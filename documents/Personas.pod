@@ -1,4 +1,6 @@
 
+=encoding utf8
+
 =head1 Personas
 
 =head1 Abstração
