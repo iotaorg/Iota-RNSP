@@ -1,4 +1,6 @@
 
+=encoding utf8
+
 =head1 Especificação da API.
 
 =head2 Abstração
