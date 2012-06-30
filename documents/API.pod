@@ -1,0 +1,128 @@
+
+=head1 Especificação da API.
+
+=head2 Abstração
+
+É uma API primariamente desenvolvida utilizando RESTful HTTP. Para realizar
+uma ação são feitas requisições HTTP a determinados endpoints utilizando
+alguns parâmetros e recebendo em resposta um conteúdo formatado, que foi
+desenvolvido para trabalhar na camada de aplicação, para facilitar a
+distribuição e integração com outros aplicativos.
+
+=head2 TERMINOLOGIA
+
+=head3 Token
+
+Chave temporaria para acesso a API, que pode ser obtida através do acesso ao
+endpoint de login, isto é para garantir maior segurança entre a comunicação
+entre os aplicativos.
+
+=head3 Endpoint
+
+Ponto de entrada de um determinado processo dentro do Discador VDT.
+
+=head2 Proposta
+
+O objetivo maior desta API é facilitar que aplicativos possam se comunicar de
+forma simples com todos os dados disponível pela aplicação.
+
+=head3 Visão Geral
+
+Esta API é baseado em resposta e requisição, no qual o cliente deve enviar
+todas as requisições acompanhadas de um token para verificação de identidade
+(a única operação que não exige a utilização do token, é o acesso ao endpoint
+login que justamente tem como função a autenticação e obtenção deste token).
+
+O servidor, Discador VDT, irá responder a requisição com uma resposta, como
+será detalhada na documentação de cada endpoint.
+
+    Cliente --------- requisição ------------------>
+
+    <-------------- resposta -------------------- API 
+
+=head3 Como ler este documento ?
+
+Este documento esta organizado de uma maneira, no qual serão descritos
+inicialmente quais são os endpoints existentes, que são os métodos para as
+diversas aplicações irão acessar para interagir com o discador, e depois uma
+explicação detalhada no qual contempla os métodos HTTP e parametros utilizados
+para acessar ele.
+
+Também é expressado como "pseudo-código", exemplos utilizados de requisição
+para o método, assim como um exemplo de resposta para facilitar o
+entendimento.
+
+=head3 NOTA
+
+=over 4
+
+=item * Por enquanto todas as requisições devem possuir Content-Type: application/x-www-form-urlencoded
+
+=item * o verbo PUT ainda não é suportado, no momento ele é emulado através de um POST
+
+=back
+
+=head2 Endpoints:
+
+=head3 1. Usuário
+
+=over 4
+
+=item * /api/user/login
+
+=item * /api/user/logout
+
+=item * /api/user/forget_password
+
+=item * /api/user/preferences
+
+=item * /api/token/create
+
+=back
+
+=head3 2. Gerenciamento de usuários
+
+=over 4
+
+=item * /api/users/create
+
+=item * /api/users/$id/edit
+
+=item * /api/users/$id/delete
+
+=back
+
+=head3 3. Gerenciamento de variaveis
+
+=over 4
+
+=item * /api/vars/create
+
+=item * /api/vars/$id/edit
+
+=item * /api/vars/$id/delete
+
+=item * /api/vars/$id/populate
+
+=back
+
+=head3 4. Gerenciamento de indicadores
+
+=over 4
+
+=item * /api/indicadores/create
+
+=item * /api/vars/$id/edit
+
+=item * /api/var/$id/delete
+
+=back
+
+=head3 5. Relatórios
+
+=over 4 
+
+=item * /api/reports
+
+=back
+

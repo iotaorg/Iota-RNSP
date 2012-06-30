@@ -1,0 +1,66 @@
+
+=head1 Personas
+
+=head1 Abstração
+
+Este documento tem como objetivo descrever os atores que irão utilizar o
+sistema da Rede Nossa São Paulo - Programa de cidades sustentaveis.
+
+=head2 Persona 1 - Administrador Geral
+
+Tarefas:
+
+=over 4
+
+=item * Login/Logout
+
+=item * Cadastro e gerenciamento de usuários do sistema em todos os perfis.
+
+=item * Cadastro, Remoção e Edição de variáveis
+
+=item * Cadastro, Remoção e Edição de indicadores
+
+=item * Relatórios de utilização do sistema
+
+=item * Gerenciamento de tokens relativos aos aplicativos
+
+=back
+
+=head2 Persona 2 - Prefeitura / Movimento da rede
+
+Tarefas:
+
+=over 4
+
+=item * Login, Logout
+
+=item * Recuperação de senha
+
+=item * Preenchimento de dados pessoais
+
+=item * Inserção de dados referentes as variaveis
+
+=item * Relatórios de utilização do sistema
+
+=item * Enviar requisição para um novo indicador. (por e-mail|log de eventos).
+
+=back
+
+=head2 Persona 3 - Aplicativos
+
+Tarefas:
+
+=over 4
+
+=item * Cadastro e obtenção de Token.
+
+=item * Consumo das variaveis
+
+=item * Consumo dos indicadores
+
+=item * Consumo de informações por candidato ou cidade.
+
+=item * Download dos dados em formatos abertos
+
+=back
+
