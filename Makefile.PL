@@ -13,8 +13,27 @@ requires 'Catalyst::Runtime' => '5.90010';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Model::DBIC::Schema';
+requires 'Catalyst::Plugin::Authentication';
+requires 'Catalyst::Plugin::Authorization::Roles';
+requires 'Catalyst::Plugin::Session';
+requires 'Catalyst::Plugin::Session::Store::FastMmap';
+requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Plugin::Authorization::Roles';
+requires 'Catalyst::Authentication::Store::DBIx::Class';
+requires 'Catalyst::Component::InstancePerContext';
+requires 'Catalyst::Plugin::Params::Nested';
+requires 'Catalyst::Controller::REST';
+
 requires 'Moose';
 requires 'namespace::autoclean';
+requires 'MooseX::Types::Email';
+requires 'Data::Diver';
+requires 'Data::Printer';
+requires 'Data::Manager';
+requires 'FindBin';
+requires 'JSON';
+
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
 test_requires 'Test::More' => '0.88';

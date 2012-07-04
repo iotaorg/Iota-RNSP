@@ -20,6 +20,11 @@ use Catalyst qw/
     -Debug
     ConfigLoader
     Static::Simple
+    Params::Nested
+
+    Authentication
+    Authorization::Roles
+
 /;
 
 extends 'Catalyst';
