@@ -1,4 +1,47 @@
 
+=head1 API
+
+=head2 Descrição
+
+A API do RNSP::PCS é uma API primariamente desenvolvida utilizando RESTful HTTP. Para realizar uma ação são feitas requisições HTTP a determinados endpoints utilizando alguns parâmetros e recebendo em resposta um conteúdo formatado.
+
+A formatação dos parâmetros das requisições obedecem ao seguinte padrão: 
+
+(entidade + ".")* + (ação + ".")* + nome do parâmetro.
+
+Ex: user.login.email, user.preferences.update.name, user.create.address_street, organization.update.cnpj, organization.user.update.cnpj
+
+Nesta versão inicial as respostas HTTP possuem o content-type 'application/json' e no corpo um texto em formato JSON. 
+
+=head3 Nota
+
+=over 4
+
+=item * Por enquanto todas as requisições devem possuir Content-Type: application/x-www-form-urlencoded
+
+=item * O verbo PUT ainda não é suportado, no momento ele é emulado através de um POST
+
+=item * Espera-se que todos os requests sejam migrados para json-encoded.
+
+=back
+
+=head2 Endpoints
+
+=head3 /api/login
+
+=head4 POST
+
+Realiza a autenticação do usuário retornando uma api_key no corpo da resposta.
+
+=head3 /api/logout
+
+=head4 GET
+
+Desloga o usuário do sistema expirando a api_key.
+
+
+=cut
+
 package RNSP::PCS::Controller::API;
 
 use Moose;
