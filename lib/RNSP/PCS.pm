@@ -25,7 +25,7 @@ use Catalyst qw/
     Authentication
     Authorization::Roles
 
-/;
+    /;
 
 extends 'Catalyst';
 
@@ -42,14 +42,23 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(
     name => 'RNSP::PCS',
+
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
-    enable_catalyst_header => 1, # Send X-Catalyst header
+    enable_catalyst_header                      => 1,    # Send X-Catalyst header
 );
+
+after 'setup_components' => sub {
+    my $app = shift;
+    for ( keys %{ $app->components } ) {
+        if ( $app->components->{$_}->can('initialize_after_setup') ) {
+            $app->components->{$_}->initialize_after_setup($app);
+        }
+    }
+};
 
 # Start the application
 __PACKAGE__->setup();
-
 
 =head1 NAME
 

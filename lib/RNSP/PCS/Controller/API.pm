@@ -17,9 +17,12 @@ sub api_key_check : Private {
     my $api_key = $c->req->param('api_key')
         || ( $c->req->data ? $c->req->data->{api_key} : undef );
 
-    #    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    #        unless defined $api_key
-    #            && $c->user( $c->model('DB::User')->find( { api_key => $api_key } ) );
+    unless (ref $c->user eq 'RNSP::PCS::TestOnly::Mock::AuthUser'){
+        my $user = $api_key ? $c->find_user({api_key => $api_key}) : undef;
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless defined $api_key && $user;
+        $c->set_authenticated( $user );
+    }
 }
 
 sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
@@ -35,12 +38,16 @@ sub login_POST {
         unless $c->model('DataManager')->success;
 
     if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
+        $c->user->update( { api_key => sha1_hex( rand(time) ) } );
+        $c->user->discard_changes;
+        $c->log->info("Login de " . $c->user->as_string ." com sucesso");
         my %attrs = $c->user->get_inflated_columns;
         delete $attrs{password};
         $self->status_ok( $c, entity => \%attrs );
     }
     else {
-        $self->status_bad_request( $c, message => 'Login invalid' );
+        $c->log->info("Falha na tentativa do login de ".$c->req->param('user.login.email').".");
+        $self->status_bad_request( $c, message => 'Login invalid(2)' );
     }
 
 }

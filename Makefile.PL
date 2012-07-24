@@ -24,7 +24,8 @@ requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Component::InstancePerContext';
 requires 'Catalyst::Plugin::Params::Nested';
 requires 'Catalyst::Controller::REST';
-
+requires 'Catalyst::TraitFor::Controller::DBIC::DoesPaging';
+requires 'DBIx::Class::PassphraseColumn';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'MooseX::Types::Email';
@@ -33,10 +34,13 @@ requires 'Data::Printer';
 requires 'Data::Manager';
 requires 'FindBin';
 requires 'JSON';
+requires 'List::MoreUtils';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
 test_requires 'Test::More' => '0.88';
+test_requires 'Test::Deep';
+tests_recursive('t');
 catalyst;
 
 install_script glob('script/*.pl');
