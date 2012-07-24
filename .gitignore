@@ -1,0 +1,16 @@
+*.swp
+*.swo
+*~
+blib/
+.build/
+_build/
+cover_db/
+inc/
+.last_cover_stats
+Makefile
+Makefile.old
+MANIFEST.bak
+META.yml
+MYMETA.yml
+nytprof.out
+pm_to_blib
