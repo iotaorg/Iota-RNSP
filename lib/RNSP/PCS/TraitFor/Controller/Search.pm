@@ -3,7 +3,7 @@ package RNSP::PCS::TraitFor::Controller::Search;
 use Moose::Role;
 with 'Catalyst::TraitFor::Controller::DBIC::DoesPaging';
 
-has 'ignored_params' => ( is => 'rw', default => sub { [qw(password api_key)] } );
+has 'ignored_params' => ( is => 'rw', default => sub { [qw(password api_key _ limit start sort dir _dc rm xaction)] } );
 
 around list_GET => sub {
     my $orig = shift;
