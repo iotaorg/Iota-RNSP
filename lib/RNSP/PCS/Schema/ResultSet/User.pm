@@ -66,8 +66,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         if ( my $existing_user = $self->find( { email => $r->get_value('email') } ) ) {
-                            return 0
-                                if $existing_user->id == $r->get_value('id');
+                            return $existing_user->id == $r->get_value('id');
                         }
                         return 1;
                         }

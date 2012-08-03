@@ -105,7 +105,7 @@ sub list_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->user->check_roles(qw(admin));
+    unless $c->check_user_roles(qw(admin));
 
   my $dm = $c->model('DataManager');
 
