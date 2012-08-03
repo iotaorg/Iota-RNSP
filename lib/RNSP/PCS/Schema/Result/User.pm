@@ -66,27 +66,6 @@ __PACKAGE__->add_column(
     },
 );
 
-use List::MoreUtils qw(any all);
 
-sub self_check     {1}
-sub self_check_any {1}
-
-sub check_any_role {
-    my ( $self, @roles ) = @_;
-    return any {
-        my $role = $_->name;
-        any { $_ eq $role } @roles;
-    }
-    $self->roles;
-}
-
-sub check_roles {
-    my ( $self, @roles ) = @_;
-    return all {
-        my $role = $_->name;
-        any { $_ eq $role } @roles;
-    }
-    $self->roles;
-}
 1;
 
