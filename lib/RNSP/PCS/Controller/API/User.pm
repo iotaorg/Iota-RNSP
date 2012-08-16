@@ -10,6 +10,10 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/base') : PathPart('user') : CaptureArgs(0) {
   my ( $self, $c ) = @_;
   $c->stash->{collection} = $c->model('DB::User');
+
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->check_user_roles(qw(admin));
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -22,6 +26,25 @@ sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
   my ( $self, $c ) = @_;
 
 }
+
+=pod
+
+=encoding utf-8
+
+detalhe do usuario
+
+GET /api/user/$id
+
+Retorna:
+
+    {
+        roles => [foo],
+        city => {..},
+        name => 'x',
+        email => 'y'
+    }
+
+=cut
 
 sub user_GET {
   my ( $self, $c ) = @_;
@@ -42,6 +65,18 @@ sub user_GET {
     }
   );
 }
+
+=pod
+
+atualizar usuario
+
+POST /api/user/$id
+
+Retorna:
+
+    { name => '', id => '' }
+
+=cut
 
 sub user_POST {
   my ( $self, $c ) = @_;
@@ -64,18 +99,50 @@ sub user_POST {
     if $user;
 }
 
+
+=pod
+
+apagar usuario
+
+DELETE /api/user/$id
+
+Retorna: No-content ou Gone
+
+=cut
+
 sub user_DELETE {
   my ( $self, $c ) = @_;
-  $c->stash->{object}->delete;
 
-  $self->status_gone( $c, message => 'deleted' );
+  my $user = $c->stash->{object}->next;
+  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $user;
+
+  $user->delete;
+
+  $self->status_no_content($c);
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
+
+=pod
+
+listar usuarios
+
+GET /api/user
+
+Retorna:
+
+    {   users => [
+            { name => 'JOHANSSON', email => 'ae@bor.ai', id => -1, city => { name => 'SP', id => 1}},
+            ...
+        ]
+    }
+=cut
+
 sub list_GET {
   my ( $self, $c ) = @_;
+
   $self->status_ok(
     $c,
     entity => {
@@ -83,6 +150,7 @@ sub list_GET {
         map {
           +{
             name => $_->{name},
+            email => $_->{email},
             $_->{city}
             ? (
               city => {
@@ -101,11 +169,34 @@ sub list_GET {
   );
 }
 
+
+=pod
+
+criar usuario
+
+POST /api/user
+
+Param:
+
+    user.update.name                Texto, Requerido: Nome completo do usuário
+    user.update.email               Texto, Requerido: Email válido
+    user.update.password            Texto, Requerido: Senha maior que 6 caracteres contendo letras, números e símbolos
+    user.update.confirm_password    Texto, Requerido: Mesma senha anterior, para confirmação
+    user.update.role                Texto, Não Requerido: qual o role dele (admin,user,app)
+
+    * Persona 1: admin
+    * Persona 2: user
+    * Persona 3: app
+
+Retorna:
+
+    { name => 'JOHANSSON', id => -1, city => { name => 'SP', id => 1}}
+
+=cut
+
 sub list_POST {
   my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
 
   my $dm = $c->model('DataManager');
 

@@ -46,6 +46,10 @@ sub verifiers_specs {
                         return $r->get_value('password') eq $r->get_value('password_confirm');
                     },
                 },
+                role => {
+                    required => 0,
+                    type     => 'Str',
+                },
             },
         ),
 
@@ -114,7 +118,16 @@ sub action_specs {
         create => sub {
             my %values = shift->valid_values;
             delete $values{password_confirm};
+            my $role = delete $values{role};
+
             my $user = $self->create( \%values );
+            if ($role){
+                $user->add_to_user_roles({
+                role => {name => $role}
+                });
+            }
+
+
             $user->discard_changes;
             return $user;
         },
