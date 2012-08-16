@@ -23,6 +23,24 @@ sub email : Chained('base') : PathPart('email') : Args(0) : ActionClass('REST')
   my ( $self, $c ) = @_;
 }
 
+=pod
+
+=encoding utf-8
+
+envia um email com um token para resetar a senha
+
+POST /api/user/forgot_password
+
+Param:
+
+    user.forgot_password.email                  Texto, requido: Email válido
+
+Retorna:
+
+    {"message":"ok"}
+
+=cut
+
 sub email_POST {
   my ( $self, $c ) = @_;
 
@@ -47,6 +65,25 @@ sub email_POST {
 sub reset_password : Chained('base') : PathPart('reset_password') : Args(0) :
   ActionClass('REST') {
 }
+
+=pod
+
+altera a senha do usuario
+
+POST /api/user/reset_password
+
+Param:
+
+    user.forgot_password.email.secret_key        Texto, requido: Chave aleatoria valida
+    user.forgot_password.email.email             Texto, requido: Email válido
+    user.forgot_password.email.password          Texto, requido: Senha 1
+    user.forgot_password.email.password_confirm  Texto, requido: confirmacao da senha 1
+
+Retorna:
+
+    {"message":"ok"}
+
+=cut
 
 sub reset_password_POST {
   my ( $self, $c ) = @_;
