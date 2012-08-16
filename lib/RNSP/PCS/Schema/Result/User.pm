@@ -50,6 +50,14 @@ __PACKAGE__->has_many(
 );
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 
+
+__PACKAGE__->has_many(
+  "user_forgotten_passwords",
+  "RNSP::PCS::Schema::Result::UserForgottenPassword",
+  { "foreign.id_user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 __PACKAGE__->load_components('PassphraseColumn');
 __PACKAGE__->remove_column('password');
 __PACKAGE__->add_column(

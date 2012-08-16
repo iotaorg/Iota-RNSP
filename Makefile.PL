@@ -35,6 +35,8 @@ requires 'Data::Manager';
 requires 'FindBin';
 requires 'JSON';
 requires 'List::MoreUtils';
+requires 'String::Random';
+
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
