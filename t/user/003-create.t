@@ -58,7 +58,8 @@ eval {
                     'user.create.email'            => 'foo@email.com',
                     'user.create.password'         => 'foobarquux1',
                     'user.create.password_confirm' => 'foobarquux1',
-                    'user.create.city_id'          => $city->id
+                    'user.create.city_id'          => $city->id,
+                    'user.create.role'             => 'admin',
                 ]
             );
             ok( $res->is_success, 'user created' );
@@ -80,6 +81,7 @@ eval {
             ok( $res->is_success, 'user exists' );
             is( $res->code, 200, 'user exists -- 200 Success' );
 
+
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
                 [   api_key                        => 'test',
@@ -91,6 +93,7 @@ eval {
             );
             ok( !$res->is_success, 'error' );
             is( $res->code, 400, 'user already exists' );
+
 
             die 'rollback';
         }
