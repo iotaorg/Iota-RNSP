@@ -8,7 +8,7 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
-sub base : Chained('/api/base') : PathPart('indicador') : CaptureArgs(0) {
+sub base : Chained('/api/base') : PathPart('indicator') : CaptureArgs(0) {
   my ( $self, $c ) = @_;
   $c->stash->{collection} = $c->model('DB::Indicator');
 
@@ -20,7 +20,7 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
-sub indicador : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
+sub indicator : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
   my ( $self, $c ) = @_;
 
 }
@@ -31,7 +31,7 @@ sub indicador : Chained('object') : PathPart('') : Args(0) : ActionClass('REST')
 
 detalhe da variavel
 
-GET /api/indicador/$id
+GET /api/indicator/$id
 
 Retorna:
 
@@ -41,7 +41,7 @@ Retorna:
         "goal": "1",
         "name": "xx",
         "axis": "Y",
-        "url": "http://localhost/api/indicador/32",
+        "url": "http://localhost/api/indicator/32",
         "created_by": {
             "name": "admin",
             "id": 1
@@ -50,7 +50,7 @@ Retorna:
 
 =cut
 
-sub indicador_GET {
+sub indicator_GET {
   my ( $self, $c ) = @_;
   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner']})->as_hashref->next;
 
@@ -69,37 +69,37 @@ sub indicador_GET {
 
 atualizar variavel
 
-POST /api/indicador/$id
+POST /api/indicator/$id
 
 Retorna:
 
-    indicador.update.name         Texto: Nome
-    indicador.update.formula      Texto: formula das variaveis
-    indicador.update.goal         Texto: numero que se quer chegar
-    indicador.update.axis         Texto: (talvez seja a categoria)
+    indicator.update.name         Texto: Nome
+    indicator.update.formula      Texto: formula das variaveis
+    indicator.update.goal         Texto: numero que se quer chegar
+    indicator.update.axis         Texto: (talvez seja a categoria)
 
 
 =cut
 
-sub indicador_POST {
+sub indicator_POST {
   my ( $self, $c ) = @_;
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_user_roles(qw(admin));
 
 
-  $c->req->params->{indicador}{update}{id} = $c->stash->{object}->next->id;
+  $c->req->params->{indicator}{update}{id} = $c->stash->{object}->next->id;
 
   my $dm = $c->model('DataManager');
 
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
 
-  my $obj = $dm->get_outcome_for('indicador.update');
+  my $obj = $dm->get_outcome_for('indicator.update');
 
   $self->status_accepted(
     $c,
     location =>
-      $c->uri_for( $self->action_for('indicador'), [ $obj->id ] )->as_string,
+      $c->uri_for( $self->action_for('indicator'), [ $obj->id ] )->as_string,
         entity => { name => $obj->name, id => $obj->id }
     ),
     $c->detach
@@ -111,13 +111,13 @@ sub indicador_POST {
 
 apagar variavel
 
-DELETE /api/indicador/$id
+DELETE /api/indicator/$id
 
 Retorna: No-content ou Gone
 
 =cut
 
-sub indicador_DELETE {
+sub indicator_DELETE {
   my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
@@ -140,7 +140,7 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 
 listar variaveis
 
-GET /api/indicador
+GET /api/indicator
 
 Retorna:
 
@@ -152,7 +152,7 @@ Retorna:
                 "goal": "1",
                 "name": "BB",
                 "axis": "Y",
-                "url": "http://localhost/api/indicador/32",
+                "url": "http://localhost/api/indicator/32",
                 "created_by": {
                     "name": "admin",
                     "id": 1
@@ -178,15 +178,15 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(name goal axis formula created_at)),
-            url => $c->uri_for_action( $self->action_for('indicador'), [ $obj->{id} ] )->as_string,
+            (map { $_ => $obj->{$_} } qw(id name goal axis formula created_at)),
+            url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
 
         }
     }
     $self->status_ok(
         $c,
         entity => {
-        indicadors => \@objs
+        indicators => \@objs
         }
     );
 }
@@ -196,14 +196,14 @@ sub list_GET {
 
 criar variavel
 
-POST /api/indicador
+POST /api/indicator
 
 Param:
 
-    indicador.create.name        Texto, Requerido: Nome
-    indicador.create.formula     Texto, Requerido: formula das variaveis
-    indicador.create.goal        Texto, Requerido: numero que se quer chegar
-    indicador.create.axis        Texto, Requerido: (talvez seja a categoria)
+    indicator.create.name        Texto, Requerido: Nome
+    indicator.create.formula     Texto, Requerido: formula das variaveis
+    indicator.create.goal        Texto, Requerido: numero que se quer chegar
+    indicator.create.axis        Texto, Requerido: (talvez seja a categoria)
 
 Retorna:
 
@@ -218,17 +218,17 @@ sub list_POST {
     unless $c->check_user_roles(qw(admin));
 
 
-  $c->req->params->{indicador}{create}{user_id} = $c->user->id;
+  $c->req->params->{indicator}{create}{user_id} = $c->user->id;
 
   my $dm = $c->model('DataManager');
 
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
-  my $object = $dm->get_outcome_for('indicador.create');
+  my $object = $dm->get_outcome_for('indicator.create');
 
   $self->status_created(
     $c,
-    location => $c->uri_for( $self->action_for('indicador'), [ $object->id ] )->as_string,
+    location => $c->uri_for( $self->action_for('indicator'), [ $object->id ] )->as_string,
     entity => {
       name => $object->name,
       id   => $object->id,

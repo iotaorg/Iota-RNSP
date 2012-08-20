@@ -1,5 +1,5 @@
 
-package RNSP::PCS::Schema::ResultSet::Variable;
+package RNSP::PCS::Schema::ResultSet::Indicator;
 
 use namespace::autoclean;
 

@@ -177,7 +177,7 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(name type cognomen explanation created_at)),
+            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation created_at)),
             url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
 
         }
