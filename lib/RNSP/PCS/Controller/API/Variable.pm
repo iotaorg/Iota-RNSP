@@ -18,6 +18,9 @@ sub base : Chained('/api/base') : PathPart('variable') : CaptureArgs(0) {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
   $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+
+
+
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
