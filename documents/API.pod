@@ -20,7 +20,7 @@ entre os aplicativos.
 
 =head3 Endpoint
 
-Ponto de entrada de um determinado processo dentro do Discador VDT.
+Ponto de entrada de um determinado processo.
 
 =head2 Proposta
 
@@ -39,7 +39,7 @@ será detalhada na documentação de cada endpoint.
 
     Cliente --------- requisição ------------------>
 
-    <-------------- resposta -------------------- API 
+    <-------------- resposta -------------------- API
 
 =head3 Como ler este documento ?
 
@@ -73,7 +73,9 @@ entendimento.
 
 =item * /api/user/logout
 
-=item * /api/user/forget_password
+=item * /api/user/forgot_password/email
+
+=item * /api/user/forgot_password/reset_password
 
 =item * /api/user/preferences
 
@@ -85,7 +87,7 @@ entendimento.
 
 =over 4
 
-=item * Criar: POST /api/users          
+=item * Criar: POST /api/users
 
 =item * Editar: PUT /api/users/$id
 
@@ -97,13 +99,21 @@ entendimento.
 
 =over 4
 
-=item * /api/vars/create
+=item * GET /api/variable
 
-=item * /api/vars/$id/edit
+=item * POST /api/variable
 
-=item * /api/vars/$id/delete
+=item * POST /api/variable/$id
 
-=item * /api/vars/$id/populate
+=item * DELETE /api/variable/$id
+
+=item * GET /api/variable/$id/value/$id
+
+=item * POST /api/variable/$id/value
+
+=item * DELETE /api/variable/$id/value/$id
+
+=item * GET /api/user/$id/variable
 
 =back
 
@@ -121,9 +131,10 @@ entendimento.
 
 =head3 5. Relatórios
 
-=over 4 
+=over 4
 
 =item * /api/reports
 
 =back
+
 
