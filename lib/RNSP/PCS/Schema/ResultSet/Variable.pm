@@ -24,7 +24,11 @@ sub verifiers_specs {
             profile => {
                 name        => { required => 1, type => 'Str' },
                 explanation => { required => 1, type => 'Str' },
-                cognomen    => { required => 1, type => 'Str' },
+                cognomen    => { required => 1, type => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        return $r->get_value('cognomen') =~ /^[A-Z](?:[A-Z0-9_])+$/i;
+                    }},
                 type        => { required => 1, type => VariableType },
                 user_id     => { required => 1, type => 'Int' },
 
@@ -36,7 +40,11 @@ sub verifiers_specs {
                 id          => { required => 1, type => 'Int' },
                 name        => { required => 0, type => 'Str' },
                 explanation => { required => 0, type => 'Str' },
-                cognomen    => { required => 0, type => 'Str' },
+                cognomen    => { required => 0, type => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        return $r->get_value('cognomen') =~ /^[A-Z](?:[A-Z0-9_])+$/i;
+                    }},
                 type        => { required => 0, type => VariableType },
             },
         ),
