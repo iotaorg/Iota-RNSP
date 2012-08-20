@@ -13,8 +13,6 @@ sub base : Chained('/api/base') : PathPart('variable') : CaptureArgs(0) {
   $c->stash->{collection} = $c->model('DB::Variable');
 
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -85,6 +83,10 @@ Retorna:
 
 sub variable_POST {
   my ( $self, $c ) = @_;
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->check_user_roles(qw(admin));
+
   $c->req->params->{variable}{update}{id} = $c->stash->{object}->next->id;
 
   my $dm = $c->model('DataManager');
@@ -117,6 +119,9 @@ Retorna: No-content ou Gone
 
 sub variable_DELETE {
   my ( $self, $c ) = @_;
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->check_user_roles(qw(admin));
 
   my $obj = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -207,6 +212,9 @@ Retorna:
 
 sub list_POST {
   my ( $self, $c ) = @_;
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->check_user_roles(qw(admin));
 
   $c->req->params->{variable}{create}{user_id} = $c->user->id;
 
