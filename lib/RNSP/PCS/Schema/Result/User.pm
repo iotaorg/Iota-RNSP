@@ -58,6 +58,13 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+__PACKAGE__->has_many(
+  "variables",
+  "RNSP::PCS::Schema::Result::Variable",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 __PACKAGE__->load_components('PassphraseColumn');
 __PACKAGE__->remove_column('password');
 __PACKAGE__->add_column(

@@ -3,6 +3,8 @@ package RNSP::PCS::Controller::API::User;
 
 use Moose;
 
+use JSON qw(encode_json);
+
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
@@ -84,7 +86,7 @@ sub user_POST {
 
   my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => 'rooots' ), $c->detach
+  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
 
   my $user = $dm->get_outcome_for('user.update');
@@ -200,7 +202,7 @@ sub list_POST {
 
   my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => 'roots' ), $c->detach
+  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
   my $user = $dm->get_outcome_for('user.create');
   $self->status_created(
