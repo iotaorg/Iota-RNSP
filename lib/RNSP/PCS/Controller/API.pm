@@ -5,13 +5,13 @@
 
 A API do RNSP::PCS é uma API primariamente desenvolvida utilizando RESTful HTTP. Para realizar uma ação são feitas requisições HTTP a determinados endpoints utilizando alguns parâmetros e recebendo em resposta um conteúdo formatado.
 
-A formatação dos parâmetros das requisições obedecem ao seguinte padrão: 
+A formatação dos parâmetros das requisições obedecem ao seguinte padrão:
 
 (entidade + ".")* + (ação + ".")* + nome do parâmetro.
 
 Ex: user.login.email, user.preferences.update.name, user.create.address_street, organization.update.cnpj, organization.user.update.cnpj
 
-Nesta versão inicial as respostas HTTP possuem o content-type 'application/json' e no corpo um texto em formato JSON. 
+Nesta versão inicial as respostas HTTP possuem o content-type 'application/json' e no corpo um texto em formato JSON.
 
 =head3 Nota
 
