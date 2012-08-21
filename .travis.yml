@@ -5,6 +5,6 @@ perl:
   - "5.12"
   - "5.10"
 env:
-  - PERL_CPANM_OPT="-v --mirror http://cpan.mirrors.travis-ci.org  --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --cascade-search --notest --force --skip-satisfied" 
+  - PERL_CPANM_OPT="-v --mirror http://cpan.mirrors.travis-ci.org  --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --cascade-search --notest --force --skip-satisfied --no-interactive" 
 notifications:
   irc: "git.aware.com.br#aware"
