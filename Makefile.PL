@@ -26,6 +26,7 @@ requires 'Catalyst::Plugin::Params::Nested';
 requires 'Catalyst::Controller::REST';
 requires 'Catalyst::TraitFor::Controller::DBIC::DoesPaging';
 requires 'DBIx::Class::PassphraseColumn';
+requires 'DBIx::Class::TimeStamp';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'MooseX::Types::Email';
