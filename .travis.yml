@@ -9,6 +9,11 @@ env:
 before_install:
   - cpanm -n Module::Install
   - cpanm -n Catalyst::Devel
+  - cpanm -n Text::CSV
+  - cpanm -n dbicadmin
+  - dbicadmin -Ilib --schema RNSP::PCS::Schema  --connect='["dbi:Pg:dbname=rnsp_pcs", "postgres", ""]' --deploy
+before_script:
+  - psql -c 'create database rnsp_pcs' -U postgres
 notifications:
   irc:
     channels:
