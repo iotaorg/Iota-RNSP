@@ -54,7 +54,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->add_unique_constraint( "variable_cognomen_key", [ "cognomen" ] );
 
-__PACKAGE__->belongs_to(
+__PACKAGE__->has_one(
     "owner",
     "RNSP::PCS::Schema::Result::User",
     { "foreign.id" => "self.user_id" },
@@ -62,7 +62,7 @@ __PACKAGE__->belongs_to(
 );
 
 
-__PACKAGE__->might_have(
+__PACKAGE__->has_many(
     "values",
     "RNSP::PCS::Schema::Result::VariableValue",
     { "foreign.variable_id" => "self.id", "foreign.user_id" => "self.user_id" },
