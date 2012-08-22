@@ -7,7 +7,7 @@ perl:
 env:
   - PERL_CPANM_OPT="-v --mirror http://cpan.mirrors.travis-ci.org  --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --cascade-search --notest --force --skip-satisfied --no-interactive" 
 before_install:
-  - cpanm -n Module::Install Catalyst::Devel Text::CSV dbicadmin JSON::Any MooseX::Types::JSON DBIx::Class::Optional::Dependencies
+  - cpanm -n Module::Install Catalyst::Devel Text::CSV dbicadmin JSON::Any MooseX::Types::JSON DBIx::Class::Optional::Dependencies DBIx::Class::PassphraseColumn
   - dbicadmin -Ilib --schema RNSP::PCS::Schema  --connect='["dbi:Pg:dbname=rnsp_pcs", "postgres", ""]' --deploy
 before_script:
   - psql -c 'create database rnsp_pcs' -U postgres
