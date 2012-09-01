@@ -11,7 +11,6 @@ before_install:
   - cpanm -n DBIx::Class::Optional::Dependencies dbicadmin
 before_script:
   - psql -c 'create database rnsp_pcs' -U postgres
-after_script:
   - perl script/deploy.pl
 notifications:
   irc:
