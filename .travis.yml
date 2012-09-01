@@ -13,7 +13,7 @@ before_script:
   - psql -c 'create database rnsp_pcs' -U postgres
   - perl script/deploy.pl
 after_install:
-  - perl deploy_for_test.pl
+  - perl script/deploy_for_test.pl
 notifications:
   irc:
     channels:

@@ -15,7 +15,7 @@ sub base : Chained('/api/base') : PathPart('user') : CaptureArgs(0) {
 
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    unless $c->check_user_roles(qw(admin user));
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
