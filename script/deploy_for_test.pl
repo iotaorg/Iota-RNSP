@@ -20,7 +20,7 @@ my $schema = RNSP::PCS::Schema->connect(
 $schema->storage->dbh_do(sub {
     my ($storage, $dbh) = @_;
     $dbh->do(q{
-        INSERT INTO "user_role" values (1, 1, 1);
+        INSERT INTO "user_role" values (1, 10, 1);
     });
 });
 
