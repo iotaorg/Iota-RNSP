@@ -83,7 +83,7 @@ sub login_POST {
     if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
         $c->user->update( { api_key => sha1_hex( rand(time) ) } );
         $c->user->discard_changes;
-        $c->log->info("Login de " . $c->user->as_string ." com sucesso");
+        #$c->log->info("Login de " . $c->user->as_string ." com sucesso");
         my %attrs = $c->user->get_inflated_columns;
         delete $attrs{password};
         $self->status_ok( $c, entity => \%attrs );

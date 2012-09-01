@@ -71,10 +71,11 @@ sub list_GET {
 
             (map { $_ => $obj->{$_} } qw(name type cognomen explanation)),
             variable_id => $obj->{id},
-            value_id => $obj->{values}{id},
-            value => $obj->{values}{value},
-            value_url => $obj->{values}{id} ?
-                ($c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $obj->{values}{id} ] )->as_string) : undef,
+            #xxx => $obj->{values}
+            value_id => $obj->{values}[0]{id},
+            value => $obj->{values}[0]{value},
+            value_url => $obj->{values}[0]{id} ?
+                ($c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $obj->{values}[0]{id} ] )->as_string) : undef,
 
         }
     }
