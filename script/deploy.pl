@@ -24,7 +24,7 @@ $schema->deploy;
 $schema->storage->dbh_do(sub {
     my ($storage, $dbh) = @_;
     $dbh->do(q{INSERT INTO "role"(name) VALUES ('admin'), ('user'), ('app');
-        INSERT INTO "user"(name, email, password) VALUES ('admin', 'admin_test@b-datum.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
+        INSERT INTO "user"(name, email, password) VALUES ('admin','admin_test@aware.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
     });
 });
 
