@@ -24,7 +24,8 @@ $schema->deploy;
 
 $schema->storage->dbh_do(sub {
             my ($storage, $dbh) = @_;
-                $dbh->do(q{INSERT INTO "role"(name) VALUES ('admin'),('user'), ('app');
+                $dbh->do(q{INSERT INTO "role"(id,name) VALUES
+                    (1,'admin'),(2,'user'), (3,'app');
                         });
                 });
 
