@@ -13,15 +13,18 @@ sub base : Chained('/api/base') : PathPart('user') : CaptureArgs(0) {
   my ( $self, $c ) = @_;
   $c->stash->{collection} = $c->model('DB::User');
 
-
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->user->id == $id || $c->check_any_user_role(qw(admin));
+
   $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
+
+
 }
 
 sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
@@ -50,6 +53,8 @@ Retorna:
 
 sub user_GET {
   my ( $self, $c ) = @_;
+
+
   my $user  = $c->stash->{object}->next;
   my %attrs = $user->get_inflated_columns;
   $self->status_ok(
@@ -144,6 +149,9 @@ Retorna:
 
 sub list_GET {
   my ( $self, $c ) = @_;
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->check_any_user_role(qw(admin));
 
   $self->status_ok(
     $c,
