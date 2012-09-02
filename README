@@ -14,7 +14,7 @@ agenda da sustentabilidade.
 
 O Programa Cidades Sustentáveis tem o objetivo de sensibilizar, mobilizar e
 oferecer ferramentas para que as cidades brasileiras se desenvolvam de forma
-econômica, social e ambientalmente sustentável. 
+econômica, social e ambientalmente sustentável.
 São grandes os desafios e, para sermos exitosos em ações que contribuam com a
 sustentabilidade, será necessário o envolvimento de cidadãos, organizações
 sociais, empresas e governos.
@@ -55,6 +55,10 @@ Este software tem como objetivo ser a plataforma de apoio para que estas
 informações sejam disponibilizadas em dados abertos.
 
 Autor: Thiago Rondon <thiago@aware.com.br>
+
+Eixos
+
+A lista de eixos é fixa e está no arquivo root/eixos.json. http://www.json.org/
 
 
 http://travis-ci.org/#!/W3CBrasil/RNSP-PCS
