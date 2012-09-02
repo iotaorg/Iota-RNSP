@@ -76,7 +76,6 @@ eval {
             use URI;
             my $uri = URI->new( $res->header('Location') );
             $uri->query_form( api_key => 'test' );
-
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             ok( $res->is_success, 'user exists' );
             is( $res->code, 200, 'user exists -- 200 Success' );
