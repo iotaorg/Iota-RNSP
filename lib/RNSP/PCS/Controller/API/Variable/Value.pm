@@ -89,8 +89,8 @@ sub variable_POST {
     unless $c->check_any_user_role(qw(admin user));
 
   my $obj_rs = $c->stash->{object}->next;
-
-  if ($c->user->id != $obj_rs->owner->id && !$c->check_any_user_role(qw(admin))){
+  # removido: $c->user->id != $obj_rs->owner->id
+  if (!$c->check_any_user_role(qw(admin user))){
     $self->status_forbidden( $c, message => "access denied", ), $c->detach;
   }
   $c->req->params->{variable}{value}{update}{id} = $obj_rs->id;

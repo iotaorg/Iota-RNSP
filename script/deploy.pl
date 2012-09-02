@@ -26,8 +26,9 @@ $schema->storage->dbh_do(sub {
             my ($storage, $dbh) = @_;
                 $dbh->do(q{
                     INSERT INTO "role"(id,name) VALUES (1,'admin'),(2,'user'), (3,'app');
-                    INSERT INTO "user"(id, name, email, password) VALUES (10, 'admin','admin_test@aware.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
-                        });
+                    INSERT INTO "user"(id, name, email, password) VALUES (1, 'admin','admin_test@aware.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
+                    SELECT nextval('user_id_seq');
+                    });
                 });
 
 
