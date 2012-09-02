@@ -68,6 +68,21 @@ sub api_key_check : Private {
     }
 }
 
+
+sub eixos: Chained('root') : PathPart('eixos') : Args(0) : ActionClass('REST') {
+
+}
+
+sub eixos_GET {
+    my ( $self, $c ) = @_;
+
+    my @eixos = $c->model('Static')->eixos;
+
+    $self->status_ok( $c, entity => {eixos => \@eixos} );
+}
+
+
+
 sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
 }
 
@@ -85,6 +100,9 @@ sub login_POST {
         $c->user->discard_changes;
         #$c->log->info("Login de " . $c->user->as_string ." com sucesso");
         my %attrs = $c->user->get_inflated_columns;
+
+        $attrs{roles} = [ map { $_->name } $c->model('DB::User')->search({ id => $c->user->id })->first->roles ];
+
         delete $attrs{password};
         $self->status_ok( $c, entity => \%attrs );
     }

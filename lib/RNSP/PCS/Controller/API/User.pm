@@ -212,6 +212,9 @@ sub list_POST {
 
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
+
+  $c->req->params->{user}{create}{role} ||= 'user';
+
   my $user = $dm->get_outcome_for('user.create');
   $self->status_created(
     $c,
