@@ -27,9 +27,9 @@ eval {
             like( $res->content, qr/invalid/i, 'invalid request' );
             # user exists
             my $obj = $schema->resultset('User')->create(
-                {   name     => 'Foo Bar Quux',
+                {   name     => 'FooX Bar Quux',
                     email    => 'foo@email.com',
-                    password => '1234',
+                    password => '12345',
                     city     => $schema->resultset('City')->create(
                         {   name => 'Campo Grande',
                             uf   => 'MS',
@@ -42,9 +42,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/login',
                 [   'user.login.email'    => 'foo@email.com',
-                    'user.login.password' => '1234'
+                    'user.login.password' => '12345'
                 ],
             );
+            use DDP; p$res;
 
 
             ok( $res->is_success, 'user ok' );

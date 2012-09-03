@@ -1,15 +1,35 @@
 use utf8;
 package RNSP::PCS::Schema::Result::EmailsQueue;
 
+# Created by DBIx::Class::Schema::Loader
+# DO NOT MODIFY THE FIRST PART OF THIS FILE
+
+=head1 NAME
+
+RNSP::PCS::Schema::Result::EmailsQueue
+
+=cut
 
 use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
 
+=head1 COMPONENTS LOADED
 
+=over 4
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
+=item * L<DBIx::Class::InflateColumn::DateTime>
+
+=item * L<DBIx::Class::TimeStamp>
+
+=item * L<DBIx::Class::PassphraseColumn>
+
+=back
+
+=cut
+
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<emails_queue>
 
@@ -48,7 +68,6 @@ __PACKAGE__->table("emails_queue");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 sent
 
@@ -60,7 +79,6 @@ __PACKAGE__->table("emails_queue");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 sent_at
 
@@ -91,19 +109,11 @@ __PACKAGE__->add_columns(
   "subject",
   { data_type => "varchar", is_nullable => 0, size => 300 },
   "variables",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "sent",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "text_status",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "sent_at",
   { data_type => "timestamp", is_nullable => 1 },
   "created_at",
@@ -128,8 +138,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-07-06 11:10:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QrXOns3TKr913F5QEW8vlg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 13:51:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FqohK1/pZZK5Bar+cOV1zA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -91,9 +91,15 @@ sub login : Chained('root') : PathPart('login') : Args(0) : ActionClass('REST') 
 
 sub login_POST {
     my ( $self, $c ) = @_;
+    my $dm = $c->model('DataManager');
+
+
+        my $x = $dm->errors;
+        use DDP; p $x;
 
     $self->status_bad_request( $c, message => 'Login invalid' ), $c->detach
-        unless $c->model('DataManager')->success;
+        unless $dm->success;
+
 
     if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
         $c->user->update( { api_key => sha1_hex( rand(time) ) } );
