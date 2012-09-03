@@ -61,13 +61,16 @@ eval {
 
             ok( $res->is_success, 'varible value created' );
             is( $res->code, 201, 'value added -- 201 ' );
+            use JSON qw(decode_json);
+            my $value_id_123 = eval{decode_json( $res->content )};
+
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'Foo Bar2',
                     'variable.create.cognomen'     => 'foobar2',
-                    'variable.create.explanation'  => 'a foo with bar2',
+                    'variable.create.explanation'  => 'a not foo with bar',
                     'variable.create.type'         => 'num',
                 ]
             );
@@ -82,14 +85,22 @@ eval {
 
             use JSON qw(decode_json);
             my $variable = eval{decode_json( $res->content )};
-            is(ref $variable->{variables}, ref [], 'variables is array');
 
+            is(ref $variable->{variables}, ref [], 'variables is array');
+            my $one_is_123;
             if (ref $variable->{variables} eq ref []){
                 foreach (@{$variable->{variables}}){
 
                     ok($_->{variable_id}, 'variable_id present');
+                    $one_is_123 = $_ if $_->{value} && $_->{value} eq '123';
 
                 }
+            }
+            ok($one_is_123, 'um dos valores eh 123');
+            if ($one_is_123){
+                is($one_is_123->{explanation}, 'a foo with bar', 'explanation is ok' );
+                is($one_is_123->{type}, 'int', 'name is correct' );
+                is($one_is_123->{value_id},$value_id_123->{id}, 'value_id is correct' );
             }
 
             die 'rollback';
