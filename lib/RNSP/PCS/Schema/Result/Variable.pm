@@ -190,7 +190,7 @@ __PACKAGE__->belongs_to(
 __PACKAGE__->has_many(
     "values",
     "RNSP::PCS::Schema::Result::VariableValue",
-    { "foreign.variable_id" => "self.id", "foreign.user_id" => "self.user_id" },
+    { "foreign.variable_id" => "self.id"},
 );
 
 

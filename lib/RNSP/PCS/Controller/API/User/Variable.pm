@@ -62,7 +62,7 @@ sub list_GET {
   my ( $self, $c ) = @_;
 
     my @list = $c->stash->{collection}->search_rs( {
-        'me.user_id' => $c->stash->{user}->id
+        'values.user_id' => $c->stash->{user}->id
     }, { prefetch => ['values'] } )->as_hashref->all;
     my @objs;
 
@@ -71,7 +71,6 @@ sub list_GET {
 
             (map { $_ => $obj->{$_} } qw(name type cognomen explanation)),
             variable_id => $obj->{id},
-            #xxx => $obj->{values}
             value_id => $obj->{values}[0]{id},
             value => $obj->{values}[0]{value},
             value_url => $obj->{values}[0]{id} ?

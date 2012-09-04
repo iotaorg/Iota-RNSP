@@ -30,7 +30,10 @@ sub verifiers_specs {
 
                                     return $self->result_source->schema->resultset('Variable')->find({
                                         id => $r->get_value('variable_id')
-                                    });
+                                    }) && $self->search({
+                                        user_id => $r->get_value('user_id'),
+                                        variable_id => $r->get_value('variable_id')
+                                    })->count == 0;
                                  }
                 },
             },
@@ -38,7 +41,17 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
-                id          => { required => 1, type => 'Int' },
+                id          => { required => 1, type => 'Int',
+
+                    post_check => sub {
+                            my $r = shift;
+
+                            return $self->search({
+                                id => $r->get_value('id')
+                            })->count == 1;
+                    }
+
+                },
                 value       => { required => 0, type => 'Str' },
             },
         ),

@@ -99,7 +99,11 @@ sub verifiers_specs {
                 email => {
                     required   => 1,
                     type       => EmailAddress,
+                    post_check => sub {
+                        my $r = shift;
 
+                        return $self->search( { email => $r->get_value('email') } )->count > 0;
+                    }
                 },
                 password => {
                     required => 1,
