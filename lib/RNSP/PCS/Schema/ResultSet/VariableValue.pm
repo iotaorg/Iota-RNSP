@@ -45,7 +45,6 @@ sub verifiers_specs {
 
                     post_check => sub {
                             my $r = shift;
-
                             return $self->search({
                                 id => $r->get_value('id')
                             })->count == 1;
