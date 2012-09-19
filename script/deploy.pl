@@ -16,7 +16,9 @@ my $schema = RNSP::PCS::Schema->connect(
 
 $schema->storage->dbh_do(sub {
     my ($storage, $dbh) = @_;
-    $dbh->do("CREATE TYPE city_status_enum AS ENUM ('prefeitura', 'movimento');
+    $dbh->do("DROP TYPE IF EXISTS city_status_enum CASCADE;
+        DROP TYPE IF EXISTS variable_type_enum CASCADE;
+        CREATE TYPE city_status_enum AS ENUM ('prefeitura', 'movimento');
         CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');
     ");
 });
