@@ -93,10 +93,6 @@ sub login_POST {
     my ( $self, $c ) = @_;
     my $dm = $c->model('DataManager');
 
-
-        my $x = $dm->errors;
-        use DDP; p $x;
-
     $self->status_bad_request( $c, message => 'Login invalid' ), $c->detach
         unless $dm->success;
 

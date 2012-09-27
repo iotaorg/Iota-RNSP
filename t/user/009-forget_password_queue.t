@@ -15,7 +15,7 @@ eval {
     sub {
       my ( $res, $c );
         my $city = $schema->resultset('City')->create(
-            {   type => 'prefeitura',
+            {
                 uf   => 'SP',
                 name => 'Pederneiras'
             },

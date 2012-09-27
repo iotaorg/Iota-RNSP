@@ -33,7 +33,6 @@ eval {
                     city     => $schema->resultset('City')->create(
                         {   name => 'Campo Grande',
                             uf   => 'MS',
-                            type => 'prefeitura'
                         }
                     )
                 },
@@ -45,8 +44,6 @@ eval {
                     'user.login.password' => '12345'
                 ],
             );
-            use DDP; p$res;
-
 
             ok( $res->is_success, 'user ok' );
             is( $res->code, 200, 'status 200 OK' );

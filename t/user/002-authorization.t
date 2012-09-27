@@ -32,7 +32,6 @@ eval {
             {
               name          => 'Campo Grande',
               uf            => 'MS',
-              type          => 'prefeitura',
             },
           )
         },

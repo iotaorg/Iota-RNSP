@@ -61,7 +61,6 @@ __PACKAGE__->table("city");
   data_type: 'text'
   default_value: 'Brasil'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 latitude
 
@@ -95,12 +94,7 @@ __PACKAGE__->add_columns(
   "uf",
   { data_type => "text", is_nullable => 0 },
   "pais",
-  {
-    data_type     => "text",
-    default_value => "Brasil",
-    is_nullable   => 1,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "Brasil", is_nullable => 1 },
   "latitude",
   { data_type => "double precision", is_nullable => 1 },
   "longitude",
@@ -144,8 +138,21 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 18:40:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RBdHkrhQ9pw+jv4wtkgHkA
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 19:43:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BZKi61nByKpIF4j0FK+eIw
+
+__PACKAGE__->might_have(
+  "prefeito",
+  "RNSP::PCS::Schema::Result::Prefeito",
+  { "foreign.city_id" => "self.id" }
+);
+
+__PACKAGE__->might_have(
+  "movimento",
+  "RNSP::PCS::Schema::Result::Movimento",
+  { "foreign.city_id" => "self.id" }
+);
+
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

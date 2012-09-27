@@ -159,7 +159,10 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->as_hashref->all;
+    my @list = $c->stash->{collection}->
+        search(undef, {
+            prefetch => ['movimento', 'prefeito']
+        })->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
