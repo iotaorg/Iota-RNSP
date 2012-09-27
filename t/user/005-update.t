@@ -29,6 +29,12 @@ $stash->add_symbol( '&_user', sub { return $user } );
 eval {
   $schema->txn_do(
     sub {
+        my $city = $schema->resultset('City')->create(
+                {
+                    uf   => 'SP',
+                    name => 'Pederneiras'
+                },
+        );
 
       my ( $res, $c ) = ctx_request(
         POST '/api/user',
@@ -38,6 +44,7 @@ eval {
           'user.create.email'            => 'foo@email.com',
           'user.create.password'         => 'foobarquux1',
           'user.create.password_confirm' => 'foobarquux1',
+          'user.create.city_id'          => $city->id,
         ]
       );
       ok( $res->is_success, 'user created' );

@@ -28,7 +28,7 @@ eval {
     $schema->txn_do(
         sub {
             my $city = $schema->resultset('City')->create(
-                {   type => 'prefeitura',
+                {
                     uf   => 'SP',
                     name => 'Pederneiras'
                 },

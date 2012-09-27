@@ -56,12 +56,28 @@ __PACKAGE__->table("city");
   data_type: 'text'
   is_nullable: 0
 
-=head2 type
+=head2 pais
 
-  data_type: 'enum'
-  default_value: 'prefeitura'
-  extra: {custom_type_name => "city_status_enum",list => ["prefeitura","movimento"]}
+  data_type: 'text'
+  default_value: 'Brasil'
+  is_nullable: 1
+
+=head2 latitude
+
+  data_type: 'double precision'
+  is_nullable: 1
+
+=head2 longitude
+
+  data_type: 'double precision'
+  is_nullable: 1
+
+=head2 created_at
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
   is_nullable: 0
+  original: {default_value => \"now()"}
 
 =cut
 
@@ -77,15 +93,18 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "uf",
   { data_type => "text", is_nullable => 0 },
-  "type",
+  "pais",
+  { data_type => "text", default_value => "Brasil", is_nullable => 1 },
+  "latitude",
+  { data_type => "double precision", is_nullable => 1 },
+  "longitude",
+  { data_type => "double precision", is_nullable => 1 },
+  "created_at",
   {
-    data_type => "enum",
-    default_value => "prefeitura",
-    extra => {
-      custom_type_name => "city_status_enum",
-      list => ["prefeitura", "movimento"],
-    },
-    is_nullable => 0,
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
   },
 );
 
@@ -100,24 +119,6 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("id");
-
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<user_city_type_key>
-
-=over 4
-
-=item * L</name>
-
-=item * L</uf>
-
-=item * L</type>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("user_city_type_key", ["name", "uf", "type"]);
 
 =head1 RELATIONS
 
@@ -137,8 +138,21 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 13:51:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lbVIoy8XkY4eQNwoUy/Grw
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 19:43:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BZKi61nByKpIF4j0FK+eIw
+
+__PACKAGE__->might_have(
+  "prefeito",
+  "RNSP::PCS::Schema::Result::Prefeito",
+  { "foreign.city_id" => "self.id" }
+);
+
+__PACKAGE__->might_have(
+  "movimento",
+  "RNSP::PCS::Schema::Result::Movimento",
+  { "foreign.city_id" => "self.id" }
+);
+
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -24,6 +24,10 @@ sub verifiers_specs {
                     required => 1,
                     type     => 'Str',
                 },
+                city_id => {
+                    required => 1,
+                    type     => 'Int',
+                },
                 email => {
                     required   => 1,
                     type       => EmailAddress,
@@ -61,7 +65,10 @@ sub verifiers_specs {
                     required => 1,
                     type     => 'Str',
                 },
-
+                city_id => {
+                    required => 0,
+                    type     => 'Int',
+                },
                 name => {
                     required => 1,
                     type     => 'Str',

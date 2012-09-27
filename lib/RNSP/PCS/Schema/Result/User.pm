@@ -245,6 +245,18 @@ __PACKAGE__->add_column(
     },
 );
 
+__PACKAGE__->might_have(
+  "prefeito",
+  "RNSP::PCS::Schema::Result::Prefeito",
+  { "foreign.user_id" => "self.id" }
+);
+
+__PACKAGE__->might_have(
+  "movimento",
+  "RNSP::PCS::Schema::Result::Movimento",
+  { "foreign.user_id" => "self.id" }
+);
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
