@@ -56,6 +56,8 @@ sub verifiers_specs {
                     required => 0,
                     type     => 'Str',
                 },
+                prefeito => { required => 0, type => 'Int' },
+                movimento => { required => 0, type => 'Int' },
             },
         ),
 
@@ -68,6 +70,27 @@ sub verifiers_specs {
                 city_id => {
                     required => 0,
                     type     => 'Int',
+                },
+                movimento => {
+                    required => 0, type => 'Int',
+                    post_check => sub {
+                        #my $r = shift;
+                        #my $city = $self;
+                        #if ( my $existing_user = $self->find( { email => $r->get_value('email') } ) ) {
+                        #    return $existing_user->id == $r->get_value('id');
+                        #}
+                        return 1;
+                    }
+                },
+                prefeito => {
+                    required => 0, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        #if ( my $existing_user = $self->find( { email => $r->get_value('email') } ) ) {
+                        #    return $existing_user->id == $r->get_value('id');
+                        #}
+                        return 1;
+                    }
                 },
                 name => {
                     required => 1,
@@ -82,7 +105,7 @@ sub verifiers_specs {
                             return $existing_user->id == $r->get_value('id');
                         }
                         return 1;
-                        }
+                    }
                 },
                 password => {
                     required  => 1,
@@ -181,6 +204,7 @@ sub verifiers_specs {
     };
 }
 
+
 sub action_specs {
     my $self = shift;
     return {
@@ -190,7 +214,11 @@ sub action_specs {
             delete $values{password_confirm};
             my $role = delete $values{role};
 
+            delete $values{movimento};
+            delete $values{prefeito};
+
             my $user = $self->create( \%values );
+
             if ($role){
                 $user->add_to_user_roles({
                 role => {name => $role}
@@ -204,7 +232,12 @@ sub action_specs {
         update => sub {
             my %values = shift->valid_values;
             delete $values{password_confirm};
+            delete $values{movimento};
+            delete $values{prefeito};
+
             my $user = $self->find( delete $values{id} )->update( \%values );
+
+
             $user->discard_changes;
             return $user;
         },

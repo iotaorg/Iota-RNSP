@@ -149,7 +149,9 @@ Retorna:
                 "pais": "USA",
                 "latitude": "5666.55",
                 "url": "http://localhost/api/city/9",
-                "id": 9
+                "id": 9,
+                "prefeito_id": undef,  -- user_id
+                "movimento_id": undef, -- user_id
             }
         ]
     }
@@ -169,10 +171,14 @@ sub list_GET {
         push @objs, {
 
             (map { $_ => $obj->{$_} } qw(id name uf pais latitude longitude created_at)),
+            prefeito_id => $obj->{prefeito}{user_id},
+            movimento_id => $obj->{movimento}{user_id},
+
             url => $c->uri_for_action( $self->action_for('city'), [ $obj->{id} ] )->as_string,
 
         }
     }
+
     $self->status_ok(
         $c,
         entity => {

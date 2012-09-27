@@ -79,6 +79,18 @@ atualizar usuario
 
 POST /api/user/$id
 
+Param:
+
+    user.update.name                Texto, Requerido: Nome completo do usuário
+    user.update.email               Texto, Requerido: Email válido
+    user.update.password            Texto, Requerido: Senha maior que 6 caracteres contendo letras, números e símbolos
+    user.update.confirm_password    Texto, Requerido: Mesma senha anterior, para confirmação
+    user.update.role                Texto, Não Requerido: qual o role dele (admin,user,app)
+
+    user.update.city_id             Int, Requerido: qual a cidade ele pertence
+    user.update.prefeito            0 ou 1, Nao Requerido: eh prefeito?
+    user.update.movimento           0 ou 1, Nao Requerido: eh movimento?
+
 Retorna:
 
     { name => '', id => '' }
@@ -188,11 +200,15 @@ POST /api/user
 
 Param:
 
-    user.update.name                Texto, Requerido: Nome completo do usuário
-    user.update.email               Texto, Requerido: Email válido
-    user.update.password            Texto, Requerido: Senha maior que 6 caracteres contendo letras, números e símbolos
-    user.update.confirm_password    Texto, Requerido: Mesma senha anterior, para confirmação
-    user.update.role                Texto, Não Requerido: qual o role dele (admin,user,app)
+    user.create.name                Texto, Requerido: Nome completo do usuário
+    user.create.email               Texto, Requerido: Email válido
+    user.create.password            Texto, Requerido: Senha maior que 6 caracteres contendo letras, números e símbolos
+    user.create.confirm_password    Texto, Requerido: Mesma senha anterior, para confirmação
+    user.create.role                Texto, Não Requerido: qual o role dele (admin,user,app)
+
+    user.create.city_id             Int, Nao Requerido: qual a cidade ele pertence
+    user.create.prefeito            0 ou 1, Nao Requerido: eh prefeito?
+    user.create.movimento           0 ou 1, Nao Requerido: eh movimento?
 
     * Persona 1: admin
     * Persona 2: user
