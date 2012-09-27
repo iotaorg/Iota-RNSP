@@ -73,6 +73,13 @@ __PACKAGE__->table("city");
   data_type: 'double precision'
   is_nullable: 1
 
+=head2 created_at
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
+  is_nullable: 0
+  original: {default_value => \"now()"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -98,6 +105,13 @@ __PACKAGE__->add_columns(
   { data_type => "double precision", is_nullable => 1 },
   "longitude",
   { data_type => "double precision", is_nullable => 1 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -130,8 +144,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 18:31:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:aqkdHg4IABReFJ24cCGN/g
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 18:40:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RBdHkrhQ9pw+jv4wtkgHkA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
