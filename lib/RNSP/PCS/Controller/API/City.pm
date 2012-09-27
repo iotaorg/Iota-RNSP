@@ -39,15 +39,12 @@ GET /api/city/$id
 Retorna:
 
     {
-        "created_at": "2012-08-20 03:15:18.897994",
-        "explanation": "a foo with bar",
-        "cognomen": "foobar",
-        "name": "Foo Bar",
-        "type": "int",
-        "created_by": {
-            "name": "admin",
-            "id": 1
-        }
+        "uf": "XU",
+        "created_at": "2012-09-27 18:55:53.480272",
+        "longitude": "1000.11",
+        "pais": "USA",
+        "latitude": "5666.55",
+        "name": "Foo Bar"
     }
 
 =cut
@@ -136,27 +133,24 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 
 =pod
 
-listar variaveis
+listar cidades
 
 GET /api/city
 
 Retorna:
 
     {
-        "users": [
+        "citys": [
             {
-                "created_at": "2012-08-20 03:24:39.379529",
-                "explanation": "a foo with bar",
-                "url": "http://localhost/api/city/32",
-                "cognomen": "foobar",
+                "longitude": "1000.11",
                 "name": "Foo Bar",
-                "type": "int",
-                "created_by": {
-                    "name": "admin",
-                    "id": 1
-                }
-            },
-            ...
+                "uf": "XU",
+                "created_at": "2012-09-27 18:54:59.15137",
+                "pais": "USA",
+                "latitude": "5666.55",
+                "url": "http://localhost/api/city/9",
+                "id": 9
+            }
         ]
     }
 
