@@ -11,8 +11,11 @@ use Template;
 use Encode;
 use JSON qw / decode_json /;
 
-my %config = new Config::General("$Bin/../mu_web_app.conf")->getall;
+my $file = "$Bin/../rnsp_pcs_local.conf";
+$file = "$Bin/../rnsp_pcs.conf" unless -e $file;
 
+my %config = new Config::General( $file )->getall;
+use DDP; p %config;
 use Email::MIME;
 use Email::Sender::Simple qw(sendmail);
 
@@ -23,8 +26,8 @@ die $@ if $@;
 
 my $transport = $transport_class->new( %{ $config{email}{transport}{opts} } );
 
-use Mu::Web::App;
-my $schema = Mu::Web::App->model('DB');
+use RNSP::PCS;
+my $schema = RNSP::PCS->model('DB');
 
 my $config_tt = {
   INCLUDE_PATH => $config{email}{template_path},
