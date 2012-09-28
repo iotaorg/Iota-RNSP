@@ -85,13 +85,11 @@ __PACKAGE__->table("variable");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 source
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -129,17 +127,9 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "period",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "source",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -201,8 +191,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 23:35:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g/HiSg1YdSZzgKE0bzNpFA
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 02:53:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ygtL92WkG6VdCg3jrG6NSg
 
 __PACKAGE__->belongs_to(
     "owner",

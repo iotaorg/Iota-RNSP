@@ -135,6 +135,8 @@ sub user_DELETE {
   my $user = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $user;
 
+  $user->roles->delete;
+  $user->sessions->delete;
   $user->delete;
 
   $self->status_no_content($c);
