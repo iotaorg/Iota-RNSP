@@ -48,7 +48,8 @@ Retorna:
         "created_by": {
             "name": "admin",
             "id": 1
-        }
+        },
+        "value_of_date": "2012-08-20 05:41:54.427052"
     }
 
 =cut
@@ -64,7 +65,7 @@ sub variable_GET {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
       (map { $_ => $object_ref->{variable}{$_} } qw(name type cognomen)),
-      (map { $_ => $object_ref->{$_} } qw(value created_at))
+      (map { $_ => $object_ref->{$_} } qw(value created_at value_of_date))
     }
   );
 }
