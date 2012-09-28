@@ -44,8 +44,11 @@ requires 'DateTime::Format::Duration';
 requires 'DateTimeX::Easy';
 
 
+requires 'Email::Sender';
 requires 'Email::Sender::Simple';
+requires 'Email::Sender::Transport::SMTP::TLS';
 requires 'Email::MIME';
+
 requires 'Template';
 
 

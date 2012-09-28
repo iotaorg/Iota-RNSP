@@ -54,7 +54,7 @@ eval {
 
 
 
-      die 'rollback';
+    #  die 'rollback';
     }
   );
 
