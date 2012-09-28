@@ -187,6 +187,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_sessions
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserSession>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_sessions",
+  "RNSP::PCS::Schema::Result::UserSession",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 variable_values
 
 Type: has_many
@@ -218,8 +233,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 14:04:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:D5Npz4taNgeGoDtSEVAd5w
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 00:11:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7a4CtaInZpvycrq/9nxLwg
 
 __PACKAGE__->has_many(
     "user_roles",
