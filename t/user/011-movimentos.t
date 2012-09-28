@@ -78,6 +78,7 @@ eval {
           'user.create.movimento'         => 1
         ]
       );
+
       ok( !$res->is_success, 'user not created' );
       is( $res->code, 400, 'user not created' );
       like($res->content, qr|user.create.movimento.invalid|, 'error na cidade ja tem movimento');

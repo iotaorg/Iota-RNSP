@@ -29,6 +29,27 @@ $schema->storage->dbh_do(sub {
                     SELECT setval('user_id_seq', 2);
                     SELECT setval('role_id_seq', 10);
                     INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 1); -- admin user /admin role
+                    drop table IF EXISTS prefeitos;
+                    drop table IF EXISTS movimentos;
+
+                    create view movimentos as
+                    select
+                        b.id as city_id,
+                        a.id as user_id
+                    from "user" a
+                    inner join city b on a.city_id = b.id
+                    inner join user_role ur on ur.user_id = a.id
+                    where ur.role_id = (select id from role where name ='_movimento');
+
+                    create view prefeitos as
+                    select
+                        b.id as city_id,
+                        a.id as user_id
+                    from "user" a
+                    inner join city b on a.city_id = b.id
+                    inner join user_role ur on ur.user_id = a.id
+                    where ur.role_id = (select id from role where name ='_prefeitura');
+
                     });
                 });
 
