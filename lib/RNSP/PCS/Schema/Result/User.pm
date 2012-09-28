@@ -248,7 +248,7 @@ __PACKAGE__->add_column(
 __PACKAGE__->might_have(
   "prefeito",
   "RNSP::PCS::Schema::Result::Prefeito",
-  { "foreign.user_id" => "self.id" }
+  { "foreign.user_id" => "self.id", }
 );
 
 __PACKAGE__->might_have(

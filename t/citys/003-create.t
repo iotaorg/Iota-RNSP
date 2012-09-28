@@ -56,7 +56,7 @@ eval {
             $uri->query_form( api_key => 'test' );
 
             ( $res, $c ) = ctx_request( GET $uri->path_query );
-use DDP; p $res;
+
             ok( $res->is_success, 'varible exists' );
             is( $res->code, 200, 'varible exists -- 200 Success' );
 
