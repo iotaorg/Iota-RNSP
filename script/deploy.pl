@@ -14,11 +14,11 @@ my $schema = RNSP::PCS::Schema->connect(
     $config->{'Model::DB'}{connect_info}{user},
     $config->{'Model::DB'}{connect_info}{password} );
 
-$schema->storage->dbh_do(sub {
-    my ($storage, $dbh) = @_;
-    $dbh->do("CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');");
+#$schema->storage->dbh_do(sub {
+#    my ($storage, $dbh) = @_;
+#    $dbh->do("CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');");
+#});
 
-});
 $schema->deploy;
 
 $schema->storage->dbh_do(sub {
