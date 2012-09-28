@@ -41,7 +41,8 @@ Retorna:
                 "explanation": "a foo with bar",
                 "value_id": 37,
                 "cognomen": "foobar",
-                "type": "int"
+                "type": "int",
+                "value_of_date": ...
             },
             {
                 "variable_id": 64,
@@ -51,7 +52,8 @@ Retorna:
                 "explanation": "a foo with bar2",
                 "value_id": null,
                 "cognomen": "foobar2",
-                "type": "num"
+                "type": "num",
+                "value_of_date": ...
             }
         ]
     }
@@ -73,6 +75,7 @@ sub list_GET {
             variable_id => $obj->{id},
             value_id => $obj->{values}[0]{id},
             value => $obj->{values}[0]{value},
+            value_of_date => $obj->{values}[0]{value_of_date},
             value_url => $obj->{values}[0]{id} ?
                 ($c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $obj->{values}[0]{id} ] )->as_string) : undef,
 

@@ -38,6 +38,10 @@ requires 'JSON';
 requires 'List::MoreUtils';
 requires 'String::Random';
 requires 'Crypt::PasswdMD5';
+requires 'DateTime::Duration';
+requires 'DateTime::Format::Duration';
+requires 'DateTimeX::Easy';
+
 requires 'DBD::Pg';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen

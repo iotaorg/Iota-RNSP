@@ -46,6 +46,10 @@ eval {
                     'indicator.create.axis'         => 'Y',
                     'indicator.create.explanation'  => 'explanation',
                     'indicator.create.source'       => 'me',
+                    'indicator.create.goal_source'  => '@fulano',
+                    'indicator.create.chart_name'   => 'pie',
+                    'indicator.create.goal_operator'=> '>=',
+                    'indicator.create.tags'         => 'you,me,she',
 
                 ]
             );
@@ -69,6 +73,7 @@ eval {
 
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             ok( $res->is_success, 'varible exists' );
+
             is( $res->code, 200, 'varible exists -- 200 Success' );
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');

@@ -13,7 +13,7 @@ use JSON qw /encode_json/;
 use String::Random;
 use MooseX::Types::Email qw/EmailAddress/;
 
-use RNSP::PCS::Types qw /VariableType/;
+use RNSP::PCS::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name {'variable.value'}
 
@@ -51,7 +51,9 @@ sub verifiers_specs {
                     }
 
                 },
-                value       => { required => 0, type => 'Str' },
+                value         => { required => 0, type => 'Str' },
+
+                value_of_date => { required => 0, type => DataStr },
             },
         ),
 

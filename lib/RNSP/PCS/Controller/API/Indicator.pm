@@ -36,17 +36,23 @@ GET /api/indicator/$id
 Retorna:
 
     {
-        "created_at": "2012-08-20 03:24:39.379529",
-        "formula": "$a + $b",
-        "goal": "1",
-        "name": "xx",
+        "source": "me",
+        "justification_of_missing_field": null,
+        "name": "Foo Bar",
         "axis": "Y",
-        "url": "http://localhost/api/indicator/32",
+        "goal_operator": ">=",
+        "tags": "you,me,she",
+        "chart_name": "pie",
+        "goal": "33",
+        "created_at": "2012-09-28 03:25:01.706615",
+        "formula": "$A + $B",
+        "explanation": "explanation",
+        "goal_source": "@fulano",
         "created_by": {
             "name": "admin",
             "id": 1
         }
-    },
+    }
 
 =cut
 
@@ -60,7 +66,9 @@ sub indicator_GET {
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name goal axis formula source explanation created_at))
+      (map { $_ => $object_ref->{$_} } qw(name goal axis formula source explanation
+            justification_of_missing_field goal_source tags goal_operator chart_name
+        created_at))
     }
   );
 }
@@ -77,6 +85,13 @@ Retorna:
     indicator.update.formula      Texto: formula das variaveis
     indicator.update.goal         Texto: numero que se quer chegar
     indicator.update.axis         Texto: (talvez seja a categoria)
+    indicator.update.explanation         Texto: explicacao
+    indicator.update.source              Texto: fonte do indicador
+    indicator.update.goal_source         Texto: fonte da meta
+    indicator.update.justification_of_missing_field  Texto: motivo de nao ter a variavel
+    indicator.update.tags             Texto: tags separadas por virgulas
+    indicator.update.goal_operator    Texto: '>=', '=', '<='
+    indicator.update.chart_name       Texto: 'pie', 'bar', ta livre, mas salve com um padrao em ingles
 
 
 =cut
@@ -147,17 +162,24 @@ Retorna:
     {
         "users": [
             {
-                "created_at": "2012-08-20 03:24:39.379529",
-                "formula": "$a + $b",
-                "goal": "1",
-                "name": "BB",
+                "id":1,
+                "source": "me",
+                "justification_of_missing_field": null,
+                "name": "Foo Bar",
                 "axis": "Y",
-                "url": "http://localhost/api/indicator/32",
+                "goal_operator": ">=",
+                "tags": "you,me,she",
+                "chart_name": "pie",
+                "goal": "33",
+                "created_at": "2012-09-28 03:25:01.706615",
+                "formula": "$A + $B",
+                "explanation": "explanation",
+                "goal_source": "@fulano",
                 "created_by": {
                     "name": "admin",
                     "id": 1
                 }
-            },
+            }
             ...
         ]
     }
@@ -178,7 +200,10 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name goal axis formula source explanation created_at)),
+            (map { $_ => $obj->{$_} } qw(id name goal axis formula source explanation
+                justification_of_missing_field goal_source tags goal_operator chart_name
+
+            created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
 
         }
@@ -204,6 +229,14 @@ Param:
     indicator.create.formula     Texto, Requerido: formula das variaveis
     indicator.create.goal        Texto, Requerido: numero que se quer chegar
     indicator.create.axis        Texto, Requerido: (talvez seja a categoria)
+
+    indicator.create.explanation         Texto: explicacao
+    indicator.create.source              Texto: fonte do indicador
+    indicator.create.goal_source         Texto: fonte da meta
+    indicator.create.justification_of_missing_field  Texto: motivo de nao ter a variavel
+    indicator.create.tags             Texto: tags separadas por virgulas
+    indicator.create.goal_operator    Texto: '>=', '=', '<='
+    indicator.create.chart_name       Texto: 'pie', 'bar', ta livre, mas salve com um padrao em ingles
 
 Retorna:
 
