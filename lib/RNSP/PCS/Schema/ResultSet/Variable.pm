@@ -31,7 +31,8 @@ sub verifiers_specs {
                     }},
                 type        => { required => 1, type => VariableType },
                 user_id     => { required => 1, type => 'Int' },
-
+                source       => { required => 0, type => 'Str' },
+                period       => { required => 0, type => 'Str' },
             },
         ),
 
@@ -46,6 +47,8 @@ sub verifiers_specs {
                         return $r->get_value('cognomen') =~ /^[A-Z](?:[A-Z0-9_])+$/i;
                     }},
                 type        => { required => 0, type => VariableType },
+                source       => { required => 0, type => 'Str' },
+                period       => { required => 0, type => 'Str' },
             },
         ),
 
@@ -59,6 +62,8 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
+            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            return unless keys %values;
 
             my $var = $self->create( \%values );
 

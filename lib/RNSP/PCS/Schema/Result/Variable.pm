@@ -81,6 +81,18 @@ __PACKAGE__->table("variable");
   extra: {custom_type_name => "variable_type_enum",list => ["str","int","num"]}
   is_nullable: 0
 
+=head2 period
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 source
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -115,6 +127,18 @@ __PACKAGE__->add_columns(
       list => ["str", "int", "num"],
     },
     is_nullable => 0,
+  },
+  "period",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "source",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
   },
 );
 
@@ -177,8 +201,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 13:51:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7DqZzsak5Kzal+wZHgYjvQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 23:35:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g/HiSg1YdSZzgKE0bzNpFA
 
 __PACKAGE__->belongs_to(
     "owner",

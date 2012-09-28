@@ -56,8 +56,28 @@ sub verifiers_specs {
                     required => 0,
                     type     => 'Str',
                 },
-                prefeito => { required => 0, type => 'Int' },
-                movimento => { required => 0, type => 'Int' },
+                prefeito => { required => 0, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        my $city = $self->result_source->schema->resultset('City')->find({
+                            id => $r->get_value('city_id')
+                        });
+                        return 1 unless $city;
+
+                        return !defined $city->prefeito;
+                    }
+                },
+                movimento => { required => 0, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        my $city = $self->result_source->schema->resultset('City')->find({
+                            id => $r->get_value('city_id')
+                        });
+                        return 1 unless $city;
+
+                        return !defined $city->movimento;
+                    }
+                },
             },
         ),
 
@@ -74,22 +94,35 @@ sub verifiers_specs {
                 movimento => {
                     required => 0, type => 'Int',
                     post_check => sub {
-                        #my $r = shift;
-                        #my $city = $self;
-                        #if ( my $existing_user = $self->find( { email => $r->get_value('email') } ) ) {
-                        #    return $existing_user->id == $r->get_value('id');
-                        #}
-                        return 1;
+                        my $r = shift;
+                        my $city = $self->result_source->schema->resultset('City')->find({
+                            id => $r->get_value('city_id')
+                        });
+                        return 1 unless $city;
+
+                        my $mov = $city->movimento;
+                        # se tem movimento, mas eh ele mesmo, libera
+                        if ( $mov && $mov->user_id == $r->get_value('id') ) {
+                            return 1
+                        }
+                        return 0;
                     }
                 },
                 prefeito => {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        #if ( my $existing_user = $self->find( { email => $r->get_value('email') } ) ) {
-                        #    return $existing_user->id == $r->get_value('id');
-                        #}
-                        return 1;
+                        my $city = $self->result_source->schema->resultset('City')->find({
+                            id => $r->get_value('city_id')
+                        });
+                        return 1 unless $city;
+
+                        my $pref = $city->prefeito;
+                        # se tem prefeito, mas eh ele mesmo, libera
+                        if ( $pref && $pref->user_id == $r->get_value('id') ) {
+                            return 1
+                        }
+                        return 0;
                     }
                 },
                 name => {
@@ -108,7 +141,7 @@ sub verifiers_specs {
                     }
                 },
                 password => {
-                    required  => 1,
+                    required  => 0,
                     type      => 'Str',
                     dependent => {
                         password_confirm => {
@@ -214,9 +247,8 @@ sub action_specs {
             delete $values{password_confirm};
             my $role = delete $values{role};
 
-            delete $values{movimento};
-            delete $values{prefeito};
-
+            my $mov = delete $values{movimento};
+            my $pref = delete $values{prefeito};
             my $user = $self->create( \%values );
 
             if ($role){
@@ -226,17 +258,68 @@ sub action_specs {
             }
 
 
+            if ($user->city_id && ($mov || $pref) ){
+                $user->add_to_user_roles({
+                    role => {name => '_movimento'}
+                }) if $mov;
+
+                $user->add_to_user_roles({
+                    role => {name => '_prefeitura'}
+                }) if $pref;
+            }
+
             $user->discard_changes;
             return $user;
         },
         update => sub {
             my %values = shift->valid_values;
             delete $values{password_confirm};
-            delete $values{movimento};
-            delete $values{prefeito};
+            delete $values{password} unless $values{password};
+            delete $values{city_id} unless $values{city_id};
 
-            my $user = $self->find( delete $values{id} )->update( \%values );
+            my $mov = delete $values{movimento};
+            my $pref = delete $values{prefeito};
 
+            my $user = $self->find( delete $values{id} );
+
+            # se tem uma cidade antiga, e nao foi enviado o que fazer
+            # troca para 'remover cargos' porque geralmente isso
+            # que vai acontecer
+            my $old_city = $user->city_id;
+            if ($old_city && $values{city_id} && $old_city != $values{city_id}){
+                $mov  = 0 unless defined $mov;
+                $pref = 0 unless defined $pref;
+            }
+
+            $user->update( \%values );
+
+            if ($user->city_id && (defined $mov || defined $pref) ){
+                if (defined $mov){
+                    if ($mov){
+                        $user->add_to_user_roles({
+                            role => {name => '_movimento'}
+                        });
+                    }else{
+                        my $role = $self->result_source->schema->resultset('Role')->find({
+                            name => '_movimento'
+                        });
+                        $user->remove_from_roles($role);
+                    }
+                }
+
+                if (defined $pref){
+                    if ($pref){
+                        $user->add_to_user_roles({
+                            role => {name => '_prefeitura'}
+                        });
+                    }else{
+                        my $role = $self->result_source->schema->resultset('Role')->find({
+                            name => '_prefeitura'
+                        });
+                        $user->remove_from_roles($role);
+                    }
+                }
+            }
 
             $user->discard_changes;
             return $user;

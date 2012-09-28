@@ -23,6 +23,9 @@ sub verifiers_specs {
                 goal        => { required => 1, type => 'Num' },
                 axis        => { required => 1, type => 'Str' },
                 user_id     => { required => 1, type => 'Int' },
+                source       => { required => 0, type => 'Str' },
+                explanation  => { required => 0, type => 'Str' },
+
             },
         ),
 
@@ -33,6 +36,8 @@ sub verifiers_specs {
                 formula     => { required => 0, type => 'Str' },
                 goal        => { required => 0, type => 'Num' },
                 axis        => { required => 0, type => 'Str' },
+                source       => { required => 0, type => 'Str' },
+                explanation  => { required => 0, type => 'Str' },
             },
         ),
 
@@ -46,6 +51,8 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
+            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            return unless keys %values;
 
             my $var = $self->create( \%values );
 

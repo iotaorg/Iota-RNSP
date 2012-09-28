@@ -63,7 +63,7 @@ sub variable_GET {
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation created_at))
+      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period created_at))
     }
   );
 }
@@ -180,7 +180,7 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation created_at)),
+            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period created_at)),
             url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
 
         }
