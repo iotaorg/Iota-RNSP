@@ -43,6 +43,7 @@ eval {
           'user.create.email'            => 'foo@email.com',
           'user.create.password'         => 'foobarquux1',
           'user.create.password_confirm' => 'foobarquux1',
+          'user.create.role'             => 'role',
           'user.create.city_id'          => $city->id,
 
         ]
