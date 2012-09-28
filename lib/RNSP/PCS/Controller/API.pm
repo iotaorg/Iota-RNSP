@@ -61,10 +61,28 @@ sub api_key_check : Private {
         || ( $c->req->data ? $c->req->data->{api_key} : undef );
 
     unless (ref $c->user eq 'RNSP::PCS::TestOnly::Mock::AuthUser'){
-        my $user = $api_key ? $c->find_user({api_key => $api_key}) : undef;
-        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        $self->status_forbidden( $c, message => "access denied" ), $c->detach
+        unless defined $api_key;
+
+        my $user_session = $c->model('DB::UserSession')->search(
+        {
+            api_key      => $api_key,
+            valid_until  => { '>=' => \'now()' },
+            valid_for_ip => $c->req->address
+        }
+        )->first;
+        my $user =
+        $user_session ? $c->find_user( { id => $user_session->user_id } ) : undef;
+
+        $self->status_forbidden( $c, message => "access denied", ),
+        $c->logx(
+        'sys', "API_KEY invalida chave " . ( $api_key ? $api_key : '' )
+        ),
+        $c->detach
         unless defined $api_key && $user;
-        $c->set_authenticated( $user );
+
+
+        $c->set_authenticated($user);
     }
 }
 
@@ -98,10 +116,17 @@ sub login_POST {
 
 
     if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
-        $c->user->update( { api_key => sha1_hex( rand(time) ) } );
+        my $item = $c->user->sessions->create(
+        {
+            api_key      => sha1_hex( rand(time) ),
+            valid_for_ip => $c->req->address
+        }
+        );
+
         $c->user->discard_changes;
         #$c->log->info("Login de " . $c->user->as_string ." com sucesso");
         my %attrs = $c->user->get_inflated_columns;
+        $attrs{api_key} = $item->api_key;
 
         $attrs{roles} = [ map { $_->name } $c->model('DB::User')->search({ id => $c->user->id })->first->roles ];
 

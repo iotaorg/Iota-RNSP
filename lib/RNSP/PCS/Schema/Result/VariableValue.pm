@@ -70,6 +70,11 @@ __PACKAGE__->table("variable_value");
   is_nullable: 1
   original: {default_value => \"now()"}
 
+=head2 value_of_date
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -93,6 +98,8 @@ __PACKAGE__->add_columns(
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
+  "value_of_date",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -156,8 +163,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 13:51:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u1THXqca+rBxsi/KLHTFTg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 02:53:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mgrqrMdeW9lG+NXZAagJcQ
 
 
 __PACKAGE__->belongs_to(

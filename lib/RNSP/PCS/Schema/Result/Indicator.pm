@@ -83,9 +83,37 @@ __PACKAGE__->table("indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 source
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 goal_source
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 justification_of_missing_field
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 tags
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 goal_operator
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 chart_name
 
   data_type: 'text'
   is_nullable: 1
@@ -119,12 +147,34 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "explanation",
+  { data_type => "text", is_nullable => 1 },
+  "source",
+  { data_type => "text", is_nullable => 1 },
+  "goal_source",
   {
     data_type   => "text",
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
-  "source",
+  "justification_of_missing_field",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "tags",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "goal_operator",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "chart_name",
   {
     data_type   => "text",
     is_nullable => 1,
@@ -176,8 +226,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 23:35:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/2Y/B77jfCqG20bbn5qIlQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 02:53:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QLDTpn9h/BuJx2eeGEtIjA
 
 __PACKAGE__->belongs_to(
     "owner",
