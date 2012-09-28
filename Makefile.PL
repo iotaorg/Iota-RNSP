@@ -35,12 +35,19 @@ requires 'Data::Printer';
 requires 'Data::Manager';
 requires 'FindBin';
 requires 'JSON';
+requires 'JSON::XS';
 requires 'List::MoreUtils';
 requires 'String::Random';
 requires 'Crypt::PasswdMD5';
 requires 'DateTime::Duration';
 requires 'DateTime::Format::Duration';
 requires 'DateTimeX::Easy';
+
+
+requires 'Email::Sender::Simple';
+requires 'Email::MIME';
+requires 'Template';
+
 
 requires 'DBD::Pg';
 
