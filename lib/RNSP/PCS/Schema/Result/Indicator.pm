@@ -79,6 +79,18 @@ __PACKAGE__->table("indicator");
   is_nullable: 1
   original: {default_value => \"now()"}
 
+=head2 explanation
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 source
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -105,6 +117,18 @@ __PACKAGE__->add_columns(
     default_value => \"current_timestamp",
     is_nullable   => 1,
     original      => { default_value => \"now()" },
+  },
+  "explanation",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "source",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
   },
 );
 
@@ -152,8 +176,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 13:51:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vg2pfOmXPshJnQOgTWd/lQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 23:35:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/2Y/B77jfCqG20bbn5qIlQ
 
 __PACKAGE__->belongs_to(
     "owner",

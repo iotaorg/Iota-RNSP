@@ -60,7 +60,7 @@ sub indicator_GET {
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name goal axis formula created_at))
+      (map { $_ => $object_ref->{$_} } qw(name goal axis formula source explanation created_at))
     }
   );
 }
@@ -178,7 +178,7 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name goal axis formula created_at)),
+            (map { $_ => $obj->{$_} } qw(id name goal axis formula source explanation created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
 
         }

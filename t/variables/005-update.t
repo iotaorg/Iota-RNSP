@@ -38,6 +38,8 @@ eval {
                 'variable.create.cognomen'     => 'foobar',
                 'variable.create.explanation'  => 'a foo with bar',
                 'variable.create.type'         => 'str',
+                'variable.create.period'       => 'semana',
+                'variable.create.source'       => 'God',
             ]
         );
         ok( $res->is_success, 'variable created!' );
@@ -54,6 +56,8 @@ eval {
             [
                 'variable.update.name'         => 'BarFoo',
                 'variable.update.type'         => 'int',
+                'variable.update.period'       => 'dia',
+                'variable.update.source'       => 'Lulu',
             ]
         );
         ok( $res->is_success, 'var updated' );
@@ -70,6 +74,8 @@ eval {
 
         is( $updated_var->type, 'int', 'updated ok' );
         is( $updated_var->name, 'BarFoo', 'name ok' );
+        is( $updated_var->period, 'dia', 'source ok' );
+        is( $updated_var->source, 'Lulu', 'period ok' );
 
 
       die 'rollback';

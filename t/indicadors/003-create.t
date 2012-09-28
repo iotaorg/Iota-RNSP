@@ -44,6 +44,9 @@ eval {
                     'indicator.create.formula'      => '$A + $B',
                     'indicator.create.goal'         => '33',
                     'indicator.create.axis'         => 'Y',
+                    'indicator.create.explanation'  => 'explanation',
+                    'indicator.create.source'       => 'me',
+
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
@@ -56,6 +59,8 @@ eval {
                 'indicator in DB'
             );
             is( $save_test->name, 'Foo Bar', 'name ok' );
+            is( $save_test->explanation, 'explanation', 'explanation ok' );
+            is( $save_test->source, 'me', 'source ok' );
 
 
             use URI;
