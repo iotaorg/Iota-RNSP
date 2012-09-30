@@ -45,6 +45,9 @@ Retorna:
         "cognomen": "foobar",
         "name": "Foo Bar",
         "type": "int",
+        "source":"foo",
+        "period":"semana",
+        "is_basic": "1",
         "created_by": {
             "name": "admin",
             "id": 1
@@ -63,7 +66,7 @@ sub variable_GET {
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period created_at))
+      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic created_at))
     }
   );
 }
@@ -80,7 +83,9 @@ Retorna:
     variable.update.cognomen    Texto: Apelido
     variable.update.explanation Texto: Explicacao da variavel
     variable.update.type        Texto: Tipo (int,str ou num)
-
+    variable.update.is_basic    Boolean: se aparece ou nao no formulario de formulas
+    variable.update.period      Texto
+    variable.update.source      Texto
 
 =cut
 
@@ -154,7 +159,10 @@ Retorna:
                 "url": "http://localhost/api/variable/32",
                 "cognomen": "foobar",
                 "name": "Foo Bar",
+                "source":"foo",
+                "period":"semana",
                 "type": "int",
+                "is_basic": "1",
                 "created_by": {
                     "name": "admin",
                     "id": 1
@@ -180,7 +188,7 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period created_at)),
+            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at)),
             url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
 
         }
@@ -206,6 +214,10 @@ Param:
     variable.create.cognomen    Texto, Requerido: Apelido
     variable.create.explanation Texto, Requerido: Explicacao da variavel
     variable.create.type        Texto, Requerido: Tipo (int,str ou num)
+    variable.create.is_basic    Boolean: se aparece ou nao no formulario de formulas
+    variable.create.period      Texto: semana,dia ou mes (etc..) que a variavel eh atualizada
+    variable.create.source      Texto: origem da variavel
+
 
 Retorna:
 
