@@ -144,6 +144,25 @@ eval {
       is( $res->code, 201, 'user created to city 1 again' );
 
       ok(
+        my $orme =
+          $schema->resultset('User')->find( { email => 'orme@email.com' } ),
+        'user in DB'
+      );
+      ( $res, $c ) = ctx_request(
+        POST '/api/user/' . $orme->id,
+        [
+          api_key                        => 'test',
+          'user.update.name'             => 'Foo Bar',
+          'user.update.email'            => 'orme@email.com',
+          'user.update.city_id'          => $city->id,
+          'user.update.prefeito'         => 1
+        ]
+      );
+
+      ok( $res->is_success, 'user updated without changes' );
+      is( $res->code, 202, 'user updated -- 202 Accepted' );
+
+      ok(
         my $changecity =
           $schema->resultset('User')->find( { email => 'errorme@email.com' } ),
         'user in DB'
@@ -161,7 +180,7 @@ eval {
         ]
       );
 
-      ok( $res->is_success, 'user updated e perdeu a prefeitura' );
+      ok( $res->is_success, 'user updated' );
       is( $res->code, 202, 'user updated -- 202 Accepted' );
 
 
