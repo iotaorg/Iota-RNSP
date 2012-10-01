@@ -184,7 +184,7 @@ eval {
       is( $res->code, 202, 'user updated -- 202 Accepted' );
 
 
-#      die 'rollback';
+      die 'rollback';
     }
   );
 
