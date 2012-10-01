@@ -25,7 +25,7 @@ sub verifiers_specs {
                     type     => 'Str',
                 },
                 city_id => {
-                    required => 1,
+                    required => 0,
                     type     => 'Int',
                 },
                 email => {
