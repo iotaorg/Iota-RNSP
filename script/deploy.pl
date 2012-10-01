@@ -32,6 +32,25 @@ $schema->storage->dbh_do(sub {
                     drop table IF EXISTS prefeitos;
                     drop table IF EXISTS movimentos;
 
+                    SELECT pg_catalog.setval('variable_id_seq', 40, true);
+
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (19, 'populacao_total', 'População total', 'populacao_total', 1, '2012-10-01 16:50:42.857155', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (20, 'populacao_urbana', 'População rural e urbana', 'populacao_urbana', 1, '2012-10-01 16:51:55.453327', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (22, 'divisao_pop_total_faixa_etaria', 'Divisão da população total por faixa etária', 'divisao_pop_total_faixa_etaria', 1, '2012-10-01 16:52:20.626508', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (23, 'divisao_pop_total_por_genero', 'Divisão da população total por gênero', 'divisao_pop_total_por_genero', 1, '2012-10-01 16:52:42.933181', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (24, 'divisao_pop_total_total_raca', 'Divisão da população total por raça/etnia', 'divisao_pop_total_total_raca', 1, '2012-10-01 16:53:05.478149', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (26, 'densidade_demografica', 'Densidade demográfica - O número de pessoas por quilômetro quadrado', 'densidade_demografica', 1, '2012-10-01 16:57:19.059432', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (27, 'area_municipio', 'Área do Município', 'area_municipio', 1, '2012-10-01 16:58:44.813519', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (28, 'expectativa_vida', 'Expectativa de Vida: Esperança de vida ao nascer', 'expectativa_vida', 1, '2012-10-01 16:58:54.33095', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (30, 'idh_municipal', 'IDH Municipal', 'idh_municipal', 1, '2012-10-01 16:59:08.447301', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (31, 'gini', 'Gini', 'gini', 1, '2012-10-01 17:00:11.909949', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (35, 'pib_capita', 'Produto Interno Bruto per capita', 'pib_capita', 1, '2012-10-01 17:00:35.676173', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (36, 'renda_capita', 'Renda per capita', 'renda_capita', 1, '2012-10-01 17:00:49.800921', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (38, 'participacao_eleitorado', 'Participação do eleitorado nas últimas eleições', 'participacao_eleitorado', 1, '2012-10-01 17:01:02.250016', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (39, 'total_funcionario', 'Total de funcionários empregados no município', 'total_funcionario', 1, '2012-10-01 17:01:12.462152', 'str', 'year', NULL, true);
+                    INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (40, 'orcamento_liquidado', 'Orçamento liquidado', 'orcamento_liquidado', 1, '2012-10-01 17:01:22.614466', 'str', 'year', NULL, true);
+
+
                     create view movimentos as
                     select
                         b.id as city_id,

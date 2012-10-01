@@ -95,6 +95,8 @@ sub verifiers_specs {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
+                        return 0 if $r->get_value('prefeito');
+
                         my $city = $self->result_source->schema->resultset('City')->find({
                             id => $r->get_value('city_id')
                         });
@@ -112,10 +114,13 @@ sub verifiers_specs {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
+                        return 0 if $r->get_value('movimento');
+
                         my $city = $self->result_source->schema->resultset('City')->find({
                             id => $r->get_value('city_id')
                         });
                         return 1 unless $city;
+
 
                         my $pref = $city->prefeito;
                         # se tem prefeito, mas eh ele mesmo, libera
