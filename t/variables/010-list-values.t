@@ -64,7 +64,6 @@ eval {
             use JSON qw(decode_json);
             my $value_id_123 = eval{decode_json( $res->content )};
 
-
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
                 [   api_key                        => 'test',
@@ -88,6 +87,7 @@ eval {
 
             is(ref $variable->{variables}, ref [], 'variables is array');
             my $one_is_123;
+
             if (ref $variable->{variables} eq ref []){
                 foreach (@{$variable->{variables}}){
 

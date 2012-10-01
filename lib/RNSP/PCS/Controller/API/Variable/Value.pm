@@ -10,12 +10,8 @@ __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/variable/object') : PathPart('value') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{variable_rs} = $c->stash->{collection};
-    $c->stash->{variable}    = $c->stash->{variable_rs}->next;
 
     $c->stash->{collection} = $c->model('DB::VariableValue');
-
-
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -166,7 +162,6 @@ sub list_POST {
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_any_user_role(qw(admin user));
-
 
   $c->req->params->{variable}{value}{create}{variable_id} = $c->stash->{variable}->id;
 

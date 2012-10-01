@@ -68,7 +68,6 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
-
             my $var = $self->create( \%values );
 
             $var->discard_changes;
