@@ -102,6 +102,8 @@ sub verifiers_specs {
                         });
                         return 1 unless $city;
 
+                        return 1 if $r->get_value('movimento') eq '0';
+
                         my $mov = $city->movimento;
                         # se tem movimento, mas eh ele mesmo, libera
                         if ( $mov && $mov->user_id == $r->get_value('id') ) {
@@ -121,6 +123,7 @@ sub verifiers_specs {
                         });
                         return 1 unless $city;
 
+                        return 1 if $r->get_value('prefeito') eq '0';
 
                         my $pref = $city->prefeito;
                         # se tem prefeito, mas eh ele mesmo, libera
@@ -303,7 +306,7 @@ sub action_specs {
                     if ($mov){
                         $user->add_to_user_roles({
                             role => {name => '_movimento'}
-                        });
+                        }) unless $user->movimento;
                     }else{
                         my $role = $self->result_source->schema->resultset('Role')->find({
                             name => '_movimento'
@@ -316,7 +319,7 @@ sub action_specs {
                     if ($pref){
                         $user->add_to_user_roles({
                             role => {name => '_prefeitura'}
-                        });
+                        }) unless $user->prefeito;
                     }else{
                         my $role = $self->result_source->schema->resultset('Role')->find({
                             name => '_prefeitura'
