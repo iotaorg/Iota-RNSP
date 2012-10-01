@@ -18,8 +18,7 @@ sub base : Chained('/api/base') : PathPart('variable') : CaptureArgs(0) {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
   $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
-
-
+  $c->stash->{variable} = $c->stash->{object}->first;
 
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
@@ -95,7 +94,7 @@ sub variable_POST {
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_user_roles(qw(admin));
 
-  $c->req->params->{variable}{update}{id} = $c->stash->{object}->next->id;
+  $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
 
   my $dm = $c->model('DataManager');
 
@@ -131,7 +130,7 @@ sub variable_DELETE {
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_user_roles(qw(admin));
 
-  my $obj = $c->stash->{object}->next;
+  my $obj = $c->stash->{variable};
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
   $obj->delete;
