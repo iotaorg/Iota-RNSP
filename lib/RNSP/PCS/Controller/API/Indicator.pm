@@ -67,7 +67,7 @@ sub indicator_GET {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
       (map { $_ => $object_ref->{$_} } qw(name goal axis formula source explanation
-            justification_of_missing_field goal_source tags goal_operator chart_name
+            justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction
         created_at))
     }
   );
@@ -92,6 +92,8 @@ Retorna:
     indicator.update.tags             Texto: tags separadas por virgulas
     indicator.update.goal_operator    Texto: '>=', '=', '<='
     indicator.update.chart_name       Texto: 'pie', 'bar', ta livre, mas salve com um padrao em ingles
+    indicator.update.goal_explanation Texto: explicacao da meta
+    indicator.update.sort_direction   Texto: 'greater value','greater rating','lowest value','lowest rating'
 
 
 =cut
@@ -201,7 +203,7 @@ sub list_GET {
             },
 
             (map { $_ => $obj->{$_} } qw(id name goal axis formula source explanation
-                justification_of_missing_field goal_source tags goal_operator chart_name
+                justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction
 
             created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
@@ -237,6 +239,10 @@ Param:
     indicator.create.tags             Texto: tags separadas por virgulas
     indicator.create.goal_operator    Texto: '>=', '=', '<='
     indicator.create.chart_name       Texto: 'pie', 'bar', ta livre, mas salve com um padrao em ingles
+
+    indicator.create.goal_explanation Texto: explicacao da meta
+    indicator.create.sort_direction   Texto: 'greater value','greater rating','lowest value','lowest rating'
+
 
 Retorna:
 

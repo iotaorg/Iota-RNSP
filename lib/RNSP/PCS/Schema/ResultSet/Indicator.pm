@@ -33,6 +33,9 @@ sub verifiers_specs {
                 goal_operator   => { required => 0, type => 'Str' },
                 chart_name      => { required => 0, type => 'Str' },
 
+                goal_explanation  => { required => 0, type => 'Str' },
+                sort_direction    => { required => 0, type => 'Str' },
+
             },
         ),
 
@@ -51,6 +54,9 @@ sub verifiers_specs {
                 goal_source     => { required => 0, type => 'Str' },
                 tags            => { required => 0, type => 'Str' },
                 goal_operator   => { required => 0, type => 'Str' },
+
+                goal_explanation  => { required => 0, type => 'Str' },
+                sort_direction    => { required => 0, type => 'Str' },
                 chart_name      => { required => 0, type => 'Str' },
             },
         ),
