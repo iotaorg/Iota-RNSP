@@ -1,5 +1,6 @@
 
 use lib './lib';
+use utf8;
 
 use RNSP::PCS::Schema;
 
