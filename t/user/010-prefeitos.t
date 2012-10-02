@@ -162,6 +162,20 @@ eval {
       ok( $res->is_success, 'user updated without changes' );
       is( $res->code, 202, 'user updated -- 202 Accepted' );
 
+            ( $res, $c ) = ctx_request(
+        POST '/api/user/' . $orme->id,
+        [
+          api_key                        => 'test',
+          'user.update.name'             => 'Foo Bar',
+          'user.update.email'            => 'orme@email.com',
+          'user.update.city_id'          => $city->id,
+          'user.update.prefeito'         => 0
+        ]
+      );
+
+      ok( $res->is_success, 'user updated without changes' );
+      is( $res->code, 202, 'user updated -- 202 Accepted' );
+
       ok(
         my $changecity =
           $schema->resultset('User')->find( { email => 'errorme@email.com' } ),

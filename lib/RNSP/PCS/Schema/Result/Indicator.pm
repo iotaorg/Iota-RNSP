@@ -61,35 +61,32 @@ __PACKAGE__->table("indicator");
   data_type: 'numeric'
   is_nullable: 0
 
+=head2 goal_explanation
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 goal_source
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 goal_operator
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 axis
 
   data_type: 'text'
   is_nullable: 0
-
-=head2 user_id
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 0
-
-=head2 created_at
-
-  data_type: 'timestamp'
-  default_value: current_timestamp
-  is_nullable: 1
-  original: {default_value => \"now()"}
-
-=head2 explanation
-
-  data_type: 'text'
-  is_nullable: 1
 
 =head2 source
 
   data_type: 'text'
   is_nullable: 1
 
-=head2 goal_source
+=head2 explanation
 
   data_type: 'text'
   is_nullable: 1
@@ -104,15 +101,29 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   is_nullable: 1
 
-=head2 goal_operator
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 chart_name
 
   data_type: 'text'
   is_nullable: 1
+
+=head2 sort_direction
+
+  data_type: 'enum'
+  extra: {custom_type_name => "sort_direction_enum",list => ["greater value","greater rating","lowest value","lowest rating"]}
+  is_nullable: 1
+
+=head2 user_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
+=head2 created_at
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
+  is_nullable: 1
+  original: {default_value => \"now()"}
 
 =cut
 
@@ -130,8 +141,38 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "goal",
   { data_type => "numeric", is_nullable => 0 },
+  "goal_explanation",
+  { data_type => "text", is_nullable => 1 },
+  "goal_source",
+  { data_type => "text", is_nullable => 1 },
+  "goal_operator",
+  { data_type => "text", is_nullable => 1 },
   "axis",
   { data_type => "text", is_nullable => 0 },
+  "source",
+  { data_type => "text", is_nullable => 1 },
+  "explanation",
+  { data_type => "text", is_nullable => 1 },
+  "justification_of_missing_field",
+  { data_type => "text", is_nullable => 1 },
+  "tags",
+  { data_type => "text", is_nullable => 1 },
+  "chart_name",
+  { data_type => "text", is_nullable => 1 },
+  "sort_direction",
+  {
+    data_type => "enum",
+    extra => {
+      custom_type_name => "sort_direction_enum",
+      list => [
+        "greater value",
+        "greater rating",
+        "lowest value",
+        "lowest rating",
+      ],
+    },
+    is_nullable => 1,
+  },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "created_at",
@@ -141,20 +182,6 @@ __PACKAGE__->add_columns(
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
-  "explanation",
-  { data_type => "text", is_nullable => 1 },
-  "source",
-  { data_type => "text", is_nullable => 1 },
-  "goal_source",
-  { data_type => "text", is_nullable => 1 },
-  "justification_of_missing_field",
-  { data_type => "text", is_nullable => 1 },
-  "tags",
-  { data_type => "text", is_nullable => 1 },
-  "goal_operator",
-  { data_type => "text", is_nullable => 1 },
-  "chart_name",
-  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -201,8 +228,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-30 01:23:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7mQvKZOPld4vbfuJYBeXxw
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-02 15:22:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GkAxgn4xU+cpqX8NtUHxjQ
 
 __PACKAGE__->belongs_to(
     "owner",

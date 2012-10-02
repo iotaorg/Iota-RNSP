@@ -24,6 +24,11 @@ $schema->deploy;
 $schema->storage->dbh_do(sub {
             my ($storage, $dbh) = @_;
                 $dbh->do(q{
+                    INSERT INTO city(
+                            id, name, uf, pais, latitude, longitude, created_at)
+                    VALUES (1, 'São Paulo','SP','Brasil',-2332.512345,-4638.1,'2012-09-28 03:55:36.899955');
+                    SELECT setval('public.city_id_seq', 30, true);
+
                     INSERT INTO "role"(id,name) VALUES (1,'admin'),(2,'user'), (3,'app'), (4,'_prefeitura'), (5,'_movimento');
                     INSERT INTO "user"(id, name, email, password) VALUES (1, 'admin','admin@cidadessustentaveis.org.br', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
                     SELECT setval('user_id_seq', 2);
