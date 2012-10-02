@@ -95,7 +95,9 @@ sub verifiers_specs {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return 0 if $r->get_value('prefeito') eq '1';
+                        return 0 if $r->get_value('prefeito')  && $r->get_value('movimento');
+                        return 1 unless defined $r->get_value('movimento');
+
 
                         my $city = $self->result_source->schema->resultset('City')->find({
                             id => $r->get_value('city_id')
@@ -109,14 +111,18 @@ sub verifiers_specs {
                         if ( $mov && $mov->user_id == $r->get_value('id') ) {
                             return 1
                         }
-                        return 0;
+
+                        return defined $mov ? 0 : 1;
                     }
                 },
                 prefeito => {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return 0 if $r->get_value('movimento') eq '1';
+
+                        return 0 if $r->get_value('movimento') && $r->get_value('prefeito');
+                        return 1 unless defined $r->get_value('prefeito');
+
 
                         my $city = $self->result_source->schema->resultset('City')->find({
                             id => $r->get_value('city_id')
@@ -130,7 +136,8 @@ sub verifiers_specs {
                         if ( $pref && $pref->user_id == $r->get_value('id') ) {
                             return 1
                         }
-                        return 0;
+
+                        return defined $pref ? 0 : 1;
                     }
                 },
                 name => {
