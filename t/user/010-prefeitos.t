@@ -169,7 +169,8 @@ eval {
           'user.update.name'             => 'Foo Bar',
           'user.update.email'            => 'orme@email.com',
           'user.update.city_id'          => $city->id,
-          'user.update.prefeito'         => 0
+          'user.update.prefeito'         => 0,
+          'user.update.movimento'        => 1
         ]
       );
 

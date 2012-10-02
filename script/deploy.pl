@@ -17,7 +17,8 @@ my $schema = RNSP::PCS::Schema->connect(
 
 $schema->storage->dbh_do(sub {
     my ($storage, $dbh) = @_;
-    $dbh->do("CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');");
+    $dbh->do("CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');
+        CREATE TYPE sort_direction_enum AS ENUM ('greater value','greater rating','lowest value','lowest rating');");
 });
 
 $schema->deploy;
