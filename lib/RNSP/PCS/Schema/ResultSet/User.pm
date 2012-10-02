@@ -95,7 +95,7 @@ sub verifiers_specs {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return 0 if $r->get_value('prefeito');
+                        return 0 if $r->get_value('prefeito') eq '1';
 
                         my $city = $self->result_source->schema->resultset('City')->find({
                             id => $r->get_value('city_id')
@@ -116,7 +116,7 @@ sub verifiers_specs {
                     required => 0, type => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return 0 if $r->get_value('movimento');
+                        return 0 if $r->get_value('movimento') eq '1';
 
                         my $city = $self->result_source->schema->resultset('City')->find({
                             id => $r->get_value('city_id')
