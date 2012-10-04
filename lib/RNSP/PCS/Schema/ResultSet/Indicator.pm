@@ -20,7 +20,7 @@ sub verifiers_specs {
             profile => {
                 name        => { required => 1, type => 'Str' },
                 formula     => { required => 1, type => 'Str' }, # check Math::Expression::Evaluator
-                goal        => { required => 1, type => 'Num' },
+                goal        => { required => 0, type => 'Num' },
                 axis        => { required => 1, type => 'Str' },
                 user_id     => { required => 1, type => 'Int' },
                 source       => { required => 0, type => 'Str' },
