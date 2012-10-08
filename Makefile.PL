@@ -48,7 +48,7 @@ requires 'Email::Sender';
 requires 'Email::Sender::Simple';
 requires 'Email::Sender::Transport::SMTP::TLS';
 requires 'Email::MIME';
-
+requires 'Math::Expression::Evaluator';
 requires 'Template';
 
 
