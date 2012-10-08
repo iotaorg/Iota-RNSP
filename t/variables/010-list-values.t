@@ -45,6 +45,8 @@ eval {
                     'variable.create.cognomen'     => 'foobar',
                     'variable.create.explanation'  => 'a foo with bar',
                     'variable.create.type'         => 'int',
+                    'variable.create.period'       => 'yearly',
+
                 ]
             );
             ok( $res->is_success, 'variable created!' );
@@ -71,6 +73,8 @@ eval {
                     'variable.create.cognomen'     => 'foobar2',
                     'variable.create.explanation'  => 'a not foo with bar',
                     'variable.create.type'         => 'num',
+                    'variable.create.period'       => 'yearly',
+
                 ]
             );
             ok( $res->is_success, 'variable 2 created!' );

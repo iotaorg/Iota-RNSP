@@ -43,6 +43,7 @@ eval {
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'Foo Bar',
                     'variable.create.cognomen'     => 'foobar',
+                    'variable.create.period'       => 'yearly',
                     'variable.create.explanation'  => 'a foo with bar',
                     'variable.create.type'         => 'int',
                 ]
