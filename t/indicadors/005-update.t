@@ -36,7 +36,7 @@ eval {
             [   api_key                         => 'test',
                 'indicator.create.name'         => 'Foo Bar',
                 'indicator.create.goal'         => '11',
-                'indicator.create.formula'      => '$FOOBAR / 2',
+                'indicator.create.formula'      => '5 / 2',
                 'indicator.create.axis'         => 'SUBM',
             ]
         );

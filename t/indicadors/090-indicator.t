@@ -1,0 +1,107 @@
+
+use strict;
+use warnings;
+
+use Test::More;
+
+use FindBin qw($Bin);
+use lib "$Bin/../lib";
+
+use Catalyst::Test q(RNSP::PCS);
+
+use HTTP::Request::Common;
+use Package::Stash;
+use RNSP::IndicatorFormula;
+
+use RNSP::PCS::TestOnly::Mock::AuthUser;
+my $seq = 0;
+my $schema = RNSP::PCS->model('DB');
+my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
+my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
+
+$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+@RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+
+$stash->add_symbol( '&user',  sub { return $user } );
+$stash->add_symbol( '&_user', sub { return $user } );
+
+eval {
+    $schema->txn_do(
+        sub {
+            my ( $res, $c );
+
+            my $var1 = &new_var('int', 'week');
+            my $var2 = &new_var('int', 'week');
+            my $var3 = &new_var('num', 'year');
+            my $var4 = &new_var('num', 'year');
+            my $f = new RNSP::IndicatorFormula(formula => ":$var1: + :$var2:", schema => $schema);
+
+            my @expected = ($var1, $var2);
+            is((join ',', sort $f->variables), (join ',', sort @expected), 'same variables!');
+
+            is($f->evaluate(
+                "$var1" => 4,
+                "$var2" => 7
+            ), 11, 'sum with variables looks good!');
+
+
+            $f = new RNSP::IndicatorFormula(formula => "sqrt(:$var3: + :$var4:)", schema => $schema);
+            is($f->evaluate(
+                "$var3" => 5.32,
+                "$var4" => 19.68
+            ), 5, 'sqrt with sum of floats look good!');
+
+            $f = new RNSP::IndicatorFormula(formula => "-5 + sqrt(:$var1: / (:$var2: * :$var2:)) + 1", schema => $schema);
+            is($f->evaluate(
+                "$var1" => 625,
+                "$var2" => 5
+            ), 1, '"-5 + sqrt(:$var1: / (:$var2: * :$var2:)) + 1" OK!');
+
+            eval{new RNSP::IndicatorFormula(formula => "15)", schema => $schema)};
+            like($@, qr/Parse error/, 'error 001');
+
+            eval{new RNSP::IndicatorFormula(formula => "(22", schema => $schema)};
+            like($@, qr/ClosingParen/, 'error 002');
+
+            # TODO isso pode ser valido, thats depende!
+            eval{new RNSP::IndicatorFormula(formula => '"ABC" . 2345', schema => $schema)};
+            like($@, qr/No token matched input text/, 'error 003');
+
+            # soma em periodos diferentes
+            eval{new RNSP::IndicatorFormula(formula => ":$var1: + :$var3:", schema => $schema)};
+            like($@, qr/variables with mixed period not allowed/, 'variables with mixed period not allowed!');
+
+
+            die 'rollback';
+        }
+    );
+
+};
+
+die $@ unless $@ =~ /rollback/;
+
+done_testing;
+
+
+use JSON qw(decode_json);
+sub new_var {
+    my $type = shift;
+    my $period = shift;
+    my ( $res, $c ) = ctx_request(
+        POST '/api/variable',
+        [   api_key                        => 'test',
+            'variable.create.name'         => 'Foo Bar'.$seq++,
+            'variable.create.cognomen'     => 'foobar'.$seq++,
+            'variable.create.explanation'  => 'a foo with bar'.$seq++,
+            'variable.create.type'         => $type,
+            'variable.create.period'       => $period||'week',
+            'variable.create.source'       => 'God',
+        ]
+    );
+    if ($res->code == 201){
+        my $xx = eval{decode_json( $res->content )};
+        return $xx->{id};
+    }else{
+        die('fail to create new var: ' . $res->code);
+    }
+}
