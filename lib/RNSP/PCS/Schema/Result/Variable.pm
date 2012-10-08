@@ -83,8 +83,9 @@ __PACKAGE__->table("variable");
 
 =head2 period
 
-  data_type: 'text'
-  is_nullable: 1
+  data_type: 'enum'
+  extra: {custom_type_name => "period_enum",list => ["daily","weekly","monthly","bimonthly","quarterly","semi-annual","yearly","decade"]}
+  is_nullable: 0
 
 =head2 source
 
@@ -133,7 +134,23 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "period",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type => "enum",
+    extra => {
+      custom_type_name => "period_enum",
+      list => [
+        "daily",
+        "weekly",
+        "monthly",
+        "bimonthly",
+        "quarterly",
+        "semi-annual",
+        "yearly",
+        "decade",
+      ],
+    },
+    is_nullable => 0,
+  },
   "source",
   { data_type => "text", is_nullable => 1 },
   "is_basic",
@@ -199,8 +216,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-30 01:23:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TTTjlSNjOrM53XY2p/JPzA
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-08 07:05:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iD4JJrHEsUPDhS7IvfuiPQ
 
 __PACKAGE__->belongs_to(
     "owner",
