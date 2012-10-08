@@ -30,10 +30,10 @@ eval {
         sub {
             my ( $res, $c );
 
-            my $var1 = &new_var('int', 'week');
-            my $var2 = &new_var('int', 'week');
-            my $var3 = &new_var('num', 'year');
-            my $var4 = &new_var('num', 'year');
+            my $var1 = &new_var('int', 'weekly');
+            my $var2 = &new_var('int', 'weekly');
+            my $var3 = &new_var('num', 'yearly');
+            my $var4 = &new_var('num', 'yearly');
             my $f = new RNSP::IndicatorFormula(formula => ":$var1: + :$var2:", schema => $schema);
 
             my @expected = ($var1, $var2);

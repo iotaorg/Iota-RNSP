@@ -75,6 +75,16 @@ __PACKAGE__->table("variable_value");
   data_type: 'timestamp'
   is_nullable: 1
 
+=head2 valid_from
+
+  data_type: 'date'
+  is_nullable: 1
+
+=head2 valid_until
+
+  data_type: 'date'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -100,6 +110,10 @@ __PACKAGE__->add_columns(
   },
   "value_of_date",
   { data_type => "timestamp", is_nullable => 1 },
+  "valid_from",
+  { data_type => "date", is_nullable => 1 },
+  "valid_until",
+  { data_type => "date", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -163,8 +177,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 02:53:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mgrqrMdeW9lG+NXZAagJcQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-08 07:17:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:T4JogXbnMeV7xH+HHkRxIA
 
 
 __PACKAGE__->belongs_to(

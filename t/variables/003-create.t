@@ -45,7 +45,7 @@ eval {
                     'variable.create.cognomen'     => 'foobar',
                     'variable.create.explanation'  => 'a foo with bar',
                     'variable.create.type'         => 'int',
-                    'variable.create.period'       => 'semana',
+                    'variable.create.period'       => 'yearly',
                     'variable.create.source'       => 'God',
                 ]
             );

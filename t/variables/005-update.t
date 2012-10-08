@@ -38,7 +38,7 @@ eval {
                 'variable.create.cognomen'     => 'foobar',
                 'variable.create.explanation'  => 'a foo with bar',
                 'variable.create.type'         => 'str',
-                'variable.create.period'       => 'semana',
+                'variable.create.period'       => 'yearly',
                 'variable.create.source'       => 'God',
             ]
         );
@@ -56,7 +56,7 @@ eval {
             [
                 'variable.update.name'         => 'BarFoo',
                 'variable.update.type'         => 'int',
-                'variable.update.period'       => 'dia',
+                'variable.update.period'       => 'weekly',
                 'variable.update.source'       => 'Lulu',
             ]
         );
@@ -74,7 +74,7 @@ eval {
 
         is( $updated_var->type, 'int', 'updated ok' );
         is( $updated_var->name, 'BarFoo', 'name ok' );
-        is( $updated_var->period, 'dia', 'source ok' );
+        is( $updated_var->period, 'weekly', 'source ok' );
         is( $updated_var->source, 'Lulu', 'period ok' );
 
 
