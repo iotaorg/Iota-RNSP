@@ -91,9 +91,7 @@ sub evaluate {
 sub check {
     my ($self) = @_;
 
-    my @variables = $self->schema->resultset('Variable')->search(
-        id => [$self->variables]
-    )->all;
+    my @variables = $self->schema->resultset('Variable')->search({id => [$self->variables]} )->all;
 
     $self->_check_period(\@variables)
 

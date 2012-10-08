@@ -41,7 +41,7 @@ eval {
                 POST '/api/indicator',
                 [   api_key                         => 'test',
                     'indicator.create.name'         => 'Foo Bar',
-                    'indicator.create.formula'      => '$A + $B',
+                    'indicator.create.formula'      => '5 + 8',
                     'indicator.create.goal'         => '33',
                     'indicator.create.axis'         => 'Y',
                     'indicator.create.explanation'  => 'explanation',

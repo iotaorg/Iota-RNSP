@@ -9,7 +9,7 @@ with 'RNSP::PCS::Role::Verification';
 with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
-
+use RNSP::IndicatorFormula;
 
 sub _build_verifier_scope_name {'indicator'}
 
@@ -19,7 +19,15 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             profile => {
                 name        => { required => 1, type => 'Str' },
-                formula     => { required => 1, type => 'Str' }, # check Math::Expression::Evaluator
+                formula     => { required => 1, type => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        my $f = eval{new RNSP::IndicatorFormula(
+                            formula => $r->get_value('formula'),
+                            schema  => $self->result_source->schema)};
+                        return $@ eq '';
+                    },
+                },
                 goal        => { required => 0, type => 'Num' },
                 axis        => { required => 1, type => 'Str' },
                 user_id     => { required => 1, type => 'Int' },
@@ -43,7 +51,15 @@ sub verifiers_specs {
             profile => {
                 id          => { required => 1, type => 'Int' },
                 name        => { required => 0, type => 'Str' },
-                formula     => { required => 0, type => 'Str' },
+                formula     => { required => 0, type => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        my $f = eval{new RNSP::IndicatorFormula(
+                            formula => $r->get_value('formula'),
+                            schema  => $self->result_source->schema)};
+                        return $@ eq '';
+                    },
+                },
                 goal        => { required => 0, type => 'Num' },
                 axis        => { required => 0, type => 'Str' },
                 source       => { required => 0, type => 'Str' },
