@@ -30,9 +30,11 @@ eval {
         sub {
             my ( $res, $c );
 
-            my $var1 = &new_var('int');
-            my $var2 = &new_var('int');
-            my $f = new RNSP::IndicatorFormula(formula => ":$var1: + :$var2:");
+            my $var1 = &new_var('int', 'week');
+            my $var2 = &new_var('int', 'week');
+            my $var3 = &new_var('num', 'year');
+            my $var4 = &new_var('num', 'year');
+            my $f = new RNSP::IndicatorFormula(formula => ":$var1: + :$var2:", schema => $schema);
 
             my @expected = ($var1, $var2);
             is((join ',', sort $f->variables), (join ',', sort @expected), 'same variables!');
@@ -43,17 +45,31 @@ eval {
             ), 11, 'sum with variables looks good!');
 
 
-            $f = new RNSP::IndicatorFormula(formula => "sqrt(:$var1: + :$var2:)");
+            $f = new RNSP::IndicatorFormula(formula => "sqrt(:$var3: + :$var4:)", schema => $schema);
             is($f->evaluate(
-                "$var1" => 5.32,
-                "$var2" => 19.68
+                "$var3" => 5.32,
+                "$var4" => 19.68
             ), 5, 'sqrt with sum of floats look good!');
 
-            $f = new RNSP::IndicatorFormula(formula => "-5 + sqrt(:$var1: / (:$var2: * :$var2:)) + 1");
+            $f = new RNSP::IndicatorFormula(formula => "-5 + sqrt(:$var1: / (:$var2: * :$var2:)) + 1", schema => $schema);
             is($f->evaluate(
                 "$var1" => 625,
                 "$var2" => 5
             ), 1, '"-5 + sqrt(:$var1: / (:$var2: * :$var2:)) + 1" OK!');
+
+            eval{new RNSP::IndicatorFormula(formula => "15)", schema => $schema)};
+            like($@, qr/Parse error/, 'error 001');
+
+            eval{new RNSP::IndicatorFormula(formula => "(22", schema => $schema)};
+            like($@, qr/ClosingParen/, 'error 002');
+
+            # TODO isso pode ser valido, thats depende!
+            eval{new RNSP::IndicatorFormula(formula => '"ABC" . 2345', schema => $schema)};
+            like($@, qr/No token matched input text/, 'error 003');
+
+            # soma em periodos diferentes
+            eval{new RNSP::IndicatorFormula(formula => ":$var1: + :$var3:", schema => $schema)};
+            like($@, qr/variables with mixed period not allowed/, 'variables with mixed period not allowed!');
 
 
             die 'rollback';
@@ -70,6 +86,7 @@ done_testing;
 use JSON qw(decode_json);
 sub new_var {
     my $type = shift;
+    my $period = shift;
     my ( $res, $c ) = ctx_request(
         POST '/api/variable',
         [   api_key                        => 'test',
@@ -77,7 +94,7 @@ sub new_var {
             'variable.create.cognomen'     => 'foobar'.$seq++,
             'variable.create.explanation'  => 'a foo with bar'.$seq++,
             'variable.create.type'         => $type,
-            'variable.create.period'       => 'week',
+            'variable.create.period'       => $period||'week',
             'variable.create.source'       => 'God',
         ]
     );

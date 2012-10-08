@@ -16,10 +16,16 @@ has auto_parse => (
     default    => sub { 1 }
 );
 
+has auto_check => (
+    is         => 'ro',
+    isa        => 'Bool',
+    default    => sub { 1 }
+);
+
 has schema => (
     is         => 'ro',
     isa        => 'Any',
-    required   => 0
+    required   => 1
 );
 
 
@@ -50,7 +56,7 @@ has _variable => (
         _clear_variables  => 'clear',
     }
 );
-use DDP;
+
 
 sub BUILD {
     my ($self) = @_;
@@ -73,11 +79,34 @@ sub parse {
 
     my $ee = $self->_math_ee;
     $self->_compiled($ee->parse($formula)->compiled);
+
+    $self->check() if $self->auto_check;
 }
 
 sub evaluate {
     my ($self, %vars) = @_;
     return $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
+}
+
+sub check {
+    my ($self) = @_;
+
+    my @variables = $self->schema->resultset('Variable')->search(
+        id => [$self->variables]
+    )->all;
+
+    $self->_check_period(\@variables)
+
+}
+
+sub _check_period {
+    my ($self, $arr) = @_;
+
+    my $periods = {};
+    $periods->{$_->period()}++ foreach (@$arr);
+
+    die 'variables with mixed period not allowed! IDs: ' .
+        join (keys %$periods) if keys %$periods > 1;
 }
 
 1;
