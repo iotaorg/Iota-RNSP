@@ -57,7 +57,8 @@ eval {
 
             # POST
             ( $res, $c ) = ctx_request( POST $uri->path_query , [
-                'variable.value.create.value'    => '123',
+                'variable.value.create.value'         => '123',
+                'variable.value.create.value_of_date' => 'today',
             ]);
 
             ok( $res->is_success, 'varible value created' );
@@ -72,7 +73,8 @@ eval {
 
             # UPDATE
             ( $res, $c ) = ctx_request( POST $uri->path_query, [
-                'variable.value.update.value'    => '456',
+                'variable.value.update.value'         => '456',
+                'variable.value.update.value_of_date' => '2012-12-22 14:22:44',
             ] );
             ok( $res->is_success, 'varible updated' );
             is( $res->code, 202, 'varible exists -- 202 accepted' );
@@ -85,7 +87,9 @@ eval {
                 $schema->resultset('VariableValue')->find( { id => $variable->{id} } ),
                 'var in DB'
             );
+
             is($updated_var->value, '456', 'value is relly updated');
+            is($updated_var->value_of_date->datetime, '2012-12-22T14:22:44', 'value date as well updated');
 
             # DELETE
             ( $res, $c ) = ctx_request( DELETE $uri->path_query );

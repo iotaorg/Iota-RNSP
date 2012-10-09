@@ -22,8 +22,9 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                value       => { required => 0, type => 'Str' },
-                user_id     => { required => 1, type => 'Int' },
+                value         => { required => 0, type => 'Str' },
+                user_id       => { required => 1, type => 'Int' },
+                value_of_date => { required => 1, type => DataStr },
                 variable_id => { required => 1, type => 'Int',
                                  post_check => sub {
                                     my $r = shift;
@@ -42,7 +43,6 @@ sub verifiers_specs {
         update => Data::Verifier->new(
             profile => {
                 id          => { required => 1, type => 'Int',
-
                     post_check => sub {
                             my $r = shift;
                             return $self->search({
@@ -52,8 +52,27 @@ sub verifiers_specs {
 
                 },
                 value         => { required => 0, type => 'Str' },
+                value_of_date => { required => 1, type => DataStr },
+            },
+        ),
 
-                value_of_date => { required => 0, type => DataStr },
+        put => Data::Verifier->new(
+            profile => {
+                value         => { required => 0, type => 'Str' },
+                user_id       => { required => 1, type => 'Int' },
+                value_of_date => { required => 1, type => DataStr },
+                variable_id => { required => 1, type => 'Int',
+                                 post_check => sub {
+                                    my $r = shift;
+
+                                    return $self->result_source->schema->resultset('Variable')->find({
+                                        id => $r->get_value('variable_id')
+                                    }) && $self->search({
+                                        user_id => $r->get_value('user_id'),
+                                        variable_id => $r->get_value('variable_id')
+                                    })->count == 0;
+                                 }
+                },
             },
         ),
 
@@ -74,6 +93,16 @@ sub action_specs {
             return $var;
         },
         update => sub {
+            my %values = shift->valid_values;
+
+            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            return unless keys %values;
+
+            my $var = $self->find( delete $values{id} )->update( \%values );
+            $var->discard_changes;
+            return $var;
+        },
+        put => sub {
             my %values = shift->valid_values;
 
             do { delete $values{$_} unless defined $values{$_}} for keys %values;

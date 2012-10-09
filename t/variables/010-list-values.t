@@ -58,7 +58,9 @@ eval {
 
             # POST
             ( $res, $c ) = ctx_request( POST $uri->path_query , [
-                'variable.value.create.value'    => '123',
+                'variable.value.create.value'         => '123',
+                'variable.value.create.value_of_date' => '2010-02-14 17:24:32',
+
             ]);
 
             ok( $res->is_success, 'varible value created' );
