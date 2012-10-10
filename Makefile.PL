@@ -42,7 +42,7 @@ requires 'Crypt::PasswdMD5';
 requires 'DateTime::Duration';
 requires 'DateTime::Format::Duration';
 requires 'DateTimeX::Easy';
-
+requires 'DateTime::Format::Pg';
 
 requires 'Email::Sender';
 requires 'Email::Sender::Simple';
