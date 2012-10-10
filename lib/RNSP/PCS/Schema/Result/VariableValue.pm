@@ -130,7 +130,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<var_user_key>
+=head2 C<user_value_period_key>
 
 =over 4
 
@@ -138,11 +138,16 @@ __PACKAGE__->set_primary_key("id");
 
 =item * L</user_id>
 
+=item * L</valid_from>
+
 =back
 
 =cut
 
-__PACKAGE__->add_unique_constraint("var_user_key", ["variable_id", "user_id"]);
+__PACKAGE__->add_unique_constraint(
+  "user_value_period_key",
+  ["variable_id", "user_id", "valid_from"],
+);
 
 =head1 RELATIONS
 
@@ -177,8 +182,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-08 07:17:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:T4JogXbnMeV7xH+HHkRxIA
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-10 09:29:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6ApLK75RkfOgMv9xyiJ8uw
 
 
 __PACKAGE__->belongs_to(
