@@ -69,10 +69,10 @@ sub parse {
 
     $self->_clear_variables;
     # caputar todas as variaveis
-    $self->_add_variable($1) while ($formula =~ /\:(\d+)\:/go);
+    $self->_add_variable($1) while ($formula =~ /\$(\d+)\b/go);
 
     # troca por V<ID>
-    $formula =~ s/\:(\d+)\:/V$1/go;
+    $formula =~ s/\$(\d+)\b/V$1/go;
 
     # TODO tratar strings! strings don't math!
 
