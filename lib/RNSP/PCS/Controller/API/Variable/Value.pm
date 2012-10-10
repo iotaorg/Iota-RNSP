@@ -217,14 +217,14 @@ sub list_PUT {
     unless $dm->success;
 
   my $object = $dm->get_outcome_for('variable.value.put');
-
+  # retorna created, mas pode ser updated
   $self->status_created(
     $c,
     location => $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id, $object->id ] )->as_string,
     entity => {
       id            => $object->id,
-      valid_from    => $object->valid_from,
-      valid_until   => $object->valid_until
+      valid_from    => $object->valid_from->ymd,
+      valid_until   => $object->valid_until->ymd
     }
   );
 

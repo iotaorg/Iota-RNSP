@@ -79,19 +79,15 @@ sub verifiers_specs {
 
         put => Data::Verifier->new(
             profile => {
-                value         => { required => 0, type => 'Str' },
+                value         => { required => 1, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => { required => 1, type => DataStr },
                 variable_id => { required => 1, type => 'Int',
                                  post_check => sub {
                                     my $r = shift;
-
                                     return $self->result_source->schema->resultset('Variable')->find({
                                         id => $r->get_value('variable_id')
-                                    }) && $self->search({
-                                        user_id => $r->get_value('user_id'),
-                                        variable_id => $r->get_value('variable_id')
-                                    })->count == 0;
+                                    });
                                  }
                 },
             },
@@ -138,13 +134,37 @@ sub action_specs {
         },
         put => sub {
             my %values = shift->valid_values;
+            my $schema = $self->result_source->schema;
 
             do { delete $values{$_} unless defined $values{$_}} for keys %values;
             return unless keys %values;
 
-            my $var = $self->find( delete $values{id} )->update( \%values );
-            $var->discard_changes;
-            return $var;
+            my $var = $schema->resultset('Variable')->find($values{variable_id});
+            my $dates = $schema->f_extract_period_edge(
+                $var->period,
+                DateTimeX::Easy->new($values{value_of_date})->datetime
+            );
+            # procura por uma variavel daquele usuario naquele periodo, se
+            # existir, atualiza a data e o valor!
+            my $row = $self->search({
+                user_id     => $values{user_id},
+                variable_id => $values{variable_id},
+                valid_from  => $dates->{period_begin}
+            })->next;
+
+            if ($row){
+                $row->update( {
+                    value         => $values{value},
+                    value_of_date => $values{value_of_date},
+                });
+                $row->discard_changes;
+            }else{
+                $values{valid_from}  = $dates->{period_begin};
+                $values{valid_until} = $dates->{period_end};
+
+                $row = $self->create( \%values );
+            }
+            return $row;
         },
 
     };
