@@ -51,31 +51,52 @@ eval {
             ok( $res->is_success, 'variable created!' );
             is( $res->code, 201, 'created!' );
 
+
             use URI;
             my $uri = URI->new( $res->header('Location') . '/value' );
             $uri->query_form( api_key => 'test' );
 
+            my $variable_url = $uri->path_query;
             # POST
-            ( $res, $c ) = ctx_request( POST $uri->path_query , [
-                'variable.value.create.value'    => '123',
+            ( $res, $c ) = ctx_request( POST $variable_url, [
+                'variable.value.create.value'         => '123',
+                'variable.value.create.value_of_date' => '2012-12-22 14:22:44',
             ]);
 
-            ok( $res->is_success, 'varible value created' );
+            ok( $res->is_success, 'variable value created' );
             is( $res->code, 201, 'value added -- 201 ' );
 
             # GET
             $uri = URI->new( $res->header('Location') );
             $uri->query_form( api_key => 'test' );
             ( $res, $c ) = ctx_request( GET $uri->path_query );
-            ok( $res->is_success, 'varible exists' );
-            is( $res->code, 200, 'varible exists -- 200 Success' );
+            ok( $res->is_success, 'variable exists' );
+            is( $res->code, 200, 'variable exists -- 200 Success' );
+
+            # tem q dar erro porque ja tem outra criada nesta mesma data [e esse nao eh o metodo de PUT]
+
+            ( $res, $c ) = ctx_request( POST $variable_url, [
+                'variable.value.create.value'         => '123',
+                'variable.value.create.value_of_date' => '2012-12-20 14:22:44',
+            ]);
+
+            ok( !$res->is_success, 'variable value not created' );
+            is( $res->code, 400, 'expected error' );
 
             # UPDATE
             ( $res, $c ) = ctx_request( POST $uri->path_query, [
-                'variable.value.update.value'    => '456',
+                'variable.value.update.value'         => '456',
+                'variable.value.update.value_of_date' => '2012-12-22 14:22:44',
             ] );
-            ok( $res->is_success, 'varible updated' );
-            is( $res->code, 202, 'varible exists -- 202 accepted' );
+            ok( $res->is_success, 'variable updated' );
+            is( $res->code, 202, 'variable exists -- 202 accepted' );
+
+            my ( $res2, $c2 ) = ctx_request( POST $uri->path_query, [
+                'variable.value.update.value'         => '456',
+                'variable.value.update.value_of_date' => '2011-12-22 14:22:44',
+            ] );
+            ok( !$res2->is_success, 'variable not updated [changed perid]' );
+            is( $res2->code, 400, 'expected error' );
 
             use JSON qw(decode_json);
             my $variable = eval{decode_json( $res->content )};
@@ -85,7 +106,9 @@ eval {
                 $schema->resultset('VariableValue')->find( { id => $variable->{id} } ),
                 'var in DB'
             );
+
             is($updated_var->value, '456', 'value is relly updated');
+            is($updated_var->value_of_date->datetime, '2012-12-22T14:22:44', 'value date as well updated');
 
             # DELETE
             ( $res, $c ) = ctx_request( DELETE $uri->path_query );

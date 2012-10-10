@@ -184,6 +184,52 @@ sub list_POST {
 
 }
 
+=pod
+
+cria ou atualiza o valor para a variavel para o usuario logado em determinado periodo.
+
+
+PUT /api/variable/$id/value
+
+Param:
+
+    variable.value.put.value         Texto, Requerido: valor
+    variable.value.put.value_of_date Data , Requerido: data
+
+Retorna:
+
+    {"id":3, "valid_from":"2012-01-01", "valid_until":"2012-01-02" }
+
+=cut
+
+sub list_PUT {
+  my ( $self, $c ) = @_;
+
+  $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    unless $c->check_any_user_role(qw(admin user));
+
+  $c->req->params->{variable}{value}{put}{variable_id} = $c->stash->{variable}->id;
+  $c->req->params->{variable}{value}{put}{user_id} = $c->user->id;
+
+  my $dm = $c->model('DataManager');
+
+  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    unless $dm->success;
+
+  my $object = $dm->get_outcome_for('variable.value.put');
+  # retorna created, mas pode ser updated
+  $self->status_created(
+    $c,
+    location => $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id, $object->id ] )->as_string,
+    entity => {
+      id            => $object->id,
+      valid_from    => $object->valid_from->ymd,
+      valid_until   => $object->valid_until->ymd
+    }
+  );
+
+}
+
 
 1;
 

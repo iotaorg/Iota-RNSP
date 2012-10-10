@@ -16,23 +16,29 @@ use MooseX::Types::Email qw/EmailAddress/;
 use RNSP::PCS::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name {'variable.value'}
+use DateTimeX::Easy;
 
 sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
             profile => {
-                value       => { required => 0, type => 'Str' },
-                user_id     => { required => 1, type => 'Int' },
+                value         => { required => 0, type => 'Str' },
+                user_id       => { required => 1, type => 'Int' },
+                value_of_date => { required => 1, type => DataStr },
                 variable_id => { required => 1, type => 'Int',
                                  post_check => sub {
                                     my $r = shift;
-
-                                    return $self->result_source->schema->resultset('Variable')->find({
+                                    my $schema = $self->result_source->schema;
+                                    my $var = $schema->resultset('Variable')->find({
                                         id => $r->get_value('variable_id')
-                                    }) && $self->search({
-                                        user_id => $r->get_value('user_id'),
-                                        variable_id => $r->get_value('variable_id')
+                                    });
+                                    my $date = DateTimeX::Easy->new($r->get_value('value_of_date'))->datetime;
+                                    # f_extract_period_edge
+                                    return $var && $self->search({
+                                        user_id     => $r->get_value('user_id'),
+                                        variable_id => $r->get_value('variable_id'),
+                                        valid_from  => $schema->f_extract_period_edge($var->period, $date)->{period_begin}
                                     })->count == 0;
                                  }
                 },
@@ -42,7 +48,6 @@ sub verifiers_specs {
         update => Data::Verifier->new(
             profile => {
                 id          => { required => 1, type => 'Int',
-
                     post_check => sub {
                             my $r = shift;
                             return $self->search({
@@ -52,8 +57,39 @@ sub verifiers_specs {
 
                 },
                 value         => { required => 0, type => 'Str' },
+                value_of_date => { required => 1, type => DataStr,
+                                post_check => sub {
+                                    my $r = shift;
+                                    my $schema = $self->result_source->schema;
+                                    my $var    = $self->search({
+                                        id => $r->get_value('id')
+                                    })->first;
 
-                value_of_date => { required => 0, type => DataStr },
+                                    my $date = DateTimeX::Easy->new($r->get_value('value_of_date'))->datetime;
+                                    # f_extract_period_edge
+                                    return $var && $self->search({
+                                        id          => $r->get_value('id'),
+                                        valid_from  => $schema->f_extract_period_edge($var->variable->period, $date)->{period_begin}
+                                    })->count == 1;
+                                 }
+
+                },
+            },
+        ),
+
+        put => Data::Verifier->new(
+            profile => {
+                value         => { required => 1, type => 'Str' },
+                user_id       => { required => 1, type => 'Int' },
+                value_of_date => { required => 1, type => DataStr },
+                variable_id => { required => 1, type => 'Int',
+                                 post_check => sub {
+                                    my $r = shift;
+                                    return $self->result_source->schema->resultset('Variable')->find({
+                                        id => $r->get_value('variable_id')
+                                    });
+                                 }
+                },
             },
         ),
 
@@ -68,10 +104,23 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
-            my $var = $self->create( \%values );
+            my $schema = $self->result_source->schema;
+            my $var = $schema->resultset('Variable')->find({
+                id => $values{variable_id}
+            });
+            my $date = DateTimeX::Easy->new($values{value_of_date})->datetime;
 
-            $var->discard_changes;
-            return $var;
+            my $dates = $schema->f_extract_period_edge(
+                $var->period,
+                $date
+            );
+            $values{valid_from}  = $dates->{period_begin};
+            $values{valid_until} = $dates->{period_end};
+
+            my $varvalue = $self->create( \%values );
+
+            $varvalue->discard_changes;
+            return $varvalue;
         },
         update => sub {
             my %values = shift->valid_values;
@@ -82,6 +131,40 @@ sub action_specs {
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
             return $var;
+        },
+        put => sub {
+            my %values = shift->valid_values;
+            my $schema = $self->result_source->schema;
+
+            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            return unless keys %values;
+
+            my $var = $schema->resultset('Variable')->find($values{variable_id});
+            my $dates = $schema->f_extract_period_edge(
+                $var->period,
+                DateTimeX::Easy->new($values{value_of_date})->datetime
+            );
+            # procura por uma variavel daquele usuario naquele periodo, se
+            # existir, atualiza a data e o valor!
+            my $row = $self->search({
+                user_id     => $values{user_id},
+                variable_id => $values{variable_id},
+                valid_from  => $dates->{period_begin}
+            })->next;
+
+            if ($row){
+                $row->update( {
+                    value         => $values{value},
+                    value_of_date => $values{value_of_date},
+                });
+                $row->discard_changes;
+            }else{
+                $values{valid_from}  = $dates->{period_begin};
+                $values{valid_until} = $dates->{period_end};
+
+                $row = $self->create( \%values );
+            }
+            return $row;
         },
 
     };
