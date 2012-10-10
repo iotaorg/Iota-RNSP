@@ -182,7 +182,6 @@ sub list_GET {
     foreach my $obj (@list){
         push @objs, {
 
-
             created_by => {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },

@@ -60,7 +60,6 @@ eval {
             ( $res, $c ) = ctx_request( POST $uri->path_query , [
                 'variable.value.create.value'         => '123',
                 'variable.value.create.value_of_date' => '2010-02-14 17:24:32',
-
             ]);
 
             ok( $res->is_success, 'varible value created' );
@@ -84,9 +83,8 @@ eval {
 
             # GET
             ( $res, $c ) = ctx_request( GET '/api/user/1/variable?api_key=test' );
-
-            ok( $res->is_success, 'varible exists' );
-            is( $res->code, 200, 'varible exists -- 200 Success' );
+            ok( $res->is_success, 'varibles exists' );
+            is( $res->code, 200, 'varibles exists -- 200 Success' );
 
             use JSON qw(decode_json);
             my $variable = eval{decode_json( $res->content )};
@@ -95,18 +93,19 @@ eval {
             my $one_is_123;
 
             if (ref $variable->{variables} eq ref []){
-                foreach (@{$variable->{variables}}){
+                foreach my $v (@{$variable->{variables}}){
 
-                    ok($_->{variable_id}, 'variable_id present');
-                    $one_is_123 = $_ if $_->{value} && $_->{value} eq '123';
-
+                    ok($v->{variable_id}, 'variable_id present');
+                    foreach (@{$v->{values}}){
+                        $one_is_123 = $v if $_->{value} eq '123';
+                    }
                 }
             }
             ok($one_is_123, 'um dos valores eh 123');
             if ($one_is_123){
                 is($one_is_123->{explanation}, 'a foo with bar', 'explanation is ok' );
                 is($one_is_123->{type}, 'int', 'name is correct' );
-                is($one_is_123->{value_id},$value_id_123->{id}, 'value_id is correct' );
+                is($one_is_123->{values}[0]{id},$value_id_123->{id}, 'value_id is correct' );
             }
 
             die 'rollback';

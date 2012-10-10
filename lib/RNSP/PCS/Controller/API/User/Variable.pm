@@ -34,27 +34,34 @@ Retorna:
     {
         "variables": [
             {
-                "variable_id": 63,
-                "value": "123",
-                "name": "Foo Bar",
-                "value_url": "http://localhost/api/variable/63/value/37",
+                "variable_id": 207,
+                "period": "yearly",
                 "explanation": "a foo with bar",
-                "value_id": 37,
                 "cognomen": "foobar",
-                "type": "int",
-                "value_of_date": ...
+                "name": "Foo Bar",
+                "values": [
+                    {
+                        "valid_from": "2010-01-01",
+                        "value": "123",
+                        "url": "http://localhost/api/variable/207/value/116",
+                        "valid_until": "2011-01-01",
+                        "value_of_date": "2010-02-14 17:24:32",
+                        "id": 116
+                    }, ...
+                    pode ter varios valores de anos (por que é anual) diferentes
+                ],
+                "type": "int"
             },
             {
-                "variable_id": 64,
-                "value": null,
-                "name": "Foo Bar2",
-                "value_url": null,
-                "explanation": "a foo with bar2",
-                "value_id": null,
+                "variable_id": "208",
+                "period": "yearly",
+                "explanation": "a not foo with bar",
                 "cognomen": "foobar2",
-                "type": "num",
-                "value_of_date": ...
-            }
+                "name": "Foo Bar2",
+                "values": [],
+                "type": "num"
+            },
+            ....
         ]
     }
 
@@ -63,22 +70,27 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search_rs( {
-        'values.user_id' => $c->stash->{user}->id
-    }, { prefetch => ['values'] } )->as_hashref->all;
+    my @list = $c->stash->{collection}->search_rs(
+    [
+        { 'values.user_id' => $c->stash->{user}->id},
+        {'values.user_id' => undef}
+    ], { prefetch => ['values'] } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
         push @objs, {
 
-            (map { $_ => $obj->{$_} } qw(name type cognomen explanation)),
+            (map { $_ => $obj->{$_} } qw(name type cognomen explanation period)),
             variable_id => $obj->{id},
-            value_id => $obj->{values}[0]{id},
-            value => $obj->{values}[0]{value},
-            value_of_date => $obj->{values}[0]{value_of_date},
-            value_url => $obj->{values}[0]{id} ?
-                ($c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $obj->{values}[0]{id} ] )->as_string) : undef,
-
+            values => [ map {+{
+                    value         => $_->{value},
+                    value_of_date => $_->{value_of_date},
+                    valid_from    => $_->{valid_from},
+                    valid_until   => $_->{valid_until},
+                    id            => $_->{id},
+                    url           =>  $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $_->{id} ] )->as_string
+                }} @{$obj->{values}}
+           ],
         }
     }
     $self->status_ok(
