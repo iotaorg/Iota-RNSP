@@ -90,7 +90,18 @@ eval {
             my $variable = eval{decode_json( $res->content )};
 
             is(ref $variable->{variables}, ref [], 'variables is array');
+            my $count = scalar @{$variable->{variables}};
+            do {
+                my ( $res2, $c2 ) = ctx_request( GET '/api/user/1/variable?api_key=test&is_basic=1' );
+                ok( $res2->is_success, 'varibles exists' );
+                is( $res2->code, 200, 'varibles exists -- 200 Success' );
+
+                my $variable2 = eval{decode_json( $res2->content )};
+                ok($count > scalar @{$variable2->{variables}}, 'less keys on is_basic is active');
+
+            };
             my $one_is_123;
+
 
             if (ref $variable->{variables} eq ref []){
                 foreach my $v (@{$variable->{variables}}){

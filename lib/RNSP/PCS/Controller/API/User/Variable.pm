@@ -70,11 +70,16 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search_rs(
-    [
-        { 'values.user_id' => $c->stash->{user}->id},
-        {'values.user_id' => undef}
-    ], { prefetch => ['values'] } )->as_hashref->all;
+    my $rs = $c->stash->{collection}->search_rs({
+    -or => [
+         'values.user_id' => $c->stash->{user}->id,
+        'values.user_id' => undef,
+    ] }, { prefetch => ['values'] } );
+
+    $rs = $rs->search({is_basic => $c->req->params->{is_basic}})
+        if (defined $c->req->params->{is_basic});
+
+    my @list = $rs->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
@@ -93,6 +98,7 @@ sub list_GET {
            ],
         }
     }
+
     $self->status_ok(
         $c,
         entity => {
@@ -102,6 +108,6 @@ sub list_GET {
 }
 
 
-with 'RNSP::PCS::TraitFor::Controller::Search';
+#with 'RNSP::PCS::TraitFor::Controller::Search';
 1;
 
