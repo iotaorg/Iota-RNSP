@@ -34,6 +34,8 @@ eval {
             my $var2 = &new_var('int', 'weekly');
             my $var3 = &new_var('num', 'yearly');
             my $var4 = &new_var('num', 'yearly');
+            my $var5 = &new_var('str', 'yearly');
+            my $var6 = &new_var('str', 'yearly');
             my $f = new RNSP::IndicatorFormula(formula => "\$$var1 + \$$var2", schema => $schema);
 
             my @expected = ($var1, $var2);
@@ -60,12 +62,20 @@ eval {
             eval{new RNSP::IndicatorFormula(formula => "15)", schema => $schema)};
             like($@, qr/Parse error/, 'error 001');
 
+            #eval{new RNSP::IndicatorFormula(formula => "\$$var1 + \$$var5", schema => $schema)};
+            #like($@, qr/string/, 'error 004');
+
             eval{new RNSP::IndicatorFormula(formula => "(22", schema => $schema)};
             like($@, qr/ClosingParen/, 'error 002');
 
-            # TODO isso pode ser valido, thats depende!
             eval{new RNSP::IndicatorFormula(formula => '"ABC" . 2345', schema => $schema)};
             like($@, qr/No token matched input text/, 'error 003');
+
+            $f = new RNSP::IndicatorFormula(formula => "CONCATENAR \$$var5 \$$var6", schema => $schema);
+            is($f->evaluate(
+                "$var5" => 'renato',
+                "$var6" => 'cron'
+            ), 'renato cron', 'CONCATENAR funcionando!');
 
             # soma em periodos diferentes
             eval{new RNSP::IndicatorFormula(formula => "\$$var1 + \$$var3", schema => $schema)};

@@ -95,7 +95,7 @@ __PACKAGE__->table("variable");
 =head2 is_basic
 
   data_type: 'boolean'
-  default_value: true
+  default_value: false
   is_nullable: 1
 
 =cut
@@ -154,7 +154,7 @@ __PACKAGE__->add_columns(
   "source",
   { data_type => "text", is_nullable => 1 },
   "is_basic",
-  { data_type => "boolean", default_value => \"true", is_nullable => 1 },
+  { data_type => "boolean", default_value => \"false", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -216,8 +216,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-08 07:05:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iD4JJrHEsUPDhS7IvfuiPQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-11 01:50:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JESpzK6ZCcAqEL4Pz3U9Fw
 
 __PACKAGE__->belongs_to(
     "owner",

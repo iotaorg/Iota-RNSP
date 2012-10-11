@@ -57,6 +57,11 @@ has _variable => (
     }
 );
 
+has _is_string => (
+    is => 'rw',
+    isa => 'Bool',
+    default => sub { 0 }
+);
 
 sub BUILD {
     my ($self) = @_;
@@ -74,18 +79,31 @@ sub parse {
     # troca por V<ID>
     $formula =~ s/\$(\d+)\b/V$1/go;
 
-    # TODO tratar strings! strings don't math!
-
-
-    my $ee = $self->_math_ee;
-    $self->_compiled($ee->parse($formula)->compiled);
+    if ($formula =~ /concatenar/io){
+        $self->_is_string(1);
+    }else{
+        my $ee = $self->_math_ee;
+        $self->_compiled($ee->parse($formula)->compiled);
+    }
 
     $self->check() if $self->auto_check;
 }
 
 sub evaluate {
     my ($self, %vars) = @_;
-    return $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
+
+    return $self->_is_string ? $self->as_string(%vars) : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
+}
+
+sub as_string {
+    my ($self, %vars) = @_;
+    my $str = '';
+    foreach ($self->variables){
+
+        $str .= $vars{$_} . ' ';
+    }
+    chop($str);
+    return $str;
 }
 
 sub check {
@@ -93,7 +111,9 @@ sub check {
 
     my @variables = $self->schema->resultset('Variable')->search({id => [$self->variables]} )->all;
 
-    $self->_check_period(\@variables)
+    $self->_check_period(\@variables);
+
+    $self->_check_only_numbers(\@variables) unless $self->_is_string;
 
 }
 
@@ -105,6 +125,13 @@ sub _check_period {
 
     die 'variables with mixed period not allowed! IDs: ' .
         join (keys %$periods) if keys %$periods > 1;
+}
+
+sub _check_only_numbers {
+    my ($self, $arr) = @_;
+    foreach (@$arr){
+        die "variable ".$_->id ." is a ".$_->type." and it's not allowed! " if $_->type ne 'int' && $_->type ne 'num';
+    }
 }
 
 1;
