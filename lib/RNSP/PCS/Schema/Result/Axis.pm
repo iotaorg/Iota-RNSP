@@ -91,9 +91,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-13 10:03:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SAGGgUBZ2/yqNT7NftJXYw
+=head2 indicators
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::Indicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicators",
+  "RNSP::PCS::Schema::Result::Indicator",
+  { "foreign.axis_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-13 11:39:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:P44tCFd+Qu8iuHPfp+kmZA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

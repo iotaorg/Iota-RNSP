@@ -76,9 +76,10 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   is_nullable: 1
 
-=head2 axis
+=head2 axis_id
 
-  data_type: 'text'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 source
@@ -147,8 +148,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "goal_operator",
   { data_type => "text", is_nullable => 1 },
-  "axis",
-  { data_type => "text", is_nullable => 0 },
+  "axis_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "source",
   { data_type => "text", is_nullable => 1 },
   "explanation",
@@ -212,6 +213,21 @@ __PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
 
 =head1 RELATIONS
 
+=head2 axis
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::Axis>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "axis",
+  "RNSP::PCS::Schema::Result::Axis",
+  { id => "axis_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
 =head2 user
 
 Type: belongs_to
@@ -228,8 +244,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-02 15:22:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GkAxgn4xU+cpqX8NtUHxjQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-13 11:39:07
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3HYXYgcleFJV1xVpK1knCg
 
 __PACKAGE__->belongs_to(
     "owner",
