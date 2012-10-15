@@ -104,11 +104,13 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
+            $values{value_of_date} = DateTimeX::Easy->new($values{value_of_date})->datetime;
+
             my $schema = $self->result_source->schema;
             my $var = $schema->resultset('Variable')->find({
                 id => $values{variable_id}
             });
-            my $date = DateTimeX::Easy->new($values{value_of_date})->datetime;
+            my $date = $values{value_of_date};
 
             my $dates = $schema->f_extract_period_edge(
                 $var->period,
@@ -124,6 +126,7 @@ sub action_specs {
         },
         update => sub {
             my %values = shift->valid_values;
+            $values{value_of_date} = DateTimeX::Easy->new($values{value_of_date})->datetime;
 
             do { delete $values{$_} unless defined $values{$_}} for keys %values;
             return unless keys %values;
@@ -134,6 +137,8 @@ sub action_specs {
         },
         put => sub {
             my %values = shift->valid_values;
+            $values{value_of_date} = DateTimeX::Easy->new($values{value_of_date})->datetime;
+
             my $schema = $self->result_source->schema;
 
             do { delete $values{$_} unless defined $values{$_}} for keys %values;
@@ -142,7 +147,7 @@ sub action_specs {
             my $var = $schema->resultset('Variable')->find($values{variable_id});
             my $dates = $schema->f_extract_period_edge(
                 $var->period,
-                DateTimeX::Easy->new($values{value_of_date})->datetime
+                $values{value_of_date}
             );
             # procura por uma variavel daquele usuario naquele periodo, se
             # existir, atualiza a data e o valor!
