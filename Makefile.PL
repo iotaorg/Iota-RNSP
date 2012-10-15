@@ -51,7 +51,6 @@ requires 'Email::MIME';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
 
-requires 'Catalyst::Model::Factory';
 requires 'DBD::Pg';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
