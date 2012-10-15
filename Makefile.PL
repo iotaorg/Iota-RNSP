@@ -51,6 +51,7 @@ requires 'Email::MIME';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
 
+requires 'MooseX::Traits';
 requires 'DBD::Pg';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
