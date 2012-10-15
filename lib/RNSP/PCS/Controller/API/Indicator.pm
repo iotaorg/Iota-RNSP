@@ -39,7 +39,7 @@ Retorna:
         "source": "me",
         "justification_of_missing_field": null,
         "name": "Foo Bar",
-        "axis": "Y",
+        "axis_id": "2",
         "goal_operator": ">=",
         "tags": "you,me,she",
         "chart_name": "pie",
@@ -58,7 +58,7 @@ Retorna:
 
 sub indicator_GET {
   my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner']})->as_hashref->next;
+  my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis']})->as_hashref->next;
 
   $self->status_ok(
     $c,
@@ -66,7 +66,10 @@ sub indicator_GET {
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name goal axis formula source explanation
+      axis => {
+        map { $_ => $object_ref->{axis}{$_} } qw(name id)
+      },
+      (map { $_ => $object_ref->{$_} } qw(name goal axis_id formula source explanation
             justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction
         created_at))
     }
@@ -84,7 +87,7 @@ Retorna:
     indicator.update.name         Texto: Nome
     indicator.update.formula      Texto: formula das variaveis
     indicator.update.goal         Texto: numero que se quer chegar
-    indicator.update.axis         Texto: (talvez seja a categoria)
+    indicator.update.axis_id         Texto: (talvez seja a categoria)
     indicator.update.explanation         Texto: explicacao
     indicator.update.source              Texto: fonte do indicador
     indicator.update.goal_source         Texto: fonte da meta
@@ -168,7 +171,7 @@ Retorna:
                 "source": "me",
                 "justification_of_missing_field": null,
                 "name": "Foo Bar",
-                "axis": "Y",
+                "axis_id": "Y",
                 "goal_operator": ">=",
                 "tags": "you,me,she",
                 "chart_name": "pie",
@@ -191,7 +194,7 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search_rs( undef, { prefetch => 'owner' } )->as_hashref->all;
+    my @list = $c->stash->{collection}->search_rs( undef, { prefetch => ['owner','axis'] } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
@@ -201,8 +204,11 @@ sub list_GET {
             created_by => {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
+            axis => {
+                map { $_ => $obj->{axis}{$_} } qw(name id)
+            },
 
-            (map { $_ => $obj->{$_} } qw(id name goal axis formula source explanation
+            (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation
                 justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction
 
             created_at)),
@@ -230,7 +236,7 @@ Param:
     indicator.create.name        Texto, Requerido: Nome
     indicator.create.formula     Texto, Requerido: formula das variaveis
     indicator.create.goal        Texto, Requerido: numero que se quer chegar
-    indicator.create.axis        Texto, Requerido: (talvez seja a categoria)
+    indicator.create.axis_id        Texto, Requerido: (talvez seja a categoria)
 
     indicator.create.explanation         Texto: explicacao
     indicator.create.source              Texto: fonte do indicador
