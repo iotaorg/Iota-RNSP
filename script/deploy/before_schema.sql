@@ -1,6 +1,6 @@
 CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');
 
-CREATE TYPE sort_direction_enum AS ENUM ('greater value','greater rating','lowest value','lowest rating');
+CREATE TYPE sort_direction_enum AS ENUM ('greater value','lowest value');
 
 CREATE TYPE period_enum AS ENUM ('daily', 'weekly', 'monthly', 'bimonthly', 'quarterly', 'semi-annual', 'yearly', 'decade');
 

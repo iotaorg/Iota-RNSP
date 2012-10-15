@@ -37,7 +37,7 @@ eval {
                 'indicator.create.name'         => 'Foo Bar',
                 'indicator.create.goal'         => '11',
                 'indicator.create.formula'      => '5 / 2',
-                'indicator.create.axis'         => 'SUBM',
+                'indicator.create.axis_id'       => '1',
             ]
         );
         ok( $res->is_success, 'indicator created!' );

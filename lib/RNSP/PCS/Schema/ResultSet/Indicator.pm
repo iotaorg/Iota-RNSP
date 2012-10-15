@@ -29,7 +29,15 @@ sub verifiers_specs {
                     },
                 },
                 goal        => { required => 0, type => 'Num' },
-                axis        => { required => 1, type => 'Str' },
+                axis_id     => { required => 1, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        my $axis = $self->result_source->schema->resultset('Axis')->find({
+                            id => $r->get_value('axis_id')
+                        });
+                        return defined $axis;
+                    }
+                },
                 user_id     => { required => 1, type => 'Int' },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
@@ -61,7 +69,15 @@ sub verifiers_specs {
                     },
                 },
                 goal        => { required => 0, type => 'Num' },
-                axis        => { required => 0, type => 'Str' },
+                axis_id      => { required => 0, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        my $axis = $self->result_source->schema->resultset('Axis')->find({
+                            id => $r->get_value('axis_id')
+                        });
+                        return defined $axis;
+                    }
+                },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
 
