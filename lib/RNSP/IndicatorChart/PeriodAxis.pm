@@ -14,8 +14,8 @@ opcional:
         desde que o periodo seja maior que o salvo no indicator
         default: indicator + 1 tempo (de dia, separa por semana, de semana por mes...)
 
-    from: DateTime
-    to: DateTime
+    from: str to DateTime
+    to: str to DateTime
 
 exemplo:
 
@@ -57,7 +57,7 @@ exemplo:
 sub read_values {
     my ($self, %options) = @_;
 
-    my $group_by = $options{group_by} ? $options{group_by} : 'yearly';
+    my $group_by = $options{group_by} ? $self->_valid_or_null($options{group_by}) : 'yearly';
     my $indicator = $self->indicator;
 
     my $series = $self->_load_variables_values(%options, group_by => $group_by);
@@ -93,13 +93,16 @@ sub read_values {
     $self->_data($data);
 }
 
-
 sub _load_variables_values {
     my ($self, %options) =  @_;
 
     my $rs = $self->schema->resultset('VariableValue')->search({
         variable_id => $self->variables,
-        user_id     => $self->user_id
+        user_id     => $self->user_id,
+
+        ( $options{from} ? (valid_from  => {'>=' => DateTime::Format::Pg->parse_datetime( $options{from} )->datetime }) : () ),
+        ( $options{to}   ? (valid_until => {'<' => DateTime::Format::Pg->parse_datetime( $options{to}   )->datetime }) : () ),
+
     }, {
         '+select' => [ \['(SELECT x.period_begin FROM f_extract_period_edge(?, me.valid_from) x)', [ plain_value => $options{group_by} ]] ],
         '+as'     => ['group_from']
@@ -138,6 +141,12 @@ sub get_label_of_period {
     }else{
         return $data;
     }
+}
+
+
+sub _valid_or_null {
+    my ($self, $period) =  @_;
+    return $period =~ /(daily|weekly|monthly|bimonthly|quarterly|semi-annual|yearly|decade)/ ? $1 : undef;
 }
 
 
