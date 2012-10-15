@@ -44,6 +44,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri = URI->new( $res->header('Location') . '/value' );
+
             my $var = eval{decode_json( $res->content )};
 
 
@@ -64,6 +65,7 @@ eval {
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
+            my $uri_chart = URI->new( $res->header('Location') . '/chart/period_axis' );
             my $indicator = eval{decode_json( $res->content )};
 
 
@@ -85,25 +87,38 @@ eval {
             &add_value($variable_url, '1192-03-25', 25);
 
             my $chart = RNSP::IndicatorChart->new_with_traits(
-                traits => ['PeriodAxis'],
                 schema => $schema,
                 indicator => $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
+                traits => ['PeriodAxis'],
                 user_id   => $RNSP::PCS::TestOnly::Mock::AuthUser::_id
             );
 
-            my $res = $chart->data();
-            is ($res->{goal}, 33, 'goal number ok');
-            is ($res->{series}[0]{label}, 'ano 1192', 'Ordem dos anos OK');
+            my $data = $chart->data();
 
-            if (is($res->{series}[1]{label}, 'ano 2011', 'segundo ano ok')){
-                my $a2011 = $res->{series}[1];
+            ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
+            my $obj = eval{decode_json( $res->content )};
+            ok($res->is_success, 'GET chart success');
+            my @responses = ($data, $obj);
+            foreach my $res (@responses){
+                is ($res->{goal}, 33, 'goal number ok');
+                is ($res->{series}[0]{label}, 'ano 1192', 'Ordem dos anos OK');
 
-                is($a2011->{avg}, '27', 'media correta para 2011');
-                is($a2011->{data}[0][0], '2011-01-21T00:00:00', 'data correta');
-                is($a2011->{data}[0][1], 25, 'valor correto');
+                if (is($res->{series}[1]{label}, 'ano 2011', 'segundo ano ok')){
+                    my $a2011 = $res->{series}[1];
+
+                    is($a2011->{avg}, '27', 'media correta para 2011');
+                    is($a2011->{data}[0][0], '2011-01-21T00:00:00', 'data correta');
+                    is($a2011->{data}[0][1], 25, 'valor correto');
+                }
+
+                is ($res->{series}[2]{label}, 'ano 2012', '2012 presente');
             }
 
-            is ($res->{series}[2]{label}, 'ano 2012', '2012 presente');
+            ( $res, $c ) = ctx_request(GET $uri_chart->path_query .'?to=2011-12-01&from=2002-01-01&group_by=weekly');
+            ok($res->is_success, 'GET chart with params success');
+            $obj = eval{decode_json( $res->content )};
+            is(scalar @{$obj->{series}}, 4, 'numero de semanas ok');
+            is($obj->{series}[0]{avg}, 25, 'media de um numero soh ok!');
 
             die 'rollback';
         }

@@ -86,21 +86,6 @@ sub api_key_check : Private {
     }
 }
 
-
-sub eixos: Chained('root') : PathPart('eixos') : Args(0) : ActionClass('REST') {
-
-}
-
-sub eixos_GET {
-    my ( $self, $c ) = @_;
-
-    my @eixos = $c->model('Static')->eixos;
-
-    $self->status_ok( $c, entity => {eixos => \@eixos} );
-}
-
-
-
 sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
 }
 
