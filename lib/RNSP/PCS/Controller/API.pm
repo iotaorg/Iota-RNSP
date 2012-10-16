@@ -75,9 +75,9 @@ sub api_key_check : Private {
         $user_session ? $c->find_user( { id => $user_session->user_id } ) : undef;
 
         $self->status_forbidden( $c, message => "access denied", ),
-        $c->logx(
-        'sys', "API_KEY invalida chave " . ( $api_key ? $api_key : '' )
-        ),
+        #$c->logx(
+        #'sys', "API_KEY invalida chave " . ( $api_key ? $api_key : '' )
+        #),
         $c->detach
         unless defined $api_key && $user;
 
@@ -89,7 +89,6 @@ sub api_key_check : Private {
 sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->response->headers->header( 'charset' => 'utf-8' );
-
 }
 
 sub login : Chained('root') : PathPart('login') : Args(0) : ActionClass('REST') {
