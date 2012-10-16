@@ -27,7 +27,7 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 
 listar variaveis com ou sem valores do usuario
 
-GET /api/variable
+GET /api/user/ID/variable
 
 Retorna:
 
