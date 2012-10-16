@@ -22,6 +22,8 @@ use Catalyst qw/
     Static::Simple
     Params::Nested
 
+    Unicode::Encoding
+
     Authentication
     Authorization::Roles
 
@@ -42,6 +44,8 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(
     name => 'RNSP::PCS',
+    encoding => 'UTF-8',
+
 
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
