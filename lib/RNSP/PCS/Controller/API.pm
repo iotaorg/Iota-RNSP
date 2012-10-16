@@ -87,6 +87,9 @@ sub api_key_check : Private {
 }
 
 sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->response->headers->header( 'charset' => 'utf-8' );
+
 }
 
 sub login : Chained('root') : PathPart('login') : Args(0) : ActionClass('REST') {
