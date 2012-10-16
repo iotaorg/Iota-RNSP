@@ -54,12 +54,15 @@ Desenvolvimento de software para apoio
 Este software tem como objetivo ser a plataforma de apoio para que estas
 informações sejam disponibilizadas em dados abertos.
 
-Autor: Thiago Rondon <thiago@aware.com.br>
+Autores
+
+- Thiago Rondon <thiago@aware.com.br>
+- Renato Santos <renato@aware.com.br>
+- Henry Shinohara <shin@aware.com.br>
 
 Eixos
 
 A lista de eixos é fixa e está no arquivo root/eixos.json. http://www.json.org/
-
 
 http://travis-ci.org/#!/W3CBrasil/RNSP-PCS
 
