@@ -40,6 +40,7 @@ requires 'List::MoreUtils';
 requires 'String::Random';
 requires 'Crypt::PasswdMD5';
 requires 'DateTime::Duration';
+requires 'Catalyst::Plugin::Unicode::Encoding';
 requires 'DateTime::Format::Duration';
 requires 'DateTimeX::Easy';
 requires 'DateTime::Format::Pg';
