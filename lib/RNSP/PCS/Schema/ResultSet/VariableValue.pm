@@ -18,12 +18,35 @@ use RNSP::PCS::Types qw /VariableType DataStr/;
 sub _build_verifier_scope_name {'variable.value'}
 use DateTimeX::Easy;
 
+sub value_check {
+    my ($self, $r) = @_;
+
+    my $variable_id = $r->get_value('variable_id');
+    my $schema = $self->result_source->schema;
+    unless ($variable_id){
+        $variable_id = $self->search({
+            id => $r->get_value('id')
+        })->first->variable_id;
+    }
+
+    my $var = $schema->resultset('Variable')->find({
+        id => $variable_id
+    });
+
+    if ($var->type eq 'int' && $r->get_value('value') !~ /^[-+]?[0-9]+$/){
+        return 0;
+    }elsif ($var->type eq 'num' && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/){
+        return 0;
+    }
+    return 1;
+}
+
 sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
             profile => {
-                value         => { required => 0, type => 'Str' },
+                value         => { required => 0, type => 'Str', post_check => sub {$self->value_check(shift)} },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => { required => 1, type => DataStr },
                 variable_id => { required => 1, type => 'Int',
@@ -56,7 +79,8 @@ sub verifiers_specs {
                     }
 
                 },
-                value         => { required => 0, type => 'Str' },
+                value         => { required => 0, type => 'Str', post_check => sub
+                    {$self->value_check(shift)} },
                 value_of_date => { required => 1, type => DataStr,
                                 post_check => sub {
                                     my $r = shift;
@@ -79,7 +103,8 @@ sub verifiers_specs {
 
         put => Data::Verifier->new(
             profile => {
-                value         => { required => 1, type => 'Str' },
+                value         => { required => 1, type => 'Str',
+                    post_check => sub { $self->value_check(shift)  }},
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => { required => 1, type => DataStr },
                 variable_id => { required => 1, type => 'Int',
