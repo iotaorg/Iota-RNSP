@@ -104,8 +104,8 @@ eval {
                 'variable.value.update.value'         => '456',
                 'variable.value.update.value_of_date' => '2011-12-22 14:22:44',
             ] );
-            ok( !$res2->is_success, 'variable not updated [changed perid]' );
-            is( $res2->code, 400, 'expected error' );
+            ok( $res2->is_success, 'variable updated [changed perid]' );
+            is( $res2->code, 202, 'not expected error more' );
 
             use JSON qw(decode_json);
             my $variable = eval{decode_json( $res->content )};
@@ -117,7 +117,7 @@ eval {
             );
 
             is($updated_var->value, '456', 'value is relly updated');
-            is($updated_var->value_of_date->datetime, '2012-12-22T14:22:44', 'value date as well updated');
+            is($updated_var->value_of_date->datetime, '2011-12-22T14:22:44', 'value date as well updated');
 
             # DELETE
             ( $res, $c ) = ctx_request( DELETE $uri->path_query );
