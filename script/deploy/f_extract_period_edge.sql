@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION f_extract_period_edge(p_period period_enum, p_date timestamp)
+-- Function: f_extract_period_edge(period_enum, timestamp without time zone)
+
+-- DROP FUNCTION f_extract_period_edge(period_enum, timestamp without time zone);
+
+CREATE OR REPLACE FUNCTION f_extract_period_edge(p_period period_enum, p_date timestamp without time zone)
   RETURNS tp_period_edges AS
 $BODY$DECLARE
     v_edges tp_period_edges;
@@ -14,13 +18,12 @@ BEGIN
         v_edges.period_end   := p_date::date + '1 day'::interval;
     WHEN 'weekly' THEN
 
-        v_edges.period_begin := (extract('year' FROM p_date)::text || '-01-01' )::date +
-                    (extract('week' FROM p_date)::text || ' weeks')::interval - '1 week'::interval;
+        v_edges.period_begin := date_trunc('week', p_date) - '1 day'::interval; -- vem segunda feira, volta pra domingo
 
         v_edges.period_end   := v_edges.period_begin + '7 days'::interval;
     WHEN 'monthly' THEN
 
-        v_edges.period_begin := (extract('year' FROM p_date)::text || '-'|| extract('month' FROM p_date)::text ||'-01' )::date;
+        v_edges.period_begin := date_trunc('month', p_date);
 
         v_edges.period_end   := v_edges.period_begin + '1 month'::interval;
     WHEN 'bimonthly' THEN
@@ -36,16 +39,7 @@ BEGIN
         v_edges.period_end   := v_edges.period_begin + '2 month'::interval;
     WHEN 'quarterly' THEN
         -- meses trimestrais são: [01 02 03] [04 05 06] [07 08 09] [10 11 12]
-        v_edges.period_begin := (extract('year' FROM p_date)::text || '-' ||
-                (
-                CASE extract('month' FROM p_date)::int % 3
-                    WHEN 0 THEN extract('month' FROM p_date)::int - 2
-                    WHEN 1 THEN extract('month' FROM p_date)::int
-                    WHEN 2 THEN extract('month' FROM p_date)::int - 1
-                ELSE NULL
-                END )::text
-
-            ||'-01' )::date;
+        v_edges.period_begin := date_trunc('quarter', p_date);
 
         v_edges.period_end   := v_edges.period_begin + '3 month'::interval;
 
@@ -57,15 +51,11 @@ BEGIN
         v_edges.period_end   := v_edges.period_begin + '6 month'::interval;
 
     WHEN 'yearly' THEN
-        v_edges.period_begin := (extract('year' FROM p_date)::text || '-01-01' )::date;
+        v_edges.period_begin := date_trunc('year', p_date);
         v_edges.period_end   := v_edges.period_begin + '1 year'::interval;
 
     WHEN 'decade' THEN
-        v_edges.period_begin := ((
-
-                extract('DECADE' FROM p_date) * 10::int
-
-            )::text || '-01-01' )::date;
+        v_edges.period_begin := date_trunc('decade', p_date);
 
         v_edges.period_end   := v_edges.period_begin + '10 years'::interval;
     ELSE
@@ -77,5 +67,5 @@ BEGIN
 END;$BODY$
   LANGUAGE plpgsql STABLE
   COST 100;
-
-
+ALTER FUNCTION f_extract_period_edge(period_enum, timestamp without time zone)
+  OWNER TO postgres;

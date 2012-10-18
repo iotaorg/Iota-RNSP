@@ -71,20 +71,20 @@ eval {
 
             my $variable_url = $uri->path_query;
 
-            &add_value($variable_url, '2012-01-01', 23);
-            &add_value($variable_url, '2012-02-22', 25);
-            &add_value($variable_url, '2012-03-08', 26);
-            &add_value($variable_url, '2012-04-12', 28);
+            &add_value($variable_url, '2012-02-01', 23);
+            &add_value($variable_url, '2012-03-22', 25);
+            &add_value($variable_url, '2012-04-08', 26);
+            &add_value($variable_url, '2012-05-12', 28);
 
 
-            &add_value($variable_url, '2011-01-21', 25);
-            &add_value($variable_url, '2011-02-12', 27);
-            &add_value($variable_url, '2011-03-25', 27);
-            &add_value($variable_url, '2011-04-16', 29);
+            &add_value($variable_url, '2011-02-21', 25);
+            &add_value($variable_url, '2011-03-12', 27);
+            &add_value($variable_url, '2011-04-25', 27);
+            &add_value($variable_url, '2011-05-16', 29);
 
-            &add_value($variable_url, '1192-01-21', 21);
-            &add_value($variable_url, '1192-02-12', 22);
-            &add_value($variable_url, '1192-03-25', 25);
+            &add_value($variable_url, '1192-02-21', 21);
+            &add_value($variable_url, '1192-03-12', 22);
+            &add_value($variable_url, '1192-04-25', 25);
 
             my $chart = RNSP::IndicatorChart->new_with_traits(
                 schema => $schema,
@@ -107,7 +107,7 @@ eval {
                     my $a2011 = $res->{series}[1];
 
                     is($a2011->{avg}, '27', 'media correta para 2011');
-                    is($a2011->{data}[0][0], '2011-01-21T00:00:00', 'data correta');
+                    is($a2011->{data}[0][0], '2011-02-21T00:00:00', 'data correta');
                     is($a2011->{data}[0][1], 25, 'valor correto');
                 }
 

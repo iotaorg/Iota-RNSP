@@ -45,7 +45,7 @@ eval {
                     'variable.create.cognomen'     => 'foobar',
                     'variable.create.period'       => 'yearly',
                     'variable.create.explanation'  => 'a foo with bar',
-                    'variable.create.type'         => 'int',
+                    'variable.create.type'         => 'num',
                 ]
             );
             ok( $res->is_success, 'variable created!' );
@@ -59,7 +59,16 @@ eval {
             my $variable_url = $uri->path_query;
             # POST
             ( $res, $c ) = ctx_request( POST $variable_url, [
-                'variable.value.create.value'         => '123',
+                'variable.value.create.value'         => '123AAA',
+                'variable.value.create.value_of_date' => '2012-12-22 14:22:44',
+            ]);
+
+            ok( !$res->is_success, 'variable value not created' );
+            is( $res->code, 400, 'value added -- 201 ' );
+            like($res->content, qr/value.invalid/, 'valor invalido');
+
+            ( $res, $c ) = ctx_request( POST $variable_url, [
+                'variable.value.create.value'         => '123.24',
                 'variable.value.create.value_of_date' => '2012-12-22 14:22:44',
             ]);
 
