@@ -33,5 +33,25 @@ sub AUTOLOAD {
     goto &$AUTOLOAD;
 }
 
+sub get_weeks_of_year {
+    my ( $self, $year ) = @_;
+    my $res = eval {
+        $self->storage->dbh->selectall_arrayref( "SELECT * FROM (
+            SELECT extract('week' from period_begin + '1 day'::interval) as week_num, period_begin
+            FROM (
+                select (date_trunc('week', (? || '-01-01')::date + s.a) - '1 day'::interval)::date as period_begin
+                from generate_series(0,371,7) as s(a)
+            ) a
+            where a.period_begin >= (? || '-01-01')::date AND a.period_begin < (? || '-01-01')::date + '1 year'::interval
+        ) a
+        WHERE NOT (week_num = 1 AND period_begin > (? || '-12-01')::date )  -- semana 01 do proximo ano
+        ORDER BY a.period_begin
+        ", {Slice => {} }, $year, $year, $year, $year );
+    };
+    do { print $@; return undef } if $@;
+
+    return $res;
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
