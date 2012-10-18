@@ -98,12 +98,11 @@ sub verifiers_specs {
                                     })->first;
 
                                     my $date = DateTimeX::Easy->new($r->get_value('value_of_date'))->datetime;
-
-                                    my $value = $self->search({
+                                    # f_extract_period_edge
+                                    return $var && $self->search({
+                                        id          => $r->get_value('id'),
                                         valid_from  => $schema->f_extract_period_edge($var->variable->period, $date)->{period_begin}
-                                    })->next;
-
-                                    return $var && (!defined $value || (defined $value && $value->id == $r->get_value('id') ));
+                                    })->count == 1;
                                  }
 
                 },
