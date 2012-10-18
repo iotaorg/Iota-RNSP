@@ -85,7 +85,6 @@ sub verifiers_specs {
                                 id => $r->get_value('id')
                             })->count == 1;
                     }
-
                 },
                 value         => { required => 0, type => 'Str', post_check => sub
                     {$self->value_check(shift)} },
