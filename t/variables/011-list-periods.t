@@ -46,6 +46,16 @@ eval {
             ok($week->{options}[0]{value}, 'value is present');
 
 
+            ( $res, $c ) = ctx_request( GET '/api/period/year' );
+            ok( $res->is_success, 'year success' );
+            is( $res->code, 200, '200 Success' );
+
+
+            ( $res, $c ) = ctx_request( GET '/api/period/year/2012/month' );
+            ok( $res->is_success, 'year success' );
+            is( $res->code, 200, '200 Success' );
+
+
             die 'rollback';
         }
     );
