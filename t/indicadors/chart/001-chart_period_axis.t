@@ -94,6 +94,7 @@ eval {
             );
 
             my $data = $chart->data();
+            use DDP; p $data;
 
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
             my $obj = eval{decode_json( $res->content )};
