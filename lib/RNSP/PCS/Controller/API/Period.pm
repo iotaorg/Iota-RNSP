@@ -164,7 +164,7 @@ sub month_GET {
         entity => {
             options => [ map { +{
                 value => $year . '-' . sprintf('%02s', $_) . '-01',
-                text => "$year - " . @meses[$_-1]
+                text => "$year - " . $meses[$_-1]
             }  } (1 .. $max)]
         }
     );

@@ -3,6 +3,7 @@ package RNSP::PCS::Controller::API::Indicator;
 
 use Moose;
 use JSON qw(encode_json);
+use RNSP::IndicatorFormula;
 
 BEGIN { extends 'Catalyst::Controller::REST' }
 
@@ -60,9 +61,15 @@ sub indicator_GET {
   my ( $self, $c ) = @_;
   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis']})->as_hashref->next;
 
+  my $f = new RNSP::IndicatorFormula(
+    formula => $object_ref->{formula},
+    schema => $c->model('DB')->schema);
+  my ($any_var) = $f->variables;
+
   $self->status_ok(
     $c,
     entity => {
+      period     => eval{$c->model('DB')->resultset('Variable')->find($any_var)->period},
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
@@ -216,6 +223,7 @@ sub list_GET {
 
         }
     }
+
     $self->status_ok(
         $c,
         entity => {
