@@ -15,6 +15,7 @@ sub base : Chained('/api/indicator/object') : PathPart('variable') : CaptureArgs
   $c->stash->{indicator}  = $c->stash->{object}->next;
 }
 
+
 sub values: Chained('base') : PathPart('value') : Args(0 ): ActionClass('REST') {
   my ( $self, $c ) = @_;
 }
@@ -197,7 +198,7 @@ sub values_GET {
                 'values.user_id' => $c->user->id,
                 'values.user_id' => undef,
             ],
-            variable_id => [$indicator_formula->variables]
+            'me.id' => [$indicator_formula->variables]
         }, { prefetch => ['values'] } );
 
 
@@ -235,6 +236,139 @@ sub values_GET {
         }
         $ret = $hash;
     };
+    if ($@){
+        $self->status_bad_request(
+            $c,
+            message => $@,
+        );
+    }else{
+        $self->status_ok(
+            $c,
+            entity => $ret
+        );
+    }
+}
+
+
+sub period: Chained('base') : PathPart('period') : CaptureArgs( 1 ) {
+    my ( $self, $c, $date ) = @_;
+    $self->status_bad_request( $c, message => encode_json( { 'invalid.date' => 1 } ) ), $c->detach
+        unless $date =~ /^\d{4}-\d{2}-\d{2}$/;
+
+    $c->stash->{valid_from} = $date;
+}
+
+sub by_period :Chained('period') : PathPart('') : Args( 0 ) : ActionClass('REST') {}
+
+
+=pod
+
+
+
+GET /api/indicator/<ID>/variable/period/2010-01-01
+
+retorna as variaveis de um indicador para um determinado periodo
+
+{
+    "valid_from": "2012-01-01",
+    "rows": [
+        {
+            "source": null,
+            "is_basic": 0,
+            "value": "23",
+            "name": "Temperatura semanal",
+            "explanation": "a foo with bar",
+            "value_id": 304,
+            "cognomen": "temp_semana",
+            "value_of_date": "2012-01-05T00:00:00",
+            "type": "int",
+            "id": 216
+        },
+        {
+            "source": null,
+            "is_basic": 0,
+            "value": "3",
+            "name": "nostradamus",
+            "explanation": "nostradamus end of world",
+            "value_id": 305,
+            "cognomen": "nostradamus",
+            "value_of_date": "2012-01-04T00:00:00",
+            "type": "int",
+            "id": "217"
+        },
+        {
+            "source": null,
+            "is_basic": 0,
+            "value": null,
+            "name": "XXXX",
+            "explanation": "a foo with bar",
+            "value_id": null,
+            "cognomen": "XXXAA",
+            "value_of_date": null,
+            "id": "215",
+            "type": "int"
+        }
+    ]
+}
+
+=cut
+
+sub by_period_GET {
+    my ( $self, $c ) = @_;
+    my $ret;
+    eval {
+        my $indicator = $c->stash->{indicator};
+
+        my $indicator_formula = new RNSP::IndicatorFormula(
+            formula => $indicator->formula,
+            schema => $c->model('DB')->schema
+        );
+
+        my $rs = $c->model('DB')->resultset('Variable')->search_rs({
+            -or => [
+                'values.user_id' => $c->user->id,
+                'values.user_id' => undef,
+            ],
+            'me.id' => [$indicator_formula->variables],
+
+        }, { prefetch => ['values'] } );
+        $rs = $rs->search_rs({
+            -or => [
+                'values.valid_from' => $c->stash->{valid_from},
+                'values.valid_from' => undef
+            ]});
+
+        my @rows;
+
+
+        while (my $row = $rs->next){
+            my $rowx = {
+                (map { $_ => $row->$_ } qw /id name explanation cognomen type source is_basic/),
+
+                value         => undef,
+                value_of_date => undef,
+                value_id      => undef,
+            };
+
+            foreach my $value ($row->values){
+
+                $rowx = {
+                    %{$rowx},
+                    value         => $value->value,
+                    value_of_date => $value->value_of_date->datetime,
+                    value_id      => $value->id,
+                };
+
+                last; # so tem um mesmo
+
+            }
+            push @rows, $rowx;
+        }
+
+
+        $ret = {rows => \@rows, valid_from => $c->stash->{valid_from}};
+    };
+
     if ($@){
         $self->status_bad_request(
             $c,
