@@ -325,21 +325,10 @@ sub by_period_GET {
         );
 
         my $rs = $c->model('DB')->resultset('Variable')->search_rs({
-            -or => [
-                'values.user_id' => $c->user->id,
-                'values.user_id' => undef,
-            ],
             'me.id' => [$indicator_formula->variables],
-
-        }, { prefetch => ['values'] } );
-        $rs = $rs->search_rs({
-            -or => [
-                'values.valid_from' => $c->stash->{valid_from},
-                'values.valid_from' => undef
-            ]});
+        } );
 
         my @rows;
-
 
         while (my $row = $rs->next){
             my $rowx = {
@@ -350,17 +339,18 @@ sub by_period_GET {
                 value_id      => undef,
             };
 
-            foreach my $value ($row->values){
-
+            my $rsx = $row->values->search({
+                'me.valid_from' => $c->stash->{valid_from},
+                'me.user_id' => $c->user->id,
+            });
+            my $value = $rsx->first;
+            if ($value){
                 $rowx = {
                     %{$rowx},
                     value         => $value->value,
                     value_of_date => $value->value_of_date->datetime,
                     value_id      => $value->id,
                 };
-
-                last; # so tem um mesmo
-
             }
             push @rows, $rowx;
         }
@@ -372,7 +362,7 @@ sub by_period_GET {
     if ($@){
         $self->status_bad_request(
             $c,
-            message => $@,
+            message => "$@",
         );
     }else{
         $self->status_ok(
