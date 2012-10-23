@@ -39,7 +39,7 @@ sub get_weeks_of_year {
         $self->storage->dbh->selectall_arrayref( "SELECT * FROM (
             SELECT extract('week' from period_begin + '1 day'::interval) as week_num, period_begin
             FROM (
-                select (date_trunc('week', (? || '-01-01')::date + s.a) - '1 day'::interval)::date as period_begin
+                select (date_trunc('week', (? || '-01-01')::date + s.a + '1 day'::interval) - '1 day'::interval)::date as period_begin
                 from generate_series(0,371,7) as s(a)
             ) a
             where a.period_begin >= (? || '-01-01')::date AND a.period_begin < (? || '-01-01')::date + '1 year'::interval

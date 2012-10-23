@@ -1,6 +1,5 @@
 -- Function: f_extract_period_edge(period_enum, timestamp without time zone)
 
--- DROP FUNCTION f_extract_period_edge(period_enum, timestamp without time zone);
 
 CREATE OR REPLACE FUNCTION f_extract_period_edge(p_period period_enum, p_date timestamp without time zone)
   RETURNS tp_period_edges AS
@@ -18,7 +17,7 @@ BEGIN
         v_edges.period_end   := p_date::date + '1 day'::interval;
     WHEN 'weekly' THEN
 
-        v_edges.period_begin := date_trunc('week', p_date) - '1 day'::interval; -- vem segunda feira, volta pra domingo
+        v_edges.period_begin := date_trunc('week', p_date + '1 day'::interval ) - '1 day'::interval; -- vem segunda feira, volta pra domingo
 
         v_edges.period_end   := v_edges.period_begin + '7 days'::interval;
     WHEN 'monthly' THEN
@@ -67,5 +66,3 @@ BEGIN
 END;$BODY$
   LANGUAGE plpgsql STABLE
   COST 100;
-ALTER FUNCTION f_extract_period_edge(period_enum, timestamp without time zone)
-  OWNER TO postgres;

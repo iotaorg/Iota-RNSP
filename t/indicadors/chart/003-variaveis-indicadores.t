@@ -36,7 +36,7 @@ eval {
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'XXXX',
                     'variable.create.cognomen'     => 'XXXAA',
-                    'variable.create.period'       => 'yearly',
+                    'variable.create.period'       => 'weekly',
                     'variable.create.explanation'  => 'a foo with bar',
                     'variable.create.type'         => 'int',
                 ]
@@ -50,7 +50,7 @@ eval {
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'Temperatura semanal',
                     'variable.create.cognomen'     => 'temp_semana',
-                    'variable.create.period'       => 'yearly',
+                    'variable.create.period'       => 'weekly',
                     'variable.create.explanation'  => 'a foo with bar',
                     'variable.create.type'         => 'int',
                 ]
@@ -65,7 +65,7 @@ eval {
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'nostradamus',
                     'variable.create.cognomen'     => 'nostradamus',
-                    'variable.create.period'       => 'yearly',
+                    'variable.create.period'       => 'weekly',
                     'variable.create.explanation'  => 'nostradamus end of world',
                     'variable.create.type'         => 'int',
                 ]
@@ -92,7 +92,6 @@ eval {
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
-            my $uri_chart = URI->new( $res->header('Location') . '/variable/period/2012-01-01' );
             my $indicator = eval{decode_json( $res->content )};
 
             my $variable_url = $uri->path_query;
@@ -106,10 +105,11 @@ eval {
 
 
             $variable_url = $uri0->path_query;
-
+            my $path = $res->header('Location');
+            my $uri_chart = URI->new( $path . '/variable/period/2012-01-01' );
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
             my $obj = eval{decode_json( $res->content )};
-
+            is(@{$obj->{rows}}, 3, 'count ok');
             ok($res->is_success, 'GET chart success');
 
             foreach my $res (@{$obj->{rows}}){
@@ -119,6 +119,13 @@ eval {
                     is($res->{value}, '23', 'variavel 1 com valor ok');
                 }
             }
+
+            my $uri_chart = URI->new( $path . '/variable/period/2018-01-01' );
+            ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
+
+            $obj = eval{decode_json( $res->content )};
+
+            is(@{$obj->{rows}}, 3, 'count ok');
 
             die 'rollback';
         }
