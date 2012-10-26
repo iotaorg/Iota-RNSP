@@ -51,11 +51,26 @@ eval {
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
 
+            ( $res, $c ) = ctx_request(
+                POST '/api/city',
+                [   api_key                        => 'test',
+                    'city.create.name'      => 'Foo Bar',
+                    'city.create.uf'        => 'XU',
+                    'city.create.pais'      => 'USA',
+                    'city.create.latitude'  => 5666.55,
+                    'city.create.longitude' => 1000.11,
+                ]
+            );
+            ok( $res->is_success, 'city created com mesmo nome!' );
+            is( $res->code, 201, 'created!' );
+
+
             use URI;
             my $uri = URI->new( $res->header('Location') );
             $uri->query_form( api_key => 'test' );
 
             ( $res, $c ) = ctx_request( GET $uri->path_query );
+            like($res->content, qr|foo-bar-2|, 'foo-bar-2 ok');
 
             ok( $res->is_success, 'varible exists' );
             is( $res->code, 200, 'varible exists -- 200 Success' );
