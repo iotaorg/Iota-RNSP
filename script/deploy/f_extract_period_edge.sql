@@ -66,3 +66,26 @@ BEGIN
 END;$BODY$
   LANGUAGE plpgsql STABLE
   COST 100;
+
+
+
+CREATE OR REPLACE FUNCTION voltar_periodo(p_date timestamp without time zone, p_period period_enum, p_num int)
+  RETURNS date AS
+$BODY$DECLARE
+
+BEGIN
+    IF (p_period IN ('daily', 'weekly', 'monthly', 'yearly', 'decade') ) THEN
+            RETURN ( p_date - ( p_num::text|| ' ' || replace(p_period::text, 'ly','') )::interval  )::date;
+    ELSEIF (p_period = 'bimonthly') THEN
+        RETURN ( p_date - ( (p_num*2)::text|| ' month' )::interval  )::date;
+    ELSEIF (p_period = 'quarterly') THEN
+        RETURN ( p_date - ( (p_num*3)::text|| ' month' )::interval  )::date;
+    ELSEIF (p_period = 'semi-annual') THEN
+        RETURN ( p_date - ( (p_num*6)::text|| ' month' )::interval  )::date;
+    END IF;
+
+    RETURN NULL;
+END;$BODY$
+  LANGUAGE plpgsql STABLE
+  COST 100;
+

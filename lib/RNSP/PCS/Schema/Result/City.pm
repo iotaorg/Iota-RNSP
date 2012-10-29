@@ -60,7 +60,7 @@ __PACKAGE__->table("city");
 =head2 pais
 
   data_type: 'text'
-  default_value: 'Brasil'
+  default_value: 'br'
   is_nullable: 1
 
 =head2 latitude
@@ -101,7 +101,7 @@ __PACKAGE__->add_columns(
   "uf",
   { data_type => "char", is_nullable => 0, size => 2 },
   "pais",
-  { data_type => "text", default_value => "Brasil", is_nullable => 1 },
+  { data_type => "text", default_value => "br", is_nullable => 1 },
   "latitude",
   { data_type => "double precision", is_nullable => 1 },
   "longitude",
@@ -135,9 +135,11 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<city_uf_name_uri_key>
+=head2 C<city_pais_uf_name_uri_key>
 
 =over 4
+
+=item * L</pais>
 
 =item * L</uf>
 
@@ -147,7 +149,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("city_uf_name_uri_key", ["uf", "name_uri"]);
+__PACKAGE__->add_unique_constraint("city_pais_uf_name_uri_key", ["pais", "uf", "name_uri"]);
 
 =head1 RELATIONS
 
@@ -167,8 +169,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-26 18:33:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Um8e84KgmWUa0EkUPoVsMg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-28 17:44:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kvU2jn2tburK+jYPwszgow
 
 __PACKAGE__->might_have(
   "prefeito",
