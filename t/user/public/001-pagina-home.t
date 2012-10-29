@@ -243,6 +243,7 @@ eval {
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{decode_json( $res->content )};
+            use DDP; p$obj;
             is($obj->{resumos}{weekly}{datas}[0]{data}, '2012-01-08', 'data da primeira semana ok');
             is(join(',', @{$obj->{resumos}{weekly}{indicadores}[0]{valores}}), '30,32,36,37', 'valores da semana ok');
 
