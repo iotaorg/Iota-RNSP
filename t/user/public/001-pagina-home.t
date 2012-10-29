@@ -224,11 +224,12 @@ eval {
 
 
             # variavel basicas
+            my $basic_id = $schema->resultset('Variable')->search( { is_basic => 1 } )->next->id;
 
-            &add_value('/api/variable/20/value', '2012-03-25', 15);
-            &add_value('/api/variable/20/value', '1192-03-25', 5);
-            &add_value('/api/variable/20/value', '1193-03-25', 6);
-            &add_value('/api/variable/20/value', '1195-03-25', 7);
+            &add_value('/api/variable/'.$basic_id.'/value', '2012-03-25', 15);
+            &add_value('/api/variable/'.$basic_id.'/value', '1192-03-25', 5);
+            &add_value('/api/variable/'.$basic_id.'/value', '1193-03-25', 6);
+            &add_value('/api/variable/'.$basic_id.'/value', '1195-03-25', 7);
 
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id);
