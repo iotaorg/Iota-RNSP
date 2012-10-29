@@ -19,8 +19,10 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
 
-  $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
-  $c->stash->{object}->count > 0 or $c->detach('/error_404');
+  $c->stash->{indicator} = $c->stash->{collection}->search_rs( { id => $id } );
+  $c->stash->{indicator_obj} = $c->stash->{indicator}->next;
+
+  $c->detach('/error_404') unless $c->stash->{indicator_obj};
 
 
 }
@@ -92,6 +94,7 @@ retorna os valores dos ultimos 4 periodos de cada indicator
             indicadores:  [
                 [0] {
                     explanation:  "explanation",
+                    id         : 123,
                     formula    :  "$592",
                     name       :  "outra coisa por ano: SP",
                     valores    :  [
@@ -150,16 +153,10 @@ sub reusmo_GET {
                     $perido = $row->period;
                 }
 
-                my $rowx = {
-                    (map { $_ => $row->$_ } qw /id name explanation cognomen type source is_basic/),
-
-                    value         => undef,
-                    value_of_date => undef,
-                    value_id      => undef,
-                };
-
                 my $rsx = $row->values->search({
-                    'me.valid_from' => {'>' => $valid_from}
+                    'me.valid_from' => {'>' => $valid_from},
+                    'me.user_id'    => $c->stash->{user_obj}->id
+
                 })->as_hashref;
                 while (my $value = $rsx->next){
                     $res->{$value->{valid_from}}{$value->{variable_id}} = $value->{value};
@@ -182,6 +179,8 @@ sub reusmo_GET {
                 name        => $indicator->name,
                 formula     => $indicator->formula,
                 explanation => $indicator->explanation,
+                id          => $indicator->id,
+
                 valores     => $item
             });
         }

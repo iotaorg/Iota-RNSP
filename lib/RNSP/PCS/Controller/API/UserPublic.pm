@@ -17,8 +17,11 @@ sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
 
-  $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
-  $c->stash->{object}->count > 0 or $c->detach('/error_404');
+  $c->stash->{user} = $c->stash->{collection}->search_rs( { id => $id } );
+
+  $c->stash->{user_obj} = $c->stash->{user}->next;
+
+  $c->detach('/error_404') unless defined $c->stash->{user_obj};
 
 
 }
@@ -55,7 +58,7 @@ Retorna:
 sub user_GET {
     my ( $self, $c ) = @_;
 
-    my $user  = $c->stash->{object}->next;
+    my $user  = $c->stash->{user_obj};
 
     my $ret = {};
     do {

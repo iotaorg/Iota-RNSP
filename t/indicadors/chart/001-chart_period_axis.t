@@ -98,7 +98,16 @@ eval {
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
             my $obj = eval{decode_json( $res->content )};
             ok($res->is_success, 'GET chart success');
-            my @responses = ($data, $obj);
+
+
+            ( $res, $c ) = ctx_request(
+                    GET '/api/public/user/'.
+                    $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis'
+            );
+            my $obj_public = eval{decode_json( $res->content )};
+            ok($res->is_success, 'GET chart public success');
+
+            my @responses = ($data, $obj, $obj_public);
             foreach my $res (@responses){
                 is ($res->{goal}, 33, 'goal number ok');
                 is ($res->{series}[0]{label}, 'ano 1192', 'Ordem dos anos OK');

@@ -266,6 +266,9 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value .  ' on ' . $date . ' created!' );
+    if (!$res->is_success){
+        use DDP; p $res;
+    }
     my $variable = eval{decode_json( $res->content )};
     return $variable;
 
