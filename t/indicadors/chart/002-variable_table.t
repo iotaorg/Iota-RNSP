@@ -117,9 +117,21 @@ eval {
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
             my $obj = eval{decode_json( $res->content )};
 
-            ok($res->is_success, 'GET chart success');
+            ok($res->is_success, 'GET values success');
+
+            foreach my $res (@{$obj->{rows}}){
+                ok($res->{valid_from}, 'cada valor tem uma data de inicio');
+                like($res->{valores}[0]{value}, qr/$res->{valores}[1]{value}$/, 'comeco de uma coluna eh o final da segunda');
+            }
 
 
+            ( $res, $c ) = ctx_request(
+                GET '/api/public/user/'.
+                    $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/variable/value'
+                );
+            $obj = eval{decode_json( $res->content )};
+
+            ok($res->is_success, 'GET public values success');
             foreach my $res (@{$obj->{rows}}){
                 ok($res->{valid_from}, 'cada valor tem uma data de inicio');
                 like($res->{valores}[0]{value}, qr/$res->{valores}[1]{value}$/, 'comeco de uma coluna eh o final da segunda');

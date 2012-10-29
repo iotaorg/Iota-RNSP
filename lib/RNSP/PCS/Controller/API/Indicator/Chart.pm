@@ -88,8 +88,8 @@ sub render_GET {
   my $model = RNSP::IndicatorChart->new_with_traits(
     traits => [$c->stash->{chart_type}],
     schema    => $c->model('DB'),
-    indicator => $c->stash->{indicator},
-    user_id   => $c->user->id
+    indicator => $c->stash->{indicator_obj} || $c->stash->{indicator},
+    user_id   => $c->stash->{user_id} || $c->user->id
   );
 
   my %options = (

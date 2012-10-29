@@ -196,7 +196,7 @@ sub values_GET {
     my ( $self, $c ) = @_;
     my $ret;
     eval {
-        my $indicator = $c->stash->{indicator};
+        my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
         my $indicator_formula = new RNSP::IndicatorFormula(
             formula => $indicator->formula,
@@ -205,7 +205,7 @@ sub values_GET {
 
         my $rs = $c->model('DB')->resultset('Variable')->search_rs({
             -or => [
-                'values.user_id' => $c->user->id,
+                'values.user_id' => $c->stash->{user_id} || $c->user->id,
                 'values.user_id' => undef,
             ],
             'me.id' => [$indicator_formula->variables]
@@ -336,7 +336,7 @@ sub by_period_GET {
     my ( $self, $c ) = @_;
     my $ret;
     eval {
-        my $indicator = $c->stash->{indicator};
+        my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
         my $indicator_formula = new RNSP::IndicatorFormula(
             formula => $indicator->formula,
@@ -360,7 +360,7 @@ sub by_period_GET {
 
             my $rsx = $row->values->search({
                 'me.valid_from' => $c->stash->{valid_from},
-                'me.user_id' => $c->user->id,
+                'me.user_id' => $c->stash->{user_id} || $c->user->id,
             });
             my $value = $rsx->first;
             if ($value){
