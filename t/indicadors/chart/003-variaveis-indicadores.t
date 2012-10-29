@@ -120,7 +120,7 @@ eval {
                 }
             }
 
-            my $uri_chart = URI->new( $path . '/variable/period/2018-01-01' );
+            $uri_chart = URI->new( $path . '/variable/period/2018-01-01' );
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
 
             $obj = eval{decode_json( $res->content )};

@@ -53,13 +53,14 @@ __PACKAGE__->table("city");
 
 =head2 uf
 
-  data_type: 'text'
+  data_type: 'char'
   is_nullable: 0
+  size: 2
 
 =head2 pais
 
   data_type: 'text'
-  default_value: 'Brasil'
+  default_value: 'br'
   is_nullable: 1
 
 =head2 latitude
@@ -79,6 +80,12 @@ __PACKAGE__->table("city");
   is_nullable: 0
   original: {default_value => \"now()"}
 
+=head2 name_uri
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -92,9 +99,9 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "text", is_nullable => 0 },
   "uf",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "char", is_nullable => 0, size => 2 },
   "pais",
-  { data_type => "text", default_value => "Brasil", is_nullable => 1 },
+  { data_type => "text", default_value => "br", is_nullable => 1 },
   "latitude",
   { data_type => "double precision", is_nullable => 1 },
   "longitude",
@@ -105,6 +112,12 @@ __PACKAGE__->add_columns(
     default_value => \"current_timestamp",
     is_nullable   => 0,
     original      => { default_value => \"now()" },
+  },
+  "name_uri",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
   },
 );
 
@@ -119,6 +132,24 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("id");
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<city_pais_uf_name_uri_key>
+
+=over 4
+
+=item * L</pais>
+
+=item * L</uf>
+
+=item * L</name_uri>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("city_pais_uf_name_uri_key", ["pais", "uf", "name_uri"]);
 
 =head1 RELATIONS
 
@@ -138,8 +169,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-27 19:43:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BZKi61nByKpIF4j0FK+eIw
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-28 17:44:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kvU2jn2tburK+jYPwszgow
 
 __PACKAGE__->might_have(
   "prefeito",

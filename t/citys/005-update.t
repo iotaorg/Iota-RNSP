@@ -52,6 +52,7 @@ eval {
             POST $uri->path_query,
             [
                 'city.update.name'         => 'BarFoo',
+                'city.update.uf'           => 'XX',
                 'city.update.longitude'    => 55.55,
             ]
         );

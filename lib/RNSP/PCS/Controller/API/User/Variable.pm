@@ -74,7 +74,7 @@ sub list_GET {
     -or => [
          'values.user_id' => $c->stash->{user}->id,
         'values.user_id' => undef,
-    ] }, { prefetch => ['values'] } );
+    ] }, { prefetch => ['values'], order_by => 'values.valid_from' } );
 
     $rs = $rs->search({is_basic => $c->req->params->{is_basic}})
         if (defined $c->req->params->{is_basic});

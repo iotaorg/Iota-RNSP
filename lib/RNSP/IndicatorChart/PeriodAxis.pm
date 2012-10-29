@@ -86,7 +86,7 @@ sub read_values {
             push @data, $xy;
         }
         $row->{avg}   = @data ?  $total / scalar @data : 0;
-        $row->{label} = $self->get_label_of_period($start, $group_by);
+        $row->{label} = &get_label_of_period($start, $group_by);
 
         push @{$data->{series}}, $row;
     }
@@ -122,7 +122,7 @@ sub _load_variables_values {
 }
 
 sub get_label_of_period {
-    my ($self, $data, $period) =  @_;
+    my ($data, $period) =  @_;
 
     my $dt = DateTime::Format::Pg->parse_datetime( $data );
 
