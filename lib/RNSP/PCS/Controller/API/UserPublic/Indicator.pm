@@ -152,6 +152,7 @@ sub reusmo_GET {
                         $row->period, $max_periodos)->{voltar_periodo};
                     $perido = $row->period;
                 }
+                next unless $valid_from;
 
                 my $rsx = $row->values->search({
                     'me.valid_from' => {'>' => $valid_from},
