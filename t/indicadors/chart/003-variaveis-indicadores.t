@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 use Test::More;
 
 use FindBin qw($Bin);
@@ -43,7 +43,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri0 = URI->new( $res->header('Location') . '/value' );
-            my $var0 = eval{decode_json( $res->content )};
+            my $var0 = eval{from_json( $res->content )};
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
@@ -57,7 +57,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri = URI->new( $res->header('Location') . '/value' );
-            my $var = eval{decode_json( $res->content )};
+            my $var = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -72,7 +72,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri2 = URI->new( $res->header('Location') . '/value' );
-            my $var2 = eval{decode_json( $res->content )};
+            my $var2 = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -92,7 +92,7 @@ eval {
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
-            my $indicator = eval{decode_json( $res->content )};
+            my $indicator = eval{from_json( $res->content )};
 
             my $variable_url = $uri->path_query;
 
@@ -108,7 +108,7 @@ eval {
             my $path = $res->header('Location');
             my $uri_chart = URI->new( $path . '/variable/period/2012-01-01' );
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
-            my $obj = eval{decode_json( $res->content )};
+            my $obj = eval{from_json( $res->content )};
             is(@{$obj->{rows}}, 3, 'count ok');
             ok($res->is_success, 'GET chart success');
 
@@ -123,7 +123,7 @@ eval {
             $uri_chart = URI->new( $path . '/variable/period/2018-01-01' );
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
 
-            $obj = eval{decode_json( $res->content )};
+            $obj = eval{from_json( $res->content )};
 
             is(@{$obj->{rows}}, 3, 'count ok');
 
@@ -148,7 +148,7 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value .  ' on ' . $date . ' created!' );
-    my $variable = eval{decode_json( $res->content )};
+    my $variable = eval{from_json( $res->content )};
     return $variable;
 
 }

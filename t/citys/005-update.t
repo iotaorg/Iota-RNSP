@@ -59,8 +59,8 @@ eval {
         ok( $res->is_success, 'var updated' );
         is( $res->code, 202, 'var updated -- 202 Accepted' );
 
-        use JSON qw(decode_json);
-        my $city = eval{decode_json( $res->content )};
+        use JSON qw(from_json);
+        my $city = eval{from_json( $res->content )};
         ok(
             my $updated_var =
             $schema->resultset('City')->find( { id => $city->{id} } ),

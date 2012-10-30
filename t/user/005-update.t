@@ -56,8 +56,8 @@ eval {
       );
 
       {
-        use JSON qw(decode_json);
-        is( decode_json( $res->content )->{name}, $new_user->name,
+        use JSON qw(from_json);
+        is( from_json( $res->content )->{name}, $new_user->name,
           'same user' );
       }
       like( $res->header('Location'), qr{/api/user/\d+$}, 'location ok' );

@@ -34,8 +34,9 @@ eval {
             ok( $res->is_success, 'axis list ok' );
             is( $res->code, 200, '200 Success' );
 
-            use JSON qw(decode_json);
-            my $axis = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $axis = eval{from_json( $res->content )};
+
 
             is(ref $axis->{axis}, ref [], 'axis is array');
             ok($axis->{axis}[0]{name}, 'defined name');

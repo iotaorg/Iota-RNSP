@@ -107,8 +107,8 @@ eval {
             ok( !$res2->is_success, 'variable not updated [changed perid]' );
             is( $res2->code, 400, 'expected error' );
 
-            use JSON qw(decode_json);
-            my $variable = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $variable = eval{from_json( $res->content )};
 
             ok(
                 my $updated_var =

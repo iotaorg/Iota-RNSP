@@ -57,8 +57,8 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
-            use JSON qw(decode_json);
-            my $indicator = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $indicator = eval{from_json( $res->content )};
             ok(
                 my $save_test =
                 $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
@@ -95,7 +95,7 @@ die $@ unless $@ =~ /rollback/;
 done_testing;
 
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 sub new_var {
     my $type = shift;
     my $period = shift;
@@ -111,7 +111,7 @@ sub new_var {
         ]
     );
     if ($res->code == 201){
-        my $xx = eval{decode_json( $res->content )};
+        my $xx = eval{from_json( $res->content )};
         return $xx->{id};
     }else{
         die('fail to create new var: ' . $res->code);

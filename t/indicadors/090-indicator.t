@@ -93,7 +93,7 @@ die $@ unless $@ =~ /rollback/;
 done_testing;
 
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 sub new_var {
     my $type = shift;
     my $period = shift;
@@ -109,7 +109,7 @@ sub new_var {
         ]
     );
     if ($res->code == 201){
-        my $xx = eval{decode_json( $res->content )};
+        my $xx = eval{from_json( $res->content )};
         return $xx->{id};
     }else{
         die('fail to create new var: ' . $res->code);

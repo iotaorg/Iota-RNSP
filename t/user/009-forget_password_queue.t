@@ -7,7 +7,7 @@ use Catalyst::Test q(RNSP::PCS);
 
 use HTTP::Request::Common;
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 
 my $schema = RNSP::PCS->model('DB');
 eval {
