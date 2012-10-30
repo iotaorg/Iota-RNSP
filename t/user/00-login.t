@@ -7,7 +7,7 @@ use Catalyst::Test q(RNSP::PCS);
 
 use HTTP::Request::Common;
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 my $schema = RNSP::PCS->model('DB');
 eval {
     $schema->txn_do(
@@ -47,7 +47,7 @@ eval {
 
             ok( $res->is_success, 'user ok' );
             is( $res->code, 200, 'status 200 OK' );
-            ok( my $decoded_response = decode_json( $res->content ), 'valid json' );
+            ok( my $decoded_response = from_json( $res->content ), 'valid json' );
             ok( my $api_key          = $decoded_response->{api_key}, 'api_key ok' );
             is( $decoded_response->{roles}[0], 'user', 'user role');
 

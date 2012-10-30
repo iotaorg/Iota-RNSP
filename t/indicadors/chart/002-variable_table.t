@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 use Test::More;
 
 use FindBin qw($Bin);
@@ -43,7 +43,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri = URI->new( $res->header('Location') . '/value' );
-            my $var = eval{decode_json( $res->content )};
+            my $var = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -58,7 +58,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri2 = URI->new( $res->header('Location') . '/value' );
-            my $var2 = eval{decode_json( $res->content )};
+            my $var2 = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -79,7 +79,7 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
-            my $indicator = eval{decode_json( $res->content )};
+            my $indicator = eval{from_json( $res->content )};
 
             my $variable_url = $uri->path_query;
 
@@ -115,7 +115,7 @@ eval {
 
 
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
-            my $obj = eval{decode_json( $res->content )};
+            my $obj = eval{from_json( $res->content )};
 
             ok($res->is_success, 'GET values success');
 
@@ -129,7 +129,7 @@ eval {
                 GET '/api/public/user/'.
                     $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/variable/value'
                 );
-            $obj = eval{decode_json( $res->content )};
+            $obj = eval{from_json( $res->content )};
 
             ok($res->is_success, 'GET public values success');
             foreach my $res (@{$obj->{rows}}){
@@ -159,7 +159,7 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value .  ' on ' . $date . ' created!' );
-    my $variable = eval{decode_json( $res->content )};
+    my $variable = eval{from_json( $res->content )};
     return $variable;
 
 }

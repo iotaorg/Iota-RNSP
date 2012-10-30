@@ -64,8 +64,8 @@ eval {
 
             ok( $res->is_success, 'varible value created' );
             is( $res->code, 201, 'value added -- 201 ' );
-            use JSON qw(decode_json);
-            my $value_id_123 = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $value_id_123 = eval{from_json( $res->content )};
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
@@ -86,8 +86,8 @@ eval {
             ok( $res->is_success, 'varibles exists' );
             is( $res->code, 200, 'varibles exists -- 200 Success' );
 
-            use JSON qw(decode_json);
-            my $variable = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $variable = eval{from_json( $res->content )};
 
             is(ref $variable->{variables}, ref [], 'variables is array');
             my $count = scalar @{$variable->{variables}};
@@ -96,7 +96,7 @@ eval {
                 ok( $res2->is_success, 'varibles exists' );
                 is( $res2->code, 200, 'varibles exists -- 200 Success' );
 
-                my $variable2 = eval{decode_json( $res2->content )};
+                my $variable2 = eval{from_json( $res2->content )};
                 ok($count > scalar @{$variable2->{variables}}, 'less keys on is_basic is active');
 
             };

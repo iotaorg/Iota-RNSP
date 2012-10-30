@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 use Test::More;
 
 use FindBin qw($Bin);
@@ -45,7 +45,7 @@ eval {
             ok( $res->is_success, 'variable created!' );
             my $uri = URI->new( $res->header('Location') . '/value' );
 
-            my $var = eval{decode_json( $res->content )};
+            my $var = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -66,7 +66,7 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
             my $uri_chart = URI->new( $res->header('Location') . '/chart/period_axis' );
-            my $indicator = eval{decode_json( $res->content )};
+            my $indicator = eval{from_json( $res->content )};
 
 
             my $variable_url = $uri->path_query;
@@ -96,7 +96,7 @@ eval {
             my $data = $chart->data();
 
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
-            my $obj = eval{decode_json( $res->content )};
+            my $obj = eval{from_json( $res->content )};
             ok($res->is_success, 'GET chart success');
 
 
@@ -104,7 +104,7 @@ eval {
                     GET '/api/public/user/'.
                     $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis'
             );
-            my $obj_public = eval{decode_json( $res->content )};
+            my $obj_public = eval{from_json( $res->content )};
             ok($res->is_success, 'GET chart public success');
 
             my @responses = ($data, $obj, $obj_public);
@@ -125,7 +125,7 @@ eval {
 
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query .'?to=2011-12-01&from=2002-01-01&group_by=weekly');
             ok($res->is_success, 'GET chart with params success');
-            $obj = eval{decode_json( $res->content )};
+            $obj = eval{from_json( $res->content )};
             is(scalar @{$obj->{series}}, 4, 'numero de semanas ok');
             is($obj->{series}[0]{avg}, 25, 'media de um numero soh ok!');
 
@@ -150,7 +150,7 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value .  ' on ' . $date . ' created!' );
-    my $variable = eval{decode_json( $res->content )};
+    my $variable = eval{from_json( $res->content )};
     return $variable;
 
 }

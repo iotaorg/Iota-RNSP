@@ -66,8 +66,8 @@ eval {
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             ok( $res->is_success, 'variable exists' );
             is( $res->code, 200, 'variable exists -- 200 Success' );
-            use JSON qw(decode_json);
-            my $variable = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $variable = eval{from_json( $res->content )};
 
             is ($variable->{value}, '123', 'variable created with correct value');
             is ($variable->{value_of_date}, '2012-10-10 14:22:44', 'variable created with correct value date');
@@ -87,7 +87,7 @@ eval {
             ok( $res->is_success, 'variable exists' );
             is( $res->code, 200, 'variable exists -- 200 Success' );
 
-            $variable = eval{decode_json( $res->content )};
+            $variable = eval{from_json( $res->content )};
 
             is ($variable->{value}, '4456', 'variable updated with correct value');
             is ($variable->{value_of_date}, '2012-10-11 14:22:44', 'variable updated with correct value date');

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use JSON qw(decode_json);
+use JSON qw(from_json);
 use Test::More;
 
 use FindBin qw($Bin);
@@ -74,7 +74,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri = URI->new( $res->header('Location') . '/value' );
-            my $var = eval{decode_json( $res->content )};
+            my $var = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -89,7 +89,7 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
             my $uri2 = URI->new( $res->header('Location') . '/value' );
-            my $var2 = eval{decode_json( $res->content )};
+            my $var2 = eval{from_json( $res->content )};
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
@@ -104,7 +104,7 @@ eval {
             ok( $res->is_success, 'variable created!' );
 
             my $uri3 = URI->new( $res->header('Location') . '/value' );
-            my $var3 = eval{decode_json( $res->content )};
+            my $var3 = eval{from_json( $res->content )};
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
@@ -119,7 +119,7 @@ eval {
             ok( $res->is_success, 'variable created!' );
 
             my $uri4 = URI->new( $res->header('Location') . '/value' );
-            my $var4 = eval{decode_json( $res->content )};
+            my $var4 = eval{from_json( $res->content )};
 
 
             ( $res, $c ) = ctx_request(
@@ -140,7 +140,7 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
-            my $indicator = eval{decode_json( $res->content )};
+            my $indicator = eval{from_json( $res->content )};
 
             $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->prefeito->user_id;
 
@@ -181,7 +181,7 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
 
-            my $indicator2 = eval{decode_json( $res->content )};
+            my $indicator2 = eval{from_json( $res->content )};
 
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
@@ -201,7 +201,7 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
 
-            my $indicator3 = eval{decode_json( $res->content )};
+            my $indicator3 = eval{from_json( $res->content )};
 
             $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->prefeito->user_id;
 
@@ -233,7 +233,7 @@ eval {
 
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id);
-            my $obj = eval{decode_json( $res->content )};
+            my $obj = eval{from_json( $res->content )};
 
             ok($res->is_success, 'GET public info success');
 
@@ -242,7 +242,7 @@ eval {
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
-            $obj = eval{decode_json( $res->content )};
+            $obj = eval{from_json( $res->content )};
 
             is($obj->{resumos}{weekly}{datas}[0]{data}, '2012-01-08', 'data da primeira semana ok');
             is(join(',', @{$obj->{resumos}{weekly}{indicadores}[0]{valores}}), '30,32,36,37', 'valores da semana ok');
@@ -271,7 +271,7 @@ sub add_value {
     if (!$res->is_success){
         use DDP; p $res;
     }
-    my $variable = eval{decode_json( $res->content )};
+    my $variable = eval{from_json( $res->content )};
     return $variable;
 
 }

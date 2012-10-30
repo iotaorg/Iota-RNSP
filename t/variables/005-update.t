@@ -63,8 +63,8 @@ eval {
         ok( $res->is_success, 'var updated' );
         is( $res->code, 202, 'var updated -- 202 Accepted' );
 
-        use JSON qw(decode_json);
-        my $variable = eval{decode_json( $res->content )};
+        use JSON qw(from_json);
+        my $variable = eval{from_json( $res->content )};
 
         ok(
             my $updated_var =

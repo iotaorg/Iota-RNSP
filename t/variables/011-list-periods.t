@@ -40,8 +40,8 @@ eval {
             ok( $res->is_success, 'weeks success' );
             is( $res->code, 200, '200 Success' );
 
-            use JSON qw(decode_json);
-            my $week = eval{decode_json( $res->content )};
+            use JSON qw(from_json);
+            my $week = eval{from_json( $res->content )};
             ok($week->{options}[0]{text}, 'text is present');
             ok($week->{options}[0]{value}, 'value is present');
 

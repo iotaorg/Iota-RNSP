@@ -68,8 +68,8 @@ eval {
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
 
             {
-                use JSON qw(decode_json);
-                is( decode_json( $res->content )->{name}, $new_user->name, 'same user' );
+                use JSON qw(from_json);
+                is( from_json( $res->content )->{name}, $new_user->name, 'same user' );
             }
             like( $res->header('Location'), qr{/api/user/\d+$}, 'location ok' );
 

@@ -58,8 +58,8 @@ eval {
         ok( $res->is_success, 'indicator updated' );
         is( $res->code, 202, 'indicator updated -- 202 Accepted' );
 
-        use JSON qw(decode_json);
-        my $indicator = eval{decode_json( $res->content )};
+        use JSON qw(from_json);
+        my $indicator = eval{from_json( $res->content )};
 
         ok(
             my $updated_indicator =
