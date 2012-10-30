@@ -18,6 +18,16 @@ use RNSP::PCS::Types qw /VariableType DataStr/;
 sub _build_verifier_scope_name {'variable.value'}
 use DateTimeX::Easy;
 
+# TODO verificar se isso nao vai ferrar com alguma
+# variavel do tipo string
+my $str2number = sub {
+    my $str = shift;
+    $str =~ s/\.(\d{3})/$1/g;
+    $str =~ s/\s(\d{3})/$1/g;
+    $str =~ s/\,/./;
+    return $str;
+};
+
 sub value_check {
     my ($self, $r) = @_;
 
@@ -46,7 +56,10 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                value         => { required => 0, type => 'Str', post_check => sub {$self->value_check(shift)} },
+                value         => { required => 0, type => 'Str',
+                    post_check => sub {$self->value_check(shift)},
+                    filters => [$str2number]
+                },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => { required => 1, type => DataStr,
                                 post_check => sub {
@@ -88,7 +101,7 @@ sub verifiers_specs {
 
                 },
                 value         => { required => 0, type => 'Str', post_check => sub
-                    {$self->value_check(shift)} },
+                    {$self->value_check(shift)}, filters => [$str2number] },
                 value_of_date => { required => 1, type => DataStr,
                                 post_check => sub {
                                     my $r = shift;
@@ -112,7 +125,7 @@ sub verifiers_specs {
         put => Data::Verifier->new(
             profile => {
                 value         => { required => 1, type => 'Str',
-                    post_check => sub { $self->value_check(shift)  }},
+                    post_check => sub { $self->value_check(shift)  }, filters => [$str2number] },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => { required => 1, type => DataStr },
                 variable_id => { required => 1, type => 'Int',
@@ -151,6 +164,8 @@ sub action_specs {
             );
             $values{valid_from}  = $dates->{period_begin};
             $values{valid_until} = $dates->{period_end};
+
+
 
             my $varvalue = $self->create( \%values );
 

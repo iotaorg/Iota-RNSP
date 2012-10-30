@@ -1,0 +1,7 @@
+[% META title = 'Catalyst/TT Error' %]
+<p>
+Ocorreu um erro!
+</p>
+<p>
+Aqui está a mensagem de erro, sobre a possibilidade remota de que isso significa alguma coisa para você: <span class="error"> [%error%] </ span>
+</p>
