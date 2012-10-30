@@ -1,0 +1,4 @@
+Atenção
+Cidade [% city.name %]
+User_id [% user.id %]
+
