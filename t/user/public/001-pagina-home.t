@@ -207,19 +207,19 @@ eval {
 
             $variable_url = $uri3->path_query;
 
-            &add_value($variable_url, '2012-01-01', 23.5);
-            &add_value($variable_url, '2011-01-08', 25.8);
-            &add_value($variable_url, '2008-01-15', 26.8);
-            &add_value($variable_url, '2010-01-26', 28.6);
-            &add_value($variable_url, '1998-01-30', 29.588);
+            &add_value($variable_url, '2012-01-01', '23,5');
+            &add_value($variable_url, '2011-01-08', '25,8');
+            &add_value($variable_url, '2008-01-15', '26,8');
+            &add_value($variable_url, '2010-01-26', '28,6');
+            &add_value($variable_url, '1998-01-30', '29,588');
 
 
             $variable_url = $uri4->path_query;
 
-            &add_value($variable_url, '2011-01-01', 222.5);
-            &add_value($variable_url, '2010-01-08', 245.8);
-            &add_value($variable_url, '2009-01-15', 246.8);
-            &add_value($variable_url, '2008-01-26', 258.6);
+            &add_value($variable_url, '2011-01-01', '222,5');
+            &add_value($variable_url, '2010-01-08', '1 222 245,8');
+            &add_value($variable_url, '2009-01-15', '11.246,8');
+            &add_value($variable_url, '2008-01-26', '258');
 
 
 
@@ -243,7 +243,7 @@ eval {
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{decode_json( $res->content )};
-            use DDP; p$obj;
+
             is($obj->{resumos}{weekly}{datas}[0]{data}, '2012-01-08', 'data da primeira semana ok');
             is(join(',', @{$obj->{resumos}{weekly}{indicadores}[0]{valores}}), '30,32,36,37', 'valores da semana ok');
 
