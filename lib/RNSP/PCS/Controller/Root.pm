@@ -137,7 +137,11 @@ sub stash_tela_indicator {
     $c->stash->{indicator} = $indicator;
 }
 
-
+sub xptoxpto: Global {
+my ( $self, $c ) = @_;
+$c->model('DB')->schema->fix_deploy_pogpogpog;
+$c->res->body('ok');
+}
 
 sub stash_tela_cidade {
     my ( $self, $c ) = @_;
