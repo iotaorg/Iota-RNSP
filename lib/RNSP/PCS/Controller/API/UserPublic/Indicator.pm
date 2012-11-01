@@ -182,12 +182,15 @@ sub reusmo_GET {
 
             my $item = {};
             foreach my $from (keys %{$res}){
+                $item->{$from}{nome} = RNSP::IndicatorChart::PeriodAxis::get_label_of_period( $from, $perido);
 
                 if (keys %{$res->{$from}} == $variaveis){
-                    $item->{$from}{nome}  = RNSP::IndicatorChart::PeriodAxis::get_label_of_period( $from, $perido);
-                    $item->{$from}{valor} = $indicator_formula->evaluate(%{$res->{$from}});
+
+                    my $undef = 0;
+                    map {$undef++ unless defined $_} values %{$res->{$from}};
+
+                    $item->{$from}{valor} = $undef ? '-' : $indicator_formula->evaluate(%{$res->{$from}});
                 }else{
-                    $item->{$from}{nome} = RNSP::IndicatorChart::PeriodAxis::get_label_of_period( $from, $perido);
                     $item->{$from}{valor} = '-';
                 }
             }
