@@ -78,7 +78,7 @@ sub indicator_GET {
         map { $_ => $object_ref->{axis}{$_} } qw(name id)
       },
       (map { $_ => $object_ref->{$_} } qw(name goal axis_id formula source explanation
-            justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction
+            justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
         created_at))
     }
   );
@@ -217,7 +217,7 @@ sub list_GET {
             },
 
             (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation
-                justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction
+                justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
 
             created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
@@ -285,6 +285,8 @@ sub list_POST {
     location => $c->uri_for( $self->action_for('indicator'), [ $object->id ] )->as_string,
     entity => {
       name => $object->name,
+
+      name_url => $object->name_url,
       id   => $object->id,
 
     }

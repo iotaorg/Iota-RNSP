@@ -194,6 +194,7 @@ sub reusmo_GET {
             push(@{$ret->{resumos}{$perido}{indicadores}}, {
                 name        => $indicator->name,
                 formula     => $indicator->formula,
+                name_url    => $indicator->name_url,
                 explanation => $indicator->explanation,
                 id          => $indicator->id,
 
