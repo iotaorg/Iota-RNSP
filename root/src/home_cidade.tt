@@ -39,10 +39,8 @@
         </div>    	
 
 		<script type="text/javascript">
-			var userID = 2;
-			loadCidadeData();
+			$(document).ready(function(){
+				var userID = [% user.id %];
+				loadCidadeData();
+			});
 		</script>
-Atenção
-Cidade [% city.name %]
-User_id [% user.id %]
-
