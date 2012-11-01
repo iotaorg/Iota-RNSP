@@ -85,11 +85,11 @@ sub action_specs {
             my $name_o     = $values{name};
 
             my $idx = 2;
-            while (my $item = defined $self->search( {
+            while (my $item = $self->search( {
                 uf       => $values{uf},
                 name_uri => $values{name_uri},
             })->next){
-                next if ($item->id == $values{id});
+                last if ($item->id == $values{id});
                 $values{name_uri} = $name_uri_o . '-'. $idx;
                 $values{name}     = $name_o     . '-'. $idx++;
             };

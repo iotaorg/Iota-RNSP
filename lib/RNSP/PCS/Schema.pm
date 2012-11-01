@@ -53,5 +53,19 @@ sub get_weeks_of_year {
     return $res;
 }
 
+sub fix_deploy_pogpogpog {
+    my ( $self, $year ) = @_;
+    my $res = eval {
+        eval{$self->storage->dbh->selectall_arrayref( qq{ALTER TABLE indicator ADD COLUMN name_url character varying;} );};
+        eval{$self->storage->dbh->selectall_arrayref( qq{ALTER TABLE indicator ADD UNIQUE (name_url);} );};
+
+        eval{$self->storage->dbh->selectall_arrayref( qq{update indicator set name_url = regexp_replace(regexp_replace( translate (regexp_replace(lower(   "name" ), E'\\W', '-','g')  , text 'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', text 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN'), '-+', '-','g'), '^-+|-+\$', '', 'g');} )};
+    };
+    do { print $@; return undef } if $@;
+
+    return $res;
+}
+
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
