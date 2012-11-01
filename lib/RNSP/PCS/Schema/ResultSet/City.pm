@@ -22,7 +22,7 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             profile => {
                 name        => { required => 1, type => 'Str' },
-                uf          => { required => 1, type => 'Str' },
+                uf          => { required => 1, type => 'Str', filter => ['trim', 'upper'] },
                 pais        => { required => 0, type => 'Str' },
                 latitude    => { required => 0, type => 'Num' },
                 longitude   => { required => 0, type => 'Num' },
@@ -34,7 +34,7 @@ sub verifiers_specs {
             profile => {
                 id          => { required => 1, type => 'Int' },
                 name        => { required => 1, type => 'Str' },
-                uf          => { required => 1, type => 'Str' },
+                uf          => { required => 1, type => 'Str', filter => ['trim', 'upper'] },
                 pais        => { required => 0, type => 'Str' },
                 latitude    => { required => 0, type => 'Num' },
                 longitude   => { required => 0, type => 'Num' },
