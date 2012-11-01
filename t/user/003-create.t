@@ -96,8 +96,8 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'Image updated' );
 
-            ok(-e "$Bin/../../root/static/user/user_$id.gif", 'image exists');
-            unlink("$Bin/../../root/static/user/user_$id.gif") if -e "$Bin/../../root/static/user/user_$id.gif";
+            ok(-e "$Bin/../../root/static/user/user_$id", 'image exists');
+            unlink("$Bin/../../root/static/user/user_$id") if -e "$Bin/../../root/static/user/user_$id";
 
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
