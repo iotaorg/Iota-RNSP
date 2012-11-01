@@ -67,6 +67,20 @@ sub prefeitura_render: Chained('prefeitura_cidade') PathPart('') Args(0) {
 }
 
 
+sub prefeitura_indicator: Chained('prefeitura_cidade') PathPart('') CaptureArgs(1) {
+    my ( $self, $c, $indicator ) = @_;
+    $c->stash->{indicator} = $indicator;
+    $self->stash_tela_indicator($c);
+}
+
+sub prefeitura_indicator_render: Chained('prefeitura_indicator') PathPart('') Args(0) {
+    my ( $self, $c, $cidade ) = @_;
+     $c->stash(
+        template => 'home_indicador.tt'
+    );
+}
+
+
 sub movimento: Chained('root') PathPart('movimento') CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{find_role} = '_movimento';
@@ -91,6 +105,39 @@ sub movimento_render: Chained('movimento_cidade') PathPart('') Args(0) {
     my ( $self, $c, $cidade ) = @_;
     $self->stash_tela_cidade($c);
 }
+
+sub movimento_indicator: Chained('movimento_cidade') PathPart('') CaptureArgs(1) {
+    my ( $self, $c, $indicator ) = @_;
+    $c->stash->{indicator} = $indicator;
+    $self->stash_tela_indicator($c);
+}
+
+sub movimento_indicator_render: Chained('movimento_indicator') PathPart('') Args(0) {
+    my ( $self, $c, $cidade ) = @_;
+     $c->stash(
+        template => 'home_indicador.tt'
+    );
+}
+
+sub stash_tela_indicator {
+    my ( $self, $c ) = @_;
+
+    # carrega a cidade/user
+    $self->stash_tela_cidade($c);
+
+    # anti bug de quem chamar isso sem ler o fonte ^^
+    delete $c->stash->{template};
+
+    my $indicator = $c->model('DB::Indicator')->search({
+        name_url     => $c->stash->{indicator}
+    })->as_hashref->next;
+
+    $c->forward('/error_404') unless $indicator;
+
+    $c->stash->{indicator} = $indicator;
+}
+
+
 
 sub stash_tela_cidade {
     my ( $self, $c ) = @_;
