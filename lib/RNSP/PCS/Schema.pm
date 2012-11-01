@@ -58,7 +58,10 @@ sub fix_deploy_pogpogpog {
     my $res = eval {
 
 
-        eval{$self->storage->dbh->selectall_arrayref( qq{update indicator set name_url = replace( regexp_replace(regexp_replace( translate (regexp_replace(lower(  "name" ), E'\\W', '-','g')  , text 'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ', text 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN'), '-+', '-','g'), '^-+|-+\$', '', 'g'); ' ', '-')  } )};
+        $self->storage->dbh->selectall_arrayref(
+        "update indicator set name_url = replace( regexp_replace(regexp_replace( translate (regexp_replace(lower(  \"name\" ), E'\\W', '-','g'),
+            text 'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ',
+            text 'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN'), '-+', '-','g'), '^-+|-+\$', '', 'g'); ' ', '-') ");
     };
     do { print $@; return undef } if $@;
 
