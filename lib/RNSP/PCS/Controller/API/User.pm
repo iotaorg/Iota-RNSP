@@ -27,6 +27,33 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
 }
 
+sub user_img : Chained('object') : PathPart('imagem') : Args(0) : ActionClass('REST') {
+}
+
+sub user_img_POST {
+    my ( $self, $c ) = @_;
+
+    my $upload = $c->req->upload('imagem');
+    if ($upload){
+
+        my ($ext) = $upload->basename =~ /\.([a-z]+)$/i;
+
+
+        my $filename = sprintf('user_%i.%s',
+            $c->stash->{object}->next->id,
+            $ext
+        );
+        $upload->copy_to(  RNSP::PCS->path_to( $c->config->{root_images} , $filename ));
+
+        $c->config->{root_images} =~ s/^root//;
+        $self->status_ok( $c, entity => {ok => 1, url => $c->uri_for($c->config->{root_images} . '/' . $filename)->as_string } );
+    }else{
+        $self->status_bad_request( $c, message => 'no upload found');
+    }
+}
+
+
+
 sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
   my ( $self, $c ) = @_;
 
@@ -248,6 +275,8 @@ sub list_POST {
   );
 
 }
+
+
 
 with 'RNSP::PCS::TraitFor::Controller::Search';
 1;
