@@ -97,7 +97,7 @@ sub stash_tela_cidade {
 
     my $city = $c->model('DB::City')->search({
         pais     => lc $c->stash->{pais},
-        uf       => lc $c->stash->{estado},
+        uf       => uc $c->stash->{estado},
         name_uri => lc $c->stash->{cidade}
     })->as_hashref->next;
 
