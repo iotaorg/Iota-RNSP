@@ -182,7 +182,7 @@
 
 #cidades-dados .profile{
 	width: 256px;
-	height: 332px;
+	height: 432px;
 }
 
 #cidades-dados .profile .title{
@@ -213,14 +213,14 @@
 
 #cidades-dados #mapa{
 	width: 285px;
-	height: 200px;
+	height: 300px;
 }
 
 
 
 #cidades-dados .resume,
 #cidades-dados .map{
-	height: 200px;
+	height: 300px;
 }
 
 #cidades-dados .resume .content-fill,
@@ -242,7 +242,7 @@
 	padding: 4px 2px;
 }
 #cidades-dados .variaveis .item .label{
-	width: 33%;
+	width: 38%;
 	text-align: right;
 	color: #999;
 	vertical-align: top;

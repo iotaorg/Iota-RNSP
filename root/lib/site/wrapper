@@ -32,7 +32,7 @@
                 <a href="https://twitter.com/#!/cidsustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/twitter.png" border="0" /></a>&nbsp;&nbsp;
                 <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" border="0" /></a>
             </div>
-        	<div class="logo"><img src="/static/images/logo.png" border="0" alt="Programa Cidades Sustentáveis" /></div>
+        	<div class="logo"><img src="/static/images/logo[% IF find_role == '_movimento' %]-movimento[% END %].png" border="0" /></div>
         </div>
     </div>
 	<div id="menu">

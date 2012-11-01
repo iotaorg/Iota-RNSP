@@ -1,28 +1,26 @@
 .indicators .item.selected{
-	color: #663200;
-	background-color: #ffefcc;
+	color: #392268;
+	background-color: #d4ccff;
 }
 
 .indicators .item:hover{
-	background-color: #fff5e1;
+	background-color: #e9e1ff;
 }
 
 #indicadores-dados .menu-left .title{
-	padding: 5px;
-	color: #663200;
-	font-size: 14pt;
+	color: #392268;
 }
 
 #indicadores-dados .data-right .title{
-	color: #995600;
-	font-size: 14pt;
+	color: #53368e;
 }
 .data-content .tabs .item.selected{
 	background-color: #fff;
-	color: #995600;
+	color: #53368e;
 }
 #cidades-dados .profile .title{
-	color: #995600;
-	font-size: 20pt;
-	font-weight: bolder; 
+	color: #53368e;
+}
+#cidades-indicadores .title{
+	color: #994c00;
 }
