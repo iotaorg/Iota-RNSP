@@ -1,0 +1,28 @@
+.indicators .item.selected{
+	color: #663200;
+	background-color: #ffefcc;
+}
+
+.indicators .item:hover{
+	background-color: #fff5e1;
+}
+
+#indicadores-dados .menu-left .title{
+	padding: 5px;
+	color: #663200;
+	font-size: 14pt;
+}
+
+#indicadores-dados .data-right .title{
+	color: #995600;
+	font-size: 14pt;
+}
+.data-content .tabs .item.selected{
+	background-color: #fff;
+	color: #995600;
+}
+#cidades-dados .profile .title{
+	color: #995600;
+	font-size: 20pt;
+	font-weight: bolder; 
+}
