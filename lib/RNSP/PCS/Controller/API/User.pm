@@ -36,12 +36,8 @@ sub user_img_POST {
     my $upload = $c->req->upload('imagem');
     if ($upload){
 
-        my ($ext) = $upload->basename =~ /\.([a-z]+)$/i;
-
-
-        my $filename = sprintf('user_%i.%s',
-            $c->stash->{object}->next->id,
-            $ext
+        my $filename = sprintf('user_%i',
+            $c->stash->{object}->next->id
         );
         $upload->copy_to(  RNSP::PCS->path_to( $c->config->{root_images} , $filename ));
 
