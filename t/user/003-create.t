@@ -73,13 +73,31 @@ eval {
             }
             like( $res->header('Location'), qr{/api/user/\d+$}, 'location ok' );
 
+            my ($id) = $res->header('Location') =~ /api\/user\/(\d+)$/;
+            my $url_user = $res->header('Location');
             use URI;
             my $uri = URI->new( $res->header('Location') );
+
             $uri->query_form( api_key => 'test' );
+
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             ok( $res->is_success, 'user exists' );
             is( $res->code, 200, 'user exists -- 200 Success' );
 
+
+            ( $res, $c ) = ctx_request(
+                POST $url_user . '/imagem',
+                'Content-Type' => 'form-data',
+                Content =>
+                [   api_key                        => 'test',
+                    'imagem' => ["$Bin/img_teste.gif"],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'Image updated' );
+
+            ok(-e "$Bin/../../root/static/user/user_$id.gif", 'image exists');
+            unlink("$Bin/../../root/static/user/user_$id.gif") if -e "$Bin/../../root/static/user/user_$id.gif";
 
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
@@ -92,6 +110,7 @@ eval {
             );
             ok( !$res->is_success, 'error' );
             is( $res->code, 400, 'user already exists' );
+
 
 
             die 'rollback';
