@@ -92,6 +92,10 @@ sub parse {
 sub evaluate {
     my ($self, %vars) = @_;
 
+    foreach($self->variables){
+        return '-' unless defined $vars{$_};
+    }
+
     return $self->_is_string ? $self->as_string(%vars) : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
 }
 
