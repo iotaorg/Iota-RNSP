@@ -19,7 +19,7 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
 
-  $c->stash->{indicator} = $c->stash->{collection}->search_rs( { id => $id } );
+  $c->stash->{indicator} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
   $c->stash->{indicator_obj} = $c->stash->{indicator}->next;
 
   $c->detach('/error_404') unless $c->stash->{indicator_obj};
@@ -27,6 +27,18 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
 }
 
+sub indicator : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
+  my ( $self, $c ) = @_;
+
+}
+
+sub indicator_GET {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{object} = $c->stash->{indicator};
+    my $controller = $c->controller('API::Indicator');
+    $controller->indicator_GET( $c );
+}
 
 sub reusmo :Chained('base') : PathPart('') : Args( 0 ) : ActionClass('REST') {}
 
@@ -153,6 +165,7 @@ sub reusmo_GET {
                     $perido = $row->period;
                 }
                 next unless $valid_from;
+                next unless $perido;
 
                 my $rsx = $row->values->search({
                     'me.valid_from' => {'>' => $valid_from},
@@ -192,7 +205,7 @@ sub reusmo_GET {
             # procura pelas ultimas N periodos de novo, so que consideranto todos os
             # indicadores duma vez
             my $datas = {};
-            my @datas = [];
+            my @datas_ar;
             foreach my $in (@$indicadores){
                 $datas->{$_}{nome} = $in->{valores}{$_}{nome}
                     for (keys %{$in->{valores}} );
@@ -201,23 +214,21 @@ sub reusmo_GET {
             my $i     = $max_periodos;
             foreach my $data (sort {$b cmp $a} keys %{$datas}){
                 last if $i <= 0;
-                $datas[--$i] = {
+                $datas_ar[--$i] = {
                     data => $data,
                     nome => $datas->{$data}{nome}
                 };
             }
             # pronto, agora @datas ja tem a lista correta e na ordem!
-
             foreach my $in (@$indicadores){
 
                 my @valores;
-
-                foreach my $data (@datas){
+                foreach my $data (@datas_ar){
                     push @valores, $in->{valores}{$data->{data}}{valor} ||'-';
                 }
                 $in->{valores} = \@valores;
             }
-            $ind_info->{datas} = \@datas;
+            $ind_info->{datas} = \@datas_ar;
         }
     };
 

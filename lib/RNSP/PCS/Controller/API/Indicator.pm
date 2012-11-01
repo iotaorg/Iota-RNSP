@@ -59,6 +59,7 @@ Retorna:
 
 sub indicator_GET {
   my ( $self, $c ) = @_;
+
   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis']})->as_hashref->next;
 
   my $f = new RNSP::IndicatorFormula(
@@ -69,7 +70,7 @@ sub indicator_GET {
   $self->status_ok(
     $c,
     entity => {
-      period     => eval{$c->model('DB')->resultset('Variable')->find($any_var)->period},
+      period     => $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)->period} : undef,
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
