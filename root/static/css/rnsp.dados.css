@@ -1,0 +1,316 @@
+#indicadores-dados{
+	
+}
+
+#indicadores-dados .menu-left{
+	width: 192px;
+	float: left;	
+	margin-right: 6px;
+	border: 1px solid #d5d5d5;
+	clear: left;
+}
+
+#indicadores-dados .data-right{
+	float: left;	
+	width: 698px;
+	clear: right;
+}
+
+#indicadores-dados .menu-left .content-fill{
+	padding: 5px;	
+}
+#indicadores-dados .data-right .content-fill{
+	padding: 0px;	
+}
+
+.indicators{
+	margin-top: 5px;
+}
+
+.indicators .item{
+	border-bottom: 1px solid #e0e0e0;
+	padding: 5px;
+	font-size: 10pt;
+}
+.indicators .item.selected{
+	color: #006666;
+	background-color: #ccffff;
+}
+
+.indicators .item:hover,
+.indicators .item.selected:hover{
+	cursor: hand;
+	cursor: pointer;
+}
+
+.indicators .item:hover{
+	background-color: #e1ffff;
+}
+
+#indicadores-dados .menu-left .title{
+	padding: 5px;
+	color: #006666;
+	font-size: 14pt;
+}
+
+#indicadores-dados .data-right .title{
+	color: #009999;
+	font-size: 14pt;
+}
+
+#indicadores-dados .data-title{
+	border: 1px solid #d5d5d5;
+	padding: 5px;
+	margin-bottom: 6px;
+}
+
+#indicadores-dados .data-content{
+	border: 1px solid #d5d5d5;
+	padding: 10px;
+}
+
+.data-content .tabs{
+	float: right;
+	clear: right;
+}
+
+.data-content .tabs .item{
+	float: left;
+	border: 1px solid #e0e0e0;
+	margin-left: 5px;
+	font-size: 9pt;
+	padding: 2px 5px;
+	background-color: #f1f1f1;
+}
+
+.data-content .tabs .item.selected{
+	background-color: #fff;
+	color: #009999;
+}
+
+.data-content .tabs .item:hover{
+	cursor: hand;
+	cursor: pointer;
+}
+
+.data-content .table{
+	margin-top: -1px;
+	border: 1px solid #e0e0e0;
+	padding: 5px;
+	font-family: arial;
+}
+.data-content .table td,
+.data-content .table th,
+.data-content .table div{
+	font-family: arial;
+}
+
+.data-content .table table{
+	width: 100%;
+}
+
+.data-content .table th{
+	text-align: center;
+	font-weight: normal;
+	font-size: 10pt;
+	color: #999;
+}
+
+.data-content .table tr td,
+.data-content .table tr th{
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.data-content .table tbody td{
+	padding: 4px 2px;
+}
+
+.data-content .table tbody td.valor{
+	text-align: center;
+}
+.data-content .table tbody td.grafico{
+	text-align: center;
+	width: 1px;
+	padding: 5px;
+}
+
+.data-content .graph{
+	display: none;	
+	margin-top: -1px;
+	border: 1px solid #e0e0e0;
+	padding: 5px;
+	text-align: center;
+}
+
+.data-content .graph .legend{
+	clear: both;
+	margin-left: 50px;
+}
+
+.data-content .graph .legend .item{
+	float: left;
+	margin-right: 5px;
+}
+
+.data-content .graph .legend .item .quad{
+	float: left;
+	width: 10px;
+	height: 10px;
+	margin-right: 5px;
+	margin-top: 3px;
+}
+.data-content .graph .legend .item .label{
+	float: left;
+	font-size: 10pt;
+}
+
+.data-content .map{
+	display: none;	
+	margin-top: -1px;
+	border: 1px solid #e0e0e0;
+	padding: 5px;
+	text-align: center;
+}
+
+#cidades-dados .profile,
+#cidades-dados .image,
+#cidades-dados .resume,
+#cidades-dados .map{
+	border: 1px solid #e0e0e0;
+	float: left;
+}
+
+#cidades-dados .profile{
+	width: 256px;
+	height: 332px;
+}
+
+#cidades-dados .profile .title{
+	color: #009999;
+	font-size: 20pt;
+	font-weight: bolder; 
+}
+
+
+#cidades-dados .image{
+	width: 630px;
+	height: 120px;
+	clear: right;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+#cidades-dados .resume{
+	width: 332px;
+	clear: right;
+	margin-left: 10px;
+}
+#cidades-dados .map{
+	width: 285px;
+	clear: right;
+	margin-left: 10px;
+}
+
+#cidades-dados #mapa{
+	width: 285px;
+	height: 200px;
+}
+
+
+
+#cidades-dados .resume,
+#cidades-dados .map{
+	height: 200px;
+}
+
+#cidades-dados .resume .content-fill,
+#cidades-dados .profile .content-fill{
+	padding: 10px;
+}
+
+#cidades-dados .variaveis .tabela{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#cidades-dados .variaveis{
+}
+#cidades-dados .variaveis .item{
+	border-bottom: 1px solid #efefef;
+}
+#cidades-dados .variaveis .item td{
+	padding: 4px 2px;
+}
+#cidades-dados .variaveis .item .label{
+	width: 33%;
+	text-align: right;
+	color: #999;
+	vertical-align: top;
+}
+#cidades-dados .variaveis .item .valor{
+	color: #666;
+	vertical-align: bottom;
+}
+
+#cidades-indicadores{
+	border: 1px solid #e0e0e0;
+	margin-top: 10px;
+	padding: 2px;
+}
+
+#cidades-indicadores .title{
+	color: #009999;
+	background-color: #efefef;
+	border: 1px solid #e0e0e0;
+	padding: 2px 5px;
+	font-size: 12pt;
+	font-weight: bolder;
+}
+
+
+#cidades-indicadores .table{
+	padding: 5px;
+	font-family: arial;
+}
+#cidades-indicadores .table td,
+#cidades-indicadores .table th,
+#cidades-indicadores .table div{
+	font-family: arial;
+}
+
+#cidades-indicadores .table table{
+	width: 100%;
+}
+
+#cidades-indicadores .table th{
+	text-align: center;
+	font-weight: normal;
+	font-size: 10pt;
+	color: #999;
+}
+
+#cidades-indicadores .table tr td,
+#cidades-indicadores .table tr th{
+	border-bottom: 1px solid #e5e5e5;
+}
+
+#cidades-indicadores .table tbody td{
+	padding: 4px 2px;
+}
+
+#cidades-indicadores .table tbody td.nome a{
+	text-decoration: underline;
+}
+#cidades-indicadores .table tbody td.nome a:hover{
+	text-decoration: none;
+}
+
+
+#cidades-indicadores .table tbody td.valor{
+	text-align: center;
+}
+#cidades-indicadores .table tbody td.grafico{
+	text-align: center;
+	width: 1px;
+	padding: 5px;
+}
