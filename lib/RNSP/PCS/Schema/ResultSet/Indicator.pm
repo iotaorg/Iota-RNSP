@@ -7,6 +7,9 @@ use Moose;
 extends 'DBIx::Class::ResultSet';
 with 'RNSP::PCS::Role::Verification';
 with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
+use Text2URI;
+my $text2uri = Text2URI->new(); # tem lazy la, don't worry
+
 
 use Data::Verifier;
 use RNSP::IndicatorFormula;
@@ -105,6 +108,8 @@ sub action_specs {
             my %values = shift->valid_values;
             do { delete $values{$_} unless defined $values{$_}} for keys %values;
             return unless keys %values;
+            $values{name_url} = $text2uri->translate($values{name});
+
 
             my $var = $self->create( \%values );
 
@@ -114,8 +119,10 @@ sub action_specs {
         update => sub {
             my %values = shift->valid_values;
 
+            $values{name_url} = $text2uri->translate($values{name}) if $values{name};
             do { delete $values{$_} unless defined $values{$_}} for keys %values;
             return unless keys %values;
+
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

@@ -5,7 +5,7 @@ use namespace::autoclean;
 
 use Moose;
 use Text2URI;
-my $text2uri = new Text2URI(); # tem lazy la, don't worry
+my $text2uri = Text2URI->new(); # tem lazy la, don't worry
 
 extends 'DBIx::Class::ResultSet';
 with 'RNSP::PCS::Role::Verification';

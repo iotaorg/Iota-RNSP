@@ -148,6 +148,7 @@ sub reusmo_GET {
                 schema => $c->model('DB')->schema
             );
 
+
             my $rs = $c->model('DB')->resultset('Variable')->search_rs({
                 'me.id' => [$indicator_formula->variables],
             } );
@@ -165,7 +166,7 @@ sub reusmo_GET {
                     $perido = $row->period;
                 }
                 next unless $valid_from;
-                next unless $perido;
+
 
                 my $rsx = $row->values->search({
                     'me.valid_from' => {'>' => $valid_from},
@@ -177,6 +178,7 @@ sub reusmo_GET {
                 }
                 $variaveis++;
             }
+            next unless $perido;
 
             my $item = {};
             foreach my $from (keys %{$res}){
