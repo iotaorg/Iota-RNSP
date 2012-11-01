@@ -59,6 +59,17 @@ eval {
         ok( $res->is_success, 'var updated' );
         is( $res->code, 202, 'var updated -- 202 Accepted' );
 
+        ( $res, $c ) = ctx_request(
+            POST $uri->path_query,
+            [
+                'city.update.name'         => 'BarFoo',
+                'city.update.uf'           => 'XX',
+                'city.update.longitude'    => 55.55,
+            ]
+        );
+        ok( $res->is_success, 'var updated' );
+        is( $res->code, 202, 'var updated -- 202 Accepted' );
+
         use JSON qw(from_json);
         my $city = eval{from_json( $res->content )};
         ok(
