@@ -39,8 +39,6 @@
         </div>    	
 
 		<script type="text/javascript">
-			$(document).ready(function(){
-				var userID = [% user.id %];
-				loadCidadeData();
-			});
+			var userID = [% user.id %];
+			loadCidadeData();
 		</script>
