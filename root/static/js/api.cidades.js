@@ -103,7 +103,7 @@ function showIndicadoresData(){
 			table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url: item.name_url});
 			for (j = 0; j < item.valores.length; j++){
 				if (item.valores[j] == "-") item.valores[j] = 0;
-				table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j]});
+				table_content += "<td class='valor'>$$valor</td>".render({valor: parseFloat(item.valores[j]).toFixed(2)});
 			}
 			table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: i});
 			graficos[i] = item.valores;
