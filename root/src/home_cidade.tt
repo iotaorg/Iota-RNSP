@@ -38,6 +38,10 @@
             <div class="clear"></div>
         </div>    	
 
+		<script type="text/javascript">
+			var userID = 2;
+			loadCidadeData();
+		</script>
 Atenção
 Cidade [% city.name %]
 User_id [% user.id %]

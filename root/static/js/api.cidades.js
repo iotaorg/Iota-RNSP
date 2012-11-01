@@ -1,5 +1,7 @@
 $(document).ready(function(){
-	var userID = 2;
+	if (typeof(userID) == undefined){
+		var userID = 2;
+	}
 	
 	var cidade_data;
 	var indicadores_data;
@@ -60,7 +62,7 @@ $(document).ready(function(){
 		//setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
 
 		$("#cidades-dados .image").css("background-image","none");
-		$("#cidades-dados .image").css("background-image","url('images/"+cidade_data.cidade.imagem+"')");
+		$("#cidades-dados .image").css("background-image","url('/static/images/"+cidade_data.cidade.imagem+"')");
 	}
 	
 	function loadIndicadoresData(){
@@ -163,7 +165,5 @@ $(document).ready(function(){
             line.Draw();
 		}
 	}
-	
-	loadCidadeData();
 
 });
