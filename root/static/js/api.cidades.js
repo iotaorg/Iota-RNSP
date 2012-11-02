@@ -1,6 +1,11 @@
-$(document).ready(function(){
+var zoom_padrao = 5;
+var map;
+var cidade_data;
+var indicadores_data;
+var graficos = [];
+
+function loadMap(){
 	
-	var zoom_padrao = 5;
 	var mapDefaultLocation = new google.maps.LatLng(-14.2350040, -51.9252800);
 	var geocoder = new google.maps.Geocoder();
 
@@ -10,9 +15,8 @@ $(document).ready(function(){
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 
-	var map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
-
-});
+	map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
+}
 	
 var cidade_data;
 var indicadores_data;
@@ -164,3 +168,6 @@ function geraGraficos(){
 		line.Draw();
 	}
 }
+$(document).ready(function(){
+	loadMap();
+});
