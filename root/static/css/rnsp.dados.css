@@ -1,5 +1,5 @@
-#indicadores-dados{
-	
+table{
+	border-collapse: collapse;
 }
 
 #indicadores-dados .menu-left{
@@ -232,11 +232,6 @@
 	border-collapse: collapse;
 	width: 100%;
 }
-
-#cidades-dados .variaveis .tabela table{
-	border-collapse: collapse;
-}
-
 
 #cidades-dados .variaveis{
 }

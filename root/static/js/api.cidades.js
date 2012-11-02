@@ -62,10 +62,19 @@ function showCidadeData(){
 		));
 	});
 
-	setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
-
 	$("#cidades-dados .image").css("background-image","none");
 	$("#cidades-dados .image").css("background-image","url('/static/images/"+cidade_data.cidade.imagem+"')");
+	
+	var diff = $("#cidades-dados .profile .content-fill").height() - $("#cidades-dados .profile").height() + 10;
+	if (diff > 10){
+		$("#cidades-dados .profile").css("height","+="+diff);
+		$("#cidades-dados .resume").css("height","+="+diff);
+		$("#cidades-dados .map").css("height","+="+diff);
+		$("#cidades-dados #mapa").css("height","+="+diff);
+	}
+
+	setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
+	
 }
 
 function loadIndicadoresData(){
