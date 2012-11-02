@@ -65,13 +65,15 @@ sub user_GET {
         my $rs = $c->model('DB::Variable')->search_rs({
             'values.user_id' => $user->id,
             is_basic => 1
-        }, { prefetch => ['values'], order_by => 'values.valid_from' } );
+        }, { prefetch => ['values'] } );
 
         $rs = $rs->as_hashref;
-
+        my $existe = {};
         while(my $r = $rs->next){
 
+            @{$r->{values}} = map {$_} sort {$a->{valid_from} cmp $b->{valid_from}} @{$r->{values}};
             my $valor = pop @{$r->{values}};
+
             push (@{$ret->{variaveis}}, {
                 name => $r->{name},
                 cognomen => $r->{cognomen},

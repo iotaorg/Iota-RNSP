@@ -74,7 +74,7 @@ sub list_GET {
     -or => [
          'values.user_id' => $c->stash->{user}->id,
         'values.user_id' => undef,
-    ] }, { prefetch => ['values'], order_by => 'values.valid_from' } );
+    ] }, { prefetch => ['values'] } );
 
     $rs = $rs->search({is_basic => $c->req->params->{is_basic}})
         if (defined $c->req->params->{is_basic});
@@ -94,7 +94,7 @@ sub list_GET {
                     valid_until   => $_->{valid_until},
                     id            => $_->{id},
                     url           =>  $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $_->{id} ] )->as_string
-                }} @{$obj->{values}}
+                }} sort {$a->{valid_from} cmp $b->{valid_from} } @{$obj->{values}}
            ],
         }
     }
