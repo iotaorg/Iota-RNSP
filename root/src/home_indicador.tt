@@ -9,7 +9,7 @@
             </div>
             <div class="clear"></div>
         	<div id="indicador-historico">
-				<div class="title">Série Histórica de <span class="cidade"></span></div>
+				<div class="title">SÃ©rie HistÃ³rica de <span class="cidade"></span></div>
 				<div class="content-fill">
 
 					<div class="table">

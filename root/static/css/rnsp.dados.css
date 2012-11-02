@@ -181,6 +181,14 @@ table{
 	float: left;
 }
 
+#indicador-dados .profile .explanation{
+	padding: 10px 0;	
+}
+
+#indicador-dados .profile span.goal-explanation{
+	font-size: 8pt;
+}
+
 #cidades-dados .profile{
 	width: 256px;
 	height: 447px;
@@ -230,7 +238,7 @@ table{
 }
 
 #cidades-dados .variaveis .tabela,
-#indicador-dados .variaveis .tabela{
+#indicador-dados .dados .tabela{
 	border-collapse: collapse;
 	width: 100%;
 }
