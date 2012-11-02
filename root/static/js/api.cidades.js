@@ -58,7 +58,7 @@ function showCidadeData(){
 		));
 	});
 
-	//setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
+	setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
 
 	$("#cidades-dados .image").css("background-image","none");
 	$("#cidades-dados .image").css("background-image","url('/static/images/"+cidade_data.cidade.imagem+"')");
@@ -100,7 +100,7 @@ function showIndicadoresData(){
 		
 		var indicadores = indicadores_data.resumos.yearly.indicadores;
 		$.each(indicadores, function(i,item){
-			table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url: item.name_url});
+			table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.substring(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 			for (j = 0; j < item.valores.length; j++){
 				if (item.valores[j] == "-") item.valores[j] = 0;
 				table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.##", locale:"br"})});
