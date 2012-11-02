@@ -38,5 +38,5 @@
 
 		<script type="text/javascript">
 			var userID = [% user.id %];
-			loadCidadeData();
+			loadCidadeData({ref: "cidade"});
 		</script>

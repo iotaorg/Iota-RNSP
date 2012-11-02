@@ -175,10 +175,14 @@ table{
 #cidades-dados .profile,
 #cidades-dados .image,
 #cidades-dados .resume,
-#cidades-dados .map,
-#indicador-dados .profile{
+#cidades-dados .map{
 	border: 1px solid #e0e0e0;
 	float: left;
+}
+
+#indicador-dados .profile{
+	border: 1px solid #e0e0e0;
+	clear: both;
 }
 
 #indicador-dados .profile .explanation{
@@ -235,6 +239,7 @@ table{
 #cidades-dados .profile .content-fill,
 #indicador-dados .profile .content-fill{
 	padding: 10px;
+	clear: both;
 }
 
 #cidades-dados .variaveis .tabela,
