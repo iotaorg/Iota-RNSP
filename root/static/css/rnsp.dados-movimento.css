@@ -18,9 +18,15 @@
 	background-color: #fff;
 	color: #53368e;
 }
-#cidades-dados .profile .title{
+#cidades-dados .profile .title,
+#indicador-dados .profile .title{
 	color: #53368e;
 }
-#cidades-indicadores .title{
+#cidades-indicadores .title,
+#indicador-historico .title{
+	color: #4b308f;
+}
+
+#indicador-historico .title span{
 	color: #4b308f;
 }

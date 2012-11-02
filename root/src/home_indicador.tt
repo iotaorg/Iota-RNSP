@@ -1,1 +1,28 @@
-[%indicator.name%]
+        	<div id="indicador-dados">
+                <div class="profile">
+	            	<div class="content-fill">
+                        <div class="title">[% indicator.name %]</div>
+                        <div class="explanation"></div>
+                        <div class="dados"><table class="tabela"></table></div>
+					</div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        	<div id="indicador-historico">
+				<div class="title">Série Histórica de <span class="cidade"></span></div>
+				<div class="content-fill">
+
+					<div class="table">
+						<div class="content-fill"></div>
+					</div>
+
+				</div>
+            </div>
+            <div class="clear"></div>
+        </div>    	
+
+<script type="text/javascript">
+		var userID = [% user.id %];
+		var indicadorID = [% indicator.id %];
+		loadIndicadorData();
+</script>

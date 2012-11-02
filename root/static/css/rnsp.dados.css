@@ -175,7 +175,8 @@ table{
 #cidades-dados .profile,
 #cidades-dados .image,
 #cidades-dados .resume,
-#cidades-dados .map{
+#cidades-dados .map,
+#indicador-dados .profile{
 	border: 1px solid #e0e0e0;
 	float: left;
 }
@@ -185,7 +186,8 @@ table{
 	height: 447px;
 }
 
-#cidades-dados .profile .title{
+#cidades-dados .profile .title,
+#indicador-dados .profile .title{
 	color: #009999;
 	font-size: 20pt;
 	font-weight: bolder; 
@@ -216,29 +218,29 @@ table{
 	height: 300px;
 }
 
-
-
 #cidades-dados .resume,
 #cidades-dados .map{
 	height: 300px;
 }
 
 #cidades-dados .resume .content-fill,
-#cidades-dados .profile .content-fill{
+#cidades-dados .profile .content-fill,
+#indicador-dados .profile .content-fill{
 	padding: 10px;
 }
 
-#cidades-dados .variaveis .tabela{
+#cidades-dados .variaveis .tabela,
+#indicador-dados .variaveis .tabela{
 	border-collapse: collapse;
 	width: 100%;
 }
 
-#cidades-dados .variaveis{
-}
-#cidades-dados .variaveis .item{
+#cidades-dados .variaveis .item,
+#indicador-dados .dados .item{
 	border-bottom: 1px solid #efefef;
 }
-#cidades-dados .variaveis .item td{
+#cidades-dados .variaveis .item td,
+#indicador-dados .dados .item td{
 	padding: 4px 2px;
 }
 #cidades-dados .variaveis .item .label{
@@ -252,13 +254,26 @@ table{
 	vertical-align: bottom;
 }
 
-#cidades-indicadores{
+#indicador-dados .dados .item .label{
+	width: 100px;
+	text-align: right;
+	color: #999;
+	vertical-align: top;
+}
+#indicador-dados .dados .item .valor{
+	color: #666;
+	vertical-align: bottom;
+}
+
+#cidades-indicadores,
+#indicador-historico{
 	border: 1px solid #e0e0e0;
 	margin-top: 10px;
 	padding: 2px;
 }
 
-#cidades-indicadores .title{
+#cidades-indicadores .title,
+#indicador-historico .title{
 	color: #009999;
 	background-color: #efefef;
 	border: 1px solid #e0e0e0;
@@ -267,8 +282,12 @@ table{
 	font-weight: bolder;
 }
 
+#indicador-historico .title span{
+	color: #009999;
+}
 
-#cidades-indicadores .table{
+#cidades-indicadores .table,
+#indicador-historico .table{
 	padding: 5px;
 	font-family: arial;
 }
@@ -304,7 +323,6 @@ table{
 #cidades-indicadores .table tbody td.nome a:hover{
 	text-decoration: none;
 }
-
 
 #cidades-indicadores .table tbody td.valor{
 	text-align: center;

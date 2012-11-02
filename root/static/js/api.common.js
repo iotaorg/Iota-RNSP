@@ -76,6 +76,24 @@ if ('a,,b'.split(',').length < 3) {
 }
 
 
+var	convertDate = function(date,splitter){
+	var date_tmp = date.split(splitter);
+	var date = date_tmp[0];
+	var time = date_tmp[1];
+	
+	var date_split = date.split("-");
+
+	return date_split[2] + "/" + date_split[1] + "/" + date_split[0];
+}
+
+var convertDateToPeriod = function(date,period){
+	if (period == "yearly"){
+		return date.split("-")[0];
+	}else if (period == "monthly"){
+		return date.split("-")[1] + "/" + date.split("-")[0];
+	}
+}
+
 var findInArray = function(obj,value){
 	if (value == "") return true;
 	var retorno = false;

@@ -18,16 +18,15 @@ function loadMap(){
 	map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
 }
 	
-var cidade_data;
-var indicadores_data;
-var graficos = [];
-
 function setMap(lat,lng){
 	var center = new google.maps.LatLng(lat, lng)
 	map.setCenter(center);
 }
 
-function loadCidadeData(){
+function loadCidadeData(args){
+	if (args.ref == undefined || args.ref == "cidade"){
+		loadMap();
+	}
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
@@ -36,8 +35,10 @@ function loadCidadeData(){
 				}),
 		success: function(data, textStatus, jqXHR){
 			cidade_data = data;
-			showCidadeData();
-			loadIndicadoresData();
+			if (args.ref == undefined || args.ref == "cidade"){
+				showCidadeData();
+				loadIndicadoresData();
+			}
 		},
 		error: function(data){
 			console.log("erro ao carregar informações da cidade");
@@ -131,37 +132,6 @@ function showIndicadoresData(){
 	geraGraficos();
 }
 
-
-function carregaTabela(){
-	$.getJSON("json/indicador.cidade.1.json",
-	{
-		format: "json"
-	},
-	function(data) {
-		var table_content = ""
-		$("#cidades-indicadores .table .content-fill").empty();
-		table_content += "<table>";
-		table_content += "<thead><tr><th></th><th>2009</th><th>2010</th><th>2011</th><th>2012</th><th></th></tr></thead>";
-		table_content += "<tbody>";
-		
-		$.each(data.dados, function(i,item){
-			table_content += "<tr><td class='nome'>$$nome</td>".render({nome: item.nome});
-			for (j = 0; j < item.valores.length; j++){
-				table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j]});
-			}
-			table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: i});
-			graficos[i] = item.valores;
-		});
-
-		table_content += "</tbody></table>";
-		
-		$("#cidades-indicadores .table .content-fill").append(table_content);
-		
-		geraGraficos();
-
-	});
-}
-
 function geraGraficos(){
 	for (i = 0; i < graficos.length; i++){
 		var line = new RGraph.Line('graph-'+i, graficos[i]);
@@ -177,6 +147,3 @@ function geraGraficos(){
 		line.Draw();
 	}
 }
-$(document).ready(function(){
-	loadMap();
-});
