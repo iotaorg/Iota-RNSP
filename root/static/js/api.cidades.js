@@ -99,7 +99,7 @@ function showIndicadoresData(){
 			table_content += "<th>$$data</th>".render({data: datas[index].nome});
 		});
 
-		table_content += "</tr></thead>";
+		table_content += "<th></th></tr></thead>";
 		table_content += "<tbody>";
 		
 		var indicadores = indicadores_data.resumos.yearly.indicadores;

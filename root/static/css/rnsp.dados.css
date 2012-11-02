@@ -233,6 +233,11 @@
 	width: 100%;
 }
 
+#cidades-dados .variaveis .tabela table{
+	border-collapse: collapse;
+}
+
+
 #cidades-dados .variaveis{
 }
 #cidades-dados .variaveis .item{
