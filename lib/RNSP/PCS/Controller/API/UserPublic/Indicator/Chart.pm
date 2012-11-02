@@ -37,6 +37,7 @@ Retorna a mesma coisa que o GET /api/indicator/$id/chart/period_axis?group_by=we
 sub render_GET {
     my ( $self, $c ) = @_;
 
+    $c->stash->{user_id} = $c->stash->{user_obj}->id;
     $c->stash->{controller}->render_GET( $c );
 }
 
