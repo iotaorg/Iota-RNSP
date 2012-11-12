@@ -77,7 +77,7 @@ sub indicator_GET {
       axis => {
         map { $_ => $object_ref->{axis}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name goal axis_id formula source explanation
+      (map { $_ => $object_ref->{$_} } qw(name goal axis_id formula source explanation observations
             justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
         created_at))
     }
@@ -216,7 +216,7 @@ sub list_GET {
                 map { $_ => $obj->{axis}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation
+            (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation observations
                 justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
 
             created_at)),

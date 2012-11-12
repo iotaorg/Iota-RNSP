@@ -132,6 +132,12 @@ __PACKAGE__->table("indicator");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 observations
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -195,6 +201,12 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "observations",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -223,7 +235,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
 
-=head2 C<indicator_name_url_key>
+=head2 C<indicator_name_url_key2>
 
 =over 4
 
@@ -233,7 +245,7 @@ __PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
 
 =cut
 
-__PACKAGE__->add_unique_constraint("indicator_name_url_key", ["name_url"]);
+__PACKAGE__->add_unique_constraint("indicator_name_url_key2", ["name_url"]);
 
 =head1 RELATIONS
 
@@ -268,8 +280,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-01 15:34:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H4Ud2Tmod40qI92LlxsTMg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-12 15:18:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X8SPAZyVv6QHlGv4XCWwng
 
 __PACKAGE__->belongs_to(
     "owner",

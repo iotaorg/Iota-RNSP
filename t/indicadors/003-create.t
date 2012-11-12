@@ -52,6 +52,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',
+                    'indicator.create.observations' => 'lala'
 
                 ]
             );
@@ -67,7 +68,8 @@ eval {
             is( $save_test->name, 'Foo Bar', 'name ok' );
             is( $save_test->explanation, 'explanation', 'explanation ok' );
             is( $save_test->source, 'me', 'source ok' );
-
+            is( $save_test->observations, 'lala', 'observations ok' );
+            is( $save_test->chart_name, 'pie', 'chart_name ok' );
 
             use URI;
             my $uri = URI->new( $res->header('Location') );
