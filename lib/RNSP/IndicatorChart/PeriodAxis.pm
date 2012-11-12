@@ -129,15 +129,15 @@ sub get_label_of_period {
     if ($period eq 'weekly'){
         return 'semana ' . $dt->week;
     }elsif ($period eq 'monthly'){
-        return 'mês ' . $dt->month . ' de ' . $dt->year ;
+        return $dt->month . ' de ' . $dt->year ;
     }elsif ($period eq 'bimonthly'){
-        return 'mêses ' . $dt->month . '/' . ($dt->month + 1).' de ' . $dt->year ;
+        return $dt->month . ' e ' . ($dt->month + 1).' de ' . $dt->year ;
     }elsif ($period eq 'quarterly'){
         return $dt->quarter . ' trimeste de ' . $dt->year;
     }elsif ($period eq 'semi-annual'){
         return ($dt->month <= 6? '1 semestre' : '2 semestre') . ' de '. $dt->year;
     }elsif ($period eq 'yearly'){
-        return 'ano ' . $dt->year;
+        return $dt->year;
     }else{
         return $data;
     }
