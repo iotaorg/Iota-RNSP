@@ -46,6 +46,7 @@ Retorna:
         "type": "int",
         "source":"foo",
         "period":"semana",
+        "measurement_unit":"km",
         "is_basic": "1",
         "created_by": {
             "name": "admin",
@@ -65,7 +66,7 @@ sub variable_GET {
       created_by => {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic created_at))
+      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic measurement_unit created_at))
     }
   );
 }
@@ -85,6 +86,9 @@ Retorna:
     variable.update.is_basic    Boolean: se aparece ou nao no formulario de formulas
     variable.update.period      Texto
     variable.update.source      Texto
+    variable.update.measurement_unit Texto
+
+
 
 =cut
 
@@ -162,6 +166,7 @@ Retorna:
                 "period":"semana",
                 "type": "int",
                 "is_basic": "1",
+                "measurement_unit":"km",
                 "created_by": {
                     "name": "admin",
                     "id": 1
@@ -186,7 +191,7 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at)),
+            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic measurement_unit created_at)),
             url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
 
         }
@@ -215,7 +220,7 @@ Param:
     variable.create.is_basic    Boolean: se aparece ou nao no formulario de formulas
     variable.create.period      Texto: semana,dia ou mes (etc..) que a variavel eh atualizada
     variable.create.source      Texto: origem da variavel
-
+    variable.update.measurement_unit Texto
 
 Retorna:
 

@@ -33,6 +33,7 @@ sub verifiers_specs {
                 user_id     => { required => 1, type => 'Int' },
                 source       => { required => 0, type => 'Str' },
                 period       => { required => 0, type => 'Str' },
+                measurement_unit => { required => 0, type => 'Str' },
                 is_basic     => { required => 0, type => 'Bool' },
             },
         ),
@@ -50,6 +51,7 @@ sub verifiers_specs {
                 type        => { required => 0, type => VariableType },
                 source       => { required => 0, type => 'Str' },
                 period       => { required => 1, type => 'Str' },
+                measurement_unit => { required => 0, type => 'Str' },
                 is_basic     => { required => 0, type => 'Bool' },
 
 
