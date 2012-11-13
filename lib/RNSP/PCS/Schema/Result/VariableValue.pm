@@ -49,7 +49,7 @@ __PACKAGE__->table("variable_value");
 =head2 value
 
   data_type: 'text'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 variable_id
 
@@ -102,7 +102,7 @@ __PACKAGE__->add_columns(
     sequence          => "variable_value_id_seq",
   },
   "value",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "text", is_nullable => 1 },
   "variable_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "user_id",
@@ -194,8 +194,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 09:23:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yG1XAyooPIfHorpXtf7T5w
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 10:57:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R76T6vuGTScC8exGNaHKfw
 
 
 __PACKAGE__->belongs_to(
