@@ -100,6 +100,8 @@ function showIndicadoresData(){
 	$("#cidades-indicadores .table .content-fill").empty();
 	table_content += "<table>";
 	
+	var cont = 0;
+	
 	$.each(indicadores_data.resumos, function(eixo_index, eixo){
 		
 		table_content += "<thead class='eixos'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
@@ -129,11 +131,19 @@ function showIndicadoresData(){
 							table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.###", locale:"br"})});
 						}
 					}
-					table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: i});
+					table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: cont});
+
+					for (j = 0; j < item.valores.length; j++){
+						console.log(i + " / " + item.valores[j]);
+						if (item.valores[j] == "-"){
+							item.valores[j] = 0;
+						}
+					}
+					graficos[cont] = item.valores;
+					cont++;
 				}else{
 					table_content += "<td class='valor' colspan='20'>-</td>";
 				}
-				graficos[i] = item.valores;
 			});
 			table_content += "</tbody>";
 		});
