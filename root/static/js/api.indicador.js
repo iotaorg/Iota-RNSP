@@ -106,11 +106,11 @@ function showHistoricoData(){
 			history_table += "<tr><td class='periodo'>$$periodo</td>".render({periodo: convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period)});
 			$.each(historico_data.rows[index].valores, function(index2,value2){
 				history_table += "<td class='valor' title='$$data'>$$valor</td>".render({
-						valor: historico_data.rows[index].valores[index2].value,
+						valor: $.formatNumber(historico_data.rows[index].valores[index2].value, {format:"#,###", locale:"br"}),
 						data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 				});
 			});
-			history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor:historico_data.rows[index].formula_value});
+			history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
 			history_table += "</tr></tbody>";
 		});
 		history_table += "</table>";
