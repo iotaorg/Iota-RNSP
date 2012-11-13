@@ -85,7 +85,7 @@ sub list_GET {
     foreach my $obj (@list){
         push @objs, {
 
-            (map { $_ => $obj->{$_} } qw(name type cognomen explanation period)),
+            (map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit)),
             variable_id => $obj->{id},
             values => [ map {+{
                     value         => $_->{value},

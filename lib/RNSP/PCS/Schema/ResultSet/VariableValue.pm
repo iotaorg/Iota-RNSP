@@ -15,39 +15,39 @@ use MooseX::Types::Email qw/EmailAddress/;
 
 use RNSP::PCS::Types qw /VariableType DataStr/;
 
-sub _build_verifier_scope_name {'variable.value'}
+sub _build_verifier_scope_name { 'variable.value' }
 use DateTimeX::Easy;
 
 # TODO verificar se isso nao vai ferrar com alguma
 # variavel do tipo string
 my $str2number = sub {
     my $str = shift;
-    $str =~ s/\.(\d{3})/$1/g;
-    $str =~ s/\s(\d{3})/$1/g;
-    $str =~ s/\,/./;
+    if ($str){
+        $str =~ s/\.(\d{3})/$1/g;
+        $str =~ s/\s(\d{3})/$1/g;
+        $str =~ s/\,/./;
+    }
     return $str;
 };
 
 sub value_check {
-    my ($self, $r) = @_;
+    my ( $self, $r ) = @_;
 
     my $variable_id = $r->get_value('variable_id');
-    my $schema = $self->result_source->schema;
-    unless ($variable_id){
-        $variable_id = $self->search({
-            id => $r->get_value('id')
-        })->first->variable_id;
+    my $schema      = $self->result_source->schema;
+    unless ($variable_id) {
+        $variable_id = $self->search( { id => $r->get_value('id') } )->first->variable_id;
     }
 
-    my $var = $schema->resultset('Variable')->find({
-        id => $variable_id
-    });
+    my $var = $schema->resultset('Variable')->find( { id => $variable_id } );
 
-    if ($var->type eq 'int' && $r->get_value('value') !~ /^[-+]?[0-9]+$/){
-        return 0;
-    }elsif ($var->type eq 'num' && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/){
+    if ( $var->type eq 'int' && $r->get_value('value') !~ /^[-+]?[0-9]+$/ ) {
         return 0;
     }
+    elsif ( $var->type eq 'num' && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/ ) {
+        return 0;
+    }
+
     return 1;
 }
 
@@ -56,67 +56,100 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                value         => { required => 0, type => 'Str',
-                    post_check => sub {$self->value_check(shift)},
+                justification_of_missing_field => {
+                    required   => 0,
+                    type       => 'Str'
+                },
+                value => {
+                    required   => 0,
+                    type       => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->value_check($r);
+                    },
                     filters => [$str2number]
                 },
                 user_id       => { required => 1, type => 'Int' },
-                value_of_date => { required => 1, type => DataStr,
-                                post_check => sub {
-                                    my $r = shift;
-                                    my $schema = $self->result_source->schema;
-                                    my $var = $schema->resultset('Variable')->find({
-                                        id => $r->get_value('variable_id')
-                                    });
-                                    my $date = DateTimeX::Easy->new($r->get_value('value_of_date'))->datetime;
-                                    # f_extract_period_edge
-                                    return $var && $self->search({
-                                        user_id     => $r->get_value('user_id'),
-                                        variable_id => $r->get_value('variable_id'),
-                                        valid_from  => $schema->f_extract_period_edge($var->period, $date)->{period_begin}
-                                    })->count == 0;
-                                 }
+                value_of_date => {
+                    required   => 1,
+                    type       => DataStr,
+                    post_check => sub {
+                        my $r      = shift;
+
+                        return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
+
+                        my $schema = $self->result_source->schema;
+                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id') } );
+                        my $date   = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
+
+                        # f_extract_period_edge
+                        return $var && $self->search(
+                            {
+                                user_id     => $r->get_value('user_id'),
+                                variable_id => $r->get_value('variable_id'),
+                                valid_from  => $schema->f_extract_period_edge( $var->period, $date )->{period_begin}
+                            }
+                        )->count == 0;
+                      }
 
                 },
-                variable_id => { required => 1, type => 'Int',
-                                 post_check => sub {
-                                    my $r = shift;
-                                    return $self->result_source->schema->resultset('Variable')->find({
-                                        id => $r->get_value('variable_id')
-                                    }) ? 1 : 0;
-                                 }
+                variable_id => {
+                    required   => 1,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->result_source->schema->resultset('Variable')
+                          ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
+                      }
                 },
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id          => { required => 1, type => 'Int',
+                justification_of_missing_field => {
+                    required   => 0,
+                    type       => 'Str'
+                },
+                id => {
+                    required   => 1,
+                    type       => 'Int',
                     post_check => sub {
-                            my $r = shift;
-                            return $self->search({
-                                id => $r->get_value('id')
-                            })->count == 1;
-                    }
+                        my $r = shift;
+                        return $self->search( { id => $r->get_value('id') } )->count == 1;
+                      }
 
                 },
-                value         => { required => 0, type => 'Str', post_check => sub
-                    {$self->value_check(shift)}, filters => [$str2number] },
-                value_of_date => { required => 1, type => DataStr,
-                                post_check => sub {
-                                    my $r = shift;
-                                    my $schema = $self->result_source->schema;
-                                    my $var    = $self->search({
-                                        id => $r->get_value('id')
-                                    })->first;
+                value => {
+                    required   => 0,
+                    type       => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->value_check($r);
+                    },
+                    filters => [$str2number]
+                },
+                value_of_date => {
+                    required   => 1,
+                    type       => DataStr,
+                    post_check => sub {
+                        my $r      = shift;
+                        return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
 
-                                    my $date = DateTimeX::Easy->new($r->get_value('value_of_date'))->datetime;
-                                    # f_extract_period_edge
-                                    return $var && $self->search({
-                                        id          => $r->get_value('id'),
-                                        valid_from  => $schema->f_extract_period_edge($var->variable->period, $date)->{period_begin}
-                                    })->count == 1;
-                                 }
+                        my $schema = $self->result_source->schema;
+                        my $var    = $self->search( { id => $r->get_value('id') } )->first;
+
+                        my $date = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
+
+                        # f_extract_period_edge
+                        return $var && $self->search(
+                            {
+                                id => $r->get_value('id'),
+                                valid_from =>
+                                  $schema->f_extract_period_edge( $var->variable->period, $date )->{period_begin}
+                            }
+                        )->count == 1;
+                      }
 
                 },
             },
@@ -124,48 +157,62 @@ sub verifiers_specs {
 
         put => Data::Verifier->new(
             profile => {
-                value         => { required => 1, type => 'Str',
-                    post_check => sub { $self->value_check(shift)  }, filters => [$str2number] },
+                justification_of_missing_field => {
+                    required   => 0,
+                    type       => 'Str',
+                },
+
+                value => {
+                    required   => 0,
+                    type       => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+
+                        return $self->value_check($r);
+                    },
+                    filters => [$str2number]
+                },
                 user_id       => { required => 1, type => 'Int' },
-                value_of_date => { required => 1, type => DataStr },
-                variable_id => { required => 1, type => 'Int',
-                                 post_check => sub {
-                                    my $r = shift;
-                                    return $self->result_source->schema->resultset('Variable')->find({
-                                        id => $r->get_value('variable_id')
-                                    }) ? 1 : 0;
-                                 }
+                value_of_date => {
+                    required => 1,
+                    type => DataStr,
+
+                    post_check => sub {
+                        my $r = shift;
+                        return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
+                        return 1;
+                    },
+
+                },
+                variable_id   => {
+                    required   => 1,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->result_source->schema->resultset('Variable')
+                          ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
+                      }
                 },
             },
         ),
 
-
-
     };
 }
-
 
 sub action_specs {
     my $self = shift;
     return {
         create => sub {
             my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new($values{value_of_date})->datetime;
+            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
             my $schema = $self->result_source->schema;
-            my $var = $schema->resultset('Variable')->find({
-                id => $values{variable_id}
-            });
-            my $date = $values{value_of_date};
+            my $var    = $schema->resultset('Variable')->find( { id => $values{variable_id} } );
+            my $date   = $values{value_of_date};
 
-            my $dates = $schema->f_extract_period_edge(
-                $var->period,
-                $date
-            );
+            my $dates = $schema->f_extract_period_edge( $var->period, $date );
             $values{valid_from}  = $dates->{period_begin};
             $values{valid_until} = $dates->{period_end};
-
-
 
             my $varvalue = $self->create( \%values );
 
@@ -174,9 +221,10 @@ sub action_specs {
         },
         update => sub {
             my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new($values{value_of_date})->datetime;
+            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
-            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            do { delete $values{$_} unless defined $values{$_} }
+              for keys %values;
             return unless keys %values;
 
             my $var = $self->find( delete $values{id} )->update( \%values );
@@ -185,33 +233,42 @@ sub action_specs {
         },
         put => sub {
             my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new($values{value_of_date})->datetime;
+            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
             my $schema = $self->result_source->schema;
 
-            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            do { delete $values{$_} unless defined $values{$_} }
+              for keys %values;
             return unless keys %values;
 
-            my $var = $schema->resultset('Variable')->find($values{variable_id});
-            my $dates = $schema->f_extract_period_edge(
-                $var->period,
-                $values{value_of_date}
-            );
+            my $var = $schema->resultset('Variable')->find( $values{variable_id} );
+            my $dates = $schema->f_extract_period_edge( $var->period, $values{value_of_date} );
+
             # procura por uma variavel daquele usuario naquele periodo, se
             # existir, atualiza a data e o valor!
-            my $row = $self->search({
-                user_id     => $values{user_id},
-                variable_id => $values{variable_id},
-                valid_from  => $dates->{period_begin}
-            })->next;
+            my $row = $self->search(
+                {
+                    user_id     => $values{user_id},
+                    variable_id => $values{variable_id},
+                    valid_from  => $dates->{period_begin}
+                }
+            )->next;
 
-            if ($row){
-                $row->update( {
-                    value         => $values{value},
-                    value_of_date => $values{value_of_date},
-                });
+            if ($row) {
+                $row->update(
+                    {
+                        value         => $values{value},
+                        value_of_date => $values{value_of_date},
+
+                        (exists $values{justification_of_missing_field} ? (
+                                justification_of_missing_field => $values{justification_of_missing_field}
+                            ) : () )
+
+                    }
+                );
                 $row->discard_changes;
-            }else{
+            }
+            else {
                 $values{valid_from}  = $dates->{period_begin};
                 $values{valid_until} = $dates->{period_end};
 

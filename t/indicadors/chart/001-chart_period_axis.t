@@ -110,9 +110,9 @@ eval {
             my @responses = ($data, $obj, $obj_public);
             foreach my $res (@responses){
                 is ($res->{goal}, 33, 'goal number ok');
-                is ($res->{series}[0]{label}, 'ano 1192', 'Ordem dos anos OK');
+                is ($res->{series}[0]{label}, '1192', 'Ordem dos anos OK');
 
-                if (is($res->{series}[1]{label}, 'ano 2011', 'segundo ano ok')){
+                if (is($res->{series}[1]{label}, '2011', 'segundo ano ok')){
                     my $a2011 = $res->{series}[1];
 
                     is($a2011->{avg}, '27', 'media correta para 2011');
@@ -120,7 +120,7 @@ eval {
                     is($a2011->{data}[0][1], 25, 'valor correto');
                 }
 
-                is ($res->{series}[2]{label}, 'ano 2012', '2012 presente');
+                is ($res->{series}[2]{label}, '2012', '2012 presente');
             }
 
             ( $res, $c ) = ctx_request(GET $uri_chart->path_query .'?to=2011-12-01&from=2002-01-01&group_by=weekly');

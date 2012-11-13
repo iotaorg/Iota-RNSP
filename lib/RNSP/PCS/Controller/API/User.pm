@@ -27,25 +27,48 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
 }
 
-sub user_img : Chained('object') : PathPart('imagem') : Args(0) : ActionClass('REST') {
+sub user_file : Chained('object') : PathPart('arquivo') : Args(1) : ActionClass('REST') {
 }
 
-sub user_img_POST {
-    my ( $self, $c ) = @_;
+sub user_file_POST {
+    my ( $self, $c, $classe ) = @_;
 
-    my $upload = $c->req->upload('imagem');
+    my $t = new Text2URI();
+
+    $classe = $t->translate(substr($classe, 0, 15));
+    $classe ||= 'perfil';
+
+    my $upload = $c->req->upload('arquivo');
     if ($upload){
-
-        my $filename = sprintf('user_%i',
-            $c->stash->{object}->next->id
+        my $user_id = $c->stash->{object}->next->id;
+        my $filename = sprintf('user_%i_%s_%s',
+            $user_id,
+            $classe,
+            substr($t->translate($upload->basename), 0, 200)
         );
-        $upload->copy_to(  RNSP::PCS->path_to( $c->config->{root_images} , $filename ));
 
-        $c->config->{root_images} =~ s/^root//;
-        $self->status_ok( $c, entity => {ok => 1, url => $c->uri_for($c->config->{root_images} . '/' . $filename)->as_string } );
+        my $private_path = RNSP::PCS->path_to( $c->config->{private_path} , $filename );
+        $upload->copy_to( $private_path );
+
+        my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
+
+        # nao trocar por $c->user->obj por causa dos testes
+        my $file = $c->model('DB::User')->find($user_id)->add_to_user_files({
+            class_name   => $classe,
+            public_url   => $public_url,
+            private_path => $private_path
+        });
+
+        $self->status_accepted(
+            $c,
+            location => $public_url,
+            entity => { class_name => $classe, id => $file->id }
+        );
+
     }else{
         $self->status_bad_request( $c, message => 'no upload found');
     }
+    $c->detach
 }
 
 
@@ -84,6 +107,12 @@ sub user_GET {
     $c,
     entity => {
       roles => [ map { $_->name } $user->roles ],
+      files => {
+        map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
+            order_by => 'created_at'
+      }) },
+
+
       $user->city
       ? (
         city => $c->uri_for(

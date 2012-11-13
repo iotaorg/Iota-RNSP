@@ -56,7 +56,7 @@ requires 'Template';
 
 requires 'MooseX::Traits';
 requires 'DBD::Pg';
-requires 'Text2URI';
+requires 'Text2URI' => '0.2';
 requires 'XML::Simple';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen

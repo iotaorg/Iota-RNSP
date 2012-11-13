@@ -64,8 +64,31 @@ eval {
             ]);
 
             ok( !$res->is_success, 'variable value not created' );
-            is( $res->code, 400, 'value added -- 201 ' );
+            is( $res->code, 400, 'value added -- 400 ' );
             like($res->content, qr/value.invalid/, 'valor invalido');
+
+            # sem valor
+            ( $res, $c ) = ctx_request( POST $variable_url, [
+                'variable.value.create.value'         => '',
+                'variable.value.create.value_of_date' => '2022-12-22 14:22:44',
+            ]);
+            ok( !$res->is_success, 'variable value not created' );
+            is( $res->code, 400, 'value added -- 400 ' );
+
+            # sem valor 2
+            ( $res, $c ) = ctx_request( POST $variable_url, [
+                'variable.value.create.value_of_date' => '2022-12-22 14:22:44',
+            ]);
+            ok( !$res->is_success, 'variable value not created' );
+            is( $res->code, 400, 'value added -- 400 ' );
+
+            # sem valor, MAS COM justificativa
+            ( $res, $c ) = ctx_request( POST $variable_url, [
+                'variable.value.create.justification_of_missing_field' => 'lala',
+                'variable.value.create.value_of_date' => '2022-12-22 14:22:44',
+            ]);
+            ok( $res->is_success, 'variable justification_of_missing_field created' );
+            is( $res->code, 201, 'value added -- 201 ' );
 
             ( $res, $c ) = ctx_request( POST $variable_url, [
                 'variable.value.create.value'         => '123.24',

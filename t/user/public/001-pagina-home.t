@@ -244,8 +244,8 @@ eval {
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{from_json( $res->content )};
 
-            is($obj->{resumos}{weekly}{datas}[0]{data}, '2012-01-08', 'data da primeira semana ok');
-            is(join(',', @{$obj->{resumos}{weekly}{indicadores}[0]{valores}}), '30,32,36,37', 'valores da semana ok');
+            is($obj->{resumos}{'Bens Naturais Comuns'}{weekly}{datas}[0]{data}, '2012-01-08', 'data da primeira semana ok');
+            is(join(',', @{$obj->{resumos}{'Bens Naturais Comuns'}{weekly}{indicadores}[0]{valores}}), '30,32,36,37', 'valores da semana ok');
 
             die 'rollback';
         }

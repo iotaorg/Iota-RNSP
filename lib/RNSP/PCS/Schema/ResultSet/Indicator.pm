@@ -44,13 +44,15 @@ sub verifiers_specs {
                 user_id     => { required => 1, type => 'Int' },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
+                observations => { required => 0, type => 'Str' },
 
-                justification_of_missing_field => { required => 0, type => 'Str' },
+
 
                 goal_source     => { required => 0, type => 'Str' },
                 tags            => { required => 0, type => 'Str' },
                 goal_operator   => { required => 0, type => 'Str' },
                 chart_name      => { required => 0, type => 'Str' },
+
 
                 goal_explanation  => { required => 0, type => 'Str' },
                 sort_direction    => { required => 0, type => 'Str' },
@@ -83,8 +85,7 @@ sub verifiers_specs {
                 },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
-
-                justification_of_missing_field => { required => 0, type => 'Str' },
+                observations => { required => 0, type => 'Str' },
 
                 goal_source     => { required => 0, type => 'Str' },
                 tags            => { required => 0, type => 'Str' },

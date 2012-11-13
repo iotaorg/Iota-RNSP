@@ -194,7 +194,8 @@ sub reusmo_GET {
                     $item->{$from}{valor} = '-';
                 }
             }
-            push(@{$ret->{resumos}{$perido}{indicadores}}, {
+            my $axis = $indicator->axis->name;
+            push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
                 name        => $indicator->name,
                 formula     => $indicator->formula,
                 name_url    => $indicator->name_url,
@@ -206,35 +207,37 @@ sub reusmo_GET {
         }
 
 
-        while( my ($periodo, $ind_info) = each %{$ret->{resumos}}){
-            my $indicadores = $ind_info->{indicadores};
-            # procura pelas ultimas N periodos de novo, so que consideranto todos os
-            # indicadores duma vez
-            my $datas = {};
-            my @datas_ar;
-            foreach my $in (@$indicadores){
-                $datas->{$_}{nome} = $in->{valores}{$_}{nome}
-                    for (keys %{$in->{valores}} );
-            }
-
-            my $i     = $max_periodos;
-            foreach my $data (sort {$b cmp $a} keys %{$datas}){
-                last if $i <= 0;
-                $datas_ar[--$i] = {
-                    data => $data,
-                    nome => $datas->{$data}{nome}
-                };
-            }
-            # pronto, agora @datas ja tem a lista correta e na ordem!
-            foreach my $in (@$indicadores){
-
-                my @valores;
-                foreach my $data (@datas_ar){
-                    push @valores, $in->{valores}{$data->{data}}{valor} ||'-';
+        while( my ($axis, $periodos) = each %{$ret->{resumos}}){
+            while( my ($periodo, $ind_info) = each %{$periodos}){
+                my $indicadores = $ind_info->{indicadores};
+                # procura pelas ultimas N periodos de novo, so que consideranto todos os
+                # indicadores duma vez
+                my $datas = {};
+                my @datas_ar;
+                foreach my $in (@$indicadores){
+                    $datas->{$_}{nome} = $in->{valores}{$_}{nome}
+                        for (keys %{$in->{valores}} );
                 }
-                $in->{valores} = \@valores;
+
+                my $i     = $max_periodos;
+                foreach my $data (sort {$b cmp $a} keys %{$datas}){
+                    last if $i <= 0;
+                    $datas_ar[--$i] = {
+                        data => $data,
+                        nome => $datas->{$data}{nome}
+                    };
+                }
+                # pronto, agora @datas ja tem a lista correta e na ordem!
+                foreach my $in (@$indicadores){
+
+                    my @valores;
+                    foreach my $data (@datas_ar){
+                        push @valores, $in->{valores}{$data->{data}}{valor} ||'-';
+                    }
+                    $in->{valores} = \@valores;
+                }
+                $ind_info->{datas} = \@datas_ar;
             }
-            $ind_info->{datas} = \@datas_ar;
         }
     };
 
