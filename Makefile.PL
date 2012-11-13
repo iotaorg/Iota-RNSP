@@ -46,7 +46,7 @@ requires 'DateTimeX::Easy';
 requires 'DateTime::Format::Pg';
 requires 'Catalyst::View::TT';
 
-
+requires 'Text::Iconv';
 requires 'Email::Sender';
 requires 'Email::Sender::Simple';
 requires 'Email::Sender::Transport::SMTP::TLS';
