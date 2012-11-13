@@ -194,7 +194,7 @@ sub reusmo_GET {
                     $item->{$from}{valor} = '-';
                 }
             }
-            my $axis = $indicator->axis;
+            my $axis = $indicator->axis->name;
             push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
                 name        => $indicator->name,
                 formula     => $indicator->formula,
