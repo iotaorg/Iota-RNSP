@@ -162,3 +162,5 @@ $(document).ready(function(){
 	$.ajaxSetup({ cache: false });
 
 });
+
+var api_path = "";

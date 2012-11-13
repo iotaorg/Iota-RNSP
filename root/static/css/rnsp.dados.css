@@ -327,6 +327,15 @@ table{
 	color: #999;
 }
 
+#cidades-indicadores .table thead.eixos th{
+	font-weight: normal;
+	font-size: 12pt;
+	color: #999;
+	padding: 5px 0px;
+	background-color: #fafafa;
+}
+
+
 #cidades-indicadores .table tr td,
 #cidades-indicadores .table tr th{
 	border-bottom: 1px solid #e5e5e5;

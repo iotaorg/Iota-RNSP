@@ -30,7 +30,7 @@ function loadCidadeData(args){
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
-		url: '/api/public/user/$$id'.render({
+		url: api_path + '/api/public/user/$$id'.render({
 						id: userID
 				}),
 		success: function(data, textStatus, jqXHR){
@@ -82,7 +82,7 @@ function loadIndicadoresData(){
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
-		url: '/api/public/user/$$id/indicator'.render({
+		url: api_path + '/api/public/user/$$id/indicator'.render({
 						id: userID
 				}),
 		success: function(data, textStatus, jqXHR){
@@ -99,33 +99,44 @@ function showIndicadoresData(){
 	var table_content = ""
 	$("#cidades-indicadores .table .content-fill").empty();
 	table_content += "<table>";
-	table_content += "<thead>";
 	
-	$.each(indicadores_data.resumos, function(period_index, period){
-		table_content += "<tr><th></th>";
-	
-		var datas = period.datas;
-		$.each(datas, function(index, value){
-			table_content += "<th>$$data</th>".render({data: datas[index].nome});
-		});
-
-		table_content += "<th></th></tr></thead>";
-		table_content += "<tbody>";
+	$.each(indicadores_data.resumos, function(eixo_index, eixo){
 		
-		var indicadores = indicadores_data.resumos.yearly.indicadores;
-		$.each(indicadores, function(i,item){
-			table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
-			for (j = 0; j < item.valores.length; j++){
-				if (item.valores[j] == "-"){
-					table_content += "<td class='valor'>-</td>";
-				}else{
-					table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.###", locale:"br"})});
-				}
+		table_content += "<thead class='eixos'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
+
+		var periods = eixo;
+		$.each(periods, function(period_index, period){
+			var datas = periods[period_index].datas;
+			
+			if (datas.length > 0){
+				table_content += "<thead class='datas'><tr><th></th>";
+				$.each(datas, function(index, value){
+					table_content += "<th>$$data</th>".render({data: datas[index].nome});
+				});
+				table_content += "<th></th></tr></thead>";
 			}
-			table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: i});
-			graficos[i] = item.valores;
+
+			table_content += "<tbody>";
+
+			var indicadores = periods[period_index].indicadores;
+			$.each(indicadores, function(i,item){
+				table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+				if (item.valores.length > 0){
+					for (j = 0; j < item.valores.length; j++){
+						if (item.valores[j] == "-"){
+							table_content += "<td class='valor'>-</td>";
+						}else{
+							table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.###", locale:"br"})});
+						}
+					}
+					table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: i});
+				}else{
+					table_content += "<td class='valor' colspan='20'>-</td>";
+				}
+				graficos[i] = item.valores;
+			});
+			table_content += "</tbody>";
 		});
-		table_content += "</tbody>";
 	});
 
 	table_content += "</table>";

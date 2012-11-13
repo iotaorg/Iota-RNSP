@@ -7,7 +7,7 @@ function loadIndicadorData(){
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
-		url: '/api/public/user/$$id/indicator/$$indicator_id'.render({
+		url: api_path + '/api/public/user/$$id/indicator/$$indicator_id'.render({
 						id: userID,
 						indicator_id: indicadorID
 				}),
@@ -25,7 +25,7 @@ function loadVariaveisData(){
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
-		url: '/api/public/user/variable',
+		url: api_path + '/api/public/user/variable',
 		success: function(data, textStatus, jqXHR){
 			$.each(data.variables, function(index,value){
 				variaveis_data.push({"id":data.variables[index].id,"name":data.variables[index].name});
@@ -78,7 +78,7 @@ function loadHistoricoData(){
 	$.ajax({
 		type: 'GET',
 		dataType: 'json',
-		url: '/api/public/user/$$id/indicator/$$indicator_id/variable/value'.render({
+		url: api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value'.render({
 						id: userID,
 						indicator_id: indicadorID
 				}),
