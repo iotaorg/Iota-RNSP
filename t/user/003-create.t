@@ -86,18 +86,38 @@ eval {
 
 
             ( $res, $c ) = ctx_request(
-                POST $url_user . '/imagem',
+                POST $url_user . '/arquivo/perfil_XD',
                 'Content-Type' => 'form-data',
                 Content =>
                 [   api_key                        => 'test',
-                    'imagem' => ["$Bin/img_teste.gif"],
+                    'arquivo' => ["$Bin/img_teste.gif"],
                 ]
             );
             ok( $res->is_success, 'OK' );
-            is( $res->code, 200, 'Image updated' );
+            is( $res->code, 202, 'Image created!' );
 
-            ok(-e "$Bin/../../root/static/user/user_$id", 'image exists');
-            unlink("$Bin/../../root/static/user/user_$id") if -e "$Bin/../../root/static/user/user_$id";
+            my $name = "$Bin/../../root/static/user/user_${id}_perfil_xd_img_teste.gif";
+            if (ok(-e $name, $name . ' image exists')){
+                unlink($name) if -e $name;
+
+                ( $res, $c ) = ctx_request(
+                    POST $url_user . '/arquivo/perfil_XD',
+                    'Content-Type' => 'form-data',
+                    Content =>
+                    [   api_key                        => 'test',
+                        'arquivo' => ["$Bin/img_teste_2.gif"],
+                    ]
+                );
+
+                ( $res, $c ) = ctx_request( GET $url_user );
+                {
+                    my $obj = from_json( $res->content );
+
+                    like( $obj->{files}{perfil_xd}, qr|img_teste_2\.gif|, 'version updated' );
+                }
+                $name = "$Bin/../../root/static/user/user_${id}_perfil_xd_img_teste_2.gif";
+                unlink($name) if -e $name;
+            }
 
             ( $res, $c ) = ctx_request(
                 POST '/api/user',

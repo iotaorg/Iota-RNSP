@@ -157,6 +157,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_files
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserFile>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_files",
+  "RNSP::PCS::Schema::Result::UserFile",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_forgotten_passwords
 
 Type: has_many
@@ -233,8 +248,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 00:11:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7a4CtaInZpvycrq/9nxLwg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 05:45:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g+4jK4AYUUcOnOifKdUfLg
 
 __PACKAGE__->has_many(
     "user_roles",
