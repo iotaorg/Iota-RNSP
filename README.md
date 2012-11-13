@@ -1,5 +1,13 @@
 
-Programa Cidades Sustentaveis
+# Plaforma para gerenciamento de indicadores
+
+O aplicativo é uma plataforma que permite a criação dos indicadores, com o objetivo de facilitar o compartilhamento dos dados para visualização, comparação e re-utilização deles através de padrões de tecnologias abertos.
+
+Ele foi criado inicialmente para atender ao "Programa Cidades Sustentaveis" da "Rede Nossa São Paulo".
+
+[![Build Status](https://secure.travis-ci.org/W3CBrasil/RNSP-PCS.png?branch=master)](https://travis-ci.org/W3CBrasil/RNSP-PCS)
+
+## Programa Cidades Sustentaveis
 
 Uma grande rede de organizações da sociedade civil está aproveitando as
 eleições municipais de 2012 para colocar a sustentabilidade na agenda da
@@ -19,7 +27,7 @@ São grandes os desafios e, para sermos exitosos em ações que contribuam com a
 sustentabilidade, será necessário o envolvimento de cidadãos, organizações
 sociais, empresas e governos.
 
-Compromissos
+### Compromissos
 
 Os(as) candidatos(as) a cargos executivos podem confirmar seu engajamento com
 o desenvolvimento sustentável assinando a Carta Compromisso. Com isso, os
@@ -28,7 +36,7 @@ Sustentáveis em suas cidades e a prestar contas das ações desenvolvidas e dos
 avanços alcançados por meio de relatórios, revelando a evolução dos
 indicadores básicos relacionados a cada eixo.
 
-Indicadores
+### Indicadores
 
 Indicadores são importantes instrumentos para o planejamento de cidades mais
 sustentáveis, e para desenvolvimento, execução e avaliação de políticas
@@ -49,7 +57,7 @@ diferenciado de indicadores. E, para aquelas que desejarem avançar nesse
 processo de monitoramento de políticas públicas em prol da sustentabilidade,
 os indicadores gerais podem ser incorporados aos básicos.
 
-Desenvolvimento de software para apoio
+### Desenvolvimento de software para apoio
 
 Este software tem como objetivo ser a plataforma de apoio para que estas
 informações sejam disponibilizadas em dados abertos.
@@ -60,9 +68,11 @@ Autores
 - Renato Santos <renato@aware.com.br>
 - Henry Shinohara <shin@aware.com.br>
 
-Eixos
+
+### Outros
+
+#### Eixos
 
 A lista de eixos é fixa e está no arquivo root/eixos.json. http://www.json.org/
 
-http://travis-ci.org/#!/W3CBrasil/RNSP-PCS
 
