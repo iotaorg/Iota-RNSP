@@ -92,11 +92,6 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   is_nullable: 1
 
-=head2 justification_of_missing_field
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 tags
 
   data_type: 'text'
@@ -165,8 +160,6 @@ __PACKAGE__->add_columns(
   "source",
   { data_type => "text", is_nullable => 1 },
   "explanation",
-  { data_type => "text", is_nullable => 1 },
-  "justification_of_missing_field",
   { data_type => "text", is_nullable => 1 },
   "tags",
   { data_type => "text", is_nullable => 1 },
@@ -280,8 +273,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-12 15:18:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X8SPAZyVv6QHlGv4XCWwng
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 09:23:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3peZL3lnK1EQl/pMVhJd5Q
 
 __PACKAGE__->belongs_to(
     "owner",

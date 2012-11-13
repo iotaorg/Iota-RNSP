@@ -38,7 +38,6 @@ Retorna:
 
     {
         "source": "me",
-        "justification_of_missing_field": null,
         "name": "Foo Bar",
         "axis_id": "2",
         "goal_operator": ">=",
@@ -78,7 +77,7 @@ sub indicator_GET {
         map { $_ => $object_ref->{axis}{$_} } qw(name id)
       },
       (map { $_ => $object_ref->{$_} } qw(name goal axis_id formula source explanation observations
-            justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
+            goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
         created_at))
     }
   );
@@ -99,7 +98,7 @@ Retorna:
     indicator.update.explanation         Texto: explicacao
     indicator.update.source              Texto: fonte do indicador
     indicator.update.goal_source         Texto: fonte da meta
-    indicator.update.justification_of_missing_field  Texto: motivo de nao ter a variavel
+
     indicator.update.tags             Texto: tags separadas por virgulas
     indicator.update.goal_operator    Texto: '>=', '=', '<='
     indicator.update.chart_name       Texto: 'pie', 'bar', ta livre, mas salve com um padrao em ingles
@@ -177,7 +176,6 @@ Retorna:
             {
                 "id":1,
                 "source": "me",
-                "justification_of_missing_field": null,
                 "name": "Foo Bar",
                 "axis_id": "Y",
                 "goal_operator": ">=",
@@ -217,7 +215,7 @@ sub list_GET {
             },
 
             (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation observations
-                justification_of_missing_field goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
+                 goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
 
             created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
@@ -250,7 +248,6 @@ Param:
     indicator.create.explanation         Texto: explicacao
     indicator.create.source              Texto: fonte do indicador
     indicator.create.goal_source         Texto: fonte da meta
-    indicator.create.justification_of_missing_field  Texto: motivo de nao ter a variavel
     indicator.create.tags             Texto: tags separadas por virgulas
     indicator.create.goal_operator    Texto: '>=', '=', '<='
     indicator.create.chart_name       Texto: 'pie', 'bar', ta livre, mas salve com um padrao em ingles

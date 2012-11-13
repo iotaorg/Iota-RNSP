@@ -41,6 +41,7 @@ Retorna:
         "cognomen": "foobar",
         "name": "Foo Bar",
         "type": "int",
+        "justification_of_missing_field":"justification_of_missing_field",
         "created_by": {
             "name": "admin",
             "id": 1
@@ -61,7 +62,7 @@ sub variable_GET {
         map { $_ => $object_ref->{owner}{$_} } qw(name id)
       },
       (map { $_ => $object_ref->{variable}{$_} } qw(name type cognomen)),
-      (map { $_ => $object_ref->{$_} } qw(value created_at value_of_date))
+      (map { $_ => $object_ref->{$_} } qw(value created_at value_of_date justification_of_missing_field))
     }
   );
 }

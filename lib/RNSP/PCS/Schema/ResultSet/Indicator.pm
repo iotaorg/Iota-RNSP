@@ -46,7 +46,7 @@ sub verifiers_specs {
                 explanation  => { required => 0, type => 'Str' },
                 observations => { required => 0, type => 'Str' },
 
-                justification_of_missing_field => { required => 0, type => 'Str' },
+
 
                 goal_source     => { required => 0, type => 'Str' },
                 tags            => { required => 0, type => 'Str' },
@@ -86,10 +86,6 @@ sub verifiers_specs {
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
                 observations => { required => 0, type => 'Str' },
-
-
-
-                justification_of_missing_field => { required => 0, type => 'Str' },
 
                 goal_source     => { required => 0, type => 'Str' },
                 tags            => { required => 0, type => 'Str' },

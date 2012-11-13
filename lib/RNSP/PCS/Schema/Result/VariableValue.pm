@@ -85,6 +85,12 @@ __PACKAGE__->table("variable_value");
   data_type: 'date'
   is_nullable: 1
 
+=head2 justification_of_missing_field
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -114,6 +120,12 @@ __PACKAGE__->add_columns(
   { data_type => "date", is_nullable => 1 },
   "valid_until",
   { data_type => "date", is_nullable => 1 },
+  "justification_of_missing_field",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -182,8 +194,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-10 09:29:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6ApLK75RkfOgMv9xyiJ8uw
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 09:23:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yG1XAyooPIfHorpXtf7T5w
 
 
 __PACKAGE__->belongs_to(
