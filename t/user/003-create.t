@@ -97,7 +97,8 @@ eval {
             is( $res->code, 202, 'Image created!' );
 
             my $name = "$Bin/../../root/static/user/user_${id}_perfil_xd_img_teste.gif";
-            if (ok(-e $name, $name . ' image exists')){
+            ok(-e $name, $name . ' image exists');
+            if (-e $name ){
                 unlink($name) if -e $name;
 
                 ( $res, $c ) = ctx_request(
