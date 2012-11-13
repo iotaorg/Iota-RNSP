@@ -116,8 +116,11 @@ function showIndicadoresData(){
 		$.each(indicadores, function(i,item){
 			table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 			for (j = 0; j < item.valores.length; j++){
-				if (item.valores[j] == "-") item.valores[j] = 0;
-				table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.##", locale:"br"})});
+				if (item.valores[j] == "-"){
+					table_content += "<td class='valor'>-</td>";
+				}else{
+					table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.###", locale:"br"})});
+				}
 			}
 			table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: i});
 			graficos[i] = item.valores;

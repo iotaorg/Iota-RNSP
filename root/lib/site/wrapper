@@ -40,8 +40,9 @@
 	<div id="menu">
 		<div class="content">
             <ul>
-                <li class="selected">Cidades</li>
-                <li><a href="dados.html">Indicadores</a></li>
+                <li><a href="">Início</a></li>
+                <li><a href="">Cidades</a></li>
+                <li><a href="">Indicadores</a></li>
             </ul>
         </div>    	
 	    <div class="clear"></div>

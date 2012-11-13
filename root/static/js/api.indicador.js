@@ -66,12 +66,12 @@ function showIndicadorData(){
 	$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 	$("#indicador-dados .profile .dados .tabela").empty();
 	$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data)}));
-	$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado<br /><span class='goal-explanation'>fonte: $$fonte_meta</span></td></tr>".render(
+	$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span></td></tr>".render(
 			{
 				dado: indicador_data.goal_explanation,
 				fonte_meta: indicador_data.goal_source
 			}));
-	$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte:</td><td class='valor'>$$dado</td></tr>".render({dado: indicador_data.source}));
+	$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'><span class='source'>Fonte:</span></td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: indicador_data.source}));
 }
 
 function loadHistoricoData(){

@@ -190,7 +190,8 @@ table{
 }
 
 #indicador-dados .profile span.goal-explanation{
-	font-size: 8pt;
+	font-size: 9pt;
+	font-style: italic;
 }
 
 #cidades-dados .profile{
@@ -248,6 +249,11 @@ table{
 	width: 100%;
 }
 
+.tabela span.source{
+	font-size: 9pt;
+	font-style: italic;	
+}
+
 #cidades-dados .variaveis .item,
 #indicador-dados .dados .item{
 	border-bottom: 1px solid #efefef;
@@ -269,7 +275,7 @@ table{
 
 #indicador-dados .dados .item .label{
 	width: 100px;
-	text-align: right;
+	text-align: left;
 	color: #999;
 	vertical-align: top;
 }
