@@ -4,7 +4,7 @@ var cidade_data;
 var indicadores_data;
 var graficos = [];
 var infoVars = [];
-infoVars["cidade"] = [
+infoVars["_prefeitura"] = [
 				{"cognomen": "prefeito", "type": "text"},
 				{"cognomen": "vice-prefeito", "type": "text"},
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
@@ -22,7 +22,7 @@ infoVars["cidade"] = [
 				{"cognomen": "part_eleitorado", "type": "number", "format": "#,##0.##"},
 				{"cognomen": "website", "type": "text"}
 ];
-infoVars["movimento"] = [
+infoVars["_movimento"] = [
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_rural", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
