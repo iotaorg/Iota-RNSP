@@ -264,7 +264,7 @@ table{
 }
 #cidades-dados .variaveis .item .label{
 	width: 40%;
-	text-align: right;
+	text-align: left;
 	color: #999;
 	vertical-align: top;
 }
