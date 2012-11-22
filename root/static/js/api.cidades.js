@@ -89,7 +89,7 @@ function showCidadeData(){
 	$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Estado:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.uf}));
 	$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>País:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.pais}));
 
-	$.each(infoVars,function(index,value){
+	$.each(infoVars[role],function(index,value){
 		var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[role][index].cognomen);
 		if (dadoIndex){
 			var label = cidade_data.variaveis[dadoIndex].name;
