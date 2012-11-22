@@ -75,6 +75,20 @@ if ('a,,b'.split(',').length < 3) {
     };
 }
 
+var findInJson = function(obj,key,value){
+	var found = false;
+	$.each(obj, function(key1,value1){
+		$.each(obj[key1], function(key2,value2){
+			if (key2 == key){
+				if (value2 == value){
+					found = key1;
+					return false;
+				}
+			}
+		});
+	});
+	return found;
+}
 
 var	convertDate = function(date,splitter){
 	var date_tmp = date.split(splitter);
@@ -160,21 +174,6 @@ $(document).ready(function(){
 	estados_sg[""] = "";
 
 	$.ajaxSetup({ cache: false });
-	
-	var findInJson = function(obj,key,value){
-		var found = false;
-		$.each(obj, function(key1,value1){
-			$.each(obj[key1], function(key2,value2){
-				if (key2 == key){
-					if (value2 == value){
-						found = key1;
-						return false;
-					}
-				}
-			});
-		});
-		return found;
-	}
 
 });
 
