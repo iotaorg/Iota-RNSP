@@ -91,12 +91,12 @@ function showCidadeData(){
 
 	$.each(infoVars[role],function(index,value){
 		var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[role][index].cognomen);
-		if (dadoIndex){
-			var label = cidade_data.variaveis[dadoIndex].name;
+		if (dadoIndex.found){
+			var label = cidade_data.variaveis[dadoIndex.key].name;
 			if (infoVars[role][index].type == "number"){
-				var value = $.formatNumber(cidade_data.variaveis[dadoIndex].last_value, {format:infoVars[role][index].format, locale:"br"});
+				var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[role][index].format, locale:"br"});
 			}else if (infoVars[role][index].type == "text"){
-				var value = cidade_data.variaveis[dadoIndex].last_value;
+				var value = cidade_data.variaveis[dadoIndex.key].last_value;
 			}
 			$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value</td></tr>".render(
 				{

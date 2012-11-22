@@ -81,13 +81,15 @@ var findInJson = function(obj,key,value){
 		$.each(obj[key1], function(key2,value2){
 			if (key2 == key){
 				if (value2 == value){
-					found = key1;
+					found = true;
+					key_found = key1;
 					return false;
 				}
 			}
 		});
 	});
-	return found;
+	var retorno = {"found": found, "key": key_found}
+	return retorno;
 }
 
 var	convertDate = function(date,splitter){
