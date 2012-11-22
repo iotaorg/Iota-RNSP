@@ -77,6 +77,7 @@ if ('a,,b'.split(',').length < 3) {
 
 var findInJson = function(obj,key,value){
 	var found = false;
+	var key_found = "";
 	$.each(obj, function(key1,value1){
 		$.each(obj[key1], function(key2,value2){
 			if (key2 == key){
