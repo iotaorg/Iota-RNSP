@@ -887,3 +887,37 @@ table.history tbody tr td.edit a:hover{
 table.history tbody tr.selected{
 	background-color: #FF9;
 }
+
+.xbreadcrumbs LI {
+	border-right: none;
+	background: url(../images/separator-arrow.gif) no-repeat right center;
+	padding-right: 15px;
+	padding-left: 10px;
+}
+.xbreadcrumbs LI.current { background: none; }
+.xbreadcrumbs LI UL LI { background: none; }
+
+.xbreadcrumbs LI A.home {
+	padding-left: 20px;
+}
+
+.xbreadcrumbs#breadcrumbs-top {
+	background: none;
+} 
+.xbreadcrumbs#breadcrumbs-top LI A {
+	text-decoration: underline;
+	color: #0A8ECC;
+}
+.xbreadcrumbs#breadcrumbs-top LI A:HOVER, .xbreadcrumbs#breadcrumbs-3 LI.hover A { text-decoration: none; }
+.xbreadcrumbs#breadcrumbs-top LI.current A {
+	color: #333333;
+	text-decoration: none;
+}
+.xbreadcrumbs#breadcrumbs-top LI {
+	border-right: none;
+	background: url(../images/separator-arrow.gif) no-repeat right center;
+	padding-right: 15px;
+	padding-left: 10px;
+}
+.xbreadcrumbs#breadcrumbs-top LI.current { background: none; }
+.xbreadcrumbs#breadcrumbs-top LI UL LI { background: none; padding: 0;  }

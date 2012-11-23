@@ -25,5 +25,5 @@
 		var userID = [% user.id %];
 		var indicadorID = [% indicator.id %];
 		var role = '[% find_role %]';
-		loadIndicadorData();
+		var ref = 'indicador';
 </script>

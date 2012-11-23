@@ -144,9 +144,9 @@ var removeAccents = (function() {
   }
 })();
 
+var estados_sg = [];
 
 $(document).ready(function(){
-	var estados_sg = [];
 	estados_sg["Acre"] = "AC";
 	estados_sg["Alagoas"] = "AL";
 	estados_sg["Amapá"] = "AP";
@@ -177,6 +177,23 @@ $(document).ready(function(){
 	estados_sg[""] = "";
 
 	$.ajaxSetup({ cache: false });
+	
+	var loadBreadCrumb = function(data){
+		if (ref == "indicador"){
+			var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name});
+		}else if (ref == "cidade"){
+			var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf});
+		}
+		$("#breadcrumbs-top").append(breadcrumb);
+		$('#breadcrumbs-top').xBreadcrumbs();
+		
+	}
+
+	if (ref == "indicador"){
+		loadIndicadorData();
+	}else if (ref == "cidade"){
+		loadCidadeData({ref: "cidade"});
+	}
 
 });
 

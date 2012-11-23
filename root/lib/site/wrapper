@@ -7,6 +7,7 @@
 <title>[% template.title or site.title %]</title>
 <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
 <link rel="stylesheet" href="/static/css/rnsp.dados.css" type="text/css" />
+<link rel="stylesheet" href="/static/css/xbreadcrumbs.css" type="text/css" />
 [% IF find_role == '_movimento' %]
 <link rel="stylesheet" href="/static/css/style-movimento.css" type="text/css" />
 <link rel="stylesheet" href="/static/css/rnsp.dados-movimento.css" type="text/css" />
@@ -20,6 +21,7 @@
 <script type="text/javascript" src="/static/js/api.indicador.js"></script>
 <script type="text/javascript" src="/static/js/libraries/RGraph.common.core.js" ></script>
 <script type="text/javascript" src="/static/js/libraries/RGraph.line.js" ></script>
+<script type="text/javascript" src="/static/js/xbreadcrumbs.js"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
 <link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />
 </head>
@@ -47,6 +49,11 @@
         </div>    	
 	    <div class="clear"></div>
     </div>
+	<div id="breadcrumb">
+        <ul class="xbreadcrumbs" id="breadcrumbs-top">
+		</ul>
+	    <div class="clear"></div>
+	</div>
 	<div id="content">
 		<div class="content">
 		[% content %]
