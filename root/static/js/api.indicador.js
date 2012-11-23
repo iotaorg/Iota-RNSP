@@ -69,7 +69,9 @@ $(document).ready(function(){
 	
 		var new_formula = formula;
 		$.each(variables,function(index,value){
-			new_formula = new_formula.replace("$"+variables[index].id,variables[index].name);
+			var pattern = "\\$"+variables[index].id;
+			var re = new RegExp(pattern, "g");
+			new_formula = new_formula.replace(re,variables[index].name);
 		});
 		
 		$.each(operators_caption,function(index,value){
