@@ -65,7 +65,7 @@ a{
 }
 
 #menu{
-	margin: 10px auto;
+	margin: 10px auto 0 auto;
 	text-align: center;
 	background-color: #20c1c1;
 	clear: both;
@@ -886,6 +886,16 @@ table.history tbody tr td.edit a:hover{
 }
 table.history tbody tr.selected{
 	background-color: #FF9;
+}
+
+#breadcrumb{
+	margin: auto;	
+	text-align: center;
+}
+
+.xbreadcrumbs{
+	text-align: left;
+	width: 900px;
 }
 
 .xbreadcrumbs LI {
