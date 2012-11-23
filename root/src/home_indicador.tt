@@ -1,3 +1,13 @@
+	<div id="breadcrumb">
+    	<div class="contents">
+            <ul class="xbreadcrumbs" id="breadcrumbs-top">
+            </ul>
+		    <div class="clear"></div>
+        </div>
+	</div>
+	<div id="content">
+		<div class="content">
+
         	<div id="indicador-dados">
                 <div class="profile">
 	            	<div class="content-fill">
@@ -20,10 +30,11 @@
             </div>
             <div class="clear"></div>
         </div>    	
+    </div>
 
-<script type="text/javascript">
-		var userID = [% user.id %];
-		var indicadorID = [% indicator.id %];
-		var role = '[% find_role %]';
-		var ref = 'indicador';
-</script>
+	<script type="text/javascript">
+			var userID = [% user.id %];
+			var indicadorID = [% indicator.id %];
+			var role = '[% find_role %]';
+			var ref = 'indicador';
+	</script>

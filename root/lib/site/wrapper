@@ -49,18 +49,9 @@
         </div>    	
 	    <div class="clear"></div>
     </div>
-	<div id="breadcrumb">
-    	<div class="contents">
-            <ul class="xbreadcrumbs" id="breadcrumbs-top">
-            </ul>
-		    <div class="clear"></div>
-        </div>
-	</div>
-	<div id="content">
-		<div class="content">
-		[% content %]
-        </div>    	
-    </div>
+
+	[% content %]
+
     <div class="clear"></div>
 	<div id="footer-menu">
     	<div class="content">
