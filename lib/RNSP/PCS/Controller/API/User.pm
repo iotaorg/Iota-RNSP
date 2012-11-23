@@ -30,6 +30,8 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 sub user_file : Chained('object') : PathPart('arquivo') : Args(1) : ActionClass('REST') {
 }
 
+use JSON;
+
 sub user_file_POST {
     my ( $self, $c, $classe ) = @_;
 
@@ -37,6 +39,8 @@ sub user_file_POST {
 
     $classe = $t->translate(substr($classe, 0, 15));
     $classe ||= 'perfil';
+
+    $c->res->content_type('application/json; charset=utf8');
 
     my $upload = $c->req->upload('arquivo');
     if ($upload){
@@ -59,16 +63,13 @@ sub user_file_POST {
             private_path => $private_path
         });
 
-        $self->status_accepted(
-            $c,
-            location => $public_url,
-            entity => { class_name => $classe, id => $file->id }
-        );
+        $c->res->body(to_json({ class_name => $classe, id => $file->id, location => $public_url }));
 
     }else{
-        $self->status_bad_request( $c, message => 'no upload found');
+        $c->res->body(to_json({ error => 'no upload found' }));
     }
-    $c->detach
+
+    $c->detach;
 }
 
 
