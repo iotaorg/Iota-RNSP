@@ -57,6 +57,7 @@ eval {
                     'user.create.name'             => 'Foo Bar',
                     'user.create.email'            => 'foo@email.com',
                     'user.create.password'         => 'foobarquux1',
+                    'user.create.nome_responsavel_cadastro'         => 'nome_responsavel_cadastro',
                     'user.create.password_confirm' => 'foobarquux1',
                     'user.create.city_id'          => $city->id,
                     'user.create.role'             => 'admin',
@@ -66,11 +67,13 @@ eval {
             is( $res->code, 201, 'user created' );
 
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
-
+            is( $new_user->nome_responsavel_cadastro, 'nome_responsavel_cadastro', 'nome responsavel ok' );
             {
                 use JSON qw(from_json);
                 is( from_json( $res->content )->{name}, $new_user->name, 'same user' );
+
             }
+
             like( $res->header('Location'), qr{/api/user/\d+$}, 'location ok' );
 
             my ($id) = $res->header('Location') =~ /api\/user\/(\d+)$/;

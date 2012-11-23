@@ -72,6 +72,60 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 nome_responsavel_cadastro
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 estado
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 telefone
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 email_contato
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 telefone_contato
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 cidade
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 bairro
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 cep
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 endereco
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -92,6 +146,60 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 0 },
+  "nome_responsavel_cadastro",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "estado",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "telefone",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "email_contato",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "telefone_contato",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "cidade",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "bairro",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "cep",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "endereco",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -187,6 +295,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_indicators
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicators",
+  "RNSP::PCS::Schema::Result::UserIndicator",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -248,8 +371,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 05:45:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g+4jK4AYUUcOnOifKdUfLg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 16:04:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kW0rLS+/pr1Aqe4xHorELw
 
 __PACKAGE__->has_many(
     "user_roles",

@@ -99,31 +99,40 @@ Retorna:
 =cut
 
 sub user_GET {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 
-  my $user  = $c->stash->{object}->next;
-  my %attrs = $user->get_inflated_columns;
-  $self->status_ok(
-    $c,
-    entity => {
-      roles => [ map { $_->name } $user->roles ],
-      files => {
-        map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
-            order_by => 'created_at'
-      }) },
+    my $user  = $c->stash->{object}->next;
+    my %attrs = $user->get_inflated_columns;
+    $self->status_ok(
+        $c,
+        entity => {
+        roles => [ map { $_->name } $user->roles ],
+        files => {
+            map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
+                order_by => 'created_at'
+        }) },
 
+        nome_responsavel_cadastro => $user->nome_responsavel_cadastro,
+        estado => $user->estado,
+        telefone => $user->telefone,
+        email_contato => $user->email_contato,
+        telefone_contato => $user->telefone_contato,
+        cidade => $user->cidade,
+        bairro => $user->bairro,
+        cep => $user->cep,
+        endereco => $user->endereco,
 
-      $user->city
-      ? (
-        city => $c->uri_for(
-          $c->controller('API::City')->action_for('city'),
-          [ $attrs{city_id} ] )->as_string
-        )
-      : (),
-      map { $_ => $attrs{$_}, } qw(name email)
-    }
-  );
+        $user->city
+        ? (
+            city => $c->uri_for(
+            $c->controller('API::City')->action_for('city'),
+            [ $attrs{city_id} ] )->as_string
+            )
+        : (),
+        map { $_ => $attrs{$_}, } qw(name email)
+        }
+    );
 }
 
 =pod
@@ -144,6 +153,7 @@ Param:
     user.update.prefeito            0 ou 1, Nao Requerido: eh prefeito?
     user.update.movimento           0 ou 1, Nao Requerido: eh movimento?
 
+    nome_responsavel_cadastro, estado, telefone, email_contato, telefone_contato, cidade, bairro, cep, endereco,
 Retorna:
 
     { name => '', id => '' }
@@ -220,6 +230,7 @@ sub list_GET {
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_any_user_role(qw(admin));
 
+
   $self->status_ok(
     $c,
     entity => {
@@ -228,6 +239,17 @@ sub list_GET {
           +{
             name => $_->{name},
             email => $_->{email},
+
+            nome_responsavel_cadastro => $_->{nome_responsavel_cadastro},
+            estado => $_->{estado},
+            telefone => $_->{telefone},
+            email_contato => $_->{email_contato},
+            telefone_contato => $_->{telefone_contato},
+            cidade => $_->{cidade},
+            bairro => $_->{bairro},
+            cep => $_->{cep},
+            endereco => $_->{endereco},
+
             $_->{city}
             ? (
               city => {

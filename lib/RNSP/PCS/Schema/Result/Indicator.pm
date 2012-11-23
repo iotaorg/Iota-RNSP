@@ -262,9 +262,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 user_indicators
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cKTXmvClbHgOY0ZVEhp09g
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicators",
+  "RNSP::PCS::Schema::Result::UserIndicator",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 15:50:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+1vX3aC2hJxWHG1DiIhGzQ
 
 __PACKAGE__->belongs_to(
     "owner",
