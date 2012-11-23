@@ -46,7 +46,9 @@ Retorna:
                         "url": "http://localhost/api/variable/207/value/116",
                         "valid_until": "2011-01-01",
                         "value_of_date": "2010-02-14 17:24:32",
-                        "id": 116
+                        "id": 116,
+                        source,
+                        observations
                     }, ...
                     pode ter varios valores de anos (por que é anual) diferentes
                 ],
@@ -59,7 +61,8 @@ Retorna:
                 "cognomen": "foobar2",
                 "name": "Foo Bar2",
                 "values": [],
-                "type": "num"
+                "type": "num",
+
             },
             ....
         ]
@@ -90,6 +93,8 @@ sub list_GET {
             values => [ map {+{
                     value         => $_->{value},
                     value_of_date => $_->{value_of_date},
+                    source        => $_->{source},
+                    observations  => $_->{observations},
                     valid_from    => $_->{valid_from},
                     valid_until   => $_->{valid_until},
                     id            => $_->{id},

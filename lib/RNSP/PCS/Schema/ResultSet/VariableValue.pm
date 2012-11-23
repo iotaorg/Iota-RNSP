@@ -70,6 +70,7 @@ sub verifiers_specs {
                     filters => [$str2number]
                 },
                 source => { required => 0, type => 'Str' },
+                observations  => { required => 0, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => {
                     required   => 1,
@@ -122,6 +123,7 @@ sub verifiers_specs {
                       }
 
                 },
+                observations  => { required => 0, type => 'Str' },
                 value => {
                     required   => 0,
                     type       => 'Str',
@@ -175,6 +177,7 @@ sub verifiers_specs {
                     },
                     filters => [$str2number]
                 },
+                observations  => { required => 0, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => {
                     required => 1,
@@ -262,7 +265,14 @@ sub action_specs {
                     {
                         value         => $values{value},
                         value_of_date => $values{value_of_date},
-                        source        => $values{source},
+
+                        (exists $values{source} ? (
+                                source => $values{source}
+                            ) : () ),
+
+                        (exists $values{observations} ? (
+                                observations => $values{observations}
+                            ) : () ),
 
                         (exists $values{justification_of_missing_field} ? (
                                 justification_of_missing_field => $values{justification_of_missing_field}
