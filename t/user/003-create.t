@@ -94,7 +94,7 @@ eval {
                 ]
             );
             ok( $res->is_success, 'OK' );
-            is( $res->code, 202, 'Image created!' );
+            is( $res->code, 200, 'Image created!' );
 
             my $name = "$Bin/../../root/static/user/user_${id}_perfil_xd_img_teste.gif";
             ok(-e $name, $name . ' image exists');

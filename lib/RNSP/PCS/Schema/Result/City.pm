@@ -84,7 +84,6 @@ __PACKAGE__->table("city");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -114,11 +113,7 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "name_uri",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -169,8 +164,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-10-28 17:44:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kvU2jn2tburK+jYPwszgow
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NjYvPs09cooikUxAkTmRPg
 
 __PACKAGE__->might_have(
   "prefeito",

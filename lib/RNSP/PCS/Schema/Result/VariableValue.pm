@@ -89,7 +89,6 @@ __PACKAGE__->table("variable_value");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -121,11 +120,7 @@ __PACKAGE__->add_columns(
   "valid_until",
   { data_type => "date", is_nullable => 1 },
   "justification_of_missing_field",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -175,7 +170,7 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 variable
@@ -190,12 +185,12 @@ __PACKAGE__->belongs_to(
   "variable",
   "RNSP::PCS::Schema::Result::Variable",
   { id => "variable_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 10:57:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R76T6vuGTScC8exGNaHKfw
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4O3yqX5cmuhle3fMS47BRA
 
 
 __PACKAGE__->belongs_to(

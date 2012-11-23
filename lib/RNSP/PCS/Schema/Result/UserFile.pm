@@ -57,19 +57,16 @@ __PACKAGE__->table("user_file");
   data_type: 'text'
   default_value: 'perfil'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 public_url
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 private_path
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -89,24 +86,11 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "class_name",
-  {
-    data_type     => "text",
-    default_value => "perfil",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "perfil", is_nullable => 0 },
   "public_url",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "private_path",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "created_at",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -137,12 +121,12 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 06:02:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7RE+j5uP/UlDh681ANo31Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qEcIOIG+o8sEnyrFbNhnFg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

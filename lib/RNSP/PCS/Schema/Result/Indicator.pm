@@ -59,7 +59,7 @@ __PACKAGE__->table("indicator");
 =head2 goal
 
   data_type: 'numeric'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 goal_explanation
 
@@ -125,13 +125,11 @@ __PACKAGE__->table("indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 observations
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -148,7 +146,7 @@ __PACKAGE__->add_columns(
   "formula",
   { data_type => "text", is_nullable => 0 },
   "goal",
-  { data_type => "numeric", is_nullable => 0 },
+  { data_type => "numeric", is_nullable => 1 },
   "goal_explanation",
   { data_type => "text", is_nullable => 1 },
   "goal_source",
@@ -189,17 +187,9 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "name_url",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "observations",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -254,7 +244,7 @@ __PACKAGE__->belongs_to(
   "axis",
   "RNSP::PCS::Schema::Result::Axis",
   { id => "axis_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 user
@@ -269,12 +259,12 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-13 09:23:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3peZL3lnK1EQl/pMVhJd5Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cKTXmvClbHgOY0ZVEhp09g
 
 __PACKAGE__->belongs_to(
     "owner",
