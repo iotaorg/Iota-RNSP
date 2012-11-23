@@ -146,12 +146,12 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "CASCADE", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-28 00:11:12
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:M7FFmcvU1FycMum1Cj0jqA
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:muOpjQpaXhVOWPFlaSiIbQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

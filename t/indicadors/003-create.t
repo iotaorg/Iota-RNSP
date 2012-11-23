@@ -44,7 +44,6 @@ eval {
                 [   api_key                         => 'test',
                     'indicator.create.name'         => 'Foo Bar',
                     'indicator.create.formula'      => '5 + $' . $var1,
-                    'indicator.create.goal'         => '33',
                     'indicator.create.axis_id'      => '1',
                     'indicator.create.explanation'  => 'explanation',
                     'indicator.create.source'       => 'me',

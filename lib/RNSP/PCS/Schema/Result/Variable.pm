@@ -102,7 +102,6 @@ __PACKAGE__->table("variable");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -162,11 +161,7 @@ __PACKAGE__->add_columns(
   "is_basic",
   { data_type => "boolean", default_value => \"false", is_nullable => 1 },
   "measurement_unit",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -209,7 +204,7 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 variable_values
@@ -228,8 +223,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-12 15:18:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ryO8QcXl2Ub/IPQ1Ad0htg
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9jheFvPcKTve/K8fXsbFuQ
 
 __PACKAGE__->belongs_to(
     "owner",
