@@ -238,6 +238,8 @@ eval {
             ok($res->is_success, 'GET public info success');
 
             is($obj->{variaveis}[0]{last_value}, 15, 'ultimo valor ok');
+            is($obj->{variaveis}[0]{period}, 'yearly', 'periodo das variaveis basicas nao mudaram');
+            is($obj->{variaveis}[0]{last_value_date}, '2012-01-01', 'data do ultimo valor ok');
 
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
 
