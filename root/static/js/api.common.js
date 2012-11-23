@@ -189,12 +189,6 @@ $(document).ready(function(){
 		
 	}
 
-	if (ref == "indicador"){
-		loadIndicadorData();
-	}else if (ref == "cidade"){
-		loadCidadeData({ref: "cidade"});
-	}
-
 });
 
 var api_path = "";

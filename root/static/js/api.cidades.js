@@ -228,4 +228,8 @@ $(document).ready(function(){
 		}
 	}
 
+	if (ref == "cidade"){
+		loadCidadeData({ref: "cidade"});
+	}
+
 });

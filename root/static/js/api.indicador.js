@@ -123,5 +123,9 @@ $(document).ready(function(){
 		$("#indicador-historico .table .content-fill").append(history_table);
 		
 	}
+
+	if (ref == "indicador"){
+		loadIndicadorData();
+	}
 	
 });
