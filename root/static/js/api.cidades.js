@@ -41,10 +41,8 @@ infoVars["_movimento"] = [
 
 $(document).ready(function(){
 
-	function loadCidadeData(args){
-		if (args.ref == undefined || args.ref == "cidade"){
-			loadMap();
-		}
+	function loadCidadeData(){
+		loadMap();
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
@@ -53,10 +51,8 @@ $(document).ready(function(){
 					}),
 			success: function(data, textStatus, jqXHR){
 				cidade_data = data;
-				if (args.ref == undefined || args.ref == "cidade"){
-					showCidadeData();
-					loadIndicadoresData();
-				}
+				showCidadeData();
+				loadIndicadoresData();
 			},
 			error: function(data){
 				console.log("erro ao carregar informações da cidade");
@@ -229,7 +225,7 @@ $(document).ready(function(){
 	}
 
 	if (ref == "cidade"){
-		loadCidadeData({ref: "cidade"});
+		loadCidadeData();
 	}
 
 });

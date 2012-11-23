@@ -4,8 +4,24 @@ var variaveis_data = [];
 
 $(document).ready(function(){
 	
+	function loadCidadeDataIndicador(){
+		$.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: api_path + '/api/public/user/$$id'.render({
+							id: userID
+					}),
+			success: function(data, textStatus, jqXHR){
+				cidade_data = data;
+				loadIndicadorData();
+			},
+			error: function(data){
+				console.log("erro ao carregar informações da cidade");
+			}
+		});
+	}
+
 	function loadIndicadorData(){
-		loadCidadeData({ref: "indicador"});
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
@@ -125,7 +141,7 @@ $(document).ready(function(){
 	}
 
 	if (ref == "indicador"){
-		loadIndicadorData();
+		loadCidadeDataIndicador();
 	}
 	
 });
