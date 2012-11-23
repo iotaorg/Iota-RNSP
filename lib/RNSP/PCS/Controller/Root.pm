@@ -41,6 +41,13 @@ sub root: Chained('/') PathPart('') CaptureArgs(0) {
 }
 
 
+sub mapa_site: Chained('root') PathPart('mapa-do-site') Args(0) {
+    my ( $self, $c, $cidade ) = @_;
+     $c->stash(
+        template => 'mapa_site.tt'
+    );
+}
+
 sub prefeitura: Chained('root') PathPart('prefeitura') CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{find_role} = '_prefeitura';
