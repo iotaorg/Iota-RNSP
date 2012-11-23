@@ -893,6 +893,7 @@ table.history tbody tr.selected{
 	background: url(../images/separator-arrow.gif) no-repeat right center;
 	padding-right: 15px;
 	padding-left: 10px;
+	font-size: 10pt;
 }
 .xbreadcrumbs LI.current { background: none; }
 .xbreadcrumbs LI UL LI { background: none; }
@@ -905,8 +906,8 @@ table.history tbody tr.selected{
 	background: none;
 } 
 .xbreadcrumbs#breadcrumbs-top LI A {
-	text-decoration: underline;
-	color: #0A8ECC;
+	text-decoration: none;
+	color: #20c1c1;
 }
 .xbreadcrumbs#breadcrumbs-top LI A:HOVER, .xbreadcrumbs#breadcrumbs-3 LI.hover A { text-decoration: none; }
 .xbreadcrumbs#breadcrumbs-top LI.current A {
