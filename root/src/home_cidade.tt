@@ -1,43 +1,54 @@
-		<div id="cidades-dados">
-			<div class="profile">
-				<div class="content-fill">
-					<div class="title">[% city.name %]</div>
-					<div class="variaveis"><table class="tabela"></table></div>
-				</div>
-			</div>
-			<div class="image">
-				<div class="content-fill">
-				</div>
-			</div>
-			<div class="resume">
-				<div class="content-fill">
-					resumo
-				</div>
-			</div>
-			<div class="map">
-				<div class="content-fill">
-					<div id="mapa"></div>
-				</div>
-			</div>
-		</div>
-		<div class="clear"></div>
-		<div id="cidades-indicadores">
-				<div class="title">Indicadores</div>
-				<div class="content-fill">
-
-					<div class="table">
-						<div class="period">
-							<div class="item"></div>
-						</div>
-						<div class="content-fill"></div>
+	<div id="breadcrumb">
+    	<div class="contents">
+            <ul class="xbreadcrumbs" id="breadcrumbs-top">
+            </ul>
+		    <div class="clear"></div>
+        </div>
+	</div>
+	<div id="content">
+		<div class="content">
+			<div id="cidades-dados">
+				<div class="profile">
+					<div class="content-fill">
+						<div class="title">[% city.name %]</div>
+						<div class="variaveis"><table class="tabela"></table></div>
 					</div>
-
 				</div>
-		</div>
-		<div class="clear"></div>
+				<div class="image">
+					<div class="content-fill">
+					</div>
+				</div>
+				<div class="resume">
+					<div class="content-fill">
+						resumo
+					</div>
+				</div>
+				<div class="map">
+					<div class="content-fill">
+						<div id="mapa"></div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div id="cidades-indicadores">
+					<div class="title">Indicadores</div>
+					<div class="content-fill">
 
-		<script type="text/javascript">
-			var userID = [% user.id %];
-			var role = '[% find_role %]';
-			var ref = 'cidade';
-		</script>
+						<div class="table">
+							<div class="period">
+								<div class="item"></div>
+							</div>
+							<div class="content-fill"></div>
+						</div>
+
+					</div>
+			</div>
+			<div class="clear"></div>
+        </div>    	
+    </div>
+
+	<script type="text/javascript">
+		var userID = [% user.id %];
+		var role = '[% find_role %]';
+		var ref = 'cidade';
+	</script>
