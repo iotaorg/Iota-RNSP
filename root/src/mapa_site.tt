@@ -18,12 +18,16 @@
                     	<li><a href="">Home</a></li>
                     	<li><a href="">Cidades</a>
                             <ul>
-                                <li><a href="">São Paulo, SP</a></li>
+                            [%FOREACH c IN citys %]
+                                <a href="/movimento/br/[%c.uf.lower%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</a>
+                            [%END%]
                             </ul>
                         </li>
                     	<li><a href="">Indicadores</a>
                             <ul>
-                                <li><a href="">Desemprego</a></li>
+                                [%FOREACH i IN indicators %]
+                                    <li><a href="#">[%i.name%]</a></li>
+                                [%END%]
                             </ul>
                         </li>
                     	<li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
@@ -31,6 +35,6 @@
 				</div>
 			</div>
             <div class="clear"></div>
-        </div>    	
-    </div>    	
+        </div>
+    </div>
 </div>
