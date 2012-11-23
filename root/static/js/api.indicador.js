@@ -87,7 +87,7 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
 		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data)}));
-		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span></td></tr>".render(
+		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span></td></tr>".render(
 				{
 					dado: indicador_data.goal_explanation,
 					fonte_meta: indicador_data.goal_source
