@@ -114,7 +114,7 @@ $(document).ready(function(){
 	
 	function showHistoricoData(){
 	
-		if (historico_data.header.length > 0){
+		if (historico_data.rows){
 			var history_table = "<table class='history'><thead><tr><th>Período</th>";
 			$.each(historico_data.header, function(index,value){
 				history_table += "<th class='variavel'>$$variavel</th>".render({variavel:index});
