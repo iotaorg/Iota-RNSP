@@ -70,6 +70,7 @@ eval {
             # sem valor
             ( $res, $c ) = ctx_request( POST $variable_url, [
                 'variable.value.create.value'         => '',
+                'variable.value.create.source'        => 'AAAA',
                 'variable.value.create.value_of_date' => '2022-12-22 14:22:44',
             ]);
             ok( !$res->is_success, 'variable value not created' );
@@ -92,6 +93,7 @@ eval {
 
             ( $res, $c ) = ctx_request( POST $variable_url, [
                 'variable.value.create.value'         => '123.24',
+                'variable.value.create.source'        => 'AAAA',
                 'variable.value.create.value_of_date' => '2012-12-22 14:22:44',
             ]);
 
@@ -109,6 +111,7 @@ eval {
 
             ( $res, $c ) = ctx_request( POST $variable_url, [
                 'variable.value.create.value'         => '123',
+                'variable.value.create.source'        => 'AAAA',
                 'variable.value.create.value_of_date' => '2012-12-20 14:22:44',
             ]);
 
@@ -118,6 +121,7 @@ eval {
             # UPDATE
             ( $res, $c ) = ctx_request( POST $uri->path_query, [
                 'variable.value.update.value'         => '456',
+                'variable.value.update.source'        => 'AAAA',
                 'variable.value.update.value_of_date' => '2012-12-22 14:22:44',
             ] );
             ok( $res->is_success, 'variable updated' );
