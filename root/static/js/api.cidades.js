@@ -82,7 +82,7 @@ $(document).ready(function(){
 	
 	function showCidadeData(){
 		cidade_data.cidade.imagem = "saopaulo.jpg";
-		loadBreadScrumb();
+		loadBreadCrumb();
 		$("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
 		$("#cidades-dados .profile .variaveis .tabela").empty();
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Cidade:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.name}));
