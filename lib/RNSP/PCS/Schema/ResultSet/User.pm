@@ -78,6 +78,17 @@ sub verifiers_specs {
                         return !defined $city->movimento;
                     }
                 },
+
+                nome_responsavel_cadastro => { required => 0, type => 'Str' },
+                estado => { required => 0, type => 'Str' },
+                telefone => { required => 0, type => 'Str' },
+                email_contato => { required => 0, type => 'Str' },
+                telefone_contato => { required => 0, type => 'Str' },
+                cidade => { required => 0, type => 'Str' },
+                bairro => { required => 0, type => 'Str' },
+                cep => { required => 0, type => 'Str' },
+                endereco => { required => 0, type => 'Str' },
+
             },
         ),
 
@@ -169,6 +180,16 @@ sub verifiers_specs {
                         return $r->get_value('password') eq $r->get_value('password_confirm');
                     },
                 },
+
+                nome_responsavel_cadastro => { required => 0, type => 'Str' },
+                estado => { required => 0, type => 'Str' },
+                telefone => { required => 0, type => 'Str' },
+                email_contato => { required => 0, type => 'Str' },
+                telefone_contato => { required => 0, type => 'Str' },
+                cidade => { required => 0, type => 'Str' },
+                bairro => { required => 0, type => 'Str' },
+                cep => { required => 0, type => 'Str' },
+                endereco => { required => 0, type => 'Str' },
             },
         ),
 

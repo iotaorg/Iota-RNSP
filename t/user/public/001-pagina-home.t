@@ -48,7 +48,8 @@ eval {
                 'user.create.password'         => 'foobarquux1',
                 'user.create.password_confirm' => 'foobarquux1',
                 'user.create.city_id'          => $city->id,
-                'user.create.prefeito'         => 1
+                'user.create.prefeito'         => 1,
+                'user.create.endereco'         => 'endereco_t'
                 ]
             );
             ok( $res->is_success, 'user created' );
@@ -241,7 +242,9 @@ eval {
             is($obj->{variaveis}[0]{period}, 'yearly', 'periodo das variaveis basicas nao mudaram');
             is($obj->{variaveis}[0]{last_value_date}, '2012-01-01', 'data do ultimo valor ok');
 
+
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
+            is($obj->{usuario}{endereco}, 'endereco_t','endereco esta la');
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{from_json( $res->content )};

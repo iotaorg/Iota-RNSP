@@ -104,6 +104,14 @@ sub user_GET {
 
     };
 
+    $ret->{usuario} = {
+        endereco => $user->endereco,
+        bairro => $user->bairro,
+        cidade => $user->cidade,
+        estado => $user->estado,
+        cep => $user->cep ,
+    };
+
     $self->status_ok(
         $c,
         entity => $ret
