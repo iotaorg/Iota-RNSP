@@ -50,7 +50,7 @@ sub value_check {
 
     return 1;
 }
-
+# TODO deixar o campo 'source' obrigatorio quando o campo 'value' for vazio
 sub verifiers_specs {
     my $self = shift;
     return {
