@@ -43,7 +43,13 @@ sub root: Chained('/') PathPart('') CaptureArgs(0) {
 
 sub mapa_site: Chained('root') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c, $cidade ) = @_;
+
+    my @citys = $c->model('DB::City')->as_hashref->all;
+    my @indicators = $c->model('DB::Indicator')->as_hashref->all;
+
      $c->stash(
+        citys    => \@citys,
+        indicators => \@indicators,
         template => 'mapa_site.tt'
     );
 }
