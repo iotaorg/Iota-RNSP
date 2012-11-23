@@ -146,6 +146,18 @@ var removeAccents = (function() {
 
 var estados_sg = [];
 
+var loadBreadCrumb = function(data){
+	if (ref == "indicador"){
+		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name});
+	}else if (ref == "cidade"){
+		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf});
+	}
+	$("#breadcrumbs-top").append(breadcrumb);
+	$('#breadcrumbs-top').xBreadcrumbs();
+	
+}
+
+
 $(document).ready(function(){
 	estados_sg["Acre"] = "AC";
 	estados_sg["Alagoas"] = "AL";
@@ -177,17 +189,6 @@ $(document).ready(function(){
 	estados_sg[""] = "";
 
 	$.ajaxSetup({ cache: false });
-	
-	var loadBreadCrumb = function(data){
-		if (ref == "indicador"){
-			var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name});
-		}else if (ref == "cidade"){
-			var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf});
-		}
-		$("#breadcrumbs-top").append(breadcrumb);
-		$('#breadcrumbs-top').xBreadcrumbs();
-		
-	}
 
 });
 
