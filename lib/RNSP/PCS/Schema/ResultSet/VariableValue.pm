@@ -56,10 +56,7 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                justification_of_missing_field => {
-                    required   => 0,
-                    type       => 'Str'
-                },
+
                 value => {
                     required   => 0,
                     type       => 'Str',
@@ -78,7 +75,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r      = shift;
 
-                        return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
+                        #return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
                         my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id') } );
@@ -109,10 +106,7 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
-                justification_of_missing_field => {
-                    required   => 0,
-                    type       => 'Str'
-                },
+
                 source => { required => 0, type => 'Str' },
                 id => {
                     required   => 1,
@@ -138,7 +132,7 @@ sub verifiers_specs {
                     type       => DataStr,
                     post_check => sub {
                         my $r      = shift;
-                        return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
+                        #return 0 if (!$r->get_value('value')); # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
                         my $var    = $self->search( { id => $r->get_value('id') } )->first;
@@ -161,10 +155,7 @@ sub verifiers_specs {
 
         put => Data::Verifier->new(
             profile => {
-                justification_of_missing_field => {
-                    required   => 0,
-                    type       => 'Str',
-                },
+
                 source => { required => 0, type => 'Str' },
 
                 value => {
@@ -183,11 +174,11 @@ sub verifiers_specs {
                     required => 1,
                     type => DataStr,
 
-                    post_check => sub {
-                        my $r = shift;
-                        return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
-                        return 1;
-                    },
+                    #post_check => sub {
+                    #    my $r = shift;
+                    #    return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
+                    #    return 1;
+                    #},
 
                 },
                 variable_id   => {
@@ -274,9 +265,7 @@ sub action_specs {
                                 observations => $values{observations}
                             ) : () ),
 
-                        (exists $values{justification_of_missing_field} ? (
-                                justification_of_missing_field => $values{justification_of_missing_field}
-                            ) : () )
+
 
                     }
                 );

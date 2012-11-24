@@ -259,7 +259,7 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user_indicators
@@ -278,8 +278,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 15:50:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+1vX3aC2hJxWHG1DiIhGzQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5MzcD0YTKTJwsWTl3QtI1Q
 
 __PACKAGE__->belongs_to(
     "owner",

@@ -67,13 +67,11 @@ __PACKAGE__->table("user_indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 justification_of_missing_field
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -99,17 +97,9 @@ __PACKAGE__->add_columns(
   "valid_from",
   { data_type => "date", is_nullable => 1 },
   "goal",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "justification_of_missing_field",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -164,8 +154,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 15:50:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kcmv45YHya0VNl36aLYzyQ
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ado+bjXxc8i1xe+3rOjH4g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
