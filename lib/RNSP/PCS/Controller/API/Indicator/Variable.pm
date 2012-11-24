@@ -356,6 +356,8 @@ sub by_period_GET {
                 value         => undef,
                 value_of_date => undef,
                 value_id      => undef,
+                observations  => undef,
+                source        => undef,
             };
 
             my $rsx = $row->values->search({
@@ -369,6 +371,8 @@ sub by_period_GET {
                     value         => $value->value,
                     value_of_date => $value->value_of_date->datetime,
                     value_id      => $value->id,
+                    observations  => $value->observations,
+                    source        => $value->source
                 };
             }
             push @rows, $rowx;
