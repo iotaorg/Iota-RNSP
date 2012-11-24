@@ -122,10 +122,12 @@ eval {
             ( $res, $c ) = ctx_request( POST $uri->path_query, [
                 'variable.value.update.value'         => '456',
                 'variable.value.update.source'        => 'AAAA',
+                'variable.value.update.observations'  => 'observations',
                 'variable.value.update.value_of_date' => '2012-12-22 14:22:44',
             ] );
             ok( $res->is_success, 'variable updated' );
             is( $res->code, 202, 'variable exists -- 202 accepted' );
+
 
             my ( $res2, $c2 ) = ctx_request( POST $uri->path_query, [
                 'variable.value.update.value'         => '456',
@@ -144,6 +146,8 @@ eval {
             );
 
             is($updated_var->value, '456', 'value is relly updated');
+            is($updated_var->source, 'AAAA', 'source relly updated');
+            is($updated_var->observations, 'observations', 'observations updated');
             is($updated_var->value_of_date->datetime, '2012-12-22T14:22:44', 'value date as well updated');
 
             # DELETE
