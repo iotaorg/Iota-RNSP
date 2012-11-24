@@ -73,11 +73,7 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my $rs = $c->stash->{collection}->search_rs({
-    -or => [
-         'values.user_id' => $c->stash->{user}->id,
-        'values.user_id' => undef,
-    ] }, { prefetch => ['values'] } );
+    my $rs = $c->stash->{collection};
 
     $rs = $rs->search({is_basic => $c->req->params->{is_basic}})
         if (defined $c->req->params->{is_basic});
@@ -86,21 +82,25 @@ sub list_GET {
     my @objs;
 
     foreach my $obj (@list){
-        push @objs, {
 
+        my @values = $rs->search({
+            id => $obj->{id}
+        })->next->values->search({user_id => $c->stash->{user}->id})->as_hashref->all;
+        push @objs, {
             (map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit)),
             variable_id => $obj->{id},
-            values => [ map {+{
-                    value         => $_->{value},
-                    value_of_date => $_->{value_of_date},
-                    source        => $_->{source},
-                    observations  => $_->{observations},
-                    valid_from    => $_->{valid_from},
-                    valid_until   => $_->{valid_until},
-                    id            => $_->{id},
-                    url           =>  $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $_->{id} ] )->as_string
-                }} sort {$a->{valid_from} cmp $b->{valid_from} } @{$obj->{values}}
-           ],
+            values => [
+                map {+{
+                        value         => $_->{value},
+                        value_of_date => $_->{value_of_date},
+                        source        => $_->{source},
+                        observations  => $_->{observations},
+                        valid_from    => $_->{valid_from},
+                        valid_until   => $_->{valid_until},
+                        id            => $_->{id},
+                        url           =>  $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $_->{id} ] )->as_string
+                }} sort {$a->{valid_from} cmp $b->{valid_from} } @values
+            ],
         }
     }
 
