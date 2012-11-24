@@ -41,7 +41,7 @@ __PACKAGE__->table("actions_log");
 
 =head2 id
 
-  data_type: 'bigint'
+  data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
   sequence: 'actions_log_id_seq'
@@ -57,7 +57,6 @@ __PACKAGE__->table("actions_log");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 user_id
 
@@ -79,7 +78,7 @@ __PACKAGE__->table("actions_log");
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type         => "bigint",
+    data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
     sequence          => "actions_log_id_seq",
@@ -92,11 +91,7 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "url",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "user_id",
   { data_type => "integer", is_nullable => 1 },
   "message",
@@ -118,8 +113,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 14:03:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X729XxKlxrBRn5gK1zDAIg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FaDoZ+k1emMza0oMKEH8qg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
