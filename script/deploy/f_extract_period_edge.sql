@@ -74,8 +74,10 @@ CREATE OR REPLACE FUNCTION voltar_periodo(p_date timestamp without time zone, p_
 $BODY$DECLARE
 
 BEGIN
-    IF (p_period IN ('daily', 'weekly', 'monthly', 'yearly', 'decade') ) THEN
+    IF (p_period IN ('weekly', 'monthly', 'yearly', 'decade') ) THEN
             RETURN ( p_date - ( p_num::text|| ' ' || replace(p_period::text, 'ly','') )::interval  )::date;
+    ELSEIF (p_period = 'daily') THEN
+        RETURN ( p_date - '1 day'::interval  )::date;
     ELSEIF (p_period = 'bimonthly') THEN
         RETURN ( p_date - ( (p_num*2)::text|| ' month' )::interval  )::date;
     ELSEIF (p_period = 'quarterly') THEN
@@ -89,3 +91,41 @@ END;$BODY$
   LANGUAGE plpgsql STABLE
   COST 100;
 
+-- Function: ultimo_periodo(period_enum)
+
+-- DROP FUNCTION ultimo_periodo(period_enum);
+
+CREATE OR REPLACE FUNCTION ultimo_periodo(p_period period_enum)
+  RETURNS date AS
+$BODY$DECLARE
+v_ret date;
+BEGIN
+    IF (p_period IN ('weekly', 'monthly', 'yearly', 'decade') ) THEN
+            SELECT x.period_begin into v_ret
+        FROM f_extract_period_edge(p_period, current_date - ( '1 ' ||replace(p_period::text, 'ly','') )::interval)x;
+    ELSEIF (p_period = 'daily') THEN
+            SELECT x.period_begin into v_ret
+        FROM f_extract_period_edge(p_period, current_date -  '1 day'::interval) x;
+    ELSEIF (p_period = 'bimonthly') THEN
+        SELECT
+        (extract('year' FROM current_date)::text || '-' ||
+        (CASE WHEN extract('month' FROM current_date)::int % 2 = 0 THEN
+                (extract('month' FROM current_date) - 1)::text
+            ELSE
+                extract('month' FROM current_date)::text
+            END)
+    ||'-01' )::date into v_ret;
+    ELSEIF (p_period = 'quarterly') THEN
+        SELECT x.period_begin into v_ret
+        FROM f_extract_period_edge(p_period, current_date -  '3 months'::interval) x;
+    ELSEIF (p_period = 'semi-annual') THEN
+        SELECT x.period_begin into v_ret
+        FROM f_extract_period_edge(p_period, current_date -  '6 months'::interval) x;
+    END IF;
+
+    RETURN v_ret;
+END;$BODY$
+  LANGUAGE plpgsql STABLE
+  COST 100;
+ALTER FUNCTION ultimo_periodo(period_enum)
+  OWNER TO postgres;
