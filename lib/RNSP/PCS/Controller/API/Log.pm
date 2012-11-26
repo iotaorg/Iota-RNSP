@@ -23,7 +23,7 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 
 listar os eixos
 
-GET /api/axis?user_id=1234
+GET /api/log?user_id=1234
 
 user_id opcional
 
