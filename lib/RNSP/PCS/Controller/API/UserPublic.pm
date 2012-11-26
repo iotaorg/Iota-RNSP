@@ -119,6 +119,8 @@ sub user_GET {
         cep => $user->cep ,
     };
 =cut
+
+
     $self->status_ok(
         $c,
         entity => $ret

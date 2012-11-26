@@ -25,7 +25,9 @@ use Catalyst qw/
     Authentication
     Authorization::Roles
 
-    /;
+    +CatalystX::Plugin::Logx
+
+/;
 
 extends 'Catalyst';
 
@@ -60,7 +62,22 @@ after 'setup_components' => sub {
             $app->components->{$_}->initialize_after_setup($app);
         }
     }
+
+
+
 };
+
+after setup_finalize => sub {
+    my $app = shift;
+
+    for ( $app->registered_plugins  ) {
+        if ( $_->can('initialize_after_setup') ) {
+            $_->initialize_after_setup($app);
+        }
+    }
+};
+
+
 
 # Start the application
 __PACKAGE__->setup();

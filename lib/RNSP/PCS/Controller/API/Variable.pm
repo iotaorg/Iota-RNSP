@@ -107,6 +107,7 @@ sub variable_POST {
 
   my $obj = $dm->get_outcome_for('variable.update');
 
+  $c->logx('Atualizou variavel ' . $obj->name);
   $self->status_accepted(
     $c,
     location =>
@@ -241,6 +242,7 @@ sub list_POST {
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
   my $object = $dm->get_outcome_for('variable.create');
+  $c->logx('Adicionou variavel ' . $object->name);
 
   $self->status_created(
     $c,

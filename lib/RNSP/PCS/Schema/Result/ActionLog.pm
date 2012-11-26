@@ -61,6 +61,7 @@ __PACKAGE__->table("actions_log");
 =head2 user_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 message
@@ -71,6 +72,11 @@ __PACKAGE__->table("actions_log");
 =head2 ip
 
   data_type: 'text'
+  is_nullable: 1
+
+=head2 indicator_id
+
+  data_type: 'integer'
   is_nullable: 1
 
 =cut
@@ -93,11 +99,13 @@ __PACKAGE__->add_columns(
   "url",
   { data_type => "text", is_nullable => 1 },
   "user_id",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "message",
   { data_type => "text", is_nullable => 1 },
   "ip",
   { data_type => "text", is_nullable => 1 },
+  "indicator_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -112,9 +120,31 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FaDoZ+k1emMza0oMKEH8qg
+=head2 user
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "user",
+  "RNSP::PCS::Schema::Result::User",
+  { id => "user_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-26 16:32:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F+eHy6PJqYWCzxw2THUFaw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -56,16 +56,16 @@ Retorna:
 
 sub variable_GET {
   my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','variable']})->as_hashref->next;
+  my $objectect_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','variable']})->as_hashref->next;
 
   $self->status_ok(
     $c,
     entity => {
       created_by => {
-        map { $_ => $object_ref->{owner}{$_} } qw(name id)
+        map { $_ => $objectect_ref->{owner}{$_} } qw(name id)
       },
-      (map { $_ => $object_ref->{variable}{$_} } qw(name type cognomen)),
-      (map { $_ => $object_ref->{$_} } qw(value created_at value_of_date observations source))
+      (map { $_ => $objectect_ref->{variable}{$_} } qw(name type cognomen)),
+      (map { $_ => $objectect_ref->{$_} } qw(value created_at value_of_date observations source))
     }
   );
 }
@@ -89,12 +89,12 @@ sub variable_POST {
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_any_user_role(qw(admin user));
 
-  my $obj_rs = $c->stash->{object}->next;
-  # removido: $c->user->id != $obj_rs->owner->id
+  my $object_rs = $c->stash->{object}->next;
+  # removido: $c->user->id != $object_rs->owner->id
   if (!$c->check_any_user_role(qw(admin user))){
     $self->status_forbidden( $c, message => "access denied", ), $c->detach;
   }
-  $c->req->params->{variable}{value}{update}{id} = $obj_rs->id;
+  $c->req->params->{variable}{value}{update}{id} = $object_rs->id;
 
 
   my $dm = $c->model('DataManager');
@@ -102,16 +102,19 @@ sub variable_POST {
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
 
-  my $obj = $dm->get_outcome_for('variable.value.update');
+  my $object = $dm->get_outcome_for('variable.value.update');
+
+  $c->logx('Atualizou valor ' . $object->value . ' para ' . $object->valid_from .
+    ' na variavel ' . $object->variable_id . ' ID '. $object->id );
 
   $self->status_accepted(
     $c,
     location =>
-      $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id,$obj->id ] )->as_string,
-        entity => { id => $obj->id }
+      $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id,$object->id ] )->as_string,
+        entity => { id => $object->id }
     ),
     $c->detach
-    if $obj;
+    if $object;
 }
 
 
@@ -131,11 +134,11 @@ sub variable_DELETE {
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_any_user_role(qw(admin user));
 
-  my $obj = $c->stash->{object}->next;
-  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
+  my $object = $c->stash->{object}->next;
+  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $object;
 
-  if ($c->user->id == $obj->owner->id || $c->check_any_user_role(qw(admin))){
-    $obj->delete;
+  if ($c->user->id == $object->owner->id || $c->check_any_user_role(qw(admin))){
+    $object->delete;
   }
 
   $self->status_no_content($c);
@@ -176,13 +179,16 @@ sub list_POST {
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
 
-  my $object = $dm->get_outcome_for('variable.value.create');
+  my $objectect = $dm->get_outcome_for('variable.value.create');
+
+  $c->logx('Adicionou valor ' . ($objectect->value||'') . ' para ' . $objectect->valid_from .
+    ' na variavel ' . $objectect->variable_id . ' ID '. $objectect->id );
 
   $self->status_created(
     $c,
-    location => $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id, $object->id ] )->as_string,
+    location => $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id, $objectect->id ] )->as_string,
     entity => {
-      id   => $object->id
+      id   => $objectect->id
     }
   );
 
@@ -220,15 +226,17 @@ sub list_PUT {
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
 
-  my $object = $dm->get_outcome_for('variable.value.put');
+  my $objectect = $dm->get_outcome_for('variable.value.put');
+  $c->logx('Atualizou valor ' . $objectect->value . ' para ' . $objectect->valid_from .
+    ' na variavel ' . $objectect->variable_id . ' ID '. $objectect->id );
   # retorna created, mas pode ser updated
   $self->status_created(
     $c,
-    location => $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id, $object->id ] )->as_string,
+    location => $c->uri_for( $self->action_for('variable'), [ $c->stash->{variable}->id, $objectect->id ] )->as_string,
     entity => {
-      id            => $object->id,
-      valid_from    => $object->valid_from->ymd,
-      valid_until   => $object->valid_until->ymd
+      id            => $objectect->id,
+      valid_from    => $objectect->valid_from->ymd,
+      valid_until   => $objectect->valid_until->ymd
     }
   );
 
