@@ -6,9 +6,8 @@ use MRO::Compat;
 use Catalyst::Exception ();
 
 use overload ();
-use MongoDB;
 use Carp;
-use Cwd 'abs_path';
+
 
 use namespace::clean -except => 'meta';
 
