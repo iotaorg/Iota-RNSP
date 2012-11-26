@@ -98,12 +98,19 @@ sub user_GET {
                 uf => $r->{uf},
                 pais => $r->{pais},
                 latitude => $r->{latitude},
-                longitude => $r->{longitude}
+                longitude => $r->{longitude},
+                telefone_prefeitura => $r->{telefone_prefeitura},
+                endereco_prefeitura => $r->{endereco_prefeitura},
+                bairro_prefeitura => $r->{bairro_prefeitura},
+                cep_prefeitura              => $r->{cep_prefeitura},
+                nome_responsavel_prefeitura => $r->{nome_responsavel_prefeitura},
+                email_prefeitura            => $r->{email_prefeitura}
+
             };
         }
 
     };
-
+=pod
     $ret->{usuario} = {
         endereco => $user->endereco,
         bairro => $user->bairro,
@@ -111,6 +118,8 @@ sub user_GET {
         estado => $user->estado,
         cep => $user->cep ,
     };
+=cut
+
 
     $self->status_ok(
         $c,

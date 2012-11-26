@@ -40,7 +40,7 @@ sub indicator_GET {
     $controller->indicator_GET( $c );
 }
 
-sub reusmo :Chained('base') : PathPart('') : Args( 0 ) : ActionClass('REST') {}
+sub resumo :Chained('base') : PathPart('') : Args( 0 ) : ActionClass('REST') {}
 
 
 =pod
@@ -134,7 +134,7 @@ retorna os valores dos ultimos 4 periodos de cada indicator
 
 =cut
 
-sub reusmo_GET {
+sub resumo_GET {
     my ( $self, $c ) = @_;
     my $ret;
     my $max_periodos = 4;
@@ -254,6 +254,131 @@ sub reusmo_GET {
     }
 }
 
+
+sub indicator_status:Chained('base') : PathPart('status') : Args( 0 ) : ActionClass('REST') {}
+
+=pod
+
+GET /api/public/user/$id/indicator/status
+
+Retorna o status de prenchimento dos indicadores
+
+\ {
+    status:  [
+        {
+            id: 123
+            ultimo_periodo: 1 ou 0,
+            outros_periodos: 1 ou 0,
+            completo_historico: 1 ou 0
+            -- se ultimo_periodo E outros_periodos forem 0 nao tem nenhum dado
+            -- se ultimo_periodo for 1 e outros_periodos for 0,
+            -- nao ha dados apenas do ultimo periodo
+            -- completo_historico so eh verdadeiro quando todos os periodos
+            -- foram preenchidos ignorando o ultimo (se quiser saber se esta tudo completo, use completo_historico+ultimo_periodo==2)
+        },
+    ]
+}
+
+=cut
+
+sub indicator_status_GET {
+    my ( $self, $c ) = @_;
+    my $ret;
+    my $max_periodos = 4;
+    my $ultimos = {};
+    eval {
+        my $rs = $c->stash->{collection};
+
+        while (my $indicator = $rs->next){
+
+            my $indicator_formula = new RNSP::IndicatorFormula(
+                formula => $indicator->formula,
+                schema => $c->model('DB')->schema
+            );
+
+            my $rs = $c->model('DB')->resultset('Variable')->search_rs({
+                'me.id' => [$indicator_formula->variables],
+            } );
+
+            my $valid_from;
+            my $perido;
+            my $variaveis = 0;
+            my $ultima_data;
+
+            my $outros_periodos = {};
+            my $ultimo_periodo = {};
+
+            while (my $row = $rs->next){
+                # ultima data do periodo geral
+                unless (exists $ultimos->{$row->period}){
+                    my $ret = $c->model('DB')->schema->ultimo_periodo($row->period);
+                    $ultimos->{$row->period} = $ret->{ultimo_periodo};
+                }
+                $ultima_data = $ultimos->{$row->period};
+
+                if (!$valid_from){
+                    $valid_from = $c->model('DB')->schema->voltar_periodo(
+                        $ultima_data,
+                        $row->period, $max_periodos)->{voltar_periodo};
+                    $perido = $row->period;
+                }
+                next unless $valid_from;
+
+
+                my $rsx = $row->values->search({
+                    'me.valid_from' => {'>' => $valid_from},
+                    'me.user_id'    => $c->stash->{user_obj}->id
+
+                })->as_hashref;
+
+                while (my $value = $rsx->next){
+                    if ($value->{value} && $value->{valid_from} eq $ultima_data){
+                        $ultimo_periodo->{$value->{valid_from}}++;
+                    }elsif($value->{value}){
+                        $outros_periodos->{$value->{valid_from}}++;
+                    }
+
+                }
+                $variaveis++;
+            }
+            # nenhuma variavel
+            unless ($perido){
+                push @{$ret->{status}}, {
+                    id =>  $indicator->id,
+                    ultimo_periodo => 0,
+                    outros_periodos => 0,
+                    completo_historico => 0
+                };
+                next;
+            }
+
+            while(my($k, $v) = each %$outros_periodos){
+                delete $outros_periodos->{$k} unless $outros_periodos->{$k} == $variaveis;
+            }
+
+            push @{$ret->{status}}, {
+                id =>  $indicator->id,
+                ultimo_periodo     => (exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0,
+                outros_periodos    => (keys %$outros_periodos > 0) ? 1 : 0,
+                completo_historico => (keys %$outros_periodos == $max_periodos - 1) ? 1 : 0,
+            };
+
+        }
+
+    };
+
+    if ($@){
+        $self->status_bad_request(
+            $c,
+            message => "$@",
+        );
+    }else{
+        $self->status_ok(
+            $c,
+            entity => $ret
+        );
+    }
+}
 
 1;
 

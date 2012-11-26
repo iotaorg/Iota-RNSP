@@ -51,7 +51,7 @@ sub email_POST {
     unless $dm->success;
 
   my $outcome = eval { $dm->get_outcome_for('user.forgot_password') };
-
+  $c->logx('Pedido de nova senha para ' . $c->req->params->{'user.forgot_password.email'});
   if ($@) {
     $self->status_bad_request( $c, message => 'ocorreu um erro no servidor.' ),
       $c->detach;
@@ -108,7 +108,7 @@ sub reset_password_POST {
     unless $dm->success;
 
   my $user = $dm->get_outcome_for('user.reset_password');
-
+  $c->logx('Alterou a senha do usuario ' . $user->id);
 
   $self->status_ok( $c, entity => { message => 'ok' } );
 }

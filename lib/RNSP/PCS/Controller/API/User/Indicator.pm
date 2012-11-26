@@ -82,7 +82,8 @@ sub indicator_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach;
   }
 
-  $c->req->params->{user}{indicator}{update}{id} = $obj_rs->id;
+    my $param = $c->req->params->{user}{indicator}{update};
+  $param->{id} = $obj_rs->id;
 
 
   my $dm = $c->model('DataManager');
@@ -91,6 +92,10 @@ sub indicator_POST {
     unless $dm->success;
 
   my $obj = $dm->get_outcome_for('user.indicator.update');
+
+  $c->logx('Adicionou informação no indicador na data ' . $obj->valid_from,
+        indicator_id => $param->{indicator_id}
+    );
 
   $self->status_accepted(
     $c,
@@ -122,8 +127,10 @@ sub indicator_DELETE {
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
   if ($c->user->id == $obj->user_id || $c->check_any_user_role(qw(admin))){
+    $c->logx('Apagou informação de indicador ' . $obj->id);
     $obj->delete;
   }
+
 
   $self->status_no_content($c);
 }
@@ -162,7 +169,8 @@ sub list_POST {
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_any_user_role(qw(admin user));
 
-  $c->req->params->{user}{indicator}{create}{user_id} = $c->stash->{user}->id;
+    my $param = $c->req->params->{user}{indicator}{create};
+    $param->{user_id} = $c->stash->{user}->id;
 
   my $dm = $c->model('DataManager');
 
@@ -171,6 +179,9 @@ sub list_POST {
 
   my $object = $dm->get_outcome_for('user.indicator.create');
 
+    $c->logx('Adicionou informação no indicador na data ' . $object->valid_from,
+        indicator_id => $param->{indicator_id}
+    );
   $self->status_created(
     $c,
     location => $c->uri_for( $self->action_for('indicator'), [ $c->stash->{user}->id, $object->id ] )->as_string,

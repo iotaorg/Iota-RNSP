@@ -185,6 +185,21 @@ __PACKAGE__->add_unique_constraint("user_email_key", ["email"]);
 
 =head1 RELATIONS
 
+=head2 actions_log
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::ActionLog>
+
+=cut
+
+__PACKAGE__->has_many(
+  "actions_log",
+  "RNSP::PCS::Schema::Result::ActionLog",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 city
 
 Type: belongs_to
@@ -326,8 +341,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JYWRJySzzWIkMsj76ePbTg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-26 16:32:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UYLXloj0WKp+kuC0O5FAgw
 
 __PACKAGE__->has_many(
     "user_roles",

@@ -56,7 +56,10 @@ sub city_GET {
   $self->status_ok(
     $c,
     entity => {
-      (map { $_ => $object_ref->{$_} } qw(name uf pais latitude longitude name_uri created_at))
+      (map { $_ => $object_ref->{$_} } qw(name uf pais latitude longitude name_uri created_at
+        telefone_prefeitura endereco_prefeitura bairro_prefeitura
+            cep_prefeitura nome_responsavel_prefeitura email_prefeitura
+        ))
     }
   );
 }
@@ -170,7 +173,10 @@ sub list_GET {
     foreach my $obj (@list){
         push @objs, {
 
-            (map { $_ => $obj->{$_} } qw(id name uf pais latitude longitude name_uri created_at)),
+            (map { $_ => $obj->{$_} } qw(id name uf pais latitude longitude name_uri
+                telefone_prefeitura endereco_prefeitura bairro_prefeitura
+                cep_prefeitura nome_responsavel_prefeitura email_prefeitura
+            created_at)),
             prefeito_id => $obj->{prefeito}{user_id},
             movimento_id => $obj->{movimento}{user_id},
 

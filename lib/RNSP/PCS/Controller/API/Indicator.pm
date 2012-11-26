@@ -123,6 +123,8 @@ sub indicator_POST {
 
   my $obj = $dm->get_outcome_for('indicator.update');
 
+  $c->logx('Atualizou indicador' . $obj->name, indicator_id => $obj->id);
+
   $self->status_accepted(
     $c,
     location =>
@@ -276,6 +278,7 @@ sub list_POST {
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
   my $object = $dm->get_outcome_for('indicator.create');
+  $c->logx('Adicionou indicador' . $object->name, indicator_id => $object->id);
 
   $self->status_created(
     $c,
