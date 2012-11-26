@@ -35,7 +35,8 @@ eval {
             my $city = $schema->resultset('City')->create(
                     {
                         uf   => 'XX',
-                        name => 'AWS'
+                        name => 'AWS',
+                        telefone_prefeitura => '12345555'
                     },
                 );
 
@@ -244,7 +245,13 @@ eval {
 
 
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
-            is($obj->{usuario}{endereco}, 'endereco_t','endereco esta la');
+
+            SKIP: {
+                skip 'Endereco do usuario esta confirmado se eh publico', 1;
+                is($obj->{usuario}{telefone_prefeitura}, '12345555','telefone da cidade');
+            };
+            is($obj->{cidade}{name}, 'AWS', 'cidade OK');
+
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{from_json( $res->content )};

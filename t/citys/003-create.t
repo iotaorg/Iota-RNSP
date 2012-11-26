@@ -32,6 +32,7 @@ eval {
                 POST '/api/city',
                 [   api_key                        => 'test',
                     'city.create.name'         => 'FooBar',
+
                 ]
             );
             ok( !$res->is_success, 'invalid request' );
@@ -59,6 +60,7 @@ eval {
                     'city.create.pais'      => 'USA',
                     'city.create.latitude'  => 5666.55,
                     'city.create.longitude' => 1000.11,
+                    'city.create.telefone_prefeitura' => '1233'
                 ]
             );
             ok( $res->is_success, 'city created com mesmo nome!' );
@@ -71,6 +73,7 @@ eval {
 
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             like($res->content, qr|foo-bar-2|, 'foo-bar-2 ok');
+            like($res->content, qr|1233|, 'telefone ok');
 
             ok( $res->is_success, 'varible exists' );
             is( $res->code, 200, 'varible exists -- 200 Success' );

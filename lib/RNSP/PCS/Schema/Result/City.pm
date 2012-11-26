@@ -85,6 +85,42 @@ __PACKAGE__->table("city");
   data_type: 'text'
   is_nullable: 1
 
+=head2 telefone_prefeitura
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 endereco_prefeitura
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 bairro_prefeitura
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 cep_prefeitura
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 email_prefeitura
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 nome_responsavel_prefeitura
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -114,6 +150,42 @@ __PACKAGE__->add_columns(
   },
   "name_uri",
   { data_type => "text", is_nullable => 1 },
+  "telefone_prefeitura",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "endereco_prefeitura",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "bairro_prefeitura",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "cep_prefeitura",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "email_prefeitura",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "nome_responsavel_prefeitura",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -164,8 +236,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NjYvPs09cooikUxAkTmRPg
+# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-26 10:05:26
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mWUPZuNm4FATYBSf8Dv6mw
 
 __PACKAGE__->might_have(
   "prefeito",
