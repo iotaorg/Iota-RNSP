@@ -90,7 +90,7 @@ eval {
             is( $res->code, 200, 'list 200' );
 
             my $logs = eval{from_json( $res->content )};
-            foreach (%{$logs}){
+            foreach my $log(@{$logs->{logs}}){
                 if ($log->{message} eq 'Adicionou variavel Foo Bar0'){
                     is($log->{url}, 'POST /api/variable', 'Log criado com sucesso');
                 }elsif ($log->{message} eq 'Adicionou indicadorFoo Bar'){
