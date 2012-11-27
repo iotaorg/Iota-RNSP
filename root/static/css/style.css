@@ -676,7 +676,7 @@ a#help-formula:hover{
 	text-align: right;
 }
 #footer-menu .content .parceiros .label{
-	display: inline-block;
+	float: left;
 	margin-top: 18px;
 }
 
