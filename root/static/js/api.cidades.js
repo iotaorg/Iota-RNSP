@@ -104,7 +104,7 @@ $(document).ready(function(){
 
 	}
 		
-	function setMap(lat,lng,cidade_data){
+	function setMap(lat,lng){
 		var center = new google.maps.LatLng(lat, lng)
 		map.setCenter(center);
 
@@ -117,7 +117,6 @@ $(document).ready(function(){
 			draggable: false
 		});
 		
-		marker.__info = cidade_data;
 		marker.__position = center;
 		
 		google.maps.event.addListener(marker, 'click', function(e) {
@@ -136,7 +135,11 @@ $(document).ready(function(){
 		boxTextContent += "</tr></thead>";
 		boxTextContent += "<tbody>";
 		boxTextContent += "<tr>";
-		boxTextContent += "<td>" + $(marker.__info.endereco_prefeitura) + "<br />" + $(marker.__info.telefone_prefeitura) + "</td>";
+		if (cidade_data.cidade.endereco_prefeitura != null || cidade_data.cidade.telefone_prefeitura != null){
+			boxTextContent += "<td>" + cidade_data.cidade.endereco_prefeitura + "<br />" + cidade_data.cidade.telefone_prefeitura + "</td>";
+		}else{
+			boxTextContent += "<td>Dados não informados</td>";
+		}
 		boxTextContent += "</tr>";
 		boxTextContent += "</tbody></table>";
 
@@ -210,7 +213,7 @@ $(document).ready(function(){
 			$("#cidades-dados #mapa").css("height","+="+diff);
 		}
 	
-		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude,cidade_data.cidade);
+		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
 		
 	}
 	
