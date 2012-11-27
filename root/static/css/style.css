@@ -645,18 +645,20 @@ a#help-formula:hover{
 	clear: both;
 }
 #footer-menu .content{
-	padding: 20px 0;
+	padding: 0 0;
 }
 #footer-menu .content .menu{
-	margin-left: 10px;
+	float: left;
+	margin-left: 30px;
+	margin-top: 20px;
 	clear: both;
 }
-#footer-menu .content .menu ul{
+#footer-menu ul{
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
-#footer-menu .content .menu li{
+#footer-menu li{
 	float: left;
 	padding: 0;
 	margin-right: 50px;
@@ -666,6 +668,34 @@ a#help-formula:hover{
 }
 #footer-menu .content .menu a:hover{
 	color: #000;
+}
+#footer-menu .content .parceiros{
+	float: right;
+	margin-right: 30px;
+	margin-top: 5px;
+	clear: both;
+	text-align: right;
+}
+#footer-menu .content .parceiros .label{
+	display: inline-block;
+	margin-top: 15px;
+}
+
+#footer-menu .content .parceiros  ul{
+	display: inline-block;
+}
+
+#footer-menu .content .parceiros li{
+	float: right;
+	padding: 0;
+	margin-right: 10px;
+}
+
+#footer-menu .content .parceiros img{
+	display: inline-block;
+	margin-top: 5px;
+	margin-left: 10px;
+	border: none;
 }
 
 #footer{
