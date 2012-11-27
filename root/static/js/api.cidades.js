@@ -270,7 +270,7 @@ $(document).ready(function(){
 								table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.###", locale:"br"})});
 							}
 						}
-						table_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: cont});
+						table_content += "<td class='grafico'><a href='$$url'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({id: cont, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 	
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
