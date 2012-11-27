@@ -102,7 +102,7 @@ $(document).ready(function(){
 					var value = cidade_data.variaveis[dadoIndex.key].last_value;
 				}
 				if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
-					var measurement_unit = " <span class='measurement_unit'>" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + "</span>";
+					var measurement_unit = " <span class='measurement_unit'>" + cidade_data.variaveis[dadoIndex.key].measurement_unit + "</span>";
 				}else{
 					var measurement_unit = "";
 				}
