@@ -1,5 +1,8 @@
 var zoom_padrao = 5;
 var map;
+var boxText;
+var myOptions;
+var ib;
 var cidade_data;
 var indicadores_data;
 var graficos = [];
@@ -72,13 +75,81 @@ $(document).ready(function(){
 			};
 	
 		map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
+		
+		boxText = document.createElement("div");
+		boxText.style.cssText = "border: 2px solid #20c1c1; margin-top: 8px; background: white; padding: 0px;";
+		boxText.innerHTML = "";
+		myOptions = {
+			 content: boxText
+			,disableAutoPan: false
+			,maxWidth: 0
+			,pixelOffset: new google.maps.Size(-100, 0)
+			,zIndex: null
+			,boxStyle: { 
+			  background: "url('/static/images/tipbox.gif') no-repeat"
+			  ,opacity: 0.90
+			  ,width: "200px"
+			 }
+			,closeBoxMargin: "10px 2px -13px 2px"
+			,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+			,infoBoxClearance: new google.maps.Size(1, 1)
+			,isHidden: false
+			,pane: "floatPane"
+			,enableEventPropagation: false
+		};
+	
+		ib = new InfoBox(myOptions);
+		
+		ib.close();
+
 	}
 		
-	function setMap(lat,lng){
+	function setMap(lat,lng,cidade_data){
 		var center = new google.maps.LatLng(lat, lng)
 		map.setCenter(center);
+
+		var image = new google.maps.MarkerImage("/static/images/pin.png");
+		
+		var marker = new google.maps.Marker({
+			position: center,
+			map: map,
+			icon: image,
+			draggable: false
+		});
+		
+		marker.__info = cidade_data;
+		marker.__position = center;
+		
+		markers.push(marker);
+		
+		google.maps.event.addListener(marker, 'click', function(e) {
+			map.setCenter(marker.__position);
+			if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
+			showInfoWindow(marker,"marker");
+			selectRow(marker.__row);
+		});
+
+
 	}
 	
+	function showInfoWindow(marker,source){
+		boxTextContent = "<table class='infowindow'><thead>";
+		boxTextContent += "<tr>";
+		boxTextContent += "<th>Prefeitura</th>";
+		boxTextContent += "</tr></thead>";
+		boxTextContent += "<tbody>";
+		boxTextContent += "<tr>";
+		boxTextContent += "<td>" + $(marker.__info.endereco_prefeitura) + "<br />" + $(marker.__info.telefone_prefeitura) + "</td>";
+		boxTextContent += "</tr>";
+		boxTextContent += "</tbody></table>";
+
+		boxText.innerHTML = boxTextContent;
+		ib.close();
+		ib.setContent(boxText);
+		ib.open(map, marker);
+	}
+
+
 	
 	function showCidadeData(){
 		cidade_data.cidade.imagem = "saopaulo.jpg";
@@ -142,7 +213,7 @@ $(document).ready(function(){
 			$("#cidades-dados #mapa").css("height","+="+diff);
 		}
 	
-		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
+		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude,cidade_data);
 		
 	}
 	
