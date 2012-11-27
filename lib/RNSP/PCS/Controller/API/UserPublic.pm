@@ -105,7 +105,8 @@ sub user_GET {
                 bairro_prefeitura => $r->{bairro_prefeitura},
                 cep_prefeitura              => $r->{cep_prefeitura},
                 nome_responsavel_prefeitura => $r->{nome_responsavel_prefeitura},
-                email_prefeitura            => $r->{email_prefeitura}
+                email_prefeitura            => $r->{email_prefeitura},
+                summary                     => $r->{summary},
 
             };
         }
