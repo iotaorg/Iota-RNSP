@@ -287,6 +287,15 @@ table{
 	vertical-align: bottom;
 }
 
+#cidades-dados .variaveis .item .valor span.measurement_unit{
+	font-size: 10pt;
+}
+
+#cidades-dados .variaveis .item .valor span.last_date{
+	font-size: 10pt;
+}
+
+
 #cidades-indicadores,
 #indicador-historico{
 	border: 1px solid #e0e0e0;
