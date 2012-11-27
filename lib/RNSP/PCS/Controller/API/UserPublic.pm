@@ -79,6 +79,7 @@ sub user_GET {
                 cognomen => $r->{cognomen},
                 period => $r->{period},
                 type => $r->{type},
+                measurement_unit => $r->{measurement_unit},
                 last_value => $valor->{value},
                 last_value_date => $valor->{valid_from}
             } );
