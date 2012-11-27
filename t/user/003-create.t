@@ -11,7 +11,7 @@ use Catalyst::Test q(RNSP::PCS);
 
 use HTTP::Request::Common;
 use Package::Stash;
-
+use Path::Class qw(dir);
 use RNSP::PCS::TestOnly::Mock::AuthUser;
 
 my $schema = RNSP::PCS->model('DB');
@@ -99,7 +99,12 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'Image created!' );
 
-            my $name = "$Bin/../../root/static/user/user_${id}_perfil_xd_img_teste.gif";
+            my $filename = "user_${id}_perfil_xd_img_teste.gif";
+
+            my $name = RNSP::PCS->config->{private_path} =~ /^\//o ?
+                    dir(RNSP::PCS->config->{private_path})->resolve . '/' . $filename :
+                    RNSP::PCS->path_to( $c->config->{private_path} , $filename );
+
             ok(-e $name, $name . ' image exists');
             if (-e $name ){
                 unlink($name) if -e $name;
@@ -119,7 +124,13 @@ eval {
 
                     like( $obj->{files}{perfil_xd}, qr|img_teste_2\.gif|, 'version updated' );
                 }
-                $name = "$Bin/../../root/static/user/user_${id}_perfil_xd_img_teste_2.gif";
+                my $filename = "user_${id}_perfil_xd_img_teste_2.gif";
+                $name = RNSP::PCS->config->{private_path} =~ /^\//o ?
+                    dir(RNSP::PCS->config->{private_path})->resolve . '/' . $filename :
+                    RNSP::PCS->path_to( $c->config->{private_path} , $filename );
+
+                ok(-e $name, $name . ' image exists');
+
                 unlink($name) if -e $name;
             }
 

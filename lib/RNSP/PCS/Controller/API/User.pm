@@ -31,7 +31,7 @@ sub user_file : Chained('object') : PathPart('arquivo') : Args(1) : ActionClass(
 }
 
 use JSON;
-
+use Path::Class qw(dir);
 sub user_file_POST {
     my ( $self, $c, $classe ) = @_;
 
@@ -51,8 +51,14 @@ sub user_file_POST {
             substr($t->translate($upload->basename), 0, 200)
         );
 
-        my $private_path = RNSP::PCS->path_to( $c->config->{private_path} , $filename );
-        $upload->copy_to( $private_path );
+        my $private_path = $c->config->{private_path} =~ /^\//o ?
+                    dir($c->config->{private_path})->resolve . '/' . $filename :
+            RNSP::PCS->path_to( $c->config->{private_path} , $filename );
+
+        unless ($upload->copy_to( $private_path )){
+            $c->res->body(to_json({ error => "Copy failed: $!" }));
+            $c->detach;
+        }
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
 

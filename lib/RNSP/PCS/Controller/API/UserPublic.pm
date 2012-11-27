@@ -112,15 +112,14 @@ sub user_GET {
         }
 
     };
-=pod
+
     $ret->{usuario} = {
-        endereco => $user->endereco,
-        bairro => $user->bairro,
-        cidade => $user->cidade,
-        estado => $user->estado,
-        cep => $user->cep ,
+        files => {
+            map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
+                order_by => 'created_at'
+        }) },
     };
-=cut
+
 
 
     $self->status_ok(
