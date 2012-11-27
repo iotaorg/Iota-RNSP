@@ -59,7 +59,7 @@ sub user_file_POST {
             $c->res->body(to_json({ error => "Copy failed: $!" }));
             $c->detach;
         }
-        chmod 0644 $private_path;
+        chmod 0644, $private_path;
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
 
