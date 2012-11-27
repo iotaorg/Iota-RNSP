@@ -166,7 +166,7 @@ $(document).ready(function(){
 				if (datas.length > 0){
 					table_content += "<thead class='datas'><tr><th></th>";
 					$.each(datas, function(index, value){
-						table_content += "<th>$$data</th>".render({data: datas[index].nome});
+						table_content += "<th>$$data</th>".render({data: (datas[index].nome) ? datas[index].nome : ""});
 					});
 					table_content += "<th></th></tr></thead>";
 				}
