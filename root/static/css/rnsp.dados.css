@@ -174,7 +174,7 @@ table{
 
 #cidades-dados .profile,
 #cidades-dados .image,
-#cidades-dados .resume,
+#cidades-dados .summary,
 #cidades-dados .map{
 	border: 1px solid #e0e0e0;
 	float: left;
@@ -217,7 +217,7 @@ table{
 	margin-bottom: 10px;
 }
 
-#cidades-dados .resume{
+#cidades-dados .summary{
 	width: 332px;
 	clear: right;
 	margin-left: 10px;
@@ -233,12 +233,12 @@ table{
 	height: 300px;
 }
 
-#cidades-dados .resume,
+#cidades-dados .summary,
 #cidades-dados .map{
 	height: 300px;
 }
 
-#cidades-dados .resume .content-fill,
+#cidades-dados .summary .content-fill,
 #cidades-dados .profile .content-fill,
 #indicador-dados .profile .content-fill,
 #mapa-do-site .content-fill{
