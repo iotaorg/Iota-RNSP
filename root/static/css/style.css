@@ -650,7 +650,7 @@ a#help-formula:hover{
 #footer-menu .content .menu{
 	float: left;
 	margin-left: 30px;
-	margin-top: 20px;
+	margin-top: 23px;
 	clear: both;
 }
 #footer-menu ul{
@@ -671,14 +671,13 @@ a#help-formula:hover{
 }
 #footer-menu .content .parceiros{
 	float: right;
-	margin-right: 30px;
 	margin-top: 5px;
-	clear: both;
+	clear: right;
 	text-align: right;
 }
 #footer-menu .content .parceiros .label{
 	display: inline-block;
-	margin-top: 15px;
+	margin-top: 18px;
 }
 
 #footer-menu .content .parceiros  ul{
@@ -686,7 +685,7 @@ a#help-formula:hover{
 }
 
 #footer-menu .content .parceiros li{
-	float: right;
+	float: left;
 	padding: 0;
 	margin-right: 10px;
 }
