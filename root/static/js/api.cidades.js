@@ -210,7 +210,7 @@ $(document).ready(function(){
 			$("#cidades-dados #mapa").css("height","+="+diff);
 		}
 	
-		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude,cidade_data);
+		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude,cidade_data.cidade);
 		
 	}
 	
