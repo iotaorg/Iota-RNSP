@@ -120,13 +120,10 @@ $(document).ready(function(){
 		marker.__info = cidade_data;
 		marker.__position = center;
 		
-		markers.push(marker);
-		
 		google.maps.event.addListener(marker, 'click', function(e) {
 			map.setCenter(marker.__position);
 			if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
 			showInfoWindow(marker,"marker");
-			selectRow(marker.__row);
 		});
 
 
