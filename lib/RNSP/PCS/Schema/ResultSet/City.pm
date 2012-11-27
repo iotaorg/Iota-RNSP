@@ -32,6 +32,7 @@ sub verifiers_specs {
                 cep_prefeitura              => { required => 0, type => 'Str' },
                 email_prefeitura            => { required => 0, type => 'Str' },
                 nome_responsavel_prefeitura => { required => 0, type => 'Str' },
+                summary                     => { required => 0, type => 'Str' },
 
             },
         ),
@@ -50,7 +51,7 @@ sub verifiers_specs {
                 cep_prefeitura              => { required => 0, type => 'Str' },
                 email_prefeitura            => { required => 0, type => 'Str' },
                 nome_responsavel_prefeitura => { required => 0, type => 'Str' },
-
+                summary                     => { required => 0, type => 'Str' },
             },
         ),
 

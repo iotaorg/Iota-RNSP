@@ -58,7 +58,7 @@ sub city_GET {
     entity => {
       (map { $_ => $object_ref->{$_} } qw(name uf pais latitude longitude name_uri created_at
         telefone_prefeitura endereco_prefeitura bairro_prefeitura
-            cep_prefeitura nome_responsavel_prefeitura email_prefeitura
+            cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
         ))
     }
   );
@@ -175,7 +175,7 @@ sub list_GET {
 
             (map { $_ => $obj->{$_} } qw(id name uf pais latitude longitude name_uri
                 telefone_prefeitura endereco_prefeitura bairro_prefeitura
-                cep_prefeitura nome_responsavel_prefeitura email_prefeitura
+                cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
             created_at)),
             prefeito_id => $obj->{prefeito}{user_id},
             movimento_id => $obj->{movimento}{user_id},

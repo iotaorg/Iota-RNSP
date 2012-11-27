@@ -351,7 +351,7 @@ sub by_period_GET {
 
         while (my $row = $rs->next){
             my $rowx = {
-                (map { $_ => $row->$_ } qw /id name explanation cognomen type source is_basic/),
+                (map { $_ => $row->$_ } qw /id name explanation cognomen type source measurement_unit is_basic/),
 
                 value         => undef,
                 value_of_date => undef,

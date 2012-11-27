@@ -79,6 +79,7 @@ sub user_GET {
                 cognomen => $r->{cognomen},
                 period => $r->{period},
                 type => $r->{type},
+                measurement_unit => $r->{measurement_unit},
                 last_value => $valor->{value},
                 last_value_date => $valor->{valid_from}
             } );
@@ -104,7 +105,8 @@ sub user_GET {
                 bairro_prefeitura => $r->{bairro_prefeitura},
                 cep_prefeitura              => $r->{cep_prefeitura},
                 nome_responsavel_prefeitura => $r->{nome_responsavel_prefeitura},
-                email_prefeitura            => $r->{email_prefeitura}
+                email_prefeitura            => $r->{email_prefeitura},
+                summary                     => $r->{summary},
 
             };
         }
