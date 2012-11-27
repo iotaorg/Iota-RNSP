@@ -98,10 +98,16 @@ $(document).ready(function(){
 				}else if (infoVars[role][index].type == "text"){
 					var value = cidade_data.variaveis[dadoIndex.key].last_value;
 				}
-				$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value</td></tr>".render(
+				if (cidade_data.variaveis[dadoIndex.key].last_value_date != null && cidade_data.variaveis[dadoIndex.key].last_value_date != undefined && cidade_data.variaveis[dadoIndex.key].last_value_date != ""){
+					var last_date = "(" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + ")";
+				}else{
+					var last_date = "";
+				}
+				$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value $$last_date</td></tr>".render(
 					{
 						label: label,
-						value: value
+						value: value,
+						last_date: last_date
 					}
 				));
 			}
