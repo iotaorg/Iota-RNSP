@@ -87,7 +87,7 @@ $(document).ready(function(){
 		$("#cidades-dados .profile .variaveis .tabela").empty();
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Cidade:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.name}));
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Estado:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.uf}));
-		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>País:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.pais}));
+		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>País:</td><td class='valor'>$$dado</td></tr>".render({dado: paises[cidade_data.cidade.pais]}));
 	
 		$.each(infoVars[role],function(index,value){
 			var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[role][index].cognomen);

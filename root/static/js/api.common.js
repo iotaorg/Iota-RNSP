@@ -146,6 +146,39 @@ var removeAccents = (function() {
 
 var estados_sg = [];
 
+estados_sg["Acre"] = "AC";
+estados_sg["Alagoas"] = "AL";
+estados_sg["Amapá"] = "AP";
+estados_sg["Amazonas"] = "AM";
+estados_sg["Bahia"] = "BA";
+estados_sg["Ceará"] = "CE";
+estados_sg["Distrito Federal"] = "DF";
+estados_sg["Espírito Santo"] = "ES";
+estados_sg["Goiás"] = "GO";
+estados_sg["Maranhão"] = "MA";
+estados_sg["Mato Grosso"] = "MT";
+estados_sg["Mato Grosso do Sul"] = "MS";
+estados_sg["Minas Gerais"] = "MG";
+estados_sg["Pará"] = "PA";
+estados_sg["Paraíba"] = "PB";
+estados_sg["Paraná"] = "PR";
+estados_sg["Pernambuco"] = "PE";
+estados_sg["Piauí"] = "PI";
+estados_sg["Rio de Janeiro"] = "RJ";
+estados_sg["Rio Grande do Norte"] = "RN";
+estados_sg["Rio Grande do Sul"] = "RS";
+estados_sg["Rondônia"] = "RO";
+estados_sg["Roraima"] = "RR";
+estados_sg["Santa Catarina"] = "SC";
+estados_sg["São Paulo"] = "SP";
+estados_sg["Sergipe"] = "SE";
+estados_sg["Tocantins"] = "TO";
+estados_sg[""] = "";
+
+var paises = [];
+
+paises["br"] = "Brasil";
+
 var loadBreadCrumb = function(data){
 	if (ref == "indicador"){
 		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name});
@@ -159,34 +192,6 @@ var loadBreadCrumb = function(data){
 
 
 $(document).ready(function(){
-	estados_sg["Acre"] = "AC";
-	estados_sg["Alagoas"] = "AL";
-	estados_sg["Amapá"] = "AP";
-	estados_sg["Amazonas"] = "AM";
-	estados_sg["Bahia"] = "BA";
-	estados_sg["Ceará"] = "CE";
-	estados_sg["Distrito Federal"] = "DF";
-	estados_sg["Espírito Santo"] = "ES";
-	estados_sg["Goiás"] = "GO";
-	estados_sg["Maranhão"] = "MA";
-	estados_sg["Mato Grosso"] = "MT";
-	estados_sg["Mato Grosso do Sul"] = "MS";
-	estados_sg["Minas Gerais"] = "MG";
-	estados_sg["Pará"] = "PA";
-	estados_sg["Paraíba"] = "PB";
-	estados_sg["Paraná"] = "PR";
-	estados_sg["Pernambuco"] = "PE";
-	estados_sg["Piauí"] = "PI";
-	estados_sg["Rio de Janeiro"] = "RJ";
-	estados_sg["Rio Grande do Norte"] = "RN";
-	estados_sg["Rio Grande do Sul"] = "RS";
-	estados_sg["Rondônia"] = "RO";
-	estados_sg["Roraima"] = "RR";
-	estados_sg["Santa Catarina"] = "SC";
-	estados_sg["São Paulo"] = "SP";
-	estados_sg["Sergipe"] = "SE";
-	estados_sg["Tocantins"] = "TO";
-	estados_sg[""] = "";
 
 	$.ajaxSetup({ cache: false });
 
