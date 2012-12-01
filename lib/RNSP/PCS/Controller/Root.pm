@@ -99,6 +99,23 @@ sub movimento: Chained('root') PathPart('movimento') CaptureArgs(0) {
     $c->stash->{find_role} = '_movimento';
 }
 
+# TODO o shin preferiu fazer via ajax
+=pod
+sub movimento_index: Chained('movimento') PathPart('') Args(0) {
+    my ( $self, $c, $sigla ) = @_;
+    $c->stash(
+        template => 'home_comparacao.tt'
+    );
+}
+
+sub prefeitura_index: Chained('prefeitura') PathPart('') Args(0) {
+    my ( $self, $c, $sigla ) = @_;
+    $c->stash(
+        template => 'home_comparacao.tt'
+    );
+}
+=cut
+
 sub movimento_pais: Chained('movimento') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $sigla ) = @_;
     $c->stash->{pais} = $sigla;
@@ -127,7 +144,7 @@ sub movimento_indicator: Chained('movimento_cidade') PathPart('') CaptureArgs(1)
 
 sub movimento_indicator_render: Chained('movimento_indicator') PathPart('') Args(0) {
     my ( $self, $c, $cidade ) = @_;
-     $c->stash(
+    $c->stash(
         template => 'home_indicador.tt'
     );
 }
