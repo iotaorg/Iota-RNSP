@@ -99,11 +99,11 @@ sub movimento: Chained('root') PathPart('movimento') CaptureArgs(0) {
     $c->stash->{find_role} = '_movimento';
 }
 
-# TODO o shin preferiu fazer via ajax
-=pod
 sub movimento_index: Chained('movimento') PathPart('') Args(0) {
     my ( $self, $c, $sigla ) = @_;
+
     $c->stash(
+        role => 'movimento',
         template => 'home_comparacao.tt'
     );
 }
@@ -111,10 +111,39 @@ sub movimento_index: Chained('movimento') PathPart('') Args(0) {
 sub prefeitura_index: Chained('prefeitura') PathPart('') Args(0) {
     my ( $self, $c, $sigla ) = @_;
     $c->stash(
+        role => 'prefeitura',
         template => 'home_comparacao.tt'
     );
 }
-=cut
+
+sub movimento_indicador: Chained('movimento') PathPart('') Args(1) {
+    my ( $self, $c, $nome ) = @_;
+
+    $self->stash_indicator($c, $nome);
+    $c->stash( role => 'movimento');
+}
+
+sub prefeitura_indicador: Chained('prefeitura') PathPart('') Args(1) {
+    my ( $self, $c, $nome ) = @_;
+    $self->stash_indicator($c, $nome);
+    $c->stash( role => 'prefeitura');
+}
+
+sub stash_indicator {
+    my ( $self, $c, $nome ) = @_;
+
+    my $indicator = $c->model('DB::Indicator')->search({
+        name_url     => $nome
+    })->as_hashref->next;
+
+    $c->forward('/error_404') unless $indicator;
+
+    $c->stash->{indicator} = $indicator;
+
+    $c->stash( template => 'home_comparacao_indicador.tt' );
+}
+
+
 
 sub movimento_pais: Chained('movimento') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $sigla ) = @_;
