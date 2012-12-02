@@ -120,7 +120,7 @@ $(document).ready(function(){
 			var history_table = "<table class='history'><thead><tr><th>Período</th>";
 
 			var headers = [];//corrige ordem do header
-			$.each(data.header,function(titulo, index){
+			$.each(historico_data.header,function(titulo, index){
 				headers[index] = titulo;
 			});
 
