@@ -118,8 +118,14 @@ $(document).ready(function(){
 	
 		if (historico_data.rows){
 			var history_table = "<table class='history'><thead><tr><th>Período</th>";
-			$.each(historico_data.header, function(index,value){
-				history_table += "<th class='variavel'>$$variavel</th>".render({variavel:index});
+
+			var headers = [];//corrige ordem do header
+			$.each(data.header,function(titulo, index){
+				headers[index] = titulo;
+			});
+
+			$.each(headers, function(index,value){
+				history_table += "<th class='variavel'>$$variavel</th>".render({variavel:value});
 			});
 			history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
 			history_table += "</tr><tbody>";
