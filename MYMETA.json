@@ -4,7 +4,7 @@
       "Thiago Rondon"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -15,8 +15,8 @@
    "name" : "RNSP-PCS",
    "no_index" : {
       "directory" : [
-         "inc",
-         "t"
+         "t",
+         "inc"
       ]
    },
    "prereqs" : {
@@ -29,7 +29,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.36"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
@@ -47,8 +47,10 @@
             "Catalyst::Plugin::Session::State::Cookie" : "0",
             "Catalyst::Plugin::Session::Store::FastMmap" : "0",
             "Catalyst::Plugin::Static::Simple" : "0",
+            "Catalyst::Plugin::Unicode::Encoding" : "0",
             "Catalyst::Runtime" : "5.90010",
             "Catalyst::TraitFor::Controller::DBIC::DoesPaging" : "0",
+            "Catalyst::View::TT" : "0",
             "Config::General" : "0",
             "Crypt::PasswdMD5" : "0",
             "DBD::Pg" : "0",
@@ -57,21 +59,32 @@
             "Data::Diver" : "0",
             "Data::Manager" : "0",
             "Data::Printer" : "0",
+            "DateTime::Duration" : "0",
+            "DateTime::Format::Duration" : "0",
+            "DateTime::Format::Pg" : "0",
+            "DateTimeX::Easy" : "0",
+            "Email::MIME" : "0",
+            "Email::Sender" : "0",
+            "Email::Sender::Simple" : "0",
+            "Email::Sender::Transport::SMTP::TLS" : "0",
             "FindBin" : "0",
             "JSON" : "0",
+            "JSON::XS" : "0",
             "List::MoreUtils" : "0",
+            "Math::Expression::Evaluator" : "0",
             "Moose" : "0",
+            "MooseX::Traits" : "0",
             "MooseX::Types::Email" : "0",
             "String::Random" : "0",
+            "Template" : "0",
+            "Test::Deep" : "0",
+            "Test::More" : "0.88",
+            "Text::Iconv" : "0",
+            "XML::Simple" : "0",
             "namespace::autoclean" : "0"
          }
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ]
-   },
    "version" : "0.01"
 }
