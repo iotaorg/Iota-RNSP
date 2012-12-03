@@ -41,14 +41,13 @@
                 <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" alt="Youtube" /></a>
             </div>
         	<div class="logo"><img src="/static/images/logo[% IF find_role == '_movimento' %]-movimento[% END %].png" alt="" /></div>
+            <div class="clear"></div>
         </div>
     </div>
 	<div id="menu">
 		<div class="content">
             <ul>
-                <li><a href="">Início</a></li>
-                <li><a href="">Cidades</a></li>
-                <li><a href="">Indicadores</a></li>
+                <li><a href="/[% role %]/">Início</a></li>
             </ul>
         </div>    	
 	    <div class="clear"></div>

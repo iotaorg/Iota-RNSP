@@ -44,6 +44,10 @@ a{
 	float: left;
 	clear: left;
 }
+#top .content .logo-movimento{
+	float: right;
+	clear: right;
+}
 #top .content .link{
 	margin: 60px 0 0 20px;
 	float: left;

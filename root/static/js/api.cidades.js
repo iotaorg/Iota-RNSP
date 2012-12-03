@@ -152,7 +152,6 @@ $(document).ready(function(){
 
 	
 	function showCidadeData(){
-		cidade_data.cidade.imagem = "saopaulo.jpg";
 		loadBreadCrumb();
 		$("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
 		if (cidade_data.cidade.summary){
@@ -203,7 +202,12 @@ $(document).ready(function(){
 		});*/
 	
 		$("#cidades-dados .image").css("background-image","none");
-		$("#cidades-dados .image").css("background-image","url('/static/images/"+cidade_data.cidade.imagem+"')");
+		if (typeof(cidade_data.usuario.files.imagem_cidade) != undefined){
+			$("#cidades-dados .image").css("background-image","url('"+cidade_data.usuario.files.imagem_cidade+"')");
+		}
+		if (typeof(cidade_data.usuario.files.logo_movimento) != undefined){
+			$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
+		}
 		
 		var diff = $("#cidades-dados .profile .content-fill").height() - $("#cidades-dados .profile").height() + 10;
 		if (diff > 10){
