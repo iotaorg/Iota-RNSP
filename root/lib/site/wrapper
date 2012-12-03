@@ -41,8 +41,8 @@
                 <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" alt="Youtube" /></a>
             </div>
         	<div class="logo"><img src="/static/images/logo[% IF find_role == '_movimento' %]-movimento[% END %].png" alt="" /></div>
-            <div class="clear"></div>
         </div>
+        <div class="clear"></div>
     </div>
 	<div id="menu">
 		<div class="content">
