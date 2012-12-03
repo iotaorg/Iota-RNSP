@@ -259,7 +259,12 @@ $(document).ready(function(){
 						row_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(data.series[j].avg, {format:"#,##0.###", locale:"br"})});
 						valores.push(data.series[j].avg);
 					}
-					row_content += "<td class='grafico'><canvas id='graph-$$id' width='40' height='20'></canvas></td>".render({id: index});
+					row_content += "<td class='grafico'><a href='$$pais_uri/$$city_uri/$$indicador_uri'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
+									id: index,
+									pais_uri: item.pais,
+									city_uri: item.uri,
+									indicador_uri: indicador_uri
+								});
 					graficos[index] = valores;
 					dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, show: false});
 					$(".data-content .table .content-fill tbody").append(row_content);
