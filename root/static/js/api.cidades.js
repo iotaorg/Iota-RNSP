@@ -15,15 +15,15 @@ infoVars["_prefeitura"] = [
 				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_mul_20a59_anos", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_masc_15a29_anos", "type": "number", "format": "#,###"},
-				{"cognomen": "area_municipio", "type": "number", "format": "#,###"},
 				{"cognomen": "densidade_demo", "type": "number", "format": "#,##0.###"},
-				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
+				{"cognomen": "area_municipio", "type": "number", "format": "#,###"}
+/*				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
 				{"cognomen": "idh_municipal", "type": "number", "format": "#,###"},
 				{"cognomen": "gini", "type": "number", "format": "#,###"},
 				{"cognomen": "pib", "type": "number", "format": "#,###"},
 				{"cognomen": "renda_capita", "type": "number", "format": "#,##0.##"},
 				{"cognomen": "part_eleitorado", "type": "number", "format": "#,##0.##"},
-				{"cognomen": "website", "type": "text"}
+				{"cognomen": "website", "type": "text"}*/
 ];
 infoVars["_movimento"] = [
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
@@ -31,15 +31,15 @@ infoVars["_movimento"] = [
 				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_mul_20a59_anos", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_masc_15a29_anos", "type": "number", "format": "#,###"},
-				{"cognomen": "area_municipio", "type": "number", "format": "#,###"},
 				{"cognomen": "densidade_demo", "type": "number", "format": "#,##0.###"},
-				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
+				{"cognomen": "area_municipio", "type": "number", "format": "#,###"}
+/*				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
 				{"cognomen": "idh_municipal", "type": "number", "format": "#,###"},
 				{"cognomen": "gini", "type": "number", "format": "#,###"},
 				{"cognomen": "pib", "type": "number", "format": "#,###"},
 				{"cognomen": "renda_capita", "type": "number", "format": "#,##0.##"},
 				{"cognomen": "part_eleitorado", "type": "number", "format": "#,##0.##"},
-				{"cognomen": "website", "type": "text"}
+				{"cognomen": "website", "type": "text"}*/
 ];
 
 $(document).ready(function(){

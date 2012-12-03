@@ -41,7 +41,7 @@
                                 <div class="tabs">
                                     <div class="item selected" ref="tabela">tabela</div>
                                     <div class="item" ref="mapa">mapa</div>
-                                    <div class="item" ref="graficos">gr·ficos</div>
+                                    <div class="item" ref="graficos">gr√°ficos</div>
                                 </div>
                                 <div class="clear"></div>
                                 <div class="table">
