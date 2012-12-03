@@ -13,8 +13,8 @@ infoVars["_prefeitura"] = [
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_rural", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_mul_20a59_anos", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_masc_15a29_anos", "type": "number", "format": "#,###"},
+				{"cognomen": "pop_mulheres", "type": "number", "format": "#,###"},
+				{"cognomen": "pop_homens", "type": "number", "format": "#,###"},
 				{"cognomen": "densidade_demo", "type": "number", "format": "#,##0.###"},
 				{"cognomen": "area_municipio", "type": "number", "format": "#,###"}
 /*				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
@@ -29,8 +29,8 @@ infoVars["_movimento"] = [
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_rural", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_mul_20a59_anos", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_masc_15a29_anos", "type": "number", "format": "#,###"},
+				{"cognomen": "pop_mulheres", "type": "number", "format": "#,###"},
+				{"cognomen": "pop_homens", "type": "number", "format": "#,###"},
 				{"cognomen": "densidade_demo", "type": "number", "format": "#,##0.###"},
 				{"cognomen": "area_municipio", "type": "number", "format": "#,###"}
 /*				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
