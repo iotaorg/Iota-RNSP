@@ -30,3 +30,17 @@
 #indicador-historico .title span{
 	color: #4b308f;
 }
+input.button-data{
+	border: 1px solid #aa9fd2;
+	color: #392268;
+}
+input.button-data.down{
+	background-color: #f0e4ff;
+}
+input.button-data:hover{
+	background-color: #f0e4ff;
+}
+.graph .search .button input{
+	border: 1px solid #aa9fd2;
+	color: #392268;
+}
