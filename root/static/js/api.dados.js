@@ -4,6 +4,7 @@ var users_list;
 var indicadorID;
 var indicadorDATA;
 var dadosGrafico = {"dados": []};
+var carregouTabela = false;
 
 var accentMap = {
 	"á": "a",
@@ -195,9 +196,11 @@ $(document).ready(function(){
 			$("#share-link").val("http://rnsp.aware.com.br/" + role + "/" + indicadorDATA.name_url);
 			
 			if ($(".data-content .tabs .selected").attr("ref") == "tabela"){
+				carregouTabela = false;
 				carregaTabela();
 				$(".data-content .table").show();
 			}else if ($(".data-content .tabs .selected").attr("ref") == "graficos"){
+				carregouTabela = false;
 				carregaTabela();
 			}else{
 			}
@@ -207,82 +210,95 @@ $(document).ready(function(){
 
 	function carregaTabela(){
 		
-		var indicador = indicadorID;
-		var indicador_uri = $(".indicators div.selected").attr("name-uri");
-
-		dadosGrafico = {"dados": []};
-
-		var table_content = ""
-		$(".data-content .table .content-fill").empty();
-		table_content += "<table>";
-		table_content += "<thead><tr><th>Cidade</th><th>2009</th><th>2010</th><th>2011</th><th>2012</th><th></th></tr></thead>";
-		table_content += "<tbody>";
-		table_content += "</tbody></table>";
-		$(".data-content .table .content-fill").append(table_content);
-
-		var total_users = users_list.length;
-		var users_ready = 0;
-		
-		$(users_list).each(function(index,item){
+		if (!carregouTabela){
 			
-			$.ajax({
-				type: 'GET',
-				dataType: 'json',
-				url: api_path + '/api/public/user/$$userid/indicator/$$indicatorid/chart/period_axis'.render({
-							userid: item.id,
-							indicatorid: indicador
-					}),
-				success: function(data, textStatus, jqXHR){
-					var valores = [];
-
-					row_content = "<tr><td class='cidade'><a href='$$pais_uri/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
-								cidade: item.nome,
-								pais_uri: item.pais,
-								city_uri: item.uri,
-								indicador_uri: indicador_uri
-							});
-					
-					if (data.series.length < 4){
-						for (j = 0; j < (4 - data.series.length); j++){
-							row_content += "<td class='valor'>-</td>";
-							valores.push(0);
-						}
-					}
-					
-					if (data.series.length > 4){
-						var j_ini = data.series.length - 4;	
-					}else{
-						var j_ini = 0;	
-					}
-					
-					for (j = j_ini; j < data.series.length; j++){
-						row_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(data.series[j].avg, {format:"#,##0.###", locale:"br"})});
-						valores.push(data.series[j].avg);
-					}
-					row_content += "<td class='grafico'><a href='$$pais_uri/$$city_uri/$$indicador_uri'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
-									id: index,
+			var indicador = indicadorID;
+			var indicador_uri = $(".indicators div.selected").attr("name-uri");
+	
+			dadosGrafico = {"dados": []};
+	
+			var table_content = ""
+			$(".data-content .table .content-fill").empty();
+			table_content += "<table>";
+			table_content += "<thead><tr><th>Cidade</th><th>2009</th><th>2010</th><th>2011</th><th>2012</th><th></th></tr></thead>";
+			table_content += "<tbody>";
+			table_content += "</tbody></table>";
+			$(".data-content .table .content-fill").append(table_content);
+	
+			var total_users = users_list.length;
+			var users_ready = 0;
+			
+			$(users_list).each(function(index,item){
+				
+				$.ajax({
+					type: 'GET',
+					dataType: 'json',
+					url: api_path + '/api/public/user/$$userid/indicator/$$indicatorid/chart/period_axis'.render({
+								userid: item.id,
+								indicatorid: indicador
+						}),
+					success: function(data, textStatus, jqXHR){
+						var valores = [];
+	
+						row_content = "<tr><td class='cidade'><a href='$$pais_uri/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
+									cidade: item.nome,
 									pais_uri: item.pais,
 									city_uri: item.uri,
 									indicador_uri: indicador_uri
 								});
-					graficos[index] = valores;
-					dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, show: false});
-					$(".data-content .table .content-fill tbody").append(row_content);
-					
-					users_ready++;
-					
-					if (users_ready >= total_users){
-						geraGraficos();
-						carregaGraficoAba();
+						
+						if (data.series.length < 4){
+							for (j = 0; j < (4 - data.series.length); j++){
+								row_content += "<td class='valor'>-</td>";
+								valores.push(0);
+							}
+						}
+						
+						if (data.series.length > 4){
+							var j_ini = data.series.length - 4;	
+						}else{
+							var j_ini = 0;	
+						}
+						
+						for (j = j_ini; j < data.series.length; j++){
+							row_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(data.series[j].avg, {format:"#,##0.###", locale:"br"})});
+							valores.push(data.series[j].avg);
+						}
+						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
+										id: index,
+										data_id: item.id
+									});
+						graficos[index] = valores;
+						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, show: false});
+						$(".data-content .table .content-fill tbody").append(row_content);
+						
+						$("td.grafico a").click(function(e){
+							e.preventDefault();
+							setGraphLine($(this).attr("user-id"),true);
+							$(".data-content .tabs .item").removeClass("selected");
+							$(".data-content .tabs .item[ref='graficos']").addClass("selected");
+							$(".data-content .table").hide();
+							$(".data-content .map").hide();
+							carregaGraficoAba();
+							$(".data-content .graph").show();
+						});
+						
+						users_ready++;
+						
+						if (users_ready >= total_users){
+							geraGraficos();
+							carregaGraficoAba();
+						}
+						carregouTabela = true;
+						
+					},
+					error: function(data){
+						console.log("erro ao carregar informações do indicador");
 					}
-					
-				},
-				error: function(data){
-					console.log("erro ao carregar informações do indicador");
-				}
+				});
+				
 			});
-			
-		});
+		}
   	}
 	
 	function carregaGraficoAba(){
