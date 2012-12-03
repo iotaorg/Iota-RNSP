@@ -471,6 +471,7 @@ table{
 
 .graph .search{
 	margin: auto;
+	margin-top: 5px;
 	clear: both;
 	display: inline-block;
 }
