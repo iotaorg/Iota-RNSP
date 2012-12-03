@@ -240,12 +240,13 @@ $(document).ready(function(){
 					success: function(data, textStatus, jqXHR){
 						var valores = [];
 	
-						row_content = "<tr><td class='cidade'><a href='$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
+						row_content = "<tr><td class='cidade'><a href='/$$role/$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
 									cidade: item.nome,
 									uf: item.uf,
 									pais_uri: item.pais,
 									city_uri: item.uri,
-									indicador_uri: indicador_uri
+									indicador_uri: indicador_uri,
+									role: role
 								});
 						
 						if (data.series.length < 4){
