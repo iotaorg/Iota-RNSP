@@ -220,7 +220,13 @@ $(document).ready(function(){
 			var table_content = ""
 			$(".data-content .table .content-fill").empty();
 			table_content += "<table>";
-			table_content += "<thead><tr><th>Cidade</th><th>2009</th><th>2010</th><th>2011</th><th>2012</th><th></th></tr></thead>";
+			table_content += "<thead><tr><th>Cidade</th>";
+			var data_atual = new Date();
+			var ano_anterior = data_atual.getFullYear() - 1;
+			for (i = ano_anterior - 3; i <= ano_anterior; i++){
+				table_content += "<th>" + i + "</th>";
+			}
+			table_content += "</tr></thead>";
 			table_content += "<tbody>";
 			table_content += "</tbody></table>";
 			$(".data-content .table .content-fill").append(table_content);
