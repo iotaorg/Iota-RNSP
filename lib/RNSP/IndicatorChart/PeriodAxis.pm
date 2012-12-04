@@ -12,7 +12,7 @@ retorna um objeto para montar graficos de
 opcional:
     group_by one of: ('daily', 'weekly', 'monthly', 'bimonthly', 'quarterly', 'semi-annual', 'yearly', 'decade')
         desde que o periodo seja maior que o salvo no indicator
-        default: indicator + 1 tempo (de dia, separa por semana, de semana por mes...)
+        default: eh o mesmo do indicador
 
     from: str to DateTime
     to: str to DateTime
@@ -23,30 +23,34 @@ exemplo:
     "label": "Temperatura maxima do mes: SP",
     "axis": "Gestão Local para a Sustentabilidade",
     "goal": 32,
+    "avg": 25,
     "goal_operator": "<=",
+    "period": "monthly",
     "series": [
         {
             "label": "Year 2011",
-            "start": "2011-01-01",
-            "avg": 24.8,
+            "avg": 25,
+            "sum": 300,
+            "begin": "2011-01-01",
             "data": [
-                ['', 18],
-                ['', 22],
-                ['', 33],
-                ['', 25],
-                ['', 26],
+                ['2011-01-01', 18],
+                ['2011-02-01', 12],
+                ['2011-03-01', 14],
+                ['2011-04-01', 21],
+                ['2011-05-01', 18],
             ]
         },
         {
             "label": "Year 2012",
-            "start": "2012-01-01",
             "avg": 25,
+            "sum": 300,
+            "begin": "2012-01-01",
             "data": [
-                ['', 23],
-                ['', 21],
-                ['', 31],
-                ['', 23],
-                ['', 27],
+                ['2011-01-01', 18],
+                ['2011-02-01', 12],
+                ['2011-03-01', 14],
+                ['2011-04-01', 21],
+                ['2011-05-01', 18],
             ]
         }
     ]
@@ -57,7 +61,16 @@ exemplo:
 sub read_values {
     my ($self, %options) = @_;
 
-    my $group_by = $options{group_by} ? $self->_valid_or_null($options{group_by}) : 'yearly';
+    my $period;
+
+    do{
+        my ($anyid) = @{$self->variables};
+        my $anyvar = $self->schema->resultset('Variable')->find($anyid);
+        return {error => 'novar'} unless $anyvar;
+        $period = $anyvar->period;
+    };
+    my $group_by = $options{group_by} ? $self->_valid_or_null($options{group_by}) : $period;
+
     my $indicator = $self->indicator;
 
     my $series = $self->_load_variables_values(%options, group_by => $group_by);
@@ -70,33 +83,61 @@ sub read_values {
         goal_operator    => $indicator->goal_operator,
         goal_explanation => $indicator->goal_explanation,
         goal_source      => $indicator->goal_source,
-        series           => []
+        series           => [],
+        period           => $period,
+        group_by         => $group_by,
+
+        min => 9.e9,
+        max => 9.e-9
     };
 
     my $qtde = scalar @{$self->variables};
+    my $total = 0;
+    my $totali = 0;
     foreach my $start (sort {$a cmp $b} keys %{$series}){
         my @data = ();
         my $row       = {
-            start  => $start,
-            data   => \@data
+            begin  => $start,
+            sum    => 0,
+            data   => \@data,
+            min => 9.e9,
+            max => 9.e-9
         };
-        my $total = 0;
+        my $sum = 0;
+        my $total2 = 0;
         foreach my $dt (sort {$a cmp $b} keys %{$series->{$start}{sets}}) {
             my $vals = $series->{$start}{sets}{$dt};
 
-            if (scalar keys %$vals == $qtde){
-                my $valor = $self->indicator_formula->evaluate( %$vals );
-                $total   += $valor;
-                push @data, [ '', $valor ];
-            }else{
-                push @data, ['', '-'];
+            my $valor = $self->indicator_formula->evaluate( %$vals );
+
+            if ($valor ne '-'){
+                $total  += $valor;
+                $sum    += $valor;
+                $row->{max} = $valor if $valor > $row->{max};
+                $row->{min} = $valor if $valor < $row->{min};
             }
+            push @data, [$dt, $valor];
+
+            $total2++;
+            $totali++;
         }
-        $row->{avg}   = @data ?  $total / scalar @data : 0;
+        if ($total2){
+            $row->{sum} = $sum;
+            $row->{avg} = $total2 ? $sum / $total2 : $total2;
+
+            $data->{max} = $sum if $sum > $data->{max};
+            $data->{min} = $sum if $sum < $data->{min};
+        }else{
+            $row->{avg} = '-';
+            $row->{sum} = '-';
+        }
+
         $row->{label} = &get_label_of_period($start, $group_by);
 
         push @{$data->{series}}, $row;
     }
+    $data->{avg}   = $totali ? $total / $totali : '-';
+
     $self->_data($data);
 }
 
@@ -119,9 +160,7 @@ sub _load_variables_values {
 
     while( my $row = $rs->next ){
         my $gp = $row->get_column('group_from') || 'all';
-
         next if $row->value eq '';
-
         $values->{$gp}{sets}{$row->valid_from}{$row->variable_id} = $row->value;
     }
     return $values;
@@ -144,6 +183,8 @@ sub get_label_of_period {
         return ($dt->month <= 6? '1 semestre' : '2 semestre') . ' de '. $dt->year;
     }elsif ($period eq 'yearly'){
         return $dt->year;
+    }elsif ($period eq 'decade'){
+        return $dt->year . '-'.($dt->year+10);
     }else{
         return $data;
     }
