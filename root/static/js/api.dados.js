@@ -26,6 +26,59 @@ var normalize = function( term ) {
 	return ret.toLowerCase();
 };
 
+$.extend({
+	getUrlVars: function(){
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++){
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	},
+	getUrlVar: function(name){
+		return $.getUrlVars()[name];
+	},
+	getUrlParams: function(){
+		var params = window.location.href.split("?");
+		if (params.length >= 1){
+			return params[1];
+		}else{
+			return "";
+		}
+	},
+	removeItemInArray: function(obj,removeItem){
+		obj = $.grep(obj, function(value) {
+		  return value != removeItem;
+		});		
+		return obj;
+	},
+	setUrl: function(args){
+		var url = "";
+		if (args.view){
+			url += "?view=" + args.view;
+		}else if ($.getUrlVar("view")){
+			url += "?view=" + $.getUrlVar("view");
+		}
+		if (args.graphs != undefined){
+			if (args.graphs != ""){
+				if (url == ""){
+					url += "?graphs=" + args.graphs;
+				}else{
+					url += "&graphs=" + args.graphs;
+				}
+			}
+		}else if ($.getUrlVar("graphs")){
+			if (url == ""){
+				url += "?graphs=" + $.getUrlVar("graphs");
+			}else{
+				url += "&graphs=" + $.getUrlVar("graphs");
+			}
+		}
+		History.pushState(null, null, url);
+	}
+});
 
 $(document).ready(function(){
 	$.ajaxSetup({ cache: false });
@@ -89,6 +142,7 @@ $(document).ready(function(){
 				$(".menu-left div.indicators .item").show();
 			}
 			$("#indicador-busca").val("");
+			
 		});
 		$("#axis_list .options").hover(function(){
 			if (typeof(t_categorias) != "undefined"){
@@ -177,9 +231,17 @@ $(document).ready(function(){
 		});
 		$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
 		$(".data-right .data-title .description").html(indicadorDATA.explanation);
-		$("#share-link").val("http://rnsp.aware.com.br/" + role + "/" + indicadorDATA.name_url);
+		$("#share-link").val(window.location.href);
 
 		$(".indicators .item").click( function (){
+			
+			window.location.href = "/"+role+"/" + $(this).attr("name-uri");
+			
+			return;
+			
+			if (indicadorID == $(this).attr("indicator-id")){
+				return;
+			}
 			indicadorID = $(this).attr("indicator-id");
 			
 			$(indicadores_list).each(function(index,item){
@@ -193,7 +255,6 @@ $(document).ready(function(){
 			$(this).addClass("selected");
 			$(".data-right .data-title .title").html($(".indicators .selected").html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
-			$("#share-link").val("http://rnsp.aware.com.br/" + role + "/" + indicadorDATA.name_url);
 			
 			if ($(".data-content .tabs .selected").attr("ref") == "tabela"){
 				carregouTabela = false;
@@ -206,6 +267,7 @@ $(document).ready(function(){
 			}
 		});
 		carregaTabela();
+
   	}
 
 	function carregaTabela(){
@@ -258,7 +320,7 @@ $(document).ready(function(){
 						if (data.series.length < 4){
 							for (j = 0; j < (4 - data.series.length); j++){
 								row_content += "<td class='valor'>-</td>";
-								valores.push(0);
+								valores.push(null);
 							}
 						}
 						
@@ -269,35 +331,42 @@ $(document).ready(function(){
 						}
 						
 						for (j = j_ini; j < data.series.length; j++){
-							row_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(data.series[j].avg, {format:"#,##0.###", locale:"br"})});
-							valores.push(data.series[j].avg);
+							row_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})});
+							valores.push(data.series[j].sum.toFixed(3));
 						}
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
 										id: index,
 										data_id: item.id
 									});
 						graficos[index] = valores;
-						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, show: false});
+						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, data: data, show: false});
 						$(".data-content .table .content-fill tbody").append(row_content);
 						
 						$("td.grafico a").click(function(e){
+							if($.getUrlVar("graphs")){
+								var graphs = $.getUrlVar("graphs").split("-");
+							}else{
+								var graphs = [];
+							}
+							
+							if (!findInArray(graphs,$(this).attr("user-id"))){
+								graphs.push($(this).attr("user-id"));
+							}
+							
 							e.preventDefault();
-							setGraphLine($(this).attr("user-id"),true);
-							$(".data-content .tabs .item").removeClass("selected");
-							$(".data-content .tabs .item[ref='graficos']").addClass("selected");
-							$(".data-content .table").hide();
-							$(".data-content .map").hide();
-							carregaGraficoAba();
-							$(".data-content .graph").show();
+							$.setUrl({graphs: graphs.join("-"), view: "graph"});
+
 						});
 						
 						users_ready++;
 						
 						if (users_ready >= total_users){
 							geraGraficos();
-							carregaGraficoAba();
+							setaGraficos();
 						}
 						carregouTabela = true;
+						
+						setaTabs();
 						
 					},
 					error: function(data){
@@ -320,15 +389,35 @@ $(document).ready(function(){
 		var legendas = [];
 		
 		var linhas = [];
+		
 		if (indicadorDATA.goal){
 			linhas.push([ indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal ]);
 			legendas.push({name: "Meta", color: color_meta, meta: true});
 			var colors = ['#ff0000','#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
+
+			var ymax = indicadorDATA.goal;
+			var ymin = indicadorDATA.goal;
+			var maxlength = indicadorDATA.goal.length;
+		}else{
+			var ymin = 0;
+			var ymax = 0;
+			var maxlength = 1;
 		}
-		
+
 		$.each(dadosGrafico.dados, function(i,item){
 			if (item.show){
 				linhas.push(item.valores);
+				$.each(item.valores, function(index, valor){
+					if (valor != null){
+						if (ymin == 0) ymin = parseFloat(valor);
+						if (parseFloat(valor) < ymin) ymin = parseFloat(valor);
+
+						if (ymax == 0) ymax = parseFloat(valor);
+						if (parseFloat(valor) > ymax) max = parseFloat(valor);
+
+						if (String(valor).length > maxlength) maxlength = String(valor).length;
+					}
+				});
 				if (indicadorDATA.goal){
 					legendas.push({name: item.nome, color: colors[i+1], id: item.id});
 				}else{
@@ -337,9 +426,27 @@ $(document).ready(function(){
 			}
 		});
 
+		var data_atual = new Date();
+		var ano_anterior = data_atual.getFullYear() - 1;
+		var date_labels = [];
+		for (i = ano_anterior - 3; i <= ano_anterior; i++){
+			date_labels.push(String(i));
+		}
+
+		if (maxlength < 10) maxlength = 10;
+
+		if ((ymin >= 0) && ((parseInt(ymin)-1) < 0)){
+			ymin = 0;
+		}else{
+			ymin = parseInt(ymin) - 1;
+		}
+
+		ymin = 0;
+		
 		var line = new RGraph.Line('main-graph', linhas);
 		line.Set('chart.labels', ['2009','2010','2011','2012']);
-//		line.Set('chart.background.grid.vlines', false)
+		line.Set('chart.ymin', ymin);
+		line.Set('chart.gutter.left', maxlength*5);
 		line.Set('chart.text.font', 'tahoma');
 		line.Set('chart.text.color', '#bbbbbb');
 		line.Set('chart.axis.color', '#bbbbbb');
@@ -368,10 +475,21 @@ $(document).ready(function(){
 		});
 
 		$("#button-search-user").click(function(){
-			setGraphLine($("#graph-user-selected").val(),true);
-			carregaGraficoAba();
+
+			if($.getUrlVar("graphs")){
+				var graphs = $.getUrlVar("graphs").split("-");
+			}else{
+				var graphs = [];
+			}
+			
+			if (!findInArray(graphs,$("#graph-user-selected").val())){
+				graphs.push($("#graph-user-selected").val());
+			}
+			
+			$.setUrl({graphs: graphs.join("-")});
 			$("#graph-search-user").val("");
 		});
+		setaTabs();
 
 	}
 	
@@ -380,6 +498,13 @@ $(document).ready(function(){
 			if (item.id == id){
 				dadosGrafico.dados[index].show = status;
 			}
+		});
+	}
+
+	
+	function clearGraphLines(){
+		$.each(dadosGrafico.dados, function(index,item){
+			dadosGrafico.dados[index].show = false;
 		});
 	}
 
@@ -414,8 +539,16 @@ $(document).ready(function(){
 
 		$(".data-content .graph .legend .icon").click(function(){
 			if ($(this).attr("item-id")){
-				setGraphLine($(this).attr("item-id"),false);
-				carregaGraficoAba();
+				if($.getUrlVar("graphs")){
+					var graphs = $.getUrlVar("graphs").split("-");
+				}else{
+					var graphs = [];
+				}
+				
+				graphs = $.removeItemInArray(graphs,$(this).attr("item-id"));
+				
+				$.setUrl({graphs: graphs.join("-")});
+
 			}
 		});
 
@@ -424,11 +557,22 @@ $(document).ready(function(){
 	
 	function geraGraficos(){
 		for (i = 0; i < graficos.length; i++){
+
+			var ymin = 0;
+
+			$.each(graficos[i], function(index, valor){
+				if (valor != null){
+					if (ymin == 0) ymin = valor;
+					if (valor < ymin) ymin = valor;
+				}
+			});
+
 			var line = new RGraph.Line('graph-'+i, graficos[i]);
  			line.Set('chart.ylabels', false);
  			line.Set('chart.noaxes', true);
  			line.Set('chart.background.grid', false);
  			line.Set('chart.hmargin', 0);
+			line.Set('chart.ymin', parseInt(ymin-1));
  			line.Set('chart.gutter.left', 0);
  			line.Set('chart.gutter.right', 0);
  			line.Set('chart.gutter.top', 0);
@@ -437,24 +581,49 @@ $(document).ready(function(){
             line.Draw();
 		}
 	}
+	
+	function setaTabs(){
+		$(".data-content .tabs .item").removeClass("selected");
+		if ($.getUrlVar("view") == "table" || !($.getUrlVar("view"))){
+			$(".data-content .tabs .item[ref='tabela']").addClass("selected");
+			$(".data-content .graph").hide();
+			$(".data-content .map").hide();
+			$(".data-content .table").show();
+		}else if ($.getUrlVar("view") == "graph"){
+			$(".data-content .tabs .item[ref='graficos']").addClass("selected");
+			$(".data-content .table").hide();
+			$(".data-content .map").hide();
+			$(".data-content .graph").show();
+		}else if ($.getUrlVar("view") == "map"){
+			$(".data-content .tabs .item[ref='mapa']").addClass("selected");
+			$(".data-content .table").hide();
+			$(".data-content .graph").hide();
+			$(".data-content .map").show();
+		}		
+	}
+	
+	function setaGraficos(){
+		if ($.getUrlVar("graphs")){
+			clearGraphLines();
+			var graphs = $.getUrlVar("graphs").split("-");
+			$.each(graphs,function(index,value){
+				setGraphLine(value,true);
+			});
+		}else{
+			clearGraphLines();
+		}
+		carregaGraficoAba();
+	}
 
 	$(".data-content .tabs .item").click( function (){
 		$(".data-content .tabs .item").removeClass("selected");
 		$(this).addClass("selected");
 		if ($(this).attr("ref") == "tabela"){
-			$(".data-content .graph").hide();
-			$(".data-content .map").hide();
-			carregaTabela();
-			$(".data-content .table").show();
+			$.setUrl({view: "table"});
 		}else if ($(this).attr("ref") == "graficos"){
-			$(".data-content .table").hide();
-			$(".data-content .map").hide();
-			carregaGraficoAba();
-			$(".data-content .graph").show();
+			$.setUrl({view: "graph"});
 		}else{
-			$(".data-content .table").hide();
-			$(".data-content .graph").hide();
-			$(".data-content .map").show();
+			$.setUrl({view: "map"});
 		}
 	});
 
@@ -493,5 +662,13 @@ $(document).ready(function(){
 		carregaIndicadoresCidades();
 	}
 
-	
+	var History = window.History; // Note: We are using a capital H instead of a lower h
+    // Bind to StateChange Event
+    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+        var State = History.getState(); // Note: We are using History.getState() instead of event.state
+		setaTabs();
+		setaGraficos();
+		$("#share-link").val(window.location.href);
+    });
+
 });
