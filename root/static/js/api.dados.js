@@ -42,7 +42,7 @@ $.extend({
 	},
 	getUrlParams: function(){
 		var params = window.location.href.split("?");
-		if (params.length >= 1){
+		if (params.length > 1){
 			return "?" + params[1];
 		}else{
 			return "";
