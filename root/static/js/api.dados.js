@@ -585,17 +585,17 @@ $(document).ready(function(){
 	function setaTabs(){
 		$(".data-content .tabs .item").removeClass("selected");
 		if ($.getUrlVar("view") == "table" || !($.getUrlVar("view"))){
-			$(".data-content .tabs .item[ref='tabela']").addClass("selected");
+			$(".data-content .tabs #tab-tabela").addClass("selected");
 			$(".data-content .graph").hide();
 			$(".data-content .map").hide();
 			$(".data-content .table").show();
 		}else if ($.getUrlVar("view") == "graph"){
-			$(".data-content .tabs .item[ref='graficos']").addClass("selected");
+			$(".data-content .tabs #tab-graficos").addClass("selected");
 			$(".data-content .table").hide();
 			$(".data-content .map").hide();
 			$(".data-content .graph").show();
 		}else if ($.getUrlVar("view") == "map"){
-			$(".data-content .tabs .item[ref='mapa']").addClass("selected");
+			$(".data-content .tabs #tab-mapa").addClass("selected");
 			$(".data-content .table").hide();
 			$(".data-content .graph").hide();
 			$(".data-content .map").show();
