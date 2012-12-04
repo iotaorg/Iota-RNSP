@@ -68,9 +68,9 @@
         	<div class="parceiros">
 				<div class="label">Parceiros:</div>
             	<ul>
-                	<li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png"></a></li>
-					<li><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png"></a></li>
-					<li><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png"></a></li>
+                	<li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
+					<li><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
+					<li><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>
 				</ul>
 			    <div class="clear"></div>
             </div>

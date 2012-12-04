@@ -39,9 +39,9 @@
                         <div class="data-content">
                             <div class="content-fill">
                                 <div class="tabs">
-                                    <div class="item selected" ref="tabela">tabela</div>
-                                    <div class="item" ref="mapa">mapa</div>
-                                    <div class="item" ref="graficos">gráficos</div>
+                                    <div class="item selected" ref-id="tabela">tabela</div>
+                                    <div class="item" ref-id="mapa">mapa</div>
+                                    <div class="item" ref-id="graficos">gráficos</div>
                                 </div>
                                 <div class="clear"></div>
                                 <div class="table">

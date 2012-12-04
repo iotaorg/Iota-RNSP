@@ -256,11 +256,11 @@ $(document).ready(function(){
 			$(".data-right .data-title .title").html($(".indicators .selected").html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
 			
-			if ($(".data-content .tabs .selected").attr("ref") == "tabela"){
+			if ($(".data-content .tabs .selected").attr("ref-id") == "tabela"){
 				carregouTabela = false;
 				carregaTabela();
 				$(".data-content .table").show();
-			}else if ($(".data-content .tabs .selected").attr("ref") == "graficos"){
+			}else if ($(".data-content .tabs .selected").attr("ref-id") == "graficos"){
 				carregouTabela = false;
 				carregaTabela();
 			}else{
@@ -618,9 +618,9 @@ $(document).ready(function(){
 	$(".data-content .tabs .item").click( function (){
 		$(".data-content .tabs .item").removeClass("selected");
 		$(this).addClass("selected");
-		if ($(this).attr("ref") == "tabela"){
+		if ($(this).attr("ref-id") == "tabela"){
 			$.setUrl({view: "table"});
-		}else if ($(this).attr("ref") == "graficos"){
+		}else if ($(this).attr("ref-id") == "graficos"){
 			$.setUrl({view: "graph"});
 		}else{
 			$.setUrl({view: "map"});
