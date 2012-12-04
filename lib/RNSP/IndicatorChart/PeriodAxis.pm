@@ -17,44 +17,222 @@ opcional:
     from: str to DateTime
     to: str to DateTime
 
-exemplo:
+exemplo com os dados:
 
-{
-    "label": "Temperatura maxima do mes: SP",
-    "axis": "Gestão Local para a Sustentabilidade",
-    "goal": 32,
-    "avg": 25,
-    "goal_operator": "<=",
-    "period": "monthly",
-    "series": [
-        {
-            "label": "Year 2011",
-            "avg": 25,
-            "sum": 300,
-            "begin": "2011-01-01",
-            "data": [
-                ['2011-01-01', 18],
-                ['2011-02-01', 12],
-                ['2011-03-01', 14],
-                ['2011-04-01', 21],
-                ['2011-05-01', 18],
-            ]
+    &add_value($variable_url, '2012-02-01', 23);
+    &add_value($variable_url, '2012-03-22', 25);
+    &add_value($variable_url, '2012-04-08', 26);
+    &add_value($variable_url, '2012-05-12', 28);
+
+
+    &add_value($variable_url, '2011-02-21', 25);
+    &add_value($variable_url, '2011-03-12', 27);
+    &add_value($variable_url, '2011-04-25', 27);
+    &add_value($variable_url, '2011-05-16', 29);
+
+    &add_value($variable_url, '1192-02-21', 21);
+    &add_value($variable_url, '1192-03-12', 22);
+    &add_value($variable_url, '1192-04-25', 25);
+
+    $variable_url = $uri2->path_query;
+
+    &add_value($variable_url, '2012-02-01', 3);
+    &add_value($variable_url, '2012-03-22', 5);
+    &add_value($variable_url, '2012-04-08', 6);
+    &add_value($variable_url, '2012-05-12', 8);
+
+
+    &add_value($variable_url, '2011-02-21', 5);
+    &add_value($variable_url, '2011-03-12', 7);
+    &add_value($variable_url, '2011-04-25', 7);
+    &add_value($variable_url, '2011-05-16', 9);
+
+    &add_value($variable_url, '1192-02-21', 1);
+    &add_value($variable_url, '1192-03-12', 2);
+    &add_value($variable_url, '1192-04-25', 5);
+
+    formula = var1 + var2
+
+exemplo agrupado por ano:
+\ {
+    avg             :  30.5454545454545,
+    axis            :  {
+        id  :  2,
+        name:  "Bens Naturais Comuns"
+    },
+    goal            :  33,
+    goal_explanation:  undef,
+    goal_operator   :  "<=",
+    goal_source     :  "@fulano",
+    group_by        :  "yearly",
+    label           :  "Temperatura maxima do mes: SP",
+    max             :  136,
+    min             :  76,
+    period          :  "weekly",
+    series          :  [
+        [0] {
+            avg  :  25.3333333333333,
+            data :  [
+                [0] [
+                    [0] "1192-02-16T00:00:00",
+                    [1] 22
+                ],
+                [1] [
+                    [0] "1192-03-08T00:00:00",
+                    [1] 24
+                ],
+                [2] [
+                    [0] "1192-04-19T00:00:00",
+                    [1] 30
+                ]
+            ],
+            label:  1192,
+            max  :  30,
+            min  :  22,
+            start:  "1192-01-01",
+            sum  :  76
         },
-        {
-            "label": "Year 2012",
-            "avg": 25,
-            "sum": 300,
-            "begin": "2012-01-01",
-            "data": [
-                ['2011-01-01', 18],
-                ['2011-02-01', 12],
-                ['2011-03-01', 14],
-                ['2011-04-01', 21],
-                ['2011-05-01', 18],
-            ]
+        [1] {
+            avg  :  34,
+            data :  [
+                [0] [
+                    [0] "2011-02-20T00:00:00",
+                    [1] 30
+                ],
+                [1] [
+                    [0] "2011-03-06T00:00:00",
+                    [1] 34
+                ],
+                [2] [
+                    [0] "2011-04-24T00:00:00",
+                    [1] 34
+                ],
+                [3] [
+                    [0] "2011-05-15T00:00:00",
+                    [1] 38
+                ]
+            ],
+            label:  2011,
+            max  :  38,
+            min  :  30,
+            start:  "2011-01-01",
+            sum  :  136
+        },
+        [2] {
+            avg  :  31,
+            data :  [
+                [0] [
+                    [0] "2012-01-29T00:00:00",
+                    [1] 26
+                ],
+                [1] [
+                    [0] "2012-03-18T00:00:00",
+                    [1] 30
+                ],
+                [2] [
+                    [0] "2012-04-08T00:00:00",
+                    [1] 32
+                ],
+                [3] [
+                    [0] "2012-05-06T00:00:00",
+                    [1] 36
+                ]
+            ],
+            label:  2012,
+            max  :  36,
+            min  :  26,
+            start:  "2012-01-01",
+            sum  :  124
         }
     ]
 }
+
+
+
+exemplo agrupado por decada:
+\ {
+    avg             :  30.5454545454545,
+    axis            :  {
+        id  :  2,
+        name:  "Bens Naturais Comuns"
+    },
+    goal            :  33,
+    goal_explanation:  undef,
+    goal_operator   :  "<=",
+    goal_source     :  "@fulano",
+    group_by        :  "decade",
+    label           :  "Temperatura maxima do mes: SP",
+    max             :  260,
+    min             :  76,
+    period          :  "weekly",
+    series          :  [
+        [0] {
+            avg  :  25.3333333333333,
+            data :  [
+                [0] [
+                    [0] "1192-02-16T00:00:00",
+                    [1] 22
+                ],
+                [1] [
+                    [0] "1192-03-08T00:00:00",
+                    [1] 24
+                ],
+                [2] [
+                    [0] "1192-04-19T00:00:00",
+                    [1] 30
+                ]
+            ],
+            label:  "1190-1200",
+            max  :  30,
+            min  :  22,
+            start:  "1190-01-01",
+            sum  :  76
+        },
+        [1] {
+            avg  :  32.5,
+            data :  [
+                [0] [
+                    [0] "2011-02-20T00:00:00",
+                    [1] 30
+                ],
+                [1] [
+                    [0] "2011-03-06T00:00:00",
+                    [1] 34
+                ],
+                [2] [
+                    [0] "2011-04-24T00:00:00",
+                    [1] 34
+                ],
+                [3] [
+                    [0] "2011-05-15T00:00:00",
+                    [1] 38
+                ],
+                [4] [
+                    [0] "2012-01-29T00:00:00",
+                    [1] 26
+                ],
+                [5] [
+                    [0] "2012-03-18T00:00:00",
+                    [1] 30
+                ],
+                [6] [
+                    [0] "2012-04-08T00:00:00",
+                    [1] 32
+                ],
+                [7] [
+                    [0] "2012-05-06T00:00:00",
+                    [1] 36
+                ]
+            ],
+            label:  "2010-2020",
+            max  :  38,
+            min  :  26,
+            start:  "2010-01-01",
+            sum  :  260
+        }
+    ]
+}
+
 
 =cut
 
@@ -87,8 +265,8 @@ sub read_values {
         period           => $period,
         group_by         => $group_by,
 
-        min => 9.e9,
-        max => 9.e-9
+        min =>  9999999999999999,
+        max => -9999999999999999
     };
 
     my $qtde = scalar @{$self->variables};
@@ -100,8 +278,8 @@ sub read_values {
             begin  => $start,
             sum    => 0,
             data   => \@data,
-            min => 9.e9,
-            max => 9.e-9
+            min =>  9999999999999999,
+            max => -9999999999999999
         };
         my $sum = 0;
         my $total2 = 0;
