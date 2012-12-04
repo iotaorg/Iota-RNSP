@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use JSON qw(from_json);
-use Test::More skip_all => 'TODO  TODO';
+use Test::More ;
 
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
@@ -122,19 +122,22 @@ eval {
                 schema => $schema,
                 indicator => $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
                 traits => ['PeriodAxis'],
-                user_id   => $RNSP::PCS::TestOnly::Mock::AuthUser::_id
+                user_id   => $RNSP::PCS::TestOnly::Mock::AuthUser::_id,
+
             );
 
-            my $data = $chart->data();
+            my $data = $chart->data(group_by => 'yearly');
 
-            ( $res, $c ) = ctx_request(GET $uri_chart->path_query);
+            ( $res, $c ) = ctx_request(GET $uri_chart->path_query . '?group_by=yearly');
+
             my $obj = eval{from_json( $res->content )};
             ok($res->is_success, 'GET chart success');
 
 
+
             ( $res, $c ) = ctx_request(
                     GET '/api/public/user/'.
-                    $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis'
+                    $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis?group_by=yearly'
             );
             my $obj_public = eval{from_json( $res->content )};
             ok($res->is_success, 'GET chart public success');
@@ -148,7 +151,7 @@ eval {
                     my $a2011 = $res->{series}[1];
 
                     is($a2011->{avg}, '34', 'media correta para 2011');
-                    is($a2011->{data}[0][0], '', 'data correta [ TODO remover, esse campo eh impossivel de existir]');
+                    is($a2011->{data}[0][0], '2011-02-20T00:00:00', 'data correta');
                     is($a2011->{data}[0][1], 25+5, 'valor correto');
                 }
 
