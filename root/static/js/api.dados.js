@@ -288,7 +288,7 @@ $(document).ready(function(){
 			for (i = ano_anterior - 3; i <= ano_anterior; i++){
 				table_content += "<th>" + i + "</th>";
 			}
-			table_content += "</tr></thead>";
+			table_content += "<th>&nbsp;</th></tr></thead>";
 			table_content += "<tbody>";
 			table_content += "</tbody></table>";
 			$(".data-content .table .content-fill").append(table_content);

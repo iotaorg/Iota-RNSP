@@ -136,6 +136,11 @@ table{
 	padding: 5px;
 }
 
+.data-content .table tbody td.grafico canvas{
+	border: 1px solid #e0e0e0;
+}
+
+
 .data-content .graph{
 	display: none;	
 	margin-top: -1px;
