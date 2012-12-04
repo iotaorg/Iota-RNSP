@@ -30,11 +30,11 @@ exemplo:
             "start": "2011-01-01",
             "avg": 24.8,
             "data": [
-                ['2011-01-03', 18],
-                ['2011-02-02', 22],
-                ['2011-03-04', 33],
-                ['2011-04-06', 25],
-                ['2011-05-09', 26],
+                ['', 18],
+                ['', 22],
+                ['', 33],
+                ['', 25],
+                ['', 26],
             ]
         },
         {
@@ -42,11 +42,11 @@ exemplo:
             "start": "2012-01-01",
             "avg": 25,
             "data": [
-                ['2012-01-02', 23],
-                ['2012-02-22', 21],
-                ['2012-03-05', 31],
-                ['2012-04-04', 23],
-                ['2012-05-08', 27],
+                ['', 23],
+                ['', 21],
+                ['', 31],
+                ['', 23],
+                ['', 27],
             ]
         }
     ]
@@ -73,6 +73,7 @@ sub read_values {
         series           => []
     };
 
+    my $qtde = scalar @{$self->variables};
     foreach my $start (sort {$a cmp $b} keys %{$series}){
         my @data = ();
         my $row       = {
@@ -81,9 +82,15 @@ sub read_values {
         };
         my $total = 0;
         foreach my $dt (sort {$a cmp $b} keys %{$series->{$start}{sets}}) {
-            my $xy = $series->{$start}{sets}{$dt};  # Y
-            $total = $total + $xy->[1];
-            push @data, $xy;
+            my $vals = $series->{$start}{sets}{$dt};
+
+            if (scalar keys %$vals == $qtde){
+                my $valor = $self->indicator_formula->evaluate( %$vals );
+                $total   += $valor;
+                push @data, [ '', $valor ];
+            }else{
+                push @data, ['', '-'];
+            }
         }
         $row->{avg}   = @data ?  $total / scalar @data : 0;
         $row->{label} = &get_label_of_period($start, $group_by);
@@ -113,10 +120,9 @@ sub _load_variables_values {
     while( my $row = $rs->next ){
         my $gp = $row->get_column('group_from') || 'all';
 
-        my $set = $values->{$gp}{sets}{$row->valid_from} = [
-                $row->value_of_date->datetime, # X
-                $row->value # Y
-            ];
+        next if $row->value eq '';
+
+        $values->{$gp}{sets}{$row->valid_from}{$row->variable_id} = $row->value;
     }
     return $values;
 }
