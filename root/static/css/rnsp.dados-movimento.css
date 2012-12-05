@@ -31,6 +31,9 @@
 #indicador-grafico .title a.link{
 	color: #4b308f;
 }
+#indicador-grafico .title a.link:hover{
+	color: #9872c8;
+}
 
 #indicador-historico .title span,
 #indicador-grafico .title span{
