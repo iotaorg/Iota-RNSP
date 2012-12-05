@@ -3,7 +3,7 @@ var eixos_list = {"dados": []};
 var users_list;
 var indicadorID;
 var indicadorDATA;
-var dadosGrafico = {"dados": []};
+var dadosGrafico = {"dados": [], "labels": []};
 var carregouTabela = false;
 
 var accentMap = {
@@ -250,7 +250,7 @@ $(document).ready(function(){
 				}
 			});
 			
-			dadosGrafico = {"dados": []};
+			dadosGrafico = {"dados": [], "labels": []};
 			$(".indicators .item").removeClass("selected");
 			$(this).addClass("selected");
 			$(".data-right .data-title .title").html($(".indicators .selected").html());
@@ -277,8 +277,15 @@ $(document).ready(function(){
 			var indicador = indicadorID;
 			var indicador_uri = $(".indicators div.selected").attr("name-uri");
 	
-			dadosGrafico = {"dados": []};
-	
+			dadosGrafico = {"dados": [], "labels": []};
+			
+			var data_atual = new Date();
+			var ano_anterior = data_atual.getFullYear() - 1;
+			var date_labels = [];
+			for (i = ano_anterior - 3; i <= ano_anterior; i++){
+				dadosGrafico.labels.push(String(i));
+			}
+
 			var table_content = ""
 			$(".data-content .table .content-fill").empty();
 			table_content += "<table>";
@@ -378,13 +385,12 @@ $(document).ready(function(){
 		}
   	}
 	
-	function carregaGraficoAba(){
-		var indicador = indicadorID;
+	$.carregaGrafico = function(canvasId){
 
 		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 		var color_meta = '#ff0000';
 
-		RGraph.Clear(document.getElementById("main-graph"));
+		RGraph.Clear(document.getElementById(canvasId));
 		
 		var legendas = [];
 		
@@ -426,13 +432,6 @@ $(document).ready(function(){
 			}
 		});
 
-		var data_atual = new Date();
-		var ano_anterior = data_atual.getFullYear() - 1;
-		var date_labels = [];
-		for (i = ano_anterior - 3; i <= ano_anterior; i++){
-			date_labels.push(String(i));
-		}
-
 		if (maxlength < 10) maxlength = 10;
 
 		if ((ymin >= 0) && ((parseInt(ymin)-1) < 0)){
@@ -443,8 +442,8 @@ $(document).ready(function(){
 
 		ymin = 0;
 		
-		var line = new RGraph.Line('main-graph', linhas);
-		line.Set('chart.labels', ['2009','2010','2011','2012']);
+		var line = new RGraph.Line(canvasId, linhas);
+		line.Set('chart.labels', dadosGrafico.labels);
 		line.Set('chart.ymin', ymin);
 		line.Set('chart.gutter.left', maxlength*5);
 		line.Set('chart.text.font', 'tahoma');
@@ -454,42 +453,11 @@ $(document).ready(function(){
 		line.Set('chart.tickmarks', 'circle');
 		line.Draw();
 		
-		montaLegenda(legendas);
+		montaLegenda({source: legendas, removable: true});
 		
-		$("#graph-search-user").autocomplete({
-//			source: users_list,
-			source: function( request, response ) {
-                var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-                response( $.grep( users_list, function( value ) {
-                    value = value.label || value.value || value;
-                    return matcher.test( value ) || matcher.test( normalize( value ) );
-                }) );
-            },
-			focus: function(event, ui){
-				$("#button-search-user").attr("disabled",true);
-			},
-			select: function(event, ui){
-				$("#graph-user-selected").val(ui.item.id);
-				$("#button-search-user").attr("disabled",false);
-			},
-		});
-
-		$("#button-search-user").click(function(){
-
-			if($.getUrlVar("graphs")){
-				var graphs = $.getUrlVar("graphs").split("-");
-			}else{
-				var graphs = [];
-			}
-			
-			if (!findInArray(graphs,$("#graph-user-selected").val())){
-				graphs.push($("#graph-user-selected").val());
-			}
-			
-			$.setUrl({graphs: graphs.join("-")});
-			$("#graph-search-user").val("");
-		});
-		setaTabs();
+		if (ref == "comparacao"){
+			setaTabs();
+		}
 
 	}
 	
@@ -500,7 +468,6 @@ $(document).ready(function(){
 			}
 		});
 	}
-
 	
 	function clearGraphLines(){
 		$.each(dadosGrafico.dados, function(index,item){
@@ -508,7 +475,8 @@ $(document).ready(function(){
 		});
 	}
 
-	function montaLegenda(legendas){
+	function montaLegenda(args){
+		var legendas = args.source;
 		$(".graph .legend").empty();
 		
 		var legenda = "";
@@ -527,31 +495,33 @@ $(document).ready(function(){
 		}
 		$(".graph .legend").append(legenda);
 		
-		$(".data-content .graph .legend .item").hover(function(){
-			if (!$(this).hasClass("meta")){
-				$(this).find(".icon").fadeIn();
-			}
-		},function(){
-			if (!$(this).hasClass("meta")){
-				$(this).find(".icon").hide();
-			}
-		});
-
-		$(".data-content .graph .legend .icon").click(function(){
-			if ($(this).attr("item-id")){
-				if($.getUrlVar("graphs")){
-					var graphs = $.getUrlVar("graphs").split("-");
-				}else{
-					var graphs = [];
+		if (args.removable){
+			
+			$(".data-content .graph .legend .item").hover(function(){
+				if (!$(this).hasClass("meta")){
+					$(this).find(".icon").fadeIn();
 				}
-				
-				graphs = $.removeItemInArray(graphs,$(this).attr("item-id"));
-				
-				$.setUrl({graphs: graphs.join("-")});
-
-			}
-		});
-
+			},function(){
+				if (!$(this).hasClass("meta")){
+					$(this).find(".icon").hide();
+				}
+			});
+	
+			$(".data-content .graph .legend .icon").click(function(){
+				if ($(this).attr("item-id")){
+					if($.getUrlVar("graphs")){
+						var graphs = $.getUrlVar("graphs").split("-");
+					}else{
+						var graphs = [];
+					}
+					
+					graphs = $.removeItemInArray(graphs,$(this).attr("item-id"));
+					
+					$.setUrl({graphs: graphs.join("-")});
+	
+				}
+			});
+		}
 		
 	}
 	
@@ -612,7 +582,7 @@ $(document).ready(function(){
 		}else{
 			clearGraphLines();
 		}
-		carregaGraficoAba();
+		$.carregaGrafico("main-graph");
 	}
 
 	$(".data-content .tabs .item").click( function (){
@@ -640,6 +610,39 @@ $(document).ready(function(){
 	});
 	$("#share-link").keypress(function(e){
 		e.preventDefault();
+	});
+
+	$("#graph-search-user").autocomplete({
+		source: function( request, response ) {
+			var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
+			response( $.grep( users_list, function( value ) {
+				value = value.label || value.value || value;
+				return matcher.test( value ) || matcher.test( normalize( value ) );
+			}) );
+		},
+		focus: function(event, ui){
+			$("#button-search-user").attr("disabled",true);
+		},
+		select: function(event, ui){
+			$("#graph-user-selected").val(ui.item.id);
+			$("#button-search-user").attr("disabled",false);
+		},
+	});
+
+	$("#button-search-user").click(function(){
+
+		if($.getUrlVar("graphs")){
+			var graphs = $.getUrlVar("graphs").split("-");
+		}else{
+			var graphs = [];
+		}
+		
+		if (!findInArray(graphs,$("#graph-user-selected").val())){
+			graphs.push($("#graph-user-selected").val());
+		}
+		
+		$.setUrl({graphs: graphs.join("-")});
+		$("#graph-search-user").val("");
 	});
 
 	function selectAxis(id){

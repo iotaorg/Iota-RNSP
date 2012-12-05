@@ -34,6 +34,7 @@ $(document).ready(function(){
 					}),
 			success: function(data, textStatus, jqXHR){
 				indicador_data = data;
+				indicadorDATA = data;
 				loadVariaveisData();
 			},
 			error: function(data){
@@ -109,6 +110,7 @@ $(document).ready(function(){
 			success: function(data, textStatus, jqXHR){
 				historico_data = data;
 				$("#indicador-historico span.cidade").html(cidade_data.cidade.name);
+				$("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
 				showHistoricoData();
 			},
 			error: function(data){
@@ -132,23 +134,42 @@ $(document).ready(function(){
 			});
 			history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
 			history_table += "</tr><tbody>";
+
+			dadosGrafico = {"dados": [], "labels": []};
+
+			var valores = [];
 			$.each(historico_data.rows, function(index,value){
 				history_table += "<tr><td class='periodo'>$$periodo</td>".render({periodo: convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period)});
+				dadosGrafico.labels.push(convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period));
 				$.each(historico_data.rows[index].valores, function(index2,value2){
 					history_table += "<td class='valor' title='$$data'>$$valor</td>".render({
 							valor: $.formatNumber(historico_data.rows[index].valores[index2].value, {format:"#,###", locale:"br"}),
 							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 					});
 				});
-				history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
+				if(historico_data.rows[index].formula_value != null){
+					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
+				}else{
+					history_table += "<td class='formula_valor'>-</td>";
+				}
 				history_table += "</tr></tbody>";
+				valores.push(historico_data.rows[index].formula_value);
 			});
 			history_table += "</table>";
+			dadosGrafico.dados.push({id: userID, nome: cidade_data.cidade.name, valores: valores, data: cidade_data, show: true});
 		}else{
 			var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
 		}
 		$("#indicador-historico .table .content-fill").append(history_table);
+		showGrafico();
 		
+	}
+	
+	function showGrafico(){
+		if (dadosGrafico.dados.length > 0){
+			$("#indicador-grafico").fadeIn();
+			$.carregaGrafico("main-graph");	
+		}
 	}
 
 	if (ref == "indicador"){
