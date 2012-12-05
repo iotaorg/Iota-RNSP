@@ -30,7 +30,7 @@
             </div>
             <div class="clear"></div>
         	<div id="indicador-grafico">
-				<div class="title">Gráfico de <span class="cidade"></span></div>
+				<div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='/[% role %]/[% indicador.name_url %]/?view=graph&graphs=[% indicador.id %]' class='link'>comparar com outras cidades</a></div>
 				<div class="content-fill">
 					<div class="graph">
 						<div class="content-fill">
