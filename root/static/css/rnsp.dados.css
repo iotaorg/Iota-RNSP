@@ -373,6 +373,16 @@ table{
 	font-weight: bolder;
 }
 
+#indicador-grafico .title a.link{
+	font-size: 9pt;
+	color: #009999;
+	text-decoration: none;
+}
+#indicador-grafico .title a.link:hover{
+	color: #fff;
+}
+
+
 #indicador-historico .title span,
 #indicador-grafico .title span{
 	color: #009999;

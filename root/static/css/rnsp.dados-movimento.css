@@ -23,11 +23,17 @@
 	color: #53368e;
 }
 #cidades-indicadores .title,
-#indicador-historico .title{
+#indicador-historico .title,
+#indicador-grafico .title{
 	color: #4b308f;
 }
 
-#indicador-historico .title span{
+#indicador-grafico .title a.link{
+	color: #4b308f;
+}
+
+#indicador-historico .title span,
+#indicador-grafico .title span{
 	color: #4b308f;
 }
 input.button-data{
