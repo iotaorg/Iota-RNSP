@@ -115,7 +115,7 @@ $(document).ready(function(){
 				historico_data = data;
 				$("#indicador-historico span.cidade").html(cidade_data.cidade.name);
 				$("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
-				$("#indicador-grafico .title a.link").attr("href","/"+role.replace("_","")+"/"+indicador_data.name_url+"/?view-graph&graphs="+indicadorID);
+				$("#indicador-grafico .title a.link").attr("href","/"+role.replace("_","")+"/"+indicador_data.name_url+"/?view=graph&graphs="+userID);
 				showHistoricoData();
 			},
 			error: function(data){
