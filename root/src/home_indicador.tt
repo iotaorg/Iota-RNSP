@@ -29,6 +29,19 @@
 				</div>
             </div>
             <div class="clear"></div>
+        	<div id="indicador-grafico">
+				<div class="title">Gráfico de <span class="cidade"></span></div>
+				<div class="content-fill">
+					<div class="graph">
+						<div class="content-fill">
+                            <canvas id="main-graph" width='600' height='280'></canvas>
+                            <div class="legend"></div>
+                            <div class="clear"></div>
+                        </div>
+					</div>
+				</div>
+            </div>
+            <div class="clear"></div>
         </div>    	
     </div>
 
