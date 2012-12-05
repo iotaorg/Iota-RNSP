@@ -271,7 +271,7 @@ $(document).ready(function(){
 							if (item.valores[j] == "-"){
 								table_content += "<td class='valor'>-</td>";
 							}else{
-								table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.###", locale:"br"})});
+								table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(item.valores[j], {format:"#,##0.##", locale:"br"})});
 							}
 						}
 						table_content += "<td class='grafico'><a href='$$url'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({id: cont, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
