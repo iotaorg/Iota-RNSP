@@ -136,11 +136,23 @@ table{
 	padding: 5px;
 }
 
-.data-content .table tbody td.grafico canvas{
-	border: 1px solid #e0e0e0;
+.data-content .table tbody td.grafico canvas,
+
+#indicador-grafico{
+	display: none;
 }
 
+#indicador-grafico canvas{
+	margin: auto;
+}
 
+#indicador-grafico .graph{
+	border: 1px solid #e0e0e0;
+}
+#indicador-grafico .content-fill{
+	padding: 5px;
+	text-align: center;
+}
 .data-content .graph{
 	display: none;	
 	margin-top: -1px;
@@ -149,12 +161,18 @@ table{
 	text-align: center;
 }
 
+
 .data-content .graph .legend{
 	clear: both;
 	margin-left: 50px;
 }
 
-.data-content .graph .legend .item{
+#indicador-grafico .graph .legend{
+	clear: both;
+	text-align: center;
+}
+.data-content .graph .legend .item,
+#indicador-grafico .graph .legend .item{
 	float: left;
 	margin-right: 5px;
 	border: 1px solid #fff;
@@ -162,30 +180,38 @@ table{
 	cursor: pointer;
 	cursor: hand;
 }
+#indicador-grafico .graph .legend .item{
+	display: inline-block;
+	float: none;
+}
 .data-content .graph .legend .item:hover{
 	border: 1px solid #ccc;
 }
 
-.data-content .graph .legend .item .quad{
+.data-content .graph .legend .item .quad,
+#indicador-grafico .graph .legend .item .quad{
 	float: left;
 	width: 10px;
 	height: 10px;
 	margin-right: 5px;
 	margin-top: 3px;
 }
-.data-content .graph .legend .item .label{
+.data-content .graph .legend .item .label,
+#indicador-grafico .graph .legend .item .label{
 	float: left;
 	font-size: 10pt;
 }
 
-.data-content .graph .legend .item .close{
+.data-content .graph .legend .item .close,
+#indicador-grafico .graph .legend .item .close{
 	margin-top: 1px;
 	margin-left: 4px;
 	float: left;
 	width: 11px;
 	height: 14px;
 }
-.data-content .graph .legend .item .close .icon{
+.data-content .graph .legend .item .close .icon,
+#indicador-grafico .graph .legend .item .close .icon{
 	display: none;
 	font-size: 7pt;
 	padding: 0px 2px;
@@ -195,7 +221,6 @@ table{
 .data-content .graph .legend .item .close .icon:hover{
 	color: #ff0000;
 }
-
 
 .data-content .map{
 	display: none;	
@@ -330,14 +355,16 @@ table{
 
 
 #cidades-indicadores,
-#indicador-historico{
+#indicador-historico,
+#indicador-grafico{
 	border: 1px solid #e0e0e0;
 	margin-top: 10px;
 	padding: 2px;
 }
 
 #cidades-indicadores .title,
-#indicador-historico .title{
+#indicador-historico .title,
+#indicador-grafico .title{
 	color: #009999;
 	background-color: #efefef;
 	border: 1px solid #e0e0e0;
@@ -346,7 +373,8 @@ table{
 	font-weight: bolder;
 }
 
-#indicador-historico .title span{
+#indicador-historico .title span,
+#indicador-grafico .title span{
 	color: #009999;
 }
 
@@ -549,3 +577,4 @@ input.button-data:hover{
 	background-color: #f5f5f5;
 	width: 450px;
 }
+
