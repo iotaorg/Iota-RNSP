@@ -156,6 +156,7 @@ sub indicator_DELETE {
   my $obj = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
+  $obj->user_indicators->delete;
   $obj->delete;
 
   $self->status_no_content($c);

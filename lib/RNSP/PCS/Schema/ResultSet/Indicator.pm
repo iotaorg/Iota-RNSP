@@ -118,6 +118,7 @@ sub action_specs {
             return unless keys %values;
             $values{name_url} = $text2uri->translate( $values{name} );
 
+
             my $var = $self->create( \%values );
 
             $var->discard_changes;
@@ -130,6 +131,12 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            $values{goal} ||= undef;
+            $values{goal_source} ||= undef;
+            $values{goal_explanation} ||= undef;
+            $values{goal_operator} ||= undef;
+            $values{tags} ||= undef;
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
