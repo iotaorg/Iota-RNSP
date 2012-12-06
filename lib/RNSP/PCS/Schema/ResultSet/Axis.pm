@@ -10,18 +10,16 @@ with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
 
-sub _build_verifier_scope_name {'axis'}
+sub _build_verifier_scope_name { 'axis' }
 
 sub verifiers_specs {
     my $self = shift;
-    return {
-    };
+    return {};
 }
 
 sub action_specs {
     my $self = shift;
-    return {
-    };
+    return {};
 }
 
 1;

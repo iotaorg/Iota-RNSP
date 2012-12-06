@@ -24,16 +24,16 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             profile => {
                 justification_of_missing_field => {
-                    required   => 0,
-                    type       => 'Str'
+                    required => 0,
+                    type     => 'Str'
                 },
                 goal => {
-                    required   => 0,
-                    type       => 'Str'
+                    required => 0,
+                    type     => 'Str'
                 },
                 user_id => {
-                    required   => 1,
-                    type       => 'Int',
+                    required => 1,
+                    type     => 'Int',
                 },
 
                 indicator_id => {
@@ -42,36 +42,40 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         return $self->result_source->schema->resultset('Indicator')
-                            ->find( { id => $r->get_value('indicator_id') } ) ? 1 : 0;
-                    }
+                          ->find( { id => $r->get_value('indicator_id') } ) ? 1 : 0;
+                      }
                 },
                 valid_from => {
                     required   => 1,
                     type       => DataStr,
                     post_check => sub {
-                        my $r      = shift;
+                        my $r = shift;
 
-                        my $ind = $self->result_source->schema->resultset('Indicator')
-                            ->find( { id => $r->get_value('indicator_id') } );
+                        my $ind =
+                          $self->result_source->schema->resultset('Indicator')
+                          ->find( { id => $r->get_value('indicator_id') } );
                         my $schema = $self->result_source->schema;
 
                         my $f = new RNSP::IndicatorFormula(
                             formula => $ind->formula,
-                            schema => $schema);
+                            schema  => $schema
+                        );
                         my ($any_var) = $f->variables;
 
-                        my $var    = $schema->resultset('Variable')->find( { id => $any_var } );
-                        my $date   = DateTimeX::Easy->new( $r->get_value('valid_from') )->datetime;
+                        my $var = $schema->resultset('Variable')->find( { id => $any_var } );
+                        my $date = DateTimeX::Easy->new( $r->get_value('valid_from') )->datetime;
 
-                        my $valid_from = eval{$schema->f_extract_period_edge( $var->period, $date )}->{period_begin};
+                        my $valid_from = eval { $schema->f_extract_period_edge( $var->period, $date ) }->{period_begin};
 
-                        return $self->search( {
-                            indicator_id => $r->get_value('indicator_id'),
-                            user_id      => $r->get_value('user_id'),
-                            valid_from   => $valid_from
-                        } )->count == 0;
+                        return $self->search(
+                            {
+                                indicator_id => $r->get_value('indicator_id'),
+                                user_id      => $r->get_value('user_id'),
+                                valid_from   => $valid_from
+                            }
+                        )->count == 0;
 
-                    }
+                      }
                 },
             }
         ),
@@ -84,15 +88,15 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         return $self->find( { id => $r->get_value('id') } ) ? 1 : 0;
-                    }
+                      }
                 },
                 justification_of_missing_field => {
-                    required   => 0,
-                    type       => 'Str'
+                    required => 0,
+                    type     => 'Str'
                 },
                 goal => {
-                    required   => 0,
-                    type       => 'Str',
+                    required => 0,
+                    type     => 'Str',
                 }
             }
         ),
@@ -109,17 +113,17 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            my $ind = $self->result_source->schema->resultset('Indicator')
-                ->find( { id => $values{indicator_id} } );
+            my $ind = $self->result_source->schema->resultset('Indicator')->find( { id => $values{indicator_id} } );
             my $schema = $self->result_source->schema;
 
             my $f = new RNSP::IndicatorFormula(
                 formula => $ind->formula,
-                schema => $schema);
+                schema  => $schema
+            );
             my ($any_var) = $f->variables;
 
-            my $var    = $schema->resultset('Variable')->find( { id => $any_var } );
-            my $date   = DateTimeX::Easy->new( $values{valid_from} )->datetime;
+            my $var = $schema->resultset('Variable')->find( { id => $any_var } );
+            my $date = DateTimeX::Easy->new( $values{valid_from} )->datetime;
 
             $values{valid_from} = $schema->f_extract_period_edge( $var->period, $date )->{period_begin};
             my $varvalue = $self->create( \%values );
@@ -134,7 +138,7 @@ sub action_specs {
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
             return $var;
-        }
+          }
     };
 }
 
