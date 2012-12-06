@@ -22,7 +22,7 @@ use DateTimeX::Easy;
 # variavel do tipo string
 my $str2number = sub {
     my $str = shift;
-    if ($str){
+    if ($str) {
         $str =~ s/\.(\d{3})/$1/g;
         $str =~ s/\s(\d{3})/$1/g;
         $str =~ s/\,/./;
@@ -50,6 +50,7 @@ sub value_check {
 
     return 1;
 }
+
 # TODO deixar o campo 'source' obrigatorio quando o campo 'value' for vazio
 sub verifiers_specs {
     my $self = shift;
@@ -66,14 +67,14 @@ sub verifiers_specs {
                     },
                     filters => [$str2number]
                 },
-                source => { required => 0, type => 'Str' },
+                source        => { required => 0, type => 'Str' },
                 observations  => { required => 0, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => {
                     required   => 1,
                     type       => DataStr,
                     post_check => sub {
-                        my $r      = shift;
+                        my $r = shift;
 
                         #return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
 
@@ -108,7 +109,7 @@ sub verifiers_specs {
             profile => {
 
                 source => { required => 0, type => 'Str' },
-                id => {
+                id     => {
                     required   => 1,
                     type       => 'Int',
                     post_check => sub {
@@ -117,8 +118,8 @@ sub verifiers_specs {
                       }
 
                 },
-                observations  => { required => 0, type => 'Str' },
-                value => {
+                observations => { required => 0, type => 'Str' },
+                value        => {
                     required   => 0,
                     type       => 'Str',
                     post_check => sub {
@@ -131,11 +132,12 @@ sub verifiers_specs {
                     required   => 1,
                     type       => DataStr,
                     post_check => sub {
-                        my $r      = shift;
+                        my $r = shift;
+
                         #return 0 if (!$r->get_value('value')); # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
-                        my $var    = $self->search( { id => $r->get_value('id') } )->first;
+                        my $var = $self->search( { id => $r->get_value('id') } )->first;
 
                         my $date = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
 
@@ -172,7 +174,7 @@ sub verifiers_specs {
                 user_id       => { required => 1, type => 'Int' },
                 value_of_date => {
                     required => 1,
-                    type => DataStr,
+                    type     => DataStr,
 
                     #post_check => sub {
                     #    my $r = shift;
@@ -181,7 +183,7 @@ sub verifiers_specs {
                     #},
 
                 },
-                variable_id   => {
+                variable_id => {
                     required   => 1,
                     type       => 'Int',
                     post_check => sub {
@@ -257,15 +259,9 @@ sub action_specs {
                         value         => $values{value},
                         value_of_date => $values{value_of_date},
 
-                        (exists $values{source} ? (
-                                source => $values{source}
-                            ) : () ),
+                        ( exists $values{source} ? ( source => $values{source} ) : () ),
 
-                        (exists $values{observations} ? (
-                                observations => $values{observations}
-                            ) : () ),
-
-
+                        ( exists $values{observations} ? ( observations => $values{observations} ) : () ),
 
                     }
                 );

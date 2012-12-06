@@ -117,6 +117,12 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 city_summary
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -155,6 +161,12 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 0 },
+  "city_summary",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -185,17 +197,17 @@ __PACKAGE__->add_unique_constraint("user_email_key", ["email"]);
 
 =head1 RELATIONS
 
-=head2 actions_log
+=head2 actions_logs
 
 Type: has_many
 
-Related object: L<RNSP::PCS::Schema::Result::ActionLog>
+Related object: L<RNSP::PCS::Schema::Result::ActionsLog>
 
 =cut
 
 __PACKAGE__->has_many(
-  "actions_log",
-  "RNSP::PCS::Schema::Result::ActionLog",
+  "actions_logs",
+  "RNSP::PCS::Schema::Result::ActionsLog",
   { "foreign.user_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -341,8 +353,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-26 16:32:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UYLXloj0WKp+kuC0O5FAgw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-06 09:39:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BI6QlzgOlADU662Nxi/3xg
 
 __PACKAGE__->has_many(
     "user_roles",

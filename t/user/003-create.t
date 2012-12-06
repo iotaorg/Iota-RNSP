@@ -61,6 +61,7 @@ eval {
                     'user.create.password_confirm' => 'foobarquux1',
                     'user.create.city_id'          => $city->id,
                     'user.create.role'             => 'admin',
+                    'user.create.city_summary'     => 'testeteste'
                 ]
             );
             ok( $res->is_success, 'user created' );
@@ -68,10 +69,10 @@ eval {
 
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
             is( $new_user->nome_responsavel_cadastro, 'nome_responsavel_cadastro', 'nome responsavel ok' );
+            is( $new_user->city_summary, 'testeteste', 'city_summary ok' );
             {
                 use JSON qw(from_json);
                 is( from_json( $res->content )->{name}, $new_user->name, 'same user' );
-
             }
 
             like( $res->header('Location'), qr{/api/user/\d+$}, 'location ok' );

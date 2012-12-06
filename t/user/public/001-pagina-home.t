@@ -50,6 +50,7 @@ eval {
                 'user.create.password_confirm' => 'foobarquux1',
                 'user.create.city_id'          => $city->id,
                 'user.create.prefeito'         => 1,
+                'user.create.city_summary'     => 'testestes',
                 'user.create.endereco'         => 'endereco_t'
                 ]
             );
@@ -245,6 +246,7 @@ eval {
 
 
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
+            is($obj->{usuario}{city_summary}, 'testestes', 'summary OK');
 
             SKIP: {
                 skip 'Endereco do usuario esta confirmado se eh publico', 1;

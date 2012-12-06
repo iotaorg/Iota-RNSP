@@ -5,7 +5,7 @@ use namespace::autoclean;
 
 use Moose;
 use Text2URI;
-my $text2uri = Text2URI->new(); # tem lazy la, don't worry
+my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
 extends 'DBIx::Class::ResultSet';
 with 'RNSP::PCS::Role::Verification';
@@ -14,18 +14,18 @@ with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
 use Data::Verifier;
 use JSON qw /encode_json/;
 
-sub _build_verifier_scope_name {'city'}
+sub _build_verifier_scope_name { 'city' }
 
 sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
             profile => {
-                name        => { required => 1, type => 'Str' },
-                uf          => { required => 1, type => 'Str', filter => ['trim', 'upper'] },
-                pais        => { required => 0, type => 'Str' },
-                latitude    => { required => 0, type => 'Num' },
-                longitude   => { required => 0, type => 'Num' },
+                name                        => { required => 1, type => 'Str' },
+                uf                          => { required => 1, type => 'Str', filter => [ 'trim', 'upper' ] },
+                pais                        => { required => 0, type => 'Str' },
+                latitude                    => { required => 0, type => 'Num' },
+                longitude                   => { required => 0, type => 'Num' },
                 telefone_prefeitura         => { required => 0, type => 'Str' },
                 endereco_prefeitura         => { required => 0, type => 'Str' },
                 bairro_prefeitura           => { required => 0, type => 'Str' },
@@ -39,12 +39,12 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
-                id          => { required => 1, type => 'Int' },
-                name        => { required => 1, type => 'Str' },
-                uf          => { required => 1, type => 'Str', filter => ['trim', 'upper'] },
-                pais        => { required => 0, type => 'Str' },
-                latitude    => { required => 0, type => 'Num' },
-                longitude   => { required => 0, type => 'Num' },
+                id                          => { required => 1, type => 'Int' },
+                name                        => { required => 1, type => 'Str' },
+                uf                          => { required => 1, type => 'Str', filter => [ 'trim', 'upper' ] },
+                pais                        => { required => 0, type => 'Str' },
+                latitude                    => { required => 0, type => 'Num' },
+                longitude                   => { required => 0, type => 'Num' },
                 telefone_prefeitura         => { required => 0, type => 'Str' },
                 endereco_prefeitura         => { required => 0, type => 'Str' },
                 bairro_prefeitura           => { required => 0, type => 'Str' },
@@ -55,8 +55,6 @@ sub verifiers_specs {
             },
         ),
 
-
-
     };
 }
 
@@ -66,22 +64,27 @@ sub action_specs {
         create => sub {
             my %values = shift->valid_values;
 
-            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            do { delete $values{$_} unless defined $values{$_} }
+              for keys %values;
             return unless keys %values;
 
             $values{uf} = uc $values{uf};
 
-            my $name_uri_o = $values{name_uri} = $text2uri->translate($values{name});
-            my $name_o     = $values{name};
+            my $name_uri_o = $values{name_uri} = $text2uri->translate( $values{name} );
+            my $name_o = $values{name};
 
             my $idx = 2;
-            while (defined $self->search( {
-                uf       => $values{uf},
-                name_uri => $values{name_uri},
-            })->next){
-                $values{name_uri} = $name_uri_o . '-'. $idx;
-                $values{name}     = $name_o     . '-'. $idx++;
-            };
+            while (
+                defined $self->search(
+                    {
+                        uf       => $values{uf},
+                        name_uri => $values{name_uri},
+                    }
+                )->next
+              ) {
+                $values{name_uri} = $name_uri_o . '-' . $idx;
+                $values{name}     = $name_o . '-' . $idx++;
+            }
 
             my $var = $self->create( \%values );
 
@@ -91,21 +94,26 @@ sub action_specs {
         update => sub {
             my %values = shift->valid_values;
 
-            do { delete $values{$_} unless defined $values{$_}} for keys %values;
+            do { delete $values{$_} unless defined $values{$_} }
+              for keys %values;
             return unless keys %values;
 
-            my $name_uri_o = $values{name_uri} = $text2uri->translate($values{name});
-            my $name_o     = $values{name};
+            my $name_uri_o = $values{name_uri} = $text2uri->translate( $values{name} );
+            my $name_o = $values{name};
 
             my $idx = 2;
-            while (my $item = $self->search( {
-                uf       => $values{uf},
-                name_uri => $values{name_uri},
-            })->next){
-                last if ($item->id == $values{id});
-                $values{name_uri} = $name_uri_o . '-'. $idx;
-                $values{name}     = $name_o     . '-'. $idx++;
-            };
+            while (
+                my $item = $self->search(
+                    {
+                        uf       => $values{uf},
+                        name_uri => $values{name_uri},
+                    }
+                )->next
+              ) {
+                last if ( $item->id == $values{id} );
+                $values{name_uri} = $name_uri_o . '-' . $idx;
+                $values{name}     = $name_o . '-' . $idx++;
+            }
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

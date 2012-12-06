@@ -211,8 +211,7 @@ sub user_GET {
                 cep_prefeitura              => $r->{cep_prefeitura},
                 nome_responsavel_prefeitura => $r->{nome_responsavel_prefeitura},
                 email_prefeitura            => $r->{email_prefeitura},
-                summary                     => $r->{summary},
-
+                # summary                     => $r->{summary},
             };
         }
 
@@ -223,6 +222,7 @@ sub user_GET {
             map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
                 order_by => 'created_at'
         }) },
+        city_summary => $user->city_summary
     };
 
 
