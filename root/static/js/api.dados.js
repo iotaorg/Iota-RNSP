@@ -527,7 +527,7 @@ $(document).ready(function(){
 						
 						tooltips.push(parseFloat(valor).toFixed(3));
 					}else{
-						tooltips.push(null);
+						tooltips.push(" "); //jogar valor em branco na tooltip caso a sequencia nao tenha valor 
 					}
 				});
 				if (indicadorDATA.goal){
