@@ -348,7 +348,7 @@ $(document).ready(function(){
 						
 						for (j = j_ini; j < data.series.length; j++){
 							
-							if (data.series[j].sum == 0 && data.series[j].data[1] == "-"){
+							if (data.series[j].sum == "-"){
 								row_content += "<td class='valor'>-/td>";
 								valores.push(null);
 							}else{
