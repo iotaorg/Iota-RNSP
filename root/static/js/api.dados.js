@@ -355,7 +355,7 @@ $(document).ready(function(){
 								row_content += "<td class='valor'>$$valor</td>".render({
 												valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})
 											});
-								valores.push(data.series[j].sum.toFixed(3));
+								valores.push(parseFloat(data.series[j].sum).toFixed(3));
 							}
 						}
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
@@ -524,7 +524,8 @@ $(document).ready(function(){
 						if (parseFloat(valor) > ymax) max = parseFloat(valor);
 
 						if (String(valor).length > maxlength) maxlength = String(valor).length;
-						tooltips.push(valor.toFixed(3));
+						
+						tooltips.push(parseFloat(valor).toFixed(3));
 					}else{
 						tooltips.push(null);
 					}
