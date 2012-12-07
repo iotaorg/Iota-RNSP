@@ -136,7 +136,8 @@ table{
 	padding: 5px;
 }
 
-.data-content .table tbody td.grafico canvas{
+.data-content .table tbody td.grafico canvas,
+.#cidades-indicadores .table tbody td.grafico canvas{
 	border: 1px solid #e0e0e0;	
 }
 
