@@ -91,15 +91,17 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
 		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data)}));
+		if (indicador_data.goal_source){
+			var fonte_meta = "<br /><span class='goal-explanation'>Fonte: $$dado</span>".render({dado: indicador_data.goal_source});
+		}else{
+			var fonte_meta = "";
+		}
 		if (indicador_data.goal){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado</td></tr>".render(
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado $$fonte_meta</td></tr>".render(
 				{
 					dado: indicador_data.goal_explanation,
-					fonte_meta: (indicador_data.goal_source) ? "<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span>".render({font_meta: indicador_data.goal_source}) : ""
+					fonte_meta: fonte_meta
 				}));
-		}
-		if (indicador_data.source){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'><span class='source'>Fonte:</span></td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: indicador_data.source}));
 		}
 	}
 	
@@ -189,12 +191,14 @@ $(document).ready(function(){
 		$("#indicador-historico .table .content-fill").append(history_table);
 		
 		if (goal_values){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
+			if (source_values){
+				var source = "<br /><span class='source'>Fonte: $$dado</span>".render({dado: source_values});
+			}else{
+				var source = "";
+			}
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado $$source</td></tr>".render({dado: goal_values, source: source}));
 		}
 		
-		if (source_values){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte:</td><td class='valor'>$$dado</td></tr>".render({dado: source_values}));
-		}
 		if (observations_values){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
 		}
