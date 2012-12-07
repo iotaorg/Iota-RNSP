@@ -280,7 +280,7 @@ $(document).ready(function(){
 	
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
-								item.valores[j] = 0;
+								item.valores[j] = null;
 							}
 						}
 						graficos[cont] = item.valores;
