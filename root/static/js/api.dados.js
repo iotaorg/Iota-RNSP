@@ -524,8 +524,10 @@ $(document).ready(function(){
 						if (parseFloat(valor) > ymax) max = parseFloat(valor);
 
 						if (String(valor).length > maxlength) maxlength = String(valor).length;
+						tooltips.push(valor.toFixed(3));
+					}else{
+						tooltips.push(null);
 					}
-					tooltips.push($.formatNumber(valor, {format:"#,##0.###", locale:"br"}));
 				});
 				if (indicadorDATA.goal){
 					legendas.push({name: item.nome, color: colors[i+1], id: item.id});
