@@ -1,3 +1,6 @@
+var api_path = "";
+//var api_path = "http://rnsp.aware.com.br";
+
 if (!String.prototype.render) {
 	String.prototype.render = function(args) {
 		var copy = this + '';
@@ -181,9 +184,9 @@ paises["br"] = "Brasil";
 
 var loadBreadCrumb = function(data){
 	if (ref == "indicador"){
-		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name});
+		var breadcrumb = "<li class='home'><a href='/$$role'>Início</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name, role: role.replace("_","")});
 	}else if (ref == "cidade"){
-		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf});
+		var breadcrumb = "<li class='home'><a href='/$$role'>Início</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf, role: role.replace("_","")});
 	}
 	$("#breadcrumbs-top").append(breadcrumb);
 	$('#breadcrumbs-top').xBreadcrumbs();
@@ -196,5 +199,3 @@ $(document).ready(function(){
 	$.ajaxSetup({ cache: false });
 
 });
-
-var api_path = "";
