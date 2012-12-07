@@ -91,11 +91,11 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
 		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data)}));
-		if (indicador_data.goal_explanation){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span></td></tr>".render(
+		if (indicador_data.goal){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado</td></tr>".render(
 				{
 					dado: indicador_data.goal_explanation,
-					fonte_meta: indicador_data.goal_source
+					fonte_meta: (indicador_data.goal_source) ? "<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span>".render({font_meta: indicador_data.goal_source}) : ""
 				}));
 		}
 		if (indicador_data.source){

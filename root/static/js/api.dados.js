@@ -291,7 +291,9 @@ $(document).ready(function(){
 			for (i = ano_anterior - 3; i <= ano_anterior; i++){
 				dadosGrafico.labels.push(String(i));
 			}
-
+			
+			montaDateRuler();
+			
 			var table_content = ""
 			$(".data-content .table .content-fill").empty();
 			table_content += "<table id='table-data'>";
@@ -406,6 +408,58 @@ $(document).ready(function(){
 			});
 		}
   	}
+
+	function montaDateRuler(){
+		
+		var data_atual = new Date();
+		var ano_anterior = data_atual.getFullYear() - 1;
+
+		var grupos = 4;
+		var ano_i = ano_anterior - (grupos * 4) + 1;
+		
+		$(".table .period").append("<div id='date-ruler'></div><div id='date-arrow'></div>");
+		var cont = 0;
+		var periodo = '';
+		for (i = ano_i; i <= ano_anterior; i++){
+			if (cont == 0){
+				periodo += "<div class='item'>" + i;
+			}else if (cont == 3){
+				periodo += "-" + i + "</div>";
+				cont = -1;
+			}
+			cont++;	
+		}
+		$("#date-ruler").append(periodo);
+		$("#date-ruler .item:last").addClass("active");
+		setDateArrow();
+		
+		$("#date-ruler .item").click(function(){
+			$("#date-ruler").find(".item").removeClass("active");
+			$(this).addClass("active");
+			setDateArrow();
+		});
+	}
+	
+	function setDateArrow(){
+		var item_pos = $("#date-ruler .item.active").offset();
+		
+		var diff = ($("#date-ruler .item.active").innerWidth() - $("#date-arrow").outerWidth()) / 2;
+		
+		var new_pos = {top: item_pos.top+15, left: item_pos.left+diff};
+		
+		$("#date-arrow").fadeOut("slow",function(){
+			$(this).show();
+			$(this).css("visibility","hidden");
+			$(this).offset({
+					top: new_pos.top,
+					left: new_pos.left
+				});
+			
+			$(this).css("visibility","");
+			$(this).fadeIn(350);
+				
+		});
+	}
 	
 	function getUserCoord(){
 		
@@ -490,8 +544,6 @@ $(document).ready(function(){
 		}
 
 		ymin = 0;
-		
-		console.log(tooltips);
 		
 		var line = new RGraph.Line(canvasId, linhas);
 		line.Set('chart.tooltips', tooltips);
@@ -687,6 +739,7 @@ $(document).ready(function(){
 		if (markerCluster) markerCluster.clearMarkers();
 		
         var markers = [];
+
 
 		var oldMin = "";
 		var oldMax = "";
