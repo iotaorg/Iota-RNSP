@@ -151,6 +151,20 @@ $(document).ready(function(){
 							valor: $.formatNumber(historico_data.rows[index].valores[index2].value, {format:"#,###", locale:"br"}),
 							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 					});
+					if (historico_data.rows[index].valores[index2].source){
+						if (source_values){
+							source_values = historico_data.rows[index].valores[index2].source;
+						}else{
+							var source_values = historico_data.rows[index].valores[index2].source;
+						}
+					}
+					if (historico_data.rows[index].valores[index2].observations){
+						if (observations_values){
+							observations_values = historico_data.rows[index].valores[index2].observations;
+						}else{
+							var observations_values = historico_data.rows[index].valores[index2].observations;
+						}
+					}
 				});
 				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
 					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
@@ -158,11 +172,20 @@ $(document).ready(function(){
 					history_table += "<td class='formula_valor'>-</td>";
 				}
 				history_table += "</tr></tbody>";
+				if (historico_data.rows[index].goal){
+					if (goal_values){
+						goal_values = historico_data.rows[index].goal;
+					}else{
+						var goal_values = historico_data.rows[index].goal;
+					}
+				}
+
 				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != "" && historico_data.rows[index].formula_value != null){
 					valores.push(parseFloat(historico_data.rows[index].formula_value).toFixed(3));
 				}else{
 					valores.push(null);
 				}
+				
 			});
 			history_table += "</table>";
 			dadosGrafico.dados.push({id: userID, nome: cidade_data.cidade.name, valores: valores, data: cidade_data, show: true});
@@ -170,6 +193,17 @@ $(document).ready(function(){
 			var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
 		}
 		$("#indicador-historico .table .content-fill").append(history_table);
+		
+		if (goal_values){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
+		}
+		if (source_values){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte:</td><td class='valor'>$$dado</td></tr>".render({dado: source_values}));
+		}
+		if (observations_values){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
+		}
+		
 		showGrafico();
 		
 	}
