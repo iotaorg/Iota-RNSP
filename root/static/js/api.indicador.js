@@ -152,14 +152,14 @@ $(document).ready(function(){
 							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 					});
 				});
-				if(historico_data.rows[index].formula_value != null){
+				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
 					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
 				}else{
 					history_table += "<td class='formula_valor'>-</td>";
 				}
 				history_table += "</tr></tbody>";
-				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != ""){
-					valores.push(historico_data.rows[index].formula_value.toFixed(3));
+				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != "" && historico_data.rows[index].formula_value != null){
+					valores.push(parseFloat(historico_data.rows[index].formula_value).toFixed(3));
 				}else{
 					valores.push(null);
 				}
