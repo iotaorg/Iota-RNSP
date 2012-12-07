@@ -158,7 +158,11 @@ $(document).ready(function(){
 					history_table += "<td class='formula_valor'>-</td>";
 				}
 				history_table += "</tr></tbody>";
-				valores.push(historico_data.rows[index].formula_value);
+				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != ""){
+					valores.push($.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"}));
+				}else{
+					valores.push(null);
+				}
 			});
 			history_table += "</table>";
 			dadosGrafico.dados.push({id: userID, nome: cidade_data.cidade.name, valores: valores, data: cidade_data, show: true});
