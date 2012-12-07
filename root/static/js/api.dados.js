@@ -345,10 +345,16 @@ $(document).ready(function(){
 						}
 						
 						for (j = j_ini; j < data.series.length; j++){
-							row_content += "<td class='valor'>$$valor</td>".render({
-											valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})
-										});
-							valores.push(data.series[j].sum.toFixed(3));
+							
+							if (data.series[j].sum == 0 && data.series[j].data[1] == "-"){
+								row_content += "<td class='valor'>-/td>";
+								valores.push(null);
+							}else{
+								row_content += "<td class='valor'>$$valor</td>".render({
+												valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})
+											});
+								valores.push(data.series[j].sum.toFixed(3));
+							}
 						}
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
 										id: index,
