@@ -557,7 +557,7 @@ $(document).ready(function(){
 		line.Set('chart.text.color', '#bbbbbb');
 		line.Set('chart.axis.color', '#bbbbbb');
 		line.Set('chart.colors', colors);
-		line.Set('chart.tickmarks', 'circle');
+		line.Set('chart.tickmarks', 'filledcircle');
 		line.Draw();
 		
 		montaLegenda({source: legendas, removable: true});

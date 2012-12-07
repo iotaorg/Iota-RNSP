@@ -96,7 +96,7 @@ $(document).ready(function(){
 		}else{
 			var fonte_meta = "";
 		}
-		if (indicador_data.goal){
+		if (indicador_data.goal_explanation){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado $$fonte_meta</td></tr>".render(
 				{
 					dado: indicador_data.goal_explanation,
@@ -191,11 +191,15 @@ $(document).ready(function(){
 		$("#indicador-historico .table .content-fill").append(history_table);
 		
 		if (goal_values){
+			if (goal_values.toLowerCase.indexOf("fonte:") > 0){
+				goal_values = goal_values.replace("fonte:","Fonte:");
+				goal_values = goal_values.replace("Fonte:","<br /><span class='source'>Fonte:") + "</span>";
+			}
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
 		}
 		
 		if (source_values){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'><span class='source'>Fonte:</span></td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values}));
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte do Indicador:</td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values}));
 		}
 		if (observations_values){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
