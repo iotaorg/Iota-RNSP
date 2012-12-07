@@ -349,7 +349,7 @@ $(document).ready(function(){
 						for (j = j_ini; j < data.series.length; j++){
 							
 							if (data.series[j].sum == "-"){
-								row_content += "<td class='valor'>-/td>";
+								row_content += "<td class='valor'>-</td>";
 								valores.push(null);
 							}else{
 								row_content += "<td class='valor'>$$valor</td>".render({
