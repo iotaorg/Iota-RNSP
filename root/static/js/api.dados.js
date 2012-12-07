@@ -484,9 +484,8 @@ $(document).ready(function(){
 	
 	$.carregaGrafico = function(canvasId){
 
-		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 		var color_meta = '#ff0000';
-
+		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 		RGraph.Clear(document.getElementById(canvasId));
 		
 		var legendas = [];
@@ -502,7 +501,6 @@ $(document).ready(function(){
 			tooltips.push(indicadorDATA.goal);
 			tooltips.push(indicadorDATA.goal);
 			legendas.push({name: "Meta", color: color_meta, meta: true});
-			var colors = [color_meta,'#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 
 			var ymax = indicadorDATA.goal;
 			var ymin = indicadorDATA.goal;
@@ -512,10 +510,12 @@ $(document).ready(function(){
 			var ymax = 0;
 			var maxlength = 1;
 		}
-		
+
+		var color_index = 0;		
 		$.each(dadosGrafico.dados, function(i,item){
 			if (item.show){
 				linhas.push(item.valores);
+				legendas.push({name: item.nome, color: colors[color_index], id: item.id});
 				$.each(item.valores, function(index, valor){
 					if (valor != null){
 						if (ymin == 0) ymin = parseFloat(valor);
@@ -531,11 +531,7 @@ $(document).ready(function(){
 						tooltips.push(" "); //jogar valor em branco na tooltip caso a sequencia nao tenha valor 
 					}
 				});
-				if (indicadorDATA.goal){
-					legendas.push({name: item.nome, color: colors[i+1], id: item.id});
-				}else{
-					legendas.push({name: item.nome, color: colors[i], id: item.id});
-				}
+				color_index++;
 			}
 		});
 
@@ -548,6 +544,10 @@ $(document).ready(function(){
 		}
 
 		ymin = 0;
+
+		if (indicadorDATA.goal){
+			colors.unshift(color_meta);
+		}
 		
 		var line = new RGraph.Line(canvasId, linhas);
 		line.Set('chart.tooltips', tooltips);
@@ -705,6 +705,7 @@ $(document).ready(function(){
 	
 	function geraMapa(){
 	
+
 		var mapDefaultLocation = new google.maps.LatLng(-15.6778, -47.4384);
 		var mapOptions = {
 				center: mapDefaultLocation,
