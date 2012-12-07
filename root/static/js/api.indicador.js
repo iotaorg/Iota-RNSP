@@ -79,7 +79,7 @@ $(document).ready(function(){
 		});
 		
 		$.each(operators_caption,function(index,value){
-			new_formula = new_formula.replace(index,value);
+			new_formula = new_formula.replace(index,"&nbsp;" + value + "&nbsp;");
 		});
 		
 		return new_formula;
