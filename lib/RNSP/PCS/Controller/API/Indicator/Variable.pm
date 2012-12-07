@@ -227,7 +227,6 @@ sub values_GET {
                     value_id      => $value->id,
                     observations  => $value->observations,
                     source        => $value->source,
-
                 }
             }
             $x++;
@@ -246,8 +245,8 @@ sub values_GET {
             my $item = {
                 formula_value => undef,
                 valid_from => $begin,
-                variable_id => $_->{varid},
                 valores    => [map { +{
+                    variable_id   => $_->{varid},
                     value_of_date => $_->{value_of_date},
                     id            => $_->{value_id},
                     observations  => $_->{observations},
