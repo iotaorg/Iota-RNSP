@@ -223,7 +223,8 @@ sub values_GET {
                     col           => $x,
                     varid         => $row->id,
                     value_of_date => $value->value_of_date->datetime,
-                    value         => $value->value
+                    value         => $value->value,
+                    value_id      => $value->id
                 }
             }
             $x++;
@@ -239,6 +240,7 @@ sub values_GET {
                 valid_from => $begin,
                 valores    => [map { +{
                     value_of_date => $_->{value_of_date},
+                    id            => $_->{value_id},
                     value         => $_->{value}
                 } } @order ]
             };

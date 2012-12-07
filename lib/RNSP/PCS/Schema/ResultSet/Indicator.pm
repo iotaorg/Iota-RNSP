@@ -132,11 +132,11 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            $values{goal} ||= undef;
-            $values{goal_source} ||= undef;
-            $values{goal_explanation} ||= undef;
-            $values{goal_operator} ||= undef;
-            $values{tags} ||= undef;
+            do { $values{$_} = undef unless exists $values{$_} }
+                for qw/
+                goal goal_source goal_explanation goal_operator
+                tags source observations
+            /;
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
