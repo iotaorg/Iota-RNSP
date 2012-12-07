@@ -116,6 +116,8 @@ $(document).ready(function(){
 				$("#indicador-historico span.cidade").html(cidade_data.cidade.name);
 				$("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
 				$("#indicador-grafico .title a.link").attr("href","/"+role.replace("_","")+"/"+indicador_data.name_url+"/?view=graph&graphs="+userID);
+
+
 				showHistoricoData();
 			},
 			error: function(data){
@@ -142,28 +144,24 @@ $(document).ready(function(){
 
 			dadosGrafico = {"dados": [], "labels": []};
 
+			var goal_values;
+			var source_values;
+			var observations_values;
+
 			var valores = [];
 			$.each(historico_data.rows, function(index,value){
 				history_table += "<tr><td class='periodo'>$$periodo</td>".render({periodo: convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period)});
 				dadosGrafico.labels.push(convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period));
 				$.each(historico_data.rows[index].valores, function(index2,value2){
-					history_table += "<td class='valor' title='$$data'>$$valor</td>".render({
+					history_table += "<td class='valor'>$$valor</td>".render({
 							valor: $.formatNumber(historico_data.rows[index].valores[index2].value, {format:"#,###", locale:"br"}),
 							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 					});
 					if (historico_data.rows[index].valores[index2].source){
-						if (source_values){
-							source_values = historico_data.rows[index].valores[index2].source;
-						}else{
-							var source_values = historico_data.rows[index].valores[index2].source;
-						}
+						source_values = historico_data.rows[index].valores[index2].source;
 					}
 					if (historico_data.rows[index].valores[index2].observations){
-						if (observations_values){
-							observations_values = historico_data.rows[index].valores[index2].observations;
-						}else{
-							var observations_values = historico_data.rows[index].valores[index2].observations;
-						}
+						observations_values = historico_data.rows[index].valores[index2].observations;
 					}
 				});
 				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
@@ -173,11 +171,7 @@ $(document).ready(function(){
 				}
 				history_table += "</tr></tbody>";
 				if (historico_data.rows[index].goal){
-					if (goal_values){
-						goal_values = historico_data.rows[index].goal;
-					}else{
-						var goal_values = historico_data.rows[index].goal;
-					}
+					goal_values = historico_data.rows[index].goal;
 				}
 
 				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != "" && historico_data.rows[index].formula_value != null){
@@ -197,6 +191,7 @@ $(document).ready(function(){
 		if (goal_values){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
 		}
+		
 		if (source_values){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte:</td><td class='valor'>$$dado</td></tr>".render({dado: source_values}));
 		}
