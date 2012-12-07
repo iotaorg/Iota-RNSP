@@ -191,14 +191,12 @@ $(document).ready(function(){
 		$("#indicador-historico .table .content-fill").append(history_table);
 		
 		if (goal_values){
-			if (source_values){
-				var source = "<br /><span class='source'>Fonte: $$dado</span>".render({dado: source_values});
-			}else{
-				var source = "";
-			}
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado $$source</td></tr>".render({dado: goal_values, source: source}));
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
 		}
 		
+		if (source_values){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'><span class='source'>Fonte:</span></td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values}));
+		}
 		if (observations_values){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
 		}
