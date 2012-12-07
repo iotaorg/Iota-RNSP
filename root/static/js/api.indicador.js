@@ -190,7 +190,7 @@ $(document).ready(function(){
 		}
 		$("#indicador-historico .table .content-fill").append(history_table);
 		
-		if (goal_values.trim()){
+		if ((goal_values) && goal_values.trim() != ""){
 			if (goal_values.toLowerCase().indexOf("fonte:") > 0){
 				goal_values = goal_values.replace("fonte:","Fonte:");
 				goal_values = goal_values.replace("Fonte:","<br /><span class='source'>Fonte:") + "</span>";
@@ -198,10 +198,10 @@ $(document).ready(function(){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
 		}
 		
-		if (source_values.trim()){
+		if ((source_values) && source_values.trim() != ""){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte do Indicador:</td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values}));
 		}
-		if (observations_values.trim()){
+		if ((observations_values) && observations_values.trim() != ""){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
 		}
 		
