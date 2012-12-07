@@ -580,6 +580,27 @@ input.button-data:hover{
 	background-color: #e4fbff;
 }
 
+.download-links{
+	display: inline-block;
+	display: none;
+	background-color: #f0f0f0;
+	padding: 10px;
+	margin-top: 5px;	
+}
+
+.download-links a{
+	background-color: #fff;
+	color: #006666;
+	font-size: 8pt;
+	border: 1px solid #9fcdd2;
+	padding: 4px 20px;
+	margin: 5px;	
+}
+.download-links a:hover{
+	background-color: #f5f5f5;
+	color: #9fcdd2;
+}
+
 .share-link{
 	display: none;
 	margin-top: 5px;

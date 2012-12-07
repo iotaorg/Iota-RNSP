@@ -236,7 +236,7 @@ $(document).ready(function(){
 		$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
 		$(".data-right .data-title .description").html(indicadorDATA.explanation);
 		$("#share-link").val(window.location.href);
-
+		
 		$(".indicators .item").click( function (){
 			
 			window.location.href = "/"+role+"/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -390,6 +390,7 @@ $(document).ready(function(){
 						users_ready++;
 						
 						if (users_ready >= total_users){
+							setaBotoes();
 							geraGraficos();
 							setaGraficos();
 							getUserCoord();
@@ -501,7 +502,7 @@ $(document).ready(function(){
 			tooltips.push(indicadorDATA.goal);
 			tooltips.push(indicadorDATA.goal);
 			legendas.push({name: "Meta", color: color_meta, meta: true});
-			var colors = ['#ff0000','#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
+			var colors = [color_meta,'#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 
 			var ymax = indicadorDATA.goal;
 			var ymin = indicadorDATA.goal;
@@ -850,7 +851,21 @@ $(document).ready(function(){
 		}
 	});
 
+	$("#button-download").click(function(){
+		if ($(".share-link").is(":visible")){
+			$(".share-link").toggle();
+			$("#button-share").toggleClass("down");
+		}
+		$(".download-links").toggle();
+		$(this).toggleClass("down");
+	});
+
+
 	$("#button-share").click(function(){
+		if ($(".download-links").is(":visible")){
+			$(".download-links").toggle();
+			$("#button-download").toggleClass("down");
+		}
 		$(".share-link").toggle();
 		$(this).toggleClass("down");
 		$("#share-link").select();
@@ -913,6 +928,13 @@ $(document).ready(function(){
 		}
 
 	}
+	
+	function setaBotoes(){
+		$(".download-links").empty();	
+		$(".download-links").append("<a href='#' class='botao xml'>XML</a>");	
+		$(".download-links").append("<a href='#' class='botao csv'>CSV</a>");	
+		$(".download-links").append("<a href='#' class='botao son'>JSON</a>");	
+	}
 
 	if (ref == "comparacao"){
 		carregaIndicadoresCidades();
@@ -924,6 +946,7 @@ $(document).ready(function(){
         var State = History.getState(); // Note: We are using History.getState() instead of event.state
 		setaTabs();
 		setaGraficos();
+		setaBotoes();
 		$("#share-link").val(window.location.href);
     });
 

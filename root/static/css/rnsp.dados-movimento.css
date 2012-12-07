@@ -53,3 +53,10 @@ input.button-data:hover{
 	border: 1px solid #aa9fd2;
 	color: #392268;
 }
+.download-links a{
+	color: #392268;
+	border: 1px solid #aa9fd2;
+}
+.download-links a:hover{
+	color: #aa9fd2;
+}

@@ -66,6 +66,8 @@
                                     <input type="button" value="Download" id="button-download" class="button-data"/>
                                     <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
                                 </div>
+                                <div class="download-links">
+                                </div>
                                 <div class="share-link">
                                     <input type="text" id="share-link" value="url" />
                                 </div>
