@@ -438,8 +438,14 @@ $(document).ready(function(){
 		
 		var linhas = [];
 		
+		var tooltips = [];
+		
 		if (indicadorDATA.goal){
 			linhas.push([ indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal ]);
+			tooltips.push(indicadorDATA.goal);
+			tooltips.push(indicadorDATA.goal);
+			tooltips.push(indicadorDATA.goal);
+			tooltips.push(indicadorDATA.goal);
 			legendas.push({name: "Meta", color: color_meta, meta: true});
 			var colors = ['#ff0000','#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 
@@ -451,7 +457,7 @@ $(document).ready(function(){
 			var ymax = 0;
 			var maxlength = 1;
 		}
-
+		
 		$.each(dadosGrafico.dados, function(i,item){
 			if (item.show){
 				linhas.push(item.valores);
@@ -465,6 +471,7 @@ $(document).ready(function(){
 
 						if (String(valor).length > maxlength) maxlength = String(valor).length;
 					}
+					tooltips.push(valor);
 				});
 				if (indicadorDATA.goal){
 					legendas.push({name: item.nome, color: colors[i+1], id: item.id});
@@ -484,7 +491,10 @@ $(document).ready(function(){
 
 		ymin = 0;
 		
+		console.log(tooltips);
+		
 		var line = new RGraph.Line(canvasId, linhas);
+		line.Set('chart.tooltips', tooltips);
 		line.Set('chart.labels', dadosGrafico.labels);
 		line.Set('chart.ymin', ymin);
 		line.Set('chart.gutter.left', maxlength*5);
@@ -705,8 +715,6 @@ $(document).ready(function(){
 		$.each(dadosMapa, function(index,item){
 			dadosMapa[index].novo_valor = parseInt(convertRangeValue(oldMin,oldMax,newMin,newMax,dadosMapa[index].novo_valor));
 		});
-		
-		console.log(dadosMapa);
 
 
 		$.each(dadosMapa, function(index,item){
