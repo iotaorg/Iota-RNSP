@@ -191,7 +191,7 @@ $(document).ready(function(){
 		$("#indicador-historico .table .content-fill").append(history_table);
 		
 		if (goal_values){
-			if (goal_values.toLowerCase.indexOf("fonte:") > 0){
+			if (goal_values.toLowerCase().indexOf("fonte:") > 0){
 				goal_values = goal_values.replace("fonte:","Fonte:");
 				goal_values = goal_values.replace("Fonte:","<br /><span class='source'>Fonte:") + "</span>";
 			}
