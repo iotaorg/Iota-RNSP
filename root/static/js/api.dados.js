@@ -4,6 +4,8 @@ var users_list;
 var indicadorID;
 var indicadorDATA;
 var dadosGrafico = {"dados": [], "labels": []};
+var dadosMapa = [];
+var markerCluster;
 var carregouTabela = false;
 
 var accentMap = {
@@ -81,6 +83,8 @@ $.extend({
 });
 
 $(document).ready(function(){
+
+	zoom_padrao = 4;
 	$.ajaxSetup({ cache: false });
 
 	var graficos = [];
@@ -258,19 +262,21 @@ $(document).ready(function(){
 			
 			if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
 				carregouTabela = false;
-				carregaTabela();
+				carregaDadosTabela();
 				$(".data-content .table").show();
 			}else if ($(".data-content .tabs .selected").attr("id") == "tab-graficos"){
 				carregouTabela = false;
-				carregaTabela();
-			}else{
+				carregaDadosTabela();
+			}else if ($(".data-content .tabs .selected").attr("id") == "tab-mapa"){
+				carregouTabela = false;
+				carregaDadosTabela();
 			}
 		});
-		carregaTabela();
+		carregaDadosTabela();
 
   	}
 
-	function carregaTabela(){
+	function carregaDadosTabela(){
 		
 		if (!carregouTabela){
 			
@@ -288,7 +294,7 @@ $(document).ready(function(){
 
 			var table_content = ""
 			$(".data-content .table .content-fill").empty();
-			table_content += "<table>";
+			table_content += "<table id='table-data'>";
 			table_content += "<thead><tr><th>Cidade</th>";
 			var data_atual = new Date();
 			var ano_anterior = data_atual.getFullYear() - 1;
@@ -315,7 +321,8 @@ $(document).ready(function(){
 					success: function(data, textStatus, jqXHR){
 						var valores = [];
 	
-						row_content = "<tr><td class='cidade'><a href='/$$role/$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
+						row_content = "<tr user-id='$$id'><td class='cidade'><a href='/$$role/$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
+									id: item.id,
 									cidade: item.nome,
 									uf: item.uf,
 									pais_uri: item.pais,
@@ -338,15 +345,16 @@ $(document).ready(function(){
 						}
 						
 						for (j = j_ini; j < data.series.length; j++){
-							row_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})});
+							row_content += "<td class='valor'>$$valor</td>".render({
+											valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})
+										});
 							valores.push(data.series[j].sum.toFixed(3));
 						}
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
 										id: index,
 										data_id: item.id
 									});
-						graficos[index] = valores;
-						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, data: data, show: false});
+
 						$(".data-content .table .content-fill tbody").append(row_content);
 						
 						$("td.grafico a").click(function(e){
@@ -364,12 +372,20 @@ $(document).ready(function(){
 							$.setUrl({graphs: graphs.join("-"), view: "graph"});
 
 						});
+
+						//alimenta dados dos graficos
+						graficos[index] = valores;
+						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, data: data, show: false, latitude: '', longitude: ''});
+
+						//alimenta dados do mapa
 						
 						users_ready++;
 						
 						if (users_ready >= total_users){
 							geraGraficos();
 							setaGraficos();
+							getUserCoord();
+							geraMapa();
 						}
 						carregouTabela = true;
 						
@@ -384,6 +400,26 @@ $(document).ready(function(){
 			});
 		}
   	}
+	
+	function getUserCoord(){
+		
+		$.each(dadosGrafico.dados, function(index,item){
+			$.ajax({
+				async: false,
+				type: 'GET',
+				dataType: 'json',
+				url: api_path + '/api/public/user/$$userid/'.render({
+							userid: item.id
+					}),
+				success: function(data, textStatus, jqXHR){
+					if (data.cidade.latitude) dadosGrafico.dados[index].latitude = data.cidade.latitude;
+					if (data.cidade.longitude) dadosGrafico.dados[index].longitude = data.cidade.longitude;
+					
+				}
+			});
+		});
+		
+	}
 	
 	$.carregaGrafico = function(canvasId){
 
@@ -569,6 +605,16 @@ $(document).ready(function(){
 			$(".data-content .table").hide();
 			$(".data-content .graph").hide();
 			$(".data-content .map").show();
+			if (typeof(map) != "undefined"){
+				google.maps.event.trigger(map, 'resize');
+				map.setZoom( map.getZoom() );
+				if ($("#mapa").attr("lat")){
+					var mapDefaultLocation = new google.maps.LatLng($("#mapa").attr("lat"), $("#mapa").attr("lng"));
+					map.setCenter(mapDefaultLocation);
+					$("#mapa").attr("lat","");
+					$("#mapa").attr("lng","");
+				}
+			}
 		}		
 	}
 	
@@ -583,6 +629,143 @@ $(document).ready(function(){
 			clearGraphLines();
 		}
 		$.carregaGrafico("main-graph");
+	}
+	
+	function geraMapa(){
+	
+		var mapDefaultLocation = new google.maps.LatLng(-15.6778, -47.4384);
+		var mapOptions = {
+				center: mapDefaultLocation,
+				zoom: zoom_padrao,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+
+        map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
+
+		if (!$("#mapa").is(":visible")){
+			$("#mapa").attr("lat",-15.6778);
+			$("#mapa").attr("lng",-47.4384);
+		}
+		
+		$("#mapa-filtro").empty();
+		$("#mapa-filtro").append("<label>Selecione um Período:</label> <select id='mapa-filtro-periodo'></select>");
+		$.each(dadosGrafico.labels,function(index,value){
+			if (!value) return;
+			$("#mapa-filtro select").append("<option value='$$index'>$$periodo</option>".render({
+					index: index,
+					periodo: value
+				}));
+		});
+		
+		$("#mapa-filtro select option:last").attr("selected",true);
+		marcaMapa($("#mapa-filtro select option:selected").val());
+		
+		$("#mapa-filtro select").change(function(){
+			marcaMapa($(this).find("option:selected").val());
+		});
+		
+	}
+	
+	function marcaMapa(label_index){
+		
+		if (markerCluster) markerCluster.clearMarkers();
+		
+        var markers = [];
+
+		var oldMin = "";
+		var oldMax = "";
+		var newMin = 10;
+		
+		dadosMapa = [];
+		
+		$.each(dadosGrafico.dados, function(index,item){
+			if (item.valores[label_index] != null){
+				
+				var valor = parseInt(item.valores[label_index].replace(".",""));
+				
+				if (oldMin == "") oldMin = valor;
+				if (oldMax == "") oldMax = valor;
+				
+				if (valor < oldMin) oldMin = valor;
+				if (valor > oldMax) oldMax = valor;
+				
+				dadosMapa.push({id: item.id, nome: item.nome, valor: item.valores[label_index], latitude: item.latitude, longitude: item.longitude, novo_valor: valor});
+				
+			}
+		});
+
+		var newMax = 1000;
+
+		$.each(dadosMapa, function(index,item){
+			dadosMapa[index].novo_valor = parseInt(convertRangeValue(oldMin,oldMax,newMin,newMax,dadosMapa[index].novo_valor));
+		});
+		
+		console.log(dadosMapa);
+
+
+		$.each(dadosMapa, function(index,item){
+			for (var i = 0; i < item.novo_valor; i++) {
+				if (item.longitude){
+					var latLng = new google.maps.LatLng(item.latitude,
+						item.longitude);
+					var marker = new google.maps.Marker({
+						position: latLng,
+						map: map
+					});
+					
+					marker.__userID = item.id;
+					marker.__position = latLng;
+					marker.__valor = item.valor;
+					marker.__nome = item.nome;
+
+					markers.push(marker);
+
+				}
+			}
+		});
+		
+		markerCluster = new MarkerClusterer(map, markers, {gridSize: 40});
+		var numStyles = markerCluster.getStyles().length;
+
+		markerCluster.setCalculator(customClusterText);
+	}
+
+	function customClusterText(markers,numStyles){
+		
+		var text;
+		var title;
+		
+		var index = 0;
+		var count = markers.length;
+		var dv = count;
+		while (dv !== 0){
+			dv = parseInt(dv / 10, 10);
+			index++;
+		}
+		
+		index = Math.min(index, numStyles);
+
+		if (markers.length > 0){
+			text = $.formatNumber(markers[0].__valor, {format:"#,##0.###", locale:"br"});
+			title = markers[0].__nome + " - " + text;
+		}else{
+			text = count;
+		}
+
+		return{
+			text: text,
+			index: index,
+			title: title
+		};
+		
+  	}
+	
+	function convertRangeValue(oldMin,oldMax,newMin,newMax,value){
+		var oldRange = (oldMax - oldMin);
+		var newRange = (newMax - newMin);
+		var newValue = (((value - oldMin) * newRange) / oldRange) + newMin;
+		
+		return newValue;
 	}
 
 	$(".data-content .tabs .item").click( function (){

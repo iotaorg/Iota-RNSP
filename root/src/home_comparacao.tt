@@ -58,7 +58,8 @@
                                     <div class="clear"></div>
                                 </div>
                                 <div class="map">
-                                	 - mapa -
+                                    <div id="mapa-filtro"></div>
+                                    <div id="mapa"></div>
                                 </div>
                                 <div class="clear"></div>
                                 <div class="dados-botoes">
