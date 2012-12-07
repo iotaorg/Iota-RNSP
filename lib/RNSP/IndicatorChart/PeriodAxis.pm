@@ -271,6 +271,7 @@ sub read_values {
 
     my $qtde = scalar @{$self->variables};
     my $total = 0;
+    my $total_ok = 0;
     my $totali = 0;
     foreach my $start (sort {$a cmp $b} keys %{$series}){
         my @data = ();
@@ -282,6 +283,7 @@ sub read_values {
             max => -9999999999999999
         };
         my $sum = 0;
+        my $sum_ok = 0;
         my $total2 = 0;
         foreach my $dt (sort {$a cmp $b} keys %{$series->{$start}{sets}}) {
             my $vals = $series->{$start}{sets}{$dt};
@@ -289,6 +291,7 @@ sub read_values {
             my $valor = $self->indicator_formula->evaluate( %$vals );
 
             if ($valor ne '-'){
+                $sum_ok = $total_ok = 1;
                 $total  += $valor;
                 $sum    += $valor;
                 $row->{max} = $valor if $valor > $row->{max};
@@ -299,7 +302,7 @@ sub read_values {
             $total2++;
             $totali++;
         }
-        if ($total2){
+        if ($total2 && $sum_ok){
             $row->{sum} = $sum;
             $row->{avg} = $total2 ? $sum / $total2 : $total2;
 
@@ -308,13 +311,20 @@ sub read_values {
         }else{
             $row->{avg} = '-';
             $row->{sum} = '-';
+            $row->{max} = '-';
+            $row->{min} = '-';
         }
 
         $row->{label} = &get_label_of_period($start, $group_by);
 
         push @{$data->{series}}, $row;
     }
-    $data->{avg}   = $totali ? $total / $totali : '-';
+    if ($total_ok){
+        $data->{avg} = $totali ? $total / $totali : '-';
+    }else{
+        $data->{avg} = '-';
+    }
+
 
     $self->_data($data);
 }
