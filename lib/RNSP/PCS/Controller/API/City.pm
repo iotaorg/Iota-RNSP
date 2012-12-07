@@ -125,6 +125,8 @@ sub city_DELETE {
   my $obj = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
+  $c->model('DB')->resultset('User')->search({city_id=>$obj->id})->update({city_id => undef});
+
   $obj->delete;
 
   $self->status_no_content($c);
