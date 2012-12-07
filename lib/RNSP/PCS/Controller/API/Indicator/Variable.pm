@@ -238,6 +238,7 @@ sub values_GET {
             my $item = {
                 formula_value => undef,
                 valid_from => $begin,
+                variable_id => $_->{varid},
                 valores    => [map { +{
                     value_of_date => $_->{value_of_date},
                     id            => $_->{value_id},
