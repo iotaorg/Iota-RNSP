@@ -226,6 +226,9 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            $values{observations} ||= undef;
+            $values{source} ||= undef;
+
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
             return $var;
