@@ -224,7 +224,10 @@ sub values_GET {
                     varid         => $row->id,
                     value_of_date => $value->value_of_date->datetime,
                     value         => $value->value,
-                    value_id      => $value->id
+                    value_id      => $value->id,
+                    observations  => $value->observations,
+                    source        => $value->source,
+
                 }
             }
             $x++;
@@ -234,6 +237,11 @@ sub values_GET {
         foreach my $begin (sort {$a cmp $b} keys %$tmp){
 
             my @order = sort {$a->{col} <=> $b->{col}} @{$tmp->{$begin}};
+            my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs({
+                user_id      => $c->stash->{user_id} || $c->user->id,
+                valid_from   => $begin,
+                indicator_id => $indicator->id
+            })->next;
 
             my $item = {
                 formula_value => undef,
@@ -242,9 +250,15 @@ sub values_GET {
                 valores    => [map { +{
                     value_of_date => $_->{value_of_date},
                     id            => $_->{value_id},
+                    observations  => $_->{observations},
+                    source        => $_->{source},
                     value         => $_->{value}
                 } } @order ]
             };
+            if ($attrs){
+                $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
+                $item->{goal} = $attrs->goal;
+            }
 
             if ($definidos == scalar @order){
                 $item->{formula_value} = $indicator_formula->evaluate(
