@@ -353,9 +353,9 @@ $(document).ready(function(){
 								valores.push(null);
 							}else{
 								row_content += "<td class='valor'>$$valor</td>".render({
-												valor: $.formatNumber(data.series[j].sum, {format:"#,##0.###", locale:"br"})
+												valor: $.formatNumber(data.series[j].sum, {format:"#,##0.##", locale:"br"})
 											});
-								valores.push(parseFloat(data.series[j].sum).toFixed(3));
+								valores.push(parseFloat(data.series[j].sum).toFixed(2));
 							}
 						}
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
@@ -525,7 +525,7 @@ $(document).ready(function(){
 
 						if (String(valor).length > maxlength) maxlength = String(valor).length;
 						
-						tooltips.push(parseFloat(valor).toFixed(3));
+						tooltips.push(parseFloat(valor).toFixed(2));
 					}else{
 						tooltips.push(" "); //jogar valor em branco na tooltip caso a sequencia nao tenha valor 
 					}
@@ -816,7 +816,7 @@ $(document).ready(function(){
 		index = Math.min(index, numStyles);
 
 		if (markers.length > 0){
-			text = $.formatNumber(markers[0].__valor, {format:"#,##0.###", locale:"br"});
+			text = $.formatNumber(markers[0].__valor, {format:"#,##0.##", locale:"br"});
 			title = markers[0].__nome + " - " + text;
 		}else{
 			text = count;
