@@ -154,8 +154,8 @@ $(document).ready(function(){
 	function showCidadeData(){
 		loadBreadCrumb();
 		$("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
-		if (cidade_data.cidade.summary){
-			$("#cidades-dados .summary .content-fill").html(cidade_data.cidade.summary);
+		if (cidade_data.usuario.city_summary){
+			$("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
 		}
 		$("#cidades-dados .profile .variaveis .tabela").empty();
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Cidade:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.name}));
@@ -217,7 +217,9 @@ $(document).ready(function(){
 			$("#cidades-dados #mapa").css("height","+="+diff);
 		}
 	
-		setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
+		if (cidade_data.cidade.latitude != null && cidade_data.cidade.longitude != null){
+			setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
+		}
 		
 	}
 	
