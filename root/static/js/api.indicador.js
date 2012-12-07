@@ -159,7 +159,7 @@ $(document).ready(function(){
 				}
 				history_table += "</tr></tbody>";
 				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != ""){
-					valores.push($.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"}));
+					valores.push(historico_data.rows[index].formula_value.toFixed(3));
 				}else{
 					valores.push(null);
 				}

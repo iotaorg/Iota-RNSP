@@ -442,10 +442,10 @@ $(document).ready(function(){
 		
 		if (indicadorDATA.goal){
 			linhas.push([ indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal ]);
-			tooltips.push(indicadorDATA.goal);
-			tooltips.push(indicadorDATA.goal);
-			tooltips.push(indicadorDATA.goal);
-			tooltips.push(indicadorDATA.goal);
+			tooltips.push($.formatNumber(indicadorDATA.goal, {format:"#,##0.###", locale:"br"}));
+			tooltips.push($.formatNumber(indicadorDATA.goal, {format:"#,##0.###", locale:"br"}));
+			tooltips.push($.formatNumber(indicadorDATA.goal, {format:"#,##0.###", locale:"br"}));
+			tooltips.push($.formatNumber(indicadorDATA.goal, {format:"#,##0.###", locale:"br"}));
 			legendas.push({name: "Meta", color: color_meta, meta: true});
 			var colors = ['#ff0000','#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 
@@ -471,7 +471,7 @@ $(document).ready(function(){
 
 						if (String(valor).length > maxlength) maxlength = String(valor).length;
 					}
-					tooltips.push(valor);
+					tooltips.push($.formatNumber(valor, {format:"#,##0.###", locale:"br"}));
 				});
 				if (indicadorDATA.goal){
 					legendas.push({name: item.nome, color: colors[i+1], id: item.id});
