@@ -332,32 +332,27 @@ $(document).ready(function(){
 									indicador_uri: indicador_uri,
 									role: role
 								});
-						
-						if (data.series.length < 4){
-							for (j = 0; j < (4 - data.series.length); j++){
-								row_content += "<td class='valor'>-</td>";
-								valores.push(null);
-							}
+						var series = [];
+						for (j = 0; j < data.series.length; j++){
+							series[data.series[j].label] = data.series[j].sum;
 						}
-						
-						if (data.series.length > 4){
-							var j_ini = data.series.length - 4;	
-						}else{
-							var j_ini = 0;	
-						}
-						
-						for (j = j_ini; j < data.series.length; j++){
-							
-							if (data.series[j].sum == "-"){
+
+						var data_atual = new Date();
+						var ano_anterior = data_atual.getFullYear() - 1;
+						var date_labels = [];
+						for (i = ano_anterior - 3; i <= ano_anterior; i++){
+							if (series[i] == "-" || series[i] == undefined){
 								row_content += "<td class='valor'>-</td>";
 								valores.push(null);
 							}else{
 								row_content += "<td class='valor'>$$valor</td>".render({
-												valor: $.formatNumber(data.series[j].sum, {format:"#,##0.##", locale:"br"})
+												valor: $.formatNumber(series[i], {format:"#,##0.##", locale:"br"})
 											});
-								valores.push(parseFloat(data.series[j].sum).toFixed(2));
+								valores.push(parseFloat(series[i]).toFixed(2));
 							}
+							
 						}
+
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
 										id: index,
 										data_id: item.id
