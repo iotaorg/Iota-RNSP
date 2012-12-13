@@ -162,35 +162,37 @@ $(document).ready(function(){
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Estado:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.uf}));
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>País:</td><td class='valor'>$$dado</td></tr>".render({dado: paises[cidade_data.cidade.pais]}));
 	
-		$.each(infoVars[role],function(index,value){
-			var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[role][index].cognomen);
-			if (dadoIndex.found){
-				var label = cidade_data.variaveis[dadoIndex.key].name;
-				if (infoVars[role][index].type == "number"){
-					var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[role][index].format, locale:"br"});
-				}else if (infoVars[role][index].type == "text"){
-					var value = cidade_data.variaveis[dadoIndex.key].last_value;
-				}
-				if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
-					var measurement_unit = " <span class='measurement_unit'>" + cidade_data.variaveis[dadoIndex.key].measurement_unit + "</span>";
-				}else{
-					var measurement_unit = "";
-				}
-				if (cidade_data.variaveis[dadoIndex.key].last_value_date != null && cidade_data.variaveis[dadoIndex.key].last_value_date != undefined && cidade_data.variaveis[dadoIndex.key].last_value_date != ""){
-					var last_date = "<span class='last_date'>(" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + ")</span>";
-				}else{
-					var last_date = "";
-				}
-				$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value$$measurement_unit $$last_date</td></tr>".render(
-					{
-						label: label,
-						value: value,
-						last_date: last_date,
-						measurement_unit: measurement_unit
+		if (cidade_data.variaveis){
+			$.each(infoVars[role],function(index,value){
+				var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[role][index].cognomen);
+				if (dadoIndex.found){
+					var label = cidade_data.variaveis[dadoIndex.key].name;
+					if (infoVars[role][index].type == "number"){
+						var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[role][index].format, locale:"br"});
+					}else if (infoVars[role][index].type == "text"){
+						var value = cidade_data.variaveis[dadoIndex.key].last_value;
 					}
-				));
-			}
-		});
+					if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
+						var measurement_unit = " <span class='measurement_unit'>" + cidade_data.variaveis[dadoIndex.key].measurement_unit + "</span>";
+					}else{
+						var measurement_unit = "";
+					}
+					if (cidade_data.variaveis[dadoIndex.key].last_value_date != null && cidade_data.variaveis[dadoIndex.key].last_value_date != undefined && cidade_data.variaveis[dadoIndex.key].last_value_date != ""){
+						var last_date = "<span class='last_date'>(" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + ")</span>";
+					}else{
+						var last_date = "";
+					}
+					$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value$$measurement_unit $$last_date</td></tr>".render(
+						{
+							label: label,
+							value: value,
+							last_date: last_date,
+							measurement_unit: measurement_unit
+						}
+					));
+				}
+			});
+		}
 	
 	/*	$.each(cidade_data.variaveis,function(index,value){
 			$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value</td></tr>".render(
