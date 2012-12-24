@@ -26,6 +26,262 @@ use Moose;
 BEGIN { extends 'Catalyst::Controller' }
 use utf8;
 use JSON::XS;
+use RNSP::IndicatorFormula;
+use Text::CSV_XS;
+use XML::Simple qw(:strict);
+use Digest::MD5;
+
+
+
+# download de todos os endpoints caem aqui
+sub _download {
+    my ( $self, $c ) = @_;
+
+    my $file = substr($c->stash->{find_role}, 1);
+    $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
+                if $c->stash->{cidade};
+    $file .= '.' . $c->stash->{type};
+
+    my $path = $c->config->{downloads}{tmp_dir} . '/' . lc $file;
+
+    if (-e $path){
+        # apaga o arquivo caso passe 12 horas
+        my $epoch_timestamp = (stat($path))[9];
+        unlink($path) if time() - $epoch_timestamp > 43200;
+    }
+    $self->_download_and_detach($c, $path) if -e $path;
+
+    # procula pela cidade, se existir.
+    my $citys = $c->model('DB::City')->as_hashref;
+
+    $citys = $citys->search({
+        pais     => lc $c->stash->{pais},
+        uf       => uc $c->stash->{estado},
+        name_uri => lc $c->stash->{cidade}
+    }) if $c->stash->{cidade};
+
+    $c->detach('/error_404') if $c->stash->{cidade} && !$citys->count;
+
+    my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
+    $c->detach('/error_404') unless $role_id;
+
+
+    my @lines = (
+        ['ID da cidade',
+        'Nome da cidade ',
+        'Eixo',
+        'ID Indicador',
+        'Nome do indicador',
+        'Formula do indicador',
+        'Meta do indicador',
+        'Descrição da meta do indicador',
+        'Fonte da meta do indicador',
+        'Operação da meta do indicador',
+        'Descrição do indicador',
+        'Tags do indicador',
+        'Observações do indicador',
+        'Período do indicador',
+        'Data',
+        'Valor',
+        'Meta do valor',
+        'Justificativa do valor não preenchido',
+        'Observações do valor',
+        'Fonte do valor'
+        ]
+    );
+    while(my $city = $citys->next){
+    use DDP; p $city;
+        my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] })->as_hashref;
+        while (my $indicator = $rs->next){
+
+            my $user = $c->model('DB::User')->search({
+                city_id => $city->{id},
+                'user_roles.role_id' => $role_id->id
+            }, {  join  => 'user_roles'} )->as_hashref->next;
+            $c->detach('/error_404') if $c->stash->{cidade} && !$user;
+            next if !$user;
+
+            my $indicator_formula = new RNSP::IndicatorFormula(
+                formula => $indicator->{formula},
+                schema => $c->model('DB')->schema
+            );
+
+            my $rs = $c->model('DB')->resultset('Variable')->search_rs({
+                -or => [
+                    'values.user_id' => $user->{id},
+                    'values.user_id' => undef,
+                ],
+                'me.id' => [$indicator_formula->variables]
+            }, { prefetch => ['values'] } );
+
+
+            my $hash = {};
+            my $tmp  = {};
+            my $x = 0;
+            my $period = '';
+            while (my $row = $rs->next){
+                $hash->{header}{$row->name} = $x;
+                $hash->{id_nome}{$row->id} = $row->name;
+                $period = $row->period;
+
+                foreach my $value ($row->values){
+                    push @{$tmp->{$value->valid_from}}, {
+                        col           => $x,
+                        varid         => $row->id,
+                        varn          => $row->name,
+                        value         => $value->value,
+#                        observations  => $value->observations,
+#                        source        => $value->source,
+                    }
+                }
+                $x++;
+            }
+            my $definidos = scalar keys %{$hash->{header}};
+
+            foreach my $begin (sort {$a cmp $b} keys %$tmp){
+
+                my @order = sort {$a->{col} <=> $b->{col}} @{$tmp->{$begin}};
+                my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs({
+                    user_id      => $user->{id},
+                    valid_from   => $begin,
+                    indicator_id => $indicator->{id}
+                })->next;
+
+                my $item = {};
+                if ($attrs){
+                    $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
+                    $item->{goal} = $attrs->goal;
+                }
+
+                if ($definidos == scalar @order){
+                    $item->{formula_value} = $indicator_formula->evaluate(
+                        map { $_->{varid} => $_->{value} } @order
+                    );
+                }
+                next if defined $item->{formula_value} && $item->{formula_value} eq '-';
+
+                my @this_row = (
+                    $city->{id},
+                    $city->{name},
+                    $indicator->{axis}{name},
+                    $indicator->{id},
+                    $indicator->{name},
+                    $self->formula_translate($indicator->{formula}, $hash->{id_nome}),
+                    $indicator->{goal},
+                    $indicator->{goal_explanation},
+                    $indicator->{goal_source},
+                    $indicator->{goal_operator},
+                    $indicator->{explanation},
+                    $indicator->{tags},
+                    $indicator->{observations},
+                    $period,
+                    $self->ymd2dmy($begin),
+                    $item->{formula_value},
+                    $item->{goal},
+                    $item->{justification_of_missing_field}
+                );
+
+                push @lines, \@this_row;
+
+            }
+            #use DDP; p $hash;
+
+        }
+
+    }
+
+    eval{$self->lines2file($c, $path, \@lines)};
+    if ($@){
+        $path =~ s/\.check//;
+        unlink($path);
+        $path .= '.check';
+        unlink($path);
+        die $@;
+    }
+
+    $self->_download_and_detach($c, $path);
+}
+
+sub formula_translate {
+    my ( $self, $formula, $variables) = @_;
+
+    $formula =~ s/([\*\(\/\-\+])/ $1 /g;
+
+    foreach my $varid (keys $variables){
+        $formula =~ s/\$$varid([^\d]|$)/ $variables->{$varid} $1/g;
+    }
+    $formula =~ s/^\s+//;
+    $formula =~ s/\s+$//;
+    $formula =~ s/\s\s/ /;
+    return $formula;
+}
+
+sub ymd2dmy{
+    my ( $self, $str) = @_;
+    return "$3/$2/$1" if ($str =~ /(\d{4})-(\d{2})-(\d{2})/);
+    return '';
+}
+
+sub lines2file {
+    my ( $self, $c, $path, $lines ) = @_;
+
+    $path =~ s/\.check//;
+
+    open my $fh, ">:encoding(utf8)", $path or die "$path: $!";
+    if ($path =~ /csv$/){
+        my $csv = Text::CSV_XS->new ({ binary => 1, eol => "\r\n" }) or
+        die "Cannot use CSV: ".Text::CSV_XS->error_diag ();
+
+        $csv->print ($fh, $_) for @$lines;
+
+    }elsif ($path =~ /json$/){
+
+        print $fh encode_json($lines);
+
+    }elsif ($path =~ /xml$/){
+        print $fh XMLout($lines, KeyAttr => { server => 'linhas' } );
+
+    }else{
+        die("not a valid format");
+    }
+    close $fh or die "$path: $!";
+
+
+    open(my $fh, $path) or die "Can't open '$path': $!";
+    binmode($fh);
+    my $md5 = Digest::MD5->new;
+    while (<$fh>) {
+        $md5->add($_);
+    }
+    close($fh);
+
+    open my $fh, '>', "$path.check" or die "$path: $!";
+    print $fh $md5->hexdigest;;
+
+
+
+}
+
+sub _download_and_detach {
+    my ( $self, $c, $path ) = @_;
+
+    if ($c->stash->{type} =~ /(json)/){
+        $c->response->content_type('application/json; charset=UTF-8');
+    }elsif ($c->stash->{type} =~ /(xml)/){
+        $c->response->content_type('text/xml');
+    }elsif ($c->stash->{type} =~ /(csv)/){
+        $c->response->content_type('text/csv');
+    }
+    $c->response->headers->header('content-disposition' => "attachment;filename=dados.$1");
+
+    open(my $fh, '<:raw', $path);
+    $c->res->body($fh);
+
+    $c->detach;
+}
+
+##################################################
+### be happy to read bellow this line!
 
 # MOVIMENTO CSV
 sub mov_dados_csv : Chained('/movimento') : PathPart('dados.csv') : CaptureArgs(0) {
@@ -287,12 +543,6 @@ sub down_pref_dados_cidade_json_check : Chained('pref_dados_cidade_json_check') 
 }
 
 
-
-# download de todos os endpoints caem aqui
-sub _download {
-    my ( $self, $c ) = @_;
-
-}
 
 1;
 

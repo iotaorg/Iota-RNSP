@@ -254,6 +254,8 @@ Attempt to render a view, if needed.
 =cut
 
 sub end : ActionClass('RenderView') {
+    my ( $self, $c ) = @_;
+
 }
 
 =head1 AUTHOR
