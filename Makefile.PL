@@ -54,6 +54,9 @@ requires 'Email::MIME';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
 
+requires 'Text::CSV_XS';
+requires 'Digest::MD5';
+
 requires 'MooseX::Traits';
 requires 'DBD::Pg';
 requires 'XML::Simple';
@@ -68,3 +71,6 @@ catalyst;
 install_script glob('script/*.pl');
 auto_install;
 WriteAll;
+
+
+

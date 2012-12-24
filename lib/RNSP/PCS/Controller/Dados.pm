@@ -90,7 +90,6 @@ sub _download {
         ]
     );
     while(my $city = $citys->next){
-    use DDP; p $city;
         my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] })->as_hashref;
         while (my $indicator = $rs->next){
 
