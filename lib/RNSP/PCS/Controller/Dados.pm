@@ -42,7 +42,7 @@ sub _download {
                 if $c->stash->{cidade};
     $file .= '.' . $c->stash->{type};
 
-    my $path = $c->config->{downloads}{tmp_dir} . '/' . lc $file;
+    my $path = ($c->config->{downloads}{tmp_dir}||'/tmp') . '/' . lc $file;
 
     if (-e $path){
         # apaga o arquivo caso passe 12 horas
