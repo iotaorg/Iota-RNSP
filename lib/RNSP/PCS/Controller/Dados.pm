@@ -246,7 +246,7 @@ sub lines2file {
     close $fh or die "$path: $!";
 
 
-    open(my $fh, $path) or die "Can't open '$path': $!";
+    open($fh, $path) or die "Can't open '$path': $!";
     binmode($fh);
     my $md5 = Digest::MD5->new;
     while (<$fh>) {
@@ -254,7 +254,7 @@ sub lines2file {
     }
     close($fh);
 
-    open my $fh, '>', "$path.check" or die "$path: $!";
+    open $fh, '>', "$path.check" or die "$path: $!";
     print $fh $md5->hexdigest;;
 
 
