@@ -108,7 +108,7 @@ $(document).ready(function(){
 		var center = new google.maps.LatLng(lat, lng)
 		map.setCenter(center);
 
-		var image = new google.maps.MarkerImage("static/images/pin.png");
+		var image = new google.maps.MarkerImage("/static/images/pin.png");
 		
 		var marker = new google.maps.Marker({
 			position: center,

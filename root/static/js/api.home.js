@@ -27,7 +27,7 @@ $(document).ready(function(){
 				
 				if (lat != "" && lng != ""){
 					var latlng = new google.maps.LatLng(lat, lng);
-					var image = new google.maps.MarkerImage("static/images/pin.png");
+					var image = new google.maps.MarkerImage("/static/images/pin.png");
 	
 					var marker = new google.maps.Marker({
 						position: latlng,
