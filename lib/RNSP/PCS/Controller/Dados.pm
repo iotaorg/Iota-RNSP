@@ -244,7 +244,7 @@ sub formula_translate {
 
     $formula =~ s/([\*\(\/\-\+])/ $1 /g;
 
-    foreach my $varid (keys $variables){
+    foreach my $varid (keys %$variables){
         $formula =~ s/\$$varid([^\d]|$)/ $variables->{$varid} $1/g;
     }
     $formula =~ s/^\s+//;
