@@ -1,7 +1,7 @@
 	<div id="breadcrumb">
     	<div class="contents">
             <ul class="xbreadcrumbs" id="breadcrumbs-top">
-            	<li class="home"><a href="/[% role %]">Início</a></li>
+            	<li class="home"><a href="/">Home</a></li>
             </ul>
 		    <div class="clear"></div>
         </div>
@@ -11,7 +11,7 @@
         	<div id="indicadores-dados">
                 <div class="menu-left">
 	            	<div class="content-fill">
-                        <div class="title">Indicadores</div>
+                        <div class="title">Por Indicador</div>
                         <div class="category" id="axis_list">
                             
                         </div>
@@ -24,54 +24,20 @@
                 </div>
             	<div class="data-right">
                 	<div class="content-fill">
-                        <div class="data-title">
-                            <div class="content-fill">
-                                <div class="title">
-                                    Indicadores
-                                </div>
-                                <div class="description">
-                                    
-                                </div>
-                            </div>    	
-                        </div>
                         <div class="data-content">
+                            <div class="title">
+                                Por Cidade
+                            </div>
                             <div class="content-fill">
-                                <div class="tabs">
-                                    <div class="item selected" id="tab-tabela">tabela</div>
-                                    <div class="item" id="tab-mapa">mapa</div>
-                                    <div class="item" id="tab-graficos">gráficos</div>
-                                </div>
-                                <div class="clear"></div>
-                                <div class="table">
-                                    <div class="period">
-                                        <div class="item"></div>
+                                
+                                	<div id="filtro_mapa">
+                                    	Estado: <select id="uf_filter">
+		                                        	<option value="">Selecione
+		                                        </select>
                                     </div>
-                                    <div class="content-fill"></div>
-                                </div>
-                                <div class="graph">
-                                    <canvas id="main-graph" width='600' height='250'></canvas>
-                                    <div class="legend"></div>
-                                    <div class="clear"></div>
-                                    <div class="search">
-                                    	<label>Cidade: </label><div class='input'><input type="text" id="graph-search-user" /></div><div class='button'><input type="button" value="adicionar" disabled="disabled" id="button-search-user"/><input type="hidden" name="graph-user-selected" id="graph-user-selected" /></div>
-                                    </div>
-                                    <div class="clear"></div>
-                                </div>
-                                <div class="map">
-                                    <div id="mapa-filtro"></div>
+
                                     <div id="mapa"></div>
-                                </div>
-                                <div class="clear"></div>
-                                <div class="dados-botoes">
-                                    <input type="button" value="Download" id="button-download" class="button-data"/>
-                                    <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
-                                </div>
-                                <div class="download-links">
-                                </div>
-                                <div class="share-link">
-                                    <input type="text" id="share-link" value="url" />
-                                </div>
-                                <div class="clear"></div>
+                            
                             </div>    	
                         </div>
 					</div>
@@ -80,8 +46,29 @@
             <div class="clear"></div>
         </div>    	
     </div>
-
-<script type="text/javascript">
-		var role = '[% role %]';
-		var ref = 'comparacao';
-</script>
+    <div class="clear"></div>
+	<div id="footer-menu">
+    	<div class="content">
+        	<div class="menu">
+            	<ul>
+                	<li><a href="/mapa-do-site">Mapa do Site</a></li><li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
+                </ul>
+			    <div class="clear"></div>
+            </div>
+        	<div class="parceiros">
+				<div class="label">Parceiros:</div>
+            	<ul>
+                	<li><a href="http://www.w3c.br/" target="_blank"><img src="static/images/logo-w3c.png"></a></li>
+					<li><a href="http://www.nic.br/" target="_blank"><img src="static/images/logo-nicbr.png"></a></li>
+					<li><a href="http://www.cgi.br/" target="_blank"><img src="static/images/logo-cgibr.png"></a></li>
+				</ul>
+			    <div class="clear"></div>
+            </div>
+			<div class="clear"></div>
+        </div>
+    </div>
+	<script type="text/javascript">
+			var role = 'movimento';
+			var ref = 'home';
+			var userID = "";
+	</script>

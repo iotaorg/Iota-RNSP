@@ -1,47 +1,66 @@
 	<div id="breadcrumb">
     	<div class="contents">
             <ul class="xbreadcrumbs" id="breadcrumbs-top">
+            	<li class="home"><a href="/">Home</a></li>
             </ul>
 		    <div class="clear"></div>
         </div>
 	</div>
 	<div id="content">
 		<div class="content">
-
-        	<div id="indicador-dados">
-                <div class="profile">
-	            	<div class="content-fill">
-                        <div class="title">[% indicator.name %]</div>
-                        <div class="explanation"></div>
-                        <div class="dados"><table class="tabela"></table></div>
-					</div>
-                </div>
-            </div>
-            <div class="clear"></div>
-        	<div id="indicador-historico">
-				<div class="title">Série Histórica de <span class="cidade"></span></div>
-				<div class="content-fill">
-
-					<div class="table">
-						<div class="content-fill"></div>
-					</div>
-
-				</div>
-            </div>
-            <div class="clear"></div>
-        	<div id="indicador-grafico">
-				<div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>comparar com outras cidades</a></div>
-				<div class="content-fill">
-					<div class="graph">
-						<div class="content-fill">
-                            <canvas id="main-graph" width='600' height='280'></canvas>
-                            <div class="legend"></div>
-                            <div class="clear"></div>
+			<div id="indicador-dados">
+                <div class="menu-left">
+                    <div class="content-fill">
+                        <div class="title">Indicadores</div>
+                        <div class="category" id="axis_list">
+                            
                         </div>
-					</div>
-				</div>
-            </div>
-            <div class="clear"></div>
+                        <div class="search">
+                            <input type="text" name="indicador-busca" id="indicador-busca" size="25" class="indicador-busca"  placeholder="Busca"/>
+                        </div>
+                        <div class="indicators">
+                        </div>
+                    </div>
+                </div>
+                <div class="data-right">
+                    <div class="content-fill">
+                        <div class="profile">
+                            <div class="content-fill">
+                                <div class="title">[% indicator.name %]</div>
+                                <div class="explanation"></div>
+                                <div class="dados"><table class="tabela"></table></div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div id="indicador-historico">
+                            <div class="title">Série Histórica de <span class="cidade"></span></div>
+                            <div class="content-fill">
+            
+                                <div class="table">
+                                    <div class="content-fill"></div>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div id="indicador-grafico">
+                            <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>comparar com outras cidades</a></div>
+                            <div class="content-fill">
+                                <div class="graph">
+                                    <div class="content-fill">
+                                        <canvas id="main-graph" width='600' height='280'></canvas>
+                                        <div class="legend"></div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+	        </div>    	
         </div>    	
     </div>
 

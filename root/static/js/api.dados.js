@@ -8,80 +8,6 @@ var dadosMapa = [];
 var markerCluster;
 var carregouTabela = false;
 
-var accentMap = {
-	"á": "a",
-	"ã": "a",
-	"à": "a",
-	"é": "e",
-	"ê": "e",
-	"í": "i",
-	"ó": "o",
-	"õ": "o",
-	"ú": "u",
-	"ç": "c"
-};
-var normalize = function( term ) {
-	var ret = "";
-	for ( var i = 0; i < term.length; i++ ) {
-		ret += accentMap[ term.charAt(i) ] || term.charAt(i);
-	}
-	return ret.toLowerCase();
-};
-
-$.extend({
-	getUrlVars: function(){
-		var vars = [], hash;
-		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-		for(var i = 0; i < hashes.length; i++){
-			hash = hashes[i].split('=');
-			vars.push(hash[0]);
-			vars[hash[0]] = hash[1];
-		}
-		return vars;
-	},
-	getUrlVar: function(name){
-		return $.getUrlVars()[name];
-	},
-	getUrlParams: function(){
-		var params = window.location.href.split("?");
-		if (params.length > 1){
-			return "?" + params[1];
-		}else{
-			return "";
-		}
-	},
-	removeItemInArray: function(obj,removeItem){
-		obj = $.grep(obj, function(value) {
-		  return value != removeItem;
-		});		
-		return obj;
-	},
-	setUrl: function(args){
-		var url = "";
-		if (args.view){
-			url += "?view=" + args.view;
-		}else if ($.getUrlVar("view")){
-			url += "?view=" + $.getUrlVar("view");
-		}
-		if (args.graphs != undefined){
-			if (args.graphs != ""){
-				if (url == ""){
-					url += "?graphs=" + args.graphs;
-				}else{
-					url += "&graphs=" + args.graphs;
-				}
-			}
-		}else if ($.getUrlVar("graphs")){
-			if (url == ""){
-				url += "?graphs=" + $.getUrlVar("graphs");
-			}else{
-				url += "&graphs=" + $.getUrlVar("graphs");
-			}
-		}
-		History.pushState(null, null, url);
-	}
-});
-
 $(document).ready(function(){
 
 	zoom_padrao = 4;
@@ -94,12 +20,13 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/user/$$role/'.render({role: role}),
+			url: api_path + '/api/public/user/$$role/'.render({role: role.replace("_","")}),
 			success: function(data, textStatus, jqXHR){
 				users_list = [];
 				indicadores_list = data.indicators;
 
 				$(data.users).each(function(index,item){
+					if (item.id == userID) cidade_uri = "/" + item.city.pais + "/" + item.city.uf + "/" + item.city.name_uri;
 					users_list.push({id: item.id, nome: item.city.name, pais: item.city.pais, uf: item.city.uf, uri: item.city.name_uri, label: item.city.name + " - " + item.city.uf});
 				});
 				
@@ -223,7 +150,9 @@ $(document).ready(function(){
 					}));
 		});
 		if (indicadorID == "" || indicadorID == undefined){
-			indicadorID = $(".indicators .item:first").attr("indicator-id");
+			if (ref != "home"){
+				indicadorID = $(".indicators .item:first").attr("indicator-id");
+			}
 		}else{
 			selectAxis(indicadorID);
 		}
@@ -233,47 +162,60 @@ $(document).ready(function(){
 				indicadorDATA = indicadores_list[i];
 			}
 		});
-		$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
-		$(".data-right .data-title .description").html(indicadorDATA.explanation);
-		$("#share-link").val(window.location.href);
-		
+		if (indicadorID){
+			$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
+			$(".data-right .data-title .description").html(indicadorDATA.explanation);
+			$("#share-link").val(window.location.href);
+		}
 		$(".indicators .item").click( function (){
 			
-			window.location.href = "/"+role+"/" + $(this).attr("name-uri") + $.getUrlParams();
-			
-			return;
-			
+			if (ref == "home"){
+				window.location.href = "/"+role+"/" + $(this).attr("name-uri") + $.getUrlParams();
+				return;
+			}
+		
 			if (indicadorID == $(this).attr("indicator-id")){
 				return;
 			}
 			indicadorID = $(this).attr("indicator-id");
-			
+
 			$(indicadores_list).each(function(index,item){
 				if (item.id == indicadorID){
 					indicadorDATA = item;	
 				}
 			});
 			
-			dadosGrafico = {"dados": [], "labels": []};
 			$(".indicators .item").removeClass("selected");
 			$(this).addClass("selected");
 			$(".data-right .data-title .title").html($(".indicators .selected").html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
 			
-			if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
-				carregouTabela = false;
-				carregaDadosTabela();
-				$(".data-content .table").show();
-			}else if ($(".data-content .tabs .selected").attr("id") == "tab-graficos"){
-				carregouTabela = false;
-				carregaDadosTabela();
-			}else if ($(".data-content .tabs .selected").attr("id") == "tab-mapa"){
-				carregouTabela = false;
-				carregaDadosTabela();
+			if (ref == "comparacao"){
+				var url = "/"+role.replace("_","")+"/" + $(this).attr("name-uri") + $.getUrlParams();
+				History.pushState(null, null, url);
+
+				dadosGrafico = {"dados": [], "labels": []};
+				
+				if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
+					carregouTabela = false;
+					carregaDadosTabela();
+					$(".data-content .table").show();
+				}else if ($(".data-content .tabs .selected").attr("id") == "tab-graficos"){
+					carregouTabela = false;
+					carregaDadosTabela();
+				}else if ($(".data-content .tabs .selected").attr("id") == "tab-mapa"){
+					carregouTabela = false;
+					carregaDadosTabela();
+				}
+			}else if (ref == "indicador"){
+				var url = "/"+role.replace("_","") + cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
+				History.pushState(null, null, url);
+				$.loadCidadeDataIndicador();	
 			}
 		});
-		carregaDadosTabela();
-
+		if (ref == "comparacao"){
+			carregaDadosTabela();
+		}
   	}
 
 	function carregaDadosTabela(){
@@ -330,7 +272,7 @@ $(document).ready(function(){
 									pais_uri: item.pais,
 									city_uri: item.uri,
 									indicador_uri: indicador_uri,
-									role: role
+									role: role.replace("_","")
 								});
 						var series = [];
 						for (j = 0; j < data.series.length; j++){
@@ -413,6 +355,7 @@ $(document).ready(function(){
 		var grupos = 4;
 		var ano_i = ano_anterior - (grupos * 4) + 1;
 		
+		$(".table .period").empty();
 		$(".table .period").append("<div id='date-ruler'></div><div id='date-arrow'></div>");
 		var cont = 0;
 		var periodo = '';
@@ -545,6 +488,7 @@ $(document).ready(function(){
 		}
 		
 		var line = new RGraph.Line(canvasId, linhas);
+		RGraph.Clear(line.canvas);
 		line.Set('chart.tooltips', tooltips);
 		line.Set('chart.labels', dadosGrafico.labels);
 		line.Set('chart.ymin', ymin);
@@ -932,18 +876,19 @@ $(document).ready(function(){
 		$(".download-links").append("<a href='#' class='botao son'>JSON</a>");	
 	}
 
-	if (ref == "comparacao"){
+	if (ref == "comparacao" || ref == "indicador" || ref == "home"){
 		carregaIndicadoresCidades();
 	}
 
-	var History = window.History; // Note: We are using a capital H instead of a lower h
-    // Bind to StateChange Event
-    History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
-        var State = History.getState(); // Note: We are using History.getState() instead of event.state
-		setaTabs();
-		setaGraficos();
-		setaBotoes();
-		$("#share-link").val(window.location.href);
+	var History = window.History;
+
+    History.Adapter.bind(window,'statechange',function(){
+		if (ref == "comparacao"){
+			setaTabs();
+			setaGraficos();
+			setaBotoes();
+			$("#share-link").val(window.location.href);
+		}
     });
 
 });

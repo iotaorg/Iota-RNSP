@@ -86,7 +86,7 @@ $(document).ready(function(){
 			,pixelOffset: new google.maps.Size(-100, 0)
 			,zIndex: null
 			,boxStyle: { 
-			  background: "url('/static/images/tipbox.gif') no-repeat"
+			  background: "url('static/images/tipbox.gif') no-repeat"
 			  ,opacity: 0.90
 			  ,width: "200px"
 			 }
@@ -108,7 +108,7 @@ $(document).ready(function(){
 		var center = new google.maps.LatLng(lat, lng)
 		map.setCenter(center);
 
-		var image = new google.maps.MarkerImage("/static/images/pin.png");
+		var image = new google.maps.MarkerImage("static/images/pin.png");
 		
 		var marker = new google.maps.Marker({
 			position: center,
@@ -119,7 +119,7 @@ $(document).ready(function(){
 		
 		marker.__position = center;
 		
-		google.maps.event.addListener(marker, 'click', function(e) {
+		google.maps.event.addListener(marker, 'mouseover', function(e) {
 			map.setCenter(marker.__position);
 			if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
 			showInfoWindow(marker,"marker");

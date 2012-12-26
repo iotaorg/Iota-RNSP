@@ -1,10 +1,11 @@
 var indicador_data;
 var historico_data;
 var variaveis_data = [];
+var cidade_uri;
 
 $(document).ready(function(){
 	
-	function loadCidadeDataIndicador(){
+	$.loadCidadeDataIndicador = function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
@@ -13,6 +14,7 @@ $(document).ready(function(){
 					}),
 			success: function(data, textStatus, jqXHR){
 				cidade_data = data;
+				$("#top .content .logo-movimento").remove();
 				if (typeof(cidade_data.usuario.files.logo_movimento) != undefined){
 					$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
 				}
@@ -119,7 +121,6 @@ $(document).ready(function(){
 				$("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
 				$("#indicador-grafico .title a.link").attr("href","/"+role.replace("_","")+"/"+indicador_data.name_url+"/?view=graph&graphs="+userID);
 
-
 				showHistoricoData();
 			},
 			error: function(data){
@@ -188,7 +189,7 @@ $(document).ready(function(){
 		}else{
 			var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
 		}
-		$("#indicador-historico .table .content-fill").append(history_table);
+		$("#indicador-historico .table .content-fill").html(history_table);
 		
 		if ((goal_values) && goal_values.trim() != ""){
 			if (goal_values.toLowerCase().indexOf("fonte:") > 0){
@@ -217,7 +218,7 @@ $(document).ready(function(){
 	}
 
 	if (ref == "indicador"){
-		loadCidadeDataIndicador();
+		$.loadCidadeDataIndicador();
 	}
 	
 });

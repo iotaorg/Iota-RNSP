@@ -2,6 +2,7 @@ table{
 	border-collapse: collapse;
 }
 
+#indicador-dados .menu-left,
 #indicadores-dados .menu-left{
 	width: 192px;
 	float: left;	
@@ -10,15 +11,18 @@ table{
 	clear: left;
 }
 
+#indicador-dados .data-right,
 #indicadores-dados .data-right{
 	float: left;	
 	width: 698px;
 	clear: right;
 }
 
+#indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
 	padding: 5px;	
 }
+#indicador-dados .data-right .content-fill,
 #indicadores-dados .data-right .content-fill{
 	padding: 0px;	
 }
@@ -49,12 +53,17 @@ table{
 	background-color: #e1ffff;
 }
 
+#indicador-dados .menu-left .title,
 #indicadores-dados .menu-left .title{
 	padding: 5px;
 	color: #006666;
 	font-size: 14pt;
 }
+#indicadores-dados .menu-left .title{
+	color: #009999;
+}
 
+#indicador-dados .data-right .title,
 #indicadores-dados .data-right .title{
 	color: #009999;
 	font-size: 14pt;
@@ -670,4 +679,34 @@ input.button-data:hover{
 
 #date-ruler .item.active{
 	color: #333;
+}
+
+
+#bubble-intro{
+	margin-top: 150px;	
+	display: none;
+	border: 1px solid #ccc;
+	width: 50%;
+	text-align: center;
+	background: url('../images/alpha_white.png') repeat;
+}
+
+#bubble-intro p{
+	margin: 0;
+	padding: 10px;
+	font-size: 11pt;
+	text-align: center;
+	line-height: 1.5em;
+	color: #009999;
+	font-weight: bolder;
+	-moz-text-shadow:1px 1px 1px #f0f0f0; -webkit-text-shadow:1px 1px 1px #f0f0f0; text-shadow:1px 1px 1px #f0f0f0;
+}
+
+#filtro_mapa{
+	text-align: center;	
+	padding: 5px;
+}
+#filtro_mapa select{
+	padding: 2px;
+	border: 1px solid #ccc;
 }
