@@ -72,3 +72,6 @@
 			var ref = 'home';
 			var userID = "";
 	</script>
+	<div id="bubble-intro">
+		<p>Selecione um estado acima e clique sobre os pontos do mapa para visualizar os indicadores</p>
+	</div>
