@@ -85,10 +85,11 @@ sub _download {
         'Valor',
         'Meta do valor',
         'Justificativa do valor não preenchido',
-        'Observações do valor',
-        'Fonte do valor'
         ]
     );
+    my $var_header = {};
+    $self->_add_variables($c, $var_header, $lines[0]);
+
     while(my $city = $citys->next){
         my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] })->as_hashref;
         while (my $indicator = $rs->next){
@@ -129,8 +130,6 @@ sub _download {
                         varid         => $row->id,
                         varn          => $row->name,
                         value         => $value->value,
-#                        observations  => $value->observations,
-#                        source        => $value->source,
                     }
                 }
                 $x++;
@@ -157,7 +156,7 @@ sub _download {
                         map { $_->{varid} => $_->{value} } @order
                     );
                 }
-                next if defined $item->{formula_value} && $item->{formula_value} eq '-';
+
 
                 my @this_row = (
                     $city->{id},
@@ -173,17 +172,17 @@ sub _download {
                     $indicator->{explanation},
                     $indicator->{tags},
                     $indicator->{observations},
-                    $period,
+                    $self->_period_pt($period),
                     $self->ymd2dmy($begin),
                     $item->{formula_value},
                     $item->{goal},
                     $item->{justification_of_missing_field}
                 );
+                $self->_concate_variables($c, $var_header, \@order, \@this_row);
 
                 push @lines, \@this_row;
 
             }
-            #use DDP; p $hash;
 
         }
 
@@ -199,6 +198,45 @@ sub _download {
     }
 
     $self->_download_and_detach($c, $path);
+}
+
+sub _period_pt {
+    my ( $self, $period) = @_;
+
+    return 'semanal' if $period eq 'weekly';
+    return 'mensal' if $period eq 'monthly';
+    return 'anual' if $period eq 'yearly';
+    return 'decada' if $period eq 'decade';
+    return 'diario' if $period eq 'daily';
+
+    return $period; # outros nao usados
+}
+
+sub _add_variables{
+    my ( $self, $c, $hash, $arr ) = @_;
+    my @rows = $c->model('DB')->resultset('Variable')->as_hashref
+        ->search(undef, {order_by => 'name'})
+        ->all;
+    my $i = scalar @$arr;
+    foreach my $var (@rows){
+        $hash->{$var->{id}} = $i++;
+        push @$arr, $var->{name};
+    }
+}
+
+sub _concate_variables {
+    my ( $self, $c, $header, $values, $row ) = @_;
+
+    my %id_val = map { $_->{varid} => $_->{value} } @$values;
+
+    foreach my $id (sort { $header->{$a} <=> $header->{$b}  } keys %$header ){
+        if (exists $id_val{$id}){
+            push @$row, $id_val{$id};
+        }else{
+            push @$row, '';
+        }
+    }
+
 }
 
 sub formula_translate {
