@@ -7,11 +7,13 @@
 	background-color: #e9e1ff;
 }
 
-#indicadores-dados .menu-left .title{
+#indicadores-dados .menu-left .title,
+#indicador-dados .menu-left .title{
 	color: #392268;
 }
 
-#indicadores-dados .data-right .title{
+#indicadores-dados .data-right .title,
+#indicador-dados .data-right .title{
 	color: #53368e;
 }
 .data-content .tabs .item.selected{
