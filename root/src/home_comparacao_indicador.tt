@@ -86,5 +86,6 @@
 <script type="text/javascript">
 		var role = '[% role %]';
 		var ref = 'comparacao';
-		var indicadorID = [% indicator.id %]
+		var indicadorID = [% indicator.id %];
+		var userID = "";
 </script>
