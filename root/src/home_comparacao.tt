@@ -47,7 +47,7 @@
         </div>    	
     </div>
 	<script type="text/javascript">
-			var role = 'movimento';
+			var role = '[% role %]';
 			var ref = 'home';
 			var userID = "";
 	</script>
