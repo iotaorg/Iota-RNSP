@@ -52,6 +52,12 @@ __PACKAGE__->table("indicator_variables_variations_value");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 indicator_variables_variation_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
 =head2 value
 
   data_type: 'text'
@@ -95,6 +101,8 @@ __PACKAGE__->add_columns(
     sequence          => "indicator_variables_variations_value_id_seq",
   },
   "indicator_variation_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "indicator_variables_variation_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "value",
   { data_type => "text", is_nullable => 1 },
@@ -150,7 +158,7 @@ __PACKAGE__->add_unique_constraint(
 
 =head1 RELATIONS
 
-=head2 indicator_variation
+=head2 indicator_variables_variation
 
 Type: belongs_to
 
@@ -159,15 +167,30 @@ Related object: L<RNSP::PCS::Schema::Result::IndicatorVariablesVariation>
 =cut
 
 __PACKAGE__->belongs_to(
-  "indicator_variation",
+  "indicator_variables_variation",
   "RNSP::PCS::Schema::Result::IndicatorVariablesVariation",
+  { id => "indicator_variables_variation_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+=head2 indicator_variation
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorVariation>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "indicator_variation",
+  "RNSP::PCS::Schema::Result::IndicatorVariation",
   { id => "indicator_variation_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:31:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EjeBOdzsIaKKOKw+NTmEhA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 13:23:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XKBeV3BaYqQMYga4ZNeR9g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

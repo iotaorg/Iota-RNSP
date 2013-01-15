@@ -20,7 +20,16 @@ sub verifiers_specs {
             profile => {
                 value_of_date          => { required => 1, type => DataStr },
                 user_id                => { required => 1, type => 'Int' },
-                indicator_variation_id => { required => 1, type => 'Int' },
+                indicator_variation_id => {
+                  required => 1,
+                  type => 'Int',
+                  post_check => sub {
+                     my $r = shift;
+                     return $self->result_source->schema->resultset('IndicatorVariation')
+                        ->find( { id => $r->get_value('indicator_variation_id') } ) ? 1 : 0;
+                  }
+               },
+                indicator_variables_variation_id => { required => 1, type => 'Int' },
                 period                 => { required => 0, type => 'Str' },
                 value                  => { required => 0, type => 'Str' },
             },

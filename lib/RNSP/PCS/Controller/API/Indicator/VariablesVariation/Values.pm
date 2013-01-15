@@ -41,21 +41,22 @@ sub values_GET {
    $self->status_ok(
       $c,
       entity => {
-         (map { $_ => $object_ref->{$_} } qw(id indicator_variation_id value value_of_date valid_from user_id ))
+         (map { $_ => $object_ref->{$_} } qw(
+         id
+         indicator_variation_id
+         indicator_variables_variation_id
+         value
+         value_of_date
+         valid_from
+         user_id
+         created_at
+         ))
       }
    );
 }
 
 =pod
 
-   atualizar variavel
-
-   POST /api/indicator/$id/values/$id
-
-   Retorna:
-
-      indicator.values.update.justification_of_missing_field
-      indicator.values.update.goal
 
 =cut
 
@@ -106,9 +107,6 @@ sub values_POST {
 
    Apaga o registro da tabela indicator_valuess
 
-   DELETE /api/indicator/$id/values/$id
-
-   Retorna: No-content ou Gone
 
 =cut
 
@@ -142,7 +140,13 @@ sub list_GET {
       push @objs, {
 
          (map { $_ => $obj->{$_} } qw(
-         id indicator_variation_id value value_of_date valid_from user_id
+         id
+         indicator_variation_id
+         indicator_variables_variation_id
+         value
+         value_of_date
+         valid_from
+         user_id
          created_at)),
          url => $c->uri_for_action( $self->action_for('values'), [
             $c->stash->{indicator}->id,
@@ -169,6 +173,7 @@ Param:
       indicator.variation_value.create:
          value*
          value_of_date*
+         indicator_variation_id*
 
 Retorna:
 
@@ -184,7 +189,7 @@ sub list_POST {
 
    my $param = $c->req->params->{indicator}{variation_value}{create};
 
-   $param->{indicator_variation_id} = $c->stash->{variables_variation}->id;
+   $param->{indicator_variables_variation_id} = $c->stash->{variables_variation}->id;
    $param->{indicator_id}           = $c->stash->{indicator}->id;
    $param->{user_id}                = $c->user->id;
 
@@ -202,7 +207,7 @@ sub list_POST {
    my $object = $dm->get_outcome_for('indicator.variation_value.create');
    $self->status_created(
       $c,
-      location => $c->uri_for( $self->action_for('values'), [ $c->stash->{indicator}->id, $param->{indicator_variation_id}, $object->id ] )->as_string,
+      location => $c->uri_for( $self->action_for('values'), [ $c->stash->{indicator}->id, $param->{indicator_variables_variation_id}, $object->id ] )->as_string,
       entity => {
          id   => $object->id,
          valid_from => $object->valid_from->ymd,

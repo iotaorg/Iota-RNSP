@@ -95,6 +95,7 @@ CREATE TABLE indicator_variables_variations_value
 (
   id bigserial NOT NULL,
   indicator_variation_id integer NOT NULL,
+  indicator_variables_variation_id integer NOT NULL,
   value text,
   value_of_date timestamp without time zone,
   valid_from date,
@@ -102,12 +103,14 @@ CREATE TABLE indicator_variables_variations_value
   user_id integer NOT NULL,
   created_at timestamp without time zone DEFAULT now(),
   CONSTRAINT indicator_variables_variations_value_pkey PRIMARY KEY (id),
-  CONSTRAINT indicator_variables_variations_valu_indicator_variation_id_fkey FOREIGN KEY (indicator_variation_id)
+  CONSTRAINT indicator_variables_variation_indicator_variables_variatio_fkey FOREIGN KEY (indicator_variables_variation_id)
       REFERENCES indicator_variables_variations (id) MATCH SIMPLE
-      ON UPDATE RESTRICT ON DELETE NO ACTION,
-  CONSTRAINT indicator_variables_variation_indicator_variation_id_valid__key UNIQUE (indicator_variation_id, valid_from, user_id)
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT indicator_variables_variations_valu_indicator_variation_id_fkey FOREIGN KEY (indicator_variation_id)
+      REFERENCES indicator_variations (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT indicator_variables_variation_indicator_variation_id_indica_key UNIQUE (indicator_variation_id, indicator_variables_variation_id, valid_from, user_id)
 )
 WITH (
   OIDS=FALSE
 );
-

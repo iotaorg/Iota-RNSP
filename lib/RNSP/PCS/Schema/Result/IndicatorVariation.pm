@@ -121,9 +121,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "RESTRICT" },
 );
 
+=head2 indicator_variables_variations_values
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 08:50:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vmGXMErhsRgC39uqC9H4Kg
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorVariablesVariationsValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_variables_variations_values",
+  "RNSP::PCS::Schema::Result::IndicatorVariablesVariationsValue",
+  { "foreign.indicator_variation_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 13:23:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y6ec3qnPIvtGDWHeUQkLcg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
