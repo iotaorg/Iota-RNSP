@@ -137,11 +137,13 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<indicator_variables_variation_indicator_variation_id_valid__key>
+=head2 C<indicator_variables_variation_indicator_variation_id_indica_key>
 
 =over 4
 
 =item * L</indicator_variation_id>
+
+=item * L</indicator_variables_variation_id>
 
 =item * L</valid_from>
 
@@ -152,8 +154,13 @@ __PACKAGE__->set_primary_key("id");
 =cut
 
 __PACKAGE__->add_unique_constraint(
-  "indicator_variables_variation_indicator_variation_id_valid__key",
-  ["indicator_variation_id", "valid_from", "user_id"],
+  "indicator_variables_variation_indicator_variation_id_indica_key",
+  [
+    "indicator_variation_id",
+    "indicator_variables_variation_id",
+    "valid_from",
+    "user_id",
+  ],
 );
 
 =head1 RELATIONS
@@ -189,8 +196,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 13:23:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XKBeV3BaYqQMYga4ZNeR9g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 20:30:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:K5aPCM4eG6B+fafQolmbCQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -134,12 +134,12 @@ eval {
 
             # Pessoas
             &_populate($subvar[0]{id}, \@variacoes, '2010-01-01', qw/3 5 6 10/);
-            &_populate($subvar[0]{id}, \@variacoes, '2011-01-01', qw/4 4 5 11/);
+            &_populate($subvar[0]{id}, \@variacoes, '2011-01-01', qw/4 4 1/);
             &_populate($subvar[0]{id}, \@variacoes, '2012-01-01', qw/5 4 6 8/);
             &_populate($subvar[0]{id}, \@variacoes, '2013-01-01', qw/4 4 7 9/);
 
             # fixo
-            &_populate($subvar[1]{id}, \@variacoes, '2010-01-01', qw/1 1 1 1/);
+            &_populate($subvar[1]{id}, \@variacoes, '2010-01-01', qw/1 1 /);
             &_populate($subvar[1]{id}, \@variacoes, '2011-01-01', qw/1 1 1 1/);
             &_populate($subvar[1]{id}, \@variacoes, '2012-01-01', qw/1 1 1 1/);
             &_populate($subvar[1]{id}, \@variacoes, '2013-01-01', qw/1 1 1 1/);
@@ -148,6 +148,10 @@ eval {
             &add_value($uri1, '2011-01-01', 16);
             &add_value($uri1, '2012-01-01', 17);
             &add_value($uri1, '2013-01-01', 18);
+
+            # testando historico
+            my $res = &_get(200, '/api/indicator/'.$indicator->{id}.'/variable/value');
+#use DDP; p $res;exit;
 
 
 
@@ -274,9 +278,11 @@ sub _populate {
 
    my $i = 0;
    for my $var (@$arr_variacao){
+      my $val =$list[$i++];
+      next unless defined $val;
       my $res = &_post(201, '/api/indicator/'.$indicator->{id}.'/variables_variation/'.$variavel.'/values',
             [   api_key                            => 'test',
-               'indicator.variation_value.create.value'  => $list[$i++],
+               'indicator.variation_value.create.value'  => $val,
                'indicator.variation_value.create.indicator_variation_id'  => $var->{id},
                'indicator.variation_value.create.value_of_date'  => $data
             ]
