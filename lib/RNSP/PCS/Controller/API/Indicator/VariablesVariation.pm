@@ -53,8 +53,10 @@ sub variables_variation_GET {
 
    Retorna:
 
-      indicator.variables_variation.update.justification_of_missing_field
-      indicator.variables_variation.update.goal
+      indicator.variables_variation.update:
+         name *
+         type
+         explanation
 
 =cut
 
@@ -152,9 +154,9 @@ POST /api/indicator/$id/variables_variation
 Param:
 
       indicator.variables_variation.create:
-         name
-         all_variables_are_required
-         totalization_method
+         name *
+         type
+         explanation
 
 Retorna:
 

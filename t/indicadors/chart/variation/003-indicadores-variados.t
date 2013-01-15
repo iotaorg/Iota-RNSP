@@ -27,7 +27,7 @@ my $seq = 0;
 eval {
     $schema->txn_do(
         sub {
-            my $var1 = &new_var('int', 'weekly');
+            my $var1 = &new_var('int', 'yearly');
 
             my $ind = &_post(201, '/api/indicator',
                 [   api_key                         => 'test',
@@ -65,8 +65,6 @@ eval {
                     'indicator.variation.create.name'  => 'Mais de 1 a 2 salários mínimos'
                 ]
             );
-            my $list = &_get(200, '/api/indicator/'.$ind->{id}.'/variation');
-            is(@{$list->{variations}}, 3, 'total match');
             for my $var (@variacoes){
                my $info = &_get(200, '/api/indicator/'.$ind->{id}.'/variation/'.$var->{id});
 
@@ -75,6 +73,9 @@ eval {
                   'indicator.variation.update.name'  => $info->{name} . '.'
                ]);
             }
+            my $list = &_get(200, '/api/indicator/'.$ind->{id}.'/variation');
+            is(@{$list->{variations}}, 3, 'total match');
+            is(substr($_->{name}, -1), '.', 'update ok') for @{$list->{variables_variations}};
 
             my @subvar = ();
 
@@ -98,18 +99,49 @@ eval {
                ]);
             }
             my $list_var = &_get(200, '/api/indicator/'.$ind->{id}.'/variables_variation');
-
             is(@{$list_var->{variables_variations}}, 2, 'total match');
             is(substr($_->{name}, -1), '.', 'update ok') for @{$list_var->{variables_variations}};
 
 
+            my @subvals;
+
+            push @subvals, &_post(201, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$subvar[0]{id}.'/values',
+                [   api_key                            => 'test',
+                    'indicator.variation_value.create.value'  => '5',
+                    'indicator.variation_value.create.value_of_date'  => '2010-01-01'
+                ]
+            );
+            for my $val (@subvals){
+               my $info = &_get(200, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$subvar[0]{id}.'/values/'.$val->{id});
+
+               &_post(202, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$subvar[0]{id}.'/values/'.$val->{id},
+                  [   api_key                            => 'test',
+                  'indicator.variation_value.update.value'  => $info->{value} + 1
+               ]);
+            }
+            my $list_val = &_get(200, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$subvar[0]{id}.'/values');
+
+            is(@{$list_val->{'values'}}, 1, 'total match');
+            is($list_val->{'values'}[0]{value}, '6', 'value match');
+
+
+            for my $var (@subvar){
+
+                  my $list_val = &_get(200, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$var->{id}.'/values');
+
+                  &_delete(204, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$var->{id}.'/values/'.$_->{id})
+                     for @{$list_val->{values}};
+            }
 
             for my $var (@variacoes){
                &_delete(204, '/api/indicator/'.$ind->{id}.'/variation/'.$var->{id});
                &_delete(410, '/api/indicator/'.$ind->{id}.'/variation/'.$var->{id});
             }
 
-            use DDP; p @variacoes;
+            for my $var (@subvar){
+               &_delete(204, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$var->{id});
+               &_delete(410, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$var->{id});
+            }
 
             die 'rollback';
         }
@@ -151,12 +183,13 @@ sub _post {
       POST $url, $arr
    )};
    fail("POST $url => $@") if $@;
-   is( $res->code, $code, 'POST '.$url.' code is ' . $code );
-
-   my $obj = eval{from_json( $res->content )};
-   fail("JSON $url => $@") if $@;
-   ok( $obj->{id}, 'POST '.$url.' has id - ID=' . ($obj->{id}||''));
-   return $obj;
+   if(is( $res->code, $code, 'POST '.$url.' code is ' . $code )){
+      my $obj = eval{from_json( $res->content )};
+      fail("JSON $url => $@") if $@;
+      ok( $obj->{id}, 'POST '.$url.' has id - ID=' . ($obj->{id}||''));
+      return $obj;
+   }
+   return undef;
 }
 
 
@@ -166,11 +199,12 @@ sub _get {
       GET $url
    )};
    fail("POST $url => $@") if $@;
-   is( $res->code, $code, 'GET '.$url.' code is ' . $code );
-
-   my $obj = eval{from_json( $res->content )};
-   fail("JSON $url => $@") if $@;
-   return $obj;
+   if ($code == 0 || is( $res->code, $code, 'GET '.$url.' code is ' . $code )){
+      my $obj = eval{from_json( $res->content )};
+      fail("JSON $url => $@") if $@;
+      return $obj;
+   }
+   return undef;
 }
 
 
@@ -180,14 +214,16 @@ sub _delete {
       DELETE $url
    )};
    fail("POST $url => $@") if $@;
-   is( $res->code, $code, 'DELETE '.$url.' code is ' . $code );
 
-   if ($code == 204) {
-      is($res->content, '', 'empty body');
-   }else{
-      my $obj = eval{from_json( $res->content )};
-      fail("JSON $url => $@") if $@;
-      return $obj;
+   if ($code == 0 || is( $res->code, $code, 'DELETE '.$url.' code is ' . $code )){
+      if ($code == 204) {
+         is($res->content, '', 'empty body');
+      }else{
+         my $obj = eval{from_json( $res->content )};
+         fail("JSON $url => $@") if $@;
+         return $obj;
+      }
    }
+   return undef;
 }
 

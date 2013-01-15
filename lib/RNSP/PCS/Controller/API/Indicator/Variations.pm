@@ -51,10 +51,8 @@ sub variation_GET {
 
    POST /api/indicator/$id/variation/$id
 
-   Retorna:
-
-      indicator.variation.update.justification_of_missing_field
-      indicator.variation.update.goal
+      indicator.variation.update:
+         name *
 
 =cut
 
@@ -153,8 +151,6 @@ Param:
 
       indicator.variation.create:
          name
-         all_variables_are_required
-         totalization_method
 
 Retorna:
 
