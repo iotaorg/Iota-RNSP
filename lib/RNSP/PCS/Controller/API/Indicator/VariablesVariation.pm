@@ -1,4 +1,4 @@
-package RNSP::PCS::Controller::API::Indicator::Variations;
+package RNSP::PCS::Controller::API::Indicator::VariablesVariation;
 
 use Moose;
 use JSON qw (encode_json);
@@ -6,11 +6,11 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
-sub base : Chained('/api/indicator/object') : PathPart('variation') : CaptureArgs(0) {
+sub base : Chained('/api/indicator/object') : PathPart('variables_variation') : CaptureArgs(0) {
    my ( $self, $c ) = @_;
 
    $c->stash->{indicator} = $c->stash->{object}->next;
-   $c->stash->{collection} = $c->stash->{indicator}->indicator_variations;
+   $c->stash->{collection} = $c->stash->{indicator}->indicator_variables_variations;
 
 }
 
@@ -20,7 +20,7 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
    $c->stash->{object}->count > 0 or $c->detach('/error_404') unless $c->req->method eq 'DELETE';
 }
 
-sub variation : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
+sub variables_variation : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
   my ( $self, $c ) = @_;
 
 }
@@ -33,14 +33,14 @@ sub variation : Chained('object') : PathPart('') : Args(0) : ActionClass('REST')
 
 =cut
 
-sub variation_GET {
+sub variables_variation_GET {
    my ( $self, $c ) = @_;
    my $object_ref  = $c->stash->{object}->as_hashref->next;
 
    $self->status_ok(
       $c,
       entity => {
-         (map { $_ => $object_ref->{$_} } qw(indicator_id name ))
+         (map { $_ => $object_ref->{$_} } qw(indicator_id name type explanation ))
       }
    );
 }
@@ -49,16 +49,16 @@ sub variation_GET {
 
    atualizar variavel
 
-   POST /api/indicator/$id/variation/$id
+   POST /api/indicator/$id/variables_variation/$id
 
    Retorna:
 
-      indicator.variation.update.justification_of_missing_field
-      indicator.variation.update.goal
+      indicator.variables_variation.update.justification_of_missing_field
+      indicator.variables_variation.update.goal
 
 =cut
 
-sub variation_POST {
+sub variables_variation_POST {
    my ( $self, $c ) = @_;
 
    $self->status_forbidden( $c, message => "access denied", ), $c->detach
@@ -70,7 +70,7 @@ sub variation_POST {
       $self->status_forbidden( $c, message => "access denied", ), $c->detach;
    }
 
-      my $param = $c->req->params->{indicator}{variation}{update};
+      my $param = $c->req->params->{indicator}{variables_variation}{update};
    $param->{id} = $obj_rs->id;
 
 
@@ -79,10 +79,10 @@ sub variation_POST {
    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-   my $obj = $dm->get_outcome_for('indicator.variation.update');
+   my $obj = $dm->get_outcome_for('indicator.variables_variation.update');
    $self->status_accepted(
       $c,
-         location => $c->uri_for( $self->action_for('variation'), [ $c->stash->{indicator}->id, $obj->id ] )->as_string,
+         location => $c->uri_for( $self->action_for('variables_variation'), [ $c->stash->{indicator}->id, $obj->id ] )->as_string,
          entity => { id => $obj->id }
    ),
 
@@ -92,15 +92,15 @@ sub variation_POST {
 
 =pod
 
-   Apaga o registro da tabela indicator_variations
+   Apaga o registro da tabela indicator_variables_variations
 
-   DELETE /api/indicator/$id/variation/$id
+   DELETE /api/indicator/$id/variables_variation/$id
 
    Retorna: No-content ou Gone
 
 =cut
 
-sub variation_DELETE {
+sub variables_variation_DELETE {
    my ( $self, $c ) = @_;
 
    $self->status_forbidden( $c, message => "access denied", ), $c->detach
@@ -110,7 +110,7 @@ sub variation_DELETE {
    $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
    if ($c->user->id == $obj->indicator_id || $c->check_any_user_role(qw(admin))){
-      $c->logx('Apagou informação de indicator_variations ' . $obj->id);
+      $c->logx('Apagou informação de indicator_variables_variations ' . $obj->id);
       $obj->delete;
    }
 
@@ -130,16 +130,16 @@ sub list_GET {
       push @objs, {
 
          (map { $_ => $obj->{$_} } qw(
-         id indicator_id name
+         id indicator_id name type explanation
          created_at)),
-         url => $c->uri_for_action( $self->action_for('variation'), [ $c->stash->{indicator}->id, $obj->{id} ] )->as_string,
+         url => $c->uri_for_action( $self->action_for('variables_variation'), [ $c->stash->{indicator}->id,$obj->{id} ] )->as_string,
 
       }
    }
 
    $self->status_ok( $c,
       entity => {
-         variations => \@objs
+         variables_variations => \@objs
       }
    );
 }
@@ -147,11 +147,11 @@ sub list_GET {
 
 =pod
 
-POST /api/indicator/$id/variation
+POST /api/indicator/$id/variables_variation
 
 Param:
 
-      indicator.variation.create:
+      indicator.variables_variation.create:
          name
          all_variables_are_required
          totalization_method
@@ -168,18 +168,18 @@ sub list_POST {
    $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin user));
 
-   $c->req->params->{indicator}{variation}{create}{indicator_id} = $c->stash->{indicator}->id;
+   $c->req->params->{indicator}{variables_variation}{create}{indicator_id} = $c->stash->{indicator}->id;
 
 
    my $dm = $c->model('DataManager');
    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-   my $object = $dm->get_outcome_for('indicator.variation.create');
+   my $object = $dm->get_outcome_for('indicator.variables_variation.create');
 
    $self->status_created(
       $c,
-      location => $c->uri_for( $self->action_for('variation'), [ $c->stash->{indicator}->id, $object->id ] )->as_string,
+      location => $c->uri_for( $self->action_for('variables_variation'), [ $c->stash->{indicator}->id, $object->id ] )->as_string,
       entity => {
       id   => $object->id
       }

@@ -43,7 +43,6 @@ eval {
                     'indicator.create.observations' => 'lala',
                     'indicator.create.variety_name'   => 'Faixas',
                     'indicator.create.indicator_type' => 'varied',
-
                 ]
             );
 
@@ -76,6 +75,33 @@ eval {
                   'indicator.variation.update.name'  => $info->{name} . '.'
                ]);
             }
+
+            my @subvar = ();
+
+            push @subvar, &_post(201, '/api/indicator/'.$ind->{id}.'/variables_variation',
+                [   api_key                            => 'test',
+                    'indicator.variables_variation.create.name'  => 'Pessoas'
+                ]
+            );
+
+            push @subvar, &_post(201, '/api/indicator/'.$ind->{id}.'/variables_variation',
+                [   api_key                            => 'test',
+                    'indicator.variables_variation.create.name'  => 'variavel para teste'
+                ]
+            );
+            for my $var (@subvar){
+               my $info = &_get(200, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$var->{id});
+
+               &_post(202, '/api/indicator/'.$ind->{id}.'/variables_variation/'.$var->{id},
+                  [   api_key                            => 'test',
+                  'indicator.variables_variation.update.name'  => $info->{name} . '.'
+               ]);
+            }
+            my $list_var = &_get(200, '/api/indicator/'.$ind->{id}.'/variables_variation');
+
+            is(@{$list_var->{variables_variations}}, 2, 'total match');
+            is(substr($_->{name}, -1), '.', 'update ok') for @{$list_var->{variables_variations}};
+
 
 
             for my $var (@variacoes){
