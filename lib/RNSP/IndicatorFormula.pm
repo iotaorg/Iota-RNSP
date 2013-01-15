@@ -79,6 +79,8 @@ sub parse {
     # troca por V<ID>
     $formula =~ s/\$(\d+)\b/V$1/go;
 
+    $formula =~ s/\#(\d+)\b/N$1/go;
+
     if ($formula =~ /concatenar/io){
         $self->_is_string(1);
     }else{

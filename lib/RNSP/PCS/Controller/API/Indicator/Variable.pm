@@ -198,6 +198,13 @@ sub values_GET {
     eval {
         my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
+        my @indicator_variations;
+        my @indicator_variables;
+        if ($indicator->indicator_type eq 'varied'){
+            @indicator_variations = $indicator->indicator_variations->all;
+            @indicator_variables  = $indicator->indicator_variables_variations->all;
+         }
+
         my $indicator_formula = new RNSP::IndicatorFormula(
             formula => $indicator->formula,
             schema => $c->model('DB')->schema
@@ -233,6 +240,7 @@ sub values_GET {
         }
         my $definidos = scalar keys %{$hash->{header}};
 
+
         foreach my $begin (sort {$a cmp $b} keys %$tmp){
 
             my @order = sort {$a->{col} <=> $b->{col}} @{$tmp->{$begin}};
@@ -260,9 +268,54 @@ sub values_GET {
             }
 
             if ($definidos == scalar @order){
-                $item->{formula_value} = $indicator_formula->evaluate(
-                    map { $_->{varid} => $_->{value}||0 } @order
-                );
+
+               if (@indicator_variables && @indicator_variations){
+
+                  my $vals = {};
+
+                  for my $variation (@indicator_variations){
+
+                     my $rs = $variation->indicator_variables_variations_values->search({
+                        valid_from => $begin
+                     })->as_hashref;
+                     while (my $r = $rs->next){
+                        next unless defined $r->{value};
+                        $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
+                     }
+
+                     my $qtde_dados = keys %{$vals->{$variation->id}};
+
+                     unless ($qtde_dados == @indicator_variables){
+                        $item->{variations}{$variation->id} = {
+                           value => '-'
+                        };
+
+                        delete $vals->{$variation->id};
+                     }
+                  }
+
+                  use DDP; p $vals;
+                  foreach (keys %$vals){
+
+                     #$item->{formula_value} = $indicator_formula->evaluate_double(
+                     #   {map { $_->{varid} => $_->{value}||0 } @order},
+                     #   {map { $_->{varid} => $_->{value}||0 } @order},
+                     #);
+
+                  }
+
+#exit;
+
+
+
+               }else{
+
+                  die('Indicador sem dados de varied.') if $indicator->formula =~ /#\d/;
+
+                  $item->{formula_value} = $indicator_formula->evaluate(
+                     map { $_->{varid} => $_->{value}||0 } @order
+                  );
+               }
 
             }
 
@@ -271,6 +324,7 @@ sub values_GET {
         }
         $ret = $hash;
     };
+    use DDP; p $@;
     if ($@){
         $self->status_bad_request(
             $c,
