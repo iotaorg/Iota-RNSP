@@ -144,6 +144,19 @@ __PACKAGE__->table("indicator");
   is_nullable: 0
   original: {data_type => "varchar"}
 
+=head2 all_variations_variables_are_required
+
+  data_type: 'boolean'
+  default_value: true
+  is_nullable: 0
+
+=head2 summarization_method
+
+  data_type: 'text'
+  default_value: 'sum'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -213,6 +226,15 @@ __PACKAGE__->add_columns(
   {
     data_type     => "text",
     default_value => "normal",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
+  "all_variations_variables_are_required",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "summarization_method",
+  {
+    data_type     => "text",
+    default_value => "sum",
     is_nullable   => 0,
     original      => { data_type => "varchar" },
   },
@@ -319,8 +341,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:14:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rKHPRQEgN30KNY8uJhPCVA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 07:54:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iod4TpR+KR/8WlCaCmCwzQ
 
 __PACKAGE__->belongs_to(
     "owner",

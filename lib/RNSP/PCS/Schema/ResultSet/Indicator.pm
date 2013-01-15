@@ -59,6 +59,10 @@ sub verifiers_specs {
                 goal_explanation => { required => 0, type => 'Str' },
                 sort_direction   => { required => 0, type => 'Str' },
 
+                variety_name    => { required => 0, type => 'Str' },
+                indicator_type  => { required => 0, type => 'Str' },
+
+
             },
         ),
 
@@ -102,6 +106,9 @@ sub verifiers_specs {
                 goal_explanation => { required => 0, type => 'Str' },
                 sort_direction   => { required => 0, type => 'Str' },
                 chart_name       => { required => 0, type => 'Str' },
+
+                variety_name    => { required => 0, type => 'Str' },
+                indicator_type  => { required => 0, type => 'Str' },
             },
         ),
 

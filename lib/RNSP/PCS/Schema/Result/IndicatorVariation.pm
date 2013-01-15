@@ -58,19 +58,6 @@ __PACKAGE__->table("indicator_variations");
   is_nullable: 0
   original: {data_type => "varchar"}
 
-=head2 all_variables_are_required
-
-  data_type: 'boolean'
-  default_value: true
-  is_nullable: 0
-
-=head2 totalization_method
-
-  data_type: 'text'
-  default_value: 'sum'
-  is_nullable: 1
-  original: {data_type => "varchar"}
-
 =head2 created_at
 
   data_type: 'timestamp'
@@ -95,15 +82,6 @@ __PACKAGE__->add_columns(
     data_type   => "text",
     is_nullable => 0,
     original    => { data_type => "varchar" },
-  },
-  "all_variables_are_required",
-  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
-  "totalization_method",
-  {
-    data_type     => "text",
-    default_value => "sum",
-    is_nullable   => 1,
-    original      => { data_type => "varchar" },
   },
   "created_at",
   {
@@ -159,8 +137,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:31:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sLsydzw5XZG+G4OIIZ/i8g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 07:54:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YN9NjAJLzuk1wKKnwxDozA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

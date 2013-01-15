@@ -33,6 +33,16 @@ ALTER TABLE indicator
   ADD COLUMN variety_name character varying;
 ALTER TABLE indicator
   ADD COLUMN indicator_type character varying not null default 'normal';
+
+
+ALTER TABLE indicator
+  ADD COLUMN all_variations_variables_are_required boolean not null default true;
+
+ALTER TABLE indicator
+  ADD COLUMN summarization_method varchar not null default 'sum';
+
+
+
 ALTER TABLE variable
   DROP CONSTRAINT variable_fk_user_id;
 ALTER TABLE variable
@@ -53,8 +63,6 @@ CREATE TABLE indicator_variations
   id serial NOT NULL,
   indicator_id integer NOT NULL,
   name character varying NOT NULL,
-  all_variables_are_required boolean not null default true,
-  totalization_method varchar default 'sum',
   created_at timestamp without time zone DEFAULT now(),
   CONSTRAINT indicator_variations_pkey PRIMARY KEY (id),
   CONSTRAINT indicator_variations_indicator_id_fkey FOREIGN KEY (indicator_id)
