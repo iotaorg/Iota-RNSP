@@ -131,6 +131,32 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   is_nullable: 1
 
+=head2 variety_name
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 indicator_type
+
+  data_type: 'text'
+  default_value: 'normal'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
+=head2 all_variations_variables_are_required
+
+  data_type: 'boolean'
+  default_value: true
+  is_nullable: 0
+
+=head2 summarization_method
+
+  data_type: 'text'
+  default_value: 'sum'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -190,6 +216,28 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "observations",
   { data_type => "text", is_nullable => 1 },
+  "variety_name",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "indicator_type",
+  {
+    data_type     => "text",
+    default_value => "normal",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
+  "all_variations_variables_are_required",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "summarization_method",
+  {
+    data_type     => "text",
+    default_value => "sum",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -247,6 +295,36 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 indicator_variables_variations
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorVariablesVariation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_variables_variations",
+  "RNSP::PCS::Schema::Result::IndicatorVariablesVariation",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 indicator_variations
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorVariation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_variations",
+  "RNSP::PCS::Schema::Result::IndicatorVariation",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user
 
 Type: belongs_to
@@ -278,8 +356,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5MzcD0YTKTJwsWTl3QtI1Q
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 08:50:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9JlEDEGGvJ+aos5sSvGcyA
 
 __PACKAGE__->belongs_to(
     "owner",

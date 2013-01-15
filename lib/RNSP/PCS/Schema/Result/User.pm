@@ -112,16 +112,15 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 1
 
-=head2 password
-
-  data_type: 'text'
-  is_nullable: 0
-
 =head2 city_summary
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
+
+=head2 password
+
+  data_type: 'text'
+  is_nullable: 0
 
 =cut
 
@@ -159,14 +158,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "endereco",
   { data_type => "text", is_nullable => 1 },
+  "city_summary",
+  { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 0 },
-  "city_summary",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
 );
 
 =head1 PRIMARY KEY
@@ -353,8 +348,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-06 09:39:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BI6QlzgOlADU662Nxi/3xg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:14:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pv90FLTPMiM3aXt9sk8CGA
 
 __PACKAGE__->has_many(
     "user_roles",
