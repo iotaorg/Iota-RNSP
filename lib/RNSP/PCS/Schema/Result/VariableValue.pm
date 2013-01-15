@@ -177,7 +177,7 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 variable
@@ -192,12 +192,12 @@ __PACKAGE__->belongs_to(
   "variable",
   "RNSP::PCS::Schema::Result::Variable",
   { id => "variable_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-11-24 05:27:50
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z/TDVJR0oRtIh++XzBLnBw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:31:28
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/NsGk/pHRC5CB9nmk/oJeg
 
 
 __PACKAGE__->belongs_to(
