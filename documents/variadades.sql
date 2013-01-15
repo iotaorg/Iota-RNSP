@@ -77,20 +77,19 @@ WITH (
 CREATE TABLE indicator_variables_variations
 (
   id serial NOT NULL,
-  indicator_variations integer NOT NULL,
+  indicator_id integer NOT NULL,
   name character varying NOT NULL,
   type variable_type_enum NOT NULL DEFAULT 'int'::variable_type_enum,
   explanation character varying,
   created_at timestamp without time zone DEFAULT now(),
   CONSTRAINT indicator_variables_variations_pkey PRIMARY KEY (id),
-  CONSTRAINT indicator_variables_variations_indicator_variations_fkey FOREIGN KEY (indicator_variations)
-      REFERENCES indicator_variations (id) MATCH SIMPLE
-      ON UPDATE RESTRICT ON DELETE NO ACTION
+  CONSTRAINT indicator_variables_variations_indicator_id_fkey FOREIGN KEY (indicator_id)
+      REFERENCES indicator (id) MATCH SIMPLE
+      ON UPDATE RESTRICT ON DELETE RESTRICT
 )
 WITH (
   OIDS=FALSE
 );
-
 
 CREATE TABLE indicator_variables_variations_value
 (

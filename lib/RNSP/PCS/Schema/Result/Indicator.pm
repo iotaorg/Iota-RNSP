@@ -295,6 +295,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 indicator_variables_variations
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorVariablesVariation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_variables_variations",
+  "RNSP::PCS::Schema::Result::IndicatorVariablesVariation",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_variations
 
 Type: has_many
@@ -341,8 +356,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 07:54:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iod4TpR+KR/8WlCaCmCwzQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 08:50:29
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9JlEDEGGvJ+aos5sSvGcyA
 
 __PACKAGE__->belongs_to(
     "owner",

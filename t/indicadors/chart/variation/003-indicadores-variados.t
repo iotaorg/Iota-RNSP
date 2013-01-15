@@ -9,7 +9,7 @@ use lib "$Bin/../../../lib";
 
 use Catalyst::Test q(RNSP::PCS);
 
-use HTTP::Request::Common;
+use HTTP::Request::Common qw/DELETE GET POST/;
 use Package::Stash;
 
 use RNSP::PCS::TestOnly::Mock::AuthUser;
@@ -77,6 +77,11 @@ eval {
                ]);
             }
 
+
+            for my $var (@variacoes){
+               &_delete(204, '/api/indicator/'.$ind->{id}.'/variation/'.$var->{id});
+               &_delete(410, '/api/indicator/'.$ind->{id}.'/variation/'.$var->{id});
+            }
 
             use DDP; p @variacoes;
 
@@ -151,8 +156,12 @@ sub _delete {
    fail("POST $url => $@") if $@;
    is( $res->code, $code, 'DELETE '.$url.' code is ' . $code );
 
-   my $obj = eval{from_json( $res->content )};
-   fail("JSON $url => $@") if $@;
-   return $obj;
+   if ($code == 204) {
+      is($res->content, '', 'empty body');
+   }else{
+      my $obj = eval{from_json( $res->content )};
+      fail("JSON $url => $@") if $@;
+      return $obj;
+   }
 }
 

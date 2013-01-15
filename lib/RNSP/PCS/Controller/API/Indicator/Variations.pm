@@ -17,7 +17,7 @@ sub base : Chained('/api/indicator/object') : PathPart('variation') : CaptureArg
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
    my ( $self, $c, $id ) = @_;
    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
-   $c->stash->{object}->count > 0 or $c->detach('/error_404');
+   $c->stash->{object}->count > 0 or $c->detach('/error_404') unless $c->req->method eq 'DELETE';
 }
 
 sub variation : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
