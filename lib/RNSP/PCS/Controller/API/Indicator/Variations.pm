@@ -40,7 +40,7 @@ sub variation_GET {
    $self->status_ok(
       $c,
       entity => {
-         (map { $_ => $object_ref->{$_} } qw(indicator_id name ))
+         (map { $_ => $object_ref->{$_} } qw(indicator_id name order))
       }
    );
 }
@@ -121,17 +121,16 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 sub list_GET {
    my ( $self, $c ) = @_;
 
-   my @list = $c->stash->{collection}->as_hashref->all;
+   my @list = $c->stash->{collection}->search(undef, {order_by=>'order'})->as_hashref->all;
    my @objs;
 
    foreach my $obj (@list){
       push @objs, {
 
          (map { $_ => $obj->{$_} } qw(
-         id indicator_id name
+         id indicator_id name order
          created_at)),
          url => $c->uri_for_action( $self->action_for('variation'), [ $c->stash->{indicator}->id, $obj->{id} ] )->as_string,
-
       }
    }
 

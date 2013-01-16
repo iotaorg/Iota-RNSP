@@ -65,6 +65,12 @@ __PACKAGE__->table("indicator_variations");
   is_nullable: 1
   original: {default_value => \"now()"}
 
+=head2 order
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -90,6 +96,8 @@ __PACKAGE__->add_columns(
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
+  "order",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -137,8 +145,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 13:23:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Y6ec3qnPIvtGDWHeUQkLcg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 22:17:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/tBOMizfffkVCJ9sWEG4cw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

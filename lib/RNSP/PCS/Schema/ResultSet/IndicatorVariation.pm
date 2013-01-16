@@ -20,6 +20,7 @@ sub verifiers_specs {
             profile => {
                 name         => { required => 1, type => 'Str' },
                 indicator_id => { required => 1, type => 'Int' },
+                order        => { required => 1, type => 'Int' },
             },
         ),
 
@@ -27,6 +28,7 @@ sub verifiers_specs {
             profile => {
                 id      => { required => 1, type => 'Int' },
                 name    => { required => 1, type => 'Str' },
+                order   => { required => 0, type => 'Int' },
             },
         ),
 

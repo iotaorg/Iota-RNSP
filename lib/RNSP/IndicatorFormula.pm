@@ -91,14 +91,30 @@ sub parse {
     $self->check() if $self->auto_check;
 }
 
+sub evaluate_with_alias {
+   my ($self, %alias) = @_;
+
+   return 'NOT-SUPPORTED' if $self->_is_string;
+   foreach($self->variables){
+      return '-' unless defined $alias{V}{$_};
+   }
+
+   my $tmp;
+   foreach my $var (keys %alias){
+      $tmp->{ "$var$_" } = $alias{$var}{$_} for keys %{ $alias{$var} }
+   }
+
+   return $self->_compiled()->($tmp);
+}
+
 sub evaluate {
-    my ($self, %vars) = @_;
+   my ($self, %vars) = @_;
 
-    foreach($self->variables){
-        return '-' unless defined $vars{$_};
-    }
+   foreach($self->variables){
+      return '-' unless defined $vars{$_};
+   }
 
-    return $self->_is_string ? $self->as_string(%vars) : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
+   return $self->_is_string ? $self->as_string(%vars) : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
 }
 
 sub as_string {

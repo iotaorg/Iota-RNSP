@@ -4,6 +4,7 @@ use warnings;
 use URI;
 use Test::More;
 
+use utf8;
 use FindBin qw($Bin);
 use lib "$Bin/../../../lib";
 
@@ -51,25 +52,29 @@ eval {
 
             push @variacoes, &_post(201, '/api/indicator/'.$indicator->{id}.'/variation',
                 [   api_key                            => 'test',
-                    'indicator.variation.create.name'  => 'Até 1/2 salário mínimo'
+                    'indicator.variation.create.name'  => 'Até 1/2 salário mínimo',
+                    'indicator.variation.create.order'  => '2',
                 ]
             );
 
             push @variacoes, &_post(201, '/api/indicator/'.$indicator->{id}.'/variation',
                 [   api_key                            => 'test',
-                    'indicator.variation.create.name'  => 'Mais de 1/2 a 1 salário mínimo'
+                    'indicator.variation.create.name'  => 'Mais de 1/2 a 1 salário mínimo',
+                    'indicator.variation.create.order'  => '3',
                 ]
             );
 
             push @variacoes, &_post(201, '/api/indicator/'.$indicator->{id}.'/variation',
                 [   api_key                            => 'test',
-                    'indicator.variation.create.name'  => 'Mais de 1 a 2 salários mínimos'
+                    'indicator.variation.create.name'  => 'Mais de 1 a 2 salários mínimos',
+                    'indicator.variation.create.order'  => '4',
                 ]
             );
 
             push @variacoes, &_post(201, '/api/indicator/'.$indicator->{id}.'/variation',
                 [   api_key                            => 'test',
-                    'indicator.variation.create.name'  => 'outros'
+                    'indicator.variation.create.name'  => 'outros',
+                    'indicator.variation.create.order'  => '5',
                 ]
             );
             for my $var (@variacoes){
@@ -94,7 +99,17 @@ eval {
 
             push @subvar, &_post(201, '/api/indicator/'.$indicator->{id}.'/variables_variation',
                 [   api_key                            => 'test',
-                    'indicator.variables_variation.create.name'  => 'variavel para teste'
+                    'indicator.variables_variation.create.name'  => 'variavel para teste',
+                ]
+            );
+
+            # -----------
+            ## DEADLOCK do formula faz com que a gente tenha que atualizar a formula com os IDs
+            # -----------
+            my $res=&_post(202, '/api/indicator/'.$indicator->{id},
+                [   api_key                         => 'test',
+
+                    'indicator.update.formula'      => '#'.$subvar[0]{id}.' + #'.$subvar[1]{id}.' + $' . $var1,
                 ]
             );
             for my $var (@subvar){
@@ -134,12 +149,12 @@ eval {
 
             # Pessoas
             &_populate($subvar[0]{id}, \@variacoes, '2010-01-01', qw/3 5 6 10/);
-            &_populate($subvar[0]{id}, \@variacoes, '2011-01-01', qw/4 4 1/);
+            &_populate($subvar[0]{id}, \@variacoes, '2011-01-01', qw/4 4 1 5/);
             &_populate($subvar[0]{id}, \@variacoes, '2012-01-01', qw/5 4 6 8/);
             &_populate($subvar[0]{id}, \@variacoes, '2013-01-01', qw/4 4 7 9/);
 
             # fixo
-            &_populate($subvar[1]{id}, \@variacoes, '2010-01-01', qw/1 1 /);
+            &_populate($subvar[1]{id}, \@variacoes, '2010-01-01', qw/1 1 1 1/);
             &_populate($subvar[1]{id}, \@variacoes, '2011-01-01', qw/1 1 1 1/);
             &_populate($subvar[1]{id}, \@variacoes, '2012-01-01', qw/1 1 1 1/);
             &_populate($subvar[1]{id}, \@variacoes, '2013-01-01', qw/1 1 1 1/);
@@ -150,9 +165,173 @@ eval {
             &add_value($uri1, '2013-01-01', 18);
 
             # testando historico
-            my $res = &_get(200, '/api/indicator/'.$indicator->{id}.'/variable/value');
-#use DDP; p $res;exit;
+            my $res_variable_value = &_get(200, '/api/indicator/'.$indicator->{id}.'/variable/value');
 
+            my $expe = {
+               'rows' => [
+                           {
+                              'formula_value' => 88,
+                              'valores' => [
+                                             {
+                                             'variable_id' => $var1,
+                                             'source' => undef,
+                                             'value' => '15',
+                                             'value_of_date' => '2010-01-01T00:00:00',
+                                             'observations' => undef,
+                                             }
+                                          ],
+                              'variations' => [
+                                                {
+                                                'value' => {
+                                                               'value' => 19
+                                                            },
+                                                'name' => "At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 21
+                                                            },
+                                                'name' => "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 22
+                                                            },
+                                                'name' => "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 26
+                                                            },
+                                                'name' => 'outros.'
+                                                }
+                                             ],
+                              'valid_from' => '2010-01-01T00:00:00'
+                           },
+                           {
+                              'formula_value' => 82,
+                              'valores' => [
+                                             {
+                                             'variable_id' => $var1,
+                                             'source' => undef,
+                                             'value' => '16',
+                                             'value_of_date' => '2011-01-01T00:00:00',
+                                             'observations' => undef,
+                                             }
+                                          ],
+                              'variations' => [
+                                                {
+                                                'value' => {
+                                                               'value' => 21
+                                                            },
+                                                'name' => "At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 21
+                                                            },
+                                                'name' => "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 18
+                                                            },
+                                                'name' => "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 22
+                                                            },
+                                                'name' => 'outros.'
+                                                }
+                                             ],
+                              'valid_from' => '2011-01-01T00:00:00'
+                           },
+                           {
+                              'formula_value' => 95,
+                              'valores' => [
+                                             {
+                                             'variable_id' => $var1,
+                                             'source' => undef,
+                                             'value' => '17',
+                                             'value_of_date' => '2012-01-01T00:00:00',
+                                             'observations' => undef,
+                                             }
+                                          ],
+                              'variations' => [
+                                                {
+                                                'value' => {
+                                                               'value' => 23
+                                                            },
+                                                'name' => "At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 22
+                                                            },
+                                                'name' => "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 24
+                                                            },
+                                                'name' => "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 26
+                                                            },
+                                                'name' => 'outros.'
+                                                }
+                                             ],
+                              'valid_from' => '2012-01-01T00:00:00'
+                           },
+                           {
+                              'formula_value' => 100,
+                              'valores' => [
+                                             {
+                                             'variable_id' => $var1,
+                                             'source' => undef,
+                                             'value' => '18',
+                                             'value_of_date' => '2013-01-01T00:00:00',
+                                             'observations' => undef,
+                                             }
+                                          ],
+                              'variations' => [
+                                                {
+                                                'value' => {
+                                                               'value' => 23
+                                                            },
+                                                'name' => "At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 23
+                                                            },
+                                                'name' => "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 26
+                                                            },
+                                                'name' => "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                                },
+                                                {
+                                                'value' => {
+                                                               'value' => 28
+                                                            },
+                                                'name' => 'outros.'
+                                                }
+                                             ],
+                              'valid_from' => '2013-01-01T00:00:00'
+                           }
+                        ],
+               'header' => {
+                              'Foo Bar0' => 0
+                           }
+            };
+            delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0..3;
+            is_deeply($res_variable_value, $expe, 'results looks good!');
 
 
             for my $var (@subvar){
