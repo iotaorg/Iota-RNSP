@@ -167,6 +167,12 @@ eval {
             is( @{ $list_var->{variables_variations} }, 2, 'total match' );
             is( substr( $_->{name}, -1 ), '.', 'update ok' ) for @{ $list_var->{variables_variations} };
 
+
+            my $detalhes = &_get( 200, '/api/indicator/' . $indicator->{id} );
+            is(@{$detalhes->{variables}},2,'detalhes de variaveis ok');
+            is(@{$detalhes->{variations}},4,'detalhes de variacoes ok');
+
+
             my @subvals;
 
             push @subvals,
@@ -231,6 +237,12 @@ eval {
             &add_value( $uri1, '2011-01-01', 16 );
             &add_value( $uri1, '2012-01-01', 17 );
             &add_value( $uri1, '2013-01-01', 18 );
+
+
+            my $period = &_get( 200, '/api/indicator/' . $indicator->{id} . '/variables_variation/'.$subvar[0]{id}.'/values?valid_from=2012-01-01');
+            is(@{$period->{values}}, 4, 'filtro aplicado corretamente');
+
+
 
             # testando historico
             my $res_variable_value = &_get( 200, '/api/indicator/' . $indicator->{id} . '/variable/value' );
@@ -491,11 +503,13 @@ sub _get {
    my ( $code, $url, $arr ) = @_;
    my ( $res, $c ) = eval { ctx_request( GET $url ) };
    fail("POST $url => $@") if $@;
+
    if ( $code == 0 || is( $res->code, $code, 'GET ' . $url . ' code is ' . $code ) ) {
       my $obj = eval { from_json( $res->content ) };
       fail("JSON $url => $@") if $@;
       return $obj;
    }
+   use DDP; p $res;
    return undef;
 }
 

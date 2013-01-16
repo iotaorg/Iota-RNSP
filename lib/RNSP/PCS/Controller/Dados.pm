@@ -88,7 +88,6 @@ sub _download {
         ]
     );
     my $var_header = {};
-    $self->_add_variables($c, $var_header, $lines[0]);
 
     while(my $city = $citys->next){
         my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] })->as_hashref;
