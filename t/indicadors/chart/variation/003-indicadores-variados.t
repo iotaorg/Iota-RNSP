@@ -136,6 +136,9 @@ eval {
                ]
             );
 
+            my $list_variables = &_get(200,'/api/indicator/variable');
+            is(@{$list_variables->{variables}}, 2, 'count of /api/indicator/variable looks fine');
+
             # -----------
             ## DEADLOCK do formula faz com que a gente tenha que atualizar a formula com os IDs
             # -----------
@@ -407,6 +410,9 @@ eval {
             delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0 .. 3;
             is_deeply( $res_variable_value, $expe, '/api/indicator/' . $indicator->{id} . '/variable/value dont looks nice..' );
 
+            # testa o cenario menos comum de delete
+            # que seria cada endpoint
+            # mas na real, geralmente eh um delete no indicador inteiro
             for my $var (@subvar) {
 
                my $list_val =
@@ -421,7 +427,6 @@ eval {
                      . $_->{id} )
                   for @{ $list_val->{values} };
             }
-
             for my $var (@variacoes) {
                &_delete( 204, '/api/indicator/' . $indicator->{id} . '/variation/' . $var->{id} );
                &_delete( 410, '/api/indicator/' . $indicator->{id} . '/variation/' . $var->{id} );
@@ -431,6 +436,8 @@ eval {
                &_delete( 204, '/api/indicator/' . $indicator->{id} . '/variables_variation/' . $var->{id} );
                &_delete( 410, '/api/indicator/' . $indicator->{id} . '/variables_variation/' . $var->{id} );
             }
+
+            &_delete( 204, '/api/indicator/' . $indicator->{id} );
 
             die 'rollback';
       }

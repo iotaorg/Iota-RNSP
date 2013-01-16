@@ -21,6 +21,53 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
+
+sub all_variable : Chained('base') : PathPart('variable') : Args(0) : ActionClass('REST') {
+  my ( $self, $c ) = @_;
+
+}
+=pod
+
+retorna
+\ {
+    variables:  [
+        [0] {
+            id          :  337,
+            indicator_id:  332,
+            name        :  "Pessoas"
+        },
+        [1] {
+            id          :  338,
+            indicator_id:  332,
+            name        :  "variavel para teste"
+        }
+    ]
+}
+
+=cut
+
+sub all_variable_GET {
+   my ( $self, $c ) = @_;
+
+    my @list = $c->model('DB::IndicatorVariablesVariation')->as_hashref->all;
+    my @objs;
+
+    foreach my $obj (@list){
+        push @objs, {
+            (map { $_ => $obj->{$_} } qw(
+               id name indicator_id
+            ))
+        }
+    }
+
+    $self->status_ok(
+        $c,
+        entity => {
+        variables => \@objs
+        }
+    );
+}
+
 sub indicator : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
   my ( $self, $c ) = @_;
 
@@ -148,19 +195,27 @@ Retorna: No-content ou Gone
 =cut
 
 sub indicator_DELETE {
-  my ( $self, $c ) = @_;
+   my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_user_roles(qw(admin));
 
 
-  my $obj = $c->stash->{object}->next;
-  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
+   my $obj = $c->stash->{object}->next;
+   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-  $obj->user_indicators->delete;
-  $obj->delete;
+   $c->model('DB::IndicatorVariablesVariationsValue')->search({
+      indicator_variables_variation_id => [map {$_->id} $obj->indicator_variables_variations->all ]
+   })->delete;
 
-  $self->status_no_content($c);
+   $obj->indicator_variations->delete;
+
+   $obj->indicator_variables_variations->delete;
+
+   $obj->user_indicators->delete;
+   $obj->delete;
+
+   $self->status_no_content($c);
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {

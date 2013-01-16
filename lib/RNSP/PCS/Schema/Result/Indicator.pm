@@ -157,6 +157,12 @@ __PACKAGE__->table("indicator");
   is_nullable: 0
   original: {data_type => "varchar"}
 
+=head2 indicator_admins
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -237,6 +243,12 @@ __PACKAGE__->add_columns(
     default_value => "sum",
     is_nullable   => 0,
     original      => { data_type => "varchar" },
+  },
+  "indicator_admins",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
   },
 );
 
@@ -356,8 +368,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 08:50:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9JlEDEGGvJ+aos5sSvGcyA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-16 08:28:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dVVyl+q0WV4cz+brkU51UQ
 
 __PACKAGE__->belongs_to(
     "owner",

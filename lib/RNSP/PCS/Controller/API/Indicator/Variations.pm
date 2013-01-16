@@ -109,6 +109,11 @@ sub variation_DELETE {
 
    if ($c->user->id == $obj->indicator_id || $c->check_any_user_role(qw(admin))){
       $c->logx('Apagou informação de indicator_variations ' . $obj->id);
+
+      $c->model('DB::IndicatorVariablesVariationsValue')->search({
+         indicator_variation_id => $obj->id
+      })->delete;
+
       $obj->delete;
    }
 
