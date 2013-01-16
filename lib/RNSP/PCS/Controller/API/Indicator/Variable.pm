@@ -201,7 +201,7 @@ sub values_GET {
         my @indicator_variations;
         my @indicator_variables;
         if ($indicator->indicator_type eq 'varied'){
-            @indicator_variations = $indicator->indicator_variations->all;
+            @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
             @indicator_variables  = $indicator->indicator_variables_variations->all;
          }
 
@@ -294,19 +294,31 @@ sub values_GET {
                      }
                   }
 
-                  use DDP; p $vals;
-                  foreach (keys %$vals){
+                  # TODO ler do indicador qual o totalization_method
+                  my $sum = 0;
+                  foreach my $variation_id (keys %$vals){
 
-                     #$item->{formula_value} = $indicator_formula->evaluate_double(
-                     #   {map { $_->{varid} => $_->{value}||0 } @order},
-                     #   {map { $_->{varid} => $_->{value}||0 } @order},
-                     #);
+                     my $val = $indicator_formula->evaluate_with_alias(
+                        V => {map { $_->{varid} => $_->{value} } @order},
+                        N => $vals->{$variation_id},
+                     );
 
+                     $item->{variations}{$variation_id} = {
+                        value => $val
+                     };
+                     $sum += $val;
                   }
+                  $item->{formula_value} = $sum;
 
-#exit;
-
-
+                  my @variations;
+                  # corre na ordem
+                  foreach my $var (@indicator_variations){
+                     push @variations, {
+                        name  => $var->name,
+                        value => $item->{variations}{$var->id}{value}
+                     };
+                  }
+                  $item->{variations} = \@variations;
 
                }else{
 
@@ -324,7 +336,6 @@ sub values_GET {
         }
         $ret = $hash;
     };
-    use DDP; p $@;
     if ($@){
         $self->status_bad_request(
             $c,
