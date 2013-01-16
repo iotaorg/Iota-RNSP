@@ -133,7 +133,12 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 sub list_GET {
    my ( $self, $c ) = @_;
 
-   my @list = $c->stash->{collection}->as_hashref->all;
+   my $valid_from = ($c->req->params->{valid_from}||'') =~ /^\d{4}-\d{2}-\d{2}$/ ?
+      $c->req->params->{valid_from} : undef;
+
+   my @list = $c->stash->{collection}->search({
+      ($valid_from ? ( valid_from => $valid_from) : ())
+   })->as_hashref->all;
    my @objs;
 
    foreach my $obj (@list){
