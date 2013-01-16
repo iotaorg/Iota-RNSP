@@ -29,7 +29,9 @@ sub variables_variation : Chained('object') : PathPart('') : Args(0) : ActionCla
 
 =encoding utf-8
 
-
+   name
+   type
+   explanation
 
 =cut
 
