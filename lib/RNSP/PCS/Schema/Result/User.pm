@@ -242,6 +242,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 sources
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::Source>
+
+=cut
+
+__PACKAGE__->has_many(
+  "sources",
+  "RNSP::PCS::Schema::Result::Source",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_files
 
 Type: has_many
@@ -348,8 +363,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:14:48
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pv90FLTPMiM3aXt9sk8CGA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-16 09:11:32
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6qw6slJkE3nS1WtQJxPtTw
 
 __PACKAGE__->has_many(
     "user_roles",
