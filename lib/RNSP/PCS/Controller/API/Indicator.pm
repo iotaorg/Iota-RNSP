@@ -104,31 +104,45 @@ Retorna:
 =cut
 
 sub indicator_GET {
-  my ( $self, $c ) = @_;
+   my ( $self, $c ) = @_;
 
-  my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis']})->as_hashref->next;
+   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis']})->next;
 
-  my $f = new RNSP::IndicatorFormula(
-    formula => $object_ref->{formula},
-    schema => $c->model('DB')->schema);
-  my ($any_var) = $f->variables;
+   my $f = new RNSP::IndicatorFormula(
+      formula => $object_ref->formula,
+      schema => $c->model('DB')->schema);
+   my ($any_var) = $f->variables;
+
+   my $ret = {
+
+      $object_ref->indicator_type eq 'varied' ? (variations => [
+         map { { id => $_->id, name => $_->name } } $object_ref->indicator_variations->search(undef,{order_by => 'order'})->all
+      ]) : (),
+
+      $object_ref->indicator_type eq 'varied' ? (variables => [
+         map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations
+      ]) : (),
+
+      period     => $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)->period} : undef,
+      created_by => {
+        map { $_ => $object_ref->owner->$_ } qw(name id)
+      },
+      axis => {
+        map { $_ => $object_ref->axis->$_ } qw(name id)
+      },
+
+      (map { $_ => $object_ref->$_ } qw(name goal axis_id formula source explanation observations
+            goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
+               indicator_admins variety_name indicator_type summarization_method all_variations_variables_are_required
+        ))
+    };
+    $ret->{created_at} = $object_ref->created_at->datetime;
 
   $self->status_ok(
     $c,
-    entity => {
-      period     => $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)->period} : undef,
-      created_by => {
-        map { $_ => $object_ref->{owner}{$_} } qw(name id)
-      },
-      axis => {
-        map { $_ => $object_ref->{axis}{$_} } qw(name id)
-      },
-      (map { $_ => $object_ref->{$_} } qw(name goal axis_id formula source explanation observations
-            goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-            indicator_admins variety_name indicator_type summarization_method all_variations_variables_are_required
-        created_at))
-    }
+    entity => $ret
   );
+
 }
 
 =pod
