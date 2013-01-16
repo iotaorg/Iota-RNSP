@@ -315,7 +315,7 @@ sub values_GET {
                   foreach my $var (@indicator_variations){
                      push @variations, {
                         name  => $var->name,
-                        value => $item->{variations}{$var->id}
+                        value => $item->{variations}{$var->id}{value}
                      };
                   }
                   $item->{variations} = \@variations;
