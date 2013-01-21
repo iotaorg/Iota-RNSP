@@ -18,6 +18,16 @@ sub base : Chained('/api/base') : PathPart('indicator') : CaptureArgs(0) {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
   $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+
+  my %roles = map { $_ => 1 } $c->user->roles;
+
+  my @roles;
+  push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
+  push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
+
+  $c->stash->{object} = $c->stash->{object}->search({ '-or' => \@roles });
+
+
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
@@ -133,7 +143,7 @@ sub indicator_GET {
 
       (map { $_ => $object_ref->$_ } qw(name goal axis_id formula source explanation observations
             goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-               indicator_admins variety_name indicator_type summarization_method all_variations_variables_are_required
+               indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
         ))
     };
     $ret->{created_at} = $object_ref->created_at->datetime;
@@ -273,7 +283,17 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search_rs( undef, { prefetch => ['owner','axis'] } )->as_hashref->all;
+    my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => ['owner','axis'] } );
+
+    my %roles = map { $_ => 1 } $c->user->roles;
+
+    my @roles;
+    push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
+    push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
+
+    $rs = $rs->search({ '-or' => \@roles });
+
+    my @list = $rs->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
@@ -289,7 +309,7 @@ sub list_GET {
 
             (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation observations
                  goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-                 indicator_admins variety_name indicator_type summarization_method all_variations_variables_are_required
+                 indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
 
             created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,

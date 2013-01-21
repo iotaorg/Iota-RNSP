@@ -86,18 +86,72 @@ eval {
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
-            ( $res, $c ) = ctx_request( GET '/api/log');
+            my $inds = eval{from_json( $res->content )};
+            is(@{$inds->{indicators}}, 1, 'roles admin ok');
+
+            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
+            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
+
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
-            my $logs = eval{from_json( $res->content )};
-            foreach my $log(@{$logs->{logs}}){
-                if ($log->{message} eq 'Adicionou variavel Foo Bar0'){
-                    is($log->{url}, 'POST /api/variable', 'Log criado com sucesso');
-                }elsif ($log->{message} eq 'Adicionou indicadorFoo Bar'){
-                    is($log->{url}, 'POST /api/indicator', 'Log do indicador criado com sucesso');
-                }
-            }
+            $inds = eval{from_json( $res->content )};
+            is(@{$inds->{indicators}}, 1, 'roles movimento ok');
+
+            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
+            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
+
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+            $inds = eval{from_json( $res->content )};
+            is(@{$inds->{indicators}}, 0, 'roles movimento ok');
+
+
+            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/indicator',
+                [   api_key                         => 'test',
+                    'indicator.create.name'         => 'xxFoo Bar',
+                    'indicator.create.formula'      => '5 + $' . $var1,
+                    'indicator.create.axis_id'      => '1',
+                    'indicator.create.explanation'  => 'explanation',
+                    'indicator.create.source'       => 'me',
+                    'indicator.create.goal_source'  => '@fulano',
+                    'indicator.create.chart_name'   => 'pie',
+                    'indicator.create.goal_operator'=> '>=',
+                    'indicator.create.tags'         => 'you,me,she',
+                    'indicator.create.indicator_roles'  => '_movimento',
+                    'indicator.create.observations' => 'lala'
+
+                ]
+            );
+            ok( $res->is_success, 'indicator created!' );
+
+
+            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
+            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
+
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+            $inds = eval{from_json( $res->content )};
+            is(@{$inds->{indicators}}, 1, 'roles movimento ok');
+
+            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+
+            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+            $inds = eval{from_json( $res->content )};
+            is(@{$inds->{indicators}}, 2, 'roles movimento ok');
+
+            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
+
+            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+            $inds = eval{from_json( $res->content )};
+            is(@{$inds->{indicators}}, 1, 'roles prefeitura ok');
 
             die 'rollback';
         }
