@@ -204,7 +204,7 @@ __PACKAGE__->belongs_to(
   "user",
   "RNSP::PCS::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 variable_values
@@ -223,8 +223,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 04:31:28
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6yLByViZuIVBc6XasfOAUQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J3ztLO7QeG4u1fljjFzotA
 
 __PACKAGE__->belongs_to(
     "owner",

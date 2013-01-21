@@ -41,7 +41,7 @@ __PACKAGE__->table("indicator_variables_variations_value");
 
 =head2 id
 
-  data_type: 'bigint'
+  data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
   sequence: 'indicator_variables_variations_value_id_seq'
@@ -95,7 +95,7 @@ __PACKAGE__->table("indicator_variables_variations_value");
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type         => "bigint",
+    data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
     sequence          => "indicator_variables_variations_value_id_seq",
@@ -196,8 +196,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 22:16:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uv9iin1bYLtsQsUUgIiSyQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BNKTqhDLfJEvUJC5RmZtEw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

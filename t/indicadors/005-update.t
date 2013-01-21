@@ -38,6 +38,7 @@ eval {
                 'indicator.create.goal'         => '11',
                 'indicator.create.formula'      => '5 / 2',
                 'indicator.create.axis_id'       => '1',
+                'indicator.create.indicator_roles' => '_prefeitura,_movimento',
             ]
         );
         ok( $res->is_success, 'indicator created!' );
