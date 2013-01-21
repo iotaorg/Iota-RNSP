@@ -135,14 +135,12 @@ __PACKAGE__->table("indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 indicator_type
 
   data_type: 'text'
   default_value: 'normal'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 all_variations_variables_are_required
 
@@ -155,9 +153,13 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   default_value: 'sum'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 indicator_admins
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 indicator_roles
 
   data_type: 'text'
   is_nullable: 1
@@ -223,28 +225,16 @@ __PACKAGE__->add_columns(
   "observations",
   { data_type => "text", is_nullable => 1 },
   "variety_name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "indicator_type",
-  {
-    data_type     => "text",
-    default_value => "normal",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "normal", is_nullable => 0 },
   "all_variations_variables_are_required",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "summarization_method",
-  {
-    data_type     => "text",
-    default_value => "sum",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "sum", is_nullable => 0 },
   "indicator_admins",
+  { data_type => "text", is_nullable => 1 },
+  "indicator_roles",
   {
     data_type   => "text",
     is_nullable => 1,
@@ -368,8 +358,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-16 08:28:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dVVyl+q0WV4cz+brkU51UQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0e0j1npL62qU8ctdEudH+w
 
 __PACKAGE__->belongs_to(
     "owner",

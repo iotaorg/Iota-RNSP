@@ -56,7 +56,6 @@ __PACKAGE__->table("indicator_variations");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -84,11 +83,7 @@ __PACKAGE__->add_columns(
   "indicator_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -145,8 +140,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-15 22:17:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/tBOMizfffkVCJ9sWEG4cw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gRMqtArEqxQDn1jwK0Mtyw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
