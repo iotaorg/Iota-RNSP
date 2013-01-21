@@ -50,6 +50,7 @@ eval {
                   'indicator.create.observations'   => 'lala',
                   'indicator.create.variety_name'   => 'Faixas',
                   'indicator.create.indicator_type' => 'varied',
+                  'indicator.create.indicator_roles' => '_prefeitura,_movimento'
                ]
             );
 

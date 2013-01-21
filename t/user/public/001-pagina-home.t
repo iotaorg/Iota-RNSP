@@ -138,6 +138,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
+                    'indicator.create.indicator_roles' => '_prefeitura,',
 
                 ]
             );
@@ -179,7 +180,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
-
+                    'indicator.create.indicator_roles' => '_prefeitura,',
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
@@ -199,6 +200,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
+                    'indicator.create.indicator_roles' => '_prefeitura,',
 
                 ]
             );

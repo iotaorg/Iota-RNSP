@@ -133,7 +133,7 @@ sub indicator_GET {
 
       (map { $_ => $object_ref->$_ } qw(name goal axis_id formula source explanation observations
             goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-               indicator_admins variety_name indicator_type summarization_method all_variations_variables_are_required
+               indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
         ))
     };
     $ret->{created_at} = $object_ref->created_at->datetime;
@@ -289,7 +289,7 @@ sub list_GET {
 
             (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation observations
                  goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-                 indicator_admins variety_name indicator_type summarization_method all_variations_variables_are_required
+                 indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
 
             created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
