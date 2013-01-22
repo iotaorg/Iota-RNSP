@@ -748,7 +748,7 @@ a#help-formula:hover{
 
 #patrocinadores .content{
 	text-align: center;
-	margin-top: 10px;
+	clear: both;
 }
 
 table.indicadores {
