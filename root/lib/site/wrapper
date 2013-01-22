@@ -99,6 +99,13 @@
         	Desenvolvido por <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" alt="Aware" /></a>
         </div>
     </div>
+    [% IF find_role == '_movimento' %]
+        <div id="patrocinadores">
+            <div class="content">
+                <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
+            </div>
+        </div>
+	[% END %]
 </div>
 </body>
 </html>

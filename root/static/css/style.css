@@ -746,6 +746,11 @@ a#help-formula:hover{
 	color: #333;
 }
 
+#patrocinadores .content{
+	text-align: center;
+	margin-top: 10px;
+}
+
 table.indicadores {
 	margin: 0 auto;
 	clear: both;
