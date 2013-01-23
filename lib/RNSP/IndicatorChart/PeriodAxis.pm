@@ -251,7 +251,13 @@ sub read_values {
 
     my $indicator = $self->indicator;
 
-    my $series = $self->_load_variables_values(%options, group_by => $group_by);
+    my $series    = $self->_load_variables_values(%options, group_by => $group_by);
+    my @indicator_variations;
+    my @indicator_variables;
+    if ($indicator->indicator_type eq 'varied'){
+      @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+      @indicator_variables  = $indicator->indicator_variables_variations->all;
+    }
     my $data = {
         label            => $indicator->name,
         axis             => {
@@ -286,9 +292,74 @@ sub read_values {
         my $sum_ok = 0;
         my $total2 = 0;
         foreach my $dt (sort {$a cmp $b} keys %{$series->{$start}{sets}}) {
-            my $vals = $series->{$start}{sets}{$dt};
+            my $vals_user = $series->{$start}{sets}{$dt};
+            my $valor;
 
-            my $valor = $self->indicator_formula->evaluate( %$vals );
+            # numero de variaveis preenchidas ok
+            if ($qtde == keys %$vals_user){
+
+                if (@indicator_variables && @indicator_variations){
+
+                  my $vals = {};
+
+                  for my $variation (@indicator_variations){
+
+                     my $rs = $variation->indicator_variables_variations_values->search({
+                        valid_from => $dt
+                     })->as_hashref;
+                     while (my $r = $rs->next){
+                        next unless defined $r->{value};
+                        $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
+                     }
+
+                     my $qtde_dados = keys %{$vals->{$variation->id}};
+
+                     unless ($qtde_dados == @indicator_variables){
+                        $row->{variations}{$variation->id} = {
+                           value => '-'
+                        };
+
+                        delete $vals->{$variation->id};
+                     }
+                  }
+
+                  # TODO ler do indicador qual o totalization_method
+                  my $sum = 0;
+                  foreach my $variation_id (keys %$vals){
+
+                     my $val = $self->indicator_formula->evaluate_with_alias(
+                        V => $vals_user,
+                        N => $vals->{$variation_id},
+                     );
+
+                     $row->{variations}{$variation_id} = {
+                        value => $val
+                     };
+                     $sum += $val;
+                  }
+                  $row->{formula_value} = $valor = $sum;
+
+                  my @variations;
+                  # corre na ordem
+                  foreach my $var (@indicator_variations){
+                     push @variations, {
+                        name  => $var->name,
+                        value => $row->{variations}{$var->id}{value}
+                     };
+                  }
+                  $row->{variations} = \@variations;
+
+               }else{
+
+                  die('Indicador sem dados de varied.') if $indicator->formula =~ /#\d/;
+
+                  $valor = $self->indicator_formula->evaluate( %$vals_user );
+               }
+
+
+            }else{
+                $valor = '-';
+            }
 
             if ($valor ne '-'){
                 $sum_ok = $total_ok = 1;
@@ -298,6 +369,8 @@ sub read_values {
                 $row->{min} = $valor if $valor < $row->{min};
             }
             push @data, [$dt, $valor];
+
+
 
             $total2++;
             $totali++;

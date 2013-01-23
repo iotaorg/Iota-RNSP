@@ -148,6 +148,13 @@ sub resumo_GET {
                 schema => $c->model('DB')->schema
             );
 
+            my @indicator_variations;
+            my @indicator_variables;
+            if ($indicator->indicator_type eq 'varied'){
+                @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+                @indicator_variables  = $indicator->indicator_variables_variations->all;
+            }
+
 
             my $rs = $c->model('DB')->resultset('Variable')->search_rs({
                 'me.id' => [$indicator_formula->variables],
@@ -184,12 +191,69 @@ sub resumo_GET {
             foreach my $from (keys %{$res}){
                 $item->{$from}{nome} = RNSP::IndicatorChart::PeriodAxis::get_label_of_period( $from, $perido);
 
-                if (keys %{$res->{$from}} == $variaveis){
+                my $undef = 0;
+                map {$undef++ unless defined $_} values %{$res->{$from}};
 
-                    my $undef = 0;
-                    map {$undef++ unless defined $_} values %{$res->{$from}};
+                if ($undef == 0 && keys %{$res->{$from}} == $variaveis){
 
-                    $item->{$from}{valor} = $undef ? '-' : $indicator_formula->evaluate(%{$res->{$from}});
+                    if (@indicator_variables && @indicator_variations){
+
+                        my $vals = {};
+
+                        for my $variation (@indicator_variations){
+
+                            my $rs = $variation->indicator_variables_variations_values->search({
+                                valid_from => $from
+                            })->as_hashref;
+                            while (my $r = $rs->next){
+                                next unless defined $r->{value};
+                                $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
+                            }
+
+                            my $qtde_dados = keys %{$vals->{$variation->id}};
+
+                            unless ($qtde_dados == @indicator_variables){
+                                $item->{$from}{variations}{$variation->id} = {
+                                    value => '-'
+                                };
+
+                                delete $vals->{$variation->id};
+                            }
+                        }
+
+                        # TODO ler do indicador qual o totalization_method
+                        my $sum = 0;
+                        foreach my $variation_id (keys %$vals){
+
+                            my $val = $indicator_formula->evaluate_with_alias(
+                                V => $res->{$from},
+                                N => $vals->{$variation_id},
+                            );
+
+                            $item->{$from}{variations}{$variation_id} = {
+                                value => $val
+                            };
+                            $sum += $val;
+                        }
+                        $item->{$from}{valor} = $sum;
+
+                        my @variations;
+                        # corre na ordem
+                        foreach my $var (@indicator_variations){
+                            push @variations, {
+                                name  => $var->name,
+                                value => $item->{$from}{variations}{$var->id}{value}
+                            };
+                        }
+                        $item->{$from}{variations} = \@variations;
+
+                    }else{
+
+                        die('Indicador sem dados de varied.') if $indicator->formula =~ /#\d/;
+
+                        $item->{$from}{valor} = $indicator_formula->evaluate(%{$res->{$from}});
+                    }
+
                 }else{
                     $item->{$from}{valor} = '-';
                 }
@@ -217,6 +281,10 @@ sub resumo_GET {
                 foreach my $in (@$indicadores){
                     $datas->{$_}{nome} = $in->{valores}{$_}{nome}
                         for (keys %{$in->{valores}} );
+
+                    $datas->{$_}{variations} = $in->{valores}{$_}{variations}
+                        for (keys %{$in->{valores}} );
+
                 }
 
                 my $i     = $max_periodos;
@@ -230,11 +298,22 @@ sub resumo_GET {
                 # pronto, agora @datas ja tem a lista correta e na ordem!
                 foreach my $in (@$indicadores){
 
+
                     my @valores;
                     foreach my $data (@datas_ar){
                         push @valores, $in->{valores}{$data->{data}}{valor} ||'-';
                     }
-                    $in->{valores} = \@valores;
+
+                    my @variacoes;
+                    my $defined = 0;
+                    foreach my $data (@datas_ar){
+                        $defined++ if exists $in->{valores}{$data->{data}}{variations};
+                        push @variacoes, $in->{valores}{$data->{data}}{variations};
+                    }
+                    $in->{variacoes} = \@variacoes if $defined;
+
+                    $in->{valores}  = \@valores;
+
                 }
                 $ind_info->{datas} = \@datas_ar;
             }

@@ -2,9 +2,13 @@ use JSON qw(from_json);
 use strict;
 use warnings;
 use URI;
+
 use Test::More;
 
 use utf8;
+use Encode;
+my $governanca = encode("utf8", 'Governança');
+
 use FindBin qw($Bin);
 use lib "$Bin/../../../lib";
 
@@ -422,6 +426,28 @@ eval {
             };
             delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0 .. 3;
             is_deeply( $res_variable_value, $expe, '/api/indicator/' . $indicator->{id} . '/variable/value dont looks nice..' );
+
+            ( $res ) = ctx_request(
+                    GET '/api/public/user/'.
+                    $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis?group_by=yearly'
+            );
+            my $obj_public = eval{from_json( $res->content )};
+            ok($res->is_success, 'GET chart public success');
+
+            is($obj_public->{series}[0]{formula_value}, 88, 'soma ok');
+            is($obj_public->{series}[0]{variations}[0]{value}, 19, 'primeira variacao ok');
+
+            is($obj_public->{series}[3]{formula_value}, 100, 'soma ok');
+            is($obj_public->{series}[3]{variations}[0]{value}, 23, 'terceira variacao ok');
+
+            ( $res ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
+
+
+            my $obj_public_indicator = eval{from_json( $res->content )};
+            is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{variacoes}[0][0]{value},'19', 'valor da primeira variacao ok');
+            is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[0],'88', 'valor total da primeria variacao ok');
+            is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[3],'100', 'valor total da terceira variacao ok');
+
 
             # testa o cenario menos comum de delete
             # que seria cada endpoint
