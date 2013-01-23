@@ -96,7 +96,7 @@ sub stash_comparacao {
     }
 
     my @indicators = $c->model('DB::Indicator')->search(
-        undef,
+        {indicator_roles => {like => '%'.$tipo.'%'}  },
         {
             prefetch => ['axis']
         }
