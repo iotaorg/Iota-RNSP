@@ -255,9 +255,12 @@ sub resumo_GET {
 
                     }else{
 
-                        die('Indicador sem dados de varied.') if $indicator->formula =~ /#\d/;
 
-                        $item->{$from}{valor} = $indicator_formula->evaluate(%{$res->{$from}});
+                        if ($indicator->formula =~ /#\d/){
+                            $item->{$from}{valor} = 'ERR#';
+                        }else{
+                            $item->{$from}{valor} = $indicator_formula->evaluate(%{$res->{$from}});
+                        }
                     }
 
                 }else{

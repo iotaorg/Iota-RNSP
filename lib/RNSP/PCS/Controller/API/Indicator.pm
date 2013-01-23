@@ -123,10 +123,13 @@ sub indicator_GET {
       schema => $c->model('DB')->schema);
    my ($any_var) = $f->variables;
 
+   my $where = $object_ref->dynamic_variations ? {
+        user_id =>  $c->stash->{user_id} || $c->user->id
+   } : undef;
    my $ret = {
 
-      $object_ref->indicator_type eq 'varied' && ! $object_ref->dynamic_variations ? (variations => [
-         map { { id => $_->id, name => $_->name } } $object_ref->indicator_variations->search(undef,{order_by => 'order'})->all
+      $object_ref->indicator_type eq 'varied' ? (variations => [
+         map { { id => $_->id, name => $_->name } } $object_ref->indicator_variations->search($where, {order_by => 'order'})->all
       ]) : (),
 
       $object_ref->indicator_type eq 'varied' ? (variables => [

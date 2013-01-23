@@ -359,9 +359,11 @@ sub read_values {
 
                }else{
 
-                  die('Indicador sem dados de varied.') if $indicator->formula =~ /#\d/;
-
-                  $valor = $self->indicator_formula->evaluate( %$vals_user );
+                  if ($indicator->formula =~ /#\d/ ){
+                     $valor = 'ERR#';
+                  }else{
+                    $valor = $self->indicator_formula->evaluate( %$vals_user );
+                  }
                }
 
 
