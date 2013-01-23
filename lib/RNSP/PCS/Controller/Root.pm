@@ -188,7 +188,8 @@ sub stash_tela_indicator {
     delete $c->stash->{template};
 
     my $indicator = $c->model('DB::Indicator')->search({
-        name_url     => $c->stash->{indicator}
+        name_url     => $c->stash->{indicator},
+        indicator_roles => {like => '%'.$c->stash->{find_role}.'%'}
     })->as_hashref->next;
 
     $c->forward('/error_404') unless $indicator;
