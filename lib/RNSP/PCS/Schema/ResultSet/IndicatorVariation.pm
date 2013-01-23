@@ -21,6 +21,7 @@ sub verifiers_specs {
                 name         => { required => 1, type => 'Str' },
                 indicator_id => { required => 1, type => 'Int' },
                 order        => { required => 1, type => 'Int' },
+                user_id      => { required => 1, type => 'Int' },
             },
         ),
 

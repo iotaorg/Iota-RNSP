@@ -165,6 +165,11 @@ __PACKAGE__->table("indicator");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 dynamic_variations
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -240,6 +245,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "dynamic_variations",
+  { data_type => "boolean", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -358,8 +365,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0e0j1npL62qU8ctdEudH+w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-23 03:30:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1HbUApqtSwNp5GFtqZOs4w
 
 __PACKAGE__->belongs_to(
     "owner",

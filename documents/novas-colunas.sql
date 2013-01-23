@@ -11,4 +11,12 @@ nova coluna pra salvar quem pode adicionar dados no indicador.
 ALTER TABLE indicator
   ADD COLUMN indicator_roles character varying;
 
+ALTER TABLE indicator
+  ADD COLUMN dynamic_variations boolean;
+
+
+
+ALTER TABLE indicator_variations
+  ADD COLUMN user_id boolean;
+
 

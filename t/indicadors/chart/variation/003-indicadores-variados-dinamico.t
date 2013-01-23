@@ -54,7 +54,9 @@ eval {
                   'indicator.create.observations'   => 'lala',
                   'indicator.create.variety_name'   => 'Faixas',
                   'indicator.create.indicator_type' => 'varied',
-                  'indicator.create.indicator_roles' => '_prefeitura,_movimento'
+                  'indicator.create.indicator_roles' => '_prefeitura,_movimento',
+                  'indicator.create.dynamic_variations' => 1
+
                ]
             );
 
@@ -175,7 +177,7 @@ eval {
 
             my $detalhes = &_get( 200, '/api/indicator/' . $indicator->{id} );
             is(@{$detalhes->{variables}},2,'detalhes de variaveis ok');
-            is(@{$detalhes->{variations}},4,'detalhes de variacoes ok');
+            is(@{$detalhes->{variations}},0,'detalhes de variacoes ok ZERO porque cada user tem o seu');
 
 
             my @subvals;

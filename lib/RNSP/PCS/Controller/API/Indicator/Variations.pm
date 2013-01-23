@@ -163,12 +163,18 @@ Retorna:
 =cut
 
 sub list_POST {
-   my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin user));
+    if ($c->stash->{indicator}->dynamic_variations) {
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin _movimento _prefeitura));
+    }else{
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin user));
+    }
 
    $c->req->params->{indicator}{variation}{create}{indicator_id} = $c->stash->{indicator}->id;
+   $c->req->params->{indicator}{variation}{create}{user_id} = $c->user->id;
 
 
    my $dm = $c->model('DataManager');
