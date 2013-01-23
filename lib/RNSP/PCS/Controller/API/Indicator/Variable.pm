@@ -331,11 +331,14 @@ sub values_GET {
 
                }else{
 
-                  die('Indicador sem dados de varied.') if $indicator->formula =~ /#\d/;
+                  if ($indicator->formula =~ /#\d/){
+                        $item->{formula_value} = 'ERR#';
+                  }else{
 
-                  $item->{formula_value} = $indicator_formula->evaluate(
-                     map { $_->{varid} => $_->{value}||0 } @order
-                  );
+                    $item->{formula_value} = $indicator_formula->evaluate(
+                        map { $_->{varid} => $_->{value}||0 } @order
+                    );
+                  }
                }
 
             }

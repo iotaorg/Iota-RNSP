@@ -174,10 +174,9 @@ eval {
             is( @{ $list_var->{variables_variations} }, 2, 'total match' );
             is( substr( $_->{name}, -1 ), '.', 'update ok' ) for @{ $list_var->{variables_variations} };
 
-
             my $detalhes = &_get( 200, '/api/indicator/' . $indicator->{id} );
             is(@{$detalhes->{variables}},2,'detalhes de variaveis ok');
-            is(@{$detalhes->{variations}},0,'detalhes de variacoes ok ZERO porque cada user tem o seu');
+            is(@{$detalhes->{variations}},4,'detalhes de variacoes ok');
 
 
             my @subvals;
