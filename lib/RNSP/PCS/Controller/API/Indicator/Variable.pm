@@ -201,7 +201,16 @@ sub values_GET {
         my @indicator_variations;
         my @indicator_variables;
         if ($indicator->indicator_type eq 'varied'){
-            @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+
+            if ($indicator->dynamic_variations) {
+                @indicator_variations = $indicator->indicator_variations->search({
+                    user_id => $c->stash->{user_id} || $c->user->id
+                }, {order_by=>'order'})->all;
+            }else{
+                @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+            }
+
+
             @indicator_variables  = $indicator->indicator_variables_variations->all;
          }
 

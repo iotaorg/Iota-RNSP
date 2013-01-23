@@ -66,6 +66,7 @@ sub verifiers_specs {
                summarization_method => { required => 0, type => 'Str' },
 
                indicator_roles     => { required => 1, type => 'Str' },
+               dynamic_variations  => { required => 0, type => 'Bool' },
 
             },
       ),
@@ -118,6 +119,7 @@ sub verifiers_specs {
                summarization_method => { required => 0, type => 'Str' },
 
                indicator_roles     => { required => 0, type => 'Str' },
+               dynamic_variations  => { required => 0, type => 'Bool' },
 
             },
       ),

@@ -70,6 +70,11 @@ __PACKAGE__->table("indicator_variations");
   default_value: 0
   is_nullable: 0
 
+=head2 user_id
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -93,6 +98,8 @@ __PACKAGE__->add_columns(
   },
   "order",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
+  "user_id",
+  { data_type => "boolean", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -140,8 +147,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gRMqtArEqxQDn1jwK0Mtyw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-23 04:12:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9V1oOA1X2t2ImU5L456lSA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
