@@ -81,17 +81,19 @@ sub _download {
         'Tags do indicador',
         'Observações do indicador',
         'Período do indicador',
+        'Faixa',
         'Data',
         'Valor',
         'Meta do valor',
         'Justificativa do valor não preenchido',
         ]
     );
-    my $var_header = {};
 
     while(my $city = $citys->next){
-        my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] })->as_hashref;
+        my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] });
         while (my $indicator = $rs->next){
+
+
 
             my $user = $c->model('DB::User')->search({
                 city_id => $city->{id},
@@ -100,8 +102,23 @@ sub _download {
             $c->detach('/error_404') if $c->stash->{cidade} && !$user;
             next if !$user;
 
+            my @indicator_variations;
+            my @indicator_variables;
+            if ($indicator->indicator_type eq 'varied'){
+
+                if ($indicator->dynamic_variations) {
+                    @indicator_variations = $indicator->indicator_variations->search({
+                        user_id => $user->{id}
+                    }, {order_by=>'order'})->all;
+                }else{
+                    @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+                }
+
+                @indicator_variables  = $indicator->indicator_variables_variations->all;
+            }
+
             my $indicator_formula = new RNSP::IndicatorFormula(
-                formula => $indicator->{formula},
+                formula => $indicator->formula,
                 schema => $c->model('DB')->schema
             );
 
@@ -141,7 +158,7 @@ sub _download {
                 my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs({
                     user_id      => $user->{id},
                     valid_from   => $begin,
-                    indicator_id => $indicator->{id}
+                    indicator_id => $indicator->id
                 })->next;
 
                 my $item = {};
@@ -151,35 +168,122 @@ sub _download {
                 }
 
                 if ($definidos == scalar @order){
-                    $item->{formula_value} = $indicator_formula->evaluate(
-                        map { $_->{varid} => $_->{value} } @order
-                    );
+
+                    if (@indicator_variables && @indicator_variations){
+
+                        my $vals = {};
+
+                        for my $variation (@indicator_variations){
+
+                            my $rs = $variation->indicator_variables_variations_values->search({
+                                valid_from => $begin
+                            })->as_hashref;
+                            while (my $r = $rs->next){
+                                next unless defined $r->{value};
+                                $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
+                            }
+
+                            my $qtde_dados = keys %{$vals->{$variation->id}};
+
+                            unless ($qtde_dados == @indicator_variables){
+                                $item->{variations}{$variation->id} = {
+                                value => '-'
+                                };
+
+                                delete $vals->{$variation->id};
+                            }
+                        }
+
+                        # TODO ler do indicador qual o totalization_method
+                        my $sum = 0;
+                        foreach my $variation_id (keys %$vals){
+
+                            my $val = $indicator_formula->evaluate_with_alias(
+                                V => {map { $_->{varid} => $_->{value} } @order},
+                                N => $vals->{$variation_id},
+                            );
+
+                            $item->{variations}{$variation_id} = {
+                                value => $val
+                            };
+                            $sum += $val;
+                        }
+                        $item->{formula_value} = $sum;
+
+                        my @variations;
+                        # corre na ordem
+                        foreach my $var (@indicator_variations){
+                            push @variations, {
+                                name  => $var->name,
+                                value => $item->{variations}{$var->id}{value}
+                            };
+                        }
+                        $item->{variations} = \@variations;
+
+                    }else{
+
+                        if ($indicator->formula =~ /#\d/){
+                                $item->{formula_value} = 'ERR#';
+                        }else{
+
+                            $item->{formula_value} = $indicator_formula->evaluate(
+                                map { $_->{varid} => $_->{value} } @order
+                            );
+                        }
+                    }
+
                 }
 
 
-                my @this_row = (
-                    $city->{id},
-                    $city->{name},
-                    $indicator->{axis}{name},
-                    $indicator->{id},
-                    $indicator->{name},
-                    $self->formula_translate($indicator->{formula}, $hash->{id_nome}),
-                    $indicator->{goal},
-                    $indicator->{goal_explanation},
-                    $indicator->{goal_source},
-                    $indicator->{goal_operator},
-                    $indicator->{explanation},
-                    $indicator->{tags},
-                    $indicator->{observations},
-                    $self->_period_pt($period),
-                    $self->ymd2dmy($begin),
-                    $item->{formula_value},
-                    $item->{goal},
-                    $item->{justification_of_missing_field}
-                );
-                $self->_concate_variables($c, $var_header, \@order, \@this_row);
-
-                push @lines, \@this_row;
+                if (ref $item->{variations} eq 'ARRAY'){
+                    foreach my $variacao(@{$item->{variations}}){
+                        my @this_row = (
+                            $city->{id},
+                            $city->{name},
+                            $indicator->axis->name,
+                            $indicator->id,
+                            $indicator->name,
+                            $self->formula_translate($indicator->formula, $hash->{id_nome}),
+                            $indicator->goal,
+                            $indicator->goal_explanation,
+                            $indicator->goal_source,
+                            $indicator->goal_operator,
+                            $indicator->explanation,
+                            $indicator->tags,
+                            $indicator->observations,
+                            $self->_period_pt($period),
+                            $variacao->{name},
+                            $self->ymd2dmy($begin),
+                            $variacao->{value},
+                            $item->{goal},
+                            $item->{justification_of_missing_field}
+                        );
+                        push @lines, \@this_row;
+                    }
+                }else{
+                    my @this_row = (
+                        $city->{id},
+                        $city->{name},
+                        $indicator->axis->name,
+                        $indicator->id,
+                        $indicator->name,
+                        $self->formula_translate($indicator->formula, $hash->{id_nome}),
+                        $indicator->goal,
+                        $indicator->goal_explanation,
+                        $indicator->goal_source,
+                        $indicator->goal_operator,
+                        $indicator->explanation,
+                        $indicator->tags,
+                        $indicator->observations,
+                        $self->_period_pt($period),
+                        '',
+                        $self->ymd2dmy($begin),
+                        $item->{formula_value},
+                        $item->{goal},
+                        $item->{justification_of_missing_field}
+                    );
+                    push @lines, \@this_row;
+                }
 
             }
 
@@ -195,7 +299,6 @@ sub _download {
         unlink($path);
         die $@;
     }
-
     $self->_download_and_detach($c, $path);
 }
 
