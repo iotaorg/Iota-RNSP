@@ -268,6 +268,12 @@ $(document).ready(function(){
 				table_content += "<tbody>";
 	
 				var indicadores = periods[period_index].indicadores;
+				indicadores.sort(function (a, b) {
+					a = a.name,
+					b = b.name;
+				
+					return a.localeCompare(b);
+				});
 				$.each(indicadores, function(i,item){
 					table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){

@@ -63,7 +63,7 @@ $(document).ready(function(){
 		});
 	}
 	
-	function formataFormula(formula,variables){
+	function formataFormula(formula,variables,vvariables){
 		var operators_caption = {"+":"+"
 						,"-":"-"
 						,"(":"("
@@ -72,8 +72,13 @@ $(document).ready(function(){
 						,"*":"×"
 						,"CONCATENAR ":"[ ]"
 						};
-	
+
 		var new_formula = formula;
+
+		variables.sort(function (a, b) {
+			return b.id - a.id;
+		});
+
 		$.each(variables,function(index,value){
 			var pattern = "\\$"+variables[index].id;
 			var re = new RegExp(pattern, "g");
@@ -83,6 +88,17 @@ $(document).ready(function(){
 		$.each(operators_caption,function(index,value){
 			new_formula = new_formula.replace(index,"&nbsp;" + value + "&nbsp;");
 		});
+
+		if (vvariables){
+			vvariables.sort(function (a, b) {
+				return b.id - a.id;
+			});
+			$.each(vvariables,function(index,value){
+				var pattern = "\\#"+vvariables[index].id;
+				var re = new RegExp(pattern, "g");
+				new_formula = new_formula.replace(re,vvariables[index].name);
+			});
+		}
 		
 		return new_formula;
 	}

@@ -47,6 +47,13 @@ $(document).ready(function(){
 	function carregaIndicadores(){
 
 		$("#axis_list").empty();
+
+		eixos_list.dados.sort(function (a, b) {
+			a = a.name,
+			b = b.name;
+		
+			return a.localeCompare(b);
+		});
 		
 		$(eixos_list.dados).each(function(index,value){
 			if (index == 0){
@@ -141,6 +148,12 @@ $(document).ready(function(){
 		}
 		
 		$(".indicators").empty();
+		indicadores_list.sort(function (a, b) {
+			a = a.name,
+			b = b.name;
+		
+			return a.localeCompare(b);
+		});
 		$.each(indicadores_list, function(i,item){
 			$(".indicators").append("<div class='item' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
 						id: item.id,
@@ -438,7 +451,7 @@ $(document).ready(function(){
 			tooltips.push(indicadorDATA.goal);
 			tooltips.push(indicadorDATA.goal);
 			tooltips.push(indicadorDATA.goal);
-			legendas.push({name: "Meta", color: color_meta, meta: true});
+			legendas.push({name: "Referência de Meta", color: color_meta, meta: true});
 
 			var ymax = indicadorDATA.goal;
 			var ymin = indicadorDATA.goal;
