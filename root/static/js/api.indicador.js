@@ -1,6 +1,7 @@
 var indicador_data;
 var historico_data;
 var variaveis_data = [];
+var data_vvariables = [];
 var cidade_uri;
 
 $(document).ready(function(){
@@ -54,13 +55,32 @@ $(document).ready(function(){
 				$.each(data.variables, function(index,value){
 					variaveis_data.push({"id":data.variables[index].id,"name":data.variables[index].name});
 				});
-				showIndicadorData();
-				loadHistoricoData();
+				loadVVariaveisData();
 			},
 			error: function(data){
 				console.log("erro ao carregar informações do indicador");
 			}
 		});
+	}
+
+	function loadVVariaveisData(){
+
+		data_vvariables = [];
+		$.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: api_path + '/api/public/user/indicator/variable?api_key=$$key'.render({
+					key: $.cookie("key")
+					}),
+			success: function(data, textStatus, jqXHR){
+				$.each(data.variables, function(index,value){
+					data_vvariables.push({"id":data.variables[index].id,"name":data.variables[index].name});
+				});
+				showIndicadorData();
+				loadHistoricoData();
+			}
+		});
+		
 	}
 	
 	function formataFormula(formula,variables,vvariables){
