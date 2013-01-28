@@ -1,6 +1,7 @@
 var indicador_data;
 var historico_data;
 var variaveis_data = [];
+var data_vvariables = [];
 var cidade_uri;
 
 $(document).ready(function(){
@@ -47,6 +48,7 @@ $(document).ready(function(){
 	
 	function loadVariaveisData(){
 		$.ajax({
+			async: false,
 			type: 'GET',
 			dataType: 'json',
 			url: api_path + '/api/public/user/variable',
@@ -54,6 +56,25 @@ $(document).ready(function(){
 				$.each(data.variables, function(index,value){
 					variaveis_data.push({"id":data.variables[index].id,"name":data.variables[index].name});
 				});
+
+				data_vvariables = [];
+				$.ajax({
+					async: false,
+					type: 'GET',
+					dataType: 'json',
+					url: api_path + '/api/indicator/variable?api_key=$$key'.render({
+							key: $.cookie("key"),
+							userid: $.cookie("user.id")
+							}),
+					success: function(data, textStatus, jqXHR){
+
+						$.each(data.variables, function(index,value){
+							data_vvariables.push({"id":data.variables[index].id,"name":data.variables[index].name});
+						});
+					}
+					
+				});
+
 				showIndicadorData();
 				loadHistoricoData();
 			},
@@ -61,6 +82,7 @@ $(document).ready(function(){
 				console.log("erro ao carregar informações do indicador");
 			}
 		});
+
 	}
 	
 	function formataFormula(formula,variables,vvariables){
@@ -108,7 +130,7 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .title").html(indicador_data.name);
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
-		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data)}));
+		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data,data_vvariables)}));
 		if (indicador_data.goal_source){
 			var fonte_meta = "<br /><span class='goal-explanation'>Fonte: $$dado</span>".render({dado: indicador_data.goal_source});
 		}else{

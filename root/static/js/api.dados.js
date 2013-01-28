@@ -7,6 +7,7 @@ var dadosGrafico = {"dados": [], "labels": []};
 var dadosMapa = [];
 var markerCluster;
 var carregouTabela = false;
+var carregaVariacoes = true;
 
 $(document).ready(function(){
 
@@ -202,6 +203,8 @@ $(document).ready(function(){
 			$(this).addClass("selected");
 			$(".data-right .data-title .title").html($(".indicators .selected").html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
+
+			carregaVariacoes = true;
 			
 			if (ref == "comparacao"){
 				var url = "/"+role.replace("_","")+"/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -234,6 +237,7 @@ $(document).ready(function(){
 	function carregaDadosTabela(){
 		
 		if (!carregouTabela){
+			$.xhrPool.abortAll();
 			
 			var indicador = indicadorID;
 			var indicador_uri = $(".indicators div.selected").attr("name-uri");
@@ -245,6 +249,14 @@ $(document).ready(function(){
 			var date_labels = [];
 			for (i = ano_anterior - 3; i <= ano_anterior; i++){
 				dadosGrafico.labels.push(String(i));
+			}
+			
+			if (indicadorDATA.indicator_type == "varied"){
+				if (carregaVariacoes){
+					montaFiltroVariacao();	
+				}
+			}else{
+				removeFiltroVariacao();
 			}
 			
 			montaDateRuler();
@@ -276,8 +288,27 @@ $(document).ready(function(){
 								indicatorid: indicador
 						}),
 					success: function(data, textStatus, jqXHR){
+						
+						if (indicadorDATA.indicator_type == "varied"){
+							if ($("#variationFilter option").length <= 0){
+								if(data.series.length > 0){
+									$.each(data.series[0].variations, function(index,item){
+										$("#variationFilter").append("<option value='$$index'>$$name".render({
+												index: index,
+												name: item.name
+											}));
+									});
+									$("#variationFilter").change(function(){
+										carregouTabela = false;
+										carregaVariacoes = false;
+										carregaDadosTabela();
+									});
+								}
+							}
+						}
+						
 						var valores = [];
-	
+
 						row_content = "<tr user-id='$$id'><td class='cidade'><a href='/$$role/$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
 									id: item.id,
 									cidade: item.nome,
@@ -289,12 +320,17 @@ $(document).ready(function(){
 								});
 						var series = [];
 						for (j = 0; j < data.series.length; j++){
-							series[data.series[j].label] = data.series[j].sum;
+							if (indicadorDATA.indicator_type == "varied"){
+								series[data.series[j].label] = data.series[j].variations[$("#variationFilter").val()].value;
+							}else{
+								series[data.series[j].label] = data.series[j].sum;
+							}
 						}
 
 						var data_atual = new Date();
 						var ano_anterior = data_atual.getFullYear() - 1;
 						var date_labels = [];
+
 						for (i = ano_anterior - 3; i <= ano_anterior; i++){
 							if (series[i] == "-" || series[i] == undefined){
 								row_content += "<td class='valor'>-</td>";
@@ -359,6 +395,15 @@ $(document).ready(function(){
 			});
 		}
   	}
+	
+	function montaFiltroVariacao(){
+		$(".data-content .variationFilter").remove();
+		$(".data-content .tabs").before("<div class='variationFilter'>Selecione uma Faixa: <select id='variationFilter'></select></div>");
+	}
+
+	function removeFiltroVariacao(){
+		$(".data-content .variationFilter").remove();
+	}
 
 	function montaDateRuler(){
 		
@@ -435,9 +480,10 @@ $(document).ready(function(){
 	
 	$.carregaGrafico = function(canvasId){
 
+		RGraph.ObjectRegistry.Clear();
 		var color_meta = '#ff0000';
 		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
-		RGraph.Clear(document.getElementById(canvasId));
+//		RGraph.Clear(document.getElementById(canvasId));
 		
 		var legendas = [];
 		
@@ -716,14 +762,19 @@ $(document).ready(function(){
 				if (valor > oldMax) oldMax = valor;
 				
 				dadosMapa.push({id: item.id, nome: item.nome, valor: item.valores[label_index], latitude: item.latitude, longitude: item.longitude, novo_valor: valor});
-				
+
 			}
 		});
 
 		var newMax = 1000;
 
 		$.each(dadosMapa, function(index,item){
-			dadosMapa[index].novo_valor = parseInt(convertRangeValue(oldMin,oldMax,newMin,newMax,dadosMapa[index].novo_valor));
+			var novo_valor = parseInt(convertRangeValue(oldMin,oldMax,newMin,newMax,dadosMapa[index].novo_valor));
+			if (isNaN(novo_valor)){
+				dadosMapa[index].novo_valor = 1;
+			}else{
+				dadosMapa[index].novo_valor = novo_valor;
+			}
 		});
 
 
@@ -743,6 +794,7 @@ $(document).ready(function(){
 					marker.__nome = item.nome;
 
 					markers.push(marker);
+					
 
 				}
 			}
@@ -788,6 +840,11 @@ $(document).ready(function(){
 		var oldRange = (oldMax - oldMin);
 		var newRange = (newMax - newMin);
 		var newValue = (((value - oldMin) * newRange) / oldRange) + newMin;
+		
+		if (oldRange <= 0){
+			newValue = 10;
+		}
+		console.log(newValue);
 		
 		return newValue;
 	}

@@ -80,6 +80,16 @@ table{
 	padding: 10px;
 }
 
+.data-content .variationFilter{
+	text-align: center;
+	color: #333;
+}
+.data-content select#variationFilter{
+	color: #333;
+	padding: 2px;
+	border: 1px solid #ccc;
+}
+
 .data-content .tabs{
 	float: right;
 	clear: right;
