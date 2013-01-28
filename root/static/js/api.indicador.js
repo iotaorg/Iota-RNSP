@@ -69,9 +69,7 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/user/indicator/variable?api_key=$$key'.render({
-					key: $.cookie("key")
-					}),
+			url: api_path + '/api/public/user/indicator/variable',
 			success: function(data, textStatus, jqXHR){
 				$.each(data.variables, function(index,value){
 					data_vvariables.push({"id":data.variables[index].id,"name":data.variables[index].name});
