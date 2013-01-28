@@ -11,6 +11,7 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
+
 sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureArgs(0) {
   my ( $self, $c, $id ) = @_;
   $c->stash->{collection} = $c->model('DB::Indicator');
@@ -25,6 +26,18 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   $c->detach('/error_404') unless $c->stash->{indicator_obj};
 
 
+}
+
+sub all_variable: Chained('/api/userpublic/base') : PathPart('indicator/variable') : Args(0) : ActionClass('REST') {
+  my ( $self, $c ) = @_;
+
+}
+
+sub all_variable_GET {
+    my ( $self, $c ) = @_;
+
+    my $controller = $c->controller('API::Indicator');
+    $controller->all_variable_GET( $c );
 }
 
 sub indicator : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
