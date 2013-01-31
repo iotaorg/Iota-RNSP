@@ -40,6 +40,8 @@ sub _download {
     my $file = substr($c->stash->{find_role}, 1);
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
                 if $c->stash->{cidade};
+    $file .= '_' .  $c->stash->{indicator}{name_url}
+                if $c->stash->{indicator};
     $file .= '.' . $c->stash->{type};
 
     my $path = ($c->config->{downloads}{tmp_dir}||'/tmp') . '/' . lc $file;
@@ -90,7 +92,12 @@ sub _download {
     );
 
     while(my $city = $citys->next){
-        my $rs = $c->model('DB::Indicator')->search(undef, { prefetch => ['axis'] });
+        my $indicadores = $c->stash->{indicator}{id} ? {
+            'me.id'     => $c->stash->{indicator}{id}
+        } : undef;
+
+
+        my $rs = $c->model('DB::Indicator')->search($indicadores, { prefetch => ['axis'] });
         while (my $indicator = $rs->next){
 
             my $user = $c->model('DB::User')->search({
@@ -683,7 +690,7 @@ sub down_pref_dados_cidade_json_check : Chained('pref_dados_cidade_json_check') 
 
 
 # MOVIMENTO CSV
-sub mov_dados_cidade_indicadorcsv : Chained('/movimento_indicator') : PathPart('indicadores.csv') : CaptureArgs(0) {
+sub mov_dados_cidade_indicadorcsv : Chained('/movimento_indicator') : PathPart('dados.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
@@ -704,7 +711,7 @@ sub down_mov_dados_cidade_indicadorcsv_check : Chained('mov_dados_cidade_indicad
 }
 
 # MOVIMENTO XML
-sub mov_dados_cidade_indicadorxml : Chained('/movimento_indicator') : PathPart('indicadores.xml') : CaptureArgs(0) {
+sub mov_dados_cidade_indicadorxml : Chained('/movimento_indicator') : PathPart('dados.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
@@ -725,7 +732,7 @@ sub down_mov_dados_cidade_indicadorxml_check : Chained('mov_dados_cidade_indicad
 }
 
 # MOVIMENTO JSON
-sub mov_dados_cidade_indicadorjson : Chained('/movimento_indicator') : PathPart('indicadores.json') : CaptureArgs(0) {
+sub mov_dados_cidade_indicadorjson : Chained('/movimento_indicator') : PathPart('dados.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
@@ -748,7 +755,7 @@ sub down_mov_dados_cidade_indicadorjson_check : Chained('mov_dados_cidade_indica
 #################
 
 # prefeitura CSV
-sub pref_dados_cidade_indicadorcsv : Chained('/prefeitura_indicator') : PathPart('indicadores.csv') : CaptureArgs(0) {
+sub pref_dados_cidade_indicadorcsv : Chained('/prefeitura_indicator') : PathPart('dados.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
@@ -769,7 +776,7 @@ sub down_pref_dados_cidade_indicadorcsv_check : Chained('pref_dados_cidade_indic
 }
 
 # prefeitura XML
-sub pref_dados_cidade_indicadorxml : Chained('/prefeitura_indicator') : PathPart('indicadores.xml') : CaptureArgs(0) {
+sub pref_dados_cidade_indicadorxml : Chained('/prefeitura_indicator') : PathPart('dados.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
@@ -790,7 +797,7 @@ sub down_pref_dados_cidade_indicadorxml_check : Chained('pref_dados_cidade_indic
 }
 
 # prefeitura JSON
-sub pref_dados_cidade_indicadorjson : Chained('/prefeitura_indicator') : PathPart('indicadores.json') : CaptureArgs(0) {
+sub pref_dados_cidade_indicadorjson : Chained('/prefeitura_indicator') : PathPart('dados.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
