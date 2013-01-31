@@ -1,3 +1,6 @@
+var api_path = "";
+//var api_path = "http://rnsp.aware.com.br";
+
 if (!String.prototype.render) {
 	String.prototype.render = function(args) {
 		var copy = this + '';
@@ -75,6 +78,26 @@ if ('a,,b'.split(',').length < 3) {
     };
 }
 
+$.xhrPool = [];
+$.xhrPool.abortAll = function() {
+    $(this).each(function(idx, jqXHR) {
+        jqXHR.abort();
+    });
+    $.xhrPool.length = 0
+};
+
+$.ajaxSetup({	
+    beforeSend: function(jqXHR) {
+        $.xhrPool.push(jqXHR);
+    },
+    complete: function(jqXHR) {
+        var index = $.xhrPool.indexOf(jqXHR);
+        if (index > -1) {
+            $.xhrPool.splice(index, 1);
+        }
+    }
+});
+
 var findInJson = function(obj,key,value){
 	var found = false;
 	var key_found = "";
@@ -146,34 +169,33 @@ var removeAccents = (function() {
 
 var estados_sg = [];
 
-estados_sg["Acre"] = "AC";
-estados_sg["Alagoas"] = "AL";
-estados_sg["Amapá"] = "AP";
-estados_sg["Amazonas"] = "AM";
-estados_sg["Bahia"] = "BA";
-estados_sg["Ceará"] = "CE";
-estados_sg["Distrito Federal"] = "DF";
-estados_sg["Espírito Santo"] = "ES";
-estados_sg["Goiás"] = "GO";
-estados_sg["Maranhão"] = "MA";
-estados_sg["Mato Grosso"] = "MT";
-estados_sg["Mato Grosso do Sul"] = "MS";
-estados_sg["Minas Gerais"] = "MG";
-estados_sg["Pará"] = "PA";
-estados_sg["Paraíba"] = "PB";
-estados_sg["Paraná"] = "PR";
-estados_sg["Pernambuco"] = "PE";
-estados_sg["Piauí"] = "PI";
-estados_sg["Rio de Janeiro"] = "RJ";
-estados_sg["Rio Grande do Norte"] = "RN";
-estados_sg["Rio Grande do Sul"] = "RS";
-estados_sg["Rondônia"] = "RO";
-estados_sg["Roraima"] = "RR";
-estados_sg["Santa Catarina"] = "SC";
-estados_sg["São Paulo"] = "SP";
-estados_sg["Sergipe"] = "SE";
-estados_sg["Tocantins"] = "TO";
-estados_sg[""] = "";
+estados_sg.push(["Acre","AC"]);
+estados_sg.push(["Alagoas","AL"]);
+estados_sg.push(["Amapá","AP"]);
+estados_sg.push(["Amazonas","AM"]);
+estados_sg.push(["Bahia","BA"]);
+estados_sg.push(["Ceará","CE"]);
+estados_sg.push(["Distrito Federal","DF"]);
+estados_sg.push(["Espírito Santo","ES"]);
+estados_sg.push(["Goiás","GO"]);
+estados_sg.push(["Maranhão","MA"]);
+estados_sg.push(["Mato Grosso","MT"]);
+estados_sg.push(["Mato Grosso do Sul","MS"]);
+estados_sg.push(["Minas Gerais","MG"]);
+estados_sg.push(["Pará","PA"]);
+estados_sg.push(["Paraíba","PB"]);
+estados_sg.push(["Paraná","PR"]);
+estados_sg.push(["Pernambuco","PE"]);
+estados_sg.push(["Piauí","PI"]);
+estados_sg.push(["Rio de Janeiro","RJ"]);
+estados_sg.push(["Rio Grande do Norte","RN"]);
+estados_sg.push(["Rio Grande do Sul","RS"]);
+estados_sg.push(["Rondônia","RO"]);
+estados_sg.push(["Roraima","RR"]);
+estados_sg.push(["Santa Catarina","SC"]);
+estados_sg.push(["São Paulo","SP"]);
+estados_sg.push(["Sergipe","SE"]);
+estados_sg.push(["Tocantins","TO"]);
 
 var paises = [];
 
@@ -181,20 +203,92 @@ paises["br"] = "Brasil";
 
 var loadBreadCrumb = function(data){
 	if (ref == "indicador"){
-		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name});
+		var breadcrumb = "<li class='home'><a href='/$$role'>Início</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name, role: role.replace("_","")});
 	}else if (ref == "cidade"){
-		var breadcrumb = "<li class='home'><a href='/'>Home</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf});
+		var breadcrumb = "<li class='home'><a href='/$$role'>Início</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf, role: role.replace("_","")});
 	}
-	$("#breadcrumbs-top").append(breadcrumb);
+	$("#breadcrumbs-top").html(breadcrumb);
 	$('#breadcrumbs-top').xBreadcrumbs();
 	
 }
 
+
+var accentMap = {
+	"á": "a",
+	"ã": "a",
+	"à": "a",
+	"é": "e",
+	"ê": "e",
+	"í": "i",
+	"ó": "o",
+	"õ": "o",
+	"ú": "u",
+	"ç": "c"
+};
+var normalize = function( term ) {
+	var ret = "";
+	for ( var i = 0; i < term.length; i++ ) {
+		ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+	}
+	return ret.toLowerCase();
+};
+
+$.extend({
+	getUrlVars: function(){
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++){
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	},
+	getUrlVar: function(name){
+		return $.getUrlVars()[name];
+	},
+	getUrlParams: function(){
+		var params = window.location.href.split("?");
+		if (params.length > 1){
+			return "?" + params[1];
+		}else{
+			return "";
+		}
+	},
+	removeItemInArray: function(obj,removeItem){
+		obj = $.grep(obj, function(value) {
+		  return value != removeItem;
+		});		
+		return obj;
+	},
+	setUrl: function(args){
+		var url = "";
+		if (args.view){
+			url += "?view=" + args.view;
+		}else if ($.getUrlVar("view")){
+			url += "?view=" + $.getUrlVar("view");
+		}
+		if (args.graphs != undefined){
+			if (args.graphs != ""){
+				if (url == ""){
+					url += "?graphs=" + args.graphs;
+				}else{
+					url += "&graphs=" + args.graphs;
+				}
+			}
+		}else if ($.getUrlVar("graphs")){
+			if (url == ""){
+				url += "?graphs=" + $.getUrlVar("graphs");
+			}else{
+				url += "&graphs=" + $.getUrlVar("graphs");
+			}
+		}
+		History.pushState(null, null, url);
+	}
+});
 
 $(document).ready(function(){
 
 	$.ajaxSetup({ cache: false });
 
 });
-
-var api_path = "";

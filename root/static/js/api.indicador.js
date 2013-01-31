@@ -1,10 +1,12 @@
 var indicador_data;
 var historico_data;
 var variaveis_data = [];
+var data_vvariables = [];
+var cidade_uri;
 
 $(document).ready(function(){
 	
-	function loadCidadeDataIndicador(){
+	$.loadCidadeDataIndicador = function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
@@ -13,6 +15,10 @@ $(document).ready(function(){
 					}),
 			success: function(data, textStatus, jqXHR){
 				cidade_data = data;
+				$("#top .content .logo-movimento").remove();
+				if (typeof(cidade_data.usuario.files.logo_movimento) != undefined){
+					$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
+				}
 				loadIndicadorData();
 			},
 			error: function(data){
@@ -31,6 +37,7 @@ $(document).ready(function(){
 					}),
 			success: function(data, textStatus, jqXHR){
 				indicador_data = data;
+				indicadorDATA = data;
 				loadVariaveisData();
 			},
 			error: function(data){
@@ -48,16 +55,33 @@ $(document).ready(function(){
 				$.each(data.variables, function(index,value){
 					variaveis_data.push({"id":data.variables[index].id,"name":data.variables[index].name});
 				});
-				showIndicadorData();
-				loadHistoricoData();
+				loadVVariaveisData();
 			},
 			error: function(data){
 				console.log("erro ao carregar informações do indicador");
 			}
 		});
 	}
+
+	function loadVVariaveisData(){
+
+		data_vvariables = [];
+		$.ajax({
+			type: 'GET',
+			dataType: 'json',
+			url: api_path + '/api/public/user/indicator/variable',
+			success: function(data, textStatus, jqXHR){
+				$.each(data.variables, function(index,value){
+					data_vvariables.push({"id":data.variables[index].id,"name":data.variables[index].name});
+				});
+				showIndicadorData();
+				loadHistoricoData();
+			}
+		});
+		
+	}
 	
-	function formataFormula(formula,variables){
+	function formataFormula(formula,variables,vvariables){
 		var operators_caption = {"+":"+"
 						,"-":"-"
 						,"(":"("
@@ -66,8 +90,13 @@ $(document).ready(function(){
 						,"*":"×"
 						,"CONCATENAR ":"[ ]"
 						};
-	
+
 		var new_formula = formula;
+
+		variables.sort(function (a, b) {
+			return b.id - a.id;
+		});
+
 		$.each(variables,function(index,value){
 			var pattern = "\\$"+variables[index].id;
 			var re = new RegExp(pattern, "g");
@@ -75,8 +104,19 @@ $(document).ready(function(){
 		});
 		
 		$.each(operators_caption,function(index,value){
-			new_formula = new_formula.replace(index,value);
+			new_formula = new_formula.replace(index,"&nbsp;" + value + "&nbsp;");
 		});
+
+		if (vvariables){
+			vvariables.sort(function (a, b) {
+				return b.id - a.id;
+			});
+			$.each(vvariables,function(index,value){
+				var pattern = "\\#"+vvariables[index].id;
+				var re = new RegExp(pattern, "g");
+				new_formula = new_formula.replace(re,vvariables[index].name);
+			});
+		}
 		
 		return new_formula;
 	}
@@ -86,13 +126,19 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .title").html(indicador_data.name);
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
-		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data)}));
-		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado<br /><span class='goal-explanation'>Fonte: $$fonte_meta</span></td></tr>".render(
+		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data,data_vvariables)}));
+		if (indicador_data.goal_source){
+			var fonte_meta = "<br /><span class='goal-explanation'>Fonte: $$dado</span>".render({dado: indicador_data.goal_source});
+		}else{
+			var fonte_meta = "";
+		}
+		if (indicador_data.goal_explanation){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado $$fonte_meta</td></tr>".render(
 				{
 					dado: indicador_data.goal_explanation,
-					fonte_meta: indicador_data.goal_source
+					fonte_meta: fonte_meta
 				}));
-		$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'><span class='source'>Fonte:</span></td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: indicador_data.source}));
+		}
 	}
 	
 	function loadHistoricoData(){
@@ -106,6 +152,9 @@ $(document).ready(function(){
 			success: function(data, textStatus, jqXHR){
 				historico_data = data;
 				$("#indicador-historico span.cidade").html(cidade_data.cidade.name);
+				$("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
+				$("#indicador-grafico .title a.link").attr("href","/"+role.replace("_","")+"/"+indicador_data.name_url+"/?view=graph&graphs="+userID);
+
 				showHistoricoData();
 			},
 			error: function(data){
@@ -129,27 +178,81 @@ $(document).ready(function(){
 			});
 			history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
 			history_table += "</tr><tbody>";
+
+			dadosGrafico = {"dados": [], "labels": []};
+
+			var goal_values;
+			var source_values;
+			var observations_values;
+
+			var valores = [];
 			$.each(historico_data.rows, function(index,value){
 				history_table += "<tr><td class='periodo'>$$periodo</td>".render({periodo: convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period)});
+				dadosGrafico.labels.push(convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period));
 				$.each(historico_data.rows[index].valores, function(index2,value2){
-					history_table += "<td class='valor' title='$$data'>$$valor</td>".render({
+					history_table += "<td class='valor'>$$valor</td>".render({
 							valor: $.formatNumber(historico_data.rows[index].valores[index2].value, {format:"#,###", locale:"br"}),
 							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 					});
+					if (historico_data.rows[index].valores[index2].source){
+						source_values = historico_data.rows[index].valores[index2].source;
+					}
+					if (historico_data.rows[index].valores[index2].observations){
+						observations_values = historico_data.rows[index].valores[index2].observations;
+					}
 				});
-				history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
+				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
+					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
+				}else{
+					history_table += "<td class='formula_valor'>-</td>";
+				}
 				history_table += "</tr></tbody>";
+				if (historico_data.rows[index].goal){
+					goal_values = historico_data.rows[index].goal;
+				}
+
+				if (historico_data.rows[index].formula_value != "-" && historico_data.rows[index].formula_value != "" && historico_data.rows[index].formula_value != null){
+					valores.push(parseFloat(historico_data.rows[index].formula_value).toFixed(3));
+				}else{
+					valores.push(null);
+				}
+				
 			});
 			history_table += "</table>";
+			dadosGrafico.dados.push({id: userID, nome: cidade_data.cidade.name, valores: valores, data: cidade_data, show: true});
 		}else{
 			var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
 		}
-		$("#indicador-historico .table .content-fill").append(history_table);
+		$("#indicador-historico .table .content-fill").html(history_table);
 		
+		if ((goal_values) && goal_values.trim() != ""){
+			if (goal_values.toLowerCase().indexOf("fonte:") > 0){
+				goal_values = goal_values.replace("fonte:","Fonte:");
+				goal_values = goal_values.replace("Fonte:","<br /><span class='source'>Fonte:") + "</span>";
+			}
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
+		}
+		
+		if ((source_values) && source_values.trim() != ""){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte do Indicador:</td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values}));
+		}
+		if ((observations_values) && observations_values.trim() != ""){
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
+		}
+		
+		showGrafico();
+		
+	}
+	
+	function showGrafico(){
+		if (dadosGrafico.dados.length > 0){
+			$("#indicador-grafico").fadeIn();
+			$.carregaGrafico("main-graph");	
+		}
 	}
 
 	if (ref == "indicador"){
-		loadCidadeDataIndicador();
+		$.loadCidadeDataIndicador();
 	}
 	
 });

@@ -64,3 +64,6 @@ table.indicadores thead th {
 table.history tbody tr td.edit a.edit{
 	color: #542c85;
 }
+.xbreadcrumbs#breadcrumbs-top LI A {
+	color: #542c85;
+}

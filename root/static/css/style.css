@@ -32,17 +32,20 @@ a{
 }
 
 #top .content .sociais{
-	width: 900px;
+	width: 370px;
 	position: absolute;
 	text-align: right;
-	margin-top: 2px;
-	margin-right: 2px;
+	margin-top: 70px;
 }
 
 
 #top .content .logo{
 	float: left;
 	clear: left;
+}
+#top .content .logo-movimento{
+	float: right;
+	clear: right;
 }
 #top .content .link{
 	margin: 60px 0 0 20px;
@@ -741,6 +744,11 @@ a#help-formula:hover{
 }
 #aware .content a:hover{
 	color: #333;
+}
+
+#patrocinadores .content{
+	text-align: center;
+	clear: both;
 }
 
 table.indicadores {

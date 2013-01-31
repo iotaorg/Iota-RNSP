@@ -7,11 +7,13 @@
 	background-color: #e9e1ff;
 }
 
-#indicadores-dados .menu-left .title{
-	color: #392268;
+#indicadores-dados .menu-left .title,
+#indicador-dados .menu-left .title{
+	color: #53368e;
 }
 
-#indicadores-dados .data-right .title{
+#indicadores-dados .data-right .title,
+#indicador-dados .data-right .title{
 	color: #53368e;
 }
 .data-content .tabs .item.selected{
@@ -23,10 +25,40 @@
 	color: #53368e;
 }
 #cidades-indicadores .title,
-#indicador-historico .title{
+#indicador-historico .title,
+#indicador-grafico .title{
 	color: #4b308f;
 }
 
-#indicador-historico .title span{
+#indicador-grafico .title a.link{
 	color: #4b308f;
+}
+#indicador-grafico .title a.link:hover{
+	color: #9872c8;
+}
+
+#indicador-historico .title span,
+#indicador-grafico .title span{
+	color: #4b308f;
+}
+input.button-data{
+	border: 1px solid #aa9fd2;
+	color: #392268;
+}
+input.button-data.down{
+	background-color: #f0e4ff;
+}
+input.button-data:hover{
+	background-color: #f0e4ff;
+}
+.graph .search .button input{
+	border: 1px solid #aa9fd2;
+	color: #392268;
+}
+.download-links a{
+	color: #392268;
+	border: 1px solid #aa9fd2;
+}
+.download-links a:hover{
+	color: #aa9fd2;
 }

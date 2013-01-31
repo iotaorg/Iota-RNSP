@@ -2,6 +2,7 @@ table{
 	border-collapse: collapse;
 }
 
+#indicador-dados .menu-left,
 #indicadores-dados .menu-left{
 	width: 192px;
 	float: left;	
@@ -10,21 +11,26 @@ table{
 	clear: left;
 }
 
+#indicador-dados .data-right,
 #indicadores-dados .data-right{
 	float: left;	
 	width: 698px;
 	clear: right;
 }
 
+#indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
 	padding: 5px;	
 }
+#indicador-dados .data-right .content-fill,
 #indicadores-dados .data-right .content-fill{
 	padding: 0px;	
 }
 
 .indicators{
 	margin-top: 5px;
+	overflow: auto;
+	max-height: 500px;
 }
 
 .indicators .item{
@@ -47,12 +53,17 @@ table{
 	background-color: #e1ffff;
 }
 
+#indicador-dados .menu-left .title,
 #indicadores-dados .menu-left .title{
 	padding: 5px;
 	color: #006666;
 	font-size: 14pt;
 }
+#indicadores-dados .menu-left .title{
+	color: #009999;
+}
 
+#indicador-dados .data-right .title,
 #indicadores-dados .data-right .title{
 	color: #009999;
 	font-size: 14pt;
@@ -60,13 +71,23 @@ table{
 
 #indicadores-dados .data-title{
 	border: 1px solid #d5d5d5;
-	padding: 5px;
+	padding: 10px;
 	margin-bottom: 6px;
 }
 
 #indicadores-dados .data-content{
 	border: 1px solid #d5d5d5;
 	padding: 10px;
+}
+
+.data-content .variationFilter{
+	text-align: center;
+	color: #333;
+}
+.data-content select#variationFilter{
+	color: #333;
+	padding: 2px;
+	border: 1px solid #ccc;
 }
 
 .data-content .tabs{
@@ -134,6 +155,26 @@ table{
 	padding: 5px;
 }
 
+.data-content .table tbody td.grafico canvas,
+#cidades-indicadores .table tbody td.grafico canvas{
+	border: 1px solid #e0e0e0;	
+}
+
+#indicador-grafico{
+	display: none;
+}
+
+#indicador-grafico canvas{
+	margin: auto;
+}
+
+#indicador-grafico .graph{
+	border: 1px solid #e0e0e0;
+}
+#indicador-grafico .content-fill{
+	padding: 5px;
+	text-align: center;
+}
 .data-content .graph{
 	display: none;	
 	margin-top: -1px;
@@ -142,26 +183,65 @@ table{
 	text-align: center;
 }
 
+
 .data-content .graph .legend{
 	clear: both;
 	margin-left: 50px;
 }
 
-.data-content .graph .legend .item{
+#indicador-grafico .graph .legend{
+	clear: both;
+	text-align: center;
+}
+.data-content .graph .legend .item,
+#indicador-grafico .graph .legend .item{
 	float: left;
 	margin-right: 5px;
+	border: 1px solid #fff;
+	padding: 2px 4px;
+	cursor: pointer;
+	cursor: hand;
+}
+#indicador-grafico .graph .legend .item{
+	display: inline-block;
+	float: none;
+}
+.data-content .graph .legend .item:hover{
+	border: 1px solid #ccc;
 }
 
-.data-content .graph .legend .item .quad{
+.data-content .graph .legend .item .quad,
+#indicador-grafico .graph .legend .item .quad{
 	float: left;
 	width: 10px;
 	height: 10px;
 	margin-right: 5px;
 	margin-top: 3px;
 }
-.data-content .graph .legend .item .label{
+.data-content .graph .legend .item .label,
+#indicador-grafico .graph .legend .item .label{
 	float: left;
 	font-size: 10pt;
+}
+
+.data-content .graph .legend .item .close,
+#indicador-grafico .graph .legend .item .close{
+	margin-top: 1px;
+	margin-left: 4px;
+	float: left;
+	width: 11px;
+	height: 14px;
+}
+.data-content .graph .legend .item .close .icon,
+#indicador-grafico .graph .legend .item .close .icon{
+	display: none;
+	font-size: 7pt;
+	padding: 0px 2px;
+	border: 1px solid #ccc;
+	color: #999;
+}
+.data-content .graph .legend .item .close .icon:hover{
+	color: #ff0000;
 }
 
 .data-content .map{
@@ -297,14 +377,16 @@ table{
 
 
 #cidades-indicadores,
-#indicador-historico{
+#indicador-historico,
+#indicador-grafico{
 	border: 1px solid #e0e0e0;
 	margin-top: 10px;
 	padding: 2px;
 }
 
 #cidades-indicadores .title,
-#indicador-historico .title{
+#indicador-historico .title,
+#indicador-grafico .title{
 	color: #009999;
 	background-color: #efefef;
 	border: 1px solid #e0e0e0;
@@ -313,7 +395,18 @@ table{
 	font-weight: bolder;
 }
 
-#indicador-historico .title span{
+#indicador-grafico .title a.link{
+	font-size: 9pt;
+	color: #009999;
+	text-decoration: none;
+}
+#indicador-grafico .title a.link:hover{
+	color: #42c3c3;
+}
+
+
+#indicador-historico .title span,
+#indicador-grafico .title span{
 	color: #009999;
 }
 
@@ -372,4 +465,259 @@ table{
 	text-align: center;
 	width: 1px;
 	padding: 5px;
+}
+
+
+.menu-left #axis_list *{
+	font-size: 10pt;
+}
+
+.menu-left #axis_list .select{
+	padding: 5px 8px;
+	border: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
+	padding-right: 22px;
+	color: #222;
+	background-image: url('images/seta.png');
+	background-repeat: no-repeat;
+	background-position: 95% 10px;
+}
+.menu-left #axis_list .select:hover{
+	background-color: #f0f0f0;
+}
+
+.menu-left #axis_list .select .content-fill{
+	padding: 0;
+}
+.menu-left #axis_list .select:hover,
+.menu-left #axis_list .option:hover{
+	cursor: hand;
+	cursor: pointer;
+}
+
+.menu-left #axis_list .option:hover{
+	background-color: #e1ffff;
+}
+
+.menu-left #axis_list .options{
+	display: none;
+	position: absolute;
+	background-color: #f5f5f5;
+	border: 1px solid #e5e5e5;
+	max-width: 180px;
+}
+
+.menu-left #axis_list .option{
+	padding: 5px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.menu-left .search{
+	margin-top: 5px;
+	padding: 5px 8px;
+	border: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
+	background-image: url('images/lupa.png');
+	background-repeat: no-repeat;
+	background-position: 95% center;
+}
+.menu-left .search input{
+	border: none;
+	background: transparent;
+	width: 88%;
+	color: #999;
+}
+
+.table table td.cidade a{
+	text-decoration: underline;
+}
+.table table td.cidade a:hover{
+	text-decoration: none;
+}
+
+.graph .search{
+	margin: auto;
+	margin-top: 5px;
+	clear: both;
+	display: inline-block;
+}
+
+.graph .search label{
+	float: left;
+	margin-right: 5px;
+	margin-top: 5px;
+}
+.graph .search .input{
+	float: left;
+	margin-right: 5px;
+	padding: 4px 5px;
+	border: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
+	background-image: url('images/lupa.png');
+	background-repeat: no-repeat;
+	background-position: 95% center;
+	width: 250px;
+}
+
+.graph .search .input input{
+	border: none;
+	background: transparent;
+	width: 88%;
+	color: #999;
+}
+.graph .search .button{
+	float: left;
+	margin-right: 5px;
+}
+.graph .search .button input{
+	border: 1px solid #9fcdd2;
+	color: #006666;
+	padding: 4px 10px;
+}
+
+.dados-botoes{
+	margin-top: 10px;	
+}
+
+input.button-data{
+	background-image: url('images/seta.png');
+	background-repeat: no-repeat;
+	background-position: 95% center;
+	border: 1px solid #9fcdd2;
+	color: #006666;
+	padding: 4px 10px;
+	background-color: #ffffff;
+	padding-right: 25px;
+	font-size: 9pt;
+}
+input.button-data.down{
+	background-image: url('images/seta_up.png');
+	background-color: #e4fbff;
+}
+input.button-data:hover{
+	cursor: pointer;
+	cursor: hand;
+	background-color: #e4fbff;
+}
+
+.download-links{
+	display: inline-block;
+	display: none;
+	background-color: #f0f0f0;
+	padding: 10px;
+	margin-top: 5px;	
+}
+
+.download-links a{
+	background-color: #fff;
+	color: #006666;
+	font-size: 8pt;
+	border: 1px solid #9fcdd2;
+	padding: 4px 20px;
+	margin: 5px;	
+}
+.download-links a:hover{
+	background-color: #f5f5f5;
+	color: #9fcdd2;
+}
+
+.share-link{
+	display: none;
+	margin-top: 5px;
+}
+.share-link #share-link{
+	padding: 2px 4px;
+	border: 1px solid #e5e5e5;
+	background-color: #f5f5f5;
+	width: 450px;
+}
+
+.data-content #mapa{
+	margin: auto;
+	width: 660px;
+	height: 420px;
+	border: 1px solid #e0e0e0;	
+}
+
+#mapa-filtro{
+	padding: 2px;	
+}
+#mapa-filtro label{
+	font-size: 10pt;
+}
+#mapa-filtro select{
+	border: 1px solid #ccc;
+	padding: 2px;
+	min-width: 100px;
+	text-align: center;
+	font-size: 12pt;
+}
+
+#date-ruler{
+	padding: 2px 10px 5px 10px;
+	text-align: right;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #e0e0e0;
+}
+#date-arrow{
+	display: none;
+	positon: absolute;
+	margin-top: -28px;
+	width: 14px;
+	height: 7px;
+	background: url('images/seta_up.png') no-repeat;
+	background-position: center center;
+	margin-bottom: 10px;
+}
+#date-ruler .item{
+	color: #ccc;
+	display: inline-block;
+	font-size: 9pt;
+	font-family: arial;
+	margin-left: 60px;
+	margin-right: 10px;
+}
+
+#date-ruler .item:hover{
+	cursor: pointer;
+	cursor: hand;
+	color: #aaa;
+}
+#date-ruler .item.active:hover{
+	cursor: default;
+	color: #333;
+}
+
+#date-ruler .item.active{
+	color: #333;
+}
+
+
+#bubble-intro{
+	margin-top: 150px;	
+	display: none;
+	border: 1px solid #ccc;
+	width: 50%;
+	text-align: center;
+	background: url('../images/alpha_white.png') repeat;
+}
+
+#bubble-intro p{
+	margin: 0;
+	padding: 10px;
+	font-size: 11pt;
+	text-align: center;
+	line-height: 1.5em;
+	color: #009999;
+	font-weight: bolder;
+	-moz-text-shadow:1px 1px 1px #f0f0f0; -webkit-text-shadow:1px 1px 1px #f0f0f0; text-shadow:1px 1px 1px #f0f0f0;
+}
+
+#filtro_mapa{
+	text-align: center;	
+	padding: 5px;
+}
+#filtro_mapa select{
+	padding: 2px;
+	border: 1px solid #ccc;
 }
