@@ -31,7 +31,7 @@ var md = function () {
         var arquivo = indi ? 'dados.' + formato : 'indicadores.'+formato;
         var url = 'http://rnsp.aware.com.br/' + rede;
         if ((cidade =='')==false){
-            url = url + cidade;
+            url = url + '/' +  cidade;
         }
         if ((indi =='')==false){
             url = url + '/' + indi;
