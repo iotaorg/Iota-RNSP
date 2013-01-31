@@ -54,6 +54,21 @@ sub mapa_site: Chained('root') PathPart('mapa-do-site') Args(0) {
     );
 }
 
+
+sub download: Chained('root') PathPart('download') Args(0) {
+    my ( $self, $c, $cidade ) = @_;
+
+    my @citys = $c->model('DB::City')->as_hashref->all;
+    my @indicators = $c->model('DB::Indicator')->as_hashref->all;
+
+     $c->stash(
+        citys    => \@citys,
+        indicators => \@indicators,
+        template => 'download.tt'
+    );
+}
+
+
 sub prefeitura: Chained('root') PathPart('prefeitura') CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{find_role} = '_prefeitura';

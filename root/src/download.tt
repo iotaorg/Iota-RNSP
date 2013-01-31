@@ -1,0 +1,74 @@
+<script>var ref='';</script>
+	<div id="breadcrumb">
+    	<div class="contents">
+            <ul class="xbreadcrumbs" id="breadcrumbs-top">
+            	<li class="home"><a href="/">Home</a></li>
+            	<li class="current"><a href="/download">Download</a></li>
+            </ul>
+		    <div class="clear"></div>
+        </div>
+	</div>
+	<div id="content">
+		<div class="content">
+        	<div id="mapa-do-site-header">
+				<div class="title">Download de indicadores</div>
+			</div>
+        	<div id="mapa-do-site">
+                <div class="content-fill">
+                	<form>
+                        <label>Rede</label>
+                        <div class="clear"></div>
+                        <select name="rede" style="width: 300px">
+                            <option value="movimento" selected="selected">Movimento</option>
+                            <option value="prefeitura">Prefeitura</option>
+                        </select>
+                        <div class="clear"></div>
+
+                        <label>Cidades</label>
+                        <div class="clear"></div>
+                        <select name="cidade" style="width: 300px">
+                            <option value="" selected="selected">Todas</option>
+                            [%FOREACH c IN citys %]
+                            <option value="br/[%c.uf.lower%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</option>
+                            [%END%]
+                        </select>
+
+                        <div class="clear"></div>
+
+                        <div class="grupo">
+                            <label>Indicador</label>
+                            <div class="clear"></div>
+                            <select name="indicador" style="width: 300px">
+                                <option value="" selected="selected">Todos</option>
+                                [%FOREACH i IN indicators %]
+                                <option value="[%i.name_url%]">[%i.name%]</option>
+                                [%END%]
+                            </select>
+
+                        <div class="clear"></div>
+                        </div>
+
+                        <label>Formato</label>
+                        <div class="clear"></div>
+                        <select name="formato" style="width: 300px">
+                            <option value="csv" selected="selected">CSV</option>
+                            <option value="xml">XML</option>
+                            <option value="json">JSON</option>
+                        </select>
+                        <div class="clear"></div>
+
+                        <label>URL do arquivo</label>
+                        <div class="clear"></div>
+                        <input onclick="this.focus();this.select()" name="url" readonly="readonly" style="width: 600px"/>
+                        <a target="_blank" id="id_link" href="">Download</a>
+
+                        <div class="clear"></div>
+
+                    </form>
+				</div>
+			</div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+<script type="text/javascript" src="/static/js/download_links.js" ></script>
