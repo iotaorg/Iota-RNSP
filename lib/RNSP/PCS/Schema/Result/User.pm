@@ -122,6 +122,12 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 active
+
+  data_type: 'boolean'
+  default_value: true
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -162,6 +168,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 0 },
+  "active",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -363,8 +371,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-16 09:11:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6qw6slJkE3nS1WtQJxPtTw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-03 21:07:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9Wmsa/h4erPPoyTV4p9inA
 
 __PACKAGE__->has_many(
     "user_roles",
