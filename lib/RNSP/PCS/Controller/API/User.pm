@@ -129,6 +129,7 @@ sub user_GET {
         bairro => $user->bairro,
         cep => $user->cep,
         endereco => $user->endereco,
+        active => $user->active,
 
         $user->city
         ? (
@@ -205,9 +206,9 @@ sub user_DELETE {
   my $user = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $user;
 
-  $user->user_roles->delete;
-  $user->sessions->delete;
-  $user->delete;
+#  $user->user_roles->delete;
+#  $user->sessions->delete;
+  $user->update({active => 0});
 
   $self->status_no_content($c);
 }
@@ -246,6 +247,7 @@ sub list_GET {
           +{
             name => $_->{name},
             email => $_->{email},
+            active => $_->{active},
 
             nome_responsavel_cadastro => $_->{nome_responsavel_cadastro},
             estado => $_->{estado},
@@ -269,7 +271,7 @@ sub list_GET {
               ->as_string
             }
           } $c->stash->{collection}
-          ->search_rs( undef, { prefetch => 'city' } )->as_hashref->all
+          ->search_rs( {'me.active' => 1}, { prefetch => 'city'} )->as_hashref->all
       ]
     }
   );

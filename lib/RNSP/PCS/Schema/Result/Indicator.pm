@@ -163,7 +163,6 @@ __PACKAGE__->table("indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 dynamic_variations
 
@@ -240,11 +239,7 @@ __PACKAGE__->add_columns(
   "indicator_admins",
   { data_type => "text", is_nullable => 1 },
   "indicator_roles",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "dynamic_variations",
   { data_type => "boolean", is_nullable => 1 },
 );
@@ -365,8 +360,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-23 03:30:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1HbUApqtSwNp5GFtqZOs4w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-03 20:23:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3K2J+ST8tsP8i471neqGNA
 
 __PACKAGE__->belongs_to(
     "owner",

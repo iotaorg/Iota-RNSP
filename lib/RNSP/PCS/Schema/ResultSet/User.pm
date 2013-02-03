@@ -193,6 +193,7 @@ sub verifiers_specs {
                 cep                       => { required => 0, type => 'Str' },
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
+                active                    => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -290,7 +291,7 @@ sub action_specs {
 
             my $mov  = delete $values{movimento};
             my $pref = delete $values{prefeito};
-            my $user = $self->create( \%values );
+            my $user = $self->create( \%values, active =>1 );
 
             if ($role) {
                 $user->add_to_user_roles( { role => { name => $role } } );
@@ -310,6 +311,7 @@ sub action_specs {
             delete $values{password_confirm};
             delete $values{password} unless $values{password};
             delete $values{city_id}  unless $values{city_id};
+            delete $values{active}  unless $values{active};
 
             my $mov  = delete $values{movimento};
             my $pref = delete $values{prefeito};
