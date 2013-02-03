@@ -124,7 +124,10 @@ sub stash_comparacao {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
 
-  $c->stash->{user} = $c->stash->{collection}->search_rs( { id => $id } );
+  $c->stash->{user} = $c->stash->{collection}->search_rs( {
+    id => $id,
+    'me.active' => 1
+  } );
 
   $c->stash->{user_obj} = $c->stash->{user}->next;
 

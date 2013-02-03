@@ -102,6 +102,7 @@ sub _download {
 
             my $user = $c->model('DB::User')->search({
                 city_id => $city->{id},
+                'me.active'  => 1,
                 'user_roles.role_id' => $role_id->id
             }, {  join  => 'user_roles'} )->as_hashref->next;
             $c->detach('/error_404') if $c->stash->{cidade} && !$user;
