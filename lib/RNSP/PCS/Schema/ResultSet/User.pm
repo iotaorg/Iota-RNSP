@@ -322,7 +322,7 @@ sub action_specs {
             # troca para 'remover cargos' porque geralmente isso
             # que vai acontecer
             my $old_city = $user->city_id;
-            if ( $old_city && $values{city_id} && $old_city != $values{city_id} ) {
+            if ( $old_city && exists $values{city_id} && $old_city != $values{city_id} ) {
                 $mov  = 0 unless defined $mov;
                 $pref = 0 unless defined $pref;
             }
