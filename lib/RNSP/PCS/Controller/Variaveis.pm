@@ -375,8 +375,8 @@ sub _download_and_detach {
     }elsif ($c->stash->{type} =~ /(csv)/){
         $c->response->content_type('text/csv');
     }
-    #$c->response->headers->header('content-disposition' => "attachment;filename=variaveis.$1");
-$c->response->content_type('text/plain');
+    $c->response->headers->header('content-disposition' => "attachment;filename=variaveis.$1");
+
     open(my $fh, '<:raw', $path);
     $c->res->body($fh);
 
