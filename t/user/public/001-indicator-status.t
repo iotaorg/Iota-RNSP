@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use JSON qw(from_json);
-use Test::More skip_all => 'TESTE COMENTADO, REVISAR CALCULO DA DATA';
+use Test::More;
 
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
