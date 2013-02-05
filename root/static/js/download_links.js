@@ -6,6 +6,7 @@ var md = function () {
     $indi    = $('select[name="indicador"]:first'),
     $formato = $('select[name="formato"]:first'),
     $url     = $('input[name="url"]:first'),
+    $url2    = $('input[name="url2"]:first'),
     _run = function(){
 
         $rede.change(_redo_url);
@@ -22,6 +23,7 @@ var md = function () {
         rede = $rede.val(),cidade = $cidade.val(), indi= $indi.val();
 
 
+        var base_uri = '';
         var arquivo = indi ? 'dados.' + formato : 'indicadores.'+formato;
         var url = 'http://rnsp.aware.com.br/' + rede;
         if ((cidade =='')==false){
@@ -30,10 +32,17 @@ var md = function () {
         if ((indi =='')==false){
             url = url + '/' + indi;
         }
-        url = url + '/' +arquivo;
+        base_uri = url;
 
+        url = base_uri + '/' +arquivo;
         $('#id_link').attr('href', url);
         $url.val(url);
+
+
+        var url2 = base_uri + '/variaveis.'+formato;
+        $('#id_link2').attr('href', url2);
+        $url2.val(url2);
+
 
     };
     return {

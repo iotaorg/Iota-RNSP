@@ -64,6 +64,11 @@
 
                         <div class="clear"></div>
 
+                        <input onclick="this.focus();this.select()" name="url2" readonly="readonly" style="width: 600px"/>
+                        <a target="_blank" id="id_link2" href="">Efetuar Download</a>
+
+                        <div class="clear"></div>
+
                     </form>
 				</div>
 			</div>
