@@ -13,7 +13,7 @@
 	            	<div class="content-fill">
                         <div class="title">Por Indicador</div>
                         <div class="category" id="axis_list">
-                            
+
                         </div>
                         <div class="search">
                             <input type="text" name="indicador-busca" id="indicador-busca" size="25" class="indicador-busca"  placeholder="Busca"/>
@@ -29,22 +29,22 @@
                                 Por Cidade
                             </div>
                             <div class="content-fill">
-                                
+
                                 	<div id="filtro_mapa">
                                     	Estado: <select id="uf_filter">
-		                                        	<option value="">Selecione
-		                                        </select>
+                                                <option value="">Selecione
+                                            </select>
                                     </div>
 
                                     <div id="mapa"></div>
-                            
-                            </div>    	
+
+                            </div>
                         </div>
 					</div>
                 </div>
             </div>
             <div class="clear"></div>
-        </div>    	
+        </div>
     </div>
 	<script type="text/javascript">
 			var role = '[% role %]';
