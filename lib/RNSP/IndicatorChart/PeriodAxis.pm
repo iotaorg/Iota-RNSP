@@ -247,7 +247,9 @@ sub read_values {
         return {error => 'novar'} unless $anyvar;
         $period = $anyvar->period;
     };
-    my $group_by = $options{group_by} ? $self->_valid_or_null($options{group_by}) : $period;
+    # NOTE 2013-02-05
+    # tirei o default de $period pois o JS só funciona com ano
+    my $group_by = $options{group_by} ? $self->_valid_or_null($options{group_by}) : 'yearly';
 
     my $indicator = $self->indicator;
 

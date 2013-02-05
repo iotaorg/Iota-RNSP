@@ -131,18 +131,25 @@ sub prefeitura_index: Chained('prefeitura') PathPart('') Args(0) {
     );
 }
 
-sub movimento_indicador: Chained('movimento') PathPart('') Args(1) {
+sub movimento_indicador: Chained('movimento') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
 
     $self->stash_indicator($c, $nome);
     $c->stash( role => 'movimento');
 }
 
-sub prefeitura_indicador: Chained('prefeitura') PathPart('') Args(1) {
+sub prefeitura_indicador: Chained('prefeitura') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
     $self->stash_indicator($c, $nome);
     $c->stash( role => 'prefeitura');
 }
+
+sub prefeitura_indicador_render: Chained('prefeitura_indicador') PathPart('') Args(0) {
+}
+
+sub movimento_indicador_render: Chained('movimento_indicador') PathPart('') Args(0) {
+}
+
 
 sub stash_indicator {
     my ( $self, $c, $nome ) = @_;
