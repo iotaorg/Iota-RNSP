@@ -5,8 +5,8 @@ use base 'Catalyst::View::TT';
 
 __PACKAGE__->config({
     TEMPLATE_EXTENSION => '.tt',
-    ENCODING           => 'utf-8',
-    DEFAULT_ENCODING    => 'utf-8',
+    ENCODING           => 'UTF-8',
+    DEFAULT_ENCODING    => 'UTF-8',
 
     INCLUDE_PATH => [
         RNSP::PCS->path_to( 'root', 'src' ),
@@ -16,6 +16,7 @@ __PACKAGE__->config({
     ERROR        => 'error.tt',
     TIMER        => 0,
     render_die   => 1,
+
 });
 
 =head1 NAME

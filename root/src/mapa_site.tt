@@ -1,39 +1,47 @@
-	<div id="breadcrumb">
-    	<div class="contents">
+    <div id="breadcrumb">
+        <div class="contents">
             <ul class="xbreadcrumbs" id="breadcrumbs-top">
-            	<li class="home"><a href="/">Início</a></li>
-            	<li class="current"><a href="/mapa-do-site">Mapa do Site</a></li>
+                <li class="home"><a href="/">InÃ­cio</a></li>
+                <li class="current"><a href="/mapa-do-site">Mapa do Site</a></li>
             </ul>
-		    <div class="clear"></div>
+            <div class="clear"></div>
         </div>
-	</div>
-	<div id="content">
-		<div class="content">
-        	<div id="mapa-do-site-header">
-				<div class="title">Mapa do Site</div>
-			</div>
-        	<div id="mapa-do-site">
+    </div>
+    <div id="content">
+        <div class="content">
+            <div id="mapa-do-site-header">
+                <div class="title">Mapa do Site</div>
+            </div>
+            <div id="mapa-do-site">
                 <div class="content-fill">
-                	<ul>
-                    	<li><a href="">Home</a></li>
-                    	<li><a href="">Cidades</a>
+                    <ul>
+                        <li><a href="">Home</a></li>
+                        <li><a href="/dados-abertos">Dados abertos</a></li>
+                        <li><a href="">Cidades</a>
                             <ul>
                             [%FOREACH c IN citys %]
                                 <a href="/movimento/br/[%c.uf.lower%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</a>
                             [%END%]
                             </ul>
                         </li>
-                    	<li><a href="">Indicadores</a>
+                        <li><a href="">Indicadores</a>
                             <ul>
                                 [%FOREACH i IN indicators %]
-                                    <li><a href="#">[%i.name%]</a></li>
+                                    <li>[%i.name%]:
+
+                                    [% IF i.indicator_roles.match('_movimento') %]<strong><a href="/movimento/[%i.name_url%]">movimento</a></strong>
+                                        /[%END%]
+                                    [% IF i.indicator_roles.match('_prefeitura') %]
+                                    <strong><a href="/prefeitura/[%i.name_url%]">prefeitura</a></strong>
+                                    [%END%]
+                                    </li>
                                 [%END%]
                             </ul>
                         </li>
-                    	<li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
+                        <li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
                     </ul>
-				</div>
-			</div>
+                </div>
+            </div>
             <div class="clear"></div>
         </div>
     </div>

@@ -55,7 +55,12 @@ sub mapa_site: Chained('root') PathPart('mapa-do-site') Args(0) {
 }
 
 
-sub download: Chained('root') PathPart('download') Args(0) {
+sub download_redir: Chained('root') PathPart('download') Args(0) {
+    my ( $self, $c ) = @_;
+    $c->res->redirect('/dados-abertos', 301);
+}
+
+sub download: Chained('root') PathPart('dados-abertos') Args(0) {
     my ( $self, $c, $cidade ) = @_;
 
     my @citys = $c->model('DB::City')->as_hashref->all;
@@ -64,7 +69,8 @@ sub download: Chained('root') PathPart('download') Args(0) {
      $c->stash(
         citys    => \@citys,
         indicators => \@indicators,
-        template => 'download.tt'
+        template => 'download.tt',
+        title => 'Dados abertos'
     );
 }
 
@@ -131,18 +137,25 @@ sub prefeitura_index: Chained('prefeitura') PathPart('') Args(0) {
     );
 }
 
-sub movimento_indicador: Chained('movimento') PathPart('') Args(1) {
+sub movimento_indicador: Chained('movimento') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
 
     $self->stash_indicator($c, $nome);
     $c->stash( role => 'movimento');
 }
 
-sub prefeitura_indicador: Chained('prefeitura') PathPart('') Args(1) {
+sub prefeitura_indicador: Chained('prefeitura') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
     $self->stash_indicator($c, $nome);
     $c->stash( role => 'prefeitura');
 }
+
+sub prefeitura_indicador_render: Chained('prefeitura_indicador') PathPart('') Args(0) {
+}
+
+sub movimento_indicador_render: Chained('movimento_indicador') PathPart('') Args(0) {
+}
+
 
 sub stash_indicator {
     my ( $self, $c, $nome ) = @_;
@@ -155,7 +168,9 @@ sub stash_indicator {
 
     $c->stash->{indicator} = $indicator;
 
-    $c->stash( template => 'home_comparacao_indicador.tt' );
+    $c->stash( template => 'home_comparacao_indicador.tt',
+        title => 'Dados do indicador ' . $indicator->{name}
+    );
 }
 
 
