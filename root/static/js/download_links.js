@@ -21,12 +21,6 @@ var md = function () {
         formato = $formato.val(),
         rede = $rede.val(),cidade = $cidade.val(), indi= $indi.val();
 
-        if (cidade == ''){
-            $indi.parents('div.grupo:first').hide();
-            indi = '';
-        }else{
-            $indi.parents('div.grupo:first').show();
-        }
 
         var arquivo = indi ? 'dados.' + formato : 'indicadores.'+formato;
         var url = 'http://rnsp.aware.com.br/' + rede;

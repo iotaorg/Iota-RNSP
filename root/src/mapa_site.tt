@@ -16,6 +16,7 @@
                 <div class="content-fill">
                     <ul>
                         <li><a href="">Home</a></li>
+                        <li><a href="/dados-abertos">Dados abertos</a></li>
                         <li><a href="">Cidades</a>
                             <ul>
                             [%FOREACH c IN citys %]

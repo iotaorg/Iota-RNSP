@@ -55,7 +55,12 @@ sub mapa_site: Chained('root') PathPart('mapa-do-site') Args(0) {
 }
 
 
-sub download: Chained('root') PathPart('download') Args(0) {
+sub download_redir: Chained('root') PathPart('download') Args(0) {
+    my ( $self, $c ) = @_;
+    $c->res->redirect('/dados-abertos', 301);
+}
+
+sub download: Chained('root') PathPart('dados-abertos') Args(0) {
     my ( $self, $c, $cidade ) = @_;
 
     my @citys = $c->model('DB::City')->as_hashref->all;
@@ -64,7 +69,8 @@ sub download: Chained('root') PathPart('download') Args(0) {
      $c->stash(
         citys    => \@citys,
         indicators => \@indicators,
-        template => 'download.tt'
+        template => 'download.tt',
+        title => 'Dados abertos'
     );
 }
 
@@ -162,7 +168,9 @@ sub stash_indicator {
 
     $c->stash->{indicator} = $indicator;
 
-    $c->stash( template => 'home_comparacao_indicador.tt' );
+    $c->stash( template => 'home_comparacao_indicador.tt',
+        title => 'Dados do indicador ' . $indicator->{name}
+    );
 }
 
 
