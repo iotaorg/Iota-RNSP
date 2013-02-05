@@ -15,7 +15,7 @@
 	            	<div class="content-fill">
                         <div class="title">Indicadores</div>
                         <div class="category" id="axis_list">
-                            
+
                         </div>
                         <div class="search">
                             <input type="text" name="indicador-busca" id="indicador-busca" size="25" class="indicador-busca"  placeholder="Busca"/>
@@ -32,9 +32,9 @@
                                     Indicadores
                                 </div>
                                 <div class="description">
-                                    
+
                                 </div>
-                            </div>    	
+                            </div>
                         </div>
                         <div class="data-content">
                             <div class="content-fill">
@@ -74,13 +74,13 @@
                                     <input type="text" id="share-link" value="url" />
                                 </div>
                                 <div class="clear"></div>
-                            </div>    	
+                            </div>
                         </div>
 					</div>
                 </div>
             </div>
             <div class="clear"></div>
-        </div>    	
+        </div>
     </div>
 
 <script type="text/javascript">
