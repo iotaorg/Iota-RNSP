@@ -1,6 +1,6 @@
 INSERT INTO city(
-        id, name, uf, pais, latitude, longitude, created_at)
-VALUES (1, 'São Paulo','SP','Brasil',-23.562880, -46.654659,'2012-09-28 03:55:36.899955');
+        id, name, uf, pais, latitude, longitude, created_at,name_uri)
+VALUES (1, 'São Paulo','SP','br',-23.562880, -46.654659,'2012-09-28 03:55:36.899955','sao-paulo');
 SELECT setval('public.city_id_seq', 30, true);
 
 INSERT INTO "role"(id,name) VALUES (1,'admin'),(2,'user'), (3,'app'), (4,'_prefeitura'), (5,'_movimento');
