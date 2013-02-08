@@ -438,19 +438,24 @@ sub by_period_GET {
 
         my $rs = $c->model('DB')->resultset('Variable')->search_rs({
             'me.id' => [$indicator_formula->variables],
-        } );
+        }, {prefetch => ['measurement_unit']} );
 
         my @rows;
 
         while (my $row = $rs->next){
             my $rowx = {
-                (map { $_ => $row->$_ } qw /id name explanation cognomen type source measurement_unit is_basic/),
+                (map { $_ => $row->$_ } qw /id name explanation cognomen type source is_basic/),
 
                 value         => undef,
                 value_of_date => undef,
                 value_id      => undef,
                 observations  => undef,
                 source        => undef,
+
+                # measurement_unit continua aqui apenas para manter retrocompatibilidade
+                measurement_unit      => $row->measurement_unit ? $row->measurement_unit->short_name : undef,
+                measurement_unit_name => $row->measurement_unit ? $row->measurement_unit->name : undef,
+
             };
 
             my $rsx = $row->values->search({

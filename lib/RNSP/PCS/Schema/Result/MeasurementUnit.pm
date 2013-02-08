@@ -50,13 +50,11 @@ __PACKAGE__->table("measurement_unit");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 short_name
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 user_id
 
@@ -81,17 +79,9 @@ __PACKAGE__->add_columns(
     sequence          => "measurement_unit_id_seq",
   },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "short_name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "user_id",
   { data_type => "integer", is_nullable => 0 },
   "created_at",
@@ -115,9 +105,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-08 16:10:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:feU5NzTOBlBDwYj5J6rnUQ
+=head2 variables
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::Variable>
+
+=cut
+
+__PACKAGE__->has_many(
+  "variables",
+  "RNSP::PCS::Schema::Result::Variable",
+  { "foreign.measurement_unit_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-08 18:32:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lgYnEJCk7uAwjGgniN5c/A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

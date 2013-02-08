@@ -47,11 +47,11 @@ eval {
                     'variable.create.type'         => 'int',
                     'variable.create.period'       => 'yearly',
                     'variable.create.source'       => 'God',
+                    'variable.create.measurement_unit_id' => '1',
                 ]
             );
             ok( $res->is_success, 'variable created!' );
             is( $res->code, 201, 'created!' );
-
             use URI;
             my $uri = URI->new( $res->header('Location') );
             $uri->query_form( api_key => 'test' );

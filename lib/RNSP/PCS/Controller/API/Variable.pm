@@ -9,22 +9,22 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/base') : PathPart('variable') : CaptureArgs(0) {
-  my ( $self, $c ) = @_;
-  $c->stash->{collection} = $c->model('DB::Variable');
+my ( $self, $c ) = @_;
+$c->stash->{collection} = $c->model('DB::Variable');
 
 
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
-  my ( $self, $c, $id ) = @_;
-  $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
-  $c->stash->{variable} = $c->stash->{object}->first;
+my ( $self, $c, $id ) = @_;
+$c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+$c->stash->{variable} = $c->stash->{object}->first;
 
-  $c->stash->{object}->count > 0 or $c->detach('/error_404');
+$c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
 sub variable : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-  my ( $self, $c ) = @_;
+my ( $self, $c ) = @_;
 
 }
 
@@ -39,15 +39,19 @@ GET /api/variable/$id
 Retorna:
 
     {
-        "created_at": "2012-08-20 03:15:18.897994",
+        "source": "God",
+        "is_basic": 0,
+        "period": "yearly",
+        "name": "Foo Bar",
+        "created_at": "2013-02-08 18:41:32.975254",
+        "measurement_unit": {
+            "short_name": "km",
+            "name": "Quilometro",
+            "id": 1
+        },
         "explanation": "a foo with bar",
         "cognomen": "foobar",
-        "name": "Foo Bar",
         "type": "int",
-        "source":"foo",
-        "period":"semana",
-        "measurement_unit":"km",
-        "is_basic": "1",
         "created_by": {
             "name": "admin",
             "id": 1
@@ -57,18 +61,25 @@ Retorna:
 =cut
 
 sub variable_GET {
-  my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner']})->as_hashref->next;
+    my ( $self, $c ) = @_;
+    my $object_ref  = $c->stash->{object}->search(undef,
+        {prefetch => ['owner','measurement_unit']}
+        )->as_hashref->next;
 
-  $self->status_ok(
-    $c,
-    entity => {
-      created_by => {
-        map { $_ => $object_ref->{owner}{$_} } qw(name id)
-      },
-      (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic measurement_unit created_at))
-    }
-  );
+    $self->status_ok(
+        $c,
+        entity => {
+            created_by => {
+                map { $_ => $object_ref->{owner}{$_} } qw(name id)
+            },
+            (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic created_at)),
+
+
+            measurement_unit      => $object_ref->{measurement_unit} ? {
+                (map { $_ => $object_ref->{measurement_unit}{$_} } qw(name short_name id)),
+            } : undef
+        }
+    );
 }
 
 =pod
@@ -93,29 +104,29 @@ Retorna:
 =cut
 
 sub variable_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->check_user_roles(qw(admin));
 
-  $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
+    $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+        unless $dm->success;
 
-  my $obj = $dm->get_outcome_for('variable.update');
+    my $obj = $dm->get_outcome_for('variable.update');
 
-  $c->logx('Atualizou variavel ' . $obj->name);
-  $self->status_accepted(
-    $c,
-    location =>
-      $c->uri_for( $self->action_for('variable'), [ $obj->id ] )->as_string,
-        entity => { name => $obj->name, id => $obj->id }
-    ),
-    $c->detach
-    if $obj;
+    $c->logx('Atualizou variavel ' . $obj->name);
+    $self->status_accepted(
+        $c,
+        location =>
+        $c->uri_for( $self->action_for('variable'), [ $obj->id ] )->as_string,
+            entity => { name => $obj->name, id => $obj->id }
+        ),
+        $c->detach
+        if $obj;
 }
 
 
@@ -130,17 +141,17 @@ Retorna: No-content ou Gone
 =cut
 
 sub variable_DELETE {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->check_user_roles(qw(admin));
 
-  my $obj = $c->stash->{variable};
-  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
+    my $obj = $c->stash->{variable};
+    $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-  $obj->delete;
+    $obj->delete;
 
-  $self->status_no_content($c);
+    $self->status_no_content($c);
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
@@ -180,9 +191,11 @@ Retorna:
 =cut
 
 sub list_GET {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search_rs( undef, { prefetch => 'owner' } )->as_hashref->all;
+    my @list = $c->stash->{collection}->
+        search_rs( undef, { prefetch => ['owner','measurement_unit'] } )
+    ->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
@@ -192,8 +205,12 @@ sub list_GET {
                 map { $_ => $obj->{owner}{$_} } qw(name id)
             },
 
-            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic measurement_unit created_at)),
+            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at)),
             url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
+
+            measurement_unit      => $obj->{measurement_unit} ? {
+                (map { $_ => $obj->{measurement_unit}{$_} } qw(name short_name id)),
+            } : undef
 
         }
     }
@@ -230,29 +247,29 @@ Retorna:
 =cut
 
 sub list_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->check_user_roles(qw(admin));
 
-  $c->req->params->{variable}{create}{user_id} = $c->user->id;
+    $c->req->params->{variable}{create}{user_id} = $c->user->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
-  my $object = $dm->get_outcome_for('variable.create');
-  $c->logx('Adicionou variavel ' . $object->name);
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+        unless $dm->success;
+    my $object = $dm->get_outcome_for('variable.create');
+    $c->logx('Adicionou variavel ' . $object->name);
 
-  $self->status_created(
-    $c,
-    location => $c->uri_for( $self->action_for('variable'), [ $object->id ] )->as_string,
-    entity => {
-      name => $object->name,
-      id   => $object->id,
+    $self->status_created(
+        $c,
+        location => $c->uri_for( $self->action_for('variable'), [ $object->id ] )->as_string,
+        entity => {
+        name => $object->name,
+        id   => $object->id,
 
-    }
-  );
+        }
+    );
 
 }
 
