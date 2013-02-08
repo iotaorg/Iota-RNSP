@@ -77,8 +77,8 @@ eval {
             is( $res->code, 200, 'list 200' );
 
             my $list = eval{from_json( $res->content )};
-            is($list->{measurement_units}[0]{name}, 'BarFoo', 'name from list ok');
-            is($list->{measurement_units}[0]{short_name}, 'bar', 'bar from list ok');
+            is($list->{measurement_units}[4]{name}, 'BarFoo', 'name from list ok');
+            is($list->{measurement_units}[4]{short_name}, 'bar', 'bar from list ok');
 
             ( $res, $c ) = ctx_request(
                 DELETE $obj_uri
@@ -92,7 +92,7 @@ eval {
 
 
             $list = eval{from_json( $res->content )};
-            is(@{$list->{measurement_units}}, '0', 'empty list');
+            is(@{$list->{measurement_units}}, '4', 'default list');
 
             die 'rollback';
         }
