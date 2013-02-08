@@ -88,7 +88,7 @@ $(document).ready(function(){
 						,")":")"
 						,"/":"÷"
 						,"*":"×"
-						,"CONCATENAR ":"[ ]"
+						,"CONCATENAR":""
 						};
 
 		var new_formula = formula;
