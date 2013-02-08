@@ -126,7 +126,7 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .title").html(indicador_data.name);
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
-		if (indicador_data.formula.indexOf("CONCATENAR") > 0){
+		if (indicador_data.formula.indexOf("CONCATENAR") <= 0){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data,data_vvariables)}));
 		}
 		if (indicador_data.goal_source){
