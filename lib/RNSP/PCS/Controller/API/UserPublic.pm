@@ -173,7 +173,7 @@ sub user_GET {
         my $rs = $c->model('DB::Variable')->search_rs({
             'values.user_id' => $user->id,
             is_basic => 1
-        }, { prefetch => ['values'] } );
+        }, { prefetch => ['values','measurement_unit'] } );
 
         $rs = $rs->as_hashref;
         my $existe = {};
@@ -187,7 +187,8 @@ sub user_GET {
                 cognomen => $r->{cognomen},
                 period => $r->{period},
                 type => $r->{type},
-                measurement_unit => $r->{measurement_unit},
+                measurement_unit => $r->{measurement_unit}{short_name},
+                measurement_unit_name => $r->{measurement_unit}{name},
                 last_value => $valor->{value},
                 last_value_date => $valor->{valid_from}
             } );
