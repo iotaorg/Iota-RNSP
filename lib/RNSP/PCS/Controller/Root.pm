@@ -41,11 +41,28 @@ sub root: Chained('/') PathPart('') CaptureArgs(0) {
 }
 
 
-sub mapa_site: Chained('root') PathPart('mapa-do-site') Args(0) {
+sub rede_object: Chained('root') PathPart('rede') CaptureArgs(1) {
+    my ( $self, $c, $rede ) = @_;
+
+    $self->detach('/error_404') unless $rede eq 'movimento' or $rede eq 'prefeitura';
+
+    $c->stash->{rede} = $rede;
+}
+
+sub mapa_site: Chained('rede_object') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c, $cidade ) = @_;
 
-    my @citys = $c->model('DB::City')->as_hashref->all;
-    my @indicators = $c->model('DB::Indicator')->as_hashref->all;
+    my @users = $c->model('DB::'. ($c->stash->{rede} eq 'movimento' ? 'Movimento' : 'Prefeito') )->all;
+
+    my @citys = $c->model('DB::City')->search({
+        id => [
+            map { $_->city_id } @users
+        ]
+    }, {order_by => ['pais', 'uf', 'name']})->as_hashref->all;
+
+    my @indicators = $c->model('DB::Indicator')->search({
+        indicator_roles => { like => '%' . $c->stash->{rede} . '%' }
+    })->as_hashref->all;
 
      $c->stash(
         citys    => \@citys,
