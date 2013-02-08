@@ -1,5 +1,5 @@
 
-package RNSP::PCS::Schema::ResultSet::Source;
+package RNSP::PCS::Schema::ResultSet::MeasurementUnit;
 
 use namespace::autoclean;
 
@@ -11,7 +11,7 @@ with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
 
-sub _build_verifier_scope_name { 'source' }
+sub _build_verifier_scope_name { 'measurement_unit' }
 
 sub verifiers_specs {
     my $self = shift;
@@ -19,6 +19,7 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             profile => {
                 name                        => { required => 1, type => 'Str' },
+                short_name                  => { required => 1, type => 'Str' },
                 user_id                     => { required => 1, type => 'Int' },
             },
         ),
@@ -27,6 +28,7 @@ sub verifiers_specs {
             profile => {
                 id                          => { required => 1, type => 'Int' },
                 name                        => { required => 1, type => 'Str' },
+                short_name                  => { required => 1, type => 'Str' },
             },
         ),
 
