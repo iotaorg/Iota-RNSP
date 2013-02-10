@@ -126,7 +126,7 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .title").html(indicador_data.name);
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
-		if (indicador_data.formula.indexOf("CONCATENAR") <= 0){
+		if (indicador_data.formula.indexOf("CONCATENAR") >= 0){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data,data_vvariables)}));
 		}
 		if (indicador_data.goal_source){
@@ -184,7 +184,7 @@ $(document).ready(function(){
 			dadosGrafico = {"dados": [], "labels": []};
 
 			var goal_values;
-			var source_values;
+			var source_values = [];
 			var observations_values;
 
 			var valores = [];
@@ -197,7 +197,7 @@ $(document).ready(function(){
 							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
 					});
 					if (historico_data.rows[index].valores[index2].source){
-						source_values = historico_data.rows[index].valores[index2].source;
+						source_values.push(historico_data.rows[index].valores[index2].source);
 					}
 					if (historico_data.rows[index].valores[index2].observations){
 						observations_values = historico_data.rows[index].valores[index2].observations;
@@ -235,8 +235,13 @@ $(document).ready(function(){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
 		}
 		
-		if ((source_values) && source_values.trim() != ""){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fonte do Indicador:</td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values}));
+		if (source_values.length > 0){
+			
+			var source_values_unique = [];
+			$.each(source_values, function(i, el){
+			    if($.inArray(el, source_values_unique) === -1) source_values_unique.push(el);
+			});
+			$("#indicador-dados .profile .dados .tabela").append("<tr class='item' id='fonte-indicador'><td class='label'>Fonte do Indicador:</td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values_unique.join(", ")}));
 		}
 		if ((observations_values) && observations_values.trim() != ""){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
