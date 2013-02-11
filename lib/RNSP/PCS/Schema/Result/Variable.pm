@@ -244,8 +244,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-08 18:36:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sBeewe+5gM5wzzZQfP7Isw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 21:04:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NNmV58vgNyfnZVPt6xYGxQ
 
 __PACKAGE__->belongs_to(
     "owner",
