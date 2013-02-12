@@ -295,6 +295,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_indicator_axes
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicatorAxis>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicator_axes",
+  "RNSP::PCS::Schema::Result::UserIndicatorAxis",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_indicators
 
 Type: has_many
@@ -371,8 +386,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-08 16:10:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CR+QMqwn6rMICHcSzia8VA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 22:12:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XLlMvSTjzOHgYuG+LA6bjw
 
 __PACKAGE__->has_many(
     "user_roles",
