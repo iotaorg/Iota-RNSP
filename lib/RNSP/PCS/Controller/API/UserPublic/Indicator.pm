@@ -154,6 +154,15 @@ sub resumo_GET {
     eval {
         my $rs = $c->stash->{collection};
 
+        my $user_axis_rs = $c->model('DB::UserIndicatorAxisItem')->search({
+
+            'user_indicator_axis.user_id' => $c->stash->{user_obj}->id
+
+        }, {
+            join => 'user_indicator_axis'
+        });
+
+
         while (my $indicator = $rs->next){
 
             my $indicator_formula = new RNSP::IndicatorFormula(
@@ -280,22 +289,35 @@ sub resumo_GET {
                     $item->{$from}{valor} = '-';
                 }
             }
-            my $axis = $indicator->axis->name;
-            push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
-                name        => $indicator->name,
-                formula     => $indicator->formula,
-                name_url    => $indicator->name_url,
-                explanation => $indicator->explanation,
-                id          => $indicator->id,
-
-                valores     => $item
+            my @axis_list = ($indicator->axis->name);
+            my @grupos = $user_axis_rs->search({
+                indicator_id => $indicator->id
             });
+            if (@grupos){
+                @axis_list = map {$_->user_indicator_axis->name} @grupos;
+            }
+            foreach my $axis (@axis_list){
+                push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
+                    name        => $indicator->name,
+                    formula     => $indicator->formula,
+                    name_url    => $indicator->name_url,
+                    explanation => $indicator->explanation,
+                    id          => $indicator->id,
+
+                    valores     => $item
+                });
+            }
         }
 
 
         while( my ($axis, $periodos) = each %{$ret->{resumos}}){
+
             while( my ($periodo, $ind_info) = each %{$periodos}){
+                # ja passou por aqui
+
                 my $indicadores = $ind_info->{indicadores};
+
+
                 # procura pelas ultimas N periodos de novo, so que consideranto todos os
                 # indicadores duma vez
                 my $datas = {};
@@ -308,29 +330,45 @@ sub resumo_GET {
                         for (keys %{$in->{valores}} );
 
                 }
+                # tira data dos valores vazios
+                # inseridos no primeiro loop do indicador (caso ele apareca em dois grupos)
+                delete $datas->{''};
 
                 my $i     = $max_periodos;
                 foreach my $data (sort {$b cmp $a} keys %{$datas}){
                     last if $i <= 0;
                     $datas_ar[--$i] = {
-                        data => $data,
+                        data => $data||'',
                         nome => $datas->{$data}{nome}
                     };
                 }
+
                 # pronto, agora @datas ja tem a lista correta e na ordem!
                 foreach my $in (@$indicadores){
-
-
                     my @valores;
                     foreach my $data (@datas_ar){
-                        push @valores, $in->{valores}{$data->{data}}{valor} ||'-';
+                        unless (exists $data->{data}){
+                            push @valores, '-';
+                            next;
+                        }
+                        push @valores, exists $in->{valores}{$data->{data}}{valor} ?
+                            $in->{valores}{$data->{data}}{valor} : '-';
                     }
 
                     my @variacoes;
                     my $defined = 0;
                     foreach my $data (@datas_ar){
-                        $defined++ if exists $in->{valores}{$data->{data}}{variations};
-                        push @variacoes, $in->{valores}{$data->{data}}{variations};
+                        unless (defined $data->{data}){
+                            push @variacoes, '-';
+                            next;
+                        }
+
+                        if (exists $in->{valores}{$data->{data}}{variations}){
+                            $defined++ ;
+                            push @variacoes, $in->{valores}{$data->{data}}{variations};
+                        }else{
+                            push @variacoes, undef;
+                        }
                     }
                     $in->{variacoes} = \@variacoes if $defined;
 
