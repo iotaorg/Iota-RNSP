@@ -46,6 +46,7 @@ requires 'DateTimeX::Easy';
 requires 'DateTime::Format::Pg';
 requires 'Catalyst::View::TT';
 
+requires 'Geo::Coder::Google';
 requires 'Text::Iconv';
 requires 'Email::Sender';
 requires 'Email::Sender::Simple';
