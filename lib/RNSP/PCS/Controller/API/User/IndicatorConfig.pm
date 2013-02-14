@@ -44,15 +44,15 @@ Retorna:
 =cut
 
 sub indicator_config_GET {
-  my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->as_hashref->next;
+    my ( $self, $c ) = @_;
+    my $object_ref  = $c->stash->{object}->as_hashref->next;
 
-  $self->status_ok(
-    $c,
-    entity => {
-      (map { $_ => $object_ref->{$_} } qw(technical_information indicator_id))
-    }
-  );
+    $self->status_ok(
+        $c,
+        entity => {
+            (map { $_ => $object_ref->{$_} } qw(technical_information indicator_id))
+        }
+    );
 }
 
 =pod
@@ -174,6 +174,27 @@ sub list_POST {
         }
     );
 
+}
+
+
+
+sub list_GET {
+    my ( $self, $c ) = @_;
+
+    my $config = $c->stash->{collection}->
+        search_rs( {
+            indicator_id  => $c->req->params->{indicator_id},
+            user_id       => $c->stash->{user}->id
+        } )->as_hashref->next;
+
+    $c->detach('/error_404') unless $config;
+
+    $self->status_ok(
+        $c,
+        entity => {
+            (map { $_ => $config->{$_} } qw(id technical_information indicator_id))
+        }
+    );
 }
 
 

@@ -115,6 +115,12 @@ eval {
             is($config->{technical_information}, 'foobar', 'technical_information: ok');
 
             ( $res, $c ) = ctx_request(
+                GET $url_user . '?indicator_id=' . $indicator->{id}
+            );
+            my $config2 = eval{from_json( $res->content )};
+            is($config2->{id}, $config_id->{id}, 'pesquisa funcionando');
+
+            ( $res, $c ) = ctx_request(
                 DELETE $url_user . '/' . $config_id->{id}
             );
             ok( $res->is_success, 'indicator deleted!' );
