@@ -93,6 +93,25 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 UNIQUE CONSTRAINTS
+
+=head2 C<user_indicator_axis_item_user_indicator_axis_id_indicator_i_key>
+
+=over 4
+
+=item * L</user_indicator_axis_id>
+
+=item * L</indicator_id>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint(
+  "user_indicator_axis_item_user_indicator_axis_id_indicator_i_key",
+  ["user_indicator_axis_id", "indicator_id"],
+);
+
 =head1 RELATIONS
 
 =head2 user_indicator_axis
@@ -111,8 +130,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 22:12:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F0EfrZuci7SOxAciwzxlVA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-14 04:44:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4Fp0liYrBd4yzQCxU0Q9BA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

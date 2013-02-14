@@ -310,6 +310,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_indicator_configs
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicatorConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicator_configs",
+  "RNSP::PCS::Schema::Result::UserIndicatorConfig",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_indicators
 
 Type: has_many
@@ -386,8 +401,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 22:12:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XLlMvSTjzOHgYuG+LA6bjw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-14 04:44:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G1k6fcxvqgKf11Sov+SXTQ
 
 __PACKAGE__->has_many(
     "user_roles",

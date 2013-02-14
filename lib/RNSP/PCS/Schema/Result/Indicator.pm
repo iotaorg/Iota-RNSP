@@ -344,6 +344,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 user_indicator_configs
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicatorConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicator_configs",
+  "RNSP::PCS::Schema::Result::UserIndicatorConfig",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_indicators
 
 Type: has_many
@@ -360,8 +375,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-03 20:23:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3K2J+ST8tsP8i471neqGNA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-14 04:44:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1vVEmuC2ZiYuZzIRBHw8jA
 
 __PACKAGE__->belongs_to(
     "owner",

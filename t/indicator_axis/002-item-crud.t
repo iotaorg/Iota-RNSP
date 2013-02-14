@@ -121,7 +121,7 @@ eval {
             ok( $res->is_success, 'user_indicator_axis_item exists' );
             is( $res->code, 200, 'user_indicator_axis_item exists -- 200 Success' );
 
-            my $obj = eval{from_json( $res->content )};
+            $obj = eval{from_json( $res->content )};
             is($obj->{items}[0]{position}, 2, 'item updated!');
 
 
@@ -140,7 +140,7 @@ eval {
             ok( $res->is_success, 'user_indicator_axis_item exists' );
             is( $res->code, 200, 'user_indicator_axis_item exists -- 200 Success' );
 
-            my $obj = eval{from_json( $res->content )};
+            $obj = eval{from_json( $res->content )};
             is($obj->{items}[0], undef, 'item deleted!');
 
 
