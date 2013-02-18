@@ -149,6 +149,8 @@ que podem ser entendidos como "grupos" de indicadores.
 
 GET /api/user_indicator_axis
 
+?indicator_id=xx
+
 Retorna:
 
     {
@@ -173,7 +175,13 @@ sub list_GET {
 my ( $self, $c ) = @_;
 
     my @list = $c->stash->{collection}->search({
-        user_id => $c->req->params->{user_id} || $c->user->id
+        (user_id => $c->req->params->{user_id} || $c->user->id),
+
+        (
+            exists $c->req->params->{indicator_id} && $c->req->params->{indicator_id} =~ /^\d+$/ ?
+                ( 'user_indicator_axis_items.indicator_id' => $c->req->params->{indicator_id} ) :
+                ()
+        )
     }, {
         prefetch => ['user_indicator_axis_items'],
         order_by => ['me.position', 'user_indicator_axis_items.position']

@@ -77,6 +77,14 @@ eval {
             my $list = eval{from_json( $res->content )};
             is($list->{user_indicator_axis}[0]{name}, 'BarFoo', 'name from list ok');
 
+            # com id
+            ( $res, $c ) = ctx_request( GET '/api/user_indicator_axis?api_key=test&indicator_id=1');
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+
+            $list = eval{from_json( $res->content )};
+            is(@{$list->{user_indicator_axis}}, '0', 'empty list');
+
 
             ( $res, $c ) = ctx_request(
                 DELETE $obj_uri
