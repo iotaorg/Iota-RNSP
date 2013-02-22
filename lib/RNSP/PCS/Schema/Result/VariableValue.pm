@@ -95,6 +95,12 @@ __PACKAGE__->table("variable_value");
   data_type: 'text'
   is_nullable: 1
 
+=head2 file_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -128,6 +134,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "source",
   { data_type => "text", is_nullable => 1 },
+  "file_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -165,6 +173,26 @@ __PACKAGE__->add_unique_constraint(
 
 =head1 RELATIONS
 
+=head2 file
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::File>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "file",
+  "RNSP::PCS::Schema::Result::File",
+  { id => "file_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
 =head2 user
 
 Type: belongs_to
@@ -196,8 +224,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DfUcZE5QJy9BsODCq/xT1A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YSg5WtQ4GFFHcxysMAXGwg
 
 
 __PACKAGE__->belongs_to(

@@ -52,6 +52,7 @@ requires 'Email::Sender';
 requires 'Email::Sender::Simple';
 requires 'Email::Sender::Transport::SMTP::TLS';
 requires 'Email::MIME';
+requires 'Spreadsheet::XLSX';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
 

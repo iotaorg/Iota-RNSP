@@ -120,6 +120,18 @@ __PACKAGE__->table("city");
   data_type: 'text'
   is_nullable: 1
 
+=head2 state_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 country_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -163,6 +175,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "summary",
   { data_type => "text", is_nullable => 1 },
+  "state_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "country_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -197,6 +213,46 @@ __PACKAGE__->add_unique_constraint("city_pais_uf_name_uri_key", ["pais", "uf", "
 
 =head1 RELATIONS
 
+=head2 country
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::Country>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "country",
+  "RNSP::PCS::Schema::Result::Country",
+  { id => "country_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 state
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::State>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "state",
+  "RNSP::PCS::Schema::Result::State",
+  { id => "state_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
 =head2 users
 
 Type: has_many
@@ -213,8 +269,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2012-12-06 09:39:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lYEFK1/WWxhjGtftmYcRww
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:K+rcql1IKKGjxOMEFoK09w
 
 __PACKAGE__->might_have(
   "prefeito",
