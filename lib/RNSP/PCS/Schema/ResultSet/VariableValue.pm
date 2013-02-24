@@ -237,14 +237,17 @@ sub action_specs {
         put => sub {
             my %values = shift->valid_values;
 
-            $self->_put(%values);
+            my $schema = $self->result_source->schema;
+            my $var = $schema->resultset('Variable')->find( $values{variable_id} );
+
+            $self->_put($var->period, %values);
         },
 
     };
 }
 
 sub _put {
-    my ($self, %values) = @_;
+    my ($self, $period, %values) = @_;
     $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
     my $schema = $self->result_source->schema;
@@ -253,8 +256,7 @@ sub _put {
         for keys %values;
     return unless keys %values;
 
-    my $var = $schema->resultset('Variable')->find( $values{variable_id} );
-    my $dates = $schema->f_extract_period_edge( $var->period, $values{value_of_date} );
+    my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
     # procura por uma variavel daquele usuario naquele periodo, se
     # existir, atualiza a data e o valor!

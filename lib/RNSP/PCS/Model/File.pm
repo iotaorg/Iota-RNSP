@@ -30,7 +30,7 @@ sub process {
 
     my @vars_db = $schema->resultset('Variable')->search( {
         id => [keys %varids]
-    }, { select => 'id', as => 'id' } )->as_hashref->all;
+    }, { select => [qw/id period/], as => [qw/id period/] } )->as_hashref->all;
 
     # se tem menos variaveis no banco do que as enviadas
     if ( @vars_db < keys %varids ){
@@ -43,6 +43,7 @@ sub process {
         }
         $status .= 'Arrume o arquivo e envie novamente.';
     }else{
+        my %periods = map { $_->{id} => $_->{period} } @vars_db;
 
         my $file = $schema->resultset('File')->create({
             name => $upload->filename,
@@ -65,7 +66,10 @@ sub process {
                     $ref->{file_id}       = $file_id;
 
                     eval{
-                        $schema->resultset('VariableValue')->_put(%$ref);
+                        $schema->resultset('VariableValue')->_put(
+                            $periods{$r->{id}},
+                            %$ref
+                        );
                     };
                     $status .= $@ if $@;
                     die $@ if $@;
