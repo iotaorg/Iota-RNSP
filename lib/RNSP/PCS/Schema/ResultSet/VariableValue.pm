@@ -159,6 +159,7 @@ sub verifiers_specs {
             profile => {
 
                 source => { required => 0, type => 'Str' },
+                file_id => { required => 0, type => 'Int' },
 
                 value => {
                     required   => 0,
@@ -235,51 +236,60 @@ sub action_specs {
         },
         put => sub {
             my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
-            my $schema = $self->result_source->schema;
-
-            do { delete $values{$_} unless defined $values{$_} }
-              for keys %values;
-            return unless keys %values;
-
-            my $var = $schema->resultset('Variable')->find( $values{variable_id} );
-            my $dates = $schema->f_extract_period_edge( $var->period, $values{value_of_date} );
-
-            # procura por uma variavel daquele usuario naquele periodo, se
-            # existir, atualiza a data e o valor!
-            my $row = $self->search(
-                {
-                    user_id     => $values{user_id},
-                    variable_id => $values{variable_id},
-                    valid_from  => $dates->{period_begin}
-                }
-            )->next;
-
-            if ($row) {
-                $row->update(
-                    {
-                        value         => $values{value},
-                        value_of_date => $values{value_of_date},
-
-                        ( exists $values{source} ? ( source => $values{source} ) : () ),
-
-                        ( exists $values{observations} ? ( observations => $values{observations} ) : () ),
-
-                    }
-                );
-                $row->discard_changes;
-            }
-            else {
-                $values{valid_from}  = $dates->{period_begin};
-                $values{valid_until} = $dates->{period_end};
-
-                $row = $self->create( \%values );
-            }
-            return $row;
+            $self->_put(%values);
         },
 
     };
+}
+
+sub _put {
+    my ($self, %values) = @_;
+    $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
+
+    my $schema = $self->result_source->schema;
+
+    do { delete $values{$_} unless defined $values{$_} }
+        for keys %values;
+    return unless keys %values;
+
+    my $var = $schema->resultset('Variable')->find( $values{variable_id} );
+    my $dates = $schema->f_extract_period_edge( $var->period, $values{value_of_date} );
+
+    # procura por uma variavel daquele usuario naquele periodo, se
+    # existir, atualiza a data e o valor!
+    my $row = $self->search(
+        {
+            user_id     => $values{user_id},
+            variable_id => $values{variable_id},
+            valid_from  => $dates->{period_begin}
+        }
+    )->next;
+
+    if ($row) {
+        $row->update(
+            {
+                value         => $values{value},
+                value_of_date => $values{value_of_date},
+
+                ( exists $values{source} ? ( source => $values{source} ) : () ),
+
+                ( exists $values{observations} ? ( observations => $values{observations} ) : () ),
+
+                ( exists $values{file_id} ? ( file_id => $values{file_id} ) : () ),
+
+            }
+        );
+        $row->discard_changes;
+    }
+    else {
+
+        $values{valid_from}  = $dates->{period_begin};
+        $values{valid_until} = $dates->{period_end};
+
+        $row = $self->create( \%values );
+    }
+    return $row;
 }
 
 1;

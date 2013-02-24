@@ -4,22 +4,17 @@ use Moose;
 use utf8;
 use DateTime;
 use DateTime::Format::Pg;
+
 use Spreadsheet::XLSX;
+use DateTime::Format::Excel;
 
 use Text::Iconv;
-
-has _iconv => (
-    is      => 'rw',
-    isa     => 'Text::Iconv',
-    lazy    => 1,
-    default => sub { Text::Iconv->new("utf-8", "utf-8") }
-);
 
 
 sub parse {
     my ($self, $file) = @_;
 
-    my $excel  = Spreadsheet::XLSX->new($file, $self->_iconv);
+    my $excel  = Spreadsheet::XLSX->new($file);
 
     my %expected_header = (
         id    => qr /\b(id da v.riavel|v.riavel id)\b/io,
@@ -27,13 +22,17 @@ sub parse {
         value => qr /\bvalor\b/io
     );
 
+    my @rows;
+    my $ok      = 0;
+    my $ignored = 0;
+    my $header_found;
     for my $worksheet ( @{$excel -> {Worksheet}} ) {
 
         my ( $row_min, $row_max ) = $worksheet->row_range();
         my ( $col_min, $col_max ) = $worksheet->col_range();
 
-        my $header_map     = {};
-        my $header_found   = 0;
+        my $header_map = {};
+        $header_found  = 0;
 
         for my $row ( $row_min .. $row_max ) {
 
@@ -66,19 +65,33 @@ sub parse {
                     my $value = $cell->value();
 
                     # aqui é uma regra que você escolhe, pois as vezes o valor da célula pode ser nulo
-                    next unless $value;
-
+                    next if !defined $value || $value =~ /^\s*$/;
+                    $value =~ s/^\s+//;
+                    $value =~ s/\s+$//;
                     $registro->{$header_name} = $value;
                 }
 
-                if (keys %$registro){
-use DDP; p $registro;
+                if (keys %$registro == 3 ){
 
+                    $registro->{date} = $registro->{date} =~ /^20[123][0-9]$/
+                        ? $registro->{date} . '-01-01'
+                        : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+                    $ok++;
+                    push @rows, $registro;
+
+                }else{
+                    $ignored++;
                 }
             }
 
         }
     }
+    return {
+        rows    => \@rows,
+        ignored => $ignored,
+        ok      => $ok,
+        header_found => !!$header_found
+    };
 }
 
 1;

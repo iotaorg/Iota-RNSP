@@ -18,12 +18,11 @@ sub build_per_context_instance {
     my %actions   = ();
     foreach my $name ( $c->models ) {
         next
-            if $name eq 'DataManager';
+            if $name =~ /(DataManager|file)/;
         my $model = $c->model($name);
 
         next unless $model->can('meta');
-        next
-            unless $model->meta->does_role('RNSP::PCS::Role::Verification');
+        next unless $model->meta->does_role('RNSP::PCS::Role::Verification');
 
         %verifiers = ( %verifiers, %{ $model->verifiers } );
         %actions   = ( %actions,   %{ $model->actions } );

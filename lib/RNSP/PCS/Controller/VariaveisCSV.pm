@@ -51,7 +51,11 @@ sub _download {
         ];
     }
 
-    eval{$self->lines2file($c, $path, \@lines)};
+    if ($0 && $0 =~ /\.t$/ ){
+        $c->stash->{lines} = \@lines;
+    }else{
+        eval{$self->lines2file($c, $path, \@lines)};
+    }
 
     if ($@){
         unlink($path);
