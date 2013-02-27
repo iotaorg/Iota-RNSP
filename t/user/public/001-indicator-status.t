@@ -27,8 +27,11 @@ $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 
 use DateTime;
-sub get_week {
-    return DateTime->now->add( {weeks => shift, days => -1 } )->ymd; # tem q tirar 1 dia pra voltar a ser domingo!
+sub get_year {
+    my $semna= shift;
+    my $ret = DateTime->now->add( {years => $semna, days => 1 } )->ymd;
+    #print ">>>> voltar ano = $semna  ==== $ret\n\n";
+    return $ret; # tem q tirar 1 dia pra voltar a ser domingo!
 }
 
 eval {
@@ -74,7 +77,7 @@ eval {
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'Temperatura semanal',
                     'variable.create.cognomen'     => 'temp_semana',
-                    'variable.create.period'       => 'weekly',
+                    'variable.create.period'       => 'yearly',
                     'variable.create.explanation'  => 'a foo with bar',
                     'variable.create.type'         => 'int',
                 ]
@@ -89,7 +92,7 @@ eval {
                 [   api_key                        => 'test',
                     'variable.create.name'         => 'nostradamus',
                     'variable.create.cognomen'     => 'nostradamus',
-                    'variable.create.period'       => 'weekly',
+                    'variable.create.period'       => 'yearly',
                     'variable.create.explanation'  => 'nostradamus end of world',
                     'variable.create.type'         => 'int',
                 ]
@@ -139,9 +142,9 @@ eval {
 
             my $variable_url = $uri->path_query;
 
-            &add_value($variable_url, get_week(-4), 23);
+            &add_value($variable_url, get_year(-4), 23);
             $variable_url = $uri2->path_query;
-            &add_value($variable_url, get_week(-4), 3);
+            &add_value($variable_url, get_year(-4), 3);
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
@@ -159,9 +162,9 @@ eval {
             }, 'teste condicao 2');
 
             $variable_url = $uri->path_query;
-            &add_value($variable_url, get_week(-1), 1);
+            &add_value($variable_url, get_year(-1), 1);
             $variable_url = $uri2->path_query;
-            &add_value($variable_url, get_week(-1), 1);
+            &add_value($variable_url, get_year(-1), 1);
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
@@ -179,14 +182,14 @@ eval {
             }, 'teste condicao 3');
 
             $variable_url = $uri->path_query;
-            &add_value($variable_url, get_week(-3), 1);
+            &add_value($variable_url, get_year(-3), 1);
 
-            &add_value($variable_url, get_week(-2), 2);
+            &add_value($variable_url, get_year(-2), 2);
             $variable_url = $uri2->path_query;
 
-            &add_value($variable_url, get_week(-3), 1);
+            &add_value($variable_url, get_year(-3), 1);
 
-            &add_value($variable_url, get_week(-2), 3);
+            &add_value($variable_url, get_year(-2), 3);
 
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');

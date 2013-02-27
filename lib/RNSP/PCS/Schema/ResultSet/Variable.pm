@@ -36,7 +36,15 @@ sub verifiers_specs {
                 user_id          => { required => 1, type => 'Int' },
                 source           => { required => 0, type => 'Str' },
                 period           => { required => 0, type => 'Str' },
-                measurement_unit => { required => 0, type => 'Str' },
+                measurement_unit_id => {
+                    required => 0,
+                    type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return defined $self->result_source->schema->resultset('MeasurementUnit')
+                            ->find( { id => $r->get_value('measurement_unit_id') } );
+                      }
+                },
                 is_basic         => { required => 0, type => 'Bool' },
             },
         ),
@@ -57,7 +65,15 @@ sub verifiers_specs {
                 type             => { required => 0, type => VariableType },
                 source           => { required => 0, type => 'Str' },
                 period           => { required => 1, type => 'Str' },
-                measurement_unit => { required => 0, type => 'Str' },
+                measurement_unit_id => {
+                    required => 0,
+                    type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return defined $self->result_source->schema->resultset('MeasurementUnit')
+                            ->find( { id => $r->get_value('measurement_unit_id') } );
+                      }
+                },
                 is_basic         => { required => 0, type => 'Bool' },
 
             },

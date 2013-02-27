@@ -85,9 +85,17 @@ eval {
             ( $res, $c ) = ctx_request( GET '/api/user/1/variable?api_key=test' );
             ok( $res->is_success, 'varibles exists' );
             is( $res->code, 200, 'varibles exists -- 200 Success' );
-
             use JSON qw(from_json);
             my $variable = eval{from_json( $res->content )};
+
+            {
+                ( $res, $c ) = ctx_request( GET '/api/user/1/variable?api_key=test&valid_from_begin=2012-01-01&valid_from_end=2012-01-01&variable_id=9383838' );
+                ok( $res->is_success, 'varibles exists' );
+                is( $res->code, 200, 'varibles exists -- 200 Success' );
+                my $variable = eval{from_json( $res->content )};
+                is(@{$variable->{variables}}, 0, 'sem variaveis');
+
+            }
 
             is(ref $variable->{variables}, ref [], 'variables is array');
             my $count = scalar @{$variable->{variables}};

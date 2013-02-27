@@ -29,6 +29,11 @@ listar variaveis com ou sem valores do usuario
 
 GET /api/user/ID/variable
 
+opcional enviar:
+ ?valid_from_begin=yyyy-mm-dd
+ ?valid_from_end=yyyy-mm-dd
+ ?variable_id=i
+
 Retorna:
 
     {
@@ -78,14 +83,21 @@ sub list_GET {
     $rs = $rs->search({is_basic => $c->req->params->{is_basic}})
         if (defined $c->req->params->{is_basic});
 
+    $rs = $rs->search({id => $c->req->params->{variable_id}})
+        if (defined $c->req->params->{variable_id});
+
     my @list = $rs->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
 
+        my $where = {};
+        $where->{valid_from}{'>='} = $c->req->params->{valid_from_begin} if exists $c->req->params->{valid_from_begin};
+        $where->{valid_from}{'<='} = $c->req->params->{valid_from_end} if exists $c->req->params->{valid_from_end};
+
         my @values = $rs->search({
             id => $obj->{id}
-        })->next->values->search({user_id => $c->stash->{user}->id})->as_hashref->all;
+        })->next->values->search({user_id => $c->stash->{user}->id, %$where})->as_hashref->all;
         push @objs, {
             (map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit)),
             variable_id => $obj->{id},

@@ -53,6 +53,13 @@ insert into axis (id, name) values (13, 'Planejando Cidades do Futuro');
 SELECT setval('public.axis_id_seq', 100, true);
 
 
+insert into measurement_unit (name, short_name, user_id) values
+('Quilometro', 'km', 1),
+('Habitantes', 'habitantes', 1),
+('Metro quadrado', 'm²', 1),
+('Habitantes por quilometro quadrado', 'hab/km²', 1);
+
+
 create view movimentos as
 select
     b.id as city_id,

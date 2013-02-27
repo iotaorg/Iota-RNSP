@@ -122,6 +122,7 @@ sub indicator_GET {
       formula => $object_ref->formula,
       schema => $c->model('DB')->schema);
    my ($any_var) = $f->variables;
+   $any_var = eval{$c->model('DB')->resultset('Variable')->find($any_var)};
 
    my $where = $object_ref->dynamic_variations ? {
         user_id =>  $c->stash->{user_id} || $c->user->id
@@ -136,7 +137,9 @@ sub indicator_GET {
          map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations
       ]) : (),
 
-      period     => $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)->period} : undef,
+      (period        => defined $any_var ? $any_var->period : undef),
+      (variable_type => defined $any_var ? $any_var->type   : undef),
+
       created_by => {
         map { $_ => $object_ref->owner->$_ } qw(name id)
       },

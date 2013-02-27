@@ -4,15 +4,12 @@ package RNSP::PCS::Schema::ResultSet::Source;
 use namespace::autoclean;
 
 use Moose;
-use Text2URI;
-my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
 extends 'DBIx::Class::ResultSet';
 with 'RNSP::PCS::Role::Verification';
 with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
-use JSON qw /encode_json/;
 
 sub _build_verifier_scope_name { 'source' }
 

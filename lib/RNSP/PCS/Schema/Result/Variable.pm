@@ -98,9 +98,10 @@ __PACKAGE__->table("variable");
   default_value: false
   is_nullable: 1
 
-=head2 measurement_unit
+=head2 measurement_unit_id
 
-  data_type: 'text'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =cut
@@ -160,8 +161,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "is_basic",
   { data_type => "boolean", default_value => \"false", is_nullable => 1 },
-  "measurement_unit",
-  { data_type => "text", is_nullable => 1 },
+  "measurement_unit_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -191,6 +192,26 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("variable_cognomen_key", ["cognomen"]);
 
 =head1 RELATIONS
+
+=head2 measurement_unit
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::MeasurementUnit>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "measurement_unit",
+  "RNSP::PCS::Schema::Result::MeasurementUnit",
+  { id => "measurement_unit_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
 
 =head2 user
 
@@ -223,8 +244,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-21 16:45:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J3ztLO7QeG4u1fljjFzotA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-11 21:04:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NNmV58vgNyfnZVPt6xYGxQ
 
 __PACKAGE__->belongs_to(
     "owner",

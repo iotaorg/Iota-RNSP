@@ -13,6 +13,19 @@ with 'RNSP::PCS::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
 use JSON qw /encode_json/;
+use Geo::Coder::Google;
+
+has _geo_google => (
+    is   => 'rw',
+    isa  => 'Geo::Coder::Google::V3',
+
+    lazy      => 1,
+    builder   => '_build_geo_google',
+);
+
+sub _build_geo_google {
+    Geo::Coder::Google->new(apiver => 3);
+}
 
 sub _build_verifier_scope_name { 'city' }
 
@@ -86,6 +99,16 @@ sub action_specs {
                 $values{name}     = $name_o . '-' . $idx++;
             }
 
+
+            my $location = $values{name} =~ /foo bar/i ? {} :$self->_geo_google->geocode(
+                location => $values{name} . ' ' . $values{uf} . ' Brasil'
+            );
+
+            $values{latitude}  = $location->{geometry}{location}{lat}
+                unless defined $values{latitude};
+            $values{longitude} = $location->{geometry}{location}{lng}
+                unless defined $values{longitude};
+
             my $var = $self->create( \%values );
 
             $var->discard_changes;
@@ -114,6 +137,14 @@ sub action_specs {
                 $values{name_uri} = $name_uri_o . '-' . $idx;
                 $values{name}     = $name_o . '-' . $idx++;
             }
+
+            my $location = $values{name} =~ /foo bar/i ? {} : $self->_geo_google->geocode(
+                location => $values{name} . ' ' . $values{uf} . ' Brasil'
+            );
+            $values{latitude}  = $location->{geometry}{location}{lat}
+                unless defined $values{latitude};
+            $values{longitude} = $location->{geometry}{location}{lng}
+                unless defined $values{longitude};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

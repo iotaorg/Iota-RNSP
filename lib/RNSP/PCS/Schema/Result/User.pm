@@ -117,16 +117,22 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 1
 
-=head2 password
-
-  data_type: 'text'
-  is_nullable: 0
-
 =head2 active
 
   data_type: 'boolean'
   default_value: true
   is_nullable: 0
+
+=head2 password
+
+  data_type: 'text'
+  is_nullable: 0
+
+=head2 network_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
 
 =cut
 
@@ -166,10 +172,12 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "city_summary",
   { data_type => "text", is_nullable => 1 },
-  "password",
-  { data_type => "text", is_nullable => 0 },
   "active",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "password",
+  { data_type => "text", is_nullable => 0 },
+  "network_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -235,6 +243,36 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 indicator_user_visibilities_created_by
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorUserVisibility>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_user_visibilities_created_by",
+  "RNSP::PCS::Schema::Result::IndicatorUserVisibility",
+  { "foreign.created_by" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 indicator_user_visibility_users
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorUserVisibility>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_user_visibility_users",
+  "RNSP::PCS::Schema::Result::IndicatorUserVisibility",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicators
 
 Type: has_many
@@ -248,6 +286,26 @@ __PACKAGE__->has_many(
   "RNSP::PCS::Schema::Result::Indicator",
   { "foreign.user_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 network
+
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::Network>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "network",
+  "RNSP::PCS::Schema::Result::Network",
+  { id => "network_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 sources
@@ -292,6 +350,36 @@ __PACKAGE__->has_many(
   "user_forgotten_passwords",
   "RNSP::PCS::Schema::Result::UserForgottenPassword",
   { "foreign.id_user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_indicator_axes
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicatorAxis>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicator_axes",
+  "RNSP::PCS::Schema::Result::UserIndicatorAxis",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_indicator_configs
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicatorConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicator_configs",
+  "RNSP::PCS::Schema::Result::UserIndicatorConfig",
+  { "foreign.user_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -371,8 +459,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-03 21:07:00
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9Wmsa/h4erPPoyTV4p9inA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GyY6zc/92Rss3C/ge74eiQ
 
 __PACKAGE__->has_many(
     "user_roles",

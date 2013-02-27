@@ -169,6 +169,12 @@ __PACKAGE__->table("indicator");
   data_type: 'boolean'
   is_nullable: 1
 
+=head2 visibility_level
+
+  data_type: 'enum'
+  extra: {custom_type_name => "tp_visibility_level",list => ["public","private","contry","restrict"]}
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -242,6 +248,15 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "dynamic_variations",
   { data_type => "boolean", is_nullable => 1 },
+  "visibility_level",
+  {
+    data_type => "enum",
+    extra => {
+      custom_type_name => "tp_visibility_level",
+      list => ["public", "private", "contry", "restrict"],
+    },
+    is_nullable => 1,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -299,6 +314,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 indicator_user_visibilities
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorUserVisibility>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_user_visibilities",
+  "RNSP::PCS::Schema::Result::IndicatorUserVisibility",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_variables_variations
 
 Type: has_many
@@ -344,6 +374,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 user_indicator_configs
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::UserIndicatorConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_indicator_configs",
+  "RNSP::PCS::Schema::Result::UserIndicatorConfig",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_indicators
 
 Type: has_many
@@ -360,8 +405,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-03 20:23:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3K2J+ST8tsP8i471neqGNA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:i5yWxzohzGNBvzTfwKBu+A
 
 __PACKAGE__->belongs_to(
     "owner",
