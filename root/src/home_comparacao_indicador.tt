@@ -1,7 +1,7 @@
 	<div id="breadcrumb">
     	<div class="contents">
             <ul class="xbreadcrumbs" id="breadcrumbs-top">
-            	<li class="home"><a href="/[% role %]">Início</a></li>
+            	<li class="home"><a href="/[% role %]/">Início</a></li>
             	<li><a href="/[% role %]/">Indicadores</a></li>
             	<li>[% indicator.name %]</li>
             </ul>
