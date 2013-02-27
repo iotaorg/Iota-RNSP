@@ -184,7 +184,7 @@ my ( $self, $c ) = @_;
         )
     }, {
         prefetch => ['user_indicator_axis_items'],
-        order_by => ['me.position', 'user_indicator_axis_items.position']
+        order_by => ['me.id', 'me.position', 'user_indicator_axis_items.position']
     })->as_hashref->all;
     my @objs;
 
