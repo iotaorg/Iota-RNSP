@@ -62,7 +62,20 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-            like($res->content, qr/Linhas aceitas: 3\\n"/, '3 linhas');
+            like($res->content, qr/Linhas aceitas: 3\\n"/, '3 linhas no XLSX');
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/variable/value_via_file',
+                'Content-Type' => 'form-data',
+                Content =>
+                [   api_key   => 'test',
+                    'arquivo' => ["$Bin/teste-upload.xls"],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+
+            like($res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no XLS');
 
             die 'rollback';
         }

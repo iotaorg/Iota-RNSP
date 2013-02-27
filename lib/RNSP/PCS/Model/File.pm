@@ -5,6 +5,8 @@ use JSON qw/encode_json/;
 
 use RNSP::PCS::Model::File::XLSX;
 
+
+
 sub process {
     my ($self, %param) =  @_;
 
@@ -15,9 +17,12 @@ sub process {
     eval{
         if ($upload->filename =~ /xlsx$/){
             $parse = RNSP::PCS::Model::File::XLSX->new->parse( $upload->tempname );
+        }elsif ($upload->filename =~ /xls$/){
+            $parse = RNSP::PCS::Model::File::XLS->new->parse( $upload->tempname );
         }
     };
-    die 'file not supported!' unless $parse;
+    die $@ if $@;
+    die "file not supported!\n" unless $parse;
 
     my $status = $@ ? $@ : '';
 
