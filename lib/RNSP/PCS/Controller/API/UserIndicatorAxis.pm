@@ -133,6 +133,8 @@ sub user_indicator_axis_DELETE {
     my $obj = $c->stash->{object}->next;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
+    $obj->user_indicator_axis_items->delete;
+
     $obj->delete;
 
     $self->status_no_content($c);
