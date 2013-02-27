@@ -34,7 +34,7 @@ eval {
                 POST '/api/network',
                 [   api_key                    => 'test',
                     'network.create.name'       => 'prefeitura nao lembro o nome',
-                    'network.create.name_url'   => 'prefeitura'
+                    'network.create.name_url'   => 'prefeitura-2'
                 ]
             );
 
@@ -50,7 +50,7 @@ eval {
             is( $res->code, 200, 'network exists -- 200 Success' );
 
             like($res->content, qr|"prefeitura nao lembro o nome"|, 'name ok');
-            like($res->content, qr|"prefeitura"|, 'name_url ok');
+            like($res->content, qr|"prefeitura-2"|, 'name_url ok');
 
 
             my $obj_uri = $uri->path_query;
@@ -80,7 +80,7 @@ eval {
             is( $res->code, 200, 'list 200' );
 
             my $list = eval{from_json( $res->content )};
-            is($list->{network}[0]{name}, 'BarFoo', 'name from list ok');
+            is($list->{network}[3]{name}, 'BarFoo', 'name from list ok');
 
             ( $res, $c ) = ctx_request(
                 DELETE $obj_uri
@@ -94,7 +94,7 @@ eval {
 
 
             $list = eval{from_json( $res->content )};
-            is(@{$list->{network}}, '0', 'default list');
+            is(@{$list->{network}}, '3', 'default list');
 
             die 'rollback';
         }

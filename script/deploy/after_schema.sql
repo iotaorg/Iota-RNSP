@@ -1,23 +1,55 @@
 INSERT INTO city(
         id, name, uf, pais, latitude, longitude, created_at,name_uri)
 VALUES (1, 'São Paulo','SP','br',-23.562880, -46.654659,'2012-09-28 03:55:36.899955','sao-paulo');
+
+INSERT INTO city(
+        id, name, uf, pais, latitude, longitude, created_at,name_uri)
+VALUES (2, 'Outracidade','SP','br',-23.362880, -46.354659,'2012-09-28 03:55:36.899955','outra-cidade');
+
 SELECT setval('public.city_id_seq', 30, true);
 
-INSERT INTO "role"(id,name) VALUES (1,'admin'),(2,'user'), (3,'app'), (4,'_prefeitura'), (5,'_movimento');
-INSERT INTO "user"(id, name, email, password) VALUES (1, 'admin','admin@cidadessustentaveis.org.br', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
 
-INSERT INTO "user"(id, name, email, password) VALUES (2, 'prefeitura','prefeitura@cidadessustentaveis.org.br', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
+-- all passwords are 12345
 
+INSERT INTO "role"(id,name) VALUES (0,'superadmin'), (1,'admin'),(2,'user');
+
+INSERT INTO "user"(id, name, email, password) VALUES (1, 'superadmin','superadmin@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
+
+
+insert into "network" (id, name, name_url, users_can_edit_groups, users_can_edit_value, created_by)
+values
+(1, 'Prefeituras', 'prefeitura', false, true, 1),
+(2, 'Movimentos', 'movimento', true, true, 1),
+(3, 'Rede latino americana', 'latino', false, true, 1);
+
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (-1, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
+
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
+
+
+SELECT setval('network_id_seq', 10);
 SELECT setval('user_id_seq', 10);
 SELECT setval('role_id_seq', 10);
 
-INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 1); -- admin user /admin role_id
+-- role: superadmin                                     user:
+INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 0); -- superadmin
 
-INSERT INTO "user_role" ( user_id, role_id) VALUES (2, 2); -- prefeitura user / user role
-INSERT INTO "user_role" ( user_id, role_id) VALUES (2, 4); -- prefeitura user / prefeitura role
+-- role: admins                                         user:
+INSERT INTO "user_role" ( user_id, role_id) VALUES (2, 1); -- adminpref
+INSERT INTO "user_role" ( user_id, role_id) VALUES (3, 1); -- adminmov
 
-drop table IF EXISTS prefeitos;
-drop table IF EXISTS movimentos;
+-- role: user                                           user:
+INSERT INTO "user_role" ( user_id, role_id) VALUES (4, 2); -- prefeitura
+INSERT INTO "user_role" ( user_id, role_id) VALUES (5, 2); -- movimento
+INSERT INTO "user_role" ( user_id, role_id) VALUES (6, 2); -- movimento2
+INSERT INTO "user_role" ( user_id, role_id) VALUES (7, 2); -- latina
+
+
 
 SELECT pg_catalog.setval('variable_id_seq', 40, true);
 
@@ -59,21 +91,3 @@ insert into measurement_unit (name, short_name, user_id) values
 ('Metro quadrado', 'm²', 1),
 ('Habitantes por quilometro quadrado', 'hab/km²', 1);
 
-
-create view movimentos as
-select
-    b.id as city_id,
-    a.id as user_id
-from "user" a
-inner join city b on a.city_id = b.id
-inner join user_role ur on ur.user_id = a.id
-where ur.role_id = (select id from role where name ='_movimento');
-
-create view prefeitos as
-select
-    b.id as city_id,
-    a.id as user_id
-from "user" a
-inner join city b on a.city_id = b.id
-inner join user_role ur on ur.user_id = a.id
-where ur.role_id = (select id from role where name ='_prefeitura');
