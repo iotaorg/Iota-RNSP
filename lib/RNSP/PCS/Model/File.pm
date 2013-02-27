@@ -4,6 +4,8 @@ use utf8;
 use JSON qw/encode_json/;
 
 use RNSP::PCS::Model::File::XLSX;
+use RNSP::PCS::Model::File::XLS;
+use RNSP::PCS::Model::File::CSV;
 
 
 
@@ -19,6 +21,8 @@ sub process {
             $parse = RNSP::PCS::Model::File::XLSX->new->parse( $upload->tempname );
         }elsif ($upload->filename =~ /xls$/){
             $parse = RNSP::PCS::Model::File::XLS->new->parse( $upload->tempname );
+        }elsif ($upload->filename =~ /csv$/){
+            $parse = RNSP::PCS::Model::File::CSV->new->parse( $upload->tempname );
         }
     };
     die $@ if $@;
