@@ -52,7 +52,7 @@
 	<div id="menu">
 		<div class="content">
             <ul>
-                <li><a href="/[% role %]/">Início</a></li>
+                <li><a href="/[% role||rede %]/">Início</a></li>
             </ul>
         </div>
 	    <div class="clear"></div>
@@ -65,7 +65,7 @@
     	<div class="content">
         	<div class="menu">
             	<ul>
-                	<li><a href="/rede/[%rede||'movimento'%]/mapa-do-site">Mapa do Site</a></li><li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
+                	<li><a href="/rede/[%role||rede||'movimento'%]/mapa-do-site">Mapa do Site</a></li><li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
                 </ul>
 			    <div class="clear"></div>
             </div>
