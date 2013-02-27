@@ -74,6 +74,12 @@ __PACKAGE__->table("network");
   default_value: false
   is_nullable: 0
 
+=head2 users_can_edit_groups
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -98,6 +104,8 @@ __PACKAGE__->add_columns(
   "created_by",
   { data_type => "integer", is_nullable => 0 },
   "users_can_edit_value",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "users_can_edit_groups",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
@@ -145,8 +153,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zko3fxz1bQkgE3D3LOaypg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-27 13:39:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a2TGu0CQV3N31/7y65La5w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
