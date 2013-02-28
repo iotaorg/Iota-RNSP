@@ -131,7 +131,7 @@ sub user_GET {
             endereco => $user->endereco,
             active => $user->active,
 
-            map { $_ => $attrs{$_}, } qw(name email),
+            (map { $_ => $attrs{$_}, } qw(name email)),
 
             ($user->city
             ? (
