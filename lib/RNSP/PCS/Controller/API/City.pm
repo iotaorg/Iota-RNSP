@@ -166,10 +166,7 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->
-        search(undef, {
-            prefetch => ['movimento', 'prefeito']
-        })->as_hashref->all;
+    my @list = $c->stash->{collection}->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
@@ -179,11 +176,8 @@ sub list_GET {
                 telefone_prefeitura endereco_prefeitura bairro_prefeitura
                 cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
             created_at)),
-            prefeito_id => $obj->{prefeito}{user_id},
-            movimento_id => $obj->{movimento}{user_id},
 
             url => $c->uri_for_action( $self->action_for('city'), [ $obj->{id} ] )->as_string,
-
         }
     }
 

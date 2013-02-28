@@ -57,7 +57,8 @@ eval {
                 'user.create.password'         => 'foobarquux1',
                 'user.create.password_confirm' => 'foobarquux1',
                 'user.create.city_id'          => $city->id,
-                'user.create.prefeito'         => 1,
+                'user.create.role'             => 'user',
+                'user.create.network_id'       => 1,
                 'user.create.endereco'         => 'endereco_t'
                 ]
             );
@@ -68,7 +69,7 @@ eval {
                 $schema->resultset('User')->find( { email => 'foo@email.com' } ),
                 'user in DB'
             );
-            is(eval{$new_user->prefeito->user_id}, $new_user->id, 'criado como prefeito');
+            is(eval{$new_user->network->id}, 1, 'criado como prefeito');
 
 
 
@@ -122,7 +123,7 @@ eval {
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
             my $indicator = eval{from_json( $res->content )};
 
-            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->prefeito->user_id;
+            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');

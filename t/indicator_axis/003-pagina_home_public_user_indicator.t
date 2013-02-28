@@ -49,7 +49,8 @@ eval {
                 'user.create.password'         => 'foobarquux1',
                 'user.create.password_confirm' => 'foobarquux1',
                 'user.create.city_id'          => $city->id,
-                'user.create.prefeito'         => 1,
+                'user.create.network_id'       => 1,
+                'user.create.role'             => 'user',
                 'user.create.city_summary'     => 'testestes',
                 'user.create.endereco'         => 'endereco_t'
                 ]
@@ -61,7 +62,7 @@ eval {
                 $schema->resultset('User')->find( { email => 'foo@email.com' } ),
                 'user in DB'
             );
-            is(eval{$new_user->prefeito->user_id}, $new_user->id, 'criado como prefeito');
+            is(eval{$new_user->network_id}, 1, 'criado como prefeito');
 
 
 
@@ -146,7 +147,7 @@ eval {
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
             my $indicator = eval{from_json( $res->content )};
 
-            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->prefeito->user_id;
+            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             my $variable_url = $uri->path_query;
 
@@ -187,7 +188,7 @@ eval {
 
             my $indicator3 = eval{from_json( $res->content )};
 
-            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->prefeito->user_id;
+            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             $variable_url = $uri3->path_query;
 
