@@ -50,13 +50,11 @@ __PACKAGE__->table("file");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 status_text
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -81,17 +79,9 @@ __PACKAGE__->add_columns(
     sequence          => "file_id_seq",
   },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "status_text",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -133,8 +123,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zpq6I9a2f3svRdNWxWg5/g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 00:33:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:97Fe0b+NF8iPQh49dBlGEw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

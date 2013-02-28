@@ -123,16 +123,16 @@ __PACKAGE__->table("user");
   default_value: true
   is_nullable: 0
 
-=head2 password
-
-  data_type: 'text'
-  is_nullable: 0
-
 =head2 network_id
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 1
+
+=head2 password
+
+  data_type: 'text'
+  is_nullable: 0
 
 =cut
 
@@ -174,10 +174,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "active",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
-  "password",
-  { data_type => "text", is_nullable => 0 },
   "network_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "password",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -459,8 +459,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GyY6zc/92Rss3C/ge74eiQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 00:33:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UOtL5epy8sJWC0gQieKIrg
 
 __PACKAGE__->has_many(
     "user_roles",

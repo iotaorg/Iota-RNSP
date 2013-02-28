@@ -100,9 +100,9 @@ sub action_specs {
             }
 
 
-            my $location = $values{name} =~ /foo bar/i ? {} :$self->_geo_google->geocode(
+            my $location = $values{name} =~ /foo bar/i ? {} : eval{$self->_geo_google->geocode(
                 location => $values{name} . ' ' . $values{uf} . ' Brasil'
-            );
+            )};
 
             $values{latitude}  = $location->{geometry}{location}{lat}
                 unless defined $values{latitude};
@@ -138,9 +138,9 @@ sub action_specs {
                 $values{name}     = $name_o . '-' . $idx++;
             }
 
-            my $location = $values{name} =~ /foo bar/i ? {} : $self->_geo_google->geocode(
+            my $location = $values{name} =~ /foo bar/i ? {} : eval{$self->_geo_google->geocode(
                 location => $values{name} . ' ' . $values{uf} . ' Brasil'
-            );
+            )};
             $values{latitude}  = $location->{geometry}{location}{lat}
                 unless defined $values{latitude};
             $values{longitude} = $location->{geometry}{location}{lng}

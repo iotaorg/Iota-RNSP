@@ -50,13 +50,11 @@ __PACKAGE__->table("country");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 name
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -81,17 +79,9 @@ __PACKAGE__->add_columns(
     sequence          => "country_id_seq",
   },
   "name_uri",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -147,8 +137,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6CZQCUY6NqK6U9F0BllV/A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 00:33:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TN2Yma27h8Dr5wDW49RznQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

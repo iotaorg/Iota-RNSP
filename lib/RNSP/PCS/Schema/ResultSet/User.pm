@@ -53,31 +53,41 @@ sub verifiers_specs {
                     },
                 },
                 role => {
-                    required => 0,
+                    required => 1,
                     type     => 'Str',
+
+                    post_check => sub {
+                        my $r = shift;
+                        return $r->get_value('role') =~ /^(admin|user)$/;
+                    },
+
                 },
-                prefeito => {
+                network_id => {
                     required   => 0,
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        my $city =
-                          $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
-                        return 1 unless $city;
 
-                        return !defined $city->prefeito;
-                      }
-                },
-                movimento => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        my $city =
-                          $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
-                        return 1 unless $city;
+                        my $net =
+                            $self->result_source->schema->resultset('Network')->find( { id => $r->get_value('network_id') } );
+                        return 0 unless $net;
 
-                        return !defined $city->movimento;
+                        if ($r->get_value('role') eq 'user'){
+                            my $city =
+                            $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
+                            return 0 unless $city;
+
+                            my $exists =
+                            $self->search( {
+                                city_id    => $r->get_value('city_id'),
+                                network_id => $r->get_value('network_id'),
+                            } )->count;
+
+                            return 0 if $exists;
+
+                        }
+
+                        return 1;
                       }
                 },
 
@@ -103,55 +113,75 @@ sub verifiers_specs {
                 city_id => {
                     required => 0,
                     type     => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+
+                        # cidade precisa existir
+                        my $city =
+                            $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
+                        return 0 unless $city;
+
+                        # eu preciso existir!
+                        my $me = $self->find( $r->get_value('id') );
+                        return 0 unless $me;
+                        # se nao tem rede, pode ir pra qualquer cidade.
+                        return 1 unless $me->network_id;
+
+                        my $roles = join(' ', map {$_->name} $me->roles);
+
+                        if ($roles =~ /\buser\b/){
+
+                            my $exists =
+                            $self->search( {
+                                city_id    => $city->id,
+                                network_id => $r->get_value('network_id')||$me->network_id,
+                            } )->count;
+
+                            return 0 if $exists;
+
+                        }
+
+                        return 1;
+                    }
                 },
-                movimento => {
+                network_id => {
                     required   => 0,
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return 0 if $r->get_value('prefeito') && $r->get_value('movimento');
-                        return 1 unless defined $r->get_value('movimento');
 
-                        my $city =
-                          $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
-                        return 1 unless $city;
+                        # rede precisa existir
+                        my $net =
+                            $self->result_source->schema->resultset('Network')->find( { id => $r->get_value('network_id') } );
+                        return 0 unless $net;
 
-                        return 1 if $r->get_value('movimento') eq '0';
+                        # eu preciso existir!
+                        my $me = $self->find( $r->get_value('id') );
+                        return 0 unless $me;
 
-                        my $mov = $city->movimento;
+                        # se nao tem cidade, pode trocar de rede !
+                        my $city_id = $r->get_value('city_id') || $me->city_id;
+                        return 1 unless $city_id;
 
-                        # se tem movimento, mas eh ele mesmo, libera
-                        if ( $mov && $mov->user_id == $r->get_value('id') ) {
-                            return 1;
+                        my $roles = join(' ', map {$_->name} $me->roles);
+
+                        if ($roles =~ /\buser\b/){
+                            # pra ser usuario, precisa ser de alguma cidade
+                            my $city = $self->result_source->schema->resultset('City')->find( $city_id );
+                            return 0 unless $city;
+
+                            my $exists =
+                            $self->search( {
+                                city_id    => $city_id,
+                                network_id => $r->get_value('network_id'),
+                            } )->count;
+
+                            return 0 if $exists;
+
                         }
 
-                        return defined $mov ? 0 : 1;
-                      }
-                },
-                prefeito => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-
-                        return 0 if $r->get_value('movimento') && $r->get_value('prefeito');
-                        return 1 unless defined $r->get_value('prefeito');
-
-                        my $city =
-                          $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
-                        return 1 unless $city;
-
-                        return 1 if $r->get_value('prefeito') eq '0';
-
-                        my $pref = $city->prefeito;
-
-                        # se tem prefeito, mas eh ele mesmo, libera
-                        if ( $pref && $pref->user_id == $r->get_value('id') ) {
-                            return 1;
-                        }
-
-                        return defined $pref ? 0 : 1;
-                      }
+                        return 1;
+                    }
                 },
                 name => {
                     required => 1,
@@ -289,19 +319,9 @@ sub action_specs {
             delete $values{password_confirm};
             my $role = delete $values{role};
 
-            my $mov  = delete $values{movimento};
-            my $pref = delete $values{prefeito};
             my $user = $self->create( \%values, active =>1 );
 
-            if ($role) {
-                $user->add_to_user_roles( { role => { name => $role } } );
-            }
-
-            if ( $user->city_id && ( $mov || $pref ) ) {
-                $user->add_to_user_roles( { role => { name => '_movimento' } } ) if $mov;
-
-                $user->add_to_user_roles( { role => { name => '_prefeitura' } } ) if $pref;
-            }
+            $user->add_to_user_roles( { role => { name => $role } } );
 
             $user->discard_changes;
             return $user;
@@ -313,43 +333,10 @@ sub action_specs {
             delete $values{city_id}  unless $values{city_id};
             delete $values{active}  unless $values{active};
 
-            my $mov  = delete $values{movimento};
-            my $pref = delete $values{prefeito};
 
             my $user = $self->find( delete $values{id} );
 
-            # se tem uma cidade antiga, e nao foi enviado o que fazer
-            # troca para 'remover cargos' porque geralmente isso
-            # que vai acontecer
-            my $old_city = $user->city_id;
-            if ( $old_city && exists $values{city_id} && $old_city != $values{city_id} ) {
-                $mov  = 0 unless defined $mov;
-                $pref = 0 unless defined $pref;
-            }
-
             $user->update( \%values );
-
-            if ( $user->city_id && ( defined $mov || defined $pref ) ) {
-                if ( defined $mov ) {
-                    if ($mov) {
-                        $user->add_to_user_roles( { role => { name => '_movimento' } } ) unless $user->movimento;
-                    }
-                    else {
-                        my $role = $self->result_source->schema->resultset('Role')->find( { name => '_movimento' } );
-                        $user->remove_from_roles($role);
-                    }
-                }
-
-                if ( defined $pref ) {
-                    if ($pref) {
-                        $user->add_to_user_roles( { role => { name => '_prefeitura' } } ) unless $user->prefeito;
-                    }
-                    else {
-                        my $role = $self->result_source->schema->resultset('Role')->find( { name => '_prefeitura' } );
-                        $user->remove_from_roles($role);
-                    }
-                }
-            }
 
             $user->discard_changes;
             return $user;

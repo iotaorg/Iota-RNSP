@@ -24,7 +24,7 @@ values
 
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (-1, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
 
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
@@ -42,6 +42,7 @@ INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 0); -- superadmin
 -- role: admins                                         user:
 INSERT INTO "user_role" ( user_id, role_id) VALUES (2, 1); -- adminpref
 INSERT INTO "user_role" ( user_id, role_id) VALUES (3, 1); -- adminmov
+INSERT INTO "user_role" ( user_id, role_id) VALUES (8, 1); -- adminlat
 
 -- role: user                                           user:
 INSERT INTO "user_role" ( user_id, role_id) VALUES (4, 2); -- prefeitura

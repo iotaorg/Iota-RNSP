@@ -114,31 +114,41 @@ sub user_GET {
     $self->status_ok(
         $c,
         entity => {
-        roles => [ map { $_->name } $user->roles ],
-        files => {
-            map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
-                order_by => 'created_at'
-        }) },
+            roles => [ map { $_->name } $user->roles ],
+            files => {
+                map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
+                    order_by => 'created_at'
+            }) },
 
-        nome_responsavel_cadastro => $user->nome_responsavel_cadastro,
-        estado => $user->estado,
-        telefone => $user->telefone,
-        email_contato => $user->email_contato,
-        telefone_contato => $user->telefone_contato,
-        cidade => $user->cidade,
-        bairro => $user->bairro,
-        cep => $user->cep,
-        endereco => $user->endereco,
-        active => $user->active,
+            nome_responsavel_cadastro => $user->nome_responsavel_cadastro,
+            estado => $user->estado,
+            telefone => $user->telefone,
+            email_contato => $user->email_contato,
+            telefone_contato => $user->telefone_contato,
+            cidade => $user->cidade,
+            bairro => $user->bairro,
+            cep => $user->cep,
+            endereco => $user->endereco,
+            active => $user->active,
 
-        $user->city
-        ? (
-            city => $c->uri_for(
-            $c->controller('API::City')->action_for('city'),
-            [ $attrs{city_id} ] )->as_string
+            map { $_ => $attrs{$_}, } qw(name email),
+
+            ($user->city
+            ? (
+                city => $c->uri_for($c->controller('API::City')->action_for('city'), [ $attrs{city_id} ] )->as_string
+                )
+            : ()),
+
+            ($user->network
+            ? (
+                network => {
+                    url => $c->uri_for($c->controller('API::Network')->action_for('network'), [ $attrs{network_id} ] )->as_string,
+                    id => $attrs{network_id},
+                    name => $user->network->name,
+                    name_url => $user->network->name_url
+                }
             )
-        : (),
-        map { $_ => $attrs{$_}, } qw(name email)
+            : ( network => undef )),
         }
     );
 }
@@ -158,8 +168,8 @@ Param:
     user.update.role                Texto, Não Requerido: qual o role dele (admin,user,app)
 
     user.update.city_id             Int, Requerido: qual a cidade ele pertence
-    user.update.prefeito            0 ou 1, Nao Requerido: eh prefeito?
-    user.update.movimento           0 ou 1, Nao Requerido: eh movimento?
+    user.update.network_id          int, nao Requerido
+
 
     nome_responsavel_cadastro, estado, telefone, email_contato, telefone_contato, cidade, bairro, cep, endereco,
 Retorna:
@@ -266,12 +276,24 @@ sub list_GET {
                 id   => $_->{city}->{id}
               }
               )
-            : (),
+            : ( city => undef ),
+
+            $_->{network}
+            ? (
+              network => {
+                name => $_->{network}->{name},
+                name_url => $_->{network}->{name_url},
+                id   => $_->{network}->{id}
+              }
+              )
+            : ( network => undef ),
+
+
             url => $c->uri_for_action( $self->action_for('user'), [ $_->{id} ] )
               ->as_string
             }
           } $c->stash->{collection}
-          ->search_rs( {'me.active' => 1}, { prefetch => 'city'} )->as_hashref->all
+          ->search_rs( {'me.active' => 1}, { prefetch => ['city','network']} )->as_hashref->all
       ]
     }
   );
