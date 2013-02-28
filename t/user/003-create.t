@@ -147,7 +147,38 @@ eval {
             ok( !$res->is_success, 'error' );
             is( $res->code, 400, 'user already exists' );
 
+            ( $res, $c ) = ctx_request(
+                GET '/api/user'
+            );
 
+            use JSON qw(from_json);
+            my $users = from_json( $res->content );
+            foreach (@{$users->{users}} ){
+                next unless $_->{name} eq 'Foo Bar';
+
+                delete $_->{url};
+                like(delete $_->{id}, qr/^\d+$/, 'have id');
+                my $var = {
+                    'nome_responsavel_cadastro' => 'nome_responsavel_cadastro',
+                    'cidade' => undef,
+                    'bairro' => undef,
+                    'endereco' => undef,
+                    'network' => undef,
+                    'name' => 'Foo Bar',
+                    'active' => 1,
+                    'estado' => undef,
+                    'telefone' => undef,
+                    'email' => 'foo@email.com',
+                    'city' => {
+                                'name' => 'Pederneiras',
+                                'id' => $city->id
+                                },
+                    'telefone_contato' => undef,
+                    'cep' => undef,
+                    'email_contato' => undef
+                };
+                is_deeply($_, $var, 'is ok listing');
+            }
 
             die 'rollback';
         }

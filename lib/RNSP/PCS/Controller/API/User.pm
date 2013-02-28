@@ -120,18 +120,22 @@ sub user_GET {
                     order_by => 'created_at'
             }) },
 
-            nome_responsavel_cadastro => $user->nome_responsavel_cadastro,
-            estado => $user->estado,
-            telefone => $user->telefone,
-            email_contato => $user->email_contato,
-            telefone_contato => $user->telefone_contato,
-            cidade => $user->cidade,
-            bairro => $user->bairro,
-            cep => $user->cep,
-            endereco => $user->endereco,
-            active => $user->active,
+            (map { $_ => $attrs{$_}, } qw(
+                id
+                name
+                email
 
-            (map { $_ => $attrs{$_}, } qw(name email)),
+                nome_responsavel_cadastro
+                estado
+                telefone
+                email_contato
+                telefone_contato
+                cidade
+                bairro
+                cep
+                endereco
+                active
+            )),
 
             ($user->city
             ? (
@@ -256,6 +260,7 @@ sub list_GET {
         map {
           +{
             name => $_->{name},
+            id => $_->{id},
             email => $_->{email},
             active => $_->{active},
 
