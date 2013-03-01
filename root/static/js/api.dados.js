@@ -941,7 +941,11 @@ $(document).ready(function(){
 
 		$(".download-links").empty();	
 		$(".download-links").append("<div class='label'>Tipo:</div>");	
-		$(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados</option><option value='variaveis'>Variáveis</option></select>");	
+		if (ref == "home"){
+			$(".download-links").append("<select id='dados-abertos-tipo'><option value='indicadores'>Indicadores</option><option value='variaveis'>Variáveis</option></select>");	
+		}else{
+			$(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados</option><option value='variaveis'>Variáveis</option></select>");	
+		}
 		$(".download-links").append("<a href='#' class='botao xml' formato='xml'>XML</a>");	
 		$(".download-links").append("<a href='#' class='botao csv' formato='csv'>CSV</a>");	
 		$(".download-links").append("<a href='#' class='botao json' formato='json'>JSON</a>");	
