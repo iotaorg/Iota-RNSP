@@ -26,7 +26,8 @@
 }
 #cidades-indicadores .title,
 #indicador-historico .title,
-#indicador-grafico .title{
+#indicador-grafico .title,
+#dados-abertos .title{
 	color: #4b308f;
 }
 
@@ -38,7 +39,8 @@
 }
 
 #indicador-historico .title span,
-#indicador-grafico .title span{
+#indicador-grafico .title span,
+#dados-abertos .title span{
 	color: #4b308f;
 }
 input.button-data{

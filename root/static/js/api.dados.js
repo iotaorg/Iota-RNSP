@@ -179,7 +179,6 @@ $(document).ready(function(){
 		if (indicadorID){
 			$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
-			$("#share-link").val(window.location.href);
 		}
 		$(".indicators .item").click( function (){
 			
@@ -861,35 +860,6 @@ $(document).ready(function(){
 		}
 	});
 
-	$("#button-download").click(function(){
-		if ($(".share-link").is(":visible")){
-			$(".share-link").toggle();
-			$("#button-share").toggleClass("down");
-		}
-		$(".download-links").toggle();
-		$(this).toggleClass("down");
-	});
-
-
-	$("#button-share").click(function(){
-		if ($(".download-links").is(":visible")){
-			$(".download-links").toggle();
-			$("#button-download").toggleClass("down");
-		}
-		$(".share-link").toggle();
-		$(this).toggleClass("down");
-		$("#share-link").select();
-	});
-	$("#share-link").focus(function(){
-		$(this).select();
-	});
-	$("#share-link").click(function(){
-		$(this).select();
-	});
-	$("#share-link").keypress(function(e){
-		e.preventDefault();
-	});
-
 	$("#graph-search-user").autocomplete({
 		source: function( request, response ) {
 			var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
@@ -939,11 +909,50 @@ $(document).ready(function(){
 
 	}
 	
-	function setaBotoes(){
+	function setaDadosAbertos(){
+
+		$("#button-download").click(function(){
+			if ($(".share-link").is(":visible")){
+				$(".share-link").toggle();
+				$("#button-share").toggleClass("down");
+			}
+			$(".download-links").toggle();
+			$(this).toggleClass("down");
+		});
+	
+	
+		$("#button-share").click(function(){
+			if ($(".download-links").is(":visible")){
+				$(".download-links").toggle();
+				$("#button-download").toggleClass("down");
+			}
+			$(".share-link").toggle();
+			$(this).toggleClass("down");
+			$("#share-link").select();
+		});
+		$("#share-link").focus(function(){
+			$(this).select();
+		});
+		$("#share-link").click(function(){
+			$(this).select();
+		});
+		$("#share-link").keypress(function(e){
+			e.preventDefault();
+		});
+
 		$(".download-links").empty();	
-		$(".download-links").append("<a href='#' class='botao xml'>XML</a>");	
-		$(".download-links").append("<a href='#' class='botao csv'>CSV</a>");	
-		$(".download-links").append("<a href='#' class='botao son'>JSON</a>");	
+		$(".download-links").append("<div class='label'>Tipo:</div>");	
+		$(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados</option><option value='variaveis'>Variáveis</option></select>");	
+		$(".download-links").append("<a href='#' class='botao xml' formato='xml'>XML</a>");	
+		$(".download-links").append("<a href='#' class='botao csv' formato='csv'>CSV</a>");	
+		$(".download-links").append("<a href='#' class='botao json' formato='json'>JSON</a>");	
+
+		$(".download-links a.botao").unbind();
+		$(".download-links a.botao").click(function(e){
+			e.preventDefault();
+			self.location = window.location.href + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
+		});
+
 	}
 
 	if (ref == "comparacao" || ref == "indicador" || ref == "home"){
@@ -956,7 +965,9 @@ $(document).ready(function(){
 		if (ref == "comparacao"){
 			setaTabs();
 			setaGraficos();
-			setaBotoes();
+		}
+		if (ref == "home" || ref == "indicador" || ref == "comparacao"){
+			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
 		}
     });

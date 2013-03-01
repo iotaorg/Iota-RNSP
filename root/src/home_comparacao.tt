@@ -37,9 +37,35 @@
                                     </div>
 
                                     <div id="mapa"></div>
-
+									<div class="clear"></div>
+									<div class="dados-botoes">
+										<input type="button" value="Download" id="button-download" class="button-data"/>
+										<input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+									</div>
+									<div class="download-links">
+									</div>
+									<div class="share-link">
+										<input type="text" id="share-link" value="url" />
+									</div>
+									<div class="clear"></div>
                             </div>
                         </div>
+                        <div class="clear"></div>
+                        <div id="dados-abertos">
+                            <div class="title">Dados abertos</a></div>
+                            <div class="content-fill">
+								<div class="dados-botoes">
+									<input type="button" value="Download" id="button-download" class="button-data"/>
+									<input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+								</div>
+								<div class="download-links">
+								</div>
+								<div class="share-link">
+									<input type="text" id="share-link" value="url" />
+								</div>
+							</div>
+                        </div>
+                        <div class="clear"></div>
 					</div>
                 </div>
             </div>
