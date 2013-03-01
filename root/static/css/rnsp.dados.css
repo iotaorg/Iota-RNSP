@@ -397,6 +397,10 @@ table{
 	font-weight: bolder;
 }
 
+#dados-abertos .title{
+	font-weight: normal;
+}
+
 #indicador-grafico .title a.link{
 	font-size: 9pt;
 	color: #009999;
@@ -579,7 +583,7 @@ table{
 }
 
 .dados-botoes{
-	margin-top: 10px;	
+	margin-top: 0px;	
 }
 
 input.button-data{

@@ -375,7 +375,6 @@ $(document).ready(function(){
 						users_ready++;
 						
 						if (users_ready >= total_users){
-							setaBotoes();
 							geraGraficos();
 							setaGraficos();
 							getUserCoord();
@@ -950,13 +949,15 @@ $(document).ready(function(){
 		$(".download-links a.botao").unbind();
 		$(".download-links a.botao").click(function(e){
 			e.preventDefault();
-			self.location = window.location.href + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
+			self.location = window.location.href + "/" + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
 		});
 
 	}
 
 	if (ref == "comparacao" || ref == "indicador" || ref == "home"){
 		carregaIndicadoresCidades();
+		setaDadosAbertos();
+		$("#share-link").val(window.location.href);
 	}
 
 	var History = window.History;
