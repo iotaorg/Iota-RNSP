@@ -1,8 +1,8 @@
     <div id="breadcrumb">
         <div class="contents">
             <ul class="xbreadcrumbs" id="breadcrumbs-top">
-                <li class="home"><a href="/[%rede||role%]/">Início</a></li>
-                <li class="current"><a href="/rede/[%rede||role%]/mapa-do-site">Mapa do Site</a></li>
+                <li class="home"><a href="/[%network.name_url]/">Início</a></li>
+                <li class="current"><a href="/rede/[%network.name_url%]/mapa-do-site">Mapa do Site</a></li>
             </ul>
             <div class="clear"></div>
         </div>
@@ -15,7 +15,7 @@
             <div id="mapa-do-site">
                 <div class="content-fill">
                     <ul>
-                        <li><a href="/[%rede%]/">Início de [%rede%]</a></li>
+                        <li><a href="/[%network.name_url%]/">Início de [%network.name%]</a></li>
                         <li><a href="/dados-abertos">Dados abertos</a></li>
                         <li>Cidades
                             <ul>

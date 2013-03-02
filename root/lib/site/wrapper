@@ -65,7 +65,7 @@
     	<div class="content">
         	<div class="menu">
             	<ul>
-                	<li><a href="/rede/[%role||rede||'movimento'%]/mapa-do-site">Mapa do Site</a></li><li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
+                	<li><a href="/[%network.name_url%]/mapa-do-site">Mapa do Site</a></li><li><a href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
                 </ul>
 			    <div class="clear"></div>
             </div>
