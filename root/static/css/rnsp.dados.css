@@ -378,7 +378,8 @@ table{
 
 #cidades-indicadores,
 #indicador-historico,
-#indicador-grafico{
+#indicador-grafico,
+#dados-abertos{
 	border: 1px solid #e0e0e0;
 	margin-top: 10px;
 	padding: 2px;
@@ -386,13 +387,18 @@ table{
 
 #cidades-indicadores .title,
 #indicador-historico .title,
-#indicador-grafico .title{
+#indicador-grafico .title,
+#dados-abertos .title{
 	color: #009999;
 	background-color: #efefef;
 	border: 1px solid #e0e0e0;
 	padding: 2px 5px;
 	font-size: 12pt;
 	font-weight: bolder;
+}
+
+#dados-abertos .title{
+	font-weight: normal;
 }
 
 #indicador-grafico .title a.link{
@@ -406,7 +412,8 @@ table{
 
 
 #indicador-historico .title span,
-#indicador-grafico .title span{
+#indicador-grafico .title span,
+#dados-abertos .title span{
 	color: #009999;
 }
 
@@ -576,7 +583,7 @@ table{
 }
 
 .dados-botoes{
-	margin-top: 10px;	
+	margin-top: 5px;	
 }
 
 input.button-data{
@@ -606,6 +613,19 @@ input.button-data:hover{
 	background-color: #f0f0f0;
 	padding: 10px;
 	margin-top: 5px;	
+}
+
+.download-links .label{
+	display: inline-block;
+	margin-right: 3px;
+}
+
+.download-links select{
+	display: inline-block;
+	margin-right: 5px;
+	padding: 1px 2px;
+	font-size: 9pt;
+	border: 1px solid #e0e0e0;
 }
 
 .download-links a{

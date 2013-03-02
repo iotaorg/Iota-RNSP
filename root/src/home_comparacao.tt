@@ -1,56 +1,74 @@
-	<div id="breadcrumb">
-    	<div class="contents">
-            <ul class="xbreadcrumbs" id="breadcrumbs-top">
-            	<li class="home"><a href="/[%rede||role%]/">Início</a></li>
-            </ul>
-		    <div class="clear"></div>
-        </div>
-	</div>
-	<div id="content">
-		<div class="content">
-        	<div id="indicadores-dados">
-                <div class="menu-left">
-	            	<div class="content-fill">
-                        <div class="title">Por Indicador</div>
-                        <div class="category" id="axis_list">
+<div id="breadcrumb">
+    <div class="contents">
+        <ul class="xbreadcrumbs" id="breadcrumbs-top">
+            <li class="home"><a href="/[%rede||role%]/">Início</a></li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+</div>
+<div id="content">
+    <div class="content">
+        <div id="indicadores-dados">
+            <div class="menu-left">
+                <div class="content-fill">
+                    <div class="title">Por Indicador</div>
+                    <div class="category" id="axis_list">
 
-                        </div>
-                        <div class="search">
-                            <input type="text" name="indicador-busca" id="indicador-busca" size="25" class="indicador-busca"  placeholder="Busca"/>
-                        </div>
-                        <div class="indicators">
-                        </div>
-					</div>
-                </div>
-            	<div class="data-right">
-                	<div class="content-fill">
-                        <div class="data-content">
-                            <div class="title">
-                                Por Cidade
-                            </div>
-                            <div class="content-fill">
-
-                                	<div id="filtro_mapa">
-                                    	Estado: <select id="uf_filter">
-                                                <option value="">Selecione
-                                            </select>
-                                    </div>
-
-                                    <div id="mapa"></div>
-
-                            </div>
-                        </div>
-					</div>
+                    </div>
+                    <div class="search">
+                        <input type="text" name="indicador-busca" id="indicador-busca" size="25" class="indicador-busca"  placeholder="Busca"/>
+                    </div>
+                    <div class="indicators">
+                    </div>
                 </div>
             </div>
-            <div class="clear"></div>
+            <div class="data-right">
+                <div class="content-fill">
+                    <div class="data-content">
+                        <div class="title">
+                            Por Cidade
+                        </div>
+                        <div class="content-fill">
+
+                                <div id="filtro_mapa">
+                                    Estado: <select id="uf_filter">
+                                            <option value="">Selecione
+                                        </select>
+                                </div>
+
+                                <div id="mapa"></div>
+                                <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div id="dados-abertos">
+                        <div class="title">Dados abertos</a></div>
+                        <div class="content-fill">
+                            <div class="dados-botoes">
+                                <input type="button" value="Download" id="button-download" class="button-data"/>
+                                <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+                            </div>
+                            <div class="download-links">
+                            </div>
+                            <div class="share-link">
+                                <input type="text" id="share-link" value="url" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
         </div>
+        <div class="clear"></div>
     </div>
-	<script type="text/javascript">[% PROCESS 'network_javascript.tt'%]
-            var userID = "";
-			var role = '[% role %]';
-			var ref = 'home';
-	</script>
-	<div id="bubble-intro">
-		<p>Selecione um estado acima e clique sobre os pontos do mapa para visualizar os indicadores</p>
-	</div>
+</div>
+<script type="text/javascript">
+    [% PROCESS 'network_javascript.tt'%]
+        var role = '[% role %]';
+        var ref = 'home';
+        var userID = "";
+</script>
+<div id="bubble-intro">
+    <p>Selecione um estado acima e clique sobre os pontos do mapa para visualizar os indicadores</p>
+</div>
+
