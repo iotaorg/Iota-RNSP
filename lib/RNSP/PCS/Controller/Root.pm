@@ -166,7 +166,7 @@ sub stash_indicator {
         name_url     => $nome
     })->as_hashref->next;
 
-use DDP; p $indicator;
+
     $c->detach('/error_404') unless $indicator;
     $c->stash->{indicator} = $indicator;
 
@@ -235,6 +235,8 @@ sub default : Path {
 
 sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
+    my $x = $c->req->uri;
+    use DDP; p $x;
     $c->response->body($foo . ' Page not found');
     $c->response->status(404);
 

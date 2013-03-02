@@ -24,17 +24,21 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
 
-
 }
 
-sub user_file : Chained('object') : PathPart('arquivo') : Args(1) : ActionClass('REST') {
+sub cap_user_file : Chained('object') : PathPart('arquivo') : CaptureArgs(1)  {
+    my ( $self, $c, $classe ) = @_;
+    $c->stash->{classe} = $classe;
+}
+sub user_file : Chained('cap_user_file') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
 use JSON;
 use Path::Class qw(dir);
 sub user_file_POST {
-    my ( $self, $c, $classe ) = @_;
+    my ( $self, $c) = @_;
 
+    my $classe = $c->stash->{classe};
     my $t = new Text2URI();
 
     $classe = $t->translate(substr($classe, 0, 15));
