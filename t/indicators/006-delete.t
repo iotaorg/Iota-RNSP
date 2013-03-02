@@ -10,7 +10,7 @@ use lib "$Bin/../lib";
 use Catalyst::Test q(RNSP::PCS);
 
 use HTTP::Request::Common qw(GET POST DELETE PUT);
-;
+
 use Package::Stash;
 
 use RNSP::PCS::TestOnly::Mock::AuthUser;

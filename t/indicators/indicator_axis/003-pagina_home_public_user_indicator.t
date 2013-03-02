@@ -6,7 +6,7 @@ use JSON qw(from_json);
 use Test::More;
 
 use FindBin qw($Bin);
-use lib "$Bin/../lib";
+use lib "$Bin/../../lib";
 
 use Catalyst::Test q(RNSP::PCS);
 
