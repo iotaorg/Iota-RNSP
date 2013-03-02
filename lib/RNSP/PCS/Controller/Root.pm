@@ -148,8 +148,6 @@ sub network_index: Chained('network_page') PathPart('') Args(0) {
 
 sub network_indicador: Chained('network_object') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
-use DDP; p $nome;
-
     $self->stash_indicator($c, $nome);
 }
 
@@ -236,8 +234,8 @@ sub default : Path {
 sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
-    use DDP; p $x;
-    $c->response->body($foo . ' Page not found');
+    print STDERR "NOT FOUND " . $x->path,"\n";
+    $c->response->body($x->path. ' Page not found');
     $c->response->status(404);
 
 }
