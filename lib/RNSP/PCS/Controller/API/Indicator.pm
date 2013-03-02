@@ -116,13 +116,14 @@ Retorna:
 sub indicator_GET {
    my ( $self, $c ) = @_;
 
-   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis']})->next;
+   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis','indicator_network_configs']})->next;
 
    my $f = new RNSP::IndicatorFormula(
       formula => $object_ref->formula,
       schema => $c->model('DB')->schema);
-   my ($any_var) = $f->variables;
-   $any_var = eval{$c->model('DB')->resultset('Variable')->find($any_var)};
+
+    my ($any_var) = $f->variables;
+    $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
 
    my $where = $object_ref->dynamic_variations ? {
         user_id =>  $c->stash->{user_id} || $c->user->id
@@ -136,6 +137,13 @@ sub indicator_GET {
       $object_ref->indicator_type eq 'varied' ? (variables => [
          map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations
       ]) : (),
+
+      network_configs => [
+         map { {
+            unfolded_in_home => $_->unfolded_in_home,
+            network_id       => $_->network_id
+        } } $object_ref->indicator_network_configs
+      ],
 
       (period        => defined $any_var ? $any_var->period : undef),
       (variable_type => defined $any_var ? $any_var->type   : undef),
@@ -304,6 +312,8 @@ sub list_GET {
     my @objs;
 
     foreach my $obj (@list){
+        $obj->{indicator_network_configs} = []
+            unless exists $obj->{indicator_network_configs};
         push @objs, {
 
 
@@ -313,6 +323,13 @@ sub list_GET {
             axis => {
                 map { $_ => $obj->{axis}{$_} } qw(name id)
             },
+
+            network_configs => [
+                map { {
+                    unfolded_in_home => $_->{unfolded_in_home},
+                    network_id       => $_->{network_id}
+                } } @{$obj->{indicator_network_configs}}
+            ],
 
             (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation observations
                  goal_source tags goal_operator chart_name goal_explanation sort_direction name_url

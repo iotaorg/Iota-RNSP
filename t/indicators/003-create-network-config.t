@@ -121,6 +121,15 @@ eval {
             }, 'item updated !! ');
 
 
+            ( $res, $c ) = ctx_request( GET $uri->path);
+
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+
+            my $list_ind = eval{from_json( $res->content )};
+            is( @{$list_ind->{network_configs}}, 2, '2 network_configs in detais of indicator');
+
+
             for (1..2){
                 ( $res, $c ) = ctx_request(
                     DELETE $uri->path . '/network_config/' . $_
