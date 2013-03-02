@@ -72,7 +72,8 @@ __PACKAGE__->table("indicator_variations");
 
 =head2 user_id
 
-  data_type: 'boolean'
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =cut
@@ -99,7 +100,7 @@ __PACKAGE__->add_columns(
   "order",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
   "user_id",
-  { data_type => "boolean", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -146,9 +147,29 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-01-23 04:12:17
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9V1oOA1X2t2ImU5L456lSA
+Type: belongs_to
+
+Related object: L<RNSP::PCS::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "user",
+  "RNSP::PCS::Schema::Result::User",
+  { id => "user_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-02 05:51:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JYnIPUWnKcYqm4n0dElSNg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

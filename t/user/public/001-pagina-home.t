@@ -20,7 +20,7 @@ my $schema = RNSP::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 2;
 @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
@@ -207,6 +207,14 @@ eval {
             );
             ok( $res->is_success, 'indicator created!' );
 
+            $uri = URI->new( $res->header('Location') );
+            ( $res, $c ) = ctx_request(
+                POST $uri->path . '/network_config/1',
+                [   api_key                                     => 'test',
+                    'indicator.network_config.upsert.unfolded_in_home' => 1,
+                ]
+            );
+
             my $indicator3 = eval{from_json( $res->content )};
 
             $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
@@ -256,7 +264,6 @@ eval {
                 is($obj->{usuario}{telefone_prefeitura}, '12345555','telefone da cidade');
             };
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
-
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{from_json( $res->content )};

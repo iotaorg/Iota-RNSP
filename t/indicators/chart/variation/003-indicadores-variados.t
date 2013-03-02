@@ -23,7 +23,7 @@ my $schema = RNSP::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 2;
 @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );

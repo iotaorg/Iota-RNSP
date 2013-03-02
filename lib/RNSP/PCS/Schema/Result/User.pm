@@ -273,6 +273,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 indicator_variations
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorVariation>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_variations",
+  "RNSP::PCS::Schema::Result::IndicatorVariation",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicators
 
 Type: has_many
@@ -459,8 +474,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-28 00:33:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UOtL5epy8sJWC0gQieKIrg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-02 05:51:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hh/L3KCfkk251Fy4KSMg9A
 
 __PACKAGE__->has_many(
     "user_roles",

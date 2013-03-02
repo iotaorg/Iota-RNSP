@@ -87,7 +87,7 @@ eval {
             is( $res->code, 200, 'list 200' );
 
             my $list = eval{from_json( $res->content )};
-            is($list->{indicadors][0]{explanation}, 'explanation', 'explanation present!');
+            is($list->{indicators}[0]{explanation}, 'explanation', 'explanation present!');
 
             ( $res, $c ) = ctx_request( GET '/api/log');
             ok( $res->is_success, 'listing ok!' );

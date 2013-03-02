@@ -13,8 +13,13 @@ __PACKAGE__->config( default => 'application/json' );
 
 
 sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureArgs(0) {
-  my ( $self, $c, $id ) = @_;
-  $c->stash->{collection} = $c->model('DB::Indicator');
+    my ( $self, $c, $id ) = @_;
+
+    $c->stash->{collection} = $c->model('DB::Indicator')->search(
+        {
+            'indicator_network_configs.network_id' => [$c->stash->{network}->id, undef]
+        }, { prefetch => ['indicator_network_configs'] }
+    );
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -57,6 +62,9 @@ sub resumo :Chained('base') : PathPart('') : Args( 0 ) : ActionClass('REST') {}
 
 
 =pod
+
+
+"pagina home" isso gera a maior parte dos dados da home de uma rede.
 
 GET /api/public/user/$id/indicator
 
@@ -159,7 +167,7 @@ sub resumo_GET {
             'user_indicator_axis.user_id' => $c->stash->{user_obj}->id
 
         }, {
-            join => 'user_indicator_axis'
+            join => 'user_indicator_axis',
         });
 
 
@@ -297,11 +305,19 @@ sub resumo_GET {
                 @axis_list = map {$_->user_indicator_axis->name} @grupos;
             }
             foreach my $axis (@axis_list){
+                my ($config) = $indicator->indicator_network_configs->all;
+
                 push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
                     name        => $indicator->name,
                     formula     => $indicator->formula,
                     name_url    => $indicator->name_url,
                     explanation => $indicator->explanation,
+                    network_config => $config ? {
+                        unfolded_in_home => $config->unfolded_in_home,
+                        network_id       => $config->network_id
+                    } : {
+                        unfolded_in_home => 0
+                    },
                     id          => $indicator->id,
 
                     valores     => $item
@@ -397,6 +413,7 @@ sub resumo_GET {
 sub indicator_status:Chained('base') : PathPart('status') : Args( 0 ) : ActionClass('REST') {}
 
 =pod
+
 
 GET /api/public/user/$id/indicator/status
 
