@@ -314,6 +314,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 indicator_network_configs
+
+Type: has_many
+
+Related object: L<RNSP::PCS::Schema::Result::IndicatorNetworkConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_network_configs",
+  "RNSP::PCS::Schema::Result::IndicatorNetworkConfig",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_user_visibilities
 
 Type: has_many
@@ -405,8 +420,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-02-21 17:12:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:i5yWxzohzGNBvzTfwKBu+A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-02 04:07:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yIaJPXFLwOc4OzL2p/Xtew
 
 __PACKAGE__->belongs_to(
     "owner",
