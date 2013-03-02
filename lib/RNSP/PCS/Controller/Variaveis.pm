@@ -38,7 +38,10 @@ use Digest::MD5;
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $file = 'variaveis.' . substr($c->stash->{find_role}, 1);
+    my $network = $c->stash->{network};
+
+
+    my $file = 'variaveis.' . $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
                 if $c->stash->{cidade};
     $file .= '_' .  $c->stash->{indicator}{name_url}
@@ -64,9 +67,6 @@ sub _download {
     }) if $c->stash->{cidade};
 
     $c->detach('/error_404') if $c->stash->{cidade} && !$citys->count;
-
-    my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
-    $c->detach('/error_404') unless $role_id;
 
 
     my @lines = (
@@ -98,8 +98,8 @@ sub _download {
             my $user = $c->model('DB::User')->search({
                 city_id => $city->{id},
                 'me.active'  => 1,
-                'user_roles.role_id' => $role_id->id
-            }, {  join  => 'user_roles'} )->as_hashref->next;
+                'me.network_id' => $network->id
+            } )->as_hashref->next;
             $c->detach('/error_404') if $c->stash->{cidade} && !$user;
             next if !$user;
 
