@@ -65,6 +65,7 @@
     </div>
 
 	<script type="text/javascript">
+	[% PROCESS 'network_javascript.tt'%]
 			var userID = [% user.id %];
 			var indicadorID = [% indicator.id %];
 			var role = '[% find_role %]';

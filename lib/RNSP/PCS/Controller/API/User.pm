@@ -82,7 +82,7 @@ sub user_file_POST {
 
 
 sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 

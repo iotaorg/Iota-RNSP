@@ -41,18 +41,22 @@ sub root: Chained('/') PathPart('') CaptureArgs(0) {
 }
 
 
-sub rede_object: Chained('root') PathPart('rede') CaptureArgs(1) {
+sub network_object: Chained('root') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $rede ) = @_;
 
-    $self->detach('/error_404') unless $rede eq 'movimento' or $rede eq 'prefeitura';
+    my $net = $c->model('DB::Network')->search({
+        name_url => $rede
+    })->first;
+    $c->detach('/error_404') unless $net;
 
-    $c->stash->{rede} = $rede;
+    $c->stash->{network} = $net;
+    $c->stash->{rede} = $net->name_url;
 }
 
-sub mapa_site: Chained('rede_object') PathPart('mapa-do-site') Args(0) {
+sub mapa_site: Chained('network_object') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c, $cidade ) = @_;
 
-    my @users = $c->model('DB::'. ($c->stash->{rede} eq 'movimento' ? 'Movimento' : 'Prefeito') )->all;
+    my @users = $c->stash->{network}->users->with_city->all;
 
     my @citys = $c->model('DB::City')->search({
         id => [
@@ -92,39 +96,38 @@ sub download: Chained('root') PathPart('dados-abertos') Args(0) {
 }
 
 
-sub prefeitura: Chained('root') PathPart('prefeitura') CaptureArgs(0) {
+sub network_page: Chained('network_object') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{find_role} = '_prefeitura';
 }
 
-sub prefeitura_pais: Chained('prefeitura') PathPart('') CaptureArgs(1) {
+sub network_pais: Chained('network_page') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $sigla ) = @_;
     $c->stash->{pais} = $sigla;
 }
 
-sub prefeitura_estado: Chained('prefeitura_pais') PathPart('') CaptureArgs(1) {
+sub network_estado: Chained('network_pais') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $estado ) = @_;
     $c->stash->{estado} = $estado;
 }
 
-sub prefeitura_cidade: Chained('prefeitura_estado') PathPart('') CaptureArgs(1) {
+sub network_cidade: Chained('network_estado') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $cidade ) = @_;
     $c->stash->{cidade} = $cidade;
 }
 
-sub prefeitura_render: Chained('prefeitura_cidade') PathPart('') Args(0) {
+sub network_render: Chained('network_cidade') PathPart('') Args(0) {
     my ( $self, $c, $cidade ) = @_;
     $self->stash_tela_cidade($c);
 }
 
 
-sub prefeitura_indicator: Chained('prefeitura_cidade') PathPart('') CaptureArgs(1) {
+sub network_indicator: Chained('network_cidade') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $indicator ) = @_;
     $c->stash->{indicator} = $indicator;
     $self->stash_tela_indicator($c);
 }
 
-sub prefeitura_indicator_render: Chained('prefeitura_indicator') PathPart('') Args(0) {
+sub network_indicator_render: Chained('network_indicator') PathPart('') Args(0) {
     my ( $self, $c, $cidade ) = @_;
      $c->stash(
         template => 'home_indicador.tt'
@@ -132,46 +135,28 @@ sub prefeitura_indicator_render: Chained('prefeitura_indicator') PathPart('') Ar
 }
 
 
-sub movimento: Chained('root') PathPart('movimento') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{find_role} = '_movimento';
-}
 
-sub movimento_index: Chained('movimento') PathPart('') Args(0) {
+
+sub network_index: Chained('network_page') PathPart('') Args(0) {
     my ( $self, $c, $sigla ) = @_;
-
     $c->stash(
-        role => 'movimento',
         template => 'home_comparacao.tt'
     );
 }
 
-sub prefeitura_index: Chained('prefeitura') PathPart('') Args(0) {
-    my ( $self, $c, $sigla ) = @_;
-    $c->stash(
-        role => 'prefeitura',
-        template => 'home_comparacao.tt'
-    );
-}
 
-sub movimento_indicador: Chained('movimento') PathPart('') CaptureArgs(1) {
+
+sub network_indicador: Chained('network_object') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
+use DDP; p $nome;
 
     $self->stash_indicator($c, $nome);
-    $c->stash( role => 'movimento');
 }
 
-sub prefeitura_indicador: Chained('prefeitura') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $nome ) = @_;
-    $self->stash_indicator($c, $nome);
-    $c->stash( role => 'prefeitura');
+sub network_indicador_render: Chained('network_indicador') PathPart('') Args(0) {
 }
 
-sub prefeitura_indicador_render: Chained('prefeitura_indicador') PathPart('') Args(0) {
-}
 
-sub movimento_indicador_render: Chained('movimento_indicador') PathPart('') Args(0) {
-}
 
 
 sub stash_indicator {
@@ -181,8 +166,8 @@ sub stash_indicator {
         name_url     => $nome
     })->as_hashref->next;
 
-    $c->forward('/error_404') unless $indicator;
-
+use DDP; p $indicator;
+    $c->detach('/error_404') unless $indicator;
     $c->stash->{indicator} = $indicator;
 
     $c->stash( template => 'home_comparacao_indicador.tt',
@@ -192,38 +177,7 @@ sub stash_indicator {
 
 
 
-sub movimento_pais: Chained('movimento') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $sigla ) = @_;
-    $c->stash->{pais} = $sigla;
-}
 
-sub movimento_estado: Chained('movimento_pais') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $estado ) = @_;
-    $c->stash->{estado} = $estado;
-}
-
-sub movimento_cidade: Chained('movimento_estado') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $cidade ) = @_;
-    $c->stash->{cidade} = $cidade;
-}
-
-sub movimento_render: Chained('movimento_cidade') PathPart('') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
-    $self->stash_tela_cidade($c);
-}
-
-sub movimento_indicator: Chained('movimento_cidade') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $indicator ) = @_;
-    $c->stash->{indicator} = $indicator;
-    $self->stash_tela_indicator($c);
-}
-
-sub movimento_indicator_render: Chained('movimento_indicator') PathPart('') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
-    $c->stash(
-        template => 'home_indicador.tt'
-    );
-}
 
 sub stash_tela_indicator {
     my ( $self, $c ) = @_;
@@ -234,12 +188,13 @@ sub stash_tela_indicator {
     # anti bug de quem chamar isso sem ler o fonte ^^
     delete $c->stash->{template};
 
+    # TODO arruamr isso pra usar permissoes verdadeiras
     my $indicator = $c->model('DB::Indicator')->search({
         name_url     => $c->stash->{indicator},
-        indicator_roles => {like => '%'.$c->stash->{find_role}.'%'}
+        indicator_roles => {like => '%'.$c->stash->{network}->name_url.'%'}
     })->as_hashref->next;
 
-    $c->forward('/error_404') unless $indicator;
+    $c->detach('/error_404') unless $indicator;
 
     $c->stash->{indicator} = $indicator;
 }
@@ -254,18 +209,15 @@ sub stash_tela_cidade {
         name_uri => lc $c->stash->{cidade}
     })->as_hashref->next;
 
-    $c->forward('/error_404') unless $city;
-
-    my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
-    $c->forward('/error_404') unless $role_id;
+    $c->detach('/error_404') unless $city;
 
     my $user = $c->model('DB::User')->search({
         city_id => $city->{id},
         'me.active'  => 1,
-        'user_roles.role_id' => $role_id->id
-    }, {  join  => 'user_roles' } )->as_hashref->next;
+        'me.network_id' => $c->stash->{network}->id
+    } )->as_hashref->next;
 
-    $c->forward('/error_404') unless $user;
+    $c->detach('/error_404') unless $user;
 
 
     $c->stash(
@@ -282,15 +234,15 @@ sub default : Path {
 }
 
 sub error_404 : Private {
-    my ( $self, $c ) = @_;
-    $c->response->body('Page not found');
+    my ( $self, $c, $foo ) = @_;
+    $c->response->body($foo . ' Page not found');
     $c->response->status(404);
 
 }
 
 sub error_500 : Private {
-    my ( $self, $c ) = @_;
-    $c->response->body('error');
+    my ( $self, $c, $arg ) = @_;
+    $c->response->body( $arg||'error');
     $c->response->status(500);
 
 }

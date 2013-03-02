@@ -84,8 +84,9 @@
     </div>
 
 <script type="text/javascript">
-		var role = '[% role %]';
-		var ref = 'comparacao';
-		var indicadorID = [% indicator.id %];
-		var userID = "";
+var role = '[% role %]';
+var ref = 'comparacao';
+var indicadorID = [% indicator.id %];
+var userID = "";
+[% PROCESS 'network_javascript.tt'%]
 </script>

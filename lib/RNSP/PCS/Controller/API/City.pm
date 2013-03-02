@@ -155,8 +155,7 @@ Retorna:
                 "latitude": "5666.55",
                 "url": "http://localhost/api/city/9",
                 "id": 9,
-                "prefeito_id": undef,  -- user_id
-                "movimento_id": undef, -- user_id
+
             }
         ]
     }

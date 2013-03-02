@@ -15,7 +15,7 @@ http://rnsp.aware.com.br/$rede/br/$UF/$nome-cidade/$nome-indicador/dados.$tipo
 http://rnsp.aware.com.br/$rede/$nome-indicador/dados.$tipo
 
 
-rede = 'movimento' e 'prefeitura' são aceitos.
+rede = 'movimento' e 'network' são aceitos.
 tipo = csv | json | xml
 
 o Check SUM em md5 é disponivel na mesma URL, com o final '.checksum'
@@ -40,7 +40,9 @@ use Digest::MD5;
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $file = substr($c->stash->{find_role}, 1);
+    my $network = $c->stash->{network};
+
+    my $file = $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
                 if $c->stash->{cidade};
     $file .= '_' .  $c->stash->{indicator}{name_url}
@@ -67,8 +69,8 @@ sub _download {
 
     $c->detach('/error_404') if $c->stash->{cidade} && !$citys->count;
 
-    my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
-    $c->detach('/error_404') unless $role_id;
+    #my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
+    #$c->detach('/error_404') unless $role_id;
 
 
     my @lines = (
@@ -106,7 +108,7 @@ sub _download {
             my $user = $c->model('DB::User')->search({
                 city_id => $city->{id},
                 'me.active'  => 1,
-                'user_roles.role_id' => $role_id->id
+                'me.network_id' => $network->id
             }, {  join  => 'user_roles'} )->as_hashref->next;
             $c->detach('/error_404') if $c->stash->{cidade} && !$user;
             next if !$user;
@@ -431,77 +433,16 @@ sub _download_and_detach {
 ##################################################
 ### be happy to read bellow this line!
 
-# MOVIMENTO CSV
-sub mov_dados_csv : Chained('/movimento') : PathPart('indicadores.csv') : CaptureArgs(0) {
+
+
+
+# network CSV
+sub pref_dados_csv : Chained('/network_object') : PathPart('indicadores.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
 
-sub mov_dados_csv_check: Chained('/movimento') : PathPart('indicadores.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_mov_dados_csv : Chained('mov_dados_csv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_csv_check : Chained('mov_dados_csv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO XML
-sub mov_dados_xml : Chained('/movimento') : PathPart('indicadores.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub mov_dados_xml_check: Chained('/movimento') : PathPart('indicadores.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_mov_dados_xml : Chained('mov_dados_xml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_xml_check : Chained('mov_dados_xml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO JSON
-sub mov_dados_json : Chained('/movimento') : PathPart('indicadores.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub mov_dados_json_check: Chained('/movimento') : PathPart('indicadores.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_mov_dados_json : Chained('mov_dados_json') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_json_check : Chained('mov_dados_json_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-
-# prefeitura CSV
-sub pref_dados_csv : Chained('/prefeitura') : PathPart('indicadores.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub pref_dados_csv_check: Chained('/prefeitura') : PathPart('indicadores.csv.checksum') : CaptureArgs(0) {
+sub pref_dados_csv_check: Chained('/network_object') : PathPart('indicadores.csv.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv.check';
 }
@@ -516,13 +457,13 @@ sub down_pref_dados_csv_check : Chained('pref_dados_csv_check') : PathPart('') :
     $self->_download($c);
 }
 
-# prefeitura XML
-sub pref_dados_xml : Chained('/prefeitura') : PathPart('indicadores.xml') : CaptureArgs(0) {
+# network XML
+sub pref_dados_xml : Chained('/network_object') : PathPart('indicadores.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
 
-sub pref_dados_xml_check: Chained('/prefeitura') : PathPart('indicadores.xml.checksum') : CaptureArgs(0) {
+sub pref_dados_xml_check: Chained('/network_object') : PathPart('indicadores.xml.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml.check';
 }
@@ -537,13 +478,13 @@ sub down_pref_dados_xml_check : Chained('pref_dados_xml_check') : PathPart('') :
     $self->_download($c);
 }
 
-# prefeitura JSON
-sub pref_dados_json : Chained('/prefeitura') : PathPart('indicadores.json') : CaptureArgs(0) {
+# network JSON
+sub pref_dados_json : Chained('/network_object') : PathPart('indicadores.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
 
-sub pref_dados_json_check: Chained('/prefeitura') : PathPart('indicadores.json.checksum') : CaptureArgs(0) {
+sub pref_dados_json_check: Chained('/network_object') : PathPart('indicadores.json.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json.check';
 }
@@ -562,78 +503,15 @@ sub down_pref_dados_json_check : Chained('pref_dados_json_check') : PathPart('')
 ######## dados por cidades
 
 
-# MOVIMENTO CSV
-sub mov_dados_cidade_csv : Chained('/movimento_cidade') : PathPart('indicadores.csv') : CaptureArgs(0) {
+
+
+# network CSV
+sub pref_dados_cidade_csv : Chained('/network_cidade') : PathPart('indicadores.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
 
-sub mov_dados_cidade_csv_check: Chained('/movimento_cidade') : PathPart('indicadores.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_mov_dados_cidade_csv : Chained('mov_dados_cidade_csv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_cidade_csv_check : Chained('mov_dados_cidade_csv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO XML
-sub mov_dados_cidade_xml : Chained('/movimento_cidade') : PathPart('indicadores.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub mov_dados_cidade_xml_check: Chained('/movimento_cidade') : PathPart('indicadores.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_mov_dados_cidade_xml : Chained('mov_dados_cidade_xml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_cidade_xml_check : Chained('mov_dados_cidade_xml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO JSON
-sub mov_dados_cidade_json : Chained('/movimento_cidade') : PathPart('indicadores.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub mov_dados_cidade_json_check: Chained('/movimento_cidade') : PathPart('indicadores.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_mov_dados_cidade_json : Chained('mov_dados_cidade_json') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_cidade_json_check : Chained('mov_dados_cidade_json_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-#################
-
-# prefeitura CSV
-sub pref_dados_cidade_csv : Chained('/prefeitura_cidade') : PathPart('indicadores.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub pref_dados_cidade_csv_check: Chained('/prefeitura_cidade') : PathPart('indicadores.csv.checksum') : CaptureArgs(0) {
+sub pref_dados_cidade_csv_check: Chained('/network_cidade') : PathPart('indicadores.csv.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv.check';
 }
@@ -648,13 +526,13 @@ sub down_pref_dados_cidade_csv_check : Chained('pref_dados_cidade_csv_check') : 
     $self->_download($c);
 }
 
-# prefeitura XML
-sub pref_dados_cidade_xml : Chained('/prefeitura_cidade') : PathPart('indicadores.xml') : CaptureArgs(0) {
+# network XML
+sub pref_dados_cidade_xml : Chained('/network_cidade') : PathPart('indicadores.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
 
-sub pref_dados_cidade_xml_check: Chained('/prefeitura_cidade') : PathPart('indicadores.xml.checksum') : CaptureArgs(0) {
+sub pref_dados_cidade_xml_check: Chained('/network_cidade') : PathPart('indicadores.xml.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml.check';
 }
@@ -669,13 +547,13 @@ sub down_pref_dados_cidade_xml_check : Chained('pref_dados_cidade_xml_check') : 
     $self->_download($c);
 }
 
-# prefeitura JSON
-sub pref_dados_cidade_json : Chained('/prefeitura_cidade') : PathPart('indicadores.json') : CaptureArgs(0) {
+# network JSON
+sub pref_dados_cidade_json : Chained('/network_cidade') : PathPart('indicadores.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
 
-sub pref_dados_cidade_json_check: Chained('/prefeitura_cidade') : PathPart('indicadores.json.checksum') : CaptureArgs(0) {
+sub pref_dados_cidade_json_check: Chained('/network_cidade') : PathPart('indicadores.json.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json.check';
 }
@@ -693,78 +571,16 @@ sub down_pref_dados_cidade_json_check : Chained('pref_dados_cidade_json_check') 
 # dados por indicador
 
 
-# MOVIMENTO CSV
-sub mov_dados_cidade_indicadorcsv : Chained('/movimento_indicator') : PathPart('dados.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub mov_dados_cidade_indicadorcsv_check: Chained('/movimento_indicator') : PathPart('dados.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_mov_dados_cidade_indicadorcsv : Chained('mov_dados_cidade_indicadorcsv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_cidade_indicadorcsv_check : Chained('mov_dados_cidade_indicadorcsv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO XML
-sub mov_dados_cidade_indicadorxml : Chained('/movimento_indicator') : PathPart('dados.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub mov_dados_cidade_indicadorxml_check: Chained('/movimento_indicator') : PathPart('dados.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_mov_dados_cidade_indicadorxml : Chained('mov_dados_cidade_indicadorxml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_cidade_indicadorxml_check : Chained('mov_dados_cidade_indicadorxml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO JSON
-sub mov_dados_cidade_indicadorjson : Chained('/movimento_indicator') : PathPart('dados.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub mov_dados_cidade_indicadorjson_check: Chained('/movimento_indicator') : PathPart('dados.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_mov_dados_cidade_indicadorjson : Chained('mov_dados_cidade_indicadorjson') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_dados_cidade_indicadorjson_check : Chained('mov_dados_cidade_indicadorjson_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
 
 #################
 
-# prefeitura CSV
-sub pref_dados_cidade_indicadorcsv : Chained('/prefeitura_indicator') : PathPart('dados.csv') : CaptureArgs(0) {
+# network CSV
+sub pref_dados_cidade_indicadorcsv : Chained('/network_indicator') : PathPart('dados.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
 
-sub pref_dados_cidade_indicadorcsv_check: Chained('/prefeitura_indicator') : PathPart('dados.csv.checksum') : CaptureArgs(0) {
+sub pref_dados_cidade_indicadorcsv_check: Chained('/network_indicator') : PathPart('dados.csv.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv.check';
 }
@@ -779,13 +595,13 @@ sub down_pref_dados_cidade_indicadorcsv_check : Chained('pref_dados_cidade_indic
     $self->_download($c);
 }
 
-# prefeitura XML
-sub pref_dados_cidade_indicadorxml : Chained('/prefeitura_indicator') : PathPart('dados.xml') : CaptureArgs(0) {
+# network XML
+sub pref_dados_cidade_indicadorxml : Chained('/network_indicator') : PathPart('dados.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
 
-sub pref_dados_cidade_indicadorxml_check: Chained('/prefeitura_indicator') : PathPart('dados.xml.checksum') : CaptureArgs(0) {
+sub pref_dados_cidade_indicadorxml_check: Chained('/network_indicator') : PathPart('dados.xml.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml.check';
 }
@@ -800,13 +616,13 @@ sub down_pref_dados_cidade_indicadorxml_check : Chained('pref_dados_cidade_indic
     $self->_download($c);
 }
 
-# prefeitura JSON
-sub pref_dados_cidade_indicadorjson : Chained('/prefeitura_indicator') : PathPart('dados.json') : CaptureArgs(0) {
+# network JSON
+sub pref_dados_cidade_indicadorjson : Chained('/network_indicator') : PathPart('dados.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
 
-sub pref_dados_cidade_indicadorjson_check: Chained('/prefeitura_indicator') : PathPart('dados.json.checksum') : CaptureArgs(0) {
+sub pref_dados_cidade_indicadorjson_check: Chained('/network_indicator') : PathPart('dados.json.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json.check';
 }
@@ -824,78 +640,16 @@ sub down_pref_dados_cidade_indicadorjson_check : Chained('pref_dados_cidade_indi
 ###################
 # download do indicador direto (todas as cidades)
 
-# MOVIMENTO CSV
-sub mov_indicador_csv : Chained('/movimento_indicador') : PathPart('dados.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub mov_indicador_csv_check: Chained('/movimento_indicador') : PathPart('dados.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_mov_indicador_csv : Chained('mov_indicador_csv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_indicador_csv_check : Chained('mov_indicador_csv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO XML
-sub mov_indicador_xml : Chained('/movimento_indicador') : PathPart('dados.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub mov_indicador_xml_check: Chained('/movimento_indicador') : PathPart('dados.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_mov_indicador_xml : Chained('mov_indicador_xml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_indicador_xml_check : Chained('mov_indicador_xml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# MOVIMENTO JSON
-sub mov_indicador_json : Chained('/movimento_indicador') : PathPart('dados.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub mov_indicador_json_check: Chained('/movimento_indicador') : PathPart('dados.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_mov_indicador_json : Chained('mov_indicador_json') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_mov_indicador_json_check : Chained('mov_indicador_json_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
 
 #################
 
-# prefeitura CSV
-sub pref_indicador_csv : Chained('/prefeitura_indicador') : PathPart('dados.csv') : CaptureArgs(0) {
+# network CSV
+sub pref_indicador_csv : Chained('/network_indicador') : PathPart('dados.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
 
-sub pref_indicador_csv_check: Chained('/prefeitura_indicador') : PathPart('dados.csv.checksum') : CaptureArgs(0) {
+sub pref_indicador_csv_check: Chained('/network_indicador') : PathPart('dados.csv.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv.check';
 }
@@ -910,13 +664,13 @@ sub down_pref_indicador_csv_check : Chained('pref_indicador_csv_check') : PathPa
     $self->_download($c);
 }
 
-# prefeitura XML
-sub pref_indicador_xml : Chained('/prefeitura_indicador') : PathPart('dados.xml') : CaptureArgs(0) {
+# network XML
+sub pref_indicador_xml : Chained('/network_indicador') : PathPart('dados.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
 
-sub pref_indicador_xml_check: Chained('/prefeitura_indicador') : PathPart('dados.xml.checksum') : CaptureArgs(0) {
+sub pref_indicador_xml_check: Chained('/network_indicador') : PathPart('dados.xml.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml.check';
 }
@@ -931,13 +685,13 @@ sub down_pref_indicador_xml_check : Chained('pref_indicador_xml_check') : PathPa
     $self->_download($c);
 }
 
-# prefeitura JSON
-sub pref_indicador_json : Chained('/prefeitura_indicador') : PathPart('dados.json') : CaptureArgs(0) {
+# network JSON
+sub pref_indicador_json : Chained('/network_indicador') : PathPart('dados.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
 
-sub pref_indicador_json_check: Chained('/prefeitura_indicador') : PathPart('dados.json.checksum') : CaptureArgs(0) {
+sub pref_indicador_json_check: Chained('/network_indicador') : PathPart('dados.json.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json.check';
 }

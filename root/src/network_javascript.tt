@@ -1,0 +1,3 @@
+var network_id = '[%network.id%]';
+var network_name = '[%network.name%]';
+var network_name_url = '[%network.name_url%]';

@@ -385,5 +385,11 @@ sub action_specs {
     };
 }
 
+sub with_city {
+    my ($self) = @_;
+    return $self->search( { city_id => { '!=' => undef } } );
+}
+
+
 1;
 

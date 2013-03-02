@@ -15,17 +15,22 @@ sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
 }
 
 
-sub prefeitura: Chained('base') : PathPart('prefeitura') : Args(0) : ActionClass('REST') {}
-sub movimento: Chained('base') : PathPart('movimento') : Args(0) : ActionClass('REST') {}
+sub network: Chained('base') : PathPart('') : Args(1) : ActionClass('REST') {
+    my ( $self, $c, $rede ) = @_;
 
-sub movimento_GET {
-    my ( $self, $c ) = @_;
-    $self->stash_comparacao($c, '_movimento');
+    my $net = $c->model('DB::Network')->search({
+        name_url => $rede
+    })->first;
+    $c->detach('/error_404') unless $net;
+
+    $c->stash->{network} = $net;
+    $c->stash->{rede} = $net->name_url;
+
 }
 
-sub prefeitura_GET {
+sub network_GET {
     my ( $self, $c ) = @_;
-    $self->stash_comparacao($c, '_prefeitura');
+    $self->stash_comparacao($c);
 }
 
 =pod
@@ -76,15 +81,14 @@ retorna
 
 =cut
 sub stash_comparacao {
-    my ( $self, $c, $tipo ) = @_;
+    my ( $self, $c ) = @_;
 
-    my $role_id = $c->model('DB::Role')->search( {name => $tipo})->next;
-    $c->forward('/error_404') unless $role_id;
+    my $network = $c->stash->{network};
 
     my $ret = {};
     my @users = $c->model('DB::User')->search({
-        'user_roles.role_id' => $role_id->id
-    }, {  join  => 'user_roles', prefetch => ['city'] } )->as_hashref->all;
+        'me.network_id' => $network->id
+    }, {  prefetch => ['city'] } )->as_hashref->all;
 
     for my $user (@users){
         push @{$ret->{users}}, {
@@ -96,7 +100,7 @@ sub stash_comparacao {
     }
 
     my @indicators = $c->model('DB::Indicator')->search(
-        {indicator_roles => {like => '%'.$tipo.'%'}  },
+        {indicator_roles => {like => '%'.$network->name_url.'%'}  },
         {
             prefetch => ['axis']
         }
@@ -122,16 +126,18 @@ sub stash_comparacao {
 
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
-  my ( $self, $c, $id ) = @_;
+    my ( $self, $c, $id ) = @_;
 
-  $c->stash->{user} = $c->stash->{collection}->search_rs( {
-    id => $id,
-    'me.active' => 1
-  } );
+    $c->detach('/error_500', ['user.id invalid!']) unless $id =~ /^[0-9]+$/;
 
-  $c->stash->{user_obj} = $c->stash->{user}->next;
+    $c->stash->{user} = $c->stash->{collection}->search_rs( {
+        id => $id,
+        'me.active' => 1
+    } );
 
-  $c->detach('/error_404') unless defined $c->stash->{user_obj};
+    $c->stash->{user_obj} = $c->stash->{user}->next;
+
+    $c->detach('/error_404') unless defined $c->stash->{user_obj};
 }
 
 sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
