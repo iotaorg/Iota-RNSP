@@ -15,17 +15,21 @@ sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
 }
 
 
-sub network: Chained('base') : PathPart('rede') : Args(1) : ActionClass('REST') {
+sub network_indicators: Chained('base') : PathPart('rede') : CaptureArgs(1)  {
     my ( $self, $c, $rede ) = @_;
 
     my $net = $c->model('DB::Network')->search({
         name_url => $rede
     })->first;
+
     $c->detach('/error_404') unless $net;
 
     $c->stash->{network} = $net;
     $c->stash->{rede} = $net->name_url;
+}
 
+sub network: Chained('network_indicators') : PathPart('') : Args(0) : ActionClass('REST') {
+    my ( $self, $c) = @_;
 }
 
 sub network_GET {
