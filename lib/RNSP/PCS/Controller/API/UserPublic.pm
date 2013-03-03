@@ -15,7 +15,7 @@ sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
 }
 
 
-sub network: Chained('base') : PathPart('') : Args(1) : ActionClass('REST') {
+sub network: Chained('base') : PathPart('rede') : Args(1) : ActionClass('REST') {
     my ( $self, $c, $rede ) = @_;
 
     my $net = $c->model('DB::Network')->search({
