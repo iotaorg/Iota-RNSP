@@ -2430,7 +2430,7 @@ $(document).ready(function() {
 											name: data_indicators[i].name,
 											formula: formula,
 											hash: "#!/"+getUrlSub(),
-											url: "http://rnsp.aware.com.br/api/indicator/" + data_indicators[i].id,
+											url: "/api/indicator/" + data_indicators[i].id,
 											period: data_indicators[i].period,
 											id: data_indicators[i].id
 											});
