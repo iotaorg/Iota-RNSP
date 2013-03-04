@@ -169,7 +169,6 @@ sub list_GET {
         prefetch => [{ current_users => { 'user' => { 'user_roles' => 'role' } } }]
     })->as_hashref->all;
     my @objs;
-
     foreach my $obj (@list){
         push @objs, {
 
@@ -183,6 +182,7 @@ sub list_GET {
                     user => {
                         id => $t->{user}{id},
                         name => $t->{user}{name},
+                        network_id => $t->{user}{network_id},
                         roles => [ map { $_->{role}{name} } @{$t->{user}{user_roles}}]
                     }
                 } } @{$obj->{current_users}}
