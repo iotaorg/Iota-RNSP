@@ -6,13 +6,13 @@
 Download das variaveis do sistema
 
 - todas variaveis de uma cidade
-http://rnsp.aware.com.br/$rede/br/$UF/$nome-cidade/variaveis.$tipo
+/$rede/br/$UF/$nome-cidade/variaveis.$tipo
 
 - todas variaveis utilizadas pela cidade + indicador
-http://rnsp.aware.com.br/$rede/br/$UF/$nome-cidade/$nome-indicador/variaveis.$tipo
+/$rede/br/$UF/$nome-cidade/$nome-indicador/variaveis.$tipo
 
 - todas as variaveis de todas as cidades daquele indicador
-http://rnsp.aware.com.br/$rede/$nome-indicador/variaveis.$tipo
+/$rede/$nome-indicador/variaveis.$tipo
 
 
 rede = 'movimento' e 'network' são aceitos.

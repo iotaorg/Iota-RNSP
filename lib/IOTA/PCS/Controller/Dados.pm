@@ -6,13 +6,13 @@
 Os indicadores da IOTA estao disponveis pelas seguintes URLs:
 
 - todos indicadores da cidade
-http://rnsp.aware.com.br/$rede/br/$UF/$nome-cidade/indicadores.$tipo
+/$rede/br/$UF/$nome-cidade/indicadores.$tipo
 
 - todos dados do indicador
-http://rnsp.aware.com.br/$rede/br/$UF/$nome-cidade/$nome-indicador/dados.$tipo
+/$rede/br/$UF/$nome-cidade/$nome-indicador/dados.$tipo
 
 - todos os dados do indicador de todas as cidades
-http://rnsp.aware.com.br/$rede/$nome-indicador/dados.$tipo
+/$rede/$nome-indicador/dados.$tipo
 
 
 rede = 'movimento' e 'network' são aceitos.

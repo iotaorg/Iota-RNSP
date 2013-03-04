@@ -3,7 +3,7 @@
 
 =head2 Descrição
 
-Download em http://rnsp.aware.com.br/variaveis.csv
+Download em /variaveis.csv
 
 =cut
 
