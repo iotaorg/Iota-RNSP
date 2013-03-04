@@ -29,7 +29,7 @@ INSERT INTO "user"(id, name, email, password, network_id) VALUES (8, 'adminlat',
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
 INSERT INTO "user"(id, name, email, password, network_id) VALUES (6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3, 1);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES (7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
 
 
 SELECT setval('network_id_seq', 10);
