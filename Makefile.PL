@@ -6,8 +6,8 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
                                # Catalyst::Devel installed or haven't said
                                # 'make dist' to create a standalone tarball.
 
-name 'RNSP-PCS';
-all_from 'lib/RNSP/PCS.pm';
+name 'IOTA-PCS';
+all_from 'lib/IOTA/PCS.pm';
 
 requires 'Catalyst::Runtime' => '5.90010';
 requires 'Catalyst::Plugin::ConfigLoader';

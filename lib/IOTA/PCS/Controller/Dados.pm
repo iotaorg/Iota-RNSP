@@ -3,7 +3,7 @@
 
 =head2 Descrição
 
-Os indicadores da RNSP estao disponveis pelas seguintes URLs:
+Os indicadores da IOTA estao disponveis pelas seguintes URLs:
 
 - todos indicadores da cidade
 http://rnsp.aware.com.br/$rede/br/$UF/$nome-cidade/indicadores.$tipo
