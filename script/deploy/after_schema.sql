@@ -92,3 +92,9 @@ insert into measurement_unit (name, short_name, user_id) values
 ('Metro quadrado', 'm²', 1),
 ('Habitantes por quilometro quadrado', 'hab/km²', 1);
 
+
+create view city_current_user as
+
+select c.id as city_id, u.id as user_id
+from city c
+join "user" u on u.city_id = c.id;

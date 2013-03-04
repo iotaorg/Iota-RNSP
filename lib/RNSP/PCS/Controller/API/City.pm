@@ -165,7 +165,9 @@ Retorna:
 sub list_GET {
   my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->as_hashref->all;
+    my @list = $c->stash->{collection}->search(undef, {
+        prefetch => [{ current_users => { 'user' => { 'user_roles' => 'role' } } }]
+    })->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list){
@@ -175,6 +177,16 @@ sub list_GET {
                 telefone_prefeitura endereco_prefeitura bairro_prefeitura
                 cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
             created_at)),
+
+            current_users => [
+                map { my $t = $_; {
+                    user => {
+                        id => $t->{user}{id},
+                        name => $t->{user}{name},
+                        roles => [ map { $_->{role}{name} } @{$t->{user}{user_roles}}]
+                    }
+                } } @{$obj->{current_users}}
+            ],
 
             url => $c->uri_for_action( $self->action_for('city'), [ $obj->{id} ] )->as_string,
         }

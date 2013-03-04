@@ -273,6 +273,12 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:K+rcql1IKKGjxOMEFoK09w
 
 
+__PACKAGE__->has_many(
+  "current_users",
+  "RNSP::PCS::Schema::Result::CityCurrentUser",
+  { "foreign.city_id" => "self.id" },
+);
+
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
