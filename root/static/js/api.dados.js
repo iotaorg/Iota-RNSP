@@ -21,7 +21,7 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/user/$$role/'.render({role: role.replace("_","")}),
+			url: api_path + '/api/public/user/rede/$$role/'.render({role: network_name_url.replace("_","")}),
 			success: function(data, textStatus, jqXHR){
 				users_list = [];
 				indicadores_list = data.indicators;
