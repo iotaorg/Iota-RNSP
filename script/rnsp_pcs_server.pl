@@ -5,7 +5,7 @@ BEGIN {
 }
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('RNSP::PCS', 'Server');
+Catalyst::ScriptRunner->run('IOTA::PCS', 'Server');
 
 1;
 

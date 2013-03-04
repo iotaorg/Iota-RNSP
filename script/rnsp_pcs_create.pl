@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('RNSP::PCS', 'Create');
+Catalyst::ScriptRunner->run('IOTA::PCS', 'Create');
 
 1;
 

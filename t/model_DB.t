@@ -3,6 +3,6 @@ use warnings;
 use Test::More;
 
 
-BEGIN { use_ok 'RNSP::PCS::Model::DB' }
+BEGIN { use_ok 'IOTA::PCS::Model::DB' }
 
 done_testing();

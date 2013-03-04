@@ -24,7 +24,7 @@ CREATE TYPE tp_visibility_level AS ENUM
     'restrict'
     );
 
-alter table indicator add column visibility_level tp_visibility_level; 
+alter table indicator add column visibility_level tp_visibility_level;
 
 
 CREATE TABLE indicator_user_visibility

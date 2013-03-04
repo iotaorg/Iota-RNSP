@@ -8,21 +8,21 @@ use Test::More ;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(RNSP::PCS);
+use Catalyst::Test q(IOTA::PCS);
 
 use HTTP::Request::Common qw /GET POST/;
 use URI;
 use Package::Stash;
 
-use RNSP::PCS::TestOnly::Mock::AuthUser;
-use RNSP::IndicatorChart;
+use IOTA::PCS::TestOnly::Mock::AuthUser;
+use IOTA::IndicatorChart;
 
-my $schema = RNSP::PCS->model('DB');
+my $schema = IOTA::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 2;
-@RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 2;
+@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -118,11 +118,11 @@ eval {
             &add_value($variable_url, '1192-03-12', 2);
             &add_value($variable_url, '1192-04-25', 5);
 
-            my $chart = RNSP::IndicatorChart->new_with_traits(
+            my $chart = IOTA::IndicatorChart->new_with_traits(
                 schema => $schema,
                 indicator => $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
                 traits => ['PeriodAxis'],
-                user_id   => $RNSP::PCS::TestOnly::Mock::AuthUser::_id,
+                user_id   => $IOTA::PCS::TestOnly::Mock::AuthUser::_id,
 
             );
 
@@ -137,7 +137,7 @@ eval {
 
             ( $res, $c ) = ctx_request(
                     GET '/api/public/user/'.
-                    $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis?group_by=yearly'
+                    $IOTA::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis?group_by=yearly'
             );
             my $obj_public = eval{from_json( $res->content )};
             ok($res->is_success, 'GET chart public success');

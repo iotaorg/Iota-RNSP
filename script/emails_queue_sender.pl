@@ -26,8 +26,8 @@ die $@ if $@;
 
 my $transport = $transport_class->new( %{ $config{email}{transport}{opts} } );
 
-use RNSP::PCS;
-my $schema = RNSP::PCS->model('DB');
+use IOTA::PCS;
+my $schema = IOTA::PCS->model('DB');
 
 my $config_tt = {
   INCLUDE_PATH => $config{email}{template_path},

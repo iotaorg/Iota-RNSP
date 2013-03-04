@@ -7,19 +7,19 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(RNSP::PCS);
+use Catalyst::Test q(IOTA::PCS);
 
 use HTTP::Request::Common;
 use Package::Stash;
 
-use RNSP::PCS::TestOnly::Mock::AuthUser;
+use IOTA::PCS::TestOnly::Mock::AuthUser;
 
-my $schema = RNSP::PCS->model('DB');
+my $schema = IOTA::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 1;
-@RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -89,7 +89,7 @@ eval {
             my $inds = eval{from_json( $res->content )};
             is(@{$inds->{indicators}}, 1, 'roles admin ok');
 
-            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
+            @IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
 
             ok( $res->is_success, 'listing ok!' );
@@ -98,7 +98,7 @@ eval {
             $inds = eval{from_json( $res->content )};
             is(@{$inds->{indicators}}, 1, 'roles movimento ok');
 
-            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
+            @IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
 
             ok( $res->is_success, 'listing ok!' );
@@ -107,7 +107,7 @@ eval {
             is(@{$inds->{indicators}}, 0, 'roles movimento ok');
 
 
-            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+            @IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
@@ -129,7 +129,7 @@ eval {
             ok( $res->is_success, 'indicator created!' );
 
 
-            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
+            @IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
 
             ok( $res->is_success, 'listing ok!' );
@@ -137,7 +137,7 @@ eval {
             $inds = eval{from_json( $res->content )};
             is(@{$inds->{indicators}}, 1, 'roles movimento ok');
 
-            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+            @IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
             ok( $res->is_success, 'listing ok!' );
@@ -145,7 +145,7 @@ eval {
             $inds = eval{from_json( $res->content )};
             is(@{$inds->{indicators}}, 2, 'roles movimento ok');
 
-            @RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
+            @IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
             ok( $res->is_success, 'listing ok!' );

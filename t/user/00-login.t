@@ -3,12 +3,12 @@ use strict;
 use warnings;
 
 use Test::More;
-use Catalyst::Test q(RNSP::PCS);
+use Catalyst::Test q(IOTA::PCS);
 
 use HTTP::Request::Common;
 
 use JSON qw(from_json);
-my $schema = RNSP::PCS->model('DB');
+my $schema = IOTA::PCS->model('DB');
 eval {
     $schema->txn_do(
         sub {

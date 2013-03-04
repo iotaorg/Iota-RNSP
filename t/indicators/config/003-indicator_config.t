@@ -7,20 +7,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(RNSP::PCS);
+use Catalyst::Test q(IOTA::PCS);
 
 use HTTP::Request::Common qw(GET POST DELETE PUT);
 use Package::Stash;
 
-use RNSP::PCS::TestOnly::Mock::AuthUser;
+use IOTA::PCS::TestOnly::Mock::AuthUser;
 
-my $schema = RNSP::PCS->model('DB');
+my $schema = IOTA::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 1;
 use JSON qw(from_json);
-@RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin user/;
+@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin user/;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -62,7 +62,7 @@ eval {
             my $indicator = eval{from_json( $res->content )};
 
             my $url_user = '/api/user/' .
-                $RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator_config';
+                $IOTA::PCS::TestOnly::Mock::AuthUser::_id . '/indicator_config';
 
             ( $res, $c ) = ctx_request(
                 POST $url_user,

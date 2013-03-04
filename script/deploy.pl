@@ -2,15 +2,15 @@
 use lib './lib';
 use utf8;
 
-use RNSP::PCS::Schema;
+use IOTA::PCS::Schema;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(RNSP::PCS);
-my $config = RNSP::PCS->config;
+use Catalyst::Test q(IOTA::PCS);
+my $config = IOTA::PCS->config;
 
-my $schema = RNSP::PCS::Schema->connect(
+my $schema = IOTA::PCS::Schema->connect(
     $config->{'Model::DB'}{connect_info}{dsn},
     $config->{'Model::DB'}{connect_info}{user},
     $config->{'Model::DB'}{connect_info}{password} );

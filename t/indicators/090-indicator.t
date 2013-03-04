@@ -7,20 +7,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(RNSP::PCS);
+use Catalyst::Test q(IOTA::PCS);
 
 use HTTP::Request::Common;
 use Package::Stash;
-use RNSP::IndicatorFormula;
+use IOTA::IndicatorFormula;
 
-use RNSP::PCS::TestOnly::Mock::AuthUser;
+use IOTA::PCS::TestOnly::Mock::AuthUser;
 my $seq = 0;
-my $schema = RNSP::PCS->model('DB');
+my $schema = IOTA::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 2;
-@RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 2;
+@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -36,7 +36,7 @@ eval {
             my $var4 = &new_var('num', 'yearly');
             my $var5 = &new_var('str', 'yearly');
             my $var6 = &new_var('str', 'yearly');
-            my $f = new RNSP::IndicatorFormula(formula => "\$$var1 + \$$var2", schema => $schema);
+            my $f = new IOTA::IndicatorFormula(formula => "\$$var1 + \$$var2", schema => $schema);
 
             my @expected = ($var1, $var2);
             is((join ',', sort $f->variables), (join ',', sort @expected), 'same variables!');
@@ -47,38 +47,38 @@ eval {
             ), 11, 'sum with variables looks good!');
 
 
-            $f = new RNSP::IndicatorFormula(formula => "sqrt(\$$var3 + \$$var4)", schema => $schema);
+            $f = new IOTA::IndicatorFormula(formula => "sqrt(\$$var3 + \$$var4)", schema => $schema);
             is($f->evaluate(
                 "$var3" => 5.32,
                 "$var4" => 19.68
             ), 5, 'sqrt with sum of floats look good!');
 
-            $f = new RNSP::IndicatorFormula(formula => "-5 + sqrt(\$$var1 / (\$$var2 * \$$var2)) + 1", schema => $schema);
+            $f = new IOTA::IndicatorFormula(formula => "-5 + sqrt(\$$var1 / (\$$var2 * \$$var2)) + 1", schema => $schema);
             is($f->evaluate(
                 "$var1" => 625,
                 "$var2" => 5
             ), 1, '"-5 + sqrt(\$$var1 / (\$$var2 * \$$var2)) + 1" OK!');
 
-            eval{new RNSP::IndicatorFormula(formula => "15)", schema => $schema)};
+            eval{new IOTA::IndicatorFormula(formula => "15)", schema => $schema)};
             like($@, qr/Parse error/, 'error 001');
 
-            #eval{new RNSP::IndicatorFormula(formula => "\$$var1 + \$$var5", schema => $schema)};
+            #eval{new IOTA::IndicatorFormula(formula => "\$$var1 + \$$var5", schema => $schema)};
             #like($@, qr/string/, 'error 004');
 
-            eval{new RNSP::IndicatorFormula(formula => "(22", schema => $schema)};
+            eval{new IOTA::IndicatorFormula(formula => "(22", schema => $schema)};
             like($@, qr/ClosingParen/, 'error 002');
 
-            eval{new RNSP::IndicatorFormula(formula => '"ABC" . 2345', schema => $schema)};
+            eval{new IOTA::IndicatorFormula(formula => '"ABC" . 2345', schema => $schema)};
             like($@, qr/No token matched input text/, 'error 003');
 
-            $f = new RNSP::IndicatorFormula(formula => "CONCATENAR \$$var5 \$$var6", schema => $schema);
+            $f = new IOTA::IndicatorFormula(formula => "CONCATENAR \$$var5 \$$var6", schema => $schema);
             is($f->evaluate(
                 "$var5" => 'renato',
                 "$var6" => 'cron'
             ), 'renato cron', 'CONCATENAR funcionando!');
 
             # soma em periodos diferentes
-            eval{new RNSP::IndicatorFormula(formula => "\$$var1 + \$$var3", schema => $schema)};
+            eval{new IOTA::IndicatorFormula(formula => "\$$var1 + \$$var3", schema => $schema)};
             like($@, qr/variables with mixed period not allowed/, 'variables with mixed period not allowed!');
 
 

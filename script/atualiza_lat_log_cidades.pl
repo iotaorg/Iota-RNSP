@@ -12,8 +12,8 @@ use Encode;
 use JSON qw / decode_json /;
 
 
-use RNSP::PCS;
-my $schema = RNSP::PCS->model('DB');
+use IOTA::PCS;
+my $schema = IOTA::PCS->model('DB');
 
 
 use Geo::Coder::Google;

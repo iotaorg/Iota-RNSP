@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('RNSP::PCS', 'CGI');
+Catalyst::ScriptRunner->run('IOTA::PCS', 'CGI');
 
 1;
 

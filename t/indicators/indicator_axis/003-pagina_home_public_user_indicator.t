@@ -8,20 +8,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(RNSP::PCS);
+use Catalyst::Test q(IOTA::PCS);
 
 use HTTP::Request::Common qw /GET POST/;
 use URI;
 use Package::Stash;
 
-use RNSP::PCS::TestOnly::Mock::AuthUser;
+use IOTA::PCS::TestOnly::Mock::AuthUser;
 
-my $schema = RNSP::PCS->model('DB');
+my $schema = IOTA::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = RNSP::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
 
-$RNSP::PCS::TestOnly::Mock::AuthUser::_id    = 1;
-@RNSP::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin user /;
+$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin user /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -147,7 +147,7 @@ eval {
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
             my $indicator = eval{from_json( $res->content )};
 
-            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
+            $IOTA::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             my $variable_url = $uri->path_query;
 
@@ -167,7 +167,7 @@ eval {
             &add_value($variable_url, '2012-01-30', 8);
 
 
-            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = 1; # ADMIN
+            $IOTA::PCS::TestOnly::Mock::AuthUser::_id = 1; # ADMIN
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
                 [   api_key                         => 'test',
@@ -188,7 +188,7 @@ eval {
 
             my $indicator3 = eval{from_json( $res->content )};
 
-            $RNSP::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
+            $IOTA::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             $variable_url = $uri3->path_query;
 
@@ -239,7 +239,7 @@ eval {
             &add_value('/api/variable/'.$basic_id.'/value', '1195-03-25', 7);
 
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$IOTA::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
             my $obj = eval{from_json( $res->content )};
             is_deeply($obj->{resumos}{grupo1},$obj->{resumos}{grupo2}, 'grupo 1 e 2 sao o mesmo indicador em grupos diferentes');
 

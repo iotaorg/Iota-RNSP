@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Data::Verifier;
 
-BEGIN { use_ok 'RNSP::PCS::Data::Manager' }
+BEGIN { use_ok 'IOTA::PCS::Data::Manager' }
 
 my $verifier_default_args = [
   filters => [qw(trim)],
@@ -51,7 +51,7 @@ my $actions = {
 my $args = { name => 'bar', age => 100, sign => 'plus' };
 my $args_err = { name => 'bar', age => 'hundred', sign => 'plus' };
 
-my $dm = new_ok 'RNSP::PCS::Data::Manager' => [
+my $dm = new_ok 'IOTA::PCS::Data::Manager' => [
   input     => { foo => $args, 'foo.bar' => $args_err, 'foo.bar.quux' => $args },
   verifiers => {
     map { $_ => Data::Verifier->new( @{ $verifiers->{$_} } ) } keys %$verifiers
