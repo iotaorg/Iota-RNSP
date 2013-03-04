@@ -7,18 +7,18 @@ Catalyst::ScriptRunner->run('IOTA::PCS', 'Test');
 
 =head1 NAME
 
-rnsp_pcs_test.pl - Catalyst Test
+iota_pcs_test.pl - Catalyst Test
 
 =head1 SYNOPSIS
 
-rnsp_pcs_test.pl [options] uri
+iota_pcs_test.pl [options] uri
 
  Options:
    --help    display this help and exits
 
  Examples:
-   rnsp_pcs_test.pl http://localhost/some_action
-   rnsp_pcs_test.pl /some_action
+   iota_pcs_test.pl http://localhost/some_action
+   iota_pcs_test.pl /some_action
 
  See also:
    perldoc Catalyst::Manual

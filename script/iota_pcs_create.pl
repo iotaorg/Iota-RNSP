@@ -10,11 +10,11 @@ Catalyst::ScriptRunner->run('IOTA::PCS', 'Create');
 
 =head1 NAME
 
-rnsp_pcs_create.pl - Create a new Catalyst Component
+iota_pcs_create.pl - Create a new Catalyst Component
 
 =head1 SYNOPSIS
 
-rnsp_pcs_create.pl [options] model|view|controller name [helper] [options]
+iota_pcs_create.pl [options] model|view|controller name [helper] [options]
 
  Options:
    --force        don't create a .new file where a file to be created exists
@@ -22,14 +22,14 @@ rnsp_pcs_create.pl [options] model|view|controller name [helper] [options]
    --help         display this help and exits
 
  Examples:
-   rnsp_pcs_create.pl controller My::Controller
-   rnsp_pcs_create.pl --mechanize controller My::Controller
-   rnsp_pcs_create.pl view My::View
-   rnsp_pcs_create.pl view HTML TT
-   rnsp_pcs_create.pl model My::Model
-   rnsp_pcs_create.pl model SomeDB DBIC::Schema MyApp::Schema create=dynamic\
+   iota_pcs_create.pl controller My::Controller
+   iota_pcs_create.pl --mechanize controller My::Controller
+   iota_pcs_create.pl view My::View
+   iota_pcs_create.pl view HTML TT
+   iota_pcs_create.pl model My::Model
+   iota_pcs_create.pl model SomeDB DBIC::Schema MyApp::Schema create=dynamic\
    dbi:SQLite:/tmp/my.db
-   rnsp_pcs_create.pl model AnotherDB DBIC::Schema MyApp::Schema create=static\
+   iota_pcs_create.pl model AnotherDB DBIC::Schema MyApp::Schema create=static\
    [Loader opts like db_schema, naming] dbi:Pg:dbname=foo root 4321
    [connect_info opts like quote_char, name_sep]
 

@@ -7,7 +7,7 @@ Catalyst::ScriptRunner->run('IOTA::PCS', 'CGI');
 
 =head1 NAME
 
-rnsp_pcs_cgi.pl - Catalyst CGI
+iota_pcs_cgi.pl - Catalyst CGI
 
 =head1 SYNOPSIS
 

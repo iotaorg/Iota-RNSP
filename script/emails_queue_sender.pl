@@ -11,8 +11,8 @@ use Template;
 use Encode;
 use JSON qw / decode_json /;
 
-my $file = "$Bin/../rnsp_pcs_local.conf";
-$file = "$Bin/../rnsp_pcs.conf" unless -e $file;
+my $file = "$Bin/../iota_pcs_local.conf";
+$file = "$Bin/../iota_pcs.conf" unless -e $file;
 
 my %config = new Config::General( $file )->getall;
 use DDP; p %config;

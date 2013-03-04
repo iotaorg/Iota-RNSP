@@ -35,7 +35,7 @@ our $VERSION = '0.01';
 
 # Configure the application.
 #
-# Note that settings in rnsp_pcs.conf (or other external
+# Note that settings in iota_pcs.conf (or other external
 # configuration file that you set up manually) take precedence
 # over this when using ConfigLoader. Thus configuration
 # details given here can function as a default configuration,
@@ -88,7 +88,7 @@ IOTA::PCS - Catalyst based application
 
 =head1 SYNOPSIS
 
-    script/rnsp_pcs_server.pl
+    script/iota_pcs_server.pl
 
 =head1 DESCRIPTION
 

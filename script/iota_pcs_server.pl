@@ -11,11 +11,11 @@ Catalyst::ScriptRunner->run('IOTA::PCS', 'Server');
 
 =head1 NAME
 
-rnsp_pcs_server.pl - Catalyst Test Server
+iota_pcs_server.pl - Catalyst Test Server
 
 =head1 SYNOPSIS
 
-rnsp_pcs_server.pl [options]
+iota_pcs_server.pl [options]
 
    -d --debug           force debug mode
    -f --fork            handle each request in a new process

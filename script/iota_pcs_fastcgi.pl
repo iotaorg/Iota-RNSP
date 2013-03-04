@@ -7,11 +7,11 @@ Catalyst::ScriptRunner->run('IOTA::PCS', 'FastCGI');
 
 =head1 NAME
 
-rnsp_pcs_fastcgi.pl - Catalyst FastCGI
+iota_pcs_fastcgi.pl - Catalyst FastCGI
 
 =head1 SYNOPSIS
 
-rnsp_pcs_fastcgi.pl [options]
+iota_pcs_fastcgi.pl [options]
 
  Options:
    -? -help      display this help and exits
