@@ -5,12 +5,12 @@ with 'MooseX::Traits';
 has '+_trait_namespace' => ( default => 'Iota::IndicatorChart' );
 
 
-use Iota::PCS::Schema::Result::Indicator;
+use Iota::Schema::Result::Indicator;
 use Iota::IndicatorFormula;
 
 has indicator => (
     is         => 'ro',
-    isa        => 'Iota::PCS::Schema::Result::Indicator',
+    isa        => 'Iota::Schema::Result::Indicator',
     required   => 1
 );
 

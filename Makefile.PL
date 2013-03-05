@@ -6,8 +6,8 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
                                # Catalyst::Devel installed or haven't said
                                # 'make dist' to create a standalone tarball.
 
-name 'Iota-PCS';
-all_from 'lib/Iota/PCS.pm';
+name 'Iota';
+all_from 'lib/Iota.pm';
 
 requires 'Catalyst::Runtime' => '5.90010';
 requires 'Catalyst::Plugin::ConfigLoader';

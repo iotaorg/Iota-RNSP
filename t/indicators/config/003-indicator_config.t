@@ -7,20 +7,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(Iota::PCS);
+use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common qw(GET POST DELETE PUT);
 use Package::Stash;
 
-use Iota::PCS::TestOnly::Mock::AuthUser;
+use Iota::TestOnly::Mock::AuthUser;
 
-my $schema = Iota::PCS->model('DB');
+my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = Iota::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+$Iota::TestOnly::Mock::AuthUser::_id    = 1;
 use JSON qw(from_json);
-@Iota::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin user/;
+@Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin user/;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -62,7 +62,7 @@ eval {
             my $indicator = eval{from_json( $res->content )};
 
             my $url_user = '/api/user/' .
-                $Iota::PCS::TestOnly::Mock::AuthUser::_id . '/indicator_config';
+                $Iota::TestOnly::Mock::AuthUser::_id . '/indicator_config';
 
             ( $res, $c ) = ctx_request(
                 POST $url_user,

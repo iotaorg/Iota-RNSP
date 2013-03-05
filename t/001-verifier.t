@@ -5,9 +5,9 @@ use Test::More;
 use Test::Deep;
 
 use Data::Printer;
-BEGIN { use_ok 'Iota::PCS::Data::Visitor' }
+BEGIN { use_ok 'Iota::Data::Visitor' }
 
-my $v = new_ok 'Iota::PCS::Data::Visitor';
+my $v = new_ok 'Iota::Data::Visitor';
 my $action= sub {1};
 my $d = {
   x => 0,

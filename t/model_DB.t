@@ -3,6 +3,6 @@ use warnings;
 use Test::More;
 
 
-BEGIN { use_ok 'Iota::PCS::Model::DB' }
+BEGIN { use_ok 'Iota::Model::DB' }
 
 done_testing();

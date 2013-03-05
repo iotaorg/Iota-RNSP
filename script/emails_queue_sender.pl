@@ -26,8 +26,8 @@ die $@ if $@;
 
 my $transport = $transport_class->new( %{ $config{email}{transport}{opts} } );
 
-use Iota::PCS;
-my $schema = Iota::PCS->model('DB');
+use Iota;
+my $schema = Iota->model('DB');
 
 my $config_tt = {
   INCLUDE_PATH => $config{email}{template_path},

@@ -12,8 +12,8 @@ use Encode;
 use JSON qw / decode_json /;
 
 
-use Iota::PCS;
-my $schema = Iota::PCS->model('DB');
+use Iota;
+my $schema = Iota->model('DB');
 
 
 use Geo::Coder::Google;

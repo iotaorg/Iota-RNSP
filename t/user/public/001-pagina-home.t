@@ -8,20 +8,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(Iota::PCS);
+use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common qw /GET POST/;
 use URI;
 use Package::Stash;
 
-use Iota::PCS::TestOnly::Mock::AuthUser;
+use Iota::TestOnly::Mock::AuthUser;
 
-my $schema = Iota::PCS->model('DB');
+my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = Iota::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::PCS::TestOnly::Mock::AuthUser::_id    = 2;
-@Iota::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$Iota::TestOnly::Mock::AuthUser::_id    = 2;
+@Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -147,7 +147,7 @@ eval {
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
             my $indicator = eval{from_json( $res->content )};
 
-            $Iota::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
+            $Iota::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             my $variable_url = $uri->path_query;
 
@@ -167,7 +167,7 @@ eval {
             &add_value($variable_url, '2012-01-30', 8);
 
 
-            $Iota::PCS::TestOnly::Mock::AuthUser::_id = 1; # ADMIN
+            $Iota::TestOnly::Mock::AuthUser::_id = 1; # ADMIN
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
                 [   api_key                         => 'test',
@@ -217,7 +217,7 @@ eval {
 
             my $indicator3 = eval{from_json( $res->content )};
 
-            $Iota::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
+            $Iota::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
             $variable_url = $uri3->path_query;
 
@@ -246,7 +246,7 @@ eval {
             &add_value('/api/variable/'.$basic_id.'/value', '1195-03-25', 7);
 
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id);
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id);
             my $obj = eval{from_json( $res->content )};
 
             ok($res->is_success, 'GET public info success');
@@ -265,7 +265,7 @@ eval {
             };
             is($obj->{cidade}{name}, 'AWS', 'cidade OK');
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id . '/indicator');
             $obj = eval{from_json( $res->content )};
 
             is($obj->{resumos}{'Bens Naturais Comuns'}{weekly}{datas}[0]{data}, '2012-01-08', 'data da primeira semana ok');

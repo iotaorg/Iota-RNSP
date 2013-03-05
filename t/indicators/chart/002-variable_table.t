@@ -8,20 +8,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(Iota::PCS);
+use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common qw /GET POST/;
 use URI;
 use Package::Stash;
 
-use Iota::PCS::TestOnly::Mock::AuthUser;
+use Iota::TestOnly::Mock::AuthUser;
 
-my $schema = Iota::PCS->model('DB');
+my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = Iota::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::PCS::TestOnly::Mock::AuthUser::_id    = 2;
-@Iota::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$Iota::TestOnly::Mock::AuthUser::_id    = 2;
+@Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -127,7 +127,7 @@ eval {
 
             ( $res, $c ) = ctx_request(
                 GET '/api/public/user/'.
-                    $Iota::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/variable/value'
+                    $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/variable/value'
                 );
             $obj = eval{from_json( $res->content )};
 
