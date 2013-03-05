@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('IOTA::PCS', 'CGI');
+Catalyst::ScriptRunner->run('Iota::PCS', 'CGI');
 
 1;
 

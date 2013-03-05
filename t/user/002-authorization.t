@@ -7,9 +7,9 @@ use HTTP::Request::Common;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test qw(IOTA::PCS);
+use Catalyst::Test qw(Iota::PCS);
 
-my $schema = IOTA::PCS->model('DB');
+my $schema = Iota::PCS->model('DB');
 
 eval {
   $schema->txn_do(

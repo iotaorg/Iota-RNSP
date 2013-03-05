@@ -2,15 +2,15 @@
 use lib './lib';
 use utf8;
 
-use IOTA::PCS::Schema;
+use Iota::PCS::Schema;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(IOTA::PCS);
-my $config = IOTA::PCS->config;
+use Catalyst::Test q(Iota::PCS);
+my $config = Iota::PCS->config;
 
-my $schema = IOTA::PCS::Schema->connect(
+my $schema = Iota::PCS::Schema->connect(
     $config->{'Model::DB'}{connect_info}{dsn},
     $config->{'Model::DB'}{connect_info}{user},
     $config->{'Model::DB'}{connect_info}{password} );

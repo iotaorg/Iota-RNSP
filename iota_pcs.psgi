@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 
-use IOTA::PCS;
+use Iota::PCS;
 
-my $app = IOTA::PCS->apply_default_middlewares(IOTA::PCS->psgi_app);
+my $app = Iota::PCS->apply_default_middlewares(Iota::PCS->psgi_app);
 $app;
 

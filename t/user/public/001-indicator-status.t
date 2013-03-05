@@ -8,20 +8,20 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
-use Catalyst::Test q(IOTA::PCS);
+use Catalyst::Test q(Iota::PCS);
 
 use HTTP::Request::Common qw /GET POST/;
 use URI;
 use Package::Stash;
 
-use IOTA::PCS::TestOnly::Mock::AuthUser;
+use Iota::PCS::TestOnly::Mock::AuthUser;
 
-my $schema = IOTA::PCS->model('DB');
+my $schema = Iota::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = Iota::PCS::TestOnly::Mock::AuthUser->new;
 
-$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 1;
-@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$Iota::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+@Iota::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -123,9 +123,9 @@ eval {
             my $uri_chart = URI->new( $res->header('Location') . '/variable/value' );
             my $indicator = eval{from_json( $res->content )};
 
-            $IOTA::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
+            $Iota::PCS::TestOnly::Mock::AuthUser::_id = $new_user->id;
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$IOTA::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
             my $obj = eval{from_json( $res->content )};
 
@@ -147,7 +147,7 @@ eval {
             $variable_url = $uri2->path_query;
             &add_value($variable_url, get_year(-4), 3);
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$IOTA::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
             $obj = eval{from_json( $res->content )};
 
@@ -167,7 +167,7 @@ eval {
             $variable_url = $uri2->path_query;
             &add_value($variable_url, get_year(-1), 1);
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$IOTA::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
             $obj = eval{from_json( $res->content )};
 
@@ -193,7 +193,7 @@ eval {
             &add_value($variable_url, get_year(-2), 3);
 
 
-            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$IOTA::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
             $obj = eval{from_json( $res->content )};
 

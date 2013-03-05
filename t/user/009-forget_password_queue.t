@@ -3,13 +3,13 @@ use warnings;
 
 use Test::More;
 
-use Catalyst::Test q(IOTA::PCS);
+use Catalyst::Test q(Iota::PCS);
 
 use HTTP::Request::Common;
 
 use JSON qw(from_json);
 
-my $schema = IOTA::PCS->model('DB');
+my $schema = Iota::PCS->model('DB');
 eval {
   $schema->txn_do(
     sub {

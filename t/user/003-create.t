@@ -7,19 +7,19 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(IOTA::PCS);
+use Catalyst::Test q(Iota::PCS);
 
 use HTTP::Request::Common;
 use Package::Stash;
 use Path::Class qw(dir);
-use IOTA::PCS::TestOnly::Mock::AuthUser;
+use Iota::PCS::TestOnly::Mock::AuthUser;
 
-my $schema = IOTA::PCS->model('DB');
+my $schema = Iota::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = Iota::PCS::TestOnly::Mock::AuthUser->new;
 
-$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 1;
-@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$Iota::PCS::TestOnly::Mock::AuthUser::_id    = 1;
+@Iota::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -102,9 +102,9 @@ eval {
 
             my $filename = "user_${id}_perfil_xd_img_teste.gif";
 
-            my $name = IOTA::PCS->config->{private_path} =~ /^\//o ?
-                    dir(IOTA::PCS->config->{private_path})->resolve . '/' . $filename :
-                    IOTA::PCS->path_to( $c->config->{private_path} , $filename );
+            my $name = Iota::PCS->config->{private_path} =~ /^\//o ?
+                    dir(Iota::PCS->config->{private_path})->resolve . '/' . $filename :
+                    Iota::PCS->path_to( $c->config->{private_path} , $filename );
 
             ok(-e $name, $name . ' image exists');
             if (-e $name ){
@@ -126,9 +126,9 @@ eval {
                     like( $obj->{files}{perfil_xd}, qr|img_teste_2\.gif|, 'version updated' );
                 }
                 my $filename = "user_${id}_perfil_xd_img_teste_2.gif";
-                $name = IOTA::PCS->config->{private_path} =~ /^\//o ?
-                    dir(IOTA::PCS->config->{private_path})->resolve . '/' . $filename :
-                    IOTA::PCS->path_to( $c->config->{private_path} , $filename );
+                $name = Iota::PCS->config->{private_path} =~ /^\//o ?
+                    dir(Iota::PCS->config->{private_path})->resolve . '/' . $filename :
+                    Iota::PCS->path_to( $c->config->{private_path} , $filename );
 
                 ok(-e $name, $name . ' image exists');
 

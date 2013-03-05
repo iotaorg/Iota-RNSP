@@ -5,7 +5,7 @@ BEGIN {
 }
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('IOTA::PCS', 'Server');
+Catalyst::ScriptRunner->run('Iota::PCS', 'Server');
 
 1;
 

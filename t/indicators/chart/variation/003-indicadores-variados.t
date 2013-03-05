@@ -12,19 +12,19 @@ my $governanca = encode("utf8", 'Governança');
 use FindBin qw($Bin);
 use lib "$Bin/../../../lib";
 
-use Catalyst::Test q(IOTA::PCS);
+use Catalyst::Test q(Iota::PCS);
 
 use HTTP::Request::Common qw/DELETE GET POST/;
 use Package::Stash;
 
-use IOTA::PCS::TestOnly::Mock::AuthUser;
+use Iota::PCS::TestOnly::Mock::AuthUser;
 
-my $schema = IOTA::PCS->model('DB');
+my $schema = Iota::PCS->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
-my $user   = IOTA::PCS::TestOnly::Mock::AuthUser->new;
+my $user   = Iota::PCS::TestOnly::Mock::AuthUser->new;
 
-$IOTA::PCS::TestOnly::Mock::AuthUser::_id    = 2;
-@IOTA::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+$Iota::PCS::TestOnly::Mock::AuthUser::_id    = 2;
+@Iota::PCS::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -429,7 +429,7 @@ eval {
 
             ( $res ) = ctx_request(
                     GET '/api/public/user/'.
-                    $IOTA::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis?group_by=yearly'
+                    $Iota::PCS::TestOnly::Mock::AuthUser::_id . '/indicator/' . $indicator->{id} . '/chart/period_axis?group_by=yearly'
             );
             my $obj_public = eval{from_json( $res->content )};
             ok($res->is_success, 'GET chart public success');
@@ -440,7 +440,7 @@ eval {
             is($obj_public->{series}[3]{formula_value}, 100, 'soma ok');
             is($obj_public->{series}[3]{variations}[0]{value}, 23, 'terceira variacao ok');
 
-            ( $res ) = ctx_request(GET '/api/public/user/'.$IOTA::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
+            ( $res ) = ctx_request(GET '/api/public/user/'.$Iota::PCS::TestOnly::Mock::AuthUser::_id . '/indicator');
 
 
             my $obj_public_indicator = eval{from_json( $res->content )};
