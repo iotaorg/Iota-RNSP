@@ -80,6 +80,12 @@ __PACKAGE__->table("network");
   default_value: false
   is_nullable: 0
 
+=head2 can_use_custom_css
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -106,6 +112,8 @@ __PACKAGE__->add_columns(
   "users_can_edit_value",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "users_can_edit_groups",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_use_custom_css",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
@@ -168,8 +176,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hV9Pvk8N37Wkth+Grj6u0A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 14:59:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LkrwHtu74OW2/m/zqzDJig
 
 
 
