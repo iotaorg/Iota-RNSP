@@ -413,6 +413,36 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_menus
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserMenu>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_menus",
+  "Iota::Schema::Result::UserMenu",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_pages
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserPage>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_pages",
+  "Iota::Schema::Result::UserPage",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -474,8 +504,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RFDI47O9IR21pc774kK96g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 16:25:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Fl+nKX0C+coIl8LZCmhkKA
 
 __PACKAGE__->has_many(
     "user_roles",
