@@ -46,11 +46,21 @@ sub network_object: Chained('root') PathPart('') CaptureArgs(1) {
 
     my $net = $c->model('DB::Network')->search({
         name_url => $rede
+    }, {
+        prefetch => [{'current_user' => 'user_files'}]
     })->first;
     $c->detach('/error_404') unless $net;
 
     $c->stash->{network} = $net;
     $c->stash->{rede} = $net->name_url;
+    my @files = $net->current_user->user_files;
+    foreach my $file (sort {$b->created_at->epoch <=> $a->created_at->epoch} @files){
+        if ($file->class_name eq 'custom.css'){
+            $c->stash->{custom_css} = $file->public_url;
+            last;
+        }
+    }
+
 }
 
 sub mapa_site: Chained('network_object') PathPart('mapa-do-site') Args(0) {

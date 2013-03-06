@@ -474,8 +474,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-02 05:51:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:hh/L3KCfkk251Fy4KSMg9A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RFDI47O9IR21pc774kK96g
 
 __PACKAGE__->has_many(
     "user_roles",
@@ -501,17 +501,6 @@ __PACKAGE__->add_column(
     },
 );
 
-__PACKAGE__->might_have(
-  "prefeito",
-  "Iota::Schema::Result::Prefeito",
-  { "foreign.user_id" => "self.id", }
-);
-
-__PACKAGE__->might_have(
-  "movimento",
-  "Iota::Schema::Result::Movimento",
-  { "foreign.user_id" => "self.id" }
-);
 
 __PACKAGE__->has_many(
   "sessions",

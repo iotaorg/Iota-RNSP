@@ -59,8 +59,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-03 23:16:29
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ueVyGIfDCex2u1uEW1EgEA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z9VwP8eJgfMDW2Jy0D1laQ
 
 
 __PACKAGE__->set_primary_key("user_id", "city_id");

@@ -71,7 +71,9 @@ __PACKAGE__->table("user_file");
 =head2 created_at
 
   data_type: 'timestamp'
-  is_nullable: 1
+  default_value: current_timestamp
+  is_nullable: 0
+  original: {default_value => \"now()"}
 
 =cut
 
@@ -92,7 +94,12 @@ __PACKAGE__->add_columns(
   "private_path",
   { data_type => "text", is_nullable => 0 },
   "created_at",
-  { data_type => "timestamp", is_nullable => 1 },
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -125,8 +132,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2012-11-23 09:26:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qEcIOIG+o8sEnyrFbNhnFg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LJsDj/ZSXcoMUOBW/q14Tg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

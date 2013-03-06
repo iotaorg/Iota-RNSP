@@ -12,8 +12,8 @@ use base 'DBIx::Class::Schema';
 __PACKAGE__->load_namespaces;
 
 
-# Created by DBIx::Class::Schema::Loader v0.07028 @ 2012-09-03 13:32:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AE4hVT0kix+JcrTd5vAhhA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:R50tCzP/NQTGAx+Vj3+AhQ
 
 
 sub AUTOLOAD {
