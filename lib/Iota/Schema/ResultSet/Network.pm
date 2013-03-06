@@ -24,6 +24,7 @@ sub verifiers_specs {
                 users_can_edit_value  => { required => 0, type => 'Bool' },
                 users_can_edit_groups => { required => 0, type => 'Bool' },
                 can_use_custom_css    => { required => 0, type => 'Bool' },
+                can_use_custom_pages  => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -35,6 +36,7 @@ sub verifiers_specs {
                 users_can_edit_value  => { required => 0, type => 'Bool' },
                 users_can_edit_groups => { required => 0, type => 'Bool' },
                 can_use_custom_css    => { required => 0, type => 'Bool' },
+                can_use_custom_pages  => { required => 0, type => 'Bool' },
             },
         ),
 

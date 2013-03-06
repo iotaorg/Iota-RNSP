@@ -55,8 +55,11 @@ sub network_GET {
     entity => {
       (map { $_ => $object_ref->{$_} } qw(
             id name name_url created_at created_by
+
             users_can_edit_value
             users_can_edit_groups
+            can_use_custom_css
+            can_use_custom_pages
       ))
     }
   );
@@ -156,8 +159,11 @@ sub list_GET {
         push @objs, {
             (map { $_ => $obj->{$_} } qw(
                 id name name_url created_at created_by
+
                 users_can_edit_value
                 users_can_edit_groups
+                can_use_custom_css
+                can_use_custom_pages
             )),
             url => $c->uri_for_action( $self->action_for('network'), [ $obj->{id} ] )->as_string,
         }
