@@ -21,8 +21,9 @@ sub verifiers_specs {
                 created_by => { required => 1, type => 'Int' },
                 name       => { required => 1, type => 'Str' },
                 name_url   => { required => 1, type => 'Str' },
-                users_can_edit_value => { required => 0, type => 'Str' },
-                users_can_edit_groups => { required => 0, type => 'Str' },
+                users_can_edit_value  => { required => 0, type => 'Bool' },
+                users_can_edit_groups => { required => 0, type => 'Bool' },
+                can_use_custom_css    => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -31,8 +32,9 @@ sub verifiers_specs {
                 id       => { required => 1, type => 'Int' },
                 name     => { required => 0, type => 'Str' },
                 name_url => { required => 0, type => 'Str' },
-                users_can_edit_value => { required => 0, type => 'Str' },
-                users_can_edit_groups => { required => 0, type => 'Str' },
+                users_can_edit_value  => { required => 0, type => 'Bool' },
+                users_can_edit_groups => { required => 0, type => 'Bool' },
+                can_use_custom_css    => { required => 0, type => 'Bool' },
             },
         ),
 
