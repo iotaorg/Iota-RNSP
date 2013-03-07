@@ -46,7 +46,7 @@ __PACKAGE__->table("country");
   is_nullable: 0
   sequence: 'country_id_seq'
 
-=head2 name_uri
+=head2 name_url
 
   data_type: 'text'
   is_nullable: 1
@@ -78,7 +78,7 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     sequence          => "country_id_seq",
   },
-  "name_uri",
+  "name_url",
   { data_type => "text", is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
@@ -111,13 +111,13 @@ __PACKAGE__->set_primary_key("id");
 
 =over 4
 
-=item * L</name_uri>
+=item * L</name_url>
 
 =back
 
 =cut
 
-__PACKAGE__->add_unique_constraint("country_name_uri_key", ["name_uri"]);
+__PACKAGE__->add_unique_constraint("country_name_uri_key", ["name_url"]);
 
 =head1 RELATIONS
 
@@ -137,8 +137,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:C1beyW08y22cuNNSfG8IRg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-07 14:53:33
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iTy32snJf3yCT0lTH5WUnQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
