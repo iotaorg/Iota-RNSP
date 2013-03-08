@@ -156,6 +156,7 @@ sub user_GET {
                     name => $user->network->name,
                     name_url => $user->network->name_url
                 }
+
             )
             : ( network => undef )),
         }
