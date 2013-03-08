@@ -130,6 +130,7 @@ sub user_GET {
         cep => $user->cep,
         endereco => $user->endereco,
         active => $user->active,
+        city_summary => $user->city_summary,
 
         $user->city
         ? (
