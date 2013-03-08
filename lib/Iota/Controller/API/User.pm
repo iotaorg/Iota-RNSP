@@ -138,6 +138,7 @@ sub user_GET {
                 bairro
                 cep
                 endereco
+                city_summary
                 active
             )),
 
