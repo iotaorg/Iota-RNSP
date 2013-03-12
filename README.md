@@ -1,5 +1,5 @@
 
-# Plaforma para gerenciamento de indicadores
+# Iota - Uma plataforma para gerenciamento de indicadores
 
 O aplicativo é uma plataforma que permite a criação dos indicadores, com o objetivo de facilitar o compartilhamento dos dados para visualização, comparação e re-utilização deles através de padrões de tecnologias abertos.
 
@@ -69,10 +69,5 @@ Autores
 - Henry Shinohara <shin@aware.com.br>
 
 
-### Outros
-
-#### Eixos
-
-A lista de eixos é fixa e está no arquivo root/eixos.json. http://www.json.org/
 
 
