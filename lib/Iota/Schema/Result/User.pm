@@ -134,6 +134,13 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 created_at
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
+  is_nullable: 0
+  original: {default_value => \"now()"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -178,6 +185,13 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "password",
   { data_type => "text", is_nullable => 0 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -504,8 +518,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 16:25:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Fl+nKX0C+coIl8LZCmhkKA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:k0PKypVRoXgyPXtElq5N+w
 
 __PACKAGE__->has_many(
     "user_roles",

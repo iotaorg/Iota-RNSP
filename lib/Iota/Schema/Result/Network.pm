@@ -68,29 +68,17 @@ __PACKAGE__->table("network");
   data_type: 'integer'
   is_nullable: 0
 
-=head2 users_can_edit_value
+=head2 institute_id
 
-  data_type: 'boolean'
-  default_value: false
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
-=head2 users_can_edit_groups
+=head2 domain_name
 
-  data_type: 'boolean'
-  default_value: false
+  data_type: 'varchar'
   is_nullable: 0
-
-=head2 can_use_custom_css
-
-  data_type: 'boolean'
-  default_value: false
-  is_nullable: 0
-
-=head2 can_use_custom_pages
-
-  data_type: 'boolean'
-  default_value: false
-  is_nullable: 0
+  size: 100
 
 =cut
 
@@ -115,14 +103,10 @@ __PACKAGE__->add_columns(
   },
   "created_by",
   { data_type => "integer", is_nullable => 0 },
-  "users_can_edit_value",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-  "users_can_edit_groups",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-  "can_use_custom_css",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-  "can_use_custom_pages",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "institute_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "domain_name",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
 );
 
 =head1 PRIMARY KEY
@@ -138,6 +122,18 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
+
+=head2 C<network_domain_name_key>
+
+=over 4
+
+=item * L</domain_name>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("network_domain_name_key", ["domain_name"]);
 
 =head2 C<network_name_url_key>
 
@@ -168,6 +164,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 institute
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::Institute>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "institute",
+  "Iota::Schema::Result::Institute",
+  { id => "institute_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
 =head2 users
 
 Type: has_many
@@ -184,8 +195,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 15:20:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nGosF1BEmNKfmiSkjhTGRg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TzP4W760eOmwJuLPXMrJ3w
 
 
 

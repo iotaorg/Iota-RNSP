@@ -1,12 +1,12 @@
 use utf8;
-package Iota::Schema::Result::State;
+package Iota::Schema::Result::Institute;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Iota::Schema::Result::State
+Iota::Schema::Result::Institute
 
 =cut
 
@@ -31,11 +31,11 @@ use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
-=head1 TABLE: C<state>
+=head1 TABLE: C<institute>
 
 =cut
 
-__PACKAGE__->table("state");
+__PACKAGE__->table("institute");
 
 =head1 ACCESSORS
 
@@ -44,14 +44,19 @@ __PACKAGE__->table("state");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'state_id_seq'
-
-=head2 name_uri
-
-  data_type: 'text'
-  is_nullable: 1
+  sequence: 'institute_id_seq'
 
 =head2 name
+
+  data_type: 'text'
+  is_nullable: 0
+
+=head2 short_name
+
+  data_type: 'text'
+  is_nullable: 0
+
+=head2 description
 
   data_type: 'text'
   is_nullable: 1
@@ -63,16 +68,29 @@ __PACKAGE__->table("state");
   is_nullable: 0
   original: {default_value => \"now()"}
 
-=head2 created_by
+=head2 users_can_edit_value
 
-  data_type: 'integer'
+  data_type: 'boolean'
+  default_value: false
   is_nullable: 0
 
-=head2 country_id
+=head2 users_can_edit_groups
 
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 1
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+=head2 can_use_custom_css
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+=head2 can_use_custom_pages
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
 
 =cut
 
@@ -82,11 +100,13 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "state_id_seq",
+    sequence          => "institute_id_seq",
   },
-  "name_uri",
-  { data_type => "text", is_nullable => 1 },
   "name",
+  { data_type => "text", is_nullable => 0 },
+  "short_name",
+  { data_type => "text", is_nullable => 0 },
+  "description",
   { data_type => "text", is_nullable => 1 },
   "created_at",
   {
@@ -95,10 +115,14 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
-  "created_by",
-  { data_type => "integer", is_nullable => 0 },
-  "country_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "users_can_edit_value",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "users_can_edit_groups",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_use_custom_css",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_use_custom_pages",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -115,58 +139,38 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<state_name_uri_key>
+=head2 C<institute_short_name_key>
 
 =over 4
 
-=item * L</name_uri>
+=item * L</short_name>
 
 =back
 
 =cut
 
-__PACKAGE__->add_unique_constraint("state_name_uri_key", ["name_uri"]);
+__PACKAGE__->add_unique_constraint("institute_short_name_key", ["short_name"]);
 
 =head1 RELATIONS
 
-=head2 cities
+=head2 networks
 
 Type: has_many
 
-Related object: L<Iota::Schema::Result::City>
+Related object: L<Iota::Schema::Result::Network>
 
 =cut
 
 __PACKAGE__->has_many(
-  "cities",
-  "Iota::Schema::Result::City",
-  { "foreign.state_id" => "self.id" },
+  "networks",
+  "Iota::Schema::Result::Network",
+  { "foreign.institute_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 country
-
-Type: belongs_to
-
-Related object: L<Iota::Schema::Result::Country>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "country",
-  "Iota::Schema::Result::Country",
-  { id => "country_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
 );
 
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DdtVTjN5/gcqYjbCuTxz3w
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zvmyewE6RdQSTmqGRbzLWw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

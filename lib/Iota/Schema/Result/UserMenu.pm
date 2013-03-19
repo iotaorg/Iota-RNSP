@@ -70,6 +70,12 @@ __PACKAGE__->table("user_menu");
   default_value: 0
   is_nullable: 0
 
+=head2 menu_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -92,6 +98,8 @@ __PACKAGE__->add_columns(
   },
   "position",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
+  "menu_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -107,6 +115,26 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
+
+=head2 menu
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::UserMenu>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "menu",
+  "Iota::Schema::Result::UserMenu",
+  { id => "menu_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
 
 =head2 page
 
@@ -138,9 +166,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 user_menus
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 16:25:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7xQhgrRx+3LbxuvF9jFgCg
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserMenu>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_menus",
+  "Iota::Schema::Result::UserMenu",
+  { "foreign.menu_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:est72SwYKc25TRiFpCRkxQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
