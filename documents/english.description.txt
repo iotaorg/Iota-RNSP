@@ -1,0 +1,45 @@
+Hello,
+
+The code lines of Iota lies in https://github.com/W3CBrasil/Iota,
+
+technologies in use are all open source based and free to use,
+except for Google Maps, which is not open-source, but it's free until lot of access.
+
+The application have an API, an website with some javascript, and a administration area working fully with javascript.
+
+API and the backend of the website are written in the same catalyst application.
+Catalyst is a framework for building large, fast and stable web apps, and is written in perl 5.
+
+The database is PostgreSQL 9.1+, but should work in PostgreSQL 8.4+ with some checks on the procedures that uses arrays operations.
+
+
+The part of the API resides in /api/* path, and administration is over /controle (that means "control")
+All the URLs diferrent from above shoud be some page of the website.
+
+
+There are three points to start to understand how the core of the system works:
+- indicators are some data you want to visualize, eg: "numbers of born children per 1000 residents"
+- variables are the smallest part of your data, eg: "numbers of born children" and "residents"
+- each user has your own set of data for each variable.
+
+Then, you can understand these others:
+- each variable needs to have a period, like: "dayly", "weekly", "monthly", "yearly"...
+- indicators are composed by variables, using a formula (eg: "numbers of born children / (residents / 1000)")
+  but [for while] it can only use variables of the same period.
+- users are associated with a city, an network and a network is associated with an institute.
+  these relations are used to separate the data for the reports, control user access, etc..
+  This may be seen diferrent if you only want to use the indicatos with formulas, but this will need a new fork, or a new branch.
+
+The 'production' branch hold the lasted stable version, and is running on http://indicadores.cidadessustentaveis.org.br/prefeitura
+
+'prefeitura' in this case are the institute and the 'cidadessustentaveis' is the network. The list of the cities are based on the network,
+and each user can only belong to one institute, so each institute have it's data for the same indicator.
+
+On http://indicadores.cidadessustentaveis.org.br/dados-abertos you can download all [or a part] the data of the application.
+
+The branch 'master' is running on travis (https://travis-ci.org/W3CBrasil/Iota) that tests the code each commit.
+It's falling since one project rename, i didn't realise this until now!
+
+There's a database deploy script, and the project deps are described in https://github.com/W3CBrasil/Iota/blob/master/.travis.yml
+
+
