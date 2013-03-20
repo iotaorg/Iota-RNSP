@@ -1,4 +1,3 @@
-
 package Iota::Schema::ResultSet::User;
 
 use namespace::autoclean;
@@ -392,4 +391,3 @@ sub with_city {
 
 
 1;
-
