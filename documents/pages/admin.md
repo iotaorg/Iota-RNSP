@@ -317,13 +317,99 @@ A tela do indicadores continua exatamente igual a que existe hoje, porém, o cam
 
 No lugar dele, deve-se enviar `visibility_level` com um dos seguintes valores:
 
-    * public: indicador compartilhado entre todos os usuarios
-    * private: indicador visivel apenas um usuário (o proprio)
-    * contry: indicador visivel para os usuarios de um pais
-    * restrict: indicador visivel apenas para os usuarios selecionados.
+* __public__: indicador compartilhado entre todos os usuarios
+* __private__: indicador visivel apenas um usuário (o proprio)
+* __contry__: indicador visivel para os usuarios de um pais
+* __restrict__: indicador visivel apenas para os usuarios selecionados.
 
-Caso seja `visibility_level=private`, e estiver logado com um usuario `superadmin` será necessário informar qual é o usuário.
+Caso seja `visibility_level=private`, e estiver logado com um usuario `superadmin`
+será necessário informar qual é o usuário e enviar o user-id do admin no campo `$namespace.visibility_user_id`
+
 Caso seja `visibility_level=private`, e estiver logado com um usuario `admin`, é sempre ele mesmo.
+Caso seja `visibility_level=contry`, envie junto o campo `$namespace.visibility_contry_id`;
+Caso seja `visibility_level=restrict`, é nessario cadastrar cada um dos usuarios:
+
+    POST /api/indicator/$id/user_visibility
+
+Com o campo:
+
+    indicator.user_visibility.create.user_id = int
+
+Para listar, alem de vir junto com o proprio indicador, pode utilizar
+
+    GET /api/indicator/$id/user_visibility
+
+e como sempre, o detalhe (que nesse caso só tem a hora de criação)
+
+    GET /api/indicator/$id/user_visibility/$id
+
+Então lembre-se que nesse caso, como ficaria muito chato de criar isso pois nao teria o /$indicator_id
+você pode enviar então no `POST /api/indicator` o campo `$namespace.visibility_users_id=123,134,321,345`
+enviando a lista dos usuarios separados por virgula.
+
+No update, caso esse campo seja enviado, vai ocorrer a troca de todos os antigos pelos novos.
+
+Portanto, todos os campos que o `POST /api/indicator` pode receber são:
+
+    $namespace.name                                                     string
+    $namespace.name_url                                                 string, opcional
+
+    $namespace.formula                                                  string
+
+    $namespace.goal                                                     float
+    $namespace.goal_explanation                                         string
+    $namespace.goal_source                                              string
+    $namespace.goal_operator                                            "<", "<=", ">", ">=", "="
+
+    $namespace.axis_id                                                  int
+
+    $namespace.source                                                   string
+    $namespace.explanation                                              string
+    $namespace.tags                                                     string
+
+    $namespace.chart_name           (nao utilizado nem esta na tela)
+    $namespace.sort_direction       (nao utilizado nem esta na tela)
+
+    $namespace.observations                                             string
+
+    $namespace.variety_name                                             string
+    $namespace.indicator_type                                           "normal" ou "varied"
+
+    $namespace.all_variations_variables_are_required                    boolean
+    $namespace.dynamic_variations                                       boolean
+
+    $namespace.summarization_method (nao utilizado / nao existe na tela, todos são 'sum')
+
+    $namespace.visibility_level                 = "public", "private", "restrict" ou "country"
+    $namespace.visibility_users_id              = int separados por virgula
+    $namespace.visibility_contry_id             = int
+    $namespace.visibility_user_id               = int
+
+Existem os mesmos itens para o atualizar:
+
+`POST /api/indicador/$id` com namespace = `indicator.update`;
+
+
+E para criar um indicador:
+
+`POST /api/indicador` com namespace = `indicator.create`
+
+Para apagar:
+
+    `DELETE /api/indicador/$id`
+
+Para listar:
+
+    `GET /api/indicador`
+
+Para detalhar:
+
+    `GET /api/indicador/$id`
+
+
+
+
+
 
 
 
