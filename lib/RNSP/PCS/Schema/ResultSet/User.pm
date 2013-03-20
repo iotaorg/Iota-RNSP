@@ -65,6 +65,8 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
                         return 1 unless $city;
 
+                        return 1 if $r->get_value('prefeito') eq '0';
+
                         return !defined $city->prefeito;
                       }
                 },
@@ -76,6 +78,8 @@ sub verifiers_specs {
                         my $city =
                           $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
                         return 1 unless $city;
+
+                        return 1 if $r->get_value('movimento') eq '0';
 
                         return !defined $city->movimento;
                       }
