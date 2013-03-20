@@ -309,3 +309,21 @@ Campos:
 Os dados de endereço são referentes ao endereço do cadastro.
 O campo *city_summary* é utilziado na home page do usuário.
 
+
+
+### Indicadores
+
+A tela do indicadores continua exatamente igual a que existe hoje, porém, o campo `indicator_roles` nao vai mais existir.
+
+No lugar dele, deve-se enviar `visibility_level` com um dos seguintes valores:
+
+    * public: indicador compartilhado entre todos os usuarios
+    * private: indicador visivel apenas um usuário (o proprio)
+    * contry: indicador visivel para os usuarios de um pais
+    * restrict: indicador visivel apenas para os usuarios selecionados.
+
+Caso seja `visibility_level=private`, e estiver logado com um usuario `superadmin` será necessário informar qual é o usuário.
+Caso seja `visibility_level=private`, e estiver logado com um usuario `admin`, é sempre ele mesmo.
+
+
+
