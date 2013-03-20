@@ -62,7 +62,6 @@ __PACKAGE__->table("user_menu");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 position
 
@@ -91,11 +90,7 @@ __PACKAGE__->add_columns(
   "page_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "title",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "position",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
   "menu_id",
@@ -182,8 +177,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:est72SwYKc25TRiFpCRkxQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:14:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:150ZGyTy+p4YwiRJo0DkaA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

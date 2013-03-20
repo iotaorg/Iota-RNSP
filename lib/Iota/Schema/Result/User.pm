@@ -129,17 +129,17 @@ __PACKAGE__->table("user");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 password
-
-  data_type: 'text'
-  is_nullable: 0
-
 =head2 created_at
 
   data_type: 'timestamp'
   default_value: current_timestamp
   is_nullable: 0
   original: {default_value => \"now()"}
+
+=head2 password
+
+  data_type: 'text'
+  is_nullable: 0
 
 =cut
 
@@ -183,8 +183,6 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "network_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "password",
-  { data_type => "text", is_nullable => 0 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -192,6 +190,8 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
+  "password",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -518,8 +518,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:k0PKypVRoXgyPXtElq5N+w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:14:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iIS5T9BakQalA31wPgPE6A
 
 __PACKAGE__->has_many(
     "user_roles",

@@ -46,7 +46,7 @@ __PACKAGE__->table("state");
   is_nullable: 0
   sequence: 'state_id_seq'
 
-=head2 name_uri
+=head2 name_url
 
   data_type: 'text'
   is_nullable: 1
@@ -74,6 +74,12 @@ __PACKAGE__->table("state");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 uf
+
+  data_type: 'text'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -84,7 +90,7 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     sequence          => "state_id_seq",
   },
-  "name_uri",
+  "name_url",
   { data_type => "text", is_nullable => 1 },
   "name",
   { data_type => "text", is_nullable => 1 },
@@ -99,6 +105,12 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
   "country_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "uf",
+  {
+    data_type   => "text",
+    is_nullable => 0,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -119,13 +131,13 @@ __PACKAGE__->set_primary_key("id");
 
 =over 4
 
-=item * L</name_uri>
+=item * L</name_url>
 
 =back
 
 =cut
 
-__PACKAGE__->add_unique_constraint("state_name_uri_key", ["name_uri"]);
+__PACKAGE__->add_unique_constraint("state_name_uri_key", ["name_url"]);
 
 =head1 RELATIONS
 
@@ -165,8 +177,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DdtVTjN5/gcqYjbCuTxz3w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:31:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NVM3z1TQPsspKvwkqbyzgA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

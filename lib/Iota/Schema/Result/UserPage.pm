@@ -70,19 +70,16 @@ __PACKAGE__->table("user_page");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 title_url
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 content
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -111,23 +108,11 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "title",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "title_url",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "content",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -175,8 +160,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 16:25:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wB6EWzrDj+OnHq/P6E2+0w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:14:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xyi0ciJLdW4FDYlGhPnOww
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
