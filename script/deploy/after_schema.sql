@@ -5,15 +5,8 @@ SELECT setval('variable_id_seq', 40, true);
 SELECT setval('network_id_seq', 10, true);
 SELECT setval('user_id_seq', 10, true);
 SELECT setval('role_id_seq', 10, true);
-
-INSERT INTO city(
-        id, name, uf, pais, latitude, longitude, created_at,name_uri)
-VALUES (1, 'São Paulo','SP','br',-23.562880, -46.654659,'2012-09-28 03:55:36.899955','sao-paulo');
-
-INSERT INTO city(
-        id, name, uf, pais, latitude, longitude, created_at,name_uri)
-VALUES (2, 'Outracidade','SP','br',-23.362880, -46.354659,'2012-09-28 03:55:36.899955','outra-cidade');
-
+SELECT setval('country_id_seq', 10, true);
+SELECT setval('state_id_seq', 10, true);
 
 
 -- all passwords are 12345
@@ -21,6 +14,32 @@ VALUES (2, 'Outracidade','SP','br',-23.362880, -46.354659,'2012-09-28 03:55:36.8
 INSERT INTO "role"(id,name) VALUES (0,'superadmin'), (1,'admin'),(2,'user');
 
 INSERT INTO "user"(id, name, email, password) VALUES (1, 'superadmin','superadmin@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
+
+
+INSERT INTO country(
+        id, name, name_url, created_by)
+VALUES (1, 'Brasil','BR',1);
+
+
+INSERT INTO state(
+        id, name, name_url, country_id, uf, created_by)
+VALUES (1, 'São Paulo','sao-paulo',1,'SP',1);
+
+INSERT INTO state(
+        id, name, name_url, country_id, uf, created_by)
+VALUES (2, 'Rio jan','rio',1,'RJ',1);
+
+INSERT INTO city(
+        id, name, uf, pais, latitude, longitude, created_at,name_uri, state_id,country_id)
+VALUES
+(1, 'São Paulo'  ,'SP','br',-23.562880, -46.654659,'2012-09-28 03:55:36.899955','sao-paulo', 1,1),
+(2, 'Outracidade','SP','br',-23.362880, -46.354659,'2012-09-28 03:55:36.899955','outra-cidade',1,1);
+
+
+
+
+
+
 
 INSERT INTO institute(
             id, name, short_name, description, created_at, users_can_edit_value,
@@ -33,22 +52,20 @@ VALUES
     2, 'Movimentos', 'org', 'administrado pelos movimentos', now(), true, true, true, true
 );
 
-
-
 insert into "network" (id, institute_id, domain_name, name, name_url, created_by)
 values
 (1, 1, 'prefeitura.gov', 'Prefeitura', 'pref', 1),
 (2, 2, 'rnsp.org', 'RNSP', 'movim', 1),
 (3, 2, 'latino.org', 'Rede latino americana', 'latino', 1);
 
-INSERT INTO "user"(id, name, email, password, network_id) VALUES
-(2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1),
-(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2),
-(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3),
-(4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1),
-(5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2),
-(6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2),
-(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
+INSERT INTO "user"(id, name, email, password, network_id, city_id) VALUES
+(2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1, null),
+(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
+(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3, null),
+(4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1,1),
+(5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,1),
+(6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,2),
+(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3,1);
 
 
 
