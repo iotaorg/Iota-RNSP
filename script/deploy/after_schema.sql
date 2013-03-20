@@ -27,7 +27,7 @@ INSERT INTO institute(
             users_can_edit_groups, can_use_custom_css, can_use_custom_pages)
 VALUES
 (
-    1, 'Prefeituras', 'gov', 'administrado pelas prefeituras', now(), false, false, false, false
+    1, 'Prefeituras', 'gov', 'administrado pelas prefeituras', now(), true, false, false, false
 ),
 (
     2, 'Movimentos', 'org', 'administrado pelos movimentos', now(), true, true, true, true
