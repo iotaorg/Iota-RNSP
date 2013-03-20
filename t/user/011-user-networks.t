@@ -63,7 +63,7 @@ eval {
             $schema->resultset('User')->find( { email => 'foo@email.com' } ),
             'user in DB'
         );
-        is(eval{$new_user->network->name_url}, 'movimento', 'criado como movimento');
+        is(eval{$new_user->network->name_url}, 'movim', 'criado como movimento');
 
 
 
@@ -161,7 +161,7 @@ eval {
             $schema->resultset('User')->find( { email => 'errorme@email.com' } ),
             'user in DB'
         );
-        is(eval{$changecity->network->name_url}, 'movimento', 'criado como movimento');
+        is(eval{$changecity->network->name_url}, 'movim', 'criado como movimento');
 
         ( $res, $c ) = ctx_request(
             POST '/api/user/' . $changecity->id,

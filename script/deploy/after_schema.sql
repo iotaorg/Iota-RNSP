@@ -1,3 +1,11 @@
+SELECT setval('city_id_seq', 30, true);
+SELECT setval('axis_id_seq', 100, true);
+SELECT setval('institute_id_seq', 10, true);
+SELECT setval('variable_id_seq', 40, true);
+SELECT setval('network_id_seq', 10, true);
+SELECT setval('user_id_seq', 10, true);
+SELECT setval('role_id_seq', 10, true);
+
 INSERT INTO city(
         id, name, uf, pais, latitude, longitude, created_at,name_uri)
 VALUES (1, 'São Paulo','SP','br',-23.562880, -46.654659,'2012-09-28 03:55:36.899955','sao-paulo');
@@ -6,7 +14,6 @@ INSERT INTO city(
         id, name, uf, pais, latitude, longitude, created_at,name_uri)
 VALUES (2, 'Outracidade','SP','br',-23.362880, -46.354659,'2012-09-28 03:55:36.899955','outra-cidade');
 
-SELECT setval('public.city_id_seq', 30, true);
 
 
 -- all passwords are 12345
@@ -15,26 +22,35 @@ INSERT INTO "role"(id,name) VALUES (0,'superadmin'), (1,'admin'),(2,'user');
 
 INSERT INTO "user"(id, name, email, password) VALUES (1, 'superadmin','superadmin@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW');
 
+INSERT INTO institute(
+            id, name, short_name, description, created_at, users_can_edit_value,
+            users_can_edit_groups, can_use_custom_css, can_use_custom_pages)
+VALUES
+(
+    1, 'Prefeituras', 'gov', 'administrado pelas prefeituras', now(), false, false, false, false
+),
+(
+    2, 'Movimentos', 'org', 'administrado pelos movimentos', now(), true, true, true, true
+);
 
-insert into "network" (id, name, name_url, users_can_edit_groups, users_can_edit_value, created_by)
+
+
+insert into "network" (id, institute_id, domain_name, name, name_url, created_by)
 values
-(1, 'Prefeituras', 'prefeitura', false, true, 1),
-(2, 'Movimentos', 'movimento', true, true, 1),
-(3, 'Rede latino americana', 'latino', false, true, 1);
+(1, 1, 'prefeitura.gov', 'Prefeitura', 'pref', 1),
+(2, 2, 'rnsp.org', 'RNSP', 'movim', 1),
+(3, 2, 'latino.org', 'Rede latino americana', 'latino', 1);
 
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
+INSERT INTO "user"(id, name, email, password, network_id) VALUES
+(2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1),
+(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2),
+(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3),
+(4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1),
+(5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2),
+(6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2),
+(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
 
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2);
-INSERT INTO "user"(id, name, email, password, network_id) VALUES (7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3);
 
-
-SELECT setval('network_id_seq', 10);
-SELECT setval('user_id_seq', 10);
-SELECT setval('role_id_seq', 10);
 
 -- role: superadmin                                     user:
 INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 0); -- superadmin
@@ -52,7 +68,7 @@ INSERT INTO "user_role" ( user_id, role_id) VALUES (7, 2); -- latina
 
 
 
-SELECT pg_catalog.setval('variable_id_seq', 40, true);
+
 
 INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (19, 'População total', 'População total', 'pop_total', 1, '2012-10-01 16:50:42.857155', 'num', 'yearly', NULL, true);
 INSERT INTO variable (id, name, explanation, cognomen, user_id, created_at, type, period, source, is_basic) VALUES (20, 'População rural e urbana', 'População rural e urbana', 'pop_rural_urbana', 1, '2012-10-01 16:51:55.453327', 'num', 'yearly', NULL, true);
@@ -83,7 +99,7 @@ insert into axis (id, name) values (10, 'Melhor Mobilidade, Menos Tráfego');
 insert into axis (id, name) values (11, 'Ação Local para a Saúde');
 insert into axis (id, name) values (12, 'Do Local para o Global');
 insert into axis (id, name) values (13, 'Planejando Cidades do Futuro');
-SELECT setval('public.axis_id_seq', 100, true);
+
 
 
 insert into measurement_unit (name, short_name, user_id) values

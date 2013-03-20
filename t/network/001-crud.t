@@ -34,7 +34,10 @@ eval {
                 POST '/api/network',
                 [   api_key                    => 'test',
                     'network.create.name'       => 'prefeitura nao lembro o nome',
-                    'network.create.name_url'   => 'prefeitura-2'
+                    'network.create.name_url'   => 'prefeitura-2',
+                    'network.create.domain_name'   => 'foo-domain.org',
+                    'network.create.institute_id'   => '1',
+
                 ]
             );
 
@@ -58,7 +61,7 @@ eval {
                 POST $obj_uri,
                 [
                     'network.update.name'         => 'BarFoo',
-                    'network.update.users_can_edit_groups' => '1'
+
                 ]
             );
             ok( $res->is_success, 'network updated' );
@@ -72,7 +75,7 @@ eval {
                 'network in DB'
             );
             is( $updated_network->name, 'BarFoo', 'name ok' );
-            ok( $updated_network->users_can_edit_groups, 'users_can_edit_groups ok' );
+            ok( $updated_network->domain_name, 'foo-domain.org' );
 
 
             ( $res, $c ) = ctx_request( GET '/api/network?api_key=test');

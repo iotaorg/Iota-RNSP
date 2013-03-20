@@ -140,6 +140,7 @@ sub user_GET {
                 endereco
                 city_summary
                 active
+                created_at
             )),
 
             ($user->city

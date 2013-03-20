@@ -118,6 +118,8 @@ sub login_POST {
         $attrs{roles} = [ map { $_->name } $c->model('DB::User')->search({ id => $c->user->id })->first->roles ];
 
         delete $attrs{password};
+        $attrs{created_at} = $attrs{created_at}->datetime;
+
         $self->status_ok( $c, entity => \%attrs );
     }
     else {
