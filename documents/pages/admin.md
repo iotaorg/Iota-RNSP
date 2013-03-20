@@ -244,9 +244,13 @@ Campos:
 ### Administradores
 
 Cadastro de administradores, que são usuarios com roles = `admin`.
-Estes usuarios precisam estar ligados com uma rede [`network_id`] pois serão administradores delas.
+Estes usuarios administradores precisam estar ligados com uma rede [`network_id`] pois serão administradores delas.
 
-Eles não necessariamente precisam de uma cidade. Tais dados não serão utilizados, eu acho.
+Administradores não necessariamente precisam de uma cidade. Tais dados não serão utilizados, eu acho.
+
+Os usuarios que esses administradores precisam ter uma instituição, campo `institute_id`;
+
+
 
 
 --------

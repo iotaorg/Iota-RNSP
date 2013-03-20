@@ -141,6 +141,11 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 institute_id
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -192,6 +197,8 @@ __PACKAGE__->add_columns(
   },
   "password",
   { data_type => "text", is_nullable => 0 },
+  "institute_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -518,8 +525,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:14:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iIS5T9BakQalA31wPgPE6A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 19:50:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:purqiBIdfe35SN+Ghq8V2g
 
 __PACKAGE__->has_many(
     "user_roles",
