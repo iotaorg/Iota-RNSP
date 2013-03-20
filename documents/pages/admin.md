@@ -241,4 +241,71 @@ Campos:
 
 
 
+### Administradores
+
+Cadastro de administradores, que são usuarios com roles = `admin`.
+Estes usuarios precisam estar ligados com uma rede [`network_id`] pois serão administradores delas.
+
+Eles não necessariamente precisam de uma cidade. Tais dados não serão utilizados, eu acho.
+
+
+--------
+
+Para listar eles, você precisa filtrar pelo roles=admin, se não vai acabar listando todos os usuarios (inclusive o proprio superadmin)
+
+    GET /api/user
+
+Para pegar detalhes do mesmo:
+
+    GET /api/user/$id
+
+Para remover
+
+    DELETE /api/user/$id
+
+Remover um usuario na verdade apenas desativa ele.
+Ainda vamos ver uma melhor forma de manipular os usuarios inativos.
+No momento, para liberar a rede, faça uma atualização com `network_id=null` antes de apagar.
+
+Para cadastrar uma nova:
+
+    POST /api/user
+
+    namespace = user.create
+
+Para atualizar uma existente:
+
+    PUT /api/user/$id
+
+    namespace = user.update
+
+
+Campos:
+
+    $namespace.network_id  = int
+    $namespace.roles       = string, deve-se enviar "admin" para criar um administrador.
+
+    $namespace.name        = string
+    $namespace.email       = string, unico
+
+    $namespace.city_id     = int, opcional
+
+    Os seguintes campos eu acho que não são necessarios no cadastro do administrador,
+    mas valem para o cadastro do usuario *comum*.
+
+    $namespace.nome_responsavel_cadastro  = string, opcional
+    $namespace.estado                     = string, opcional
+    $namespace.telefone                   = string, opcional
+    $namespace.email_contato              = string, opcional
+    $namespace.telefone_contato           = string, opcional
+    $namespace.cidade                     = string, opcional
+    $namespace.bairro                     = string, opcional
+    $namespace.cep                        = string, opcional
+    $namespace.endereco                   = string, opcional
+
+    $namespace.city_summary               = string, opcional
+
+
+Os dados de endereço são referentes ao endereço do cadastro.
+O campo *city_summary* é utilziado na home page do usuário.
 
