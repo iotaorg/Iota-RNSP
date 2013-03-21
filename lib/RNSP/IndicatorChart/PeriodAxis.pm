@@ -244,8 +244,10 @@ sub read_values {
     do{
         my ($anyid) = @{$self->variables};
         my $anyvar = $self->schema->resultset('Variable')->find($anyid);
-        return {error => 'novar'} unless $anyvar;
-        $period = $anyvar->period;
+        # return {error => 'novar'} unless $anyvar;
+
+        $period = $anyvar ? $anyvar->period : 'yearly';
+
     };
     # NOTE 2013-02-05
     # tirei o default de $period pois o JS só funciona com ano

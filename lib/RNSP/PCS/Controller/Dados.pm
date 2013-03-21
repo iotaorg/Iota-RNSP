@@ -143,7 +143,7 @@ sub _download {
             my $hash = {};
             my $tmp  = {};
             my $x = 0;
-            my $period = '';
+            my $period = 'yearly';
             while (my $row = $rs->next){
                 $hash->{header}{$row->name} = $x;
                 $hash->{id_nome}{$row->id} = $row->name;

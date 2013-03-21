@@ -213,6 +213,7 @@ sub resumo_GET {
                 }
                 $variaveis++;
             }
+            $perido = 'yearly' if $variaveis == 0;
             next unless $perido;
 
             my $item = {};

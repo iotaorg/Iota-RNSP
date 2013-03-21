@@ -83,7 +83,7 @@ sub values_POST {
       schema  => $c->model('DB')->schema
    );
    my ($any_var) = $f->variables;
-   $param->{period} = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)->period} : '';
+   $param->{period} = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)->period} : 'yearly';
 
    $param->{id} = $obj_rs->id;
 

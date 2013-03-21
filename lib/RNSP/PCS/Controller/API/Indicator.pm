@@ -137,8 +137,8 @@ sub indicator_GET {
          map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations
       ]) : (),
 
-      (period        => defined $any_var ? $any_var->period : undef),
-      (variable_type => defined $any_var ? $any_var->type   : undef),
+      (period        => defined $any_var ? $any_var->period : 'yearly'),
+      (variable_type => defined $any_var ? $any_var->type   : 'int'),
 
       created_by => {
         map { $_ => $object_ref->owner->$_ } qw(name id)
