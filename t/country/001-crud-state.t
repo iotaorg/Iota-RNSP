@@ -31,13 +31,15 @@ eval {
         sub {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
-                POST '/api/country',
+                POST '/api/state',
                 [   api_key                    => 'test',
-                    'country.create.name'       => 'FooBar',
+                    'state.create.name'         => 'FooBar',
+                    'state.create.uf'           => 'FB',
+                    'state.create.country_id'   => '1',
                 ]
             );
 
-            ok( $res->is_success, 'country created!' );
+            ok( $res->is_success, 'state created!' );
             is( $res->code, 201, 'created!' );
 
             use URI;
@@ -45,53 +47,53 @@ eval {
             $uri->query_form( api_key => 'test' );
 
             ( $res, $c ) = ctx_request( GET $uri->path_query );
-            ok( $res->is_success, 'country exists' );
-            is( $res->code, 200, 'country exists -- 200 Success' );
+            ok( $res->is_success, 'state exists' );
+            is( $res->code, 200, 'state exists -- 200 Success' );
 
             like($res->content, qr|FooBar|, 'FooBar ok');
-
 
             my $obj_uri = $uri->path_query;
             ( $res, $c ) = ctx_request(
                 POST $obj_uri,
                 [
-                    'country.update.name'         => 'BarFoo'
+                    'state.update.name'         => 'BarFoo'
                 ]
             );
-            ok( $res->is_success, 'country updated' );
-            is( $res->code, 202, 'country updated -- 202 Accepted' );
+            ok( $res->is_success, 'state updated' );
+            is( $res->code, 202, 'state updated -- 202 Accepted' );
 
             use JSON qw(from_json);
-            my $country = eval{from_json( $res->content )};
+            my $state = eval{from_json( $res->content )};
             ok(
-                my $updated_country =
-                $schema->resultset('Country')->find( { id => $country->{id} } ),
-                'country in DB'
+                my $updated_state =
+                $schema->resultset('State')->find( { id => $state->{id} } ),
+                'state in DB'
             );
-            is( $updated_country->name, 'BarFoo', 'name ok' );
+            is( $updated_state->name, 'BarFoo', 'name ok' );
 
-            ( $res, $c ) = ctx_request( GET '/api/country?api_key=test');
+            ( $res, $c ) = ctx_request( GET '/api/state?api_key=test');
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
             my $list = eval{from_json( $res->content )};
 
-            is($list->{countries}[1]{name}, 'BarFoo', 'name from list ok');
-            is($list->{countries}[1]{name_url}, 'barfoo', 'name_url from list ok');
+            is($list->{states}[2]{name}, 'BarFoo', 'name from list ok');
+            is($list->{states}[2]{name_url}, 'FB', 'name_url from list ok');
+            is($list->{states}[2]{uf}, 'FB', 'uf from list ok');
 
             ( $res, $c ) = ctx_request(
                 DELETE $obj_uri
             );
-            ok( $res->is_success, 'country deleted' );
-            is( $res->code, 204, 'country deleted -- 204' );
+            ok( $res->is_success, 'state deleted' );
+            is( $res->code, 204, 'state deleted -- 204' );
 
-            ( $res, $c ) = ctx_request( GET '/api/country?api_key=test');
+            ( $res, $c ) = ctx_request( GET '/api/state?api_key=test');
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
 
             $list = eval{from_json( $res->content )};
-            is(@{$list->{countries}}, '1', 'brazil only list');
+            is(@{$list->{states}}, '2', 'only 2 states list');
 
             die 'rollback';
         }
