@@ -83,11 +83,11 @@ sub verifiers_specs {
                         my $date   = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
 
                         # f_extract_period_edge
-                        return $var && $self->search(
+                        return $self->search(
                             {
                                 user_id     => $r->get_value('user_id'),
                                 variable_id => $r->get_value('variable_id'),
-                                valid_from  => $schema->f_extract_period_edge( $var->period, $date )->{period_begin}
+                                valid_from  => $schema->f_extract_period_edge( $var->period||'yearly', $date )->{period_begin}
                             }
                         )->count == 0;
                       }
@@ -210,7 +210,7 @@ sub action_specs {
             my $var    = $schema->resultset('Variable')->find( { id => $values{variable_id} } );
             my $date   = $values{value_of_date};
 
-            my $dates = $schema->f_extract_period_edge( $var->period, $date );
+            my $dates = $schema->f_extract_period_edge( $var->period ||'yearly', $date );
             $values{valid_from}  = $dates->{period_begin};
             $values{valid_until} = $dates->{period_end};
 
@@ -240,7 +240,7 @@ sub action_specs {
             my $schema = $self->result_source->schema;
             my $var = $schema->resultset('Variable')->find( $values{variable_id} );
 
-            $self->_put($var->period, %values);
+            $self->_put($var->period || 'yearly' , %values);
         },
 
     };

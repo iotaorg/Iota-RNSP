@@ -204,7 +204,10 @@ sub values_GET {
 
             if ($indicator->dynamic_variations) {
                 @indicator_variations = $indicator->indicator_variations->search({
-                    user_id => $c->stash->{user_id} || $c->user->id
+                    user_id => [
+                        $indicator->user_id,
+                        $c->stash->{user_id} || $c->user->id
+                    ]
                 }, {order_by=>'order'})->all;
             }else{
                 @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
@@ -212,6 +215,7 @@ sub values_GET {
 
 
             @indicator_variables  = $indicator->indicator_variables_variations->all;
+
          }
 
         my $indicator_formula = new Iota::IndicatorFormula(
@@ -249,10 +253,23 @@ sub values_GET {
         }
         my $definidos = scalar keys %{$hash->{header}};
 
+        for my $variation (@indicator_variations){
+
+            my $rs = $variation->indicator_variables_variations_values->search(undef, {
+                select => [qw/valid_from/],
+                as => [qw/valid_from/],
+                group_by => [qw/valid_from/]
+            });
+
+            while (my $item = $rs->next){
+                push @{$tmp->{$item->valid_from}}, {};
+            }
+        }
+
 
         foreach my $begin (sort {$a cmp $b} keys %$tmp){
 
-            my @order = sort {$a->{col} <=> $b->{col}} @{$tmp->{$begin}};
+            my @order = sort {$a->{col} <=> $b->{col}} grep {exists $_->{col}} @{$tmp->{$begin}};
             my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs({
                 user_id      => $c->stash->{user_id} || $c->user->id,
                 valid_from   => $begin,
@@ -271,10 +288,12 @@ sub values_GET {
                     value         => $_->{value}
                 } } @order ]
             };
+
             if ($attrs){
                 $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
                 $item->{goal} = $attrs->goal;
             }
+
 
             if ($definidos == scalar @order){
 

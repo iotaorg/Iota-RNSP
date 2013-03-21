@@ -109,7 +109,7 @@ sub _download {
 
                 if ($indicator->dynamic_variations) {
                     @indicator_variations = $indicator->indicator_variations->search({
-                        user_id => $user->{id}
+                        user_id => [$user->{id}, $indicator->user_id]
                     }, {order_by=>'order'})->all;
                 }else{
                     @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
@@ -135,7 +135,7 @@ sub _download {
             my $hash = {};
             my $tmp  = {};
             my $x = 0;
-            my $period = '';
+            my $period = 'yearly';
             while (my $row = $rs->next){
                 $hash->{header}{$row->name} = $x;
                 $hash->{id_nome}{$row->id} = $row;
