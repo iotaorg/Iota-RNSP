@@ -65,7 +65,7 @@ sub verifiers_specs {
                         my $var = $schema->resultset('Variable')->find( { id => $any_var } );
                         my $date = DateTimeX::Easy->new( $r->get_value('valid_from') )->datetime;
 
-                        my $valid_from = eval { $schema->f_extract_period_edge( $var->period, $date ) }->{period_begin};
+                        my $valid_from = eval { $schema->f_extract_period_edge( ($var->period || 'yearly'), $date ) }->{period_begin};
 
                         return $self->search(
                             {
@@ -125,7 +125,7 @@ sub action_specs {
             my $var = $schema->resultset('Variable')->find( { id => $any_var } );
             my $date = DateTimeX::Easy->new( $values{valid_from} )->datetime;
 
-            $values{valid_from} = $schema->f_extract_period_edge( $var->period, $date )->{period_begin};
+            $values{valid_from} = $schema->f_extract_period_edge( $var->period || 'yearly', $date )->{period_begin};
             my $varvalue = $self->create( \%values );
             return $varvalue;
         },
