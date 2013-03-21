@@ -132,6 +132,8 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   $c->stash->{user_obj} = $c->stash->{user}->next;
 
   $c->detach('/error_404') unless defined $c->stash->{user_obj};
+
+  $c->stash->{user_id} = int $id;
 }
 
 sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
