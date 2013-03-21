@@ -253,6 +253,19 @@ sub values_GET {
         }
         my $definidos = scalar keys %{$hash->{header}};
 
+        for my $variation (@indicator_variations){
+
+            my $rs = $variation->indicator_variables_variations_values->search(undef, {
+                select => [qw/valid_from/],
+                as => [qw/valid_from/],
+                group_by => [qw/valid_from/]
+            });
+
+            while (my $item = $rs->next){
+                push @{$tmp->{$item->valid_from}}, {};
+            }
+        }
+
 
         foreach my $begin (sort {$a cmp $b} keys %$tmp){
 
@@ -275,7 +288,7 @@ sub values_GET {
                     value         => $_->{value}
                 } } @order ]
             };
-            use DDP; p @order;
+
             if ($attrs){
                 $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
                 $item->{goal} = $attrs->goal;
@@ -289,7 +302,7 @@ sub values_GET {
                   my $vals = {};
 
                   for my $variation (@indicator_variations){
-use DDP; p $variation;
+
                      my $rs = $variation->indicator_variables_variations_values->search({
                         valid_from => $begin
                      })->as_hashref;
