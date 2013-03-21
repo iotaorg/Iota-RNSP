@@ -262,7 +262,7 @@ sub read_values {
 
         if ($indicator->dynamic_variations) {
             @indicator_variations = $indicator->indicator_variations->search({
-                user_id => $self->user_id,
+                user_id => [$self->user_id, $indicator->user_id],
             }, {order_by=>'order'})->all;
         }else{
             @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
