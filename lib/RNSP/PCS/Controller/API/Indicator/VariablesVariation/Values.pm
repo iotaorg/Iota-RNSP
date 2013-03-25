@@ -143,7 +143,7 @@ sub list_GET {
    my @list = $c->stash->{collection}->search({
       ($valid_from ? ( valid_from => $valid_from) : ()),
 
-      ($user_id ? ( valid_from => $user_id) : ()),
+      ($user_id ? ( user_id => $user_id) : ()),
 
    })->as_hashref->all;
    my @objs;
