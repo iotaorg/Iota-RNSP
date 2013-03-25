@@ -136,8 +136,15 @@ sub list_GET {
    my $valid_from = ($c->req->params->{valid_from}||'') =~ /^\d{4}-\d{2}-\d{2}$/ ?
       $c->req->params->{valid_from} : undef;
 
+    my $user_id = exists $c->req->params->{user_id}
+        ? ($c->req->params->{user_id} =~ /^\d+$/ ? $c->req->params->{user_id} : undef)
+        : $c->user->id;
+
    my @list = $c->stash->{collection}->search({
-      ($valid_from ? ( valid_from => $valid_from) : ())
+      ($valid_from ? ( valid_from => $valid_from) : ()),
+
+      ($user_id ? ( valid_from => $user_id) : ()),
+
    })->as_hashref->all;
    my @objs;
 
