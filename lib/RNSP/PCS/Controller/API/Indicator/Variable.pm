@@ -204,16 +204,13 @@ sub values_GET {
         if ($indicator->indicator_type eq 'varied'){
 
             if ($indicator->dynamic_variations) {
-                @indicator_variations = $indicator->indicator_variations->search({
+                $hash->{filters} = {
                     user_id => [
                         $indicator->user_id,
                         $c->stash->{user_id} || $c->user->id
                     ]
-                }, {order_by=>'order'})->all;
-                $hash->{filtros} = [
-                        $indicator->user_id,
-                        $c->stash->{user_id} || $c->user->id
-                    ];
+                };
+                @indicator_variations = $indicator->indicator_variations->search($hash->{filters}, {order_by=>'order'})->all;
             }else{
                 @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
             }
@@ -259,7 +256,7 @@ sub values_GET {
 
         for my $variation (@indicator_variations){
 
-            my $rs = $variation->indicator_variables_variations_values->search(undef, {
+            my $rs = $variation->indicator_variables_variations_values->search($hash->{filters}, {
                 select => [qw/valid_from/],
                 as => [qw/valid_from/],
                 group_by => [qw/valid_from/]
