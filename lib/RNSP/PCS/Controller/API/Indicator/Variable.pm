@@ -210,7 +210,7 @@ sub values_GET {
                         $c->stash->{user_id} || $c->user->id
                     ]
                 }, {order_by=>'order'})->all;
-                $hash->{filtros} = user_id => [
+                $hash->{filtros} = [
                         $indicator->user_id,
                         $c->stash->{user_id} || $c->user->id
                     ];
