@@ -124,26 +124,37 @@ sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
 sub list_GET {
-   my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-   my @list = $c->stash->{collection}->search(undef, {order_by=>'order'})->as_hashref->all;
-   my @objs;
+    my $where = {};
 
-   foreach my $obj (@list){
-      push @objs, {
+    if ($c->stash->{indicator}->indicator_type eq 'varied'){
 
-         (map { $_ => $obj->{$_} } qw(
-         id indicator_id name order
-         created_at)),
-         url => $c->uri_for_action( $self->action_for('variation'), [ $c->stash->{indicator}->id, $obj->{id} ] )->as_string,
-      }
-   }
+        $where->{user_id} = [
+            $c->stash->{indicator}->user_id,
+            $c->stash->{user_id} || $c->user->id
+        ];
 
-   $self->status_ok( $c,
-      entity => {
-         variations => \@objs
-      }
-   );
+    }
+
+    my @list = $c->stash->{collection}->search($where, {order_by=>'order'})->as_hashref->all;
+    my @objs;
+
+    foreach my $obj (@list){
+        push @objs, {
+
+            (map { $_ => $obj->{$_} } qw(
+            id indicator_id name order
+            created_at)),
+            url => $c->uri_for_action( $self->action_for('variation'), [ $c->stash->{indicator}->id, $obj->{id} ] )->as_string,
+        }
+    }
+
+    $self->status_ok( $c,
+        entity => {
+            variations => \@objs
+        }
+    );
 }
 
 
