@@ -195,6 +195,7 @@ retorna os valores das variaveis em forma de tabela
 sub values_GET {
     my ( $self, $c ) = @_;
     my $ret;
+    my $hash = {};
     eval {
         my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
@@ -209,6 +210,10 @@ sub values_GET {
                         $c->stash->{user_id} || $c->user->id
                     ]
                 }, {order_by=>'order'})->all;
+                $hash->{filtros} = user_id => [
+                        $indicator->user_id,
+                        $c->stash->{user_id} || $c->user->id
+                    ];
             }else{
                 @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
             }
@@ -232,7 +237,6 @@ sub values_GET {
         }, { prefetch => ['values'] } );
 
 
-        my $hash = {};
         my $tmp  = {};
         my $x = 0;
         while (my $row = $rs->next){
