@@ -9,7 +9,7 @@ env:
 before_install:
   - cpanm -n Module::Install Catalyst::Devel Text::CSV JSON::Any MooseX::Types::JSON
   - cpanm -n DBIx::Class
-  - cpanm -n DBIx::Class::Optional::Dependencies dbicadmin
+  - cpanm -n DBIx::Class::Optional::Dependencies
 before_script:
   - psql -c 'create database rnsp_pcs' -U postgres
   - perl script/deploy.pl
