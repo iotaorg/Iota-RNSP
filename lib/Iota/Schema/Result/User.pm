@@ -302,6 +302,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 indicator_visibility_users
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::Indicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_visibility_users",
+  "Iota::Schema::Result::Indicator",
+  { "foreign.visibility_user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicators
 
 Type: has_many
@@ -518,8 +533,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 20:01:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RNrLL8IsC+f5ag87AHjYqw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-26 01:46:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nKnq9AWYsxgPBdqIokiR5A
 
 __PACKAGE__->has_many(
     "user_roles",

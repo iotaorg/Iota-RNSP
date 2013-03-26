@@ -52,7 +52,9 @@ eval {
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',
                     'indicator.create.indicator_roles'  => '_prefeitura',
-                    'indicator.create.observations' => 'lala'
+                    'indicator.create.observations' => 'lala',
+                    'indicator.create.visibility_level' => 'restrict',
+                    'indicator.create.visibility_users_id' => '4,5,6,7',
 
                 ]
             );
@@ -60,6 +62,7 @@ eval {
             is( $res->code, 201, 'created!' );
             use JSON qw(from_json);
             my $indicator = eval{from_json( $res->content )};
+
             ok(
                 my $save_test =
                 $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
@@ -80,6 +83,13 @@ eval {
             is( $res->code, 200, 'indicator exists -- 200 Success' );
 
             like( $res->content, qr/weekly/, 'periodo de alguma variavel' );
+
+            my $indicator_res = eval{from_json( $res->content )};
+            is($indicator_res->{visibility_level}, 'restrict', 'visibility_level ok');
+
+            is_deeply($indicator_res->{restrict_to_users}, [4,5,6,7], 'restrict_to_users ok');
+            is($indicator_res->{name}, 'Foo Bar', 'name ok');
+
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
 

@@ -1,7 +1,7 @@
 package Iota::Types;
 
 use MooseX::Types -declare => [
-    qw( VariableType DataStr
+    qw( VariableType DataStr VisibilityLevel
       )
 ];
 use MooseX::Types::Moose qw(ArrayRef HashRef CodeRef Str ScalarRef);
@@ -19,6 +19,11 @@ use DateTimeX::Easy;
 enum 'VariableTypeEnum', [qw(int str num)];
 
 subtype VariableType, as 'VariableTypeEnum';
+
+
+enum 'VisibilityLevelEnum', [qw(public private restrict country)];
+
+subtype VisibilityLevel, as 'VisibilityLevelEnum';
 
 subtype DataStr, as Str, where {
     eval { DateTimeX::Easy->new($_)->datetime };

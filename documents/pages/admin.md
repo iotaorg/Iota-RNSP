@@ -323,14 +323,14 @@ No lugar dele, deve-se enviar `visibility_level` com um dos seguintes valores:
 
 * __public__: indicador compartilhado entre todos os usuarios
 * __private__: indicador visivel apenas um usuário (o proprio)
-* __contry__: indicador visivel para os usuarios de um pais
+* __country__: indicador visivel para os usuarios de um pais
 * __restrict__: indicador visivel apenas para os usuarios selecionados.
 
 Caso seja `visibility_level=private`, e estiver logado com um usuario `superadmin`
 será necessário informar qual é o usuário e enviar o user-id do admin no campo `$namespace.visibility_user_id`
 
 Caso seja `visibility_level=private`, e estiver logado com um usuario `admin`, é sempre ele mesmo.
-Caso seja `visibility_level=contry`, envie junto o campo `$namespace.visibility_contry_id`;
+Caso seja `visibility_level=country`, envie junto o campo `$namespace.visibility_country_id`;
 Caso seja `visibility_level=restrict`, é nessario cadastrar cada um dos usuarios:
 
     POST /api/indicator/$id/user_visibility
@@ -386,7 +386,7 @@ Portanto, todos os campos que o `POST /api/indicator` pode receber são:
 
     $namespace.visibility_level                 = "public", "private", "restrict" ou "country"
     $namespace.visibility_users_id              = int separados por virgula
-    $namespace.visibility_contry_id             = int
+    $namespace.visibility_country_id            = int
     $namespace.visibility_user_id               = int
 
 Existem os mesmos itens para o atualizar:
@@ -410,6 +410,53 @@ Para detalhar:
 
     `GET /api/indicador/$id`
 
+Exemplo do detalhe de um indicador com visibility_level=restrict:
+
+    {
+        all_variations_variables_are_required:  1,
+        axis                                 :  {
+            id  :  1,
+            name:  "Governança"
+        },
+        axis_id                              :  1,
+        chart_name                           :  "pie",
+        created_at                           :  "2013-03-26T02:40:56",
+        created_by                           :  {
+            id  :  1,
+            name:  "superadmin"
+        },
+        dynamic_variations                   :  undef,
+        explanation                          :  "explanation",
+        formula                              :  "5 + $101",
+        goal                                 :  undef,
+        goal_explanation                     :  undef,
+        goal_operator                        :  ">=",
+        goal_source                          :  "@fulano",
+        indicator_roles                      :  "_prefeitura",
+        indicator_type                       :  "normal",
+        name                                 :  "Foo Bar",
+        name_url                             :  "foo-bar",
+        network_configs                      :  [],
+        observations                         :  "lala",
+        period                               :  "weekly",
+        restrict_to_users                    :  [
+            [0] 4,
+            [1] 5,
+            [2] 6,
+            [3] 7
+        ],
+        sort_direction                       :  undef,
+        source                               :  "me",
+        summarization_method                 :  "sum",
+        tags                                 :  "you,me,she",
+        variable_type                        :  "int",
+        variety_name                         :  undef,
+        visibility_country_id                :  undef,
+        visibility_level                     :  "restrict",
+        visibility_user_id                   :  undef
+    }
+
+`restrict_to_users` são os ids dos usuarios que podem utilizar este indicador.
 
 
 

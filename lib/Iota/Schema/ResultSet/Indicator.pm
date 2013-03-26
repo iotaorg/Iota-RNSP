@@ -13,7 +13,22 @@ my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 use Data::Verifier;
 use Iota::IndicatorFormula;
 
+use Iota::Types qw /VisibilityLevel/;
+
 sub _build_verifier_scope_name { 'indicator' }
+
+sub visibility_level_post_check {
+    my $r = shift;
+    my $lvl = $r->get_value('visibility_level');
+    return 1 if $lvl eq 'public';
+
+    return 1 if $lvl eq 'private' && $r->get_value('visibility_user_id') =~ /^\d+$/;
+
+    return 1 if $lvl eq 'country' && $r->get_value('visibility_country_id') =~ /^\d+$/;
+    return 1 if $lvl eq 'restrict' && $r->get_value('visibility_users_id') =~ /^(?:(?:\d*,?)\d+)+$/;
+
+    return 0;
+}
 
 sub verifiers_specs {
    my $self = shift;
@@ -40,11 +55,11 @@ sub verifiers_specs {
                   required   => 1,
                   type       => 'Int',
                   post_check => sub {
-                        my $r = shift;
-                        my $axis =
-                        $self->result_source->schema->resultset('Axis')->find( { id => $r->get_value('axis_id') } );
-                        return defined $axis;
-                     }
+                    my $r = shift;
+                    my $axis =
+                    $self->result_source->schema->resultset('Axis')->find( { id => $r->get_value('axis_id') } );
+                    return defined $axis;
+                  }
                },
                user_id      => { required => 1, type => 'Int' },
                source       => { required => 0, type => 'Str' },
@@ -67,6 +82,14 @@ sub verifiers_specs {
 
                indicator_roles     => { required => 1, type => 'Str' },
                dynamic_variations  => { required => 0, type => 'Bool' },
+
+
+               visibility_level       => { required => 1, type => VisibilityLevel,
+                    post_check => \&visibility_level_post_check
+               },
+               visibility_user_id     => { required => 0, type => 'Int' },
+               visibility_country_id  => { required => 0, type => 'Int' },
+               visibility_users_id    => { required => 0, type => 'Str' },
 
             },
       ),
@@ -121,6 +144,13 @@ sub verifiers_specs {
                indicator_roles     => { required => 0, type => 'Str' },
                dynamic_variations  => { required => 0, type => 'Bool' },
 
+               visibility_level       => { required => 0, type => VisibilityLevel,
+                    post_check => \&visibility_level_post_check
+               },
+               visibility_user_id     => { required => 0, type => 'Int' },
+               visibility_country_id  => { required => 0, type => 'Int' },
+               visibility_users_id    => { required => 0, type => 'Str' },
+
             },
       ),
 
@@ -138,7 +168,18 @@ sub action_specs {
             $values{name_url} = $text2uri->translate( $values{name} );
 
 
+            my @visible_users = split /,/, delete $values{visibility_users_id};
             my $var = $self->create( \%values );
+
+            if ($values{visibility_level} eq 'restrict'){
+
+
+                $var->add_to_indicator_user_visibilities( {
+                    user_id => $_,
+                    created_by => $var->user_id
+                }) for @visible_users;
+
+            }
 
             $var->discard_changes;
             return $var;
@@ -157,7 +198,23 @@ sub action_specs {
                tags source observations
             /;
 
+
+            my @visible_users = split /,/, delete $values{visibility_users_id};
             my $var = $self->find( delete $values{id} )->update( \%values );
+            if (exists $values{visibility_level}){
+                if ($values{visibility_level} eq 'restrict'){
+
+
+                    $var->indicator_user_visibilities->delete;
+
+                    $var->add_to_indicator_user_visibilities( {
+                        user_id => $_,
+                        created_by => $var->user_id
+                    }) for @visible_users;
+
+                }
+
+            }
             $var->discard_changes;
             return $var;
       },

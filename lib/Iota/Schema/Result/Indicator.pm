@@ -172,7 +172,19 @@ __PACKAGE__->table("indicator");
 =head2 visibility_level
 
   data_type: 'enum'
-  extra: {custom_type_name => "tp_visibility_level",list => ["public","private","contry","restrict"]}
+  extra: {custom_type_name => "tp_visibility_level",list => ["public","private","country","restrict"]}
+  is_nullable: 1
+
+=head2 visibility_user_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 visibility_country_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =cut
@@ -253,10 +265,14 @@ __PACKAGE__->add_columns(
     data_type => "enum",
     extra => {
       custom_type_name => "tp_visibility_level",
-      list => ["public", "private", "contry", "restrict"],
+      list => ["public", "private", "country", "restrict"],
     },
     is_nullable => 1,
   },
+  "visibility_user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "visibility_country_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -419,9 +435,49 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 visibility_country
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N1VAfa+jy54iPsZvgR6RVw
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::Country>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "visibility_country",
+  "Iota::Schema::Result::Country",
+  { id => "visibility_country_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 visibility_user
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "visibility_user",
+  "Iota::Schema::Result::User",
+  { id => "visibility_user_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-26 01:46:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lVbJLbkNa/Ki0oPMgkycMA
 
 __PACKAGE__->belongs_to(
     "owner",

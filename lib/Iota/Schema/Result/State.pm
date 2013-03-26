@@ -78,7 +78,6 @@ __PACKAGE__->table("state");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -106,11 +105,7 @@ __PACKAGE__->add_columns(
   "country_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "uf",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -177,8 +172,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:31:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NVM3z1TQPsspKvwkqbyzgA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-26 01:46:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wtYBAgtdVf1KOeWEVHawew
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

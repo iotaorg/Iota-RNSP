@@ -114,61 +114,72 @@ Retorna:
 =cut
 
 sub indicator_GET {
-   my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-   my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis','indicator_network_configs']})->next;
+    my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis','indicator_network_configs']})->next;
 
-   my $f = new Iota::IndicatorFormula(
-      formula => $object_ref->formula,
-      schema => $c->model('DB')->schema);
+    my $f = new Iota::IndicatorFormula(
+        formula => $object_ref->formula,
+        schema => $c->model('DB')->schema);
 
-    my ($any_var) = $f->variables;
-    $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
+        my ($any_var) = $f->variables;
+        $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
 
-   my $where = $object_ref->dynamic_variations ? {
-        user_id =>  $c->stash->{user_id} || $c->user->id
-   } : undef;
-   my $ret = {
+    my $where = $object_ref->dynamic_variations ? {
+            user_id =>  $c->stash->{user_id} || $c->user->id
+    } : undef;
+    my $ret = {
 
-      $object_ref->indicator_type eq 'varied' ? (variations => [
-         map { { id => $_->id, name => $_->name } } $object_ref->indicator_variations->search($where, {order_by => 'order'})->all
-      ]) : (),
+        $object_ref->indicator_type eq 'varied' ? (variations => [
+            map { { id => $_->id, name => $_->name } } $object_ref->indicator_variations->search($where, {order_by => 'order'})->all
+        ]) : (),
 
-      $object_ref->indicator_type eq 'varied' ? (variables => [
-         map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations
-      ]) : (),
-
-
-      network_configs => [
-         map { {
-            unfolded_in_home => $_->unfolded_in_home,
-            network_id       => $_->network_id
-        } } $object_ref->indicator_network_configs
-      ],
-
-      (period        => defined $any_var ? $any_var->period : 'yearly'),
-      (variable_type => defined $any_var ? $any_var->type   : 'int'),
+        $object_ref->indicator_type eq 'varied' ? (variables => [
+            map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations
+        ]) : (),
 
 
-      created_by => {
-        map { $_ => $object_ref->owner->$_ } qw(name id)
-      },
-      axis => {
-        map { $_ => $object_ref->axis->$_ } qw(name id)
-      },
+        network_configs => [
+            map { {
+                unfolded_in_home => $_->unfolded_in_home,
+                network_id       => $_->network_id
+            } } $object_ref->indicator_network_configs
+        ],
 
-      (map { $_ => $object_ref->$_ } qw(name goal axis_id formula source explanation observations
-            goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-               indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
-               dynamic_variations
-        ))
+        (period        => defined $any_var ? $any_var->period : 'yearly'),
+        (variable_type => defined $any_var ? $any_var->type   : 'int'),
+
+
+        created_by => {
+            map { $_ => $object_ref->owner->$_ } qw(name id)
+        },
+        axis => {
+            map { $_ => $object_ref->axis->$_ } qw(name id)
+        },
+
+        (map { $_ => $object_ref->$_ } qw(name goal axis_id formula source explanation observations
+                goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
+                indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
+                dynamic_variations
+
+                visibility_level
+                visibility_user_id
+                visibility_country_id
+
+            )),
+
+        $object_ref->visibility_level eq 'restrict' ? (restrict_to_users => [
+            map {  $_->user_id  } $object_ref->indicator_user_visibilities
+        ]) : (),
+
+
     };
     $ret->{created_at} = $object_ref->created_at->datetime;
 
-  $self->status_ok(
-    $c,
-    entity => $ret
-  );
+    $self->status_ok(
+        $c,
+        entity => $ret
+    );
 
 }
 
@@ -337,6 +348,11 @@ sub list_GET {
                  goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
                  indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
                  dynamic_variations
+
+                 visibility_level
+                 visibility_user_id
+                 visibility_country_id
+
 
             created_at)),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
