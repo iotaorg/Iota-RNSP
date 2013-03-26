@@ -89,6 +89,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
+                    'indicator.create.visibility_level' => 'public',
                     'indicator.create.indicator_roles' => '_prefeitura,_movimento'
 
                 ]

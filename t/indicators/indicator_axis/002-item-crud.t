@@ -65,8 +65,10 @@ eval {
                     'indicator.create.source'       => 'me',
                     'indicator.create.goal_source'  => '@fulano',
                     'indicator.create.chart_name'   => 'pie',
+                    'indicator.create.visibility_level' => 'public',
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
+
                     'indicator.create.indicator_roles' => '_prefeitura,_movimento'
 
                 ]

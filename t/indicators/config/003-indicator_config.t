@@ -48,6 +48,7 @@ eval {
                     'indicator.create.explanation'  => 'explanation',
                     'indicator.create.source'       => 'me',
                     'indicator.create.goal_source'  => '@fulano',
+                    'indicator.create.visibility_level' => 'public',
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',

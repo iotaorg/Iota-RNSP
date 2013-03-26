@@ -55,7 +55,8 @@ eval {
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',
                     'indicator.create.observations' => 'lala',
-                    'indicator.create.indicator_roles' => '_prefeitura,_movimento'
+                    'indicator.create.indicator_roles' => '_prefeitura,_movimento',
+                    'indicator.create.visibility_level' => 'public',
 
                 ]
             );
