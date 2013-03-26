@@ -11,7 +11,8 @@ Visão geral
 * Redes
 * Administradores
 * Indicadores
-
+* Unidade de medidas
+* Eixos
 
 
 Detalhes
