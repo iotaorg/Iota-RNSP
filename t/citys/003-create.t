@@ -43,8 +43,7 @@ eval {
                 POST '/api/city',
                 [   api_key                        => 'test',
                     'city.create.name'      => 'Foo Bar',
-                    'city.create.uf'        => 'XU',
-                    'city.create.pais'      => 'USA',
+                    'city.create.state_id'   => 1,
                     'city.create.latitude'  => 5666.55,
                     'city.create.longitude' => 1000.11,
                 ]
@@ -56,8 +55,7 @@ eval {
                 POST '/api/city',
                 [   api_key                        => 'test',
                     'city.create.name'      => 'Foo Bar',
-                    'city.create.uf'        => 'XU',
-                    'city.create.pais'      => 'USA',
+                    'city.create.state_id'   => 1,
                     'city.create.latitude'  => 5666.55,
                     'city.create.longitude' => 1000.11,
                     'city.create.telefone_prefeitura' => '1233',
@@ -76,6 +74,8 @@ eval {
             like($res->content, qr|foo-bar-2|, 'foo-bar-2 ok');
             like($res->content, qr|1233|, 'telefone ok');
             like($res->content, qr|testexx|, 'resumo ok');
+            like($res->content, qr|"br"|, 'pais ok');
+            like($res->content, qr|"SP|, 'estado ok');
 
 
             ok( $res->is_success, 'varible exists' );

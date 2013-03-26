@@ -36,8 +36,7 @@ eval {
             POST '/api/city',
             [   api_key                        => 'test',
                 'city.create.name'      => 'Foo Bar',
-                'city.create.uf'        => 'XU',
-                'city.create.pais'      => 'USA',
+                'city.create.state_id'  => '1',
                 'city.create.latitude'  => 5666.55,
                 'city.create.longitude' => 1000.11,
             ]

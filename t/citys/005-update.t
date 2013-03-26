@@ -36,7 +36,8 @@ eval {
             [   api_key            => 'test',
                 'city.create.name' => 'Foo Bar',
                 'city.create.pais' => 'foobar',
-                'city.create.uf'   => 'XX',
+                'city.create.state_id'   => 1,
+
             ]
         );
         ok( $res->is_success, 'city created!' );
@@ -52,7 +53,7 @@ eval {
             POST $uri->path_query,
             [
                 'city.update.name'         => 'BarFoo',
-                'city.update.uf'           => 'XX',
+                'city.update.state_id'   => 1,
                 'city.update.longitude'    => 55.55,
             ]
         );
@@ -63,7 +64,7 @@ eval {
             POST $uri->path_query,
             [
                 'city.update.name'         => 'BarFoo',
-                'city.update.uf'           => 'XX',
+                'city.update.state_id'   => 1,
                 'city.update.longitude'    => 55.55,
             ]
         );

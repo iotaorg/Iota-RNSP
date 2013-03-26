@@ -51,6 +51,9 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            $values{uf} = uc $values{uf};
+
             $values{name_url} = uc $text2uri->translate( $values{uf} ) unless $values{name_url};
 
 
@@ -65,6 +68,8 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            $values{uf} = uc $values{uf} if exists $values{uf};
 
             $values{name_url} = uc $text2uri->translate( $values{uf} ) if $values{uf} && !exists $values{name_url};
 

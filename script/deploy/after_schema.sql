@@ -18,7 +18,7 @@ INSERT INTO "user"(id, name, email, password) VALUES (1, 'superadmin','superadmi
 
 INSERT INTO country(
         id, name, name_url, created_by)
-VALUES (1, 'Brasil','BR',1);
+VALUES (1, 'Brasil','br',1);
 
 
 INSERT INTO state(

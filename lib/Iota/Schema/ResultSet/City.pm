@@ -35,8 +35,16 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             profile => {
                 name                        => { required => 1, type => 'Str' },
-                uf                          => { required => 1, type => 'Str', filter => [ 'trim', 'upper' ] },
-                pais                        => { required => 0, type => 'Str' },
+
+                state_id                    => { required => 1, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        my $it =
+                        $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
+                        return defined $it;
+                     }
+                },
+
                 latitude                    => { required => 0, type => 'Num' },
                 longitude                   => { required => 0, type => 'Num' },
                 telefone_prefeitura         => { required => 0, type => 'Str' },
@@ -47,6 +55,8 @@ sub verifiers_specs {
                 nome_responsavel_prefeitura => { required => 0, type => 'Str' },
                 summary                     => { required => 0, type => 'Str' },
 
+
+
             },
         ),
 
@@ -54,8 +64,16 @@ sub verifiers_specs {
             profile => {
                 id                          => { required => 1, type => 'Int' },
                 name                        => { required => 1, type => 'Str' },
-                uf                          => { required => 1, type => 'Str', filter => [ 'trim', 'upper' ] },
-                pais                        => { required => 0, type => 'Str' },
+
+                state_id                    => { required => 1, type => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        my $it =
+                        $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
+                        return defined $it;
+                     }
+                },
+
                 latitude                    => { required => 0, type => 'Num' },
                 longitude                   => { required => 0, type => 'Num' },
                 telefone_prefeitura         => { required => 0, type => 'Str' },
@@ -81,7 +99,11 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            $values{uf} = uc $values{uf};
+            my $state = $self->result_source->schema->resultset('State')->find( { id => $values{state_id} } );
+
+            $values{uf} = $state->uf;
+            $values{country_id} = $state->country_id;
+            $values{pais} = $state->country->name_url;
 
             my $name_uri_o = $values{name_uri} = $text2uri->translate( $values{name} );
             my $name_o = $values{name};
@@ -100,8 +122,8 @@ sub action_specs {
             }
 
 
-            my $location = $values{name} =~ /foo bar/i ? {} : eval{$self->_geo_google->geocode(
-                location => $values{name} . ' ' . $values{uf} . ' Brasil'
+            my $location = $0 =~ /\.t$/ ? {} : eval{$self->_geo_google->geocode(
+                location => $values{name} . ' ' . $values{uf} . ' ' . $state->country->name
             )};
 
             $values{latitude}  = $location->{geometry}{location}{lat}
@@ -121,6 +143,14 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            my $state = $self->result_source->schema->resultset('State')->find( { id => $values{state_id} } );
+
+            $values{uf} = $state->uf;
+
+            $values{country_id} = $state->country_id;
+            $values{pais} = $state->country->name_url;
+
+
             my $name_uri_o = $values{name_uri} = $text2uri->translate( $values{name} );
             my $name_o = $values{name};
 
@@ -138,8 +168,9 @@ sub action_specs {
                 $values{name}     = $name_o . '-' . $idx++;
             }
 
-            my $location = $values{name} =~ /foo bar/i ? {} : eval{$self->_geo_google->geocode(
-                location => $values{name} . ' ' . $values{uf} . ' Brasil'
+
+            my $location = $0 =~ /\.t$/ ? {} : eval{$self->_geo_google->geocode(
+                location => $values{name} . ' ' . $values{uf} . ' ' . $state->country->name
             )};
             $values{latitude}  = $location->{geometry}{location}{lat}
                 unless defined $values{latitude};
