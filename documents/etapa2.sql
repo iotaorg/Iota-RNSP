@@ -55,6 +55,13 @@ CREATE TYPE tp_visibility_level AS ENUM
 
 alter table indicator add column visibility_level tp_visibility_level;
 
+alter table indicator add visibility_user_id int ;
+alter table indicator add visibility_country_id int ;
+
+ALTER TABLE indicator
+  ADD FOREIGN KEY (visibility_user_id) REFERENCES "user" (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE indicator
+  ADD FOREIGN KEY (visibility_country_id) REFERENCES country (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 CREATE TABLE indicator_user_visibility
 (

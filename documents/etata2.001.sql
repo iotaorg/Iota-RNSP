@@ -48,3 +48,4 @@ CREATE TABLE user_menu
 WITH (
   OIDS=FALSE
 );
+
