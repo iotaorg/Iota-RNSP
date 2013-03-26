@@ -168,7 +168,9 @@ sub action_specs {
             $values{name_url} = $text2uri->translate( $values{name} );
 
 
-            my @visible_users = split /,/, delete $values{visibility_users_id};
+            my $visibility_users_id = delete $values{visibility_users_id};
+            my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
+
             my $var = $self->create( \%values );
 
             if ($values{visibility_level} eq 'restrict'){
@@ -199,7 +201,9 @@ sub action_specs {
             /;
 
 
-            my @visible_users = split /,/, delete $values{visibility_users_id};
+            my $visibility_users_id = delete $values{visibility_users_id};
+            my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
+
             my $var = $self->find( delete $values{id} )->update( \%values );
             if (exists $values{visibility_level}){
                 if ($values{visibility_level} eq 'restrict'){
