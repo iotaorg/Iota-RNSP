@@ -158,6 +158,7 @@ eval {
 
                 delete $_->{url};
                 like(delete $_->{id}, qr/^\d+$/, 'have id');
+                is(ref delete $_->{roles}, 'ARRAY', 'roles');
                 my $var = {
                     'nome_responsavel_cadastro' => 'nome_responsavel_cadastro',
                     'cidade' => undef,
@@ -179,6 +180,14 @@ eval {
                 };
                 is_deeply($_, $var, 'is ok listing');
             }
+
+            ( $res, $c ) = ctx_request(
+                GET '/api/user?role=superadmin'
+            );
+
+            $users = from_json( $res->content );
+            is($users->{users}[0]{roles}[0], 'superadmin', 'superadmin filter ok');
+
 
             die 'rollback';
         }

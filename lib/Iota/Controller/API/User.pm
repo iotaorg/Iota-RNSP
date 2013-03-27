@@ -19,7 +19,7 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
   my ( $self, $c, $id ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->user->id == $id || $c->check_any_user_role(qw(admin));
+    unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
 
   $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
@@ -254,61 +254,82 @@ Retorna:
 =cut
 
 sub list_GET {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->check_any_user_role(qw(admin superadmin));
 
+    my $rs = $c->stash->{collection}->search_rs( {'me.active' => 1}, {
+        prefetch => ['city','network', { user_roles => 'role'  } ]
+    } );
 
-  $self->status_ok(
-    $c,
-    entity => {
-      users => [
-        map {
-          +{
-            name => $_->{name},
-            id => $_->{id},
-            email => $_->{email},
-            active => $_->{active},
+    if ($c->req->params->{role}){
+        $rs = $rs->search({
 
-            nome_responsavel_cadastro => $_->{nome_responsavel_cadastro},
-            estado => $_->{estado},
-            telefone => $_->{telefone},
-            email_contato => $_->{email_contato},
-            telefone_contato => $_->{telefone_contato},
-            cidade => $_->{cidade},
-            bairro => $_->{bairro},
-            cep => $_->{cep},
-            endereco => $_->{endereco},
+            'role.name' => $c->req->params->{role}
 
-            $_->{city}
-            ? (
-              city => {
-                name => $_->{city}->{name},
-                id   => $_->{city}->{id}
-              }
-              )
-            : ( city => undef ),
+        });
 
-            $_->{network}
-            ? (
-              network => {
-                name => $_->{network}->{name},
-                name_url => $_->{network}->{name_url},
-                id   => $_->{network}->{id}
-              }
-              )
-            : ( network => undef ),
-
-
-            url => $c->uri_for_action( $self->action_for('user'), [ $_->{id} ] )
-              ->as_string
-            }
-          } $c->stash->{collection}
-          ->search_rs( {'me.active' => 1}, { prefetch => ['city','network']} )->as_hashref->all
-      ]
     }
-  );
+
+    $self->status_ok(
+        $c,
+        entity => {
+        users => [
+            map {
+            +{
+                name => $_->{name},
+                id => $_->{id},
+                email => $_->{email},
+                active => $_->{active},
+
+                nome_responsavel_cadastro => $_->{nome_responsavel_cadastro},
+                estado => $_->{estado},
+                telefone => $_->{telefone},
+                email_contato => $_->{email_contato},
+                telefone_contato => $_->{telefone_contato},
+                cidade => $_->{cidade},
+                bairro => $_->{bairro},
+                cep => $_->{cep},
+                endereco => $_->{endereco},
+
+                $_->{city}
+                ? (
+                city => {
+                    name => $_->{city}->{name},
+                    id   => $_->{city}->{id}
+                }
+                )
+                : ( city => undef ),
+
+                $_->{network}
+                ? (
+                network => {
+                    name => $_->{network}->{name},
+                    name_url => $_->{network}->{name_url},
+                    id   => $_->{network}->{id}
+                }
+                )
+                : ( network => undef ),
+
+                $_->{user_roles}
+                ? (
+                roles => [
+                    map { $_->{role}->{name}} @{$_->{user_roles}}
+                ]
+                )
+                : ( roles => [] ),
+
+
+
+
+                url => $c->uri_for_action( $self->action_for('user'), [ $_->{id} ] )
+                ->as_string
+                }
+            } $rs->as_hashref->all
+        ]
+        }
+    );
 }
 
 
