@@ -103,6 +103,7 @@ Em cada detalhe do `GET /api/indicator/$id` vem com as configurações das redes
 
 
 E no `GET /api/public/user/$user_id/indicator`:
+
     \ {
         resumos:  {
             'nome do eixo':  {

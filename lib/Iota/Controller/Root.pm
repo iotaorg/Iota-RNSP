@@ -38,6 +38,8 @@ sub index : Path : Args(0) {
 
 sub root: Chained('/') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
+
+
 }
 
 
@@ -54,6 +56,7 @@ sub network_object: Chained('root') PathPart('') CaptureArgs(1) {
     $c->stash->{network} = $net;
     $c->stash->{rede} = $net->name_url;
     my @files = $net->current_user->user_files;
+
     foreach my $file (sort {$b->created_at->epoch <=> $a->created_at->epoch} @files){
         if ($file->class_name eq 'custom.css'){
             $c->stash->{custom_css} = $file->public_url;
