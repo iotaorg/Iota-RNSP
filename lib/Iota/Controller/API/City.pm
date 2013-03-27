@@ -145,7 +145,7 @@ GET /api/city
 Retorna:
 
     {
-        "citys": [
+        "cities": [
             {
                 "longitude": "1000.11",
                 "name": "Foo Bar",
@@ -195,7 +195,7 @@ sub list_GET {
     $self->status_ok(
         $c,
         entity => {
-        citys => \@objs
+        cities => \@objs
         }
     );
 }

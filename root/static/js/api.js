@@ -760,8 +760,8 @@ $(document).ready(function() {
 							key: $.cookie("key")
 					}),
 			success: function(data, textStatus, jqXHR){
-				$.each(data.citys, function(index,value){
-					cidades_prefeitos.push({"id":data.citys[index].id,"prefeito_id":data.citys[index].prefeito_id, "movimento_id":data.citys[index].movimento_id});
+				$.each(data.cities, function(index,value){
+					cidades_prefeitos.push({"id":data.cities[index].id,"prefeito_id":data.cities[index].prefeito_id, "movimento_id":data.cities[index].movimento_id});
 				});
 
 			},
@@ -1014,13 +1014,13 @@ $(document).ready(function() {
 			success: function(data, textStatus, jqXHR){
 				if (args){
 					if (args.option == "edit"){
-						$.each(data.citys, function(index,value){
-							if (findCidadePrefeito(data.citys[index].id) == null || findCidadeMovimento(data.citys[index].id) == null){
-								$("#dashboard-content .content select#city_id").append($("<option></option>").val(data.citys[index].id).html(data.citys[index].name + " (" + data.citys[index].uf + ")"));
+						$.each(data.cities, function(index,value){
+							if (findCidadePrefeito(data.cities[index].id) == null || findCidadeMovimento(data.cities[index].id) == null){
+								$("#dashboard-content .content select#city_id").append($("<option></option>").val(data.cities[index].id).html(data.cities[index].name + " (" + data.cities[index].uf + ")"));
 							}else{
-								console.log(findCidadeMovimento(data.citys[index].id) + ":" + getIdFromUrl(args.city));
-								if (findCidadePrefeito(data.citys[index].id) == getIdFromUrl(args.city) || findCidadeMovimento(data.citys[index].id) == getIdFromUrl(args.city)){
-									$("#dashboard-content .content select#city_id").append($("<option></option>").val(data.citys[index].id).html(data.citys[index].name + " (" + data.citys[index].uf + ")"));
+								console.log(findCidadeMovimento(data.cities[index].id) + ":" + getIdFromUrl(args.city));
+								if (findCidadePrefeito(data.cities[index].id) == getIdFromUrl(args.city) || findCidadeMovimento(data.cities[index].id) == getIdFromUrl(args.city)){
+									$("#dashboard-content .content select#city_id").append($("<option></option>").val(data.cities[index].id).html(data.cities[index].name + " (" + data.cities[index].uf + ")"));
 								}
 							}
 						});
@@ -1029,9 +1029,9 @@ $(document).ready(function() {
 						}
 					}
 				}else{
-					$.each(data.citys, function(index,value){
-						if (findCidadePrefeito(data.citys[index].id) == null || findCidadeMovimento(data.citys[index].id) == null){
-							$("#dashboard-content .content select#city_id").append($("<option></option>").val(data.citys[index].id).html(data.citys[index].name + " (" + data.citys[index].uf + ")"));
+					$.each(data.cities, function(index,value){
+						if (findCidadePrefeito(data.cities[index].id) == null || findCidadeMovimento(data.cities[index].id) == null){
+							$("#dashboard-content .content select#city_id").append($("<option></option>").val(data.cities[index].id).html(data.cities[index].name + " (" + data.cities[index].uf + ")"));
 						}
 					});
 				}

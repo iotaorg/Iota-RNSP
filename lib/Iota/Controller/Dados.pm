@@ -59,15 +59,15 @@ sub _download {
     $self->_download_and_detach($c, $path) if -e $path;
 
     # procula pela cidade, se existir.
-    my $citys = $c->model('DB::City')->as_hashref;
+    my $cities = $c->model('DB::City')->as_hashref;
 
-    $citys = $citys->search({
+    $cities = $cities->search({
         pais     => lc $c->stash->{pais},
         uf       => uc $c->stash->{estado},
         name_uri => lc $c->stash->{cidade}
     }) if $c->stash->{cidade};
 
-    $c->detach('/error_404') if $c->stash->{cidade} && !$citys->count;
+    $c->detach('/error_404') if $c->stash->{cidade} && !$cities->count;
 
     #my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
     #$c->detach('/error_404') unless $role_id;
@@ -96,7 +96,7 @@ sub _download {
         ]
     );
 
-    while(my $city = $citys->next){
+    while(my $city = $cities->next){
         my $indicadores = $c->stash->{indicator}{id} ? {
             'me.id'     => $c->stash->{indicator}{id}
         } : undef;

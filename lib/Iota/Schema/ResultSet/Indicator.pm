@@ -22,10 +22,9 @@ sub visibility_level_post_check {
     my $lvl = $r->get_value('visibility_level');
     return 1 if $lvl eq 'public';
 
-    return 1 if $lvl eq 'private' && $r->get_value('visibility_user_id') =~ /^\d+$/;
-
-    return 1 if $lvl eq 'country' && $r->get_value('visibility_country_id') =~ /^\d+$/;
-    return 1 if $lvl eq 'restrict' && $r->get_value('visibility_users_id') =~ /^(?:(?:\d*,?)\d+)+$/;
+    return 1 if $lvl eq 'private' && ($r->get_value('visibility_user_id')||'') =~ /^\d+$/;
+    return 1 if $lvl eq 'country' && ($r->get_value('visibility_country_id')||'') =~ /^\d+$/;
+    return 1 if $lvl eq 'restrict' && ($r->get_value('visibility_users_id')||'') =~ /^(?:(?:\d*,?)\d+)+$/;
 
     return 0;
 }

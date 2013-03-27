@@ -68,25 +68,40 @@ sub institute_load: Chained('root') PathPart('') CaptureArgs(0) {
         }
     }
 
-}
-
-sub mapa_site: Chained('institute_load') PathPart('mapa-do-site') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
-
     my @users = $c->stash->{network}->users->with_city->all;
 
-    my @citys = $c->model('DB::City')->search({
+    my @cities = $c->model('DB::City')->search({
         id => [
             map { $_->city_id } @users
         ]
     }, {order_by => ['pais', 'uf', 'name']})->as_hashref->all;
 
+    $c->stash->{network_data} = {
+        countries => [do{ my %seen; grep {! $seen{$_}++} map {$_->{country_id}} @cities }],
+        users_ids => [do{ my %seen; grep {! $seen{$_}++} map {$_->id} @users }],
+        cities => \@cities
+    };
+
+}
+
+sub mapa_site: Chained('institute_load') PathPart('mapa-do-site') Args(0) {
+    my ( $self, $c, $cidade ) = @_;
+
+    my @countries = @{  $c->stash->{network_data}{countries}  };
+    my @users_ids = @{  $c->stash->{network_data}{users_ids}  };
+
     my @indicators = $c->model('DB::Indicator')->search({
-        indicator_roles => { like => '%' . $c->stash->{rede} . '%' }
-    })->as_hashref->all;
+        '-or' => [
+            { visibility_level => 'public' },
+            { visibility_level => 'country', visibility_country_id => \@countries },
+            { visibility_level => 'private', visibility_user_id => \@users_ids },
+            { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
+        ]
+
+    }, { join => 'indicator_user_visibilities' })->as_hashref->all;
 
      $c->stash(
-        citys    => \@citys,
+        cities    => $c->stash->{network_data}{cities},
         indicators => \@indicators,
         template => 'mapa_site.tt'
     );
@@ -101,11 +116,11 @@ sub download_redir: Chained('root') PathPart('download') Args(0) {
 sub download: Chained('root') PathPart('dados-abertos') Args(0) {
     my ( $self, $c, $cidade ) = @_;
 
-    my @citys = $c->model('DB::City')->as_hashref->all;
+    my @cities = $c->model('DB::City')->as_hashref->all;
     my @indicators = $c->model('DB::Indicator')->as_hashref->all;
 
      $c->stash(
-        citys    => \@citys,
+        cities    => \@cities,
         indicators => \@indicators,
         template => 'download.tt',
         title => 'Dados abertos'
@@ -252,7 +267,7 @@ sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
     print STDERR "NOT FOUND " . $x->path,"\n";
-    $c->response->body($x->path. ' Page not found: ' . $foo);
+    $c->response->body($x->path. ' Page not found: ' . ($foo||''));
 
     $c->response->status(404);
 

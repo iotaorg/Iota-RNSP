@@ -28,7 +28,7 @@
                         <div class="clear"></div>
                         <select name="cidade" style="width: 300px">
                             <option value="" selected="selected">Todas</option>
-                            [%FOREACH c IN citys %]
+                            [%FOREACH c IN cities %]
                             <option value="br/[%c.uf.lower%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</option>
                             [%END%]
                         </select>

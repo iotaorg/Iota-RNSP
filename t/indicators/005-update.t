@@ -101,7 +101,7 @@ eval {
                 'indicator.update.visibility_level' => 'private',
             ]
         );
-        ok( !$res->is_success, 'indicator not updated' );
+        ok( $res->is_success, 'indicator updated!' );
 
         ( $res, $c ) = ctx_request(
             POST $uri->path_query,

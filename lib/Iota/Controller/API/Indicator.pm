@@ -211,14 +211,14 @@ Retorna:
 sub indicator_POST {
     my ( $self, $c ) = @_;
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    unless $c->check_any_user_role(qw(admin));
 
 
     $c->req->params->{indicator}{update}{id} = $c->stash->{object}->next->id;
 
     if (($c->req->params->{indicator}{update}{visibility_level}||'') eq 'private' &&
         ($c->req->params->{indicator}{update}{visibility_user_id}||'') eq '' &&
-        $c->check_user_roles(qw(admin))
+        $c->check_any_user_role(qw(admin))
         ){
         $c->req->params->{indicator}{update}{visibility_user_id} = $c->user->id;
     }
@@ -255,7 +255,7 @@ sub indicator_DELETE {
    my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    unless $c->check_any_user_role(qw(admin));
 
 
    my $obj = $c->stash->{object}->next;
@@ -408,14 +408,14 @@ Retorna:
 sub list_POST {
     my ( $self, $c ) = @_;
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_user_roles(qw(admin superadmin));
+        unless $c->check_any_user_role(qw(admin superadmin));
 
 
     $c->req->params->{indicator}{create}{user_id} = $c->user->id;
 
     if (($c->req->params->{indicator}{create}{visibility_level}||'') eq 'private' &&
         ($c->req->params->{indicator}{create}{visibility_user_id}||'') eq '' &&
-        $c->check_user_roles(qw(admin))
+        $c->check_any_user_role(qw(admin))
         ){
         $c->req->params->{indicator}{create}{visibility_user_id} = $c->user->id;
     }

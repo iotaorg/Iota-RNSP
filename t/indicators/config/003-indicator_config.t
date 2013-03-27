@@ -127,9 +127,6 @@ eval {
             ok( $res->is_success, 'indicator deleted!' );
             is( $res->code, 204, 'deleted!' );
 
-            ( $res, $c ) = ctx_request(
-                GET $url_user
-            );
 
             die 'rollback';
         }

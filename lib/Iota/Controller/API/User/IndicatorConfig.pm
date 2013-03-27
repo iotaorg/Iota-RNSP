@@ -8,7 +8,6 @@ __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/user/object') : PathPart('indicator_config') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-
     $c->stash->{user} = $c->stash->{object}->next;
     $c->stash->{collection} = $c->stash->{user}->user_indicator_configs;
 

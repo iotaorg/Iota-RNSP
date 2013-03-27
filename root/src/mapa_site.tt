@@ -19,7 +19,7 @@
                         <li><a href="/dados-abertos">Dados abertos</a></li>
                         <li>Cidades
                             <ul>
-                            [%FOREACH city IN citys %]
+                            [%FOREACH city IN cities %]
                                 <li><a href="/[%rede%]/[%city.pais%]/[%city.uf.lower%]/[%city.name_uri%]">[%city.uf%] - [%city.name%]</a></li>
                             [%END%]
                             </ul>

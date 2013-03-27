@@ -58,6 +58,7 @@ eval {
 
                 ]
             );
+
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
             use JSON qw(from_json);
