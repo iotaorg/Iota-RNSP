@@ -389,12 +389,12 @@ sub _download_and_detach {
 
 
 # network CSV
-sub pref_dados_csv : Chained('/network_object') : PathPart('variaveis.csv') : CaptureArgs(0) {
+sub pref_dados_csv : Chained('/institute_load') : PathPart('variaveis.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
 }
 
-sub pref_dados_csv_check: Chained('/network_object') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
+sub pref_dados_csv_check: Chained('/institute_load') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv.check';
 }
@@ -410,12 +410,12 @@ sub down_pref_dados_csv_check : Chained('pref_dados_csv_check') : PathPart('') :
 }
 
 # network XML
-sub pref_dados_xml : Chained('/network_object') : PathPart('variaveis.xml') : CaptureArgs(0) {
+sub pref_dados_xml : Chained('/institute_load') : PathPart('variaveis.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml';
 }
 
-sub pref_dados_xml_check: Chained('/network_object') : PathPart('variaveis.xml.checksum') : CaptureArgs(0) {
+sub pref_dados_xml_check: Chained('/institute_load') : PathPart('variaveis.xml.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xml.check';
 }
@@ -431,12 +431,12 @@ sub down_pref_dados_xml_check : Chained('pref_dados_xml_check') : PathPart('') :
 }
 
 # network JSON
-sub pref_dados_json : Chained('/network_object') : PathPart('variaveis.json') : CaptureArgs(0) {
+sub pref_dados_json : Chained('/institute_load') : PathPart('variaveis.json') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json';
 }
 
-sub pref_dados_json_check: Chained('/network_object') : PathPart('variaveis.json.checksum') : CaptureArgs(0) {
+sub pref_dados_json_check: Chained('/institute_load') : PathPart('variaveis.json.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'json.check';
 }

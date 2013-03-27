@@ -43,18 +43,22 @@ sub root: Chained('/') PathPart('') CaptureArgs(0) {
 }
 
 
-sub network_object: Chained('root') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $rede ) = @_;
+sub institute_load: Chained('root') PathPart('') CaptureArgs(0) {
+    my ( $self, $c ) = @_;
 
+    my $domain = $c->req->uri->host;
     my $net = $c->model('DB::Network')->search({
-        name_url => $rede
+        domain_name => $domain
     }, {
         prefetch => [{'current_user' => 'user_files'}]
     })->first;
-    $c->detach('/error_404') unless $net;
+    $c->detach('/error_404', ['Nenhuma rede para o dominio ' . $domain . '!']) unless $net;
 
     $c->stash->{network} = $net;
-    $c->stash->{rede} = $net->name_url;
+
+    $c->stash->{institute} = $net->institute;
+
+
     my @files = $net->current_user->user_files;
 
     foreach my $file (sort {$b->created_at->epoch <=> $a->created_at->epoch} @files){
@@ -66,7 +70,7 @@ sub network_object: Chained('root') PathPart('') CaptureArgs(1) {
 
 }
 
-sub mapa_site: Chained('network_object') PathPart('mapa-do-site') Args(0) {
+sub mapa_site: Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c, $cidade ) = @_;
 
     my @users = $c->stash->{network}->users->with_city->all;
@@ -109,7 +113,7 @@ sub download: Chained('root') PathPart('dados-abertos') Args(0) {
 }
 
 
-sub network_page: Chained('network_object') PathPart('') CaptureArgs(0) {
+sub network_page: Chained('institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 }
 
@@ -159,7 +163,7 @@ sub network_index: Chained('network_page') PathPart('') Args(0) {
 
 
 
-sub network_indicador: Chained('network_object') PathPart('') CaptureArgs(1) {
+sub network_indicador: Chained('institute_load') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
     $self->stash_indicator($c, $nome);
 }
@@ -248,7 +252,8 @@ sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
     print STDERR "NOT FOUND " . $x->path,"\n";
-    $c->response->body($x->path. ' Page not found');
+    $c->response->body($x->path. ' Page not found: ' . $foo);
+
     $c->response->status(404);
 
 }
