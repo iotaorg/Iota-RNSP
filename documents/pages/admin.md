@@ -354,6 +354,12 @@ enviando a lista dos usuarios separados por virgula.
 
 No update, caso esse campo seja enviado, vai ocorrer a troca de todos os antigos pelos novos.
 
+Lembrando que esses users_id são de usuarios com role=admin (administradores de alguma rede)
+
+da pra listar eles com `GET /api/user?role=admin` e já vem só eles!
+
+
+
 Portanto, todos os campos que o `POST /api/indicator` pode receber são:
 
     $namespace.name                                                     string
@@ -458,6 +464,7 @@ Exemplo do detalhe de um indicador com visibility_level=restrict:
     }
 
 `restrict_to_users` são os ids dos usuarios que podem utilizar este indicador.
+
 
 
 
