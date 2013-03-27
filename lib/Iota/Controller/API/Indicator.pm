@@ -209,30 +209,35 @@ Retorna:
 =cut
 
 sub indicator_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
     unless $c->check_user_roles(qw(admin));
 
 
-  $c->req->params->{indicator}{update}{id} = $c->stash->{object}->next->id;
+    $c->req->params->{indicator}{update}{id} = $c->stash->{object}->next->id;
 
-  my $dm = $c->model('DataManager');
+    if (($c->req->params->{indicator}{update}{visibility_level}||'') eq 'private' &&
+        ($c->req->params->{indicator}{update}{visibility_user_id}||'') eq '' &&
+        $c->check_user_roles(qw(admin))
+        ){
+        $c->req->params->{indicator}{update}{visibility_user_id} = $c->user->id;
+    }
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
+    my $dm = $c->model('DataManager');
 
-  my $obj = $dm->get_outcome_for('indicator.update');
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+        unless $dm->success;
 
-  $c->logx('Atualizou indicador' . $obj->name, indicator_id => $obj->id);
+    my $obj = $dm->get_outcome_for('indicator.update');
 
-  $self->status_accepted(
-    $c,
-    location =>
-      $c->uri_for( $self->action_for('indicator'), [ $obj->id ] )->as_string,
+    $c->logx('Atualizou indicador' . $obj->name, indicator_id => $obj->id);
+
+    $self->status_accepted(
+        $c,
+        location => $c->uri_for( $self->action_for('indicator'), [ $obj->id ] )->as_string,
         entity => { name => $obj->name, id => $obj->id }
-    ),
-    $c->detach
-    if $obj;
+    ), $c->detach if $obj;
+
 }
 
 
@@ -401,31 +406,39 @@ Retorna:
 =cut
 
 sub list_POST {
-  my ( $self, $c ) = @_;
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_user_roles(qw(admin));
+    my ( $self, $c ) = @_;
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->check_user_roles(qw(admin superadmin));
 
 
-  $c->req->params->{indicator}{create}{user_id} = $c->user->id;
+    $c->req->params->{indicator}{create}{user_id} = $c->user->id;
 
-  my $dm = $c->model('DataManager');
-
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
-  my $object = $dm->get_outcome_for('indicator.create');
-  $c->logx('Adicionou indicador' . $object->name, indicator_id => $object->id);
-
-  $self->status_created(
-    $c,
-    location => $c->uri_for( $self->action_for('indicator'), [ $object->id ] )->as_string,
-    entity => {
-      name => $object->name,
-
-      name_url => $object->name_url,
-      id   => $object->id,
-
+    if (($c->req->params->{indicator}{create}{visibility_level}||'') eq 'private' &&
+        ($c->req->params->{indicator}{create}{visibility_user_id}||'') eq '' &&
+        $c->check_user_roles(qw(admin))
+        ){
+        $c->req->params->{indicator}{create}{visibility_user_id} = $c->user->id;
     }
-  );
+
+
+    my $dm = $c->model('DataManager');
+
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+        unless $dm->success;
+    my $object = $dm->get_outcome_for('indicator.create');
+    $c->logx('Adicionou indicador' . $object->name, indicator_id => $object->id);
+
+    $self->status_created(
+        $c,
+        location => $c->uri_for( $self->action_for('indicator'), [ $object->id ] )->as_string,
+        entity => {
+        name => $object->name,
+
+        name_url => $object->name_url,
+        id   => $object->id,
+
+        }
+    );
 
 }
 
