@@ -66,11 +66,11 @@ sub variables_variation_POST {
    my ( $self, $c ) = @_;
 
    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
    my $obj_rs = $c->stash->{object}->next;
 
-   if ( $c->user->id != $c->stash->{indicator}->user_id || !$c->check_any_user_role(qw(admin))){
+   if ( $c->user->id != $c->stash->{indicator}->user_id || !$c->check_any_user_role(qw(admin superadmin))){
       $self->status_forbidden( $c, message => "access denied", ), $c->detach;
    }
 
@@ -108,12 +108,12 @@ sub variables_variation_DELETE {
    my ( $self, $c ) = @_;
 
    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
    my $obj = $c->stash->{object}->next;
    $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-   if ($c->user->id == $obj->indicator_id || $c->check_any_user_role(qw(admin))){
+   if ($c->user->id == $obj->indicator_id || $c->check_any_user_role(qw(admin superadmin))){
       $c->logx('Apagou informação de indicator_variables_variations ' . $obj->id);
 
       $c->model('DB::IndicatorVariablesVariationsValue')->search({
@@ -175,7 +175,7 @@ sub list_POST {
    my ( $self, $c ) = @_;
 
    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
    $c->req->params->{indicator}{variables_variation}{create}{indicator_id} = $c->stash->{indicator}->id;
 

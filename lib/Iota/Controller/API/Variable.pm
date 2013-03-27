@@ -107,7 +107,7 @@ sub variable_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_user_roles(qw(admin));
+        unless $c->check_any_user_role(qw(admin superadmin));
 
     $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
 
@@ -144,7 +144,7 @@ sub variable_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_user_roles(qw(admin));
+        unless $c->check_any_user_role(qw(admin superadmin));
 
     my $obj = $c->stash->{variable};
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -250,7 +250,7 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_user_roles(qw(admin));
+        unless $c->check_any_user_role(qw(admin superadmin));
 
     $c->req->params->{variable}{create}{user_id} = $c->user->id;
 

@@ -74,7 +74,7 @@ sub country_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
+    unless $c->check_any_user_role(qw(admin superadmin user));
 
   $c->req->params->{country}{update}{id} = $c->stash->{object}->next->id;
 
@@ -110,7 +110,7 @@ sub country_DELETE {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin));
+    unless $c->check_any_user_role(qw(admin superadmin));
 
   my $obj = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -184,7 +184,7 @@ sub list_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
+    unless $c->check_any_user_role(qw(admin superadmin user));
 
   $c->req->params->{country}{create}{created_by} = $c->user->id;
 

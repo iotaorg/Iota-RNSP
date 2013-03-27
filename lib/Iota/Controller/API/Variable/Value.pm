@@ -87,11 +87,11 @@ sub variable_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
+    unless $c->check_any_user_role(qw(admin superadmin user));
 
   my $object_rs = $c->stash->{object}->next;
   # removido: $c->user->id != $object_rs->owner->id
-  if (!$c->check_any_user_role(qw(admin user))){
+  if (!$c->check_any_user_role(qw(admin superadmin user))){
     $self->status_forbidden( $c, message => "access denied", ), $c->detach;
   }
   $c->req->params->{variable}{value}{update}{id} = $object_rs->id;
@@ -132,12 +132,12 @@ sub variable_DELETE {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
+    unless $c->check_any_user_role(qw(admin superadmin user));
 
   my $object = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $object;
 
-  if ($c->user->id == $object->owner->id || $c->check_any_user_role(qw(admin))){
+  if ($c->user->id == $object->owner->id || $c->check_any_user_role(qw(admin superadmin))){
     $object->delete;
   }
 
@@ -168,7 +168,7 @@ sub list_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
+    unless $c->check_any_user_role(qw(admin superadmin user));
 
   $c->req->params->{variable}{value}{create}{variable_id} = $c->stash->{variable}->id;
 
@@ -216,7 +216,7 @@ sub list_PUT {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user));
+    unless $c->check_any_user_role(qw(admin superadmin user));
 
   $c->req->params->{variable}{value}{put}{variable_id} = $c->stash->{variable}->id;
   $c->req->params->{variable}{value}{put}{user_id} = $c->user->id;

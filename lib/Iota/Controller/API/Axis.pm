@@ -74,7 +74,7 @@ sub axis_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin));
+    unless $c->check_any_user_role(qw(admin superadmin));
 
   $c->req->params->{axis}{update}{id} = $c->stash->{object}->next->id;
 
@@ -110,7 +110,7 @@ sub axis_DELETE {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin));
+    unless $c->check_any_user_role(qw(admin superadmin));
 
   my $obj = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -184,7 +184,7 @@ sub list_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin));
+    unless $c->check_any_user_role(qw(admin superadmin));
 
   my $dm = $c->model('DataManager');
 

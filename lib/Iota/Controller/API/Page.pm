@@ -49,7 +49,7 @@ sub page_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin user));
+        unless $c->check_any_user_role(qw(admin superadmin user));
 
     $c->req->params->{page}{update}{id} = $c->stash->{object}->first->id;
 
@@ -85,7 +85,7 @@ sub page_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin user));
+        unless $c->check_any_user_role(qw(admin superadmin user));
 
     my $obj = $c->stash->{object}->first;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -152,7 +152,7 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin user));
+        unless $c->check_any_user_role(qw(admin superadmin user));
 
     $c->req->params->{page}{create}{user_id} = $c->req->params->{user_id} || $c->user->id;
 

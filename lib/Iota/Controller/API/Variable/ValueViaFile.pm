@@ -23,7 +23,7 @@ sub file_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin user));
+        unless $c->check_any_user_role(qw(admin superadmin user));
     my $upload = $c->req->upload('arquivo');
     eval{
         if ($upload){
