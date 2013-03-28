@@ -438,10 +438,12 @@ Retorna o status de prenchimento dos indicadores
 
 =cut
 
+use DateTime;
+# TODO esse endpoint funciona apenas com periodos anuais
 sub indicator_status_GET {
     my ( $self, $c ) = @_;
     my $ret;
-    my $max_periodos = 4;
+
     my $ultimos = {};
     eval {
         my $rs = $c->stash->{collection};
@@ -457,67 +459,55 @@ sub indicator_status_GET {
                 'me.id' => [$indicator_formula->variables],
             } );
 
-            my $valid_from;
-            my $perido;
-            my $variaveis = 0;
-            my $ultima_data;
 
-            my $outros_periodos = {};
-            my $ultimo_periodo = {};
-
+            my $periodos = {};
             while (my $row = $rs->next){
-                # ultima data do periodo geral
-                unless (exists $ultimos->{$row->period}){
-                    my $ret = $c->model('DB')->schema->ultimo_periodo($row->period);
-                    $ultimos->{$row->period} = $ret->{ultimo_periodo};
-                }
-                $ultima_data = $ultimos->{$row->period};
-
-                if (!$valid_from){
-                    $valid_from = $c->model('DB')->schema->voltar_periodo(
-                        $ultima_data,
-                        $row->period, $max_periodos)->{voltar_periodo};
-                    $perido = $row->period;
-                }
-                next unless $valid_from;
-
-
                 my $rsx = $row->values->search({
-                    'me.valid_from' => {'>' => $valid_from},
                     'me.user_id'    => $c->stash->{user_obj}->id
-
                 })->as_hashref;
 
                 while (my $value = $rsx->next){
-                    if ($value->{value} && $value->{valid_from} eq $ultima_data){
-                        $ultimo_periodo->{$value->{valid_from}}++;
-                    }elsif($value->{value}){
-                        $outros_periodos->{$value->{valid_from}}++;
+                    if($value->{value}){
+                        $periodos->{$value->{valid_from}}++;
                     }
-
                 }
-                $variaveis++;
             }
-            # nenhuma variavel
-            unless ($perido){
+
+            # apaga os que tem variavel faltando,
+            # signfica que nao tem valor suficiente para executar a formula
+            my $variaveis = $indicator_formula->_variable_count;
+            while(my($k, $v) = each %$periodos){
+                delete $periodos->{$k} unless $periodos->{$k} == $variaveis;
+            }
+
+            if (keys %$periodos == 0){
                 push @{$ret->{status}}, {
                     id =>  $indicator->id,
-                    ultimo_periodo => 0,
-                    outros_periodos => 0,
-                    completo_historico => 0
+                    without_data          => 1,
+                    completed_except_last => 0,
+                    completed             => 0
                 };
                 next;
             }
 
-            while(my($k, $v) = each %$outros_periodos){
-                delete $outros_periodos->{$k} unless $outros_periodos->{$k} == $variaveis;
+            my $last_year  = (DateTime->now()->year() - 1);
+            my $begin_year = 2000;
+
+            my $completed = 1;
+            my $completed_except_last = 0;
+
+            for my $year ($begin_year .. $last_year){
+                next if (exists $periodos->{"$year-01-01"});
+                $completed = 0;
+                $completed_except_last = 1 if ( $year == $last_year );
+                last;
             }
 
             push @{$ret->{status}}, {
-                id =>  $indicator->id,
-                ultimo_periodo     => (exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0,
-                outros_periodos    => (keys %$outros_periodos > 0) ? 1 : 0,
-                completo_historico => (keys %$outros_periodos == $max_periodos - 1) ? 1 : 0,
+                id                    =>  $indicator->id,
+                without_data          => 0,
+                completed_except_last => $completed_except_last,
+                completed             => $completed
             };
 
         }

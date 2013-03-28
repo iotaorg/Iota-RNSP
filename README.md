@@ -5,7 +5,7 @@ O aplicativo é uma plataforma que permite a criação dos indicadores, com o ob
 
 Ele foi criado inicialmente para atender ao "Programa Cidades Sustentaveis" da "Rede Nossa São Paulo".
 
-[![Build Status](https://secure.travis-ci.org/W3CBrasil/Iota-PCS.png?branch=master)](https://travis-ci.org/W3CBrasil/Iota-PCS)
+[![Build Status](https://secure.travis-ci.org/W3CBrasil/Iota.png?branch=master)](https://travis-ci.org/W3CBrasil/Iota)
 
 ## Programa Cidades Sustentaveis
 
