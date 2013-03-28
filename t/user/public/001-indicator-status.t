@@ -27,12 +27,8 @@ $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 
 use DateTime;
-sub get_year {
-    my $semna= shift;
-    my $ret = DateTime->now->add( {years => $semna, days => 1 } )->ymd;
-    #print ">>>> voltar ano = $semna  ==== $ret\n\n";
-    return $ret; # tem q tirar 1 dia pra voltar a ser domingo!
-}
+
+my $last_year  = (DateTime->now()->year() - 1);
 
 eval {
     $schema->txn_do(
@@ -128,13 +124,14 @@ eval {
             ok($res->is_success, 'GET public info success');
             my $obj = eval{from_json( $res->content )};
 
+
             is_deeply($obj, {
                 status => [
                     {
-                        completo_historico=>  0,
-                        id                =>  $indicator->{id},
-                        outros_periodos   =>  0,
-                        ultimo_periodo    =>  0
+                        id                    =>  $indicator->{id},
+                        without_data          =>  1,
+                        completed             =>  0,
+                        completed_except_last =>  0,
                     }
                 ]
             }, 'teste condicao 1');
@@ -142,9 +139,26 @@ eval {
 
             my $variable_url = $uri->path_query;
 
-            &add_value($variable_url, get_year(-4), 23);
+            &add_value($variable_url, '1999-01-01', 23);
+
+            ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
+            ok($res->is_success, 'GET public info success');
+            my $obj = eval{from_json( $res->content )};
+
+
+            is_deeply($obj, {
+                status => [
+                    {
+                        id                    =>  $indicator->{id},
+                        without_data          =>  1,
+                        completed             =>  0,
+                        completed_except_last =>  0,
+                    }
+                ]
+            }, 'teste condicao 1.5');
+
             $variable_url = $uri2->path_query;
-            &add_value($variable_url, get_year(-4), 3);
+            &add_value($variable_url, '1999-01-01', 3);
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
@@ -153,18 +167,20 @@ eval {
             is_deeply($obj, {
                 status => [
                     {
-                        completo_historico=>  0,
-                        id                =>  $indicator->{id},
-                        outros_periodos   =>  1,
-                        ultimo_periodo    =>  0
+                        id                    =>  $indicator->{id},
+                        without_data          =>  0,
+                        completed             =>  0,
+                        completed_except_last =>  0,
                     }
                 ]
             }, 'teste condicao 2');
 
-            $variable_url = $uri->path_query;
-            &add_value($variable_url, get_year(-1), 1);
-            $variable_url = $uri2->path_query;
-            &add_value($variable_url, get_year(-1), 1);
+            for (2000..$last_year-1){
+                $variable_url = $uri->path_query;
+                &add_value($variable_url, $_ . '-01-01', 1);
+                $variable_url = $uri2->path_query;
+                &add_value($variable_url, $_ . '-01-01', 1);
+            }
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
@@ -173,24 +189,18 @@ eval {
             is_deeply($obj, {
                 status => [
                     {
-                        completo_historico=>  0,
-                        id                =>  $indicator->{id},
-                        outros_periodos   =>  1,
-                        ultimo_periodo    =>  1
+                        id                    =>  $indicator->{id},
+                        without_data          =>  0,
+                        completed             =>  0,
+                        completed_except_last =>  1,
                     }
                 ]
             }, 'teste condicao 3');
 
             $variable_url = $uri->path_query;
-            &add_value($variable_url, get_year(-3), 1);
-
-            &add_value($variable_url, get_year(-2), 2);
+            &add_value($variable_url, $last_year . '-01-01', 1);
             $variable_url = $uri2->path_query;
-
-            &add_value($variable_url, get_year(-3), 1);
-
-            &add_value($variable_url, get_year(-2), 3);
-
+            &add_value($variable_url, $last_year . '-01-01', 1);
 
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$RNSP::PCS::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
@@ -199,10 +209,10 @@ eval {
             is_deeply($obj, {
                 status => [
                     {
-                        completo_historico=>  1,
-                        id                =>  $indicator->{id},
-                        outros_periodos   =>  1,
-                        ultimo_periodo    =>  1
+                        id                    =>  $indicator->{id},
+                        without_data          =>  0,
+                        completed             =>  1,
+                        completed_except_last =>  0,
                     }
                 ]
             }, 'teste condicao 4');
