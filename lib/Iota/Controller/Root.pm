@@ -31,8 +31,13 @@ The root page (/)
 sub index : Path : Args(0) {
     my ( $self, $c ) = @_;
 
+    $self->institute_load($c);
+    $c->stash(
+        template => 'home_comparacao.tt'
+    );
+
    # Hello World
-   $c->res->redirect('/frontend');
+   # $c->res->redirect('/frontend');
 }
 
 
@@ -168,14 +173,14 @@ sub network_indicator_render: Chained('network_indicator') PathPart('') Args(0) 
 
 
 
-
+=pod
 sub network_index: Chained('network_page') PathPart('') Args(0) {
-    my ( $self, $c, $sigla ) = @_;
+    my ( $self, $c) = @_;
     $c->stash(
         template => 'home_comparacao.tt'
     );
 }
-
+=cut
 
 
 sub network_indicador: Chained('institute_load') PathPart('') CaptureArgs(1) {
