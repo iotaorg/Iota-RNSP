@@ -12,7 +12,7 @@
 [% IF custom_css %]
 <link rel="stylesheet" href="[%custom_css%]" type="text/css" />
 [%END%]
-[% IF find_role == '_movimento' or rede=='movimento' %]
+[% IF institute.short_name == 'org' %]
 <link rel="stylesheet" href="/static/css/style-movimento.css" type="text/css" />
 <link rel="stylesheet" href="/static/css/rnsp.dados-movimento.css" type="text/css" />
 [% END %]
@@ -48,7 +48,7 @@
                 <a href="https://twitter.com/#!/cidsustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/twitter.png" alt="Twitter" /></a>&nbsp;&nbsp;
                 <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" alt="Youtube" /></a>
             </div>
-        	<div class="logo"><img src="/static/images/logo[% IF find_role == '_movimento' %]-movimento[% END %].png" alt="" /></div>
+        	<div class="logo"><img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="" /></div>
         </div>
         <div class="clear"></div>
     </div>
@@ -102,7 +102,8 @@
         	Desenvolvido por <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" alt="Aware" /></a>
         </div>
     </div>
-    [% IF find_role == '_prefeitura' %]
+
+    [% IF institute.short_name == 'gov' %]
         <div id="patrocinadores">
             <div class="content">
                 <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />

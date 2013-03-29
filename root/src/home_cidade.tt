@@ -50,7 +50,7 @@
 
 	<script type="text/javascript">
 		var userID = [% user.id %];
-		var role = '[% find_role %]';
+
 		var ref = 'cidade';
 		[% PROCESS 'network_javascript.tt'%]
 	</script>
