@@ -210,7 +210,7 @@ sub _download {
                         $self->_period_pt($var->period),
                         $var->source,
                         $var->is_basic ? 'sim' : 'não',
-                        $var->measurement_unit,
+                        $var->measurement_unit ? $var->measurement_unit->name : '-',
                         $var->name,
                         $self->ymd2dmy($begin),
                         $varmt->{value},
