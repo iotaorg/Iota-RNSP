@@ -134,12 +134,8 @@ sub _download {
             );
 
             my $rs = $c->model('DB')->resultset('Variable')->search_rs({
-                -or => [
-                    'values.user_id' => $user->{id},
-                    'values.user_id' => undef,
-                ],
                 'me.id' => [$indicator_formula->variables]
-            }, { prefetch => ['values'] } );
+            });
 
 
             my $hash = {};
@@ -151,7 +147,10 @@ sub _download {
                 $hash->{id_nome}{$row->id} = $row->name;
                 $period = $row->period;
 
-                foreach my $value ($row->values){
+                my @values = $row->values->search({
+                    user_id => $user->{id}
+                })->all;
+                foreach my $value (@values){
                     push @{$tmp->{$value->valid_from}}, {
                         col           => $x,
                         varid         => $row->id,
@@ -161,6 +160,8 @@ sub _download {
                 }
                 $x++;
             }
+
+
             my $definidos = scalar keys %{$hash->{header}};
 
             foreach my $begin (sort {$a cmp $b} keys %$tmp){
@@ -356,10 +357,10 @@ sub formula_translate {
     my ( $self, $formula, $variables) = @_;
 
     $formula =~ s/([\*\(\/\-\+])/ $1 /g;
-
     foreach my $varid (keys %$variables){
         $formula =~ s/\$$varid([^\d]|$)/ $variables->{$varid} $1/g;
     }
+
     $formula =~ s/^\s+//;
     $formula =~ s/\s+$//;
     $formula =~ s/\s\s/ /;
