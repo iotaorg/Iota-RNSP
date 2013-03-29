@@ -27,6 +27,8 @@ use Catalyst qw/
 
     +CatalystX::Plugin::Logx
 
+    Assets
+
 /;
 
 extends 'Catalyst';
@@ -52,6 +54,15 @@ __PACKAGE__->config(
 
     private_path => 'root/static/user',
     public_url   => '/static/user',
+
+    'Plugin::Assets' => {
+
+        path => '/static',
+        output_path => 'built/',
+        minify => 1,
+        stash_var => 'assets'
+    },
+
 
 );
 
