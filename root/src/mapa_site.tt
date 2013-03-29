@@ -20,7 +20,7 @@
                         <li>Cidades
                             <ul>
                             [%FOREACH city IN cities %]
-                                <li><a href="/[%city.pais%]/[%city.uf.lower%]/[%city.name_uri%]">[%city.uf%] - [%city.name%]</a></li>
+                                <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.uf%] - [%city.name%]</a></li>
                             [%END%]
                             </ul>
                         </li>

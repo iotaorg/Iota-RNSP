@@ -159,11 +159,6 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   is_nullable: 1
 
-=head2 indicator_roles
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 dynamic_variations
 
   data_type: 'boolean'
@@ -255,8 +250,6 @@ __PACKAGE__->add_columns(
   "summarization_method",
   { data_type => "text", default_value => "sum", is_nullable => 0 },
   "indicator_admins",
-  { data_type => "text", is_nullable => 1 },
-  "indicator_roles",
   { data_type => "text", is_nullable => 1 },
   "dynamic_variations",
   { data_type => "boolean", is_nullable => 1 },
@@ -476,8 +469,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-26 01:46:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lVbJLbkNa/Ki0oPMgkycMA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-29 06:53:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O58+9QjTZGZxmaAMAR8+Vg
 
 __PACKAGE__->belongs_to(
     "owner",
