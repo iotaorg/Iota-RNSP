@@ -958,8 +958,11 @@ $(document).ready(function(){
 			setaGraficos();
 		}
 		if (ref == "home" || ref == "indicador" || ref == "comparacao"){
+
 			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
+
+            geraGraficos();
 		}
     });
 
