@@ -21,11 +21,13 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
   my %roles = map { $_ => 1 } $c->user->roles;
 
-  my @roles;
-  push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
-  push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
+  #my @roles;
+  #push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
+  #push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
 
-  $c->stash->{object} = $c->stash->{object}->search({ '-or' => \@roles });
+  $c->stash->{object} = $c->stash->{object}->search(
+    undef
+  );
 
 
   $c->stash->{object}->count > 0 or $c->detach('/error_404');
@@ -320,11 +322,11 @@ sub list_GET {
 
     my %roles = map { $_ => 1 } $c->user->roles;
 
-    my @roles;
-    push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
-    push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
+    #my @roles;
+    #push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
+    #push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
 
-    $rs = $rs->search({ '-or' => \@roles });
+    #$rs = $rs->search({ '-or' => \@roles });
 
     my @list = $rs->as_hashref->all;
     my @objs;

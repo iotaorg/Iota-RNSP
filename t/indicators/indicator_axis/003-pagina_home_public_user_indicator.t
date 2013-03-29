@@ -140,7 +140,7 @@ eval {
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
 
-                    'indicator.create.indicator_roles' => '_prefeitura,',
+
                     'indicator.create.visibility_level' => 'public',
 
                 ]
@@ -184,7 +184,7 @@ eval {
                     'indicator.create.goal_operator'=> '<=',
                     'indicator.create.tags'         => 'you,me,she',
                     'indicator.create.visibility_level' => 'public',
-                    'indicator.create.indicator_roles' => '_prefeitura,',
+
                 ]
             );
             ok( $res->is_success, 'indicator created!' );

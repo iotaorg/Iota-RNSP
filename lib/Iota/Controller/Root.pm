@@ -250,7 +250,7 @@ sub stash_tela_indicator {
     # TODO arruamr isso pra usar permissoes verdadeiras
     my $indicator = $c->model('DB::Indicator')->search({
         name_url     => $c->stash->{indicator},
-        indicator_roles => {like => '%'.$c->stash->{network}->name_url.'%'}
+        #indicator_roles => {like => '%'.$c->stash->{network}->name_url.'%'}
     })->as_hashref->next;
 
     $c->detach('/error_404') unless $indicator;

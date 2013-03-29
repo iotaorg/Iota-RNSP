@@ -98,7 +98,8 @@ sub stash_comparacao {
     }
 
     my @indicators = $c->model('DB::Indicator')->search(
-        {indicator_roles => {like => '%'.$network->name_url.'%'}  },
+        #{indicator_roles => {like => '%'.$network->name_url.'%'}  },
+        undef,
         {
             prefetch => ['axis']
         }

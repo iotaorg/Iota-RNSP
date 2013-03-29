@@ -55,7 +55,7 @@ eval {
                   'indicator.create.variety_name'   => 'Faixas',
                   'indicator.create.indicator_type' => 'varied',
                   'indicator.create.visibility_level' => 'public',
-                  'indicator.create.indicator_roles' => '_prefeitura,_movimento',
+
                   'indicator.create.dynamic_variations' => 1
 
                ]

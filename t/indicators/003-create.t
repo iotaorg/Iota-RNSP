@@ -51,7 +51,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',
-                    'indicator.create.indicator_roles'  => '_prefeitura',
+
                     'indicator.create.observations' => 'lala',
                     'indicator.create.visibility_level' => 'restrict',
                     'indicator.create.visibility_users_id' => '4,5,6,7',

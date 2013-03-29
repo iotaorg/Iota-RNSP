@@ -79,7 +79,7 @@ sub verifiers_specs {
                all_variations_variables_are_required => { required => 0, type => 'Bool' },
                summarization_method => { required => 0, type => 'Str' },
 
-               indicator_roles     => { required => 1, type => 'Str' },
+
                dynamic_variations  => { required => 0, type => 'Bool' },
 
 
@@ -140,7 +140,7 @@ sub verifiers_specs {
                all_variations_variables_are_required => { required => 0, type => 'Bool' },
                summarization_method => { required => 0, type => 'Str' },
 
-               indicator_roles     => { required => 0, type => 'Str' },
+
                dynamic_variations  => { required => 0, type => 'Bool' },
 
                visibility_level       => { required => 0, type => VisibilityLevel,

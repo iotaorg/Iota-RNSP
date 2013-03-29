@@ -51,7 +51,7 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',
-                    'indicator.create.indicator_roles'  => '_prefeitura',
+
                     'indicator.create.observations' => 'lala',
                     'indicator.create.visibility_level' => 'public',
 
@@ -122,7 +122,6 @@ eval {
                     'indicator.create.chart_name'   => 'pie',
                     'indicator.create.goal_operator'=> '>=',
                     'indicator.create.tags'         => 'you,me,she',
-                    'indicator.create.indicator_roles'  => '_movimento',
                     'indicator.create.visibility_level' => 'public',
                     'indicator.create.observations' => 'lala'
 
