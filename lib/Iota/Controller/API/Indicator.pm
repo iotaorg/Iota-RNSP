@@ -353,7 +353,7 @@ sub list_GET {
 
             (map { $_ => $obj->{$_} } qw(id name goal axis_id formula source explanation observations
                  goal_source tags goal_operator chart_name goal_explanation sort_direction name_url
-                 indicator_roles variety_name indicator_type summarization_method all_variations_variables_are_required
+                 variety_name indicator_type summarization_method all_variations_variables_are_required
                  dynamic_variations
 
                  visibility_level

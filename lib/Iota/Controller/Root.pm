@@ -127,7 +127,6 @@ sub mapa_site: Chained('institute_load') PathPart('mapa-do-site') Args(0) {
             { visibility_level => 'private', visibility_user_id => \@users_ids },
             { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
         ]
-
     }, { join => 'indicator_user_visibilities' })->as_hashref->all;
 
      $c->stash(
@@ -248,13 +247,19 @@ sub stash_tela_indicator {
     # anti bug de quem chamar isso sem ler o fonte ^^
     delete $c->stash->{template};
 
-    # TODO arruamr isso pra usar permissoes verdadeiras
+    my @countries = @{  $c->stash->{network_data}{countries}  };
+    my @users_ids = @{  $c->stash->{network_data}{users_ids}  };
+
     my $indicator = $c->model('DB::Indicator')->search({
         name_url     => $c->stash->{indicator},
-        #indicator_roles => {like => '%'.$c->stash->{network}->name_url.'%'}
-    })->as_hashref->next;
-
-    $c->detach('/error_404') unless $indicator;
+        '-or' => [
+            { visibility_level => 'public' },
+            { visibility_level => 'country', visibility_country_id => \@countries },
+            { visibility_level => 'private', visibility_user_id => \@users_ids },
+            { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
+        ]
+    }, { join => 'indicator_user_visibilities' })->as_hashref->next;
+    $c->detach('/error_404', ['Indicador não encontrado!']) unless $indicator;
 
     $c->stash->{indicator} = $indicator;
 }
