@@ -69,6 +69,11 @@ exemplo agrupado por ano:
     max             :  136,
     min             :  76,
     period          :  "weekly",
+    city            : {
+        name :
+        latitude:
+        longitude
+    },
     series          :  [
         [0] {
             avg  :  25.3333333333333,
@@ -284,8 +289,20 @@ sub read_values {
         group_by         => $group_by,
 
         min =>  9999999999999999,
-        max => -9999999999999999
+        max => -9999999999999999,
     };
+
+    my $user = $self->schema->resultset('User')->find($self->user_id);
+    my $city = $user->city;
+
+    $data->{city} = $city
+        ? {
+            name => $city->name,
+            latitude => $city->latitude,
+            longitude => $city->longitude,
+            id => $city->id
+        }
+        : {};
 
     my $qtde = scalar @{$self->variables};
     my $total = 0;

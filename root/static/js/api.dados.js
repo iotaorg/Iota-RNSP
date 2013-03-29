@@ -367,7 +367,15 @@ $(document).ready(function(){
 
 						//alimenta dados dos graficos
 						graficos[index] = valores;
-						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, data: data, show: false, latitude: '', longitude: ''});
+						dadosGrafico.dados.push({
+                            id: item.id,
+                            nome: item.nome,
+                            valores: valores,
+                            data: data,
+                            show: false,
+                            latitude: data.city.latitude,
+                            longitude: data.city.longitude
+                        });
 
 						//alimenta dados do mapa
 
@@ -376,7 +384,7 @@ $(document).ready(function(){
 						if (users_ready >= total_users){
 							geraGraficos();
 							setaGraficos();
-							getUserCoord();
+
 							geraMapa();
 						}
 						carregouTabela = true;
@@ -455,25 +463,6 @@ $(document).ready(function(){
 		});
 	}
 
-	function getUserCoord(){
-
-		$.each(dadosGrafico.dados, function(index,item){
-			$.ajax({
-				async: false,
-				type: 'GET',
-				dataType: 'json',
-				url: api_path + '/api/public/user/$$userid/'.render({
-							userid: item.id
-					}),
-				success: function(data, textStatus, jqXHR){
-					if (data.cidade.latitude) dadosGrafico.dados[index].latitude = data.cidade.latitude;
-					if (data.cidade.longitude) dadosGrafico.dados[index].longitude = data.cidade.longitude;
-
-				}
-			});
-		});
-
-	}
 
 	$.carregaGrafico = function(canvasId){
 
@@ -841,8 +830,6 @@ $(document).ready(function(){
 		if (oldRange <= 0){
 			newValue = 10;
 		}
-		console.log(newValue);
-
 		return newValue;
 	}
 
