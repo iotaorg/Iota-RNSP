@@ -265,11 +265,13 @@ sub list_GET {
 
     if ($c->req->params->{role}){
         $rs = $rs->search({
-
             'role.name' => $c->req->params->{role}
-
         });
-
+    }
+    if ($c->req->params->{network_id}){
+        $rs = $rs->search({
+            'me.network_id' => $c->req->params->{network_id}
+        });
     }
 
     $self->status_ok(
