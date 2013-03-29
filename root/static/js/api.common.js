@@ -86,7 +86,7 @@ $.xhrPool.abortAll = function() {
     $.xhrPool.length = 0
 };
 
-$.ajaxSetup({	
+$.ajaxSetup({
     beforeSend: function(jqXHR) {
         $.xhrPool.push(jqXHR);
     },
@@ -120,7 +120,7 @@ var	convertDate = function(date,splitter){
 	var date_tmp = date.split(splitter);
 	var date = date_tmp[0];
 	var time = date_tmp[1];
-	
+
 	var date_split = date.split("-");
 
 	return date_split[2] + "/" + date_split[1] + "/" + date_split[0];
@@ -161,8 +161,8 @@ var removeAccents = (function() {
    // probably more to come
   };
   return function(s) {
-	return ( s.replace(translate_re, function(match) { 
-	  return translate[match]; 
+	return ( s.replace(translate_re, function(match) {
+	  return translate[match];
 	}) );
   }
 })();
@@ -209,7 +209,7 @@ var loadBreadCrumb = function(data){
 	}
 	$("#breadcrumbs-top").html(breadcrumb);
 	$('#breadcrumbs-top').xBreadcrumbs();
-	
+
 }
 
 
@@ -258,7 +258,7 @@ $.extend({
 	removeItemInArray: function(obj,removeItem){
 		obj = $.grep(obj, function(value) {
 		  return value != removeItem;
-		});		
+		});
 		return obj;
 	},
 	setUrl: function(args){
