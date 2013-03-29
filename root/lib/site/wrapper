@@ -16,25 +16,7 @@
 <link rel="stylesheet" href="/static/css/style-movimento.css" type="text/css" />
 <link rel="stylesheet" href="/static/css/rnsp.dados-movimento.css" type="text/css" />
 [% END %]
-<script type="text/javascript" src="/static/js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
-<script type="text/javascript" src="/static/js/jquery.history.js"></script>
-<script type="text/javascript" src="/static/js/jshashtable-2.1.js"></script>
-<script type="text/javascript" src="/static/js/jquery.numberformatter-1.2.3.min.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
-<script type="text/javascript" src="/static/js/markerclusterer.js"></script>
-<script type="text/javascript" src="/static/js/infobox.js"></script>
-<script type="text/javascript" src="/static/js/api.home.js"></script>
-<script type="text/javascript" src="/static/js/api.common.js"></script>
-<script type="text/javascript" src="/static/js/api.dados.js"></script>
-<script type="text/javascript" src="/static/js/api.cidades.js"></script>
-<script type="text/javascript" src="/static/js/api.indicador.js"></script>
-<script type="text/javascript" src="/static/js/libraries/RGraph.common.core.js" ></script>
-<script type="text/javascript" src="/static/js/libraries/RGraph.common.dynamic.js" ></script>
-<script type="text/javascript" src="/static/js/libraries/RGraph.common.tooltips.js" ></script>
-<script type="text/javascript" src="/static/js/libraries/RGraph.line.js" ></script>
-<script type="text/javascript" src="/static/js/xbreadcrumbs.js"></script>
-<!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
+
 <link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />
 </head>
 <body>
@@ -111,5 +93,24 @@
         </div>
 	[% END %]
 </div>
+<script type="text/javascript" src="/static/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.history.js"></script>
+<script type="text/javascript" src="/static/js/jshashtable-2.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery.numberformatter-1.2.3.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
+<script type="text/javascript" src="/static/js/markerclusterer.js"></script>
+<script type="text/javascript" src="/static/js/infobox.js"></script>
+<script type="text/javascript" src="/static/js/api.home.js"></script>
+<script type="text/javascript" src="/static/js/api.common.js"></script>
+<script type="text/javascript" src="/static/js/api.dados.js"></script>
+<script type="text/javascript" src="/static/js/api.cidades.js"></script>
+<script type="text/javascript" src="/static/js/api.indicador.js"></script>
+<script type="text/javascript" src="/static/js/libraries/RGraph.common.core.js" ></script>
+<script type="text/javascript" src="/static/js/libraries/RGraph.common.dynamic.js" ></script>
+<script type="text/javascript" src="/static/js/libraries/RGraph.common.tooltips.js" ></script>
+<script type="text/javascript" src="/static/js/libraries/RGraph.line.js" ></script>
+<script type="text/javascript" src="/static/js/xbreadcrumbs.js"></script>
+<!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
 </body>
 </html>
