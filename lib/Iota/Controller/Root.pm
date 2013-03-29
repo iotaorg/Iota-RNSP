@@ -63,13 +63,14 @@ sub institute_load: Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{institute} = $net->institute;
 
+    if ($net->current_user){
+        my @files = $net->current_user->user_files;
 
-    my @files = $net->current_user->user_files;
-
-    foreach my $file (sort {$b->created_at->epoch <=> $a->created_at->epoch} @files){
-        if ($file->class_name eq 'custom.css'){
-            $c->stash->{custom_css} = $file->public_url;
-            last;
+        foreach my $file (sort {$b->created_at->epoch <=> $a->created_at->epoch} @files){
+            if ($file->class_name eq 'custom.css'){
+                $c->stash->{custom_css} = $file->public_url;
+                last;
+            }
         }
     }
 
