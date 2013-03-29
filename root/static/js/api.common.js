@@ -203,9 +203,9 @@ paises["br"] = "Brasil";
 
 var loadBreadCrumb = function(data){
 	if (ref == "indicador"){
-		var breadcrumb = "<li class='home'><a href='/$$role'>Início</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name, role: role.replace("_","")});
+		var breadcrumb = "<li class='home'><a href='/'>Início</a></li><li>Indicadores</li><li class='current'>$$nome</li>".render({nome: indicador_data.name });
 	}else if (ref == "cidade"){
-		var breadcrumb = "<li class='home'><a href='/$$role'>Início</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf, role: role.replace("_","")});
+		var breadcrumb = "<li class='home'><a href='/'>Início</a></li><li>Cidades</li><li class='current'>$$nome</li>".render({nome: cidade_data.cidade.name + ", " + cidade_data.cidade.uf });
 	}
 	$("#breadcrumbs-top").html(breadcrumb);
 	$('#breadcrumbs-top').xBreadcrumbs();

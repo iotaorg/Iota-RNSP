@@ -16,7 +16,7 @@ $(document).ready(function(){
 			success: function(data, textStatus, jqXHR){
 				cidade_data = data;
 				$("#top .content .logo-movimento").remove();
-				if (typeof(cidade_data.usuario.files.logo_movimento) != undefined){
+				if (typeof(cidade_data.usuario.files.logo_movimento) != "undefined"){
 					$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
 				}
 				loadIndicadorData();
@@ -155,7 +155,7 @@ $(document).ready(function(){
 				historico_data = data;
 				$("#indicador-historico span.cidade").html(cidade_data.cidade.name);
 				$("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
-				$("#indicador-grafico .title a.link").attr("href","/"+role.replace("_","")+"/"+indicador_data.name_url+"/?view=graph&graphs="+userID);
+				$("#indicador-grafico .title a.link").attr("href","/"+indicador_data.name_url+"/?view=graph&graphs="+userID);
 
 				showHistoricoData();
 			},
