@@ -2,7 +2,7 @@
     	<div class="contents">
             <ul class="xbreadcrumbs" id="breadcrumbs-top">
             	<li class="home"><a href="/">Início</a></li>
-            	<li><a href="/">Indicadores</a></li>
+            	<li>Indicadores</li>
             	<li>[% indicator.name %]</li>
             </ul>
 		    <div class="clear"></div>
