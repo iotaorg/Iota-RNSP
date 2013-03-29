@@ -5,7 +5,7 @@ var data_vvariables = [];
 var cidade_uri;
 
 $(document).ready(function(){
-	
+
 	$.loadCidadeDataIndicador = function(){
 		$.ajax({
 			type: 'GET',
@@ -45,7 +45,7 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
+
 	function loadVariaveisData(){
 		$.ajax({
 			type: 'GET',
@@ -78,9 +78,9 @@ $(document).ready(function(){
 				loadHistoricoData();
 			}
 		});
-		
+
 	}
-	
+
 	function formataFormula(formula,variables,vvariables){
 		var operators_caption = {"+":"+"
 						,"-":"-"
@@ -102,7 +102,7 @@ $(document).ready(function(){
 			var re = new RegExp(pattern, "g");
 			new_formula = new_formula.replace(re,variables[index].name);
 		});
-		
+
 		$.each(operators_caption,function(index,value){
 			new_formula = new_formula.replace(index,"&nbsp;" + value + "&nbsp;");
 		});
@@ -117,10 +117,10 @@ $(document).ready(function(){
 				new_formula = new_formula.replace(re,vvariables[index].name);
 			});
 		}
-		
+
 		return new_formula;
 	}
-	
+
 	function showIndicadorData(){
 		loadBreadCrumb();
 		$("#indicador-dados .profile .title").html(indicador_data.name);
@@ -142,7 +142,7 @@ $(document).ready(function(){
 				}));
 		}
 	}
-	
+
 	function loadHistoricoData(){
 		$.ajax({
 			type: 'GET',
@@ -164,9 +164,10 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
+
 	function showHistoricoData(){
-	
+        var source_values = [];
+
 		if (historico_data.rows){
 			var history_table = "<table class='history'><thead><tr><th>Período</th>";
 
@@ -184,7 +185,6 @@ $(document).ready(function(){
 			dadosGrafico = {"dados": [], "labels": []};
 
 			var goal_values;
-			var source_values = [];
 			var observations_values;
 
 			var valores = [];
@@ -218,15 +218,16 @@ $(document).ready(function(){
 				}else{
 					valores.push(null);
 				}
-				
+
 			});
 			history_table += "</table>";
 			dadosGrafico.dados.push({id: userID, nome: cidade_data.cidade.name, valores: valores, data: cidade_data, show: true});
 		}else{
 			var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
+            dadosGrafico.dados = [];
 		}
 		$("#indicador-historico .table .content-fill").html(history_table);
-		
+
 		if ((goal_values) && goal_values.trim() != ""){
 			if (goal_values.toLowerCase().indexOf("fonte:") > 0){
 				goal_values = goal_values.replace("fonte:","Fonte:");
@@ -234,9 +235,9 @@ $(document).ready(function(){
 			}
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
 		}
-		
+
 		if (source_values.length > 0){
-			
+
 			var source_values_unique = [];
 			$.each(source_values, function(i, el){
 			    if($.inArray(el, source_values_unique) === -1) source_values_unique.push(el);
@@ -246,20 +247,24 @@ $(document).ready(function(){
 		if ((observations_values) && observations_values.trim() != ""){
 			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
 		}
-		
+
 		showGrafico();
-		
+
 	}
-	
+
 	function showGrafico(){
+
 		if (dadosGrafico.dados.length > 0){
 			$("#indicador-grafico").fadeIn();
-			$.carregaGrafico("main-graph");	
-		}
+			$.carregaGrafico("main-graph");
+		}else{
+            $("#indicador-grafico").fadeOut();
+
+        }
 	}
 
 	if (ref == "indicador"){
 		$.loadCidadeDataIndicador();
 	}
-	
+
 });
