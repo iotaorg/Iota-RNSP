@@ -15,7 +15,7 @@
             <div id="mapa-do-site">
                 <div class="content-fill">
                     <ul>
-                        <li><a href="/[%network.name_url%]/">Início de [%network.name%]</a></li>
+                        <li><a href="/">Início de [%network.name%]</a></li>
                         <li><a href="/dados-abertos">Dados abertos</a></li>
                         <li>Cidades
                             <ul>
@@ -39,3 +39,6 @@
         </div>
     </div>
 </div>
+    <script type="text/javascript">
+            var ref = 'mapa_site';
+    </script>

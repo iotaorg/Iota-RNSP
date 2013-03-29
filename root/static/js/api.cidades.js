@@ -7,7 +7,13 @@ var cidade_data;
 var indicadores_data;
 var graficos = [];
 var infoVars = [];
-infoVars["_prefeitura"] = [
+/*
+HARD-CODED variaveis que aparecem apenas em institutos especificos
+infoVars[institute_short_name] = [
+ ..
+]
+ */
+infoVars["gov"] = [
 				{"cognomen": "prefeito", "type": "text"},
 				{"cognomen": "vice-prefeito", "type": "text"},
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
@@ -25,7 +31,7 @@ infoVars["_prefeitura"] = [
 				{"cognomen": "part_eleitorado", "type": "number", "format": "#,##0.##"},
 				{"cognomen": "website", "type": "text"}*/
 ];
-infoVars["_movimento"] = [
+infoVars["org"] = [
 				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_rural", "type": "number", "format": "#,###"},
 				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
@@ -45,6 +51,8 @@ infoVars["_movimento"] = [
 $(document).ready(function(){
 
 	function loadCidadeData(){
+
+
 		loadMap();
 		$.ajax({
 			type: 'GET',
@@ -64,18 +72,18 @@ $(document).ready(function(){
 	}
 
 	function loadMap(){
-		
+
 		var mapDefaultLocation = new google.maps.LatLng(-14.2350040, -51.9252800);
 		var geocoder = new google.maps.Geocoder();
-	
+
 		var mapOptions = {
 				center: mapDefaultLocation,
 				zoom: zoom_padrao,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
-	
+
 		map = new google.maps.Map(document.getElementById("mapa"),mapOptions);
-		
+
 		boxText = document.createElement("div");
 		boxText.style.cssText = "border: 2px solid #20c1c1; margin-top: 8px; background: white; padding: 0px;";
 		boxText.innerHTML = "";
@@ -85,7 +93,7 @@ $(document).ready(function(){
 			,maxWidth: 0
 			,pixelOffset: new google.maps.Size(-100, 0)
 			,zIndex: null
-			,boxStyle: { 
+			,boxStyle: {
 			  background: "url('static/images/tipbox.gif') no-repeat"
 			  ,opacity: 0.90
 			  ,width: "200px"
@@ -97,28 +105,28 @@ $(document).ready(function(){
 			,pane: "floatPane"
 			,enableEventPropagation: false
 		};
-	
+
 		ib = new InfoBox(myOptions);
-		
+
 		ib.close();
 
 	}
-		
+
 	function setMap(lat,lng){
 		var center = new google.maps.LatLng(lat, lng)
 		map.setCenter(center);
 
 		var image = new google.maps.MarkerImage("/static/images/pin.png");
-		
+
 		var marker = new google.maps.Marker({
 			position: center,
 			map: map,
 			icon: image,
 			draggable: false
 		});
-		
+
 		marker.__position = center;
-		
+
 		google.maps.event.addListener(marker, 'mouseover', function(e) {
 			map.setCenter(marker.__position);
 			if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
@@ -127,7 +135,7 @@ $(document).ready(function(){
 
 
 	}
-	
+
 	function showInfoWindow(marker,source){
 		boxTextContent = "<table class='infowindow'><thead>";
 		boxTextContent += "<tr>";
@@ -150,9 +158,11 @@ $(document).ready(function(){
 	}
 
 
-	
+
 	function showCidadeData(){
 		loadBreadCrumb();
+
+
 		$("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
 		if (cidade_data.usuario.city_summary){
 			$("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
@@ -161,15 +171,15 @@ $(document).ready(function(){
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Cidade:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.name}));
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Estado:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.uf}));
 		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>País:</td><td class='valor'>$$dado</td></tr>".render({dado: paises[cidade_data.cidade.pais]}));
-	
+
 		if (cidade_data.variaveis){
-			$.each(infoVars[role],function(index,value){
-				var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[role][index].cognomen);
+			$.each(infoVars[institute_short_name],function(index,value){
+				var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[institute_short_name][index].cognomen);
 				if (dadoIndex.found){
 					var label = cidade_data.variaveis[dadoIndex.key].name;
-					if (infoVars[role][index].type == "number"){
-						var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[role][index].format, locale:"br"});
-					}else if (infoVars[role][index].type == "text"){
+					if (infoVars[institute_short_name][index].type == "number"){
+						var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[institute_short_name][index].format, locale:"br"});
+					}else if (infoVars[institute_short_name][index].type == "text"){
 						var value = cidade_data.variaveis[dadoIndex.key].last_value;
 					}
 					if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
@@ -193,16 +203,8 @@ $(document).ready(function(){
 				}
 			});
 		}
-	
-	/*	$.each(cidade_data.variaveis,function(index,value){
-			$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value</td></tr>".render(
-				{
-					label: cidade_data.variaveis[index].name,
-					value: $.formatNumber(cidade_data.variaveis[index].last_value, {format:"#,###", locale:"br"})
-				}
-			));
-		});*/
-	
+
+
 		$("#cidades-dados .image").css("background-image","none");
 		if (typeof(cidade_data.usuario.files.imagem_cidade) != undefined){
 			$("#cidades-dados .image").css("background-image","url('"+cidade_data.usuario.files.imagem_cidade+"')");
@@ -210,7 +212,7 @@ $(document).ready(function(){
 		if (typeof(cidade_data.usuario.files.logo_movimento) != undefined){
 			$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
 		}
-		
+
 		var diff = $("#cidades-dados .profile .content-fill").height() - $("#cidades-dados .profile").height() + 10;
 		if (diff > 10){
 			$("#cidades-dados .profile").css("height","+="+diff);
@@ -218,13 +220,13 @@ $(document).ready(function(){
 			$("#cidades-dados .map").css("height","+="+diff);
 			$("#cidades-dados #mapa").css("height","+="+diff);
 		}
-	
+
 		if (cidade_data.cidade.latitude != null && cidade_data.cidade.longitude != null){
 			setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
 		}
-		
+
 	}
-	
+
 	function loadIndicadoresData(){
 		$.ajax({
 			type: 'GET',
@@ -241,22 +243,22 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
+
 	function showIndicadoresData(){
 		var table_content = ""
 		$("#cidades-indicadores .table .content-fill").empty();
 		table_content += "<table>";
-		
+
 		var cont = 0;
-		
+
 		$.each(indicadores_data.resumos, function(eixo_index, eixo){
-			
+
 			table_content += "<thead class='eixos'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
-	
+
 			var periods = eixo;
 			$.each(periods, function(period_index, period){
 				var datas = periods[period_index].datas;
-				
+
 				if (datas.length > 0){
 					table_content += "<thead class='datas'><tr><th></th>";
 					$.each(datas, function(index, value){
@@ -264,14 +266,14 @@ $(document).ready(function(){
 					});
 					table_content += "<th></th></tr></thead>";
 				}
-	
+
 				table_content += "<tbody>";
-	
+
 				var indicadores = periods[period_index].indicadores;
 				indicadores.sort(function (a, b) {
 					a = a.name,
 					b = b.name;
-				
+
 					return a.localeCompare(b);
 				});
 				$.each(indicadores, function(i,item){
@@ -285,7 +287,7 @@ $(document).ready(function(){
 							}
 						}
 						table_content += "<td class='grafico'><a href='$$url'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({id: cont, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
-	
+
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
 								item.valores[j] = null;
@@ -300,14 +302,14 @@ $(document).ready(function(){
 				table_content += "</tbody>";
 			});
 		});
-	
+
 		table_content += "</table>";
-		
+
 		$("#cidades-indicadores .table .content-fill").append(table_content);
-		
+
 		geraGraficos();
 	}
-	
+
 	function geraGraficos(){
 		for (i = 0; i < graficos.length; i++){
 			var line = new RGraph.Line('graph-'+i, graficos[i]);
