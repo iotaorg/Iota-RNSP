@@ -2,9 +2,9 @@ var geocoder = new google.maps.Geocoder();
 var markers = [];
 var zoom_padrao = 9;
 var mapDefaultLocation = new google.maps.LatLng(-14.2350040, -51.9252800);
-	
+
 $(document).ready(function(){
-	
+
 	$.carregaMarkers = function(){
 		$.clearMarkers();
 		$(users_list).each(function(index,item){
@@ -24,45 +24,45 @@ $(document).ready(function(){
 						if (data.cidade.longitude) lng = data.cidade.longitude;
 					}
 				});
-				
+
 				if (lat != "" && lng != ""){
 					var latlng = new google.maps.LatLng(lat, lng);
 					var image = new google.maps.MarkerImage("/static/images/pin.png");
-	
+
 					var marker = new google.maps.Marker({
 						position: latlng,
 						map: map,
 						icon: image,
 						draggable: false
 					});
-	
+
 					marker.__uf = item.uf;
 					marker.__pais = item.pais;
 					marker.__uri = item.uri;
 					marker.__cidade = item.nome;
 					marker.__id = item.id;
 					marker.__position = latlng;
-					
+
 					markers.push(marker);
-					
+
 					google.maps.event.addListener(marker, 'click', function(e) {
 						$("#bubble-intro").fadeOut("slow");
 						map.setCenter(marker.__position);
 						if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
-						window.location.href = "/" + role.replace("_","") + "/" + marker.__pais.toLowerCase() + "/" + marker.__uf.toLowerCase() + "/" + marker.__uri;
-					});				
-					
+						window.location.href = "/" + marker.__pais.toLowerCase() + "/" + marker.__uf.toLowerCase() + "/" + marker.__uri;
+					});
+
 					google.maps.event.addListener(marker, 'mouseover', function(e) {
 						$("#bubble-intro").fadeOut("slow");
 						$.showInfoCidade(marker);
 					});
-	
+
 				}
 			}
 		});
-		
+
 	}
-	
+
 	$.clearMarkers = function(){
 		if (markers.length && markers.length == 0) return;
 		$.each(markers, function(i, marker) {
@@ -70,11 +70,11 @@ $(document).ready(function(){
 			marker.__uf = null;
 			marker.__cidade = null;
 		});
-		markers = new Array();		
+		markers = new Array();
 	}
 
 	$.carregaComboEstados = function(){
-		
+
 		$(estados_sg).each(function(index,item){
 			$("#uf_filter").append("<option value='$$uf'>$$uf".render({uf: item[1]}));
 		});
@@ -82,9 +82,9 @@ $(document).ready(function(){
 		$("#uf_filter").change(function(){
 			$.carregaMarkers();
 		});
-		
+
 	}
-	
+
 	$.setaMapaHome = function(){
 		if (map){
 			map.setCenter(mapDefaultLocation);
@@ -95,9 +95,9 @@ $(document).ready(function(){
 			google.maps.event.addListener(map, 'zoom_changed', function () {
 				$("#bubble-intro").fadeOut("slow");
 			});
-		}		
+		}
 	}
-	
+
 	$.showInfoCidade = function(marker){
 		boxTextContent = "<div style='padding: 2px 4px; text-align: center;'>";
 		boxTextContent += marker.__cidade + " - " + marker.__uf;
@@ -108,7 +108,7 @@ $(document).ready(function(){
 		ib.setContent(boxText);
 		ib.open(map, marker);
 	}
-	
+
 	if (ref == "home"){
 		var mapOptions = {
 			center: mapDefaultLocation,
@@ -126,7 +126,7 @@ $(document).ready(function(){
 			,maxWidth: 0
 			,pixelOffset: new google.maps.Size(-100, 0)
 			,zIndex: null
-			,boxStyle: { 
+			,boxStyle: {
 			  background: "url('static/images/tipbox.gif') no-repeat"
 			  ,opacity: 0.90
 			  ,width: "200px"
@@ -138,9 +138,9 @@ $(document).ready(function(){
 			,pane: "floatPane"
 			,enableEventPropagation: false
 		};
-	
+
 		var ib = new InfoBox(myOptions);
-	
+
 		map.controls[google.maps.ControlPosition.TOP_CENTER].push($('#bubble-intro')[0]);
 		$('#bubble-intro').show();
 		$.carregaComboEstados();
