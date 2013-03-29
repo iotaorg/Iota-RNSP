@@ -49,7 +49,7 @@ drop type tp_visibility_level cascade;
 CREATE TYPE tp_visibility_level AS ENUM
    ('public',
     'private',
-    'contry',
+    'country',
     'restrict'
     );
 
@@ -128,6 +128,7 @@ WITH (
 );
 
 
+
 --alter table city add column state_id int;
 --alter table city add column country_id int;
 
@@ -135,6 +136,50 @@ ALTER TABLE city
   ADD FOREIGN KEY (country_id) REFERENCES country (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE city
   ADD FOREIGN KEY (state_id) REFERENCES state (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+  -- Table: indicator_network_config
+
+-- DROP TABLE indicator_network_config;
+
+CREATE TABLE indicator_network_config
+(
+  indicator_id integer NOT NULL,
+  network_id integer NOT NULL,
+  unfolded_in_home boolean NOT NULL DEFAULT false,
+  CONSTRAINT indicator_network_config_pkey PRIMARY KEY (indicator_id, network_id),
+  CONSTRAINT indicator_network_config_fk_indicator_id FOREIGN KEY (indicator_id)
+      REFERENCES indicator (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT indicator_network_config_fk_network_id FOREIGN KEY (network_id)
+      REFERENCES network (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE indicator_network_config
+  OWNER TO postgres;
+
+-- Index: indicator_network_config_idx_indicator_id
+
+-- DROP INDEX indicator_network_config_idx_indicator_id;
+
+CREATE INDEX indicator_network_config_idx_indicator_id
+  ON indicator_network_config
+  USING btree
+  (indicator_id);
+
+-- Index: indicator_network_config_idx_network_id
+
+-- DROP INDEX indicator_network_config_idx_network_id;
+
+CREATE INDEX indicator_network_config_idx_network_id
+  ON indicator_network_config
+  USING btree
+  (network_id);
+
+
+
 
 
 INSERT INTO institute(
@@ -161,8 +206,33 @@ update city a set state_id = (select x.id from state x where a.uf = x.uf), count
 
 
 
+update "user" set name='superadmin', email='superadmin@email.com' where id=1;
+delete from "user_role" where user_id = 1;
+
+insert into "user_role"(user_Id, role_id) values (1, ( select id from "role" where name='superadmin' ));
+
+update "user" set network_id = 1 where id in (select user_id from prefeitos);
+update "user" set network_id = 2 where id in (select user_id from movimentos);
 
 
+CREATE OR REPLACE VIEW city_current_user AS
+ SELECT c.id AS city_id, u.id AS user_id
+   FROM city c
+   JOIN "user" u ON u.city_id = c.id;
+
+
+
+ALTER TABLE user_file
+   ALTER COLUMN created_at SET DEFAULT now() ;
+
+update user_file set created_at=now() + (id ||'s')::interval;
+
+ALTER TABLE user_file
+ALTER COLUMN created_at SET NOT NULL;
+
+update indicator set visibility_level ='public' where indicator_roles='_prefeitura,_movimento';
+
+select count(1) from indicator where visibility_level is null; -- tem q ser 0
 
 
 
