@@ -24,7 +24,7 @@ WITH (
 
 
 -- DROP TABLE user_menu;
-DROP TABLE user_menu;
+-- DROP TABLE user_menu;
 
 CREATE TABLE user_menu
 (

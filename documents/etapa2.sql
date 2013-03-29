@@ -17,7 +17,7 @@ WITH (
   OIDS=FALSE
 );
 
-
+drop table network ;
 CREATE TABLE network
 (
   id serial NOT NULL,
@@ -40,12 +40,12 @@ WITH (
 ALTER TABLE network
   OWNER TO postgres;
 
-alter table "user" add column network_id int;
+--alter table "user" add column network_id int;
 alter table "user" add column created_at timestamp not null default now();
 
 
 
-
+drop type tp_visibility_level cascade;
 CREATE TYPE tp_visibility_level AS ENUM
    ('public',
     'private',
@@ -63,6 +63,7 @@ ALTER TABLE indicator
 ALTER TABLE indicator
   ADD FOREIGN KEY (visibility_country_id) REFERENCES country (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
+  drop table indicator_user_visibility ;
 CREATE TABLE indicator_user_visibility
 (
   id serial NOT NULL,
@@ -86,7 +87,7 @@ WITH (
 );
 
 
-insert into role (name) values ('superadmin');
+-- insert into role (name) values ('superadmin');
 
 
 DROP TABLE country cascade;
@@ -127,10 +128,49 @@ WITH (
 );
 
 
-alter table city add column state_id int;
-alter table city add column country_id int;
+--alter table city add column state_id int;
+--alter table city add column country_id int;
 
 ALTER TABLE city
   ADD FOREIGN KEY (country_id) REFERENCES country (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE city
   ADD FOREIGN KEY (state_id) REFERENCES state (id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+INSERT INTO institute(
+            id, name, short_name, description, created_at, users_can_edit_value,
+            users_can_edit_groups, can_use_custom_css, can_use_custom_pages)
+VALUES
+(
+    1, 'Prefeituras', 'gov', 'administrado pelas prefeituras', now(), true, false, false, false
+),
+(
+    2, 'Movimentos', 'org', 'administrado pelos movimentos', now(), true, true, true, true
+);
+
+INSERT INTO country(
+        id, name, name_url, created_by)
+VALUES (1, 'Brasil','br',1);
+
+
+
+insert into state (name_url, name, created_by, country_id, uf )
+select lower(uf), uf, 1, 1, upper(uf) from city group by 1,2,3,4,5;
+
+update city a set state_id = (select x.id from state x where a.uf = x.uf), country_id=1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
