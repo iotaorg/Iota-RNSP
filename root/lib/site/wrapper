@@ -5,18 +5,14 @@
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <title>[% template.title or site.title or title %]</title>
-<link rel="stylesheet" href="/static/css/jquery-ui-1.9.2.custom.min.css" type="text/css" />
-<link rel="stylesheet" href="/static/css/style.css" type="text/css" />
-<link rel="stylesheet" href="/static/css/rnsp.dados.css" type="text/css" />
-<link rel="stylesheet" href="/static/css/xbreadcrumbs.css" type="text/css" />
 [% IF custom_css %]
-<link rel="stylesheet" href="[%custom_css%]" type="text/css" />
+    [%-c.assets.include(custom_css)| null-%]
 [%END%]
-[% IF institute.short_name == 'org' %]
-<link rel="stylesheet" href="/static/css/style-movimento.css" type="text/css" />
-<link rel="stylesheet" href="/static/css/rnsp.dados-movimento.css" type="text/css" />
-[% END %]
-
+[%- IF institute.short_name == 'org'- %]
+    [%- c.assets.include("css/style-movimento.css") | null-%]
+    [%- c.assets.include("css/rnsp.dados-movimento.css") | null-%]
+[%- END -%]
+[%- assets.export("css") -%]
 <link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />
 </head>
 <body>

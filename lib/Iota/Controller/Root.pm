@@ -61,6 +61,13 @@ sub root: Chained('/') PathPart('') CaptureArgs(0) {
     $c->assets->include("js/libraries/RGraph.common.tooltips.js");
     $c->assets->include("js/libraries/RGraph.line.js");
     $c->assets->include("js/xbreadcrumbs.js");
+
+    $c->assets->include("css/jquery-ui-1.9.2.custom.min.css");
+    $c->assets->include("css/style.css");
+    $c->assets->include("css/rnsp.dados.css");
+    $c->assets->include("css/xbreadcrumbs.css");
+
+
 }
 
 
