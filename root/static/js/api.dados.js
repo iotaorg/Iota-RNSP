@@ -15,13 +15,13 @@ $(document).ready(function(){
 	$.ajaxSetup({ cache: false });
 
 	var graficos = [];
-	
+
 	function carregaIndicadoresCidades(){
-		
+
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/user/rede/$$role/'.render({role: network_name_url.replace("_","")}),
+			url: api_path + '/api/public/network'.render(),
 			success: function(data, textStatus, jqXHR){
 				users_list = [];
 				indicadores_list = data.indicators;
@@ -30,13 +30,13 @@ $(document).ready(function(){
 					if (item.id == userID) cidade_uri = "/" + item.city.pais + "/" + item.city.uf + "/" + item.city.name_uri;
 					users_list.push({id: item.id, nome: item.city.name, pais: item.city.pais, uf: item.city.uf, uri: item.city.name_uri, label: item.city.name + " - " + item.city.uf});
 				});
-				
+
 				$(indicadores_list).each(function(index,value){
 					if (!findInJson(eixos_list.dados,"id",value.axis.id).found){
-						eixos_list["dados"].push({id: value.axis.id, name: value.axis.name});	
+						eixos_list["dados"].push({id: value.axis.id, name: value.axis.name});
 					}
 				});
-				
+
 				carregaIndicadores();
 			},
 			error: function(data){
@@ -52,10 +52,10 @@ $(document).ready(function(){
 		eixos_list.dados.sort(function (a, b) {
 			a = a.name,
 			b = b.name;
-		
+
 			return a.localeCompare(b);
 		});
-		
+
 		$(eixos_list.dados).each(function(index,value){
 			if (index == 0){
 				$("#axis_list").append("<div class='select' axis-id='0'><div class='content-fill'>Categoria</div></div>");
@@ -66,7 +66,7 @@ $(document).ready(function(){
 							nome: value.name
 				}));
 		});
-		
+
 		$("#axis_list .select").click(function(){
 			$("#axis_list .options").toggle();
 		});
@@ -81,12 +81,12 @@ $(document).ready(function(){
 				$(".menu-left div.indicators .item").show();
 			}
 			$("#indicador-busca").val("");
-			
+
 		});
 		$("#axis_list .options").hover(function(){
 			if (typeof(t_categorias) != "undefined"){
 				if (t_categorias){
-					clearTimeout(t_categorias);	
+					clearTimeout(t_categorias);
 				}
 			}
 		},function(){
@@ -101,10 +101,10 @@ $(document).ready(function(){
 				var termo = $(this).val();
 				var matches = $('.indicators .item').filter(function() {
 					var match = normalize(termo);
-					
+
 					var pattern = match;
 					var re = new RegExp(pattern,'g');
-				
+
 					return re.test( normalize($(this).text()) );
 				});
 				if ($("#axis_list .select").attr("axis-id") != 0 && $("#axis_list .select").attr("axis-id") != ""){
@@ -120,7 +120,7 @@ $(document).ready(function(){
 				refreshIndicadores();
 			}
 		});
-		
+
 		function refreshIndicadores(){
 			$("#axis_list .options").hide();
 			if ($("#axis_list .select").attr("axis-id") != 0){
@@ -134,10 +134,10 @@ $(document).ready(function(){
 				var termo = $("#indicador-busca").val();
 				var matches = $('.indicators .item').filter(function() {
 					var match = normalize(termo);
-					
+
 					var pattern = match;
 					var re = new RegExp(pattern,'g');
-				
+
 					return re.test( normalize($(this).text()) );
 				});
 				if ($("#axis_list .select").attr("axis-id") != 0 && $("#axis_list .select").attr("axis-id") != ""){
@@ -147,12 +147,12 @@ $(document).ready(function(){
 				}
 			}
 		}
-		
+
 		$(".indicators").empty();
 		indicadores_list.sort(function (a, b) {
 			a = a.name,
 			b = b.name;
-		
+
 			return a.localeCompare(b);
 		});
 		$.each(indicadores_list, function(i,item){
@@ -181,12 +181,12 @@ $(document).ready(function(){
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
 		}
 		$(".indicators .item").click( function (){
-			
+
 			if (ref == "home"){
-				window.location.href = "/"+role+"/" + $(this).attr("name-uri") + $.getUrlParams();
+				window.location.href = "/" + $(this).attr("name-uri") + $.getUrlParams();
 				return;
 			}
-		
+
 			if (indicadorID == $(this).attr("indicator-id")){
 				return;
 			}
@@ -194,23 +194,23 @@ $(document).ready(function(){
 
 			$(indicadores_list).each(function(index,item){
 				if (item.id == indicadorID){
-					indicadorDATA = item;	
+					indicadorDATA = item;
 				}
 			});
-			
+
 			$(".indicators .item").removeClass("selected");
 			$(this).addClass("selected");
 			$(".data-right .data-title .title").html($(".indicators .selected").html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
 
 			carregaVariacoes = true;
-			
+
 			if (ref == "comparacao"){
-				var url = "/"+role.replace("_","")+"/" + $(this).attr("name-uri") + $.getUrlParams();
+				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
 				History.pushState(null, null, url);
 
 				dadosGrafico = {"dados": [], "labels": []};
-				
+
 				if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
 					carregouTabela = false;
 					carregaDadosTabela();
@@ -223,9 +223,9 @@ $(document).ready(function(){
 					carregaDadosTabela();
 				}
 			}else if (ref == "indicador"){
-				var url = "/"+role.replace("_","") + cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
+				var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
 				History.pushState(null, null, url);
-				$.loadCidadeDataIndicador();	
+				$.loadCidadeDataIndicador();
 			}
 		});
 		if (ref == "comparacao"){
@@ -234,32 +234,32 @@ $(document).ready(function(){
   	}
 
 	function carregaDadosTabela(){
-		
+
 		if (!carregouTabela){
 			$.xhrPool.abortAll();
-			
+
 			var indicador = indicadorID;
 			var indicador_uri = $(".indicators div.selected").attr("name-uri");
-	
+
 			dadosGrafico = {"dados": [], "labels": []};
-			
+
 			var data_atual = new Date();
 			var ano_anterior = data_atual.getFullYear() - 1;
 			var date_labels = [];
 			for (i = ano_anterior - 3; i <= ano_anterior; i++){
 				dadosGrafico.labels.push(String(i));
 			}
-			
+
 			if (indicadorDATA.indicator_type == "varied"){
 				if (carregaVariacoes){
-					montaFiltroVariacao();	
+					montaFiltroVariacao();
 				}
 			}else{
 				removeFiltroVariacao();
 			}
-			
+
 			montaDateRuler();
-			
+
 			var table_content = ""
 			$(".data-content .table .content-fill").empty();
 			table_content += "<table id='table-data'>";
@@ -273,12 +273,12 @@ $(document).ready(function(){
 			table_content += "<tbody>";
 			table_content += "</tbody></table>";
 			$(".data-content .table .content-fill").append(table_content);
-	
+
 			var total_users = users_list.length;
 			var users_ready = 0;
-			
+
 			$(users_list).each(function(index,item){
-				
+
 				$.ajax({
 					type: 'GET',
 					dataType: 'json',
@@ -287,7 +287,7 @@ $(document).ready(function(){
 								indicatorid: indicador
 						}),
 					success: function(data, textStatus, jqXHR){
-						
+
 						if (indicadorDATA.indicator_type == "varied"){
 							if ($("#variationFilter option").length <= 0){
 								if(data.series.length > 0){
@@ -305,17 +305,16 @@ $(document).ready(function(){
 								}
 							}
 						}
-						
+
 						var valores = [];
 
-						row_content = "<tr user-id='$$id'><td class='cidade'><a href='/$$role/$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
+						row_content = "<tr user-id='$$id'><td class='cidade'><a href='/$$pais_uri/$$uf/$$city_uri/$$indicador_uri'>$$cidade</a></td>".render({
 									id: item.id,
 									cidade: item.nome,
 									uf: item.uf,
 									pais_uri: item.pais,
 									city_uri: item.uri,
-									indicador_uri: indicador_uri,
-									role: role.replace("_","")
+									indicador_uri: indicador_uri
 								});
 						var series = [];
 						for (j = 0; j < data.series.length; j++){
@@ -340,7 +339,7 @@ $(document).ready(function(){
 											});
 								valores.push(parseFloat(series[i]).toFixed(2));
 							}
-							
+
 						}
 
 						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
@@ -349,18 +348,18 @@ $(document).ready(function(){
 									});
 
 						$(".data-content .table .content-fill tbody").append(row_content);
-						
+
 						$("td.grafico a").click(function(e){
 							if($.getUrlVar("graphs")){
 								var graphs = $.getUrlVar("graphs").split("-");
 							}else{
 								var graphs = [];
 							}
-							
+
 							if (!findInArray(graphs,$(this).attr("user-id"))){
 								graphs.push($(this).attr("user-id"));
 							}
-							
+
 							e.preventDefault();
 							$.setUrl({graphs: graphs.join("-"), view: "graph"});
 
@@ -371,9 +370,9 @@ $(document).ready(function(){
 						dadosGrafico.dados.push({id: item.id, nome: item.nome, valores: valores, data: data, show: false, latitude: '', longitude: ''});
 
 						//alimenta dados do mapa
-						
+
 						users_ready++;
-						
+
 						if (users_ready >= total_users){
 							geraGraficos();
 							setaGraficos();
@@ -381,19 +380,19 @@ $(document).ready(function(){
 							geraMapa();
 						}
 						carregouTabela = true;
-						
+
 						setaTabs();
-						
+
 					},
 					error: function(data){
 						console.log("erro ao carregar informações do indicador");
 					}
 				});
-				
+
 			});
 		}
   	}
-	
+
 	function montaFiltroVariacao(){
 		$(".data-content .variationFilter").remove();
 		$(".data-content .tabs").before("<div class='variationFilter'>Selecione uma Faixa: <select id='variationFilter'></select></div>");
@@ -404,13 +403,13 @@ $(document).ready(function(){
 	}
 
 	function montaDateRuler(){
-		
+
 		var data_atual = new Date();
 		var ano_anterior = data_atual.getFullYear() - 1;
 
 		var grupos = 4;
 		var ano_i = ano_anterior - (grupos * 4) + 1;
-		
+
 		$(".table .period").empty();
 		$(".table .period").append("<div id='date-ruler'></div><div id='date-arrow'></div>");
 		var cont = 0;
@@ -422,26 +421,26 @@ $(document).ready(function(){
 				periodo += "-" + i + "</div>";
 				cont = -1;
 			}
-			cont++;	
+			cont++;
 		}
 		$("#date-ruler").append(periodo);
 		$("#date-ruler .item:last").addClass("active");
 		setDateArrow();
-		
+
 		$("#date-ruler .item").click(function(){
 			$("#date-ruler").find(".item").removeClass("active");
 			$(this).addClass("active");
 			setDateArrow();
 		});
 	}
-	
+
 	function setDateArrow(){
 		var item_pos = $("#date-ruler .item.active").offset();
-		
+
 		var diff = ($("#date-ruler .item.active").innerWidth() - $("#date-arrow").outerWidth()) / 2;
-		
+
 		var new_pos = {top: item_pos.top+15, left: item_pos.left+diff};
-		
+
 		$("#date-arrow").fadeOut("slow",function(){
 			$(this).show();
 			$(this).css("visibility","hidden");
@@ -449,15 +448,15 @@ $(document).ready(function(){
 					top: new_pos.top,
 					left: new_pos.left
 				});
-			
+
 			$(this).css("visibility","");
 			$(this).fadeIn(350);
-				
+
 		});
 	}
-	
+
 	function getUserCoord(){
-		
+
 		$.each(dadosGrafico.dados, function(index,item){
 			$.ajax({
 				async: false,
@@ -469,26 +468,26 @@ $(document).ready(function(){
 				success: function(data, textStatus, jqXHR){
 					if (data.cidade.latitude) dadosGrafico.dados[index].latitude = data.cidade.latitude;
 					if (data.cidade.longitude) dadosGrafico.dados[index].longitude = data.cidade.longitude;
-					
+
 				}
 			});
 		});
-		
+
 	}
-	
+
 	$.carregaGrafico = function(canvasId){
 
 		RGraph.ObjectRegistry.Clear();
 		var color_meta = '#ff0000';
 		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
 //		RGraph.Clear(document.getElementById(canvasId));
-		
+
 		var legendas = [];
-		
+
 		var linhas = [];
-		
+
 		var tooltips = [];
-		
+
 		if (indicadorDATA.goal){
 			linhas.push([ indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal ]);
 			tooltips.push(indicadorDATA.goal);
@@ -506,7 +505,7 @@ $(document).ready(function(){
 			var maxlength = 1;
 		}
 
-		var color_index = 0;		
+		var color_index = 0;
 		$.each(dadosGrafico.dados, function(i,item){
 			if (item.show){
 				linhas.push(item.valores);
@@ -520,10 +519,10 @@ $(document).ready(function(){
 						if (parseFloat(valor) > ymax) max = parseFloat(valor);
 
 						if (String(valor).length > maxlength) maxlength = String(valor).length;
-						
+
 						tooltips.push(parseFloat(valor).toFixed(2));
 					}else{
-						tooltips.push(" "); //jogar valor em branco na tooltip caso a sequencia nao tenha valor 
+						tooltips.push(" "); //jogar valor em branco na tooltip caso a sequencia nao tenha valor
 					}
 				});
 				color_index++;
@@ -543,7 +542,7 @@ $(document).ready(function(){
 		if (indicadorDATA.goal){
 			colors.unshift(color_meta);
 		}
-		
+
 		var line = new RGraph.Line(canvasId, linhas);
 		RGraph.Clear(line.canvas);
 		line.Set('chart.tooltips', tooltips);
@@ -556,15 +555,15 @@ $(document).ready(function(){
 		line.Set('chart.colors', colors);
 		line.Set('chart.tickmarks', 'filledcircle');
 		line.Draw();
-		
+
 		montaLegenda({source: legendas, removable: true});
-		
+
 		if (ref == "comparacao"){
 			setaTabs();
 		}
 
 	}
-	
+
 	function setGraphLine(id,status){
 		$.each(dadosGrafico.dados, function(index,item){
 			if (item.id == id){
@@ -572,7 +571,7 @@ $(document).ready(function(){
 			}
 		});
 	}
-	
+
 	function clearGraphLines(){
 		$.each(dadosGrafico.dados, function(index,item){
 			dadosGrafico.dados[index].show = false;
@@ -582,7 +581,7 @@ $(document).ready(function(){
 	function montaLegenda(args){
 		var legendas = args.source;
 		$(".graph .legend").empty();
-		
+
 		var legenda = "";
 		for (i = 0; i < legendas.length; i++){
 			if (legendas[i].meta){
@@ -598,9 +597,9 @@ $(document).ready(function(){
 					});
 		}
 		$(".graph .legend").append(legenda);
-		
+
 		if (args.removable){
-			
+
 			$(".data-content .graph .legend .item").hover(function(){
 				if (!$(this).hasClass("meta")){
 					$(this).find(".icon").fadeIn();
@@ -610,7 +609,7 @@ $(document).ready(function(){
 					$(this).find(".icon").hide();
 				}
 			});
-	
+
 			$(".data-content .graph .legend .icon").click(function(){
 				if ($(this).attr("item-id")){
 					if($.getUrlVar("graphs")){
@@ -618,17 +617,17 @@ $(document).ready(function(){
 					}else{
 						var graphs = [];
 					}
-					
+
 					graphs = $.removeItemInArray(graphs,$(this).attr("item-id"));
-					
+
 					$.setUrl({graphs: graphs.join("-")});
-	
+
 				}
 			});
 		}
-		
+
 	}
-	
+
 	function geraGraficos(){
 		for (i = 0; i < graficos.length; i++){
 
@@ -655,7 +654,7 @@ $(document).ready(function(){
             line.Draw();
 		}
 	}
-	
+
 	function setaTabs(){
 		$(".data-content .tabs .item").removeClass("selected");
 		if ($.getUrlVar("view") == "table" || !($.getUrlVar("view"))){
@@ -683,9 +682,9 @@ $(document).ready(function(){
 					$("#mapa").attr("lng","");
 				}
 			}
-		}		
+		}
 	}
-	
+
 	function setaGraficos(){
 		if ($.getUrlVar("graphs")){
 			clearGraphLines();
@@ -698,9 +697,9 @@ $(document).ready(function(){
 		}
 		$.carregaGrafico("main-graph");
 	}
-	
+
 	function geraMapa(){
-	
+
 
 		var mapDefaultLocation = new google.maps.LatLng(-15.6778, -47.4384);
 		var mapOptions = {
@@ -715,7 +714,7 @@ $(document).ready(function(){
 			$("#mapa").attr("lat",-15.6778);
 			$("#mapa").attr("lng",-47.4384);
 		}
-		
+
 		$("#mapa-filtro").empty();
 		$("#mapa-filtro").append("<label>Selecione um Período:</label> <select id='mapa-filtro-periodo'></select>");
 		$.each(dadosGrafico.labels,function(index,value){
@@ -725,40 +724,40 @@ $(document).ready(function(){
 					periodo: value
 				}));
 		});
-		
+
 		$("#mapa-filtro select option:last").attr("selected",true);
 		marcaMapa($("#mapa-filtro select option:selected").val());
-		
+
 		$("#mapa-filtro select").change(function(){
 			marcaMapa($(this).find("option:selected").val());
 		});
-		
+
 	}
-	
+
 	function marcaMapa(label_index){
-		
+
 		if (markerCluster) markerCluster.clearMarkers();
-		
+
         var markers = [];
 
 
 		var oldMin = "";
 		var oldMax = "";
 		var newMin = 10;
-		
+
 		dadosMapa = [];
-		
+
 		$.each(dadosGrafico.dados, function(index,item){
 			if (item.valores[label_index] != null){
-				
+
 				var valor = parseInt(item.valores[label_index].replace(".",""));
-				
+
 				if (oldMin == "") oldMin = valor;
 				if (oldMax == "") oldMax = valor;
-				
+
 				if (valor < oldMin) oldMin = valor;
 				if (valor > oldMax) oldMax = valor;
-				
+
 				dadosMapa.push({id: item.id, nome: item.nome, valor: item.valores[label_index], latitude: item.latitude, longitude: item.longitude, novo_valor: valor});
 
 			}
@@ -785,19 +784,19 @@ $(document).ready(function(){
 						position: latLng,
 						map: map
 					});
-					
+
 					marker.__userID = item.id;
 					marker.__position = latLng;
 					marker.__valor = item.valor;
 					marker.__nome = item.nome;
 
 					markers.push(marker);
-					
+
 
 				}
 			}
 		});
-		
+
 		markerCluster = new MarkerClusterer(map, markers, {gridSize: 40});
 		var numStyles = markerCluster.getStyles().length;
 
@@ -805,10 +804,10 @@ $(document).ready(function(){
 	}
 
 	function customClusterText(markers,numStyles){
-		
+
 		var text;
 		var title;
-		
+
 		var index = 0;
 		var count = markers.length;
 		var dv = count;
@@ -816,7 +815,7 @@ $(document).ready(function(){
 			dv = parseInt(dv / 10, 10);
 			index++;
 		}
-		
+
 		index = Math.min(index, numStyles);
 
 		if (markers.length > 0){
@@ -831,19 +830,19 @@ $(document).ready(function(){
 			index: index,
 			title: title
 		};
-		
+
   	}
-	
+
 	function convertRangeValue(oldMin,oldMax,newMin,newMax,value){
 		var oldRange = (oldMax - oldMin);
 		var newRange = (newMax - newMin);
 		var newValue = (((value - oldMin) * newRange) / oldRange) + newMin;
-		
+
 		if (oldRange <= 0){
 			newValue = 10;
 		}
 		console.log(newValue);
-		
+
 		return newValue;
 	}
 
@@ -883,11 +882,11 @@ $(document).ready(function(){
 		}else{
 			var graphs = [];
 		}
-		
+
 		if (!findInArray(graphs,$("#graph-user-selected").val())){
 			graphs.push($("#graph-user-selected").val());
 		}
-		
+
 		$.setUrl({graphs: graphs.join("-")});
 		$("#graph-search-user").val("");
 	});
@@ -907,7 +906,7 @@ $(document).ready(function(){
 		}
 
 	}
-	
+
 	function setaDadosAbertos(){
 
 		$("#button-download").click(function(){
@@ -918,8 +917,8 @@ $(document).ready(function(){
 			$(".download-links").toggle();
 			$(this).toggleClass("down");
 		});
-	
-	
+
+
 		$("#button-share").click(function(){
 			if ($(".download-links").is(":visible")){
 				$(".download-links").toggle();
@@ -939,16 +938,16 @@ $(document).ready(function(){
 			e.preventDefault();
 		});
 
-		$(".download-links").empty();	
-		$(".download-links").append("<div class='label'>Tipo:</div>");	
+		$(".download-links").empty();
+		$(".download-links").append("<div class='label'>Tipo:</div>");
 		if (ref == "home"){
-			$(".download-links").append("<select id='dados-abertos-tipo'><option value='indicadores'>Indicadores</option><option value='variaveis'>Variáveis</option></select>");	
+			$(".download-links").append("<select id='dados-abertos-tipo'><option value='indicadores'>Indicadores</option><option value='variaveis'>Variáveis</option></select>");
 		}else{
-			$(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados</option><option value='variaveis'>Variáveis</option></select>");	
+			$(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados</option><option value='variaveis'>Variáveis</option></select>");
 		}
-		$(".download-links").append("<a href='#' class='botao xml' formato='xml'>XML</a>");	
-		$(".download-links").append("<a href='#' class='botao csv' formato='csv'>CSV</a>");	
-		$(".download-links").append("<a href='#' class='botao json' formato='json'>JSON</a>");	
+		$(".download-links").append("<a href='#' class='botao xml' formato='xml'>XML</a>");
+		$(".download-links").append("<a href='#' class='botao csv' formato='csv'>CSV</a>");
+		$(".download-links").append("<a href='#' class='botao json' formato='json'>JSON</a>");
 
 		$(".download-links a.botao").unbind();
 		$(".download-links a.botao").click(function(e){
