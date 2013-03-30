@@ -188,6 +188,14 @@ eval {
             $users = from_json( $res->content );
             is($users->{users}[0]{roles}[0], 'superadmin', 'superadmin filter ok');
 
+            ( $res, $c ) = ctx_request(
+                GET '/api/user?network_id=1'
+            );
+
+            $users = from_json( $res->content );
+
+            is(scalar @{$users->{users}}, '2', 'filter ok');
+
 
             die 'rollback';
         }
