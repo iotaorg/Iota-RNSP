@@ -4,7 +4,7 @@ use Moose::Role;
 with 'Catalyst::TraitFor::Controller::DBIC::DoesPaging';
 # a jquery manda essa _ pra nao fazer cache
 has 'ignored_params' =>
-  ( is => 'rw', default => sub { [qw(password api_key columns content-type _ limit start sort dir _dc rm xaction indicator_id)] } );
+  ( is => 'rw', default => sub { [qw(password api_key columns content-type _ limit start sort dir _dc rm xaction indicator_id network_id role)] } );
 
 around list_GET => sub {
   my $orig = shift;

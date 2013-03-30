@@ -282,11 +282,11 @@ sub list_GET {
             'role.name' => $c->req->params->{role}
         });
     }
-    if ($c->req->params->{network_id}){
-        $rs = $rs->search({
-            'me.network_id' => $c->req->params->{network_id}
-        });
-    }
+
+    $rs = $rs->search({
+        'me.network_id' => $c->req->params->{network_id}
+    }) if ($c->req->params->{network_id});
+
 
     $self->status_ok(
         $c,
@@ -350,10 +350,6 @@ sub list_GET {
                 }
                 )
                 : ( institute => undef ),
-
-
-
-
 
                 url => $c->uri_for_action( $self->action_for('user'), [ $_->{id} ] )
                 ->as_string
