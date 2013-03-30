@@ -56,7 +56,7 @@ __PACKAGE__->table("user_menu");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 title
 
@@ -88,7 +88,7 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "page_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "title",
   { data_type => "text", is_nullable => 0 },
   "position",
@@ -143,7 +143,12 @@ __PACKAGE__->belongs_to(
   "page",
   "Iota::Schema::Result::UserPage",
   { id => "page_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 user
@@ -177,8 +182,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:14:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:150ZGyTy+p4YwiRJo0DkaA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-30 15:37:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cyNdR2xvN87e3rQuOgl/WQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

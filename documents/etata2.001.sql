@@ -9,7 +9,7 @@ CREATE TABLE user_page
   id serial NOT NULL,
   user_id integer NOT NULL,
   created_at timestamp without time zone NOT NULL DEFAULT now(),
-  pubished_at timestamp without time zone DEFAULT now(),
+  published_at timestamp without time zone DEFAULT now(),
   title character varying NOT NULL,
   title_url character varying NOT NULL,
   content character varying NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE user_menu
 (
   id serial NOT NULL,
   user_id integer NOT NULL,
-  page_id integer NOT NULL,
+  page_id integer ,
   title text NOT NULL,
   "position" integer NOT NULL DEFAULT 0,
   menu_id integer,

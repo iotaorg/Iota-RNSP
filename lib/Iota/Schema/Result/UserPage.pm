@@ -59,7 +59,7 @@ __PACKAGE__->table("user_page");
   is_nullable: 0
   original: {default_value => \"now()"}
 
-=head2 pubished_at
+=head2 published_at
 
   data_type: 'timestamp'
   default_value: current_timestamp
@@ -100,7 +100,7 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
-  "pubished_at",
+  "published_at",
   {
     data_type     => "timestamp",
     default_value => \"current_timestamp",
@@ -160,8 +160,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-20 10:14:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xyi0ciJLdW4FDYlGhPnOww
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-30 16:07:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:E3FvYbg++hZnMOFNmswH1w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

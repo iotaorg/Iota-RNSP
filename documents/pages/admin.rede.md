@@ -27,11 +27,7 @@ Detalhes
 
 * Preferencias
 
-parte de editar os dados igual ao de hoje,
-
-parte do upload do CSS / menu e paginas esperar eu fechar isso melhor.
-
-
+parte de editar os dados igual ao de hoje
 
 * Usuários
 

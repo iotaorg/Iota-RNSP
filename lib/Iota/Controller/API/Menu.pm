@@ -39,7 +39,7 @@ sub menu_GET {
     $self->status_ok(
         $c,
         entity => {
-        (map { $_ => $object_ref->{$_} } qw(id user_id page_id position title))
+        (map { $_ => $object_ref->{$_} } qw(id user_id page_id position menu_id title))
         }
     );
 }
@@ -130,7 +130,7 @@ sub list_GET {
 
     foreach my $obj (@list){
         push @objs, {
-            (map { $_ => $obj->{$_} } qw(id user_id page_id position title)),
+            (map { $_ => $obj->{$_} } qw(id user_id page_id position menu_id title)),
 
             (map { "page_".$_ => $obj->{page}{$_} } qw(title title_url id)),
 

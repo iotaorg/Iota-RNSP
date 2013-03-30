@@ -58,7 +58,7 @@ eval {
                 [
                     'page.update.title'       => 'BarFoo',
                     'page.update.content'     => 'aa',
-                    'page.update.pubished_at' => '2010-01-02'
+                    'page.update.published_at' => '2010-01-02'
                 ]
             );
             ok( $res->is_success, 'page updated' );
@@ -73,7 +73,7 @@ eval {
             );
             is( $updated_page->title, 'BarFoo', 'title ok' );
             is( $updated_page->content, 'aa', 'content ok' );
-            like( $updated_page->pubished_at->dmy, qr/2010/, 'pubished_at' );
+            like( $updated_page->published_at->dmy, qr/2010/, 'published_at' );
 
             ( $res, $c ) = ctx_request( GET '/api/page?api_key=test');
             ok( $res->is_success, 'listing ok!' );

@@ -22,7 +22,7 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             profile => {
                 user_id      => { required => 1, type => 'Str' },
-                pubished_at  => { required => 0, type => DataStr },
+                published_at  => { required => 0, type => DataStr },
                 title        => { required => 1, type => 'Str' },
                 title_url    => { required => 0, type => 'Str' },
                 content      => { required => 1, type => 'Str' },
@@ -33,7 +33,7 @@ sub verifiers_specs {
             profile => {
                 id           => { required => 1, type => 'Int' },
                 user_id      => { required => 0, type => 'Str' },
-                pubished_at  => { required => 0, type => DataStr },
+                published_at  => { required => 0, type => DataStr },
                 title        => { required => 1, type => 'Str' },
                 title_url    => { required => 0, type => 'Str' },
                 content      => { required => 1, type => 'Str' },

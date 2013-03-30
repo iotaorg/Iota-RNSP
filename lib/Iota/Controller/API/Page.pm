@@ -39,7 +39,7 @@ sub page_GET {
     $self->status_ok(
         $c,
         entity => {
-        (map { $_ => $object_ref->{$_} } qw(id user_id created_at pubished_at title title_url content))
+        (map { $_ => $object_ref->{$_} } qw(id user_id created_at published_at title title_url content))
         }
     );
 }
@@ -128,7 +128,7 @@ sub list_GET {
 
     foreach my $obj (@list){
         push @objs, {
-            (map { $_ => $obj->{$_} } qw(id user_id created_at pubished_at title title_url content)),
+            (map { $_ => $obj->{$_} } qw(id user_id created_at published_at title title_url content)),
             url => $c->uri_for_action( $self->action_for('page'), [ $obj->{id} ] )->as_string,
         }
     }
