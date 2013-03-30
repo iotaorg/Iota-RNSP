@@ -16,6 +16,44 @@ Detalhes
 -------
 
 
+retorno de /api/user
+
+    active                   :  1,
+    bairro                   :  undef,
+    cep                      :  undef,
+    cidade                   :  undef,
+    city                     :  {
+        id  :  2,
+        name:  "Outracidade"
+    },
+    email                    :  "movimento2@email.com",
+    email_contato            :  undef,
+    endereco                 :  undef,
+    estado                   :  undef,
+    id                       :  6,
+    institute                :  {
+        can_use_custom_css   :  1,
+        can_use_custom_pages :  1,
+        id                   :  2,
+        name                 :  "Movimentos",
+        users_can_edit_groups:  1,
+        users_can_edit_value :  1
+    },
+    name                     :  "movimento2",
+    network                  :  {
+        id      :  2,
+        name    :  "RNSP",
+        name_url:  "movim"
+    },
+    nome_responsavel_cadastro:  undef,
+    roles                    :  [
+        [0] "user"
+    ],
+    telefone                 :  undef,
+    telefone_contato         :  undef,
+    url                      :  "http://localhost/api/user/6"
+
+
 ### Preferencias
 
 Parte igual já tem hoje, e mais um pedaço para subir um CSS caso a instituicao do usuario tenha permissao para `can_use_custom_css=1`
