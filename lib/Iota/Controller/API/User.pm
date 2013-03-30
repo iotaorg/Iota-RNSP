@@ -143,6 +143,19 @@ sub user_GET {
             )),
             created_at => $attrs{created_at}->datetime,
 
+            ($user->network && $user->network->institute
+            ? (
+            institute => {
+                users_can_edit_value  => $user->network->institute->users_can_edit_value,
+                users_can_edit_groups => $user->network->institute->users_can_edit_groups,
+                can_use_custom_css    => $user->network->institute->can_use_custom_css,
+                can_use_custom_pages  => $user->network->institute->can_use_custom_pages,
+                name                  => $user->network->institute->name,
+                id                    => $user->network->institute->id,
+            }
+            )
+            : ( institute => undef )),
+
             ($user->city
             ? (
                 city => $c->uri_for($c->controller('API::City')->action_for('city'), [ $attrs{city_id} ] )->as_string
@@ -162,6 +175,7 @@ sub user_GET {
             : ( network => undef )),
         }
     );
+
 }
 
 =pod
