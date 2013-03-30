@@ -153,12 +153,15 @@ eval {
 
             use JSON qw(from_json);
             my $users = from_json( $res->content );
+
             foreach (@{$users->{users}} ){
                 next unless $_->{name} eq 'Foo Bar';
 
                 delete $_->{url};
                 like(delete $_->{id}, qr/^\d+$/, 'have id');
                 is(ref delete $_->{roles}, 'ARRAY', 'roles');
+                delete $_->{institute};
+
                 my $var = {
                     'nome_responsavel_cadastro' => 'nome_responsavel_cadastro',
                     'cidade' => undef,

@@ -260,7 +260,7 @@ sub list_GET {
         unless $c->check_any_user_role(qw(admin superadmin));
 
     my $rs = $c->stash->{collection}->search_rs( {'me.active' => 1}, {
-        prefetch => ['city','network', { user_roles => 'role'  } ]
+        prefetch => ['city', { 'network' => 'institute'}, { user_roles => 'role'  } ]
     } );
 
     if ($c->req->params->{role}){
@@ -279,6 +279,7 @@ sub list_GET {
         entity => {
         users => [
             map {
+
             +{
                 name => $_->{name},
                 id => $_->{id},
@@ -321,6 +322,21 @@ sub list_GET {
                 ]
                 )
                 : ( roles => [] ),
+
+
+                exists $_->{network}{institute}
+                ? (
+                institute => {
+                    users_can_edit_value  => $_->{network}{institute}{users_can_edit_value},
+                    users_can_edit_groups => $_->{network}{institute}{users_can_edit_groups},
+                    can_use_custom_css    => $_->{network}{institute}{can_use_custom_css},
+                    can_use_custom_pages  => $_->{network}{institute}{can_use_custom_pages},
+                    name                  => $_->{network}{institute}{name},
+                    id                    => $_->{network}{institute}{id},
+                }
+                )
+                : ( institute => undef ),
+
 
 
 
