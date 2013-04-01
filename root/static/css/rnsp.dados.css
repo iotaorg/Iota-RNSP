@@ -422,6 +422,9 @@ table{
 	padding: 5px;
 	font-family: arial;
 }
+#cidades-indicadores .table{
+	border-collapse: separate;
+}
 #cidades-indicadores .table td,
 #cidades-indicadores .table th,
 #cidades-indicadores .table div{
