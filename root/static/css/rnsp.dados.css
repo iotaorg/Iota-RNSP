@@ -458,10 +458,16 @@ table{
 	background: url(../images/seta_up.png) no-repeat 98%;
 }
 
-#cidades-indicadores .table thead.datas{
+#cidades-indicadores .table thead.eixos thead.datas{
+	display: block;
+}
+#cidades-indicadores .table thead.eixos.collapsed thead.datas{
 	display: none;
 }
-#cidades-indicadores .table tbody tr.folded{
+#cidades-indicadores .table thead.eixos tbody tr{
+	display: block;
+}
+#cidades-indicadores .table thead.eixos.collapsed tbody tr{
 	display: none;
 }
 
