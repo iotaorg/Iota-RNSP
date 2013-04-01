@@ -253,7 +253,7 @@ $(document).ready(function(){
 
 		$.each(indicadores_data.resumos, function(eixo_index, eixo){
 
-			table_content += "<thead class='eixos'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
+			table_content += "<thead class='eixos collapsed'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
 
 			var periods = eixo;
 			$.each(periods, function(period_index, period){
@@ -277,7 +277,12 @@ $(document).ready(function(){
 					return a.localeCompare(b);
 				});
 				$.each(indicadores, function(i,item){
-					table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+					if (item.network_config.unfolded_in_home == 1){
+						var tr_class = "unfolded";	
+					}else{
+						var tr_class = "folded";	
+					}
+					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
@@ -306,6 +311,14 @@ $(document).ready(function(){
 		table_content += "</table>";
 
 		$("#cidades-indicadores .table .content-fill").append(table_content);
+		
+		$("#cidades-indicadores thead.eixos").click(function(){
+			$(this).toggleClass("collapsed");
+			$(this).nextAll("thead.datas:first").toggle();
+			var tbody = $(this).nextAll("tbody:first");
+			$(tbody).find("tr.unfolded").removeClass("unfolded").addClass("folded");
+			$(tbody).find("tr").toggle();
+		});
 
 		geraGraficos();
 	}
