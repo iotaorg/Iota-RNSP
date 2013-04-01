@@ -253,7 +253,7 @@ $(document).ready(function(){
 
 		$.each(indicadores_data.resumos, function(eixo_index, eixo){
 
-			table_content += "<thead class='eixos'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
+			table_content += "<thead class='eixos collapsed'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
 
 			var periods = eixo;
 			$.each(periods, function(period_index, period){
@@ -308,6 +308,7 @@ $(document).ready(function(){
 		$("#cidades-indicadores .table .content-fill").append(table_content);
 		
 		$("#cidades-indicadores thead.eixos").click(function(){
+			$(this).toggleClass("collapsed");
 			$(this).nextAll("thead.datas:first, tbody:first").toggle();
 		});
 
