@@ -314,6 +314,10 @@ $(document).ready(function(){
 		
 		$("#cidades-indicadores thead.eixos").click(function(){
 			$(this).toggleClass("collapsed");
+			$(this).nextAll("thead.datas:first").toggle();
+			var tbody = $(this).nextAll("tbody:first");
+			$(tbody).find("tr.unfolded").attr("display",$(tbody).find("tr.folded").attr("display"));
+			$(tbody).find("tr").toggle();
 		});
 
 		geraGraficos();
