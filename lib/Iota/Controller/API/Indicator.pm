@@ -321,12 +321,32 @@ sub list_GET {
     my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => ['owner','axis'] } );
 
     my %roles = map { $_ => 1 } $c->user->roles;
+    # superadmin visualiza todas
+    if (exists $roles{admin}){
+    my $x = $c->user;
+        my $country_id;
 
-    #my @roles;
-    #push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
-    #push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
+        my $user = $c->model('DB::User')->search({
+            id => $c->user->id
+        })->next;
+        if ($user->city_id){
+            my $user_city  = $c->model('DB::City')->search({
+                id => $user->city_id
+            })->next;
 
-    #$rs = $rs->search({ '-or' => \@roles });
+    use DDP; p $user_city;
+            $country_id = $user_city ? $user_city->country_id : undef;
+        }
+
+        $rs = $rs->search({
+        '-or' => [
+            { visibility_level => 'public' },
+            { visibility_level => 'country', visibility_country_id => $country_id },
+            { visibility_level => 'private', visibility_user_id => $c->user->id },
+            { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => $c->user->id },
+        ]
+        }, { join => 'indicator_user_visibilities' });
+    }
 
     my @list = $rs->as_hashref->all;
     my @objs;

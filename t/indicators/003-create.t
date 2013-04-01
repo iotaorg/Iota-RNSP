@@ -54,7 +54,7 @@ eval {
 
                     'indicator.create.observations' => 'lala',
                     'indicator.create.visibility_level' => 'restrict',
-                    'indicator.create.visibility_users_id' => '4,5,6,7',
+                    'indicator.create.visibility_users_id' => '1',
 
                 ]
             );
@@ -88,7 +88,7 @@ eval {
             my $indicator_res = eval{from_json( $res->content )};
             is($indicator_res->{visibility_level}, 'restrict', 'visibility_level ok');
 
-            is_deeply($indicator_res->{restrict_to_users}, [4,5,6,7], 'restrict_to_users ok');
+            is_deeply($indicator_res->{restrict_to_users}, [1], 'restrict_to_users ok');
             is($indicator_res->{name}, 'Foo Bar', 'name ok');
 
 
