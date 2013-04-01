@@ -25,7 +25,7 @@ var md = function () {
 
         var base_uri = '';
         var arquivo = indi ? 'dados.' + formato : 'indicadores.'+formato;
-        var u rl = '/' + rede;
+        var url = '/' + rede;
         if ((cidade =='')==false){
             url = url + '/' +  cidade;
         }

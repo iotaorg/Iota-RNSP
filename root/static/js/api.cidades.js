@@ -306,6 +306,11 @@ $(document).ready(function(){
 		table_content += "</table>";
 
 		$("#cidades-indicadores .table .content-fill").append(table_content);
+		
+		$("#cidades-indicadores thead.eixos").click(function(){
+			$(this).next("thead.datas").toggle();
+			$(this).next("tbody").toggle();
+		});
 
 		geraGraficos();
 	}
