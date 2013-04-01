@@ -1,0 +1,26 @@
+	<div id="breadcrumb">
+    	<div class="contents">
+            <ul class="xbreadcrumbs" id="breadcrumbs-top">
+            </ul>
+		    <div class="clear"></div>
+        </div>
+	</div>
+	<div id="content">
+		<div class="content">
+			<div id="cidades-pagina">
+					<div class="title">[%page.title%]</div>
+					<div class="content-fill">
+
+					[%page.content%]
+
+					</div>
+			</div>
+			<div class="clear"></div>
+        </div>
+    </div>
+
+	<script type="text/javascript">
+		var userID = [% user.id %];
+		var ref = 'cidade_pagina';
+		[% PROCESS 'network_javascript.tt'%]
+	</script>

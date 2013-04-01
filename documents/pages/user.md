@@ -104,11 +104,6 @@ Tanto menu como page tem o update com `/api/page/$id` e `/api/menu/$id` e list/g
 
 ### Editar valores
 
-Se a instituicao do usuario logado tiver `users_can_edit_value=1`
-
-
-### Editar valores
-
 Se a instituicao do usuario logado tiver `users_can_edit_value=1`,
 
 lembrando de desativar o editar na hora de fazer o cadastro tambem.

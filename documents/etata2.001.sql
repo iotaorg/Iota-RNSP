@@ -49,3 +49,48 @@ WITH (
   OIDS=FALSE
 );
 
+
+-- Table: user_indicator_config
+
+-- DROP TABLE user_indicator_config;
+
+CREATE TABLE user_indicator_config
+(
+  id serial NOT NULL,
+  user_id integer NOT NULL,
+  indicator_id integer NOT NULL,
+  technical_information text,
+  created_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT user_indicator_config_pkey PRIMARY KEY (id),
+  CONSTRAINT user_indicator_config_fk_indicator_id FOREIGN KEY (indicator_id)
+      REFERENCES indicator (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT user_indicator_config_fk_user_id FOREIGN KEY (user_id)
+      REFERENCES "user" (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT user_indicator_config_user_id_indicator_id_key UNIQUE (user_id, indicator_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE user_indicator_config
+  OWNER TO postgres;
+
+-- Index: user_indicator_config_idx_indicator_id
+
+-- DROP INDEX user_indicator_config_idx_indicator_id;
+
+CREATE INDEX user_indicator_config_idx_indicator_id
+  ON user_indicator_config
+  USING btree
+  (indicator_id);
+
+-- Index: user_indicator_config_idx_user_id
+
+-- DROP INDEX user_indicator_config_idx_user_id;
+
+CREATE INDEX user_indicator_config_idx_user_id
+  ON user_indicator_config
+  USING btree
+  (user_id);
+

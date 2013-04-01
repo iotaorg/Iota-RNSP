@@ -174,11 +174,34 @@ sub network_estado: Chained('network_pais') PathPart('') CaptureArgs(1) {
 sub network_cidade: Chained('network_estado') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $cidade ) = @_;
     $c->stash->{cidade} = $cidade;
+
+    $self->stash_tela_cidade($c);
 }
 
 sub network_render: Chained('network_cidade') PathPart('') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
-    $self->stash_tela_cidade($c);
+    my ( $self, $c ) = @_;
+}
+
+sub user_page: Chained('network_cidade') PathPart('pagina') CaptureArgs(2) {
+    my ( $self, $c, $page_id, $title ) = @_;
+
+    my $page = $c->model('DB::UserPage')->search({
+        id => $page_id,
+        user_id => $c->stash->{user}{id}
+    })->as_hashref->next;
+
+    $c->detach('/error_404') unless $page;
+    $c->stash->{page} = $page;
+
+    $c->stash( template => 'home_cidade_pagina.tt',
+        title => $page->{title}
+    );
+
+
+}
+
+sub user_page_render: Chained('user_page') PathPart('') Args(0) {
+    my ( $self, $c ) = @_;
 }
 
 
@@ -280,15 +303,71 @@ sub stash_tela_cidade {
         city_id => $city->{id},
         'me.active'  => 1,
         'me.network_id' => $c->stash->{network}->id
-    } )->as_hashref->next;
+    } )->next;
 
     $c->detach('/error_404') unless $user;
 
+    my $menurs = $user->user_menus->search(undef, {
+        order_by => [{'-asc'=>'me.position'}, 'me.id'],
+        prefetch => 'page'
+    });
+
+    $user = {$user->get_inflated_columns};
+    my $menu = {};
+    my @menu_out;
+
+    while (my $m = $menurs->next){
+        my $pai = $m->menu_id || $m->id;
+        push(@{$menu->{$pai}}, $m);
+    }
+
+    while (my ($id, $rows) = each %$menu){
+        my $menu;
+        for my $menurs ( @$rows ){
+            if (!$menurs->menu_id){
+                $menu = {
+                    title => $menurs->title,
+                    (link  => $menurs->page_id
+                        ? $c->uri_for(
+                            $self->action_for( 'user_page_render'), [
+                                $c->stash->{pais},
+                                $c->stash->{estado},
+                                $c->stash->{cidade},
+                                $menurs->page_id,
+                                $menurs->page->title_url,
+                            ])
+                        : ''
+                    )
+                };
+                push @menu_out, $menu;
+            }
+        }
+
+        for my $menurs ( @$rows ){
+            if ($menurs->menu_id){
+                push @{$menu->{subs}}, {
+                    title => $menurs->title,
+                    (link  => $menurs->page_id
+                        ? $c->uri_for(
+                            $self->action_for( 'user_page_render'), [
+                                $c->stash->{pais},
+                                $c->stash->{estado},
+                                $c->stash->{cidade},
+                                $menurs->page_id,
+                                $menurs->page->title_url,
+                            ])
+                        : ''
+                    )
+                };
+            }
+        }
+    }
 
     $c->stash(
         city => $city,
         user => $user,
-        template => 'home_cidade.tt'
+        template => 'home_cidade.tt',
+        menu => \@menu_out
     );
 }
 
