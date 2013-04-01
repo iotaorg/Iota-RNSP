@@ -444,9 +444,9 @@ table{
 	font-size: 12pt;
 	color: #999;
 	padding: 5px 10px;
-	background-color: #fafafa;
 	text-align: left;
 	background: url(../images/seta.png) no-repeat 98%;
+	background-color: #fafafa;
 }
 
 #cidades-indicadores .table thead.eixos th:hover{
@@ -456,21 +456,15 @@ table{
 
 #cidades-indicadores .table thead.eixos.collapsed th{
 	background: url(../images/seta_up.png) no-repeat 98%;
+	background-color: #fafafa;
 }
 
-#cidades-indicadores .table thead.eixos thead.datas{
-	display: block;
-}
-#cidades-indicadores .table thead.eixos.collapsed thead.datas{
+#cidades-indicadores .table thead.datas{
 	display: none;
 }
-#cidades-indicadores .table thead.eixos tbody tr{
-	display: block;
-}
-#cidades-indicadores .table thead.eixos.collapsed tbody tr{
+#cidades-indicadores .table tbody tr.folded{
 	display: none;
 }
-
 
 #cidades-indicadores .table tr td,
 #cidades-indicadores .table tr th{
