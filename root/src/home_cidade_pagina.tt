@@ -8,11 +8,9 @@
 	<div id="content">
 		<div class="content">
 			<div id="cidades-pagina">
-					<div class="title">[%page.title%]</div>
+					<h1 class="title">[%page.title%] - <small>[% city.name%] / [%city.uf %]</small></h1>
 					<div class="content-fill">
-
 					[%page.content%]
-
 					</div>
 			</div>
 			<div class="clear"></div>
