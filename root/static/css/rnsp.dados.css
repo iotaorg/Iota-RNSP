@@ -461,7 +461,7 @@ table{
 #cidades-indicadores .table thead.datas{
 	display: none;
 }
-#cidades-indicadores .table tbody{
+#cidades-indicadores .table tbody tr.folded{
 	display: none;
 }
 

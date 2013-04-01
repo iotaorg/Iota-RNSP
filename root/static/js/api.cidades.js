@@ -277,7 +277,12 @@ $(document).ready(function(){
 					return a.localeCompare(b);
 				});
 				$.each(indicadores, function(i,item){
-					table_content += "<tr><td class='nome'><a href='$$url'>$$nome</a></td>".render({nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+					if (item.network_config.unfolded_in_home == 1){
+						var tr_class = "unfolded";	
+					}else{
+						var tr_class = "folded";	
+					}
+					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
@@ -309,7 +314,8 @@ $(document).ready(function(){
 		
 		$("#cidades-indicadores thead.eixos").click(function(){
 			$(this).toggleClass("collapsed");
-			$(this).nextAll("thead.datas:first, tbody:first").toggle();
+			$(this).nextAll("tbody:first tr.unfolded").attr("display",$(this).nextAll("tbody:first tr.folded").attr("display"));
+			$(this).nextAll("thead.datas:first, tbody:first tr").toggle();
 		});
 
 		geraGraficos();
