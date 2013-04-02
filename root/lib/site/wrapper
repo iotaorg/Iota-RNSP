@@ -6,8 +6,13 @@
 <meta name="keywords" content="" />
 <title>[% template.title or site.title or title %]</title>
 
-[%-CALL assets.include("js/jquery-1.6.2.min.js")%]
-[%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
+<!--[if lt IE 9]>
+    <script src="/static/js/html5shiv.js"></script> TODO: baixar esse cara
+<![endif]-->
+
+
+[%-CALL assets.include("js/jquery-1.7.1.min.js")%]
+[%CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
 [%-CALL assets.include("js/jquery.history.js")%]
 [%-CALL assets.include("js/jshashtable-2.1.js")%]
 [%-CALL assets.include("js/jquery.numberformatter-1.2.3.min.js")%]
@@ -22,9 +27,10 @@
 [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
 [%-CALL assets.include("js/libraries/RGraph.line.js")%]
-[%-CALL assets.include("js/xbreadcrumbs.js")-%]
+[%-CALL assets.include("js/bootstrap.min.js")-%]
 
 [%-CALL assets.include("css/bootstrap.min.css")%]
+[%-CALL assets.include("css/bootstrap-responsive.min.css")%]
 
 [%-CALL assets.include("css/rnsp.dados.css")%]
 
@@ -120,58 +126,44 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>Iota</p>
+<footer>
+<div class="container">
+
+
+        <div class="row-fluid">
+            <div class="span8">
+                <h4>Programa Cidades Sustentáveis 2012</h4>
+                <p>Todo o conteúdo do site é licenciado sob a Creative Commons Attribution <img src="/static/images/cc.png" alt="Creative Commons Attribution" /></p>
+
+                <p>Desenvolvido por <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" alt="Aware" /></a></p>
+            </div>
+
+            <div class="span4">
+                <div class="parceiros">
+                    <h4>Parceiros:</h4>
+                    <ul class="thumbnails">
+                        <li class="thumbnail"><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
+                        <li class="thumbnail"><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
+                        <li class="thumbnail"><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>
+                    </ul>
+                </div>
+            </div>
+
 
         </div>
-
-        <div id="footer-menu">
-        <div class="content">
-            <div class="menu">
-                <ul>
-                    <li><a href="">Mapa do Site</a></li><li><a href="">Contato</a></li>
-                </ul>
-                <div class="clear"></div>
-            </div>
-            <div class="parceiros">
-                <div class="label">Parceiros:</div>
-                <ul>
-                    <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
-                    <li><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
-                    <li><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>
-                </ul>
-                <div class="clear"></div>
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="clear"></div>
-    <div id="footer">
-        <div class="content">
-            <div class="left">
-                Programa Cidades Sustentáveis 2012
-            </div>
-            <div class="right">
-                Todo o conteúdo do site é licenciado sob a Creative Commons Attribution <img src="/static/images/cc.png" alt="Creative Commons Attribution" />
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div>
-    <div class="clear"></div>
-    <div id="aware">
-        <div class="content">
-            Desenvolvido por <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" alt="Aware" /></a>
-        </div>
-    </div>
 
     [% IF institute.short_name == 'gov' %]
-        <div id="patrocinadores">
-            <div class="content">
+        <div class="thumbnails">
+            <div class="thumbnail">
                 <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
             </div>
         </div>
     [% END %]
+
+</div>
+
+
+
 
     </footer>
 
