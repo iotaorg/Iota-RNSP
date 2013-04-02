@@ -385,7 +385,9 @@ $(document).ready(function(){
 							geraGraficos();
 							setaGraficos();
 
-							geraMapa();
+                            if (!(typeof google == "undefined")){
+                                geraMapa();
+                            }
 						}
 						carregouTabela = true;
 
@@ -662,14 +664,16 @@ $(document).ready(function(){
 			$(".data-content .graph").hide();
 			$(".data-content .map").show();
 			if (typeof(map) != "undefined"){
-				google.maps.event.trigger(map, 'resize');
-				map.setZoom( map.getZoom() );
-				if ($("#mapa").attr("lat")){
-					var mapDefaultLocation = new google.maps.LatLng($("#mapa").attr("lat"), $("#mapa").attr("lng"));
-					map.setCenter(mapDefaultLocation);
-					$("#mapa").attr("lat","");
-					$("#mapa").attr("lng","");
-				}
+                if (!(typeof google == "undefined")){
+                    google.maps.event.trigger(map, 'resize');
+                    map.setZoom( map.getZoom() );
+                    if ($("#mapa").attr("lat")){
+                        var mapDefaultLocation = new google.maps.LatLng($("#mapa").attr("lat"), $("#mapa").attr("lng"));
+                        map.setCenter(mapDefaultLocation);
+                        $("#mapa").attr("lat","");
+                        $("#mapa").attr("lng","");
+                    }
+                }
 			}
 		}
 	}
@@ -767,6 +771,7 @@ $(document).ready(function(){
 		$.each(dadosMapa, function(index,item){
 			for (var i = 0; i < item.novo_valor; i++) {
 				if (item.longitude){
+
 					var latLng = new google.maps.LatLng(item.latitude,
 						item.longitude);
 					var marker = new google.maps.Marker({

@@ -13,7 +13,7 @@
     [%- c.assets.include("css/rnsp.dados-movimento.css") | null-%]
 [%- END -%]
 [%- assets.export("css") -%]
-<link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />
+<!--<link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />-->
 </head>
 <body>
 <div id="wrapper">
@@ -21,10 +21,10 @@
 	<div id="top">
     	<div class="content">
         	<div class="sociais">
-                <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/facebook.png" alt="Facebook" /></a>&nbsp;&nbsp;
+                <!--<a href="http://www.facebook.com/programacidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/facebook.png" alt="Facebook" /></a>&nbsp;&nbsp;
                 <a href="https://plus.google.com/115196492426365904810/posts" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/gplus.png" alt="Google+" /></a>&nbsp;&nbsp;
                 <a href="https://twitter.com/#!/cidsustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/twitter.png" alt="Twitter" /></a>&nbsp;&nbsp;
-                <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" alt="Youtube" /></a>
+                <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" alt="Youtube" /></a>-->
             </div>
         	<div class="logo"><img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="" /></div>
         </div>
@@ -105,7 +105,7 @@
         </div>
 	[% END %]
 </div>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
+<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>-->
 
 
 [% assets.export("js") %]

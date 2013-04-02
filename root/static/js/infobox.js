@@ -121,10 +121,14 @@ function InfoBox(opt_opts) {
   this.contextListener_ = null;
   this.fixedWidthSet_ = null;
 }
+if (!(typeof google == "undefined")){
+    /* InfoBox extends OverlayView in the Google Maps API v3.
+    */
+    InfoBox.prototype = new google.maps.OverlayView();
+}else{
+    InfoBox.prototype = {};
 
-/* InfoBox extends OverlayView in the Google Maps API v3.
- */
-InfoBox.prototype = new google.maps.OverlayView();
+}
 
 /**
  * Creates the DIV representing the InfoBox.
@@ -467,7 +471,7 @@ InfoBox.prototype.draw = function () {
   var pixPosition = this.getProjection().fromLatLngToDivPixel(this.position_);
 
   this.div_.style.left = (pixPosition.x + this.pixelOffset_.width) + "px";
-  
+
   if (this.alignBottom_) {
     this.div_.style.bottom = -(pixPosition.y + this.pixelOffset_.height) + "px";
   } else {

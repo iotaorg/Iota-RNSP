@@ -59,7 +59,7 @@ __PACKAGE__->config(
 
         path => '/static',
         output_path => 'built/',
-        minify => 1,
+        minify => 0,
         stash_var => 'assets'
     },
 

@@ -52,8 +52,9 @@ $(document).ready(function(){
 
 	function loadCidadeData(){
 
-
-		loadMap();
+        if (!(typeof google == "undefined")){
+            loadMap();
+        }
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
@@ -221,9 +222,11 @@ $(document).ready(function(){
 			$("#cidades-dados #mapa").css("height","+="+diff);
 		}
 
-		if (cidade_data.cidade.latitude != null && cidade_data.cidade.longitude != null){
-			setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
-		}
+		if (!(typeof google == "undefined")){
+            if (cidade_data.cidade.latitude != null && cidade_data.cidade.longitude != null){
+                setMap(cidade_data.cidade.latitude,cidade_data.cidade.longitude);
+            }
+        }
 
 	}
 
@@ -278,9 +281,9 @@ $(document).ready(function(){
 				});
 				$.each(indicadores, function(i,item){
 					if (item.network_config.unfolded_in_home == 1){
-						var tr_class = "unfolded";	
+						var tr_class = "unfolded";
 					}else{
-						var tr_class = "folded";	
+						var tr_class = "folded";
 					}
 					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){
@@ -311,7 +314,7 @@ $(document).ready(function(){
 		table_content += "</table>";
 
 		$("#cidades-indicadores .table .content-fill").append(table_content);
-		
+
 		$("#cidades-indicadores thead.eixos").click(function(){
 			$(this).toggleClass("collapsed");
 			$(this).nextAll("thead.datas:first").toggle();

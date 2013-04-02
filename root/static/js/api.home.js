@@ -1,10 +1,13 @@
-var geocoder = new google.maps.Geocoder();
-var markers = [];
-var zoom_padrao = 9;
-var mapDefaultLocation = new google.maps.LatLng(-14.2350040, -51.9252800);
+if (!(typeof google == "undefined")){
+    var geocoder = new google.maps.Geocoder();
+    var markers = [];
+    var zoom_padrao = 9;
+    var mapDefaultLocation = new google.maps.LatLng(-14.2350040, -51.9252800);
+}
 
 $(document).ready(function(){
 
+if (!(typeof google == "undefined")){
 	$.carregaMarkers = function(){
 		$.clearMarkers();
 		$(users_list).each(function(index,item){
@@ -98,16 +101,6 @@ $(document).ready(function(){
 		}
 	}
 
-	$.showInfoCidade = function(marker){
-		boxTextContent = "<div style='padding: 2px 4px; text-align: center;'>";
-		boxTextContent += marker.__cidade + " - " + marker.__uf;
-		boxTextContent += "</div>";
-
-		boxText.innerHTML = boxTextContent;
-		ib.close();
-		ib.setContent(boxText);
-		ib.open(map, marker);
-	}
 
 	if (ref == "home"){
 		var mapOptions = {
@@ -147,5 +140,18 @@ $(document).ready(function(){
 		$.setaMapaHome();
 	}
 
+    $.showInfoCidade = function(marker){
+        boxTextContent = "<div style='padding: 2px 4px; text-align: center;'>";
+        boxTextContent += marker.__cidade + " - " + marker.__uf;
+        boxTextContent += "</div>";
+
+        boxText.innerHTML = boxTextContent;
+        ib.close();
+        ib.setContent(boxText);
+        ib.open(map, marker);
+    }
+}
+
 
 });
+
