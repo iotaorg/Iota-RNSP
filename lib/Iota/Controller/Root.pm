@@ -45,29 +45,6 @@ sub index : Path : Args(0) {
 sub root: Chained('/') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    $c->assets->include("js/jquery-1.6.2.min.js");
-    $c->assets->include("js/jquery-ui-1.9.2.custom.min.js");
-    $c->assets->include("js/jquery.history.js");
-    $c->assets->include("js/jshashtable-2.1.js");
-    $c->assets->include("js/jquery.numberformatter-1.2.3.min.js");
-    $c->assets->include("js/markerclusterer.js");
-    $c->assets->include("js/infobox.js");
-    $c->assets->include("js/api.home.js");
-    $c->assets->include("js/api.common.js");
-    $c->assets->include("js/api.dados.js");
-    $c->assets->include("js/api.cidades.js");
-    $c->assets->include("js/api.indicador.js");
-    $c->assets->include("js/libraries/RGraph.common.core.js");
-    $c->assets->include("js/libraries/RGraph.common.dynamic.js");
-    $c->assets->include("js/libraries/RGraph.common.tooltips.js");
-    $c->assets->include("js/libraries/RGraph.line.js");
-    $c->assets->include("js/xbreadcrumbs.js");
-
-    $c->assets->include("css/jquery-ui-1.9.2.custom.min.css");
-    $c->assets->include("css/style.css");
-    $c->assets->include("css/rnsp.dados.css");
-    $c->assets->include("css/xbreadcrumbs.css");
-
 
 }
 

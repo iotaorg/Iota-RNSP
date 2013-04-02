@@ -5,13 +5,39 @@
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <title>[% template.title or site.title or title %]</title>
-[% IF custom_css %]
-    [%-c.assets.include(custom_css)| null-%]
-[%END%]
-[%- IF institute.short_name == 'org'- %]
-    [%- c.assets.include("css/style-movimento.css") | null-%]
-    [%- c.assets.include("css/rnsp.dados-movimento.css") | null-%]
+
+[%-CALL assets.include("js/jquery-1.6.2.min.js")%]
+[%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
+[%-CALL assets.include("js/jquery.history.js")%]
+[%-CALL assets.include("js/jshashtable-2.1.js")%]
+[%-CALL assets.include("js/jquery.numberformatter-1.2.3.min.js")%]
+[%-CALL assets.include("js/markerclusterer.js")%]
+[%-CALL assets.include("js/infobox.js")%]
+[%-CALL assets.include("js/api.home.js")%]
+[%-CALL assets.include("js/api.common.js")%]
+[%-CALL assets.include("js/api.dados.js")%]
+[%-CALL assets.include("js/api.cidades.js")%]
+[%-CALL assets.include("js/api.indicador.js")%]
+[%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
+[%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
+[%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
+[%-CALL assets.include("js/libraries/RGraph.line.js")%]
+[%-CALL assets.include("js/xbreadcrumbs.js")-%]
+
+[%-CALL assets.include("css/bootstrap.min.css")%]
+[%-CALL assets.include("css/style.css")%]
+[%-CALL assets.include("css/rnsp.dados.css")%]
+
+
+[%- IF institute.short_name == 'org'-%]
+    [%- CALL assets.include("css/style-movimento.css")-%]
+    [%- CALL assets.include("css/rnsp.dados-movimento.css")-%]
 [%- END -%]
+
+[%-IF custom_css-%]
+    [%-CALLassets.include(custom_css)-%]
+[%-END-%]
+
 [%- assets.export("css") -%]
 <!--<link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />-->
 </head>
