@@ -4,27 +4,28 @@ table{
 
 #indicador-dados .menu-left,
 #indicadores-dados .menu-left{
-	width: 192px;
-	float: left;	
-	margin-right: 6px;
-	border: 1px solid #d5d5d5;
+/*	width: 192px;
+	float: left;
 	clear: left;
+    margin-right: 6px;*/
+	border: 1px solid #d5d5d5;
 }
-
+/*
 #indicador-dados .data-right,
 #indicadores-dados .data-right{
-	float: left;	
+	float: left;
 	width: 698px;
 	clear: right;
-}
+}*/
 
 #indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
-	padding: 5px;	
+	padding: 5px;
 }
+
 #indicador-dados .data-right .content-fill,
 #indicadores-dados .data-right .content-fill{
-	padding: 0px;	
+	padding: 0px;
 }
 
 .indicators{
@@ -157,7 +158,7 @@ table{
 
 .data-content .table tbody td.grafico canvas,
 #cidades-indicadores .table tbody td.grafico canvas{
-	border: 1px solid #e0e0e0;	
+	border: 1px solid #e0e0e0;
 }
 
 #indicador-grafico{
@@ -176,7 +177,7 @@ table{
 	text-align: center;
 }
 .data-content .graph{
-	display: none;	
+	display: none;
 	margin-top: -1px;
 	border: 1px solid #e0e0e0;
 	padding: 5px;
@@ -245,7 +246,7 @@ table{
 }
 
 .data-content .map{
-	display: none;	
+	display: none;
 	margin-top: -1px;
 	border: 1px solid #e0e0e0;
 	padding: 5px;
@@ -267,7 +268,7 @@ table{
 }
 
 #indicador-dados .profile .explanation{
-	padding: 10px 0;	
+	padding: 10px 0;
 }
 
 #indicador-dados .profile span.goal-explanation{
@@ -285,7 +286,7 @@ table{
 #mapa-do-site-header .title{
 	color: #009999;
 	font-size: 20pt;
-	font-weight: bolder; 
+	font-weight: bolder;
 }
 
 
@@ -334,7 +335,7 @@ table{
 
 .tabela span.source{
 	font-size: 9pt;
-	font-style: italic;	
+	font-style: italic;
 }
 
 #cidades-dados .variaveis .item,
@@ -528,10 +529,8 @@ table{
 
 .menu-left #axis_list .options{
 	display: none;
-	position: absolute;
 	background-color: #f5f5f5;
 	border: 1px solid #e5e5e5;
-	max-width: 180px;
 }
 
 .menu-left #axis_list .option{
@@ -603,7 +602,7 @@ table{
 }
 
 .dados-botoes{
-	margin-top: 5px;	
+	margin-top: 5px;
 }
 
 input.button-data{
@@ -632,7 +631,7 @@ input.button-data:hover{
 	display: none;
 	background-color: #f0f0f0;
 	padding: 10px;
-	margin-top: 5px;	
+	margin-top: 5px;
 }
 
 .download-links .label{
@@ -654,7 +653,7 @@ input.button-data:hover{
 	font-size: 8pt;
 	border: 1px solid #9fcdd2;
 	padding: 4px 20px;
-	margin: 5px;	
+	margin: 5px;
 }
 .download-links a:hover{
 	background-color: #f5f5f5;
@@ -676,11 +675,11 @@ input.button-data:hover{
 	margin: auto;
 	width: 660px;
 	height: 420px;
-	border: 1px solid #e0e0e0;	
+	border: 1px solid #e0e0e0;
 }
 
 #mapa-filtro{
-	padding: 2px;	
+	padding: 2px;
 }
 #mapa-filtro label{
 	font-size: 10pt;
@@ -734,7 +733,7 @@ input.button-data:hover{
 
 
 #bubble-intro{
-	margin-top: 150px;	
+	margin-top: 150px;
 	display: none;
 	border: 1px solid #ccc;
 	width: 50%;
@@ -754,7 +753,7 @@ input.button-data:hover{
 }
 
 #filtro_mapa{
-	text-align: center;	
+	text-align: center;
 	padding: 5px;
 }
 #filtro_mapa select{
