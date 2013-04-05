@@ -120,7 +120,7 @@ if (!(typeof google == "undefined")){
 			,pixelOffset: new google.maps.Size(-100, 0)
 			,zIndex: null
 			,boxStyle: {
-			  background: "url('static/images/tipbox.gif') no-repeat"
+			  background: "url('/static/images/tipbox.gif') no-repeat"
 			  ,opacity: 0.90
 			  ,width: "200px"
 			 }

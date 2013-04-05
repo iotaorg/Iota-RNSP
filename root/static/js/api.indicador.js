@@ -122,7 +122,7 @@ $(document).ready(function(){
 	}
 
 	function showIndicadorData(){
-		loadBreadCrumb();
+
 		$("#indicador-dados .profile .title").html(indicador_data.name);
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();

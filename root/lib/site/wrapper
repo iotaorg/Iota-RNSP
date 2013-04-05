@@ -103,16 +103,22 @@
                 </div>
 
                 <div class="span4">
-                    <a href="#">Facebook</a>
-                    <a href="#">Google+</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">Youtube</a>
-<!--                       <div class="sociais">
-                        <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/facebook.png" alt="Facebook" /></a>
-                        <a href="https://plus.google.com/115196492426365904810/posts" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/gplus.png" alt="Google+" /></a>
-                        <a href="https://twitter.com/#!/cidsustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/twitter.png" alt="Twitter" /></a>
-                        <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="http://www.cidadessustentaveis.org.br/imagens/redesociais/youtube.png" alt="Youtube" /></a>
-                    </div>-->
+                    <h5>Programa Cidades Sustentáveis na web:</h5>
+                    <ul class="sociais thumbnails">
+                        <li class="thumbnail"><a href="http://www.facebook.com/programacidadessustentaveis" target="_blank"><img src="/static/images/facebook-icon_25x25.png" alt="Facebook" /></a>
+                        </li>
+
+                        <li class="thumbnail">
+                        <a href="https://plus.google.com/115196492426365904810/posts" target="_blank"><img src="/static/images/google-page-logo-25x25.jpg" alt="Google+" /></a>
+                        </li>
+
+                        <li class="thumbnail">
+                        <a  href="https://twitter.com/#!/cidsustentaveis" target="_blank"><img src="/static/images/twitter-icon-25x25.gif" alt="Twitter" /></a>
+                        </li>
+                        <li class="thumbnail">
+                        <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="/static/images/youtube-logo-25x25.png" alt="Youtube" /></a>
+                        </li>
+                    </ul>
                 </div>
 
             </div>
@@ -161,7 +167,7 @@
 </div>
 
 
-<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>-->
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
 [% assets.export("js") %]
 </body>

@@ -95,7 +95,7 @@ $(document).ready(function(){
 			,pixelOffset: new google.maps.Size(-100, 0)
 			,zIndex: null
 			,boxStyle: {
-			  background: "url('static/images/tipbox.gif') no-repeat"
+			  background: "url('/static/images/tipbox.gif') no-repeat"
 			  ,opacity: 0.90
 			  ,width: "200px"
 			 }
@@ -161,8 +161,6 @@ $(document).ready(function(){
 
 
 	function showCidadeData(){
-		loadBreadCrumb();
-
 
 		$("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
 		if (cidade_data.usuario.city_summary){

@@ -1,56 +1,51 @@
-	<div id="breadcrumb">
-    	<div class="contents">
-            <ul class="xbreadcrumbs" id="breadcrumbs-top">
-            </ul>
-		    <div class="clear"></div>
+
+    <div id="content" class="content">
+        <div class="row" id="cidades-dados">
+            <div class="span4 profile">
+                <div class="content-fill">
+                    <div class="title">[% city.name %]</div>
+                    <div class="variaveis"><table class="tabela"></table></div>
+                </div>
+            </div>
+            <div class="image">
+                <div class="content-fill">
+                </div>
+            </div>
+
+            <div class="summary">
+                <div class="content-fill">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="map">
+                <div class="content-fill">
+                    <div id="mapa"></div>
+                </div>
+            </div>
         </div>
-	</div>
-	<div id="content">
-		<div class="content">
-			<div id="cidades-dados">
-				<div class="profile">
-					<div class="content-fill">
-						<div class="title">[% city.name %]</div>
-						<div class="variaveis"><table class="tabela"></table></div>
-					</div>
-				</div>
-				<div class="image">
-					<div class="content-fill">
-					</div>
-				</div>
-				<div class="summary">
-					<div class="content-fill">
-						&nbsp;
-					</div>
-				</div>
-				<div class="map">
-					<div class="content-fill">
-						<div id="mapa"></div>
-					</div>
-				</div>
-			</div>
-			<div class="clear"></div>
-			<div id="cidades-indicadores">
-					<div class="title">Indicadores</div>
-					<div class="content-fill">
-
-						<div class="table">
-							<div class="period">
-								<div class="item"></div>
-							</div>
-							<div class="content-fill">Carregando...</div>
-						</div>
 
 
-					</div>
-			</div>
-			<div class="clear"></div>
+        <div id="cidades-indicadores">
+                <div class="title">Indicadores</div>
+                <div class="content-fill">
+
+                    <div class="table">
+                        <div class="period">
+                            <div class="item"></div>
+                        </div>
+                        <div class="content-fill">Carregando...</div>
+                    </div>
+
+
+                </div>
         </div>
+
     </div>
 
-	<script type="text/javascript">
-		var userID = [% user.id %];
 
-		var ref = 'cidade';
-		[% PROCESS 'network_javascript.tt'%]
-	</script>
+<script type="text/javascript">
+    var userID = [% user.id %];
+
+    var ref = 'cidade';
+    [% PROCESS 'network_javascript.tt'%]
+</script>

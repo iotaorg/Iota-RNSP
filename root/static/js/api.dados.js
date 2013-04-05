@@ -693,7 +693,6 @@ $(document).ready(function(){
 
 	function geraMapa(){
 
-
 		var mapDefaultLocation = new google.maps.LatLng(-15.6778, -47.4384);
 		var mapOptions = {
 				center: mapDefaultLocation,
