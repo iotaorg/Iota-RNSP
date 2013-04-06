@@ -234,9 +234,9 @@ $(document).ready(function(){
 		if ((goal_values) && goal_values.trim() != ""){
 			if (goal_values.toLowerCase().indexOf("fonte:") > 0){
 				goal_values = goal_values.replace("fonte:","Fonte:");
-				goal_values = goal_values.replace("Fonte:","<br /><span class='source'>Fonte:") + "</span>";
+                goal_values = goal_values.replace("Fonte:",'<blockquote><small><cite title="Fonte da meta">') + "</cite></small></blockquote>";
 			}
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Meta:</td><td class='valor'>$$dado</td></tr>".render({dado: goal_values}));
+			$("#indicador-dados .profile .dados .tabela").append("<dt>Meta:</dt><dd>$$dado</dd>".render({dado: goal_values}));
 		}
 
 		if (source_values.length > 0){
@@ -245,7 +245,7 @@ $(document).ready(function(){
 			$.each(source_values, function(i, el){
 			    if($.inArray(el, source_values_unique) === -1) source_values_unique.push(el);
 			});
-			$("#indicador-dados .profile .dados .tabela").append("<dt>Fonte do Indicador:</dt><dd>$$dado</dd>".render({dado: source_values_unique.join(", ")}));
+            $("#indicador-dados .profile .dados .tabela").append("<dt>Fontes do Indicador:</dt><dd><ul><li>$$dado</li></ul></dd>".render({dado: source_values_unique.join("</li><li>")}));
 		}
 		if ((observations_values) && observations_values.trim() != ""){
 			$("#indicador-dados .profile .dados .tabela").append("<dt>Observações:</dt><dd>$$dado</dd>".render({dado: observations_values}));
