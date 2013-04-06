@@ -257,7 +257,7 @@ table{
 #cidades-dados .image,
 #cidades-dados .summary,
 #cidades-dados .map{
-	border: 1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
 }
 
 #indicador-dados .profile,
@@ -291,12 +291,14 @@ table{
 }
 
 #cidades-dados .map{
-	width: 285px;
+	margin-top: 20px;
 }
 
 #cidades-dados #mapa{
-	width: 285px;
-	height: 300px;
+    min-height: 150px;
+    max-height: 900px;
+    height: 100%;
+
 }
 
 
@@ -782,4 +784,24 @@ a.social-icon.googleplus {
 }
 a.social-icon.youtube {
     background-position: -90px 0px;
+}
+
+#gmap iframe, #gmap object, #gmap embed { width: 100%; }
+
+#x-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+#x-container .x-dummy {
+    padding-top: 100%; /* 4:3 aspect ratio */
+}
+
+#x-container .x-element {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: silver /* show me! */
 }

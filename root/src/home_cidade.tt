@@ -31,9 +31,14 @@
                     </div>
 
                     <div class="span4">
-                        <div class="map">
+                        <div class="map" id="gmap">
                             <div class="content-fill">
-                                <div id="mapa"></div>
+                                <div id="x-container">
+                                    <div class="x-dummy"></div>
+                                    <div class="x-element">
+                                        <div id="mapa"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
