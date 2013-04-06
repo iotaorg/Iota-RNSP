@@ -160,65 +160,66 @@ $(document).ready(function(){
 
 
 
+
 	function showCidadeData(){
 
-		$("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
-		if (cidade_data.usuario.city_summary){
-			$("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
-		}
-		$("#cidades-dados .profile .variaveis .tabela").empty();
-		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Cidade:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.name}));
-		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>Estado:</td><td class='valor'>$$dado</td></tr>".render({dado: cidade_data.cidade.uf}));
-		$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>País:</td><td class='valor'>$$dado</td></tr>".render({dado: paises[cidade_data.cidade.pais]}));
+        $("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
+        if (cidade_data.usuario.city_summary){
+            $("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
+        }
+        $("#cidades-dados .profile .variaveis .tabela").empty();
+        $("#cidades-dados .profile .variaveis .tabela").append("<dt>Cidade:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.name}));
+        $("#cidades-dados .profile .variaveis .tabela").append("<dt>Estado:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.uf}));
+        $("#cidades-dados .profile .variaveis .tabela").append("<dt>País:</dt><dd>$$dado</dd>".render({dado: paises[cidade_data.cidade.pais]}));
 
-		if (cidade_data.variaveis){
-			$.each(infoVars[institute_short_name],function(index,value){
-				var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[institute_short_name][index].cognomen);
-				if (dadoIndex.found){
-					var label = cidade_data.variaveis[dadoIndex.key].name;
-					if (infoVars[institute_short_name][index].type == "number"){
-						var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[institute_short_name][index].format, locale:"br"});
-					}else if (infoVars[institute_short_name][index].type == "text"){
-						var value = cidade_data.variaveis[dadoIndex.key].last_value;
-					}
-					if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
-						var measurement_unit = " <span class='measurement_unit'>" + cidade_data.variaveis[dadoIndex.key].measurement_unit + "</span>";
-					}else{
-						var measurement_unit = "";
-					}
-					if (cidade_data.variaveis[dadoIndex.key].last_value_date != null && cidade_data.variaveis[dadoIndex.key].last_value_date != undefined && cidade_data.variaveis[dadoIndex.key].last_value_date != ""){
-						var last_date = "<span class='last_date'>(" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + ")</span>";
-					}else{
-						var last_date = "";
-					}
-					$("#cidades-dados .profile .variaveis .tabela").append("<tr class='item'><td class='label'>$$label:</td><td class='valor'>$$value$$measurement_unit $$last_date</td></tr>".render(
-						{
-							label: label,
-							value: value,
-							last_date: last_date,
-							measurement_unit: measurement_unit
-						}
-					));
-				}
-			});
-		}
+        if (cidade_data.variaveis){
+            $.each(infoVars[institute_short_name],function(index,value){
+                var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[institute_short_name][index].cognomen);
+                if (dadoIndex.found){
+                    var label = cidade_data.variaveis[dadoIndex.key].name;
+                    if (infoVars[institute_short_name][index].type == "number"){
+                        var value = $.formatNumber(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[institute_short_name][index].format, locale:"br"});
+                    }else if (infoVars[institute_short_name][index].type == "text"){
+                        var value = cidade_data.variaveis[dadoIndex.key].last_value;
+                    }
+                    if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
+                        var measurement_unit = " <span class='measurement_unit'>" + cidade_data.variaveis[dadoIndex.key].measurement_unit + "</span>";
+                    }else{
+                        var measurement_unit = "";
+                    }
+                    if (cidade_data.variaveis[dadoIndex.key].last_value_date != null && cidade_data.variaveis[dadoIndex.key].last_value_date != undefined && cidade_data.variaveis[dadoIndex.key].last_value_date != ""){
+                        var last_date = "<span class='last_date'>(" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + ")</span>";
+                    }else{
+                        var last_date = "";
+                    }
+                    $("#cidades-dados .profile .variaveis .tabela").append("<dt>$$label:</dt><dd>$$value$$measurement_unit $$last_date</dd>".render(
+                        {
+                            label: label,
+                            value: value,
+                            last_date: last_date,
+                            measurement_unit: measurement_unit
+                        }
+                    ));
+                }
+            });
+        }
 
 
 		$("#cidades-dados .image").css("background-image","none");
-		if (typeof(cidade_data.usuario.files.imagem_cidade) != undefined){
+		if (typeof(cidade_data.usuario.files.imagem_cidade) != "undefined"){
 			$("#cidades-dados .image").css("background-image","url('"+cidade_data.usuario.files.imagem_cidade+"')");
 		}
-		if (typeof(cidade_data.usuario.files.logo_movimento) != undefined){
+		if (typeof(cidade_data.usuario.files.logo_movimento) != "undefined"){
 			$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
 		}
 
-		var diff = $("#cidades-dados .profile .content-fill").height() - $("#cidades-dados .profile").height() + 10;
-		if (diff > 10){
-			$("#cidades-dados .profile").css("height","+="+diff);
-			$("#cidades-dados .summary").css("height","+="+diff);
-			$("#cidades-dados .map").css("height","+="+diff);
-			$("#cidades-dados #mapa").css("height","+="+diff);
-		}
+		//var diff = $("#cidades-dados .profile .content-fill").height() - $("#cidades-dados .profile").height() + 10;
+		//if (diff > 10){
+    //	$("#cidades-dados .profile").css("height","+="+diff);
+    //		$("#cidades-dados .summary").css("height","+="+diff);
+    //		$("#cidades-dados .map").css("height","+="+diff);
+    //		$("#cidades-dados #mapa").css("height","+="+diff);
+    //	}
 
 		if (!(typeof google == "undefined")){
             if (cidade_data.cidade.latitude != null && cidade_data.cidade.longitude != null){

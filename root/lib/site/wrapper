@@ -50,7 +50,7 @@
 <body>
 <body>
 <div id="iota-app">
-    <div class="navbar navbar-fixed-top">
+    <div class="navbar navbar-fixed-top navbar-inverse">
       <div class="navbar-inner">
         <div class="container">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -61,7 +61,7 @@
           <a class="brand" href="/">Iota</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li [% IF c.req.path == '' %]class="active"[%END%]>
+              <li [% IF c.req.path != 'mapa-do-site' %]class="active"[%END%]>
                 <a href="/">Indicadores</a>
               </li>
               <li [% IF c.req.path == 'mapa-do-site' %]class="active"[%END%]>
@@ -102,23 +102,14 @@
                     <div class="logo"><img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="" /></div>
                 </div>
 
-                <div class="span4">
-                    <h5>Programa Cidades Sustentáveis na web:</h5>
-                    <ul class="sociais thumbnails">
-                        <li class="thumbnail"><a href="http://www.facebook.com/programacidadessustentaveis" target="_blank"><img src="/static/images/facebook-icon_25x25.png" alt="Facebook" /></a>
-                        </li>
-
-                        <li class="thumbnail">
-                        <a href="https://plus.google.com/115196492426365904810/posts" target="_blank"><img src="/static/images/google-page-logo-25x25.jpg" alt="Google+" /></a>
-                        </li>
-
-                        <li class="thumbnail">
-                        <a  href="https://twitter.com/#!/cidsustentaveis" target="_blank"><img src="/static/images/twitter-icon-25x25.gif" alt="Twitter" /></a>
-                        </li>
-                        <li class="thumbnail">
-                        <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank"><img src="/static/images/youtube-logo-25x25.png" alt="Youtube" /></a>
-                        </li>
-                    </ul>
+                <div class="span4 sociais">
+                    <h5>Conecte-se</h5>
+                    <div class="icons">
+                        <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter">twitter</a>
+                        <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook">facebook</a>
+                        <a href="#" target="_blank" class="social-icon googleplus">googleplus</a>
+                        <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube">youtube</a>
+                    </div>
                 </div>
 
             </div>
@@ -135,6 +126,17 @@
 <hr class="soften">
 <footer>
     <div class="container">
+        [% IF institute.short_name == 'gov' %]
+        <div class="row">
+            <div class="span12">
+                <div class="thumbnails">
+                    <div class="thumbnail">
+                        <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        [% END %]
         <div class="row-fluid">
             <div class="span8">
                 <h4>Programa Cidades Sustentáveis 2012</h4>
@@ -154,13 +156,6 @@
                 </div>
             </div>
         </div>
-    [% IF institute.short_name == 'gov' %]
-        <div class="thumbnails">
-            <div class="thumbnail">
-                <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
-            </div>
-        </div>
-    [% END %]
     </div>
 </footer>
 

@@ -127,15 +127,18 @@ $(document).ready(function(){
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
 		if (indicador_data.formula.indexOf("CONCATENAR") < 0){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Fórmula:</td><td class='valor'>$$dado</td></tr>".render({dado: formataFormula(indicador_data.formula,variaveis_data,data_vvariables)}));
+			$("#indicador-dados .profile .dados .tabela")
+                .append("<dt>Fórmula:</dt><dd>$$dado</dd>"
+                .render({dado: formataFormula(indicador_data.formula,variaveis_data,data_vvariables)}));
 		}
+        var fonte_meta = "";
 		if (indicador_data.goal_source){
-			var fonte_meta = "<br /><span class='goal-explanation'>Fonte: $$dado</span>".render({dado: indicador_data.goal_source});
-		}else{
-			var fonte_meta = "";
+			fonte_meta = indicador_data.goal_source;
 		}
 		if (indicador_data.goal_explanation){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Referência de Meta:</td><td class='valor'>$$dado $$fonte_meta</td></tr>".render(
+			$("#indicador-dados .profile .dados .tabela")
+            .append('<dt>Referência de Meta:</dt><dd>$$dado<blockquote><small><cite title="Fonte: $$fonte_meta">$$fonte_meta</cite></small></blockquote></dd>'
+                .render(
 				{
 					dado: indicador_data.goal_explanation,
 					fonte_meta: fonte_meta
@@ -242,10 +245,10 @@ $(document).ready(function(){
 			$.each(source_values, function(i, el){
 			    if($.inArray(el, source_values_unique) === -1) source_values_unique.push(el);
 			});
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item' id='fonte-indicador'><td class='label'>Fonte do Indicador:</td><td class='valor'><span class='source'>$$dado</span></td></tr>".render({dado: source_values_unique.join(", ")}));
+			$("#indicador-dados .profile .dados .tabela").append("<dt>Fonte do Indicador:</dt><dd>$$dado</dd>".render({dado: source_values_unique.join(", ")}));
 		}
 		if ((observations_values) && observations_values.trim() != ""){
-			$("#indicador-dados .profile .dados .tabela").append("<tr class='item'><td class='label'>Observações:</td><td class='valor'>$$dado</td></tr>".render({dado: observations_values}));
+			$("#indicador-dados .profile .dados .tabela").append("<dt>Observações:</dt><dd>$$dado</dd>".render({dado: observations_values}));
 		}
 
 		showGrafico();

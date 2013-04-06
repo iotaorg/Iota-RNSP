@@ -258,10 +258,10 @@ table{
 #cidades-dados .summary,
 #cidades-dados .map{
 	border: 1px solid #e0e0e0;
-	float: left;
+
 }
 
-#indicador-dados .profile,
+
 #mapa-do-site{
 	border: 1px solid #e0e0e0;
 	clear: both;
@@ -276,10 +276,6 @@ table{
 	font-style: italic;
 }
 
-#cidades-dados .profile{
-	width: 256px;
-	height: 447px;
-}
 
 #cidades-dados .profile .title,
 #indicador-dados .profile .title,
@@ -291,7 +287,6 @@ table{
 
 
 #cidades-dados .image{
-	width: 630px;
 	height: 135px;
 	clear: right;
 	margin-left: 10px;
@@ -299,19 +294,15 @@ table{
 }
 
 #cidades-dados .summary{
-	width: 332px;
-	clear: right;
+
 	margin-left: 10px;
 }
 #cidades-dados .map{
-	width: 285px;
-	clear: right;
-	margin-left: 10px;
+
 }
 
 #cidades-dados #mapa{
-	width: 285px;
-	height: 300px;
+
 }
 
 #cidades-dados .summary,
@@ -324,7 +315,7 @@ table{
 #indicador-dados .profile .content-fill,
 #mapa-do-site .content-fill{
 	padding: 10px;
-	clear: both;
+
 }
 
 #cidades-dados .variaveis .tabela,
@@ -759,4 +750,46 @@ input.button-data:hover{
 #filtro_mapa select{
 	padding: 2px;
 	border: 1px solid #ccc;
+}
+
+
+
+
+
+
+
+
+
+
+div.sociais>h5 {color: #666}
+a.social-icon {
+    float: left;
+    padding: 0;
+    margin: 5px;
+    text-align: left;
+    width: 30px;
+    height: 30px;
+    background: url('/static/images/social-icons-tiles.png') no-repeat;
+    text-indent: -999em;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0.85;
+    -moz-opacity: .85;
+    filter: alpha(opacity=85);
+    background-color: #e0e0e0;
+    border: 1px solid #dddddd;
+}
+
+a.social-icon.twitter {
+    background-position: -30px 0px;
+}
+a.social-icon.facebook {
+    background-position: -60px 0px;
+}
+a.social-icon.googleplus {
+    background-position: -120px 0px;
+}
+a.social-icon.youtube {
+    background-position: -90px 0px;
 }

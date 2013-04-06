@@ -1,4 +1,4 @@
-
+<h2>Indicadores de [%city.uf%] / [%city.name%]</h2>
 		<div class="content" id="content">
 			<div class="row-fluid" id="indicador-dados">
                 <div class="span4 menu-left">
@@ -18,9 +18,9 @@
                     <div class="content-fill">
                         <div class="profile">
                             <div class="content-fill">
-                                <div class="title">[% indicator.name %]</div>
-                                <div class="explanation"></div>
-                                <div class="dados"><table class="tabela"></table></div>
+                                <h1 class="title">[% indicator.name %]</h1>
+                                <p class="explanation">[% indicator.explanation %]</p>
+                                <div class="dados"><dl class="tabela dl-horizontal "></dl></div>
                             </div>
                         </div>
 
