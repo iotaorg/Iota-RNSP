@@ -1,33 +1,40 @@
 
     <div id="content" class="content">
         <div class="row" id="cidades-dados">
-            <div class="span5 profile">
-                <div class="content-fill">
-                    <div class="title">[% city.name %]</div>
-                    <div class="variaveis"><table class="tabela"></table></div>
+            <div class="span4">
+                <div class="profile">
+                    <div class="content-fill">
+                        <h1 class="title">[% city.name %]</h1>
+                        <div class="variaveis"><dl class="tabela"></dl></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="span7">
+            <div class="span8">
 
                 <div class="row">
-                    <div class="image span7">
-                        <div class="content-fill">
+                    <div class="span8">
+                        <div class="image thumbnail">
+                            Imagem da cidade
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
 
-                    <div class="summary span5">
-                        <div class="content-fill">
-                            &nbsp;
+                    <div class="span4">
+                        <div class="summary">
+                            <div class="content-fill">
+                                &nbsp;
+                            </div>
                         </div>
                     </div>
 
-                    <div class="map span2">
-                        <div class="content-fill">
-                            <div id="mapa"></div>
+                    <div class="span4">
+                        <div class="map">
+                            <div class="content-fill">
+                                <div id="mapa"></div>
+                            </div>
                         </div>
                     </div>
 
