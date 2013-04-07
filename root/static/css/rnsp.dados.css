@@ -432,12 +432,12 @@ table{
     line-height: 2em;
     color: #EEE;
 	text-align: left;
-	background: url(../images/seta.png) no-repeat 98%;
+	background: url(/static/images/seta.png) no-repeat 98%;
     background-color: #2b2b2b;
 }
 
 #cidades-indicadores .table thead.eixos.collapsed th {
-	background: url(../images/seta_up.png) no-repeat 98%;
+	background: url(/static/images/seta_up.png) no-repeat 98%;
     background-color: #2b2b2b;
 }
 
@@ -492,7 +492,7 @@ table{
 	background-color: #f5f5f5;
 	padding-right: 22px;
 	color: #222;
-	background-image: url('../images/seta.png');
+	background-image: url('/static/images/seta.png');
 	background-repeat: no-repeat;
 	background-position: 95% 10px;
 }
@@ -529,7 +529,7 @@ table{
 	padding: 5px 8px;
 	border: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
-	background-image: url('../images/lupa.png');
+	background-image: url('/static/images/lupa.png');
 	background-repeat: no-repeat;
 	background-position: 95% center;
 }
@@ -565,7 +565,7 @@ table{
 	padding: 4px 5px;
 	border: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
-	background-image: url('../images/lupa.png');
+	background-image: url('/static/images/lupa.png');
 	background-repeat: no-repeat;
 	background-position: 95% center;
 	width: 250px;
@@ -592,7 +592,7 @@ table{
 }
 
 input.button-data{
-	background-image: url('../images/seta.png');
+	background-image: url('/static/images/seta.png');
 	background-repeat: no-repeat;
 	background-position: 95% center;
 	border: 1px solid #9fcdd2;
@@ -603,7 +603,7 @@ input.button-data{
 	font-size: 9pt;
 }
 input.button-data.down{
-	background-image: url('../images/seta_up.png');
+	background-image: url('/static/images/seta_up.png');
 	background-color: #e4fbff;
 }
 input.button-data:hover{
@@ -689,7 +689,7 @@ input.button-data:hover{
 	margin-top: -28px;
 	width: 14px;
 	height: 7px;
-	background: url('../images/seta_up.png') no-repeat;
+	background: url('/static/images/seta_up.png') no-repeat;
 	background-position: center center;
 	margin-bottom: 10px;
 }
@@ -722,7 +722,7 @@ input.button-data:hover{
 	border: 1px solid #ccc;
 	width: 50%;
 	text-align: center;
-	background: url('../images/alpha_white.png') repeat;
+	background: url('/static/images/alpha_white.png') repeat;
 }
 
 #bubble-intro p{
@@ -805,4 +805,15 @@ a.social-icon.youtube {
     left: 0;
     right: 0;
     background-color: silver /* show me! */
+}
+
+
+div.loading {
+    background: url(/static/images/ajax-loader.gif) no-repeat 0 0;
+    padding-left: 38px;
+    line-height: 32px;
+    height: 32px;
+    font-size: 1.2em;
+    vertical-align: middle;
+
 }

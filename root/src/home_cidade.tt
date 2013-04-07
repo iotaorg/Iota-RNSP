@@ -50,9 +50,9 @@
 
 
         <div id="cidades-indicadores">
-                <h2>Indicadores</h2>
+                <h2>Indicadores separados por eixos</h2>
                 <div class="table">
-                    Carregando...
+                    <div class="loading"><p>Carregando...</p></div>
                 </div>
         </div>
 
