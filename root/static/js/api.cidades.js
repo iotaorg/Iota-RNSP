@@ -249,9 +249,8 @@ $(document).ready(function(){
 	}
 
 	function showIndicadoresData(){
-		var table_content = ""
-		$("#cidades-indicadores .table .content-fill").empty();
-		table_content += "<table>";
+        var table_content = '<table class="table table-striped table-hover">';
+		$("#cidades-indicadores .table").empty();
 
 		var cont = 0;
 
@@ -266,10 +265,12 @@ $(document).ready(function(){
 				if (datas.length > 0){
 					table_content += "<thead class='datas'><tr><th></th>";
 					$.each(datas, function(index, value){
-						table_content += "<th>$$data</th>".render({data: (datas[index].nome) ? datas[index].nome : ""});
+						table_content += "<th>$$data</th>".render({data: (datas[index].nome) ? datas[index].nome : "Sem dados"});
 					});
 					table_content += "<th></th></tr></thead>";
-				}
+				}else{
+                    table_content += '<thead class="datas"><tr><th><th>Nenhum ano preenchido<th></th><th></th></tr></thead>';
+                }
 
 				table_content += "<tbody>";
 
@@ -314,7 +315,7 @@ $(document).ready(function(){
 
 		table_content += "</table>";
 
-		$("#cidades-indicadores .table .content-fill").append(table_content);
+		$("#cidades-indicadores .table").append(table_content);
 
 		$("#cidades-indicadores thead.eixos").click(function(){
 			$(this).toggleClass("collapsed");

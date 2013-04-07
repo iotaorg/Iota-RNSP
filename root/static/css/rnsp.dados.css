@@ -119,13 +119,9 @@ table{
 	margin-top: -1px;
 	border: 1px solid #e0e0e0;
 	padding: 5px;
-	font-family: arial;
+
 }
-.data-content .table td,
-.data-content .table th,
-.data-content .table div{
-	font-family: arial;
-}
+
 
 .data-content .table table{
 	width: 100%;
@@ -368,7 +364,7 @@ table{
 }
 
 
-#cidades-indicadores,
+
 #indicador-historico,
 #indicador-grafico,
 #dados-abertos{
@@ -377,7 +373,7 @@ table{
 	padding: 2px;
 }
 
-#cidades-indicadores .title,
+
 #indicador-historico .title,
 #indicador-grafico .title,
 #dados-abertos .title{
@@ -409,18 +405,14 @@ table{
 	color: #009999;
 }
 
-#cidades-indicadores .table,
-#indicador-historico .table{
-	padding: 5px;
-	font-family: arial;
-}
+
 #cidades-indicadores .table{
 	border-collapse: separate;
 }
 #cidades-indicadores .table td,
 #cidades-indicadores .table th,
 #cidades-indicadores .table div{
-	font-family: arial;
+
 }
 
 #cidades-indicadores .table table{
@@ -436,22 +428,25 @@ table{
 
 #cidades-indicadores .table thead.eixos th{
 	font-weight: normal;
-	font-size: 12pt;
-	color: #999;
-	padding: 5px 10px;
+	font-size: 1.5em;
+    line-height: 2em;
+    color: #EEE;
 	text-align: left;
 	background: url(../images/seta.png) no-repeat 98%;
-	background-color: #fafafa;
+    background-color: #2b2b2b;
+}
+
+#cidades-indicadores .table thead.eixos.collapsed th {
+	background: url(../images/seta_up.png) no-repeat 98%;
+    background-color: #2b2b2b;
 }
 
 #cidades-indicadores .table thead.eixos th:hover{
-	cursor: hand;
-	cursor: pointer;
-}
+    cursor: hand;
+    cursor: pointer;
+    color: #FFF;
 
-#cidades-indicadores .table thead.eixos.collapsed th{
-	background: url(../images/seta_up.png) no-repeat 98%;
-	background-color: #fafafa;
+    background-color: #222;
 }
 
 #cidades-indicadores .table thead.datas{
@@ -702,7 +697,6 @@ input.button-data:hover{
 	color: #ccc;
 	display: inline-block;
 	font-size: 9pt;
-	font-family: arial;
 	margin-left: 60px;
 	margin-right: 10px;
 }

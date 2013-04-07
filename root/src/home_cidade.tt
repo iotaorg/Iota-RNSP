@@ -50,17 +50,9 @@
 
 
         <div id="cidades-indicadores">
-                <div class="title">Indicadores</div>
-                <div class="content-fill">
-
-                    <div class="table">
-                        <div class="period">
-                            <div class="item"></div>
-                        </div>
-                        <div class="content-fill">Carregando...</div>
-                    </div>
-
-
+                <h2>Indicadores</h2>
+                <div class="table">
+                    Carregando...
                 </div>
         </div>
 
