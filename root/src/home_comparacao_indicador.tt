@@ -6,8 +6,13 @@
                 <div class="category" id="axis_list">
 
                 </div>
-                <div class="search">
-                    <input type="text" name="indicador-busca" id="indicador-busca" size="25" class="indicador-busca"  placeholder="Busca"/>
+                <div class="control-group">
+                    <div class="controls">
+                        <div class="input-append">
+                            <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
+                            <span class="add-on"><i class="icon-search"></i></span>
+                        </div>
+                    </div>
                 </div>
                 <div class="indicators">
                 </div>
@@ -29,10 +34,12 @@
                 </div>
                 <div class="data-content">
                     <div class="content-fill">
-                        <div class="tabs">
-                            <div class="item selected" id="tab-tabela">tabela</div>
-                            <div class="item" id="tab-mapa">mapa</div>
-                            <div class="item" id="tab-graficos">gráficos</div>
+                        <div class="clearfix">
+                            <div class="tabs">
+                                <div class="item selected" id="tab-tabela">tabela</div>
+                                <div class="item" id="tab-mapa">mapa</div>
+                                <div class="item" id="tab-graficos">gráficos</div>
+                            </div>
                         </div>
 
                         <div class="table">
@@ -43,6 +50,7 @@
 
                             <div id="dados-abertos">
                                 <div class="title">Dados abertos</a></div>
+
                                 <div class="content-fillx">
                                     <div class="dados-botoes">
                                         <input type="button" value="Download" id="button-download" class="button-data"/>

@@ -485,6 +485,10 @@ table{
 	padding: 5px;
 }
 
+.menu-left .category {
+    margin-bottom: 10px;
+
+}
 
 .menu-left #axis_list *{
 	font-size: 10pt;
@@ -528,20 +532,17 @@ table{
 	border-bottom: 1px solid #e5e5e5;
 }
 
-.menu-left .search{
-	margin-top: 5px;
-	padding: 5px 8px;
-	border: 1px solid #e5e5e5;
-	background-color: #f5f5f5;
-	background-image: url('/static/images/lupa.png');
-	background-repeat: no-repeat;
-	background-position: 95% center;
-}
-.menu-left .search input{
-	border: none;
-	background: transparent;
-	width: 88%;
-	color: #999;
+.menu-left .input-append { width:100% }
+.menu-left input[name="indicador-busca"]{
+
+    width: 89%;
+    width: -moz-calc(100% - 41px);
+    /* WebKit */
+    width: -webkit-calc(100% - 41px);
+    /* Opera */
+    width: -o-calc(100% - 41px);
+    /* Standard */
+    width: calc(100% - 41px);
 }
 
 .table table td.cidade a{
