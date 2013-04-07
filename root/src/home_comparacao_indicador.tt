@@ -22,6 +22,8 @@
                         </div>
                         <div class="description">
 
+
+
                         </div>
                     </div>
                 </div>
@@ -38,6 +40,22 @@
                                 <div class="item"></div>
                             </div>
                             <div class="content-fill"></div>
+
+                            <div id="dados-abertos">
+                                <div class="title">Dados abertos</a></div>
+                                <div class="content-fillx">
+                                    <div class="dados-botoes">
+                                        <input type="button" value="Download" id="button-download" class="button-data"/>
+                                        <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+                                    </div>
+                                    <div class="download-links">
+                                    </div>
+                                    <div class="share-link">
+                                        <input type="text" id="share-link" value="url" />
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="graph">
                             <canvas id="main-graph" width='600' height='250'></canvas>
@@ -56,20 +74,7 @@
                     </div>
                 </div>
 
-                <div id="dados-abertos">
-                    <div class="title">Dados abertos</a></div>
-                    <div class="content-fill">
-                        <div class="dados-botoes">
-                            <input type="button" value="Download" id="button-download" class="button-data"/>
-                            <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
-                        </div>
-                        <div class="download-links">
-                        </div>
-                        <div class="share-link">
-                            <input type="text" id="share-link" value="url" />
-                        </div>
-                    </div>
-                </div>
+
 
             </div>
         </div>

@@ -255,10 +255,18 @@ table{
 
 #cidades-dados .profile,
 #cidades-dados .image,
-#cidades-dados .summary,
-#cidades-dados .map{
+#cidades-dados .summary{
 	border-left: 1px solid #e0e0e0;
 }
+#cidades-dados .thumbnail>img{ margin-left: 0}
+#cidades-dados .thumbnail {
+    border: 0;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+}
+
 
 #indicador-dados .profile,
 #mapa-do-site{
