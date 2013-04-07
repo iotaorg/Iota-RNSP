@@ -1,7 +1,7 @@
 <h1>[%indicator.name%] - [%city.name%], [%city.uf%]</h1>
 <a href=".">Visualizar informações da cidade</a>
 		<div class="content" id="content">
-			<div class="row-fluid" id="indicador-dados">
+			<div class="row" id="indicador-dados">
                 <div class="span4 menu-left">
                     <div class="content-fill">
                         <div class="title">Indicadores</div>

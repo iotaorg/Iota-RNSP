@@ -1,5 +1,5 @@
 <div id="content" class="content">
-    <div class="row-fluid" id="indicadores-dados">
+    <div class="row" id="indicadores-dados">
         <div class="span4 menu-left">
             <div class="content-fill">
                 <div class="title">Indicadores</div>
