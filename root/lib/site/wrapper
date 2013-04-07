@@ -156,7 +156,7 @@
         </div>
 
 
-        <div class="span4">
+        <div class="span3">
             <h4>Links</h4>
             <ul class="unstyled">
                 <li><a href="/mapa-do-site">Mapa do site</a></li>
@@ -165,7 +165,17 @@
             </ul>
         </div>
 
-        <div class="span3 offset2">
+        <div class="span3 sociais">
+            <h4>Conecte-se</h4>
+            <div class="icons">
+                <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter">twitter</a>
+                <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook">facebook</a>
+                <a href="#" target="_blank" class="social-icon googleplus">googleplus</a>
+                <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube">youtube</a>
+            </div>
+        </div>
+
+        <div class="span3">
             <h4>Parceiros</h4>
             <ul class="unstyled thumbnails-unstyled">
                 <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>

@@ -3,6 +3,7 @@ var historico_data;
 var variaveis_data = [];
 var data_vvariables = [];
 var cidade_uri;
+var cidade_data;
 
 $(document).ready(function(){
 
@@ -123,7 +124,9 @@ $(document).ready(function(){
 
 	function showIndicadorData(){
 
-		$("#indicador-dados .profile .title").html(indicador_data.name);
+        $("#indicador-dados .profile .title").html(indicador_data.name);
+
+        $("h1").text(indicador_data.name + ' - ' + cidade_data.cidade.name + ', ' + cidade_data.cidade.uf);
 		$("#indicador-dados .profile .explanation").html(indicador_data.explanation);
 		$("#indicador-dados .profile .dados .tabela").empty();
 		if (indicador_data.formula.indexOf("CONCATENAR") < 0){

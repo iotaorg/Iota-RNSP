@@ -660,7 +660,11 @@ input.button-data:hover{
 .data-content #mapa{
 	margin: auto;
 	height: 420px;
+
 	border: 1px solid #e0e0e0;
+}
+#mapa img {
+    max-width: none;
 }
 
 #mapa-filtro{
@@ -846,3 +850,4 @@ footer .thumbnails-unstyled li {
     float: left;
     margin-right: 10px;
 }
+

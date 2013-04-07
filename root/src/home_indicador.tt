@@ -1,4 +1,5 @@
-<h2>Indicadores de [%city.uf%] / [%city.name%]</h2>
+<h1>[%indicator.name%] - [%city.name%], [%city.uf%]</h1>
+<a href=".">Visualizar informações da cidade</a>
 		<div class="content" id="content">
 			<div class="row-fluid" id="indicador-dados">
                 <div class="span4 menu-left">
@@ -12,6 +13,8 @@
                         </div>
                         <div class="indicators">
                         </div>
+                        <p>
+                        </p>
                     </div>
                 </div>
                 <div class="span7 data-right">
