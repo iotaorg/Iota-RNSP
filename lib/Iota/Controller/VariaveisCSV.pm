@@ -94,7 +94,7 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_csv : Chained('/') : PathPart('variaveis.csv') : Args(0) {
+sub download_csv : Chained('/') : PathPart('variaveis_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
     $self->_download($c);
 }
