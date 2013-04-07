@@ -245,8 +245,8 @@ table{
 	display: none;
 	margin-top: -1px;
 	border: 1px solid #e0e0e0;
-	padding: 5px;
-	text-align: center;
+	padding: 10px;
+
 }
 
 #cidades-dados .profile,
@@ -665,20 +665,6 @@ input.button-data:hover{
 }
 #mapa img {
     max-width: none;
-}
-
-#mapa-filtro{
-	padding: 2px;
-}
-#mapa-filtro label{
-	font-size: 10pt;
-}
-#mapa-filtro select{
-	border: 1px solid #ccc;
-	padding: 2px;
-	min-width: 100px;
-	text-align: center;
-	font-size: 12pt;
 }
 
 #date-ruler{

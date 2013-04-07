@@ -1,7 +1,7 @@
 
 var md = function () {
     var
-    $rede    = $('select[name="rede"]:first'),
+
     $cidade  = $('select[name="cidade"]:first'),
     $indi    = $('select[name="indicador"]:first'),
     $formato = $('select[name="formato"]:first'),
@@ -9,7 +9,7 @@ var md = function () {
     $url2    = $('input[name="url2"]:first'),
     _run = function(){
 
-        $rede.change(_redo_url);
+
         $cidade.change(_redo_url);
         $indi.change(_redo_url);
         $formato.change(_redo_url);
@@ -20,19 +20,19 @@ var md = function () {
 
         var
         formato = $formato.val(),
-        rede = $rede.val(),cidade = $cidade.val(), indi= $indi.val();
+        cidade = $cidade.val(), indi= $indi.val();
 
 
         var base_uri = '';
         var arquivo = indi ? 'dados.' + formato : 'indicadores.'+formato;
-        var url = '/' + rede;
+        var url = '';
         if ((cidade =='')==false){
             url = url + '/' +  cidade;
         }
         if ((indi =='')==false){
             url = url + '/' + indi;
         }
-        base_uri = url;
+        base_uri = 'http://'+window.location.host+ url;
 
         url = base_uri + '/' +arquivo;
         $('#id_link').attr('href', url);

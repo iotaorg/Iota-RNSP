@@ -708,7 +708,7 @@ $(document).ready(function(){
 		}
 
 		$("#mapa-filtro").empty();
-		$("#mapa-filtro").append("<label>Selecione um Período:</label> <select id='mapa-filtro-periodo'></select>");
+        $("#mapa-filtro").append("<form><label>Selecione um Período</label> <select id='mapa-filtro-periodo'></select></form>");
 		$.each(dadosGrafico.labels,function(index,value){
 			if (!value) return;
 			$("#mapa-filtro select").append("<option value='$$index'>$$periodo</option>".render({
