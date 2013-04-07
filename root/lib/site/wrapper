@@ -125,41 +125,70 @@
         </div>
     </div>
 
-<hr class="soften">
-<footer>
-    <div class="container">
-        [% IF institute.short_name == 'gov' %]
-        <div class="row">
-            <div class="span12">
-                <div class="thumbnails">
-                    <div class="thumbnail">
-                        <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        [% END %]
-        <div class="row-fluid">
-            <div class="span8">
-                <h4>Programa Cidades Sustentáveis 2012</h4>
-                <p>Todo o conteúdo do site é licenciado sob a Creative Commons Attribution <img src="/static/images/cc.png" alt="Creative Commons Attribution" /></p>
-
-                <p>Desenvolvido por <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" alt="Aware" /></a></p>
-            </div>
-
-            <div class="span4">
-                <div class="parceiros">
-                    <h4>Parceiros:</h4>
-                    <ul class="thumbnails">
-                        <li class="thumbnail"><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
-                        <li class="thumbnail"><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
-                        <li class="thumbnail"><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>
-                    </ul>
-                </div>
+[% IF institute.short_name == 'gov' %]
+<hr>
+<div class="container">
+<div class="row">
+    <div class="span12">
+        <div class="thumbnails">
+            <div class="thumbnail no-border">
+                <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
             </div>
         </div>
     </div>
+</div>
+</div>
+[% END %]
+
+<footer>
+  <div class="footer">
+    <div class="container">
+      <div class="row-fluid">
+
+        <div class="span3">
+            <div class="logo">
+                <img width="200" height="72" src="/static/images/prog-cidade-sustentaveis.png" alt="Logo programa cidades sustentaveis">
+            </div>
+            <small class="aware">
+                Desenvolvido por
+                <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
+            </small>
+        </div>
+
+
+        <div class="span4">
+            <h4>Links</h4>
+            <ul class="unstyled">
+                <li><a href="/mapa-do-site">Mapa do site</a></li>
+                <li><a href="/dados-abertos">Dados abertos - Download</a></li>
+                <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
+            </ul>
+        </div>
+
+        <div class="span3 offset2">
+            <h4>Parceiros</h4>
+            <ul class="unstyled thumbnails-unstyled">
+                <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
+                <li><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
+                <li><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>
+            </ul>
+        </div>
+
+
+    </div>
+  </div>
+
+  <div class="copyright">
+        <div class="footer-copyright-content">
+              Todo o conteúdo do site é licenciado sob a
+              <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
+                <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
+              </a>
+        </div>
+  </div>
 </footer>
+
+
 
 </div>
 
