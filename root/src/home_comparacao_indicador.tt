@@ -69,8 +69,30 @@
                             <canvas id="main-graph" width='600' height='250'></canvas>
                             <div class="legend"></div>
 
-                            <div class="search">
-                                <label>Cidade: </label><div class='input'><input type="text" id="graph-search-user" /></div><div class='button'><input type="button" value="adicionar" disabled="disabled" id="button-search-user"/><input type="hidden" name="graph-user-selected" id="graph-user-selected" /></div>
+                            <div class="clearfix">
+                            <form class="form-horizontal">
+                            <fieldset>
+                                    <label class="control-label"  for="graph-search-user">Cidade</label>
+                                    <div class='input'>
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <div class="input-append">
+                                                    <input type="text" id="graph-search-user" />
+                                                    <span class="add-on"><i class="icon-search"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <div class='button'>
+                                                <input type="button" value="adicionar" class="btn" disabled="disabled" id="button-search-user"/>
+                                                <input type="hidden" name="graph-user-selected" id="graph-user-selected" />
+                                            </div>
+                                        </div>
+                                    </div>
+                            </fieldset>
+                            </form>
                             </div>
 
                         </div>
