@@ -7,6 +7,7 @@
         [%FOREACH city IN cities %]
             <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.uf%] - [%city.name%]</a></li>
         [%END%]
+        [%city=undef%]
         </ul>
     </div>
 
