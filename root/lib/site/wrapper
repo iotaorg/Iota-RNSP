@@ -32,6 +32,8 @@
 [%-CALL assets.include("css/bootstrap.min.css")%]
 [%-CALL assets.include("css/bootstrap-responsive.min.css")%]
 
+[%-CALL assets.include("css/jquery-ui-1.9.2.custom.min.css")%]
+
 [%-CALL assets.include("css/rnsp.dados.css")%]
 
 
