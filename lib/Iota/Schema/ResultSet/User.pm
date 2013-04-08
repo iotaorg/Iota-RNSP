@@ -330,8 +330,12 @@ sub action_specs {
             delete $values{password_confirm};
             delete $values{password} unless $values{password};
             delete $values{city_id}  unless $values{city_id};
+
             delete $values{active}  unless $values{active};
 
+            do { delete $values{$_} unless defined $values{$_} }
+            for keys %values;
+            return unless keys %values;
 
             my $user = $self->find( delete $values{id} );
 
