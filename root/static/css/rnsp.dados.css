@@ -434,8 +434,7 @@ table{
 
 #cidades-indicadores .table thead.eixos th{
 	font-weight: normal;
-	font-size: 1.5em;
-    line-height: 1.5em;
+	font-size: 1em;
     color: #EEE;
 	text-align: left;
 	background: url(/static/images/seta.png) no-repeat 98%;
