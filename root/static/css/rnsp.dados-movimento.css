@@ -13,7 +13,7 @@
 }
 
 #indicadores-dados .data-right .title,
-#indicador-dados .data-right .title{
+#indicador-dados .data-right .title, h1,h2,h3,h4,h5{
 	color: #53368e;
 }
 .data-content .tabs .item.selected{

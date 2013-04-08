@@ -64,7 +64,7 @@ table{
 	color: #009999;
 }
 
-#indicador-dados .data-right .title,
+#indicador-dados .data-right .title,h1,h2,h3,h4,h5,
 #indicadores-dados .data-right .title{
 	color: #009999;
 	font-size: 14pt;
@@ -255,12 +255,7 @@ table{
 
 }
 
-#cidades-dados .profile,
-#cidades-dados .image,
-#cidades-dados .summary{
-	border-left: 1px solid #e0e0e0;
-}
-#cidades-dados .thumbnail>img{ margin-left: 0}
+#cidades-dados .thumbnail>img{ margin-left: 0; max-height: 172px}
 #cidades-dados .thumbnail, .no-border {
     border: 0;
     box-shadow: none;
