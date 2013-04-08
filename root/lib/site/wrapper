@@ -155,7 +155,7 @@
 
         <div class="span3">
             <div class="logo">
-                <img width="200" height="72" src="/static/images/prog-cidade-sustentaveis.png" alt="Logo programa cidades sustentaveis">
+                <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png">
             </div>
             <small class="aware">
                 Desenvolvido por
