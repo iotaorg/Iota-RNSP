@@ -943,7 +943,11 @@ $(document).ready(function(){
 		$(".download-links a.botao").unbind();
 		$(".download-links a.botao").click(function(e){
 			e.preventDefault();
-			self.location = window.location.href + "/" + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
+            var x = 'http://' + window.location.host + window.location.pathname;
+            if (x.substr(-1,1) != '/')
+                x = x + '/';
+
+            self.location = x + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
 		});
 
 	}
