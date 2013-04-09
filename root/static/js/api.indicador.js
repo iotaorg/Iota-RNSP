@@ -167,11 +167,21 @@ $(document).ready(function(){
 		});
 	}
 
+	function numKeys(obj)
+    {
+        var count = 0;
+        for(var prop in obj)
+        {
+            count++;
+        }
+        return count;
+    }
+
 	function showHistoricoData(){
         var source_values = [];
 
 		if (historico_data.rows){
-			var history_table = "<table class='history'><thead><tr><th>Período</th>";
+            var history_table = "<table class='history table-striped table-condensed '><thead><tr><th>Período</th>";
 
 			var headers = [];//corrige ordem do header
 			$.each(historico_data.header,function(titulo, index){
@@ -189,28 +199,40 @@ $(document).ready(function(){
 			var goal_values;
 			var observations_values;
 
+
 			var valores = [];
 			$.each(historico_data.rows, function(index,value){
 				history_table += "<tr><td class='periodo'>$$periodo</td>".render({periodo: convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period)});
 				dadosGrafico.labels.push(convertDateToPeriod(historico_data.rows[index].valid_from,indicador_data.period));
+
+                var cont = 0, num_var = numKeys(historico_data.header);
 				$.each(historico_data.rows[index].valores, function(index2,value2){
-					history_table += "<td class='valor'>$$valor</td>".render({
-							valor: $.formatNumber(historico_data.rows[index].valores[index2].value, {format:"#,###", locale:"br"}),
-							data: convertDate(historico_data.rows[index].valores[index2].value_of_date,"T")
-					});
-					if (historico_data.rows[index].valores[index2].source){
-						source_values.push(historico_data.rows[index].valores[index2].source);
-					}
-					if (historico_data.rows[index].valores[index2].observations){
-						observations_values = historico_data.rows[index].valores[index2].observations;
-					}
+                   cont++;
+                   var valor_linha = historico_data.rows[index].valores[index2];
+                   if (valor_linha != null ){
+                        history_table += "<td class='valor'>$$valor</td>".render({
+                                valor: $.formatNumber(valor_linha.value, {format:"#,###", locale:"br"}),
+                                data: convertDate(valor_linha.value_of_date,"T")
+                        });
+                        if (valor_linha.source){
+                            source_values.push(valor_linha.source);
+                        }
+                        if (valor_linha.observations){
+                            observations_values = valor_linha.observations;
+                        }
+                    }
 				});
+
+                for (i = cont; i<num_var; i++){
+                    history_table += "<td class='valor'>-</td>";
+                }
+
 				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
 					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
 				}else{
 					history_table += "<td class='formula_valor'>-</td>";
 				}
-				history_table += "</tr></tbody>";
+				history_table += "</tr>";
 				if (historico_data.rows[index].goal){
 					goal_values = historico_data.rows[index].goal;
 				}
@@ -222,7 +244,7 @@ $(document).ready(function(){
 				}
 
 			});
-			history_table += "</table>";
+            history_table += "</tbody></table>";
 			dadosGrafico.dados.push({id: userID, nome: cidade_data.cidade.name, valores: valores, data: cidade_data, show: true});
 		}else{
 			var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
