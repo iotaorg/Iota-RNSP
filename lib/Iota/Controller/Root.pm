@@ -284,6 +284,13 @@ sub stash_tela_cidade {
 
     $c->detach('/error_404') unless $user;
 
+
+    $c->stash->{user_obj} = $user;
+    my $public = $c->controller('API::UserPublic')->user_public_load($c);
+use DDP; p $public;
+    $c->stash( public => $public);
+
+
     my $menurs = $user->user_menus->search(undef, {
         order_by => [{'-asc'=>'me.position'}, 'me.id'],
         prefetch => 'page'

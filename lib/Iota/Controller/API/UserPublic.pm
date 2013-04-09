@@ -184,7 +184,7 @@ Retorna:
 
 =cut
 
-sub user_GET {
+sub user_public_load {
     my ( $self, $c ) = @_;
 
     my $user  = $c->stash->{user_obj};
@@ -250,8 +250,13 @@ sub user_GET {
         city_summary => $user->city_summary
     };
 
+    return $ret;
+}
 
+sub user_GET {
+    my ( $self, $c ) = @_;
 
+    my $ret = $self->user_public_load($c);
     $self->status_ok(
         $c,
         entity => $ret

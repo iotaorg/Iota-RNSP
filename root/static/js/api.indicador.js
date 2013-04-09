@@ -16,10 +16,6 @@ $(document).ready(function(){
 					}),
 			success: function(data, textStatus, jqXHR){
 				cidade_data = data;
-				$("#top .content .logo-movimento").remove();
-				if (typeof(cidade_data.usuario.files.logo_movimento) != "undefined"){
-					$("#top .content").append("<div class='logo-movimento'><img src='$$logo_movimento' alt='' /></div>".render({logo_movimento: cidade_data.usuario.files.logo_movimento}));
-				}
 				loadIndicadorData();
 			},
 			error: function(data){

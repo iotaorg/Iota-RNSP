@@ -126,6 +126,9 @@
                 [% IF institute.short_name == 'org' %]
                 <div id="top" class="span2 offset4 text-right">
                     <div class="content">
+                    [% IF public.usuario.files.logo_movimento %]
+                        <img src="[% public.usuario.files.logo_movimento%]" alt="">
+                    [%END%]
                     </div>
                 </div>
                 [%END%]

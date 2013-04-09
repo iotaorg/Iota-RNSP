@@ -4,8 +4,15 @@
             <div class="span4">
                 <div class="profile">
                     <div class="content-fill">
-                        <h1 class="title">[% city.name %]</h1>
-                        <div class="variaveis"><dl class="tabela"></dl></div>
+                        <h1 class="title">[% city.name %], [%city.uf%]</h1>
+                        <div class="variaveis"><dl class="tabela">
+                            <dt>Cidade: </dt>
+                            <dd>[%city.name%]</dd>
+                            <dt>Estado: </dt>
+                            <dd>[%city.uf%]</dd>
+
+                            <dd><div class=loading>Carregando mais informações...</div></dd>
+                        </dl></div>
                     </div>
                 </div>
             </div>
@@ -15,7 +22,9 @@
                 <div class="row">
                     <div class="span8">
                         <div class="image thumbnail">
-                            Imagem da cidade
+                            [%IF public.usuario.files.imagem_cidade%]
+                            <img src="[%public.usuario.files.imagem_cidade%]">
+                            [%END%]
                         </div>
                     </div>
                 </div>
@@ -24,9 +33,7 @@
 
                     <div class="span4">
                         <div class="summary">
-                            <div class="content-fill">
-                                &nbsp;
-                            </div>
+                            <div class="content-fill">[%public.usuario.city_summary%]</div>
                         </div>
                     </div>
 
