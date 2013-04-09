@@ -215,10 +215,10 @@ $(document).ready(function(){
             $tabela.append("<dt>Links:</dt>");
 
             if (typeof(user_files.carta_compromis) != "undefined")
-                $tabela.append("<dd><a href='$$dado'>Carta compromisso</a></dd>".render({dado: user_files.carta_compromis}));
+                $tabela.append("<dd><a href='$$dado' target='_blank'>Carta compromisso</a></dd>".render({dado: user_files.carta_compromis}));
 
             if (typeof(user_files.programa_metas) != "undefined")
-                $tabela.append("<dd><a href='$$dado'>Programa de Metas</a></dd>".render({dado: user_files.programa_metas}));
+                $tabela.append("<dd><a href='$$dado' target='_blank'>Programa de Metas</a></dd>".render({dado: user_files.programa_metas}));
 
         }
 
