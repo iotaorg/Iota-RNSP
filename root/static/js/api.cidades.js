@@ -167,10 +167,13 @@ $(document).ready(function(){
         if (cidade_data.usuario.city_summary){
             $("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
         }
-        $("#cidades-dados .profile .variaveis .tabela").empty();
-        $("#cidades-dados .profile .variaveis .tabela").append("<dt>Cidade:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.name}));
-        $("#cidades-dados .profile .variaveis .tabela").append("<dt>Estado:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.uf}));
-        $("#cidades-dados .profile .variaveis .tabela").append("<dt>País:</dt><dd>$$dado</dd>".render({dado: paises[cidade_data.cidade.pais]}));
+
+        var $tabela = $("#cidades-dados .profile .variaveis .tabela");
+        $tabela.empty()
+            .append("<dt>Cidade:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.name}))
+            .append("<dt>Estado:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.uf}))
+            .append("<dt>País:</dt><dd>$$dado</dd>".render({dado: paises[cidade_data.cidade.pais]}));
+
 
         if (cidade_data.variaveis){
             $.each(infoVars[institute_short_name],function(index,value){
@@ -192,7 +195,7 @@ $(document).ready(function(){
                     }else{
                         var last_date = "";
                     }
-                    $("#cidades-dados .profile .variaveis .tabela").append("<dt>$$label:</dt><dd>$$value$$measurement_unit $$last_date</dd>".render(
+                    $tabela.append("<dt>$$label:</dt><dd>$$value$$measurement_unit $$last_date</dd>".render(
                         {
                             label: label,
                             value: value,
@@ -204,10 +207,25 @@ $(document).ready(function(){
             });
         }
 
+        var user_files = cidade_data.usuario.files;
+        if (
+            typeof(user_files.carta_compromis) != "undefined" ||
+            typeof(user_files.programa_metas) != "undefined"
+        ){
+            $tabela.append("<dt>Links:</dt>");
 
-		if (typeof(cidade_data.usuario.files.imagem_cidade) != "undefined"){
+            if (typeof(user_files.carta_compromis) != "undefined")
+                $tabela.append("<dd><a href='$$dado'>Carta compromisso</a></dd>".render({dado: user_files.carta_compromis}));
+
+            if (typeof(user_files.programa_metas) != "undefined")
+                $tabela.append("<dd><a href='$$dado'>Programa de Metas</a></dd>".render({dado: user_files.programa_metas}));
+
+        }
+
+
+		if (typeof(user_files.imagem_cidade) != "undefined"){
             $("#cidades-dados .image").html('<img/>');
-			$("#cidades-dados .image img")[0].src = cidade_data.usuario.files.imagem_cidade;
+			$("#cidades-dados .image img")[0].src = user_files.imagem_cidade;
 		}else{
             $("#cidades-dados .image").html('<div class="alert alert-block"><p>Cidade sem imagem!</p></div>');
         }
