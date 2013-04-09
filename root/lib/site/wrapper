@@ -108,11 +108,12 @@
             <p class="logo">Iota</p>
 
             <div class="row">
-                <div class="span8">
+
+                <div class="span4">
                     <div class="logo"><img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="" /></div>
                 </div>
 
-                <div class="span4 sociais">
+                <div class="span2 sociais">
                     <h5>Conecte-se</h5>
                     <div class="icons">
                         <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter">twitter</a>
@@ -122,6 +123,12 @@
                     </div>
                 </div>
 
+                [% IF institute.short_name == 'org' %]
+                <div id="top" class="span2 offset4 text-right">
+                    <div class="content">
+                    </div>
+                </div>
+                [%END%]
             </div>
 
         </div>
