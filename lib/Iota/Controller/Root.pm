@@ -153,6 +153,8 @@ sub network_cidade: Chained('network_estado') PathPart('') CaptureArgs(1) {
     $c->stash->{cidade} = $cidade;
 
     $self->stash_tela_cidade($c);
+
+    $c->stash->{title} = $c->stash->{city}{name} . ', '  . $c->stash->{city}{uf};
 }
 
 sub network_render: Chained('network_cidade') PathPart('') Args(0) {
