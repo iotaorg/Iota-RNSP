@@ -24,10 +24,10 @@
                 <div class="data-title">
                     <div class="content-fill">
                         <div class="title">
-                            Comparar Indicadores
+                            [%indicador.name%]
                         </div>
                         <div class="description">
-                            <div class="loading"><p>Carregando...</p></div>
+                            [%indicador.explanation%]
                         </div>
                     </div>
                 </div>
