@@ -24,10 +24,10 @@
                 <div class="data-title">
                     <div class="content-fill">
                         <div class="title">
-                            [%indicador.name%]
+                            [%indicator.name%]
                         </div>
                         <div class="description">
-                            [%indicador.explanation%]
+                            [%indicator.explanation%]
                         </div>
                     </div>
                 </div>
