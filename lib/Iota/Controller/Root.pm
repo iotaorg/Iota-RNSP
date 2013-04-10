@@ -262,6 +262,8 @@ sub stash_tela_indicator {
     $c->detach('/error_404', ['Indicador não encontrado!']) unless $indicator;
 
     $c->stash->{indicator} = $indicator;
+
+    $c->stash->{title} = $indicator->{name} . ' de ' . $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
 
@@ -287,9 +289,7 @@ sub stash_tela_cidade {
 
     $c->stash->{user_obj} = $user;
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
-use DDP; p $public;
     $c->stash( public => $public);
-
 
     my $menurs = $user->user_menus->search(undef, {
         order_by => [{'-asc'=>'me.position'}, 'me.id'],
@@ -351,7 +351,7 @@ use DDP; p $public;
         city => $city,
         user => $user,
         template => 'home_cidade.tt',
-        menu => \@menu_out
+        menu => \@menu_out,
     );
 }
 

@@ -181,7 +181,7 @@ $(document).ready(function(){
         var source_values = [];
 
 		if (historico_data.rows){
-            var history_table = "<table class='history table-striped table-condensed '><thead><tr><th>Período</th>";
+            var history_table = "<table class='history table table-striped table-condensed'><thead><tr><th>Período</th>";
 
 			var headers = [];//corrige ordem do header
 			$.each(historico_data.header,function(titulo, index){
