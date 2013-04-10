@@ -15,6 +15,7 @@
                     </div>
                 </div>
                 <div class="indicators">
+                    <div class="loading"><p>Carregando...</p></div>
                 </div>
             </div>
         </div>
@@ -26,7 +27,7 @@
                             Comparar Indicadores
                         </div>
                         <div class="description">
-
+                            <div class="loading"><p>Carregando...</p></div>
                         </div>
                     </div>
                 </div>
@@ -44,7 +45,9 @@
                             <div class="period">
                                 <div class="item"></div>
                             </div>
-                            <div class="content-fill"></div>
+                            <div class="content-fill">
+                                <div class="loading"><p>Carregando...</p></div>
+                            </div>
 
                             <div id="dados-abertos">
                                 <div class="title">Dados abertos</a></div>
@@ -95,8 +98,8 @@
 
                         </div>
                         <div class="map">
-                            <div id="mapa-filtro"></div>
-                            <div id="mapa"></div>
+                            <div id="mapa-filtro"><div class="loading"><p>Carregando...</p></div></div>
+                            <div id="mapa"><div class="loading"><p>Carregando...</p></div></div>
                         </div>
 
                     </div>

@@ -16,6 +16,7 @@
                 </div>
 
                 <div class="indicators">
+                    <div class="loading"><p>Carregando...</p></div>
                 </div>
             </div>
         </div>
@@ -33,7 +34,9 @@
                                     </select>
                             </div>
 
-                            <div id="mapa"></div>
+                            <div id="mapa">
+                                <div class="loading"><p>Carregando...</p></div>
+                            </div>
 
                     </div>
                 </div>

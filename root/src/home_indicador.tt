@@ -16,6 +16,7 @@
                     </div>
                 </div>
                 <div class="indicators">
+                    <div class="loading"><p>Carregando...</p></div>
                 </div>
                 <p>
                 </p>
@@ -25,9 +26,13 @@
             <div class="content-fill">
                 <div class="profile">
                     <div class="content-fill">
-                        <h1 class="title">[% indicator.name %]</h1>
+                        <h1 class="title">[% indicator.name %] - [%city.name%], [%city.uf%]</h1>
                         <p class="explanation">[% indicator.explanation %]</p>
-                        <div class="dados"><dl class="tabela dl-horizontal "></dl></div>
+                        <div class="dados"><dl class="tabela dl-horizontal ">
+                            <dd>
+                            <div class="loading"><p>Carregando mais informações...</p></div>
+                            <dd>
+                        </dl></div>
                     </div>
                 </div>
 
@@ -36,7 +41,9 @@
                     <div class="content-fill">
 
                         <div class="table">
-                            <div class="content-fill"></div>
+                            <div class="content-fill">
+                                <div class="loading"><p>Carregando...</p></div>
+                            </div>
                         </div>
 
                     </div>
@@ -49,7 +56,6 @@
                             <div class="content-fill">
                                 <canvas id="main-graph" width='600' height='280'></canvas>
                                 <div class="legend"></div>
-
                             </div>
                         </div>
                     </div>
