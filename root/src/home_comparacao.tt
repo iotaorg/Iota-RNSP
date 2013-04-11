@@ -1,61 +1,65 @@
 <div id="content" class="content">
     <div class="row" id="indicadores-dados">
-        <div class="span4 menu-left">
-            <div class="content-fill">
-                <div class="title">Por Indicador</div>
-                <div class="category" id="axis_list">
+        <div class="span4">
+            <div class="menu-left">
+                <div class="content-fill">
+                    <div class="title">Por Indicador</div>
+                    <div class="category" id="axis_list">
 
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <div class="input-append">
-                            <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
-                            <span class="add-on"><i class="icon-search"></i></span>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="input-append">
+                                <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
+                                <span class="add-on"><i class="icon-search"></i></span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="indicators">
-                    <div class="loading"><p>Carregando...</p></div>
+                    <div class="indicators">
+                        <div class="loading"><p>Carregando...</p></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="span7 data-right">
-            <div class="content-fill">
-                <div class="data-content">
-                    <div class="title">
-                        Por Cidade
-                    </div>
-                    <div class="content-fill">
+        <div class="span8">
+            <div class="data-right">
+                <div class="content-fill">
+                    <div class="data-content">
+                        <div class="title">
+                            Por Cidade
+                        </div>
+                        <div class="content-fill">
 
-                            <div id="filtro_mapa">
-                                Estado: <select id="uf_filter">
-                                        <option value="">Selecione
-                                    </select>
+                                <div id="filtro_mapa">
+                                    Estado: <select id="uf_filter">
+                                            <option value="">Selecione
+                                        </select>
+                                </div>
+
+                                <div id="mapa">
+                                    <div class="loading"><p>Carregando...</p></div>
+                                </div>
+
+                        </div>
+                    </div>
+
+                    <div id="dados-abertos">
+                        <div class="title">Dados abertos</a></div>
+                        <div class="content-fill">
+                            <div class="dados-botoes">
+                                <input type="button" value="Download" id="button-download" class="button-data"/>
+                                <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
                             </div>
-
-                            <div id="mapa">
-                                <div class="loading"><p>Carregando...</p></div>
+                            <div class="download-links">
                             </div>
-
-                    </div>
-                </div>
-
-                <div id="dados-abertos">
-                    <div class="title">Dados abertos</a></div>
-                    <div class="content-fill">
-                        <div class="dados-botoes">
-                            <input type="button" value="Download" id="button-download" class="button-data"/>
-                            <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
-                        </div>
-                        <div class="download-links">
-                        </div>
-                        <div class="share-link">
-                            <input type="text" id="share-link" value="url" />
+                            <div class="share-link">
+                                <input type="text" id="share-link" value="url" />
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>

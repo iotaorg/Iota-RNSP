@@ -1,112 +1,113 @@
 <div id="content" class="content">
     <div class="row" id="indicadores-dados">
-        <div class="span4 menu-left">
-            <div class="content-fill">
-                <div class="title">Indicadores</div>
-                <div class="category" id="axis_list">
+        <div class="span4">
+            <div class="menu-left">
+                <div class="content-fill">
+                    <div class="title">Indicadores</div>
+                    <div class="category" id="axis_list">
 
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <div class="input-append">
-                            <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
-                            <span class="add-on"><i class="icon-search"></i></span>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="input-append">
+                                <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
+                                <span class="add-on"><i class="icon-search"></i></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="indicators">
-                    <div class="loading"><p>Carregando...</p></div>
+                    <div class="indicators">
+                        <div class="loading"><p>Carregando...</p></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="span7 data-right">
-            <div class="content-fill">
-                <div class="data-title">
-                    <div class="content-fill">
-                        <div class="title">
-                            [%indicator.name%]
-                        </div>
-                        <div class="description">
-                            [%indicator.explanation%]
+        <div class="span8">
+            <div class="data-right">
+                <div class="content-fill">
+                    <div class="data-title">
+                        <div class="content-fill">
+                            <div class="title">
+                                [%indicator.name%]
+                            </div>
+                            <div class="description">
+                                [%indicator.explanation%]
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="data-content">
-                    <div class="content-fill">
-                        <div class="clearfix">
-                            <div class="tabs">
-                                <div class="item selected" id="tab-tabela">tabela</div>
-                                <div class="item" id="tab-mapa">mapa</div>
-                                <div class="item" id="tab-graficos">gráficos</div>
-                            </div>
-                        </div>
-
-                        <div class="table">
-                            <div class="period">
-                                <div class="item"></div>
-                            </div>
-                            <div class="content-fill">
-                                <div class="loading"><p>Carregando...</p></div>
-                            </div>
-
-                            <div id="dados-abertos">
-                                <div class="title">Dados abertos</a></div>
-
-                                <div class="content-fillx">
-                                    <div class="dados-botoes">
-                                        <input type="button" value="Download" id="button-download" class="button-data"/>
-                                        <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
-                                    </div>
-                                    <div class="download-links">
-                                    </div>
-                                    <div class="share-link">
-                                        <input type="text" id="share-link" value="url" />
-                                    </div>
+                    <div class="data-content">
+                        <div class="content-fill">
+                            <div class="clearfix">
+                                <div class="tabs">
+                                    <div class="item selected" id="tab-tabela">tabela</div>
+                                    <div class="item" id="tab-mapa">mapa</div>
+                                    <div class="item" id="tab-graficos">gráficos</div>
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="graph">
-                            <canvas id="main-graph" width='600' height='250'></canvas>
-                            <div class="legend"></div>
+                            <div class="table">
+                                <div class="period">
+                                    <div class="item"></div>
+                                </div>
+                                <div class="content-fill">
+                                    <div class="loading"><p>Carregando...</p></div>
+                                </div>
 
-                            <div class="clearfix">
-                            <form class="form-horizontal">
-                            <fieldset>
-                                    <label class="control-label"  for="graph-search-user">Cidade</label>
-                                    <div class='input'>
-                                        <div class="control-group">
-                                            <div class="controls">
-                                                <div class="input-append">
-                                                    <input type="text" id="graph-search-user" />
-                                                    <span class="add-on"><i class="icon-search"></i></span>
+                                <div id="dados-abertos">
+                                    <div class="title">Dados abertos</a></div>
+
+                                    <div class="content-fillx">
+                                        <div class="dados-botoes">
+                                            <input type="button" value="Download" id="button-download" class="button-data"/>
+                                            <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+                                        </div>
+                                        <div class="download-links">
+                                        </div>
+                                        <div class="share-link">
+                                            <input type="text" id="share-link" value="url" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="graph">
+                                <canvas id="main-graph" width='600' height='250'></canvas>
+                                <div class="legend"></div>
+
+                                <div class="clearfix">
+                                <form class="form-horizontal">
+                                <fieldset>
+                                        <label class="control-label"  for="graph-search-user">Cidade</label>
+                                        <div class='input'>
+                                            <div class="control-group">
+                                                <div class="controls">
+                                                    <div class="input-append">
+                                                        <input type="text" id="graph-search-user" />
+                                                        <span class="add-on"><i class="icon-search"></i></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <div class='button'>
-                                                <input type="button" value="adicionar" class="btn" disabled="disabled" id="button-search-user"/>
-                                                <input type="hidden" name="graph-user-selected" id="graph-user-selected" />
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <div class='button'>
+                                                    <input type="button" value="adicionar" class="btn" disabled="disabled" id="button-search-user"/>
+                                                    <input type="hidden" name="graph-user-selected" id="graph-user-selected" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                            </fieldset>
-                            </form>
+                                </fieldset>
+                                </form>
+                                </div>
+
+                            </div>
+                            <div class="map">
+                                <div id="mapa-filtro"><div class="loading"><p>Carregando...</p></div></div>
+                                <div id="mapa"><div class="loading"><p>Carregando...</p></div></div>
                             </div>
 
                         </div>
-                        <div class="map">
-                            <div id="mapa-filtro"><div class="loading"><p>Carregando...</p></div></div>
-                            <div id="mapa"><div class="loading"><p>Carregando...</p></div></div>
-                        </div>
-
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>
