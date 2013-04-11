@@ -276,8 +276,9 @@ $(document).ready(function(){
 
 	}
 
-	function showGrafico(){
 
+	function showGrafico(){
+        _resize_canvas();
 		if (dadosGrafico.dados.length > 0){
 			$("#indicador-grafico").fadeIn();
 			$.carregaGrafico("main-graph");

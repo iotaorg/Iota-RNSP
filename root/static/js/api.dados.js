@@ -467,7 +467,7 @@ $(document).ready(function(){
 
 
 	$.carregaGrafico = function(canvasId){
-
+        _resize_canvas();
 		RGraph.ObjectRegistry.Clear();
 		var color_meta = '#ff0000';
 		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
@@ -620,6 +620,7 @@ $(document).ready(function(){
 	}
 
 	function geraGraficos(){
+        _resize_canvas();
 		for (i = 0; i < graficos.length; i++){
 
 			var ymin = 0;

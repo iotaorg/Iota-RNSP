@@ -1,5 +1,6 @@
 var api_path = "";
 //var api_path = "http://rnsp.aware.com.br";
+var _last_width=0;
 
 if (!String.prototype.render) {
 	String.prototype.render = function(args) {
@@ -280,3 +281,19 @@ $(document).ready(function(){
 	$.ajaxSetup({ cache: false });
 
 });
+
+
+function _resize_canvas () {
+    var $g = $('#main-graph'), w=$g.parent().width();
+    if (w != _last_width){
+        $g.attr('width', w);
+        $g.attr('height', w * 0.46);
+        RGraph.Redraw();
+    }
+}
+
+$(window).resize(function() {
+    _resize_canvas();
+});
+
+
