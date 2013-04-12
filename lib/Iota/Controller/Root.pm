@@ -293,6 +293,15 @@ sub stash_tela_cidade {
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
     $c->stash( public => $public);
 
+    my @files = $user->user_files;
+
+    foreach my $file (sort {$b->created_at->epoch <=> $a->created_at->epoch} @files){
+        if ($file->class_name eq 'custom.css'){
+            $c->assets->include($file->public_url, 9999);
+            last;
+        }
+    }
+
     my $menurs = $user->user_menus->search(undef, {
         order_by => [{'-asc'=>'me.position'}, 'me.id'],
         prefetch => 'page'
@@ -306,6 +315,7 @@ sub stash_tela_cidade {
         my $pai = $m->menu_id || $m->id;
         push(@{$menu->{$pai}}, $m);
     }
+
 
     while (my ($id, $rows) = each %$menu){
         my $menu;

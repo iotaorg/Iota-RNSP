@@ -171,7 +171,9 @@ CREATE INDEX indicator_network_config_idx_indicator_id
 
 -- Index: indicator_network_config_idx_network_id
 
--- DROP INDEX indicator_network_config_idx_network_id;
+--
+
+DROP INDEX indicator_network_config_idx_network_id;
 
 CREATE INDEX indicator_network_config_idx_network_id
   ON indicator_network_config
