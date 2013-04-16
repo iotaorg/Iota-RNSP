@@ -137,24 +137,7 @@ eval {
             $schema->resultset('User')->find( $new_user->id ),
             'user in DB'
         );
-        is(eval{$new_user->network}, undef, 'perdeu o movimento');
-
-
-        ( $res, $c ) = ctx_request(
-            POST '/api/user',
-            [
-            api_key                        => 'test',
-            'user.create.name'             => 'Foo XX',
-            'user.create.email'            => 'orme@email.com',
-            'user.create.password'         => 'foobarquux1',
-            'user.create.password_confirm' => 'foobarquux1',
-            'user.create.city_id'          => $city->id,
-            'user.create.role'             => 'user',
-            'user.create.network_id'       => 2
-            ]
-        );
-        ok( $res->is_success, 'user created to city 1 again' );
-        is( $res->code, 201, 'user created to city 1 again' );
+        ok(eval{$new_user->network}, 'ainda tem rede (enviar undef nao pode mudar a rede)');
 
         ok(
             my $changecity =
@@ -162,7 +145,6 @@ eval {
             'user in DB'
         );
         is(eval{$changecity->network->name_url}, 'movim', 'criado como movimento');
-
         ( $res, $c ) = ctx_request(
             POST '/api/user/' . $changecity->id,
             [

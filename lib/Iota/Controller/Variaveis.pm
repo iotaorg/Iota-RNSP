@@ -157,7 +157,7 @@ sub _download {
 
             foreach my $begin (sort {$a cmp $b} keys %$tmp){
 
-                my @order = sort {$a->{col} <=> $b->{col}} @{$tmp->{$begin}};
+                my @order = sort {$a->{col} <=> $b->{col}} grep {exists $_->{col} && defined $_->{value}} @{$tmp->{$begin}};
 
                 my $item = {};
 
