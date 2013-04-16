@@ -118,7 +118,7 @@
                     <div class="icons">
                         <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter">twitter</a>
                         <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook">facebook</a>
-                        <a href="#" target="_blank" class="social-icon googleplus">googleplus</a>
+
                         <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube">youtube</a>
                     </div>
                 </div>
@@ -183,19 +183,20 @@
             </ul>
         </div>
 
-        <div class="span3 sociais">
+        <div class="span2 sociais">
             <h4>Conecte-se</h4>
             <div class="icons">
                 <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter">twitter</a>
                 <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook">facebook</a>
-                <a href="#" target="_blank" class="social-icon googleplus">googleplus</a>
+
                 <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube">youtube</a>
             </div>
         </div>
 
-        <div class="span3">
+        <div class="span4">
             <h4>Parceiros</h4>
             <ul class="unstyled thumbnails-unstyled">
+                <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a></li>
                 <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
                 <li><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
                 <li><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>

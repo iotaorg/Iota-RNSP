@@ -2,21 +2,6 @@ table{
 	border-collapse: collapse;
 }
 
-#indicador-dados .menu-left,
-#indicadores-dados .menu-left{
-/*	width: 192px;
-	float: left;
-	clear: left;
-    margin-right: 6px;*/
-	border: 1px solid #d5d5d5;
-}
-/*
-#indicador-dados .data-right,
-#indicadores-dados .data-right{
-	float: left;
-	width: 698px;
-	clear: right;
-}*/
 
 #indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
