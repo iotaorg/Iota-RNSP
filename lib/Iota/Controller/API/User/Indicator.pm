@@ -74,7 +74,7 @@ sub indicator_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin ));
+    unless $c->check_any_user_role(qw(admin user superadmin ));
 
   my $obj_rs = $c->stash->{object}->next;
 
@@ -121,7 +121,7 @@ sub indicator_DELETE {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin ));
+    unless $c->check_any_user_role(qw(admin user superadmin ));
 
   my $obj = $c->stash->{object}->next;
   $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -167,7 +167,7 @@ sub list_POST {
   my ( $self, $c ) = @_;
 
   $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin ));
+    unless $c->check_any_user_role(qw(admin user superadmin ));
 
     my $param = $c->req->params->{user}{indicator}{create};
     $param->{user_id} = $c->stash->{user}->id;

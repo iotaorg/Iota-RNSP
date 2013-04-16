@@ -1,0 +1,37 @@
+
+descricao
+metodologia
+eixo ( 1 principal e varios auxiliares)
+resultados
+contatos
+.. nome | email | telefone | cidade
+
+objetivos
+---------------------------------------------
+user:
+
+População: basica
+
+Eixo: escolher
+
+Nome:
+
+Descrição:
+
+Metodologia:
+
+Objetivos:
+
+Cronograma:
+
+Resultados:
+
+Instituições envolvidas:
+
+Contatos:
+
+Fontes:
+
+Tags (palavras chaves):
+
+---------------------------------------------

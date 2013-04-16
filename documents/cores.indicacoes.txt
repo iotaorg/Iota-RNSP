@@ -1,0 +1,16 @@
+http://www.redesocialdecidades.org.br/frontend/movimento/#!/myindicator
+
+vermelho:
+Nenhum dado preenchido
+
+
+laranja: parcialmente preenchido (nao tem vigente)
+
+verde:
+"Preenchido"
+
+
+tem um anterior e o atual
+Totalmente preenchido
+
+
