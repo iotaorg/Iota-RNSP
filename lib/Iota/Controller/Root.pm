@@ -36,9 +36,6 @@ sub index : Path : Args(0) {
     $c->stash(
         template => 'home_comparacao.tt'
     );
-
-   # Hello World
-   # $c->res->redirect('/frontend');
 }
 
 

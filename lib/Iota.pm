@@ -89,6 +89,26 @@ after setup_finalize => sub {
 };
 
 
+around 'apply_default_middlewares' => sub {
+    my $orig = shift;
+    my $app  = shift->$orig(@_);
+
+    sub {
+        my $env = shift;
+        if ( $env->{ PATH_INFO } =~ m/^\/(prefeitura|movimento)(.*)/i ) {
+
+            my $sites = {
+                prefeitura => 'indicadores.cidadessustentaveis.org.br',
+                movimento  => 'www.redesocialdecidades.org.br'
+            };
+
+            my $redir_url = 'http://' . $sites->{lc $1} . ($2||'');
+            return [ 301, [ "Location" => $redir_url ], [ "Moved" ] ];
+        }
+
+        $app->($env);
+    };
+};
 
 # Start the application
 __PACKAGE__->setup();
