@@ -95,6 +95,7 @@ around 'apply_default_middlewares' => sub {
 
     sub {
         my $env = shift;
+        use DDP; p $env;
         if ( $env->{ PATH_INFO } =~ m/^\/(prefeitura|movimento)(.*)/i ) {
 
             my $sites = {
