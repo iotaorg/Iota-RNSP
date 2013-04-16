@@ -506,6 +506,7 @@ sub by_period_GET {
         if ($attrs){
             $ret->{justification_of_missing_field} = $attrs->justification_of_missing_field;
             $ret->{goal} = $attrs->goal;
+            $ret->{user_indicator_id} = $attrs->id;
         }
         $ret->{action} = $attrs ? 'update' : 'create';
 
