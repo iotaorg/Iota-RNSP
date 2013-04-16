@@ -270,7 +270,7 @@ sub values_GET {
 
         foreach my $begin (sort {$a cmp $b} keys %$tmp){
 
-            my @order = sort {$a->{col} <=> $b->{col}} grep {exists $_->{col}} @{$tmp->{$begin}};
+            my @order = sort {$a->{col} <=> $b->{col}} grep {exists $_->{col} && defined $_->{value}} @{$tmp->{$begin}};
             my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs({
                 user_id      => $c->stash->{user_id} || $c->user->id,
                 valid_from   => $begin,
@@ -356,7 +356,7 @@ sub values_GET {
                   }else{
 
                     $item->{formula_value} = $indicator_formula->evaluate(
-                        map { $_->{varid} => $_->{value}||0 } @order
+                        map { $_->{varid} => $_->{value} } @order
                     );
                   }
                }
