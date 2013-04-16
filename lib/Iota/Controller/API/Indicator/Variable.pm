@@ -495,9 +495,19 @@ sub by_period_GET {
             }
             push @rows, $rowx;
         }
-
-
         $ret = {rows => \@rows, valid_from => $c->stash->{valid_from}};
+
+        my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs({
+            user_id      => $c->stash->{user_id} || $c->user->id,
+            valid_from   => $c->stash->{valid_from},
+            indicator_id => $indicator->id
+        })->next;
+
+        if ($attrs){
+            $ret->{justification_of_missing_field} = $attrs->justification_of_missing_field;
+            $ret->{goal} = $attrs->goal;
+        }
+
     };
 
     if ($@){
