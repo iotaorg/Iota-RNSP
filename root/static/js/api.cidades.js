@@ -269,7 +269,18 @@ $(document).ready(function(){
 
 		var cont = 0;
 
-		$.each(indicadores_data.resumos, function(eixo_index, eixo){
+        var eixos_ordem = [];
+        $.each(indicadores_data.resumos, function(eixo_index, eixo){
+            eixos_ordem.push(eixo_index);
+        });
+
+        eixos_ordem.sort(function (a, b) {
+            return a.localeCompare(b);
+        });
+
+
+		$.each(eixos_ordem, function(ix, eixo_index){
+            var eixo = indicadores_data.resumos[eixo_index];
 
 			table_content += "<thead class='eixos collapsed'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
 
