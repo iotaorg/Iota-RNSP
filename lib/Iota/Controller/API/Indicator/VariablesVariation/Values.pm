@@ -70,7 +70,7 @@ sub values_POST {
 
    my $obj_rs = $c->stash->{object}->next;
 
-   if ( $c->user->id != $obj_rs->user_id || !$c->check_any_user_role(qw(admin superadmin))){
+   if ( $c->user->id != $obj_rs->user_id && !$c->check_any_user_role(qw(admin superadmin))){
       $self->status_forbidden( $c, message => "access denied", ), $c->detach;
    }
 
