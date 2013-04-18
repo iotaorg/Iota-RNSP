@@ -248,6 +248,7 @@ sub values_GET {
                     value_id      => $value->id,
                     observations  => $value->observations,
                     source        => $value->source,
+                    name          => $row->name
                 }
             }
             $x++;
@@ -280,15 +281,19 @@ sub values_GET {
             my $item = {
                 formula_value => undef,
                 valid_from => $begin,
-                valores    => [map { +{
+                valores    => []
+            };
+            foreach (@order){
+                $item->{valores}[$hash->{header}{$_->{name}}] = {
                     variable_id   => $_->{varid},
                     value_of_date => $_->{value_of_date},
                     id            => $_->{value_id},
                     observations  => $_->{observations},
                     source        => $_->{source},
                     value         => $_->{value}
-                } } @order ]
-            };
+                };
+            }
+
             @order = grep { defined $_->{value} } @order;
 
 

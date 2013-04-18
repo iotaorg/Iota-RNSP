@@ -208,8 +208,8 @@ $(document).ready(function(){
                 var cont = 0, num_var = numKeys(historico_data.header);
 				$.each(historico_data.rows[index].valores, function(index2,value2){
                    var valor_linha = historico_data.rows[index].valores[index2];
+                    cont++;
                    if (valor_linha != null ){
-                        cont++;
                         history_table += "<td class='valor'>$$valor</td>".render({
                                 valor: $.formatNumberCustom(valor_linha.value, {format:"#,##0.##", locale:"br"}),
                                 data: convertDate(valor_linha.value_of_date,"T")
@@ -220,6 +220,8 @@ $(document).ready(function(){
                         if (valor_linha.observations){
                             observations_values = valor_linha.observations;
                         }
+                    }else{
+                        history_table += "<td class='valor'>-</td>";
                     }
 				});
 
