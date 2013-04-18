@@ -119,13 +119,24 @@ sub evaluate_with_alias {
 }
 
 sub evaluate {
-   my ($self, %vars) = @_;
+    my ($self, %vars) = @_;
 
-   foreach($self->variables){
-      return '-' unless defined $vars{$_};
-   }
+    foreach($self->variables){
+        return '-' unless defined $vars{$_};
+    }
 
-   return $self->_is_string ? $self->as_string(%vars) : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
+    my $ret = eval{
+        $self->_is_string
+        ? $self->as_string(%vars)
+        : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } )
+    };
+    if ($@){
+        my $err = "$@";
+        $err .= join ', ', (map { "V" . $_ . '='. $vars{$_} } $self->variables);
+        return $err;
+    }
+
+    return $ret;
 }
 
 sub as_string {
