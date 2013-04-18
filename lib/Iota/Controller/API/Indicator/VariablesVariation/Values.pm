@@ -60,6 +60,8 @@ sub values_GET {
 
 =cut
 
+*values_PUT = *values_POST;
+
 sub values_POST {
    my ( $self, $c ) = @_;
 

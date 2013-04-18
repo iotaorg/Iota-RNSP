@@ -47,7 +47,7 @@ eval {
           'user.create.city_id'          => $city->id,
         ]
       );
-use DDP; p $res;
+
       ok(
         my $new_user =
           $schema->resultset('User')->find( { email => 'foo@email.com' } ),
