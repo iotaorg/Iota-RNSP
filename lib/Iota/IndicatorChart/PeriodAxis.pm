@@ -353,8 +353,9 @@ sub read_values {
                   }
 
                   # TODO ler do indicador qual o totalization_method
-                  my $sum = 0;
+                  my $sum = undef;
                   foreach my $variation_id (keys %$vals){
+                    $sum ||= 0;
 
                      my $val = $self->indicator_formula->evaluate_with_alias(
                         V => $vals_user,
@@ -452,6 +453,7 @@ sub _load_variables_values {
 
     while( my $row = $rs->next ){
         my $gp = $row->get_column('group_from') || 'all';
+        next unless defined $row->value;
         next if $row->value eq '';
         $values->{$gp}{sets}{$row->valid_from}{$row->variable_id} = $row->value;
     }

@@ -259,8 +259,9 @@ sub resumo_GET {
                         }
 
                         # TODO ler do indicador qual o totalization_method
-                        my $sum = 0;
+                        my $sum = undef;
                         foreach my $variation_id (keys %$vals){
+                            $sum ||= 0;
 
                             my $val = $indicator_formula->evaluate_with_alias(
                                 V => $res->{$from},
