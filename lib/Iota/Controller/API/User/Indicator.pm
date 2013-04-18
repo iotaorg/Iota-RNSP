@@ -87,8 +87,8 @@ sub indicator_POST {
 
 
   my $dm = $c->model('DataManager');
-
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+use Data::Dumper;
+  $self->status_bad_request( $c, message => encode_json( $dm->errors ). Dumper $param ), $c->detach
     unless $dm->success;
 
   my $obj = $dm->get_outcome_for('user.indicator.update');
