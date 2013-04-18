@@ -101,7 +101,7 @@ sub mapa_site: Chained('institute_load') PathPart('mapa-do-site') Args(0) {
             { visibility_level => 'private', visibility_user_id => \@users_ids },
             { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
         ]
-    }, { join => 'indicator_user_visibilities' })->as_hashref->all;
+    }, { join => 'indicator_user_visibilities', order_by => 'me.name' })->as_hashref->all;
 
      $c->stash(
         cities    => $c->stash->{network_data}{cities},
