@@ -92,19 +92,30 @@ sub parse {
 }
 
 sub evaluate_with_alias {
-   my ($self, %alias) = @_;
+    my ($self, %alias) = @_;
 
-   return 'NOT-SUPPORTED' if $self->_is_string;
-   foreach($self->variables){
-      return '-' unless defined $alias{V}{$_};
-   }
+    return 'NOT-SUPPORTED' if $self->_is_string;
+    foreach($self->variables){
+        return '-' unless defined $alias{V}{$_};
+    }
 
-   my $tmp;
-   foreach my $var (keys %alias){
-      $tmp->{ "$var$_" } = $alias{$var}{$_} for keys %{ $alias{$var} }
-   }
+    my $tmp;
+    foreach my $var (keys %alias){
+        $tmp->{ "$var$_" } = $alias{$var}{$_} for keys %{ $alias{$var} }
+    }
 
-   return $self->_compiled()->($tmp);
+    my $ret = eval { $self->_compiled()->($tmp) };
+    if ($@){
+        my $err = "$@";
+        foreach my $var (keys %alias){
+            foreach my $varx (keys %{$tmp->{ "$var$_" }}){
+                $err .= ', ' .$varx . '=' . $tmp->{ "$var$_" }{$varx};
+            }
+        }
+        return $err;
+    }
+    return $ret;
+
 }
 
 sub evaluate {
