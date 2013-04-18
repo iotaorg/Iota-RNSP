@@ -60,7 +60,8 @@ eval {
                     'user.create.nome_responsavel_cadastro'         => 'nome_responsavel_cadastro',
                     'user.create.password_confirm' => 'foobarquux1',
                     'user.create.city_id'          => $city->id,
-                    'user.create.role'             => 'admin',
+                    'user.create.role'             => 'user',
+
                     'user.create.city_summary'     => 'testeteste'
                 ]
             );
@@ -161,13 +162,13 @@ eval {
                 like(delete $_->{id}, qr/^\d+$/, 'have id');
                 is(ref delete $_->{roles}, 'ARRAY', 'roles');
                 delete $_->{institute};
+                delete $_->{network};
 
                 my $var = {
                     'nome_responsavel_cadastro' => 'nome_responsavel_cadastro',
                     'cidade' => undef,
                     'bairro' => undef,
                     'endereco' => undef,
-                    'network' => undef,
                     'name' => 'Foo Bar',
                     'active' => 1,
                     'estado' => undef,
@@ -197,7 +198,7 @@ eval {
 
             $users = from_json( $res->content );
 
-            is(scalar @{$users->{users}}, '2', 'filter ok');
+            is(scalar @{$users->{users}}, '3', 'filter ok');
 
 
             die 'rollback';

@@ -95,9 +95,11 @@ eval {
             'user.create.password_confirm' => 'foobarquux1',
             'user.create.city_id'          => $city->id,
             'user.create.role'             => 'admin',
+            'user.create.network_id'       => '1',
 
             ]
         );
+
         ok( $res->is_success, 'user created na city 1 como admin da rede' );
         is( $res->code, 201, 'user created na city 1 como admin' );
 

@@ -62,7 +62,7 @@ sub verifiers_specs {
 
                 },
                 network_id => {
-                    required   => 0,
+                    required   => 1,
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;

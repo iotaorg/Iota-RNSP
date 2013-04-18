@@ -392,13 +392,15 @@ Retorna:
 sub list_POST {
   my ( $self, $c ) = @_;
 
+  $c->req->params->{user}{create}{role} ||= 'user';
+  if ($c->req->params->{user}{create}{role} eq 'user'){
+    $c->req->params->{user}{create}{network_id} ||= $c->user->network_id;
+  }
 
   my $dm = $c->model('DataManager');
 
   $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
     unless $dm->success;
-
-  $c->req->params->{user}{create}{role} ||= 'user';
 
   my $user = $dm->get_outcome_for('user.create');
   $self->status_created(

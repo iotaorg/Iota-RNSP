@@ -6,12 +6,17 @@ use base qw/Catalyst::Authentication::User/;
 use List::MoreUtils qw(any);
 
 our $_id;
+our $_network_id;
 our @_roles;
 
 sub roles { return @_roles; }
 
 sub id {
   return $_id;
+}
+
+sub network_id {
+  return $_network_id || 1;
 }
 
 sub supports {
@@ -23,6 +28,7 @@ sub supports {
 use List::MoreUtils qw(any all);
 
 sub self_check     { 1}
+
 sub self_check_any { 1 }
 
 sub check_any_role {

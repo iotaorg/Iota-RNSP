@@ -45,6 +45,7 @@ eval {
                     'user.create.password_confirm' => 'foobarquux1',
                     'user.create.city_id'          => $city->id,
                     'user.create.role'             => 'admin',
+                    'user.create.network_id'       => '1',
                     'user.create.city_summary'     => 'testeteste'
                 ]
             );
