@@ -223,8 +223,18 @@ var normalize = function( term ) {
 };
 
 $.extend({
+    isNumber: function(o) {
+        return ! isNaN(o-0) && o !== null && o !== "" && o !== false;
+    },
     formatNumberCustom: function(number, mask ){
-        return $.formatNumber(number, mask);
+
+        if ($.isNumber(number)){
+            return $.formatNumber(number, mask);
+        }else{
+            return '<abbr class="alert-error alert" title="$$err">inválido</abbr>'.render({
+                err: number
+            });
+        }
     },
 	getUrlVars: function(){
 		var vars = [], hash;
