@@ -228,7 +228,9 @@ $.extend({
     },
     formatNumberCustom: function(number, mask ){
 
-        if ($.isNumber(number)){
+        if (number == null){
+            return '-';
+        }else if ($.isNumber(number)){
             return $.formatNumber(number, mask);
         }else{
             return '<abbr class="alert-error alert" title="$$err">inválido</abbr>'.render({
