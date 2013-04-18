@@ -87,7 +87,7 @@ sub verifiers_specs {
                             {
                                 user_id     => $r->get_value('user_id'),
                                 variable_id => $r->get_value('variable_id'),
-                                valid_from  => $schema->f_extract_period_edge( $var->period||'yearly', $date )->{period_begin}
+                                valid_from  => $schema->f_extract_period_edge( $var ? $var->period : 'yearly', $date )->{period_begin}
                             }
                         )->count == 0;
                       }
@@ -240,7 +240,7 @@ sub action_specs {
             my $schema = $self->result_source->schema;
             my $var = $schema->resultset('Variable')->find( $values{variable_id} );
 
-            $self->_put($var->period || 'yearly' , %values);
+            $self->_put($var ? $var->period : 'yearly' , %values);
         },
 
     };

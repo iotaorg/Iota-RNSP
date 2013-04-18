@@ -50,7 +50,7 @@ sub verifiers_specs {
                     type       => DataStr,
                     post_check => sub {
                         my $r = shift;
-eval{
+
                         my $ind =
                           $self->result_source->schema->resultset('Indicator')
                           ->find( { id => $r->get_value('indicator_id') } );
@@ -65,13 +65,8 @@ eval{
                         my $var = $schema->resultset('Variable')->find( { id => $any_var } );
                         my $date = DateTimeX::Easy->new( $r->get_value('valid_from') )->datetime;
 
-                        my $valid_from = eval { $schema->f_extract_period_edge( ($var->period || 'yearly'), $date ) }->{period_begin};
-use DDP; p $valid_from;
-my $x={
-                                indicator_id => $r->get_value('indicator_id'),
-                                user_id      => $r->get_value('user_id'),
-                                valid_from   => $valid_from
-                            };use DDP; p $x;
+                        my $valid_from = eval { $schema->f_extract_period_edge( ($var ? $var->period :  'yearly'), $date ) }->{period_begin};
+
                         return $self->search(
                             {
                                 indicator_id => $r->get_value('indicator_id'),
@@ -79,9 +74,8 @@ my $x={
                                 valid_from   => $valid_from
                             }
                         )->count == 0;
-                        };
-use DDP; p $@;
-                      }
+
+                    }
                 },
             }
         ),
@@ -131,7 +125,7 @@ sub action_specs {
             my $var = $schema->resultset('Variable')->find( { id => $any_var } );
             my $date = DateTimeX::Easy->new( $values{valid_from} )->datetime;
 
-            $values{valid_from} = $schema->f_extract_period_edge( $var->period || 'yearly', $date )->{period_begin};
+            $values{valid_from} = $schema->f_extract_period_edge( $var ? $var->period :  'yearly', $date )->{period_begin};
             my $varvalue = $self->create( \%values );
             return $varvalue;
         },
