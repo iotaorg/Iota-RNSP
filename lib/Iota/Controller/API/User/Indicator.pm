@@ -171,10 +171,10 @@ sub list_POST {
 
     my $param = $c->req->params->{user}{indicator}{create};
     $param->{user_id} = $c->stash->{user}->id;
-
+use Data::Dumper;
   my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+  $self->status_bad_request( $c, message => encode_json( $dm->errors ).Dumper $param ), $c->detach
     unless $dm->success;
 
   my $object = $dm->get_outcome_for('user.indicator.create');
