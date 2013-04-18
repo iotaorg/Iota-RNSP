@@ -66,7 +66,12 @@ sub verifiers_specs {
                         my $date = DateTimeX::Easy->new( $r->get_value('valid_from') )->datetime;
 
                         my $valid_from = eval { $schema->f_extract_period_edge( ($var->period || 'yearly'), $date ) }->{period_begin};
-
+use DDP; p $valid_from;
+my $x={
+                                indicator_id => $r->get_value('indicator_id'),
+                                user_id      => $r->get_value('user_id'),
+                                valid_from   => $valid_from
+                            };use DDP; p $x;
                         return $self->search(
                             {
                                 indicator_id => $r->get_value('indicator_id'),
