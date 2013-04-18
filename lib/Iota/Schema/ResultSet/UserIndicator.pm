@@ -50,7 +50,7 @@ sub verifiers_specs {
                     type       => DataStr,
                     post_check => sub {
                         my $r = shift;
-
+eval{
                         my $ind =
                           $self->result_source->schema->resultset('Indicator')
                           ->find( { id => $r->get_value('indicator_id') } );
@@ -79,7 +79,8 @@ my $x={
                                 valid_from   => $valid_from
                             }
                         )->count == 0;
-
+                        };
+use DDP; p $@;
                       }
                 },
             }
