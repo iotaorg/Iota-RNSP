@@ -178,10 +178,10 @@ sub list_POST {
 
     if ($c->stash->{indicator}->dynamic_variations) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            unless $c->check_any_user_role(qw(admin superadmin _movimento _prefeitura));
+            unless $c->check_any_user_role(qw(admin user));
     }else{
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            unless $c->check_any_user_role(qw(admin superadmin user));
+            unless $c->check_any_user_role(qw(admin));
     }
 
    $c->req->params->{indicator}{variation}{create}{indicator_id} = $c->stash->{indicator}->id;
