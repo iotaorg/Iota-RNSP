@@ -131,9 +131,9 @@ sub action_specs {
         },
         update => sub {
             my %values = shift->valid_values;
-            do { delete $values{$_} unless defined $values{$_} }
-              for keys %values;
-            return unless keys %values;
+
+            $values{justification_of_missing_field}||='';
+            $values{justification_of_missing_field}||='';
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
