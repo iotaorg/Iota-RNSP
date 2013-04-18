@@ -207,11 +207,11 @@ $(document).ready(function(){
 
                 var cont = 0, num_var = numKeys(historico_data.header);
 				$.each(historico_data.rows[index].valores, function(index2,value2){
-                   cont++;
                    var valor_linha = historico_data.rows[index].valores[index2];
                    if (valor_linha != null ){
+                        cont++;
                         history_table += "<td class='valor'>$$valor</td>".render({
-                                valor: $.formatNumber(valor_linha.value, {format:"#,###", locale:"br"}),
+                                valor: $.formatNumberCustom(valor_linha.value, {format:"#,##0.##", locale:"br"}),
                                 data: convertDate(valor_linha.value_of_date,"T")
                         });
                         if (valor_linha.source){
@@ -228,7 +228,7 @@ $(document).ready(function(){
                 }
 
 				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
-					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumber(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
+					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumberCustom(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
 				}else{
 					history_table += "<td class='formula_valor'>-</td>";
 				}

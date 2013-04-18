@@ -335,7 +335,7 @@ $(document).ready(function(){
 								valores.push(null);
 							}else{
 								row_content += "<td class='valor'>$$valor</td>".render({
-												valor: $.formatNumber(series[i], {format:"#,##0.##", locale:"br"})
+												valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
 											});
 								valores.push(parseFloat(series[i]).toFixed(2));
 							}
@@ -813,7 +813,7 @@ $(document).ready(function(){
 		index = Math.min(index, numStyles);
 
 		if (markers.length > 0){
-			text = $.formatNumber(markers[0].__valor, {format:"#,##0.##", locale:"br"});
+			text = $.formatNumberCustom(markers[0].__valor, {format:"#,##0.##", locale:"br"});
 			title = markers[0].__nome + " - " + text;
 		}else{
 			text = count;
