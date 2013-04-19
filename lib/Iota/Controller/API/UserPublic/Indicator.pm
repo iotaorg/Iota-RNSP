@@ -171,6 +171,7 @@ sub resumo_GET {
         });
 
 
+        my $user_id = $c->stash->{user_obj}->id;
         while (my $indicator = $rs->next){
 
             my $indicator_formula = new Iota::IndicatorFormula(
@@ -213,7 +214,7 @@ sub resumo_GET {
 
                 my $rsx = $row->values->search({
                     'me.valid_from' => {'>' => $valid_from},
-                    'me.user_id'    => $c->stash->{user_obj}->id
+                    'me.user_id'    => $user_id
 
                 })->as_hashref;
                 while (my $value = $rsx->next){
@@ -240,7 +241,8 @@ sub resumo_GET {
                         for my $variation (@indicator_variations){
 
                             my $rs = $variation->indicator_variables_variations_values->search({
-                                valid_from => $from
+                                valid_from => $from,
+                                user_id    => $user_id
                             })->as_hashref;
                             while (my $r = $rs->next){
                                 next unless defined $r->{value};
@@ -441,7 +443,9 @@ sub indicator_status_GET {
     eval {
         my $rs = $c->stash->{collection};
 
+        my $user_id = $c->stash->{user_obj}->id;
         while (my $indicator = $rs->next){
+
             my $indicator_formula = new Iota::IndicatorFormula(
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
@@ -468,7 +472,7 @@ sub indicator_status_GET {
 
 
                 my $rsx = $row->values->search({
-                    'me.user_id'    => $c->stash->{user_obj}->id
+                    'me.user_id'    => $user_id
                 })->as_hashref;
 
                 while (my $value = $rsx->next){
@@ -500,7 +504,7 @@ sub indicator_status_GET {
                     @indicator_variables  = $indicator->indicator_variables_variations->all;
                     if ($indicator->dynamic_variations) {
                         @indicator_variations = $indicator->indicator_variations->search({
-                            user_id => [$c->stash->{user_obj}->id, $indicator->user_id]
+                            user_id => [$user_id, $indicator->user_id]
                         }, {order_by=>'order'})->all;
                     }else{
                         @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
@@ -516,7 +520,7 @@ sub indicator_status_GET {
                 if (@indicator_variables && @indicator_variations){
 
                     my @datas = $variaveis == 0
-                        ? $self->_get_values_dates(\@indicator_variations)
+                        ? $self->_get_values_dates($user_id, \@indicator_variations)
                         : (
                             ($has_current ? (  $ultima_data ) : ()),
                             keys %$outros_periodos
@@ -532,7 +536,8 @@ sub indicator_status_GET {
                         for my $variation (@indicator_variations){
 
                             my $rs = $variation->indicator_variables_variations_values->search({
-                                valid_from => $from
+                                valid_from => $from,
+                                user_id    => $user_id
                             })->as_hashref;
                             while (my $r = $rs->next){
                                 next unless defined $r->{value};
@@ -568,6 +573,7 @@ sub indicator_status_GET {
         }
     };
 
+
     if ($@){
         $self->status_bad_request(
             $c,
@@ -582,13 +588,15 @@ sub indicator_status_GET {
 }
 
 sub _get_values_dates {
-    my ($self, $variations) = @_;
+    my ($self, $user_id, $variations) = @_;
 
     my %dates;
 
     foreach my $variation (@$variations){
 
-        my @dates = $variation->indicator_variables_variations_values->search(undef, {
+        my @dates = $variation->indicator_variables_variations_values->search({
+            user_id => $user_id,
+        }, {
             select => [qw/valid_from/],
             as => [qw/valid_from/],
             group_by => [qw/valid_from/]
