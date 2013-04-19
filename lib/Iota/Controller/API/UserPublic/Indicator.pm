@@ -442,6 +442,8 @@ sub indicator_status_GET {
         my $rs = $c->stash->{collection};
 
         while (my $indicator = $rs->next){
+        next unless $indicator->id == 190;
+
             my $indicator_formula = new Iota::IndicatorFormula(
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
@@ -468,7 +470,7 @@ sub indicator_status_GET {
 
 
                 my $rsx = $row->values->search({
-                    'me.user_id'    => $c->stash->{user_obj}->id
+                    'me.user_id'    => 107 # $c->stash->{user_obj}->id
                 })->as_hashref;
 
                 while (my $value = $rsx->next){
@@ -486,8 +488,7 @@ sub indicator_status_GET {
             }
 
             my $has_current        = ($ultima_data && exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0;
-
-            if (!$has_current && scalar(keys %$outros_periodos) == 0){
+            if ($variaveis && !$has_current && scalar(keys %$outros_periodos) == 0){
                 push @{$ret->{status}}, {
                     id           =>  $indicator->id,
                     without_data => 1,
@@ -501,19 +502,27 @@ sub indicator_status_GET {
                     @indicator_variables  = $indicator->indicator_variables_variations->all;
                     if ($indicator->dynamic_variations) {
                         @indicator_variations = $indicator->indicator_variations->search({
-                            user_id => [$c->stash->{user_obj}->id, $indicator->user_id]
+                            user_id => [11, $c->stash->{user_obj}->id, $indicator->user_id]
                         }, {order_by=>'order'})->all;
                     }else{
                         @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
                     }
                 }
 
+                if ($variaveis == 0){
+                    my $ret = $c->model('DB')->schema->ultimo_periodo('yearly');
+                    $ultima_data = $ret->{ultimo_periodo};
+                }
+
+
                 if (@indicator_variables && @indicator_variations){
 
-                    my @datas = (
-                        ($has_current ? (  $ultima_data ) : ()),
-                        keys %$outros_periodos
-                    );
+                    my @datas = $variaveis == 0
+                        ? $self->_get_values_dates(\@indicator_variations)
+                        : (
+                            ($has_current ? (  $ultima_data ) : ()),
+                            keys %$outros_periodos
+                        );
                     $outros_periodos = {};
                     $has_current     = 0;
 
@@ -553,10 +562,8 @@ sub indicator_status_GET {
                     id =>  $indicator->id,
                     has_current        => $has_current,
                     has_data           => (keys %$outros_periodos > 0) ? 1 : 0,
-                    without_data       => 0
+                    without_data       => (!$has_current && (keys %$outros_periodos == 0)) ? 1 : 0
                 };
-
-
             }
         }
     };
@@ -574,6 +581,24 @@ sub indicator_status_GET {
     }
 }
 
+sub _get_values_dates {
+    my ($self, $variations) = @_;
+
+    my %dates;
+
+    foreach my $variation (@$variations){
+
+        my @dates = $variation->indicator_variables_variations_values->search(undef, {
+            select => [qw/valid_from/],
+            as => [qw/valid_from/],
+            group_by => [qw/valid_from/]
+        })->as_hashref->all;
+        map {$dates{$_->{valid_from}} = 1} @dates;
+
+    }
+
+    return keys %dates;
+}
 
 1;
 
