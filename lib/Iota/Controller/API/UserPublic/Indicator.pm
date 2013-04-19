@@ -472,9 +472,9 @@ sub indicator_status_GET {
                 })->as_hashref;
 
                 while (my $value = $rsx->next){
-                    if ($value->{value} && $value->{valid_from} eq $ultima_data){
+                    if (($value->{value} || $value->{value} eq '0') && $value->{valid_from} eq $ultima_data){
                         $ultimo_periodo->{$value->{valid_from}}++;
-                    }elsif($value->{value}){
+                    }elsif($value->{value} || $value->{value} eq '0'){
                         $outros_periodos->{$value->{valid_from}}++;
                     }
 
@@ -495,12 +495,68 @@ sub indicator_status_GET {
                     has_current  => 0
                 };
             }else{
+                my @indicator_variations;
+                my @indicator_variables;
+                if ($indicator->indicator_type eq 'varied'){
+                    @indicator_variables  = $indicator->indicator_variables_variations->all;
+                    if ($indicator->dynamic_variations) {
+                        @indicator_variations = $indicator->indicator_variations->search({
+                            user_id => [$c->stash->{user_obj}->id, $indicator->user_id]
+                        }, {order_by=>'order'})->all;
+                    }else{
+                        @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+                    }
+                }
+
+                if (@indicator_variables && @indicator_variations){
+
+                    my @datas = (
+                        ($has_current ? (  $ultima_data ) : ()),
+                        keys %$outros_periodos
+                    );
+                    $outros_periodos = {};
+                    $has_current     = 0;
+
+                    foreach my $from (@datas){
+                        my $vals = {};
+
+                        my $completa = 1;
+
+                        for my $variation (@indicator_variations){
+
+                            my $rs = $variation->indicator_variables_variations_values->search({
+                                valid_from => $from
+                            })->as_hashref;
+                            while (my $r = $rs->next){
+                                next unless defined $r->{value};
+                                $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
+                            }
+
+                            my $qtde_dados = keys %{$vals->{$variation->id}};
+
+                            if ($qtde_dados != @indicator_variables){
+                                $completa = 0;
+                                last;
+                            }
+                        }
+
+                        if ( $from eq $ultima_data ){
+                            $has_current = 1;
+                        }else{
+                            $outros_periodos->{$from} = 1;
+                        }
+                    }
+
+                }
+
                 push @{$ret->{status}}, {
                     id =>  $indicator->id,
                     has_current        => $has_current,
                     has_data           => (keys %$outros_periodos > 0) ? 1 : 0,
                     without_data       => 0
                 };
+
+
             }
         }
     };
