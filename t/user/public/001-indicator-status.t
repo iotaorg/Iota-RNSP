@@ -125,8 +125,6 @@ eval {
             ( $res, $c ) = ctx_request(GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/indicator/status');
             ok($res->is_success, 'GET public info success');
             my $obj = eval{from_json( $res->content )};
-
-
             is_deeply($obj, {
                 status => [
                     {

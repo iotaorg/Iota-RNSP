@@ -442,7 +442,6 @@ sub indicator_status_GET {
         my $rs = $c->stash->{collection};
 
         while (my $indicator = $rs->next){
-
             my $indicator_formula = new Iota::IndicatorFormula(
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
@@ -485,23 +484,24 @@ sub indicator_status_GET {
             while(my($k, $v) = each %$outros_periodos){
                 delete $outros_periodos->{$k} unless $outros_periodos->{$k} == $variaveis;
             }
-            # nenhuma variavel
-            unless(scalar(keys %$outros_periodos) + scalar(keys %$ultimo_periodo)){
+
+            my $has_current        = ($ultima_data && exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0;
+
+            if (!$has_current && scalar(keys %$outros_periodos) == 0){
                 push @{$ret->{status}}, {
                     id           =>  $indicator->id,
                     without_data => 1,
                     has_data     => 0,
                     has_current  => 0
                 };
-                next;
+            }else{
+                push @{$ret->{status}}, {
+                    id =>  $indicator->id,
+                    has_current        => $has_current,
+                    has_data           => (keys %$outros_periodos > 0) ? 1 : 0,
+                    without_data       => 0
+                };
             }
-
-            push @{$ret->{status}}, {
-                id =>  $indicator->id,
-                has_current        => (exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0,
-                has_data           => (keys %$outros_periodos > 0) ? 1 : 0,
-                without_data       => 0
-            };
         }
     };
 
