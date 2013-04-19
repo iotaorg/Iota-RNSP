@@ -547,10 +547,12 @@ sub indicator_status_GET {
                             }
                         }
 
-                        if ( $from eq $ultima_data ){
-                            $has_current = 1;
-                        }else{
-                            $outros_periodos->{$from} = 1;
+                        if ($completa){
+                            if ( $from eq $ultima_data ){
+                                $has_current = 1;
+                            }else{
+                                $outros_periodos->{$from} = 1;
+                            }
                         }
                     }
 
