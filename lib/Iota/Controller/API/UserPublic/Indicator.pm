@@ -425,26 +425,18 @@ Retorna o status de prenchimento dos indicadores
     status:  [
         {
             id: 123
-            ultimo_periodo: 1 ou 0,
-            outros_periodos: 1 ou 0,
-            completo_historico: 1 ou 0
-            -- se ultimo_periodo E outros_periodos forem 0 nao tem nenhum dado
-            -- se ultimo_periodo for 1 e outros_periodos for 0,
-            -- nao ha dados apenas do ultimo periodo
-            -- completo_historico so eh verdadeiro quando todos os periodos
-            -- foram preenchidos ignorando o ultimo (se quiser saber se esta tudo completo, use completo_historico+ultimo_periodo==2)
+            has_data=
+            has_current=
+            without_data=
         },
     ]
 }
 
 =cut
 
-use DateTime;
-# TODO esse endpoint funciona apenas com periodos anuais
 sub indicator_status_GET {
     my ( $self, $c ) = @_;
     my $ret;
-
     my $ultimos = {};
     eval {
         my $rs = $c->stash->{collection};
@@ -461,58 +453,56 @@ sub indicator_status_GET {
             } );
 
 
-            my $periodos = {};
+            my $variaveis = 0;
+            my $ultima_data;
+
+            my $outros_periodos = {};
+            my $ultimo_periodo = {};
+
             while (my $row = $rs->next){
+                # ultima data do periodo geral
+                unless (exists $ultimos->{$row->period}){
+                    my $ret = $c->model('DB')->schema->ultimo_periodo($row->period);
+                    $ultimos->{$row->period} = $ret->{ultimo_periodo};
+                }
+                $ultima_data = $ultimos->{$row->period};
+
+
                 my $rsx = $row->values->search({
                     'me.user_id'    => $c->stash->{user_obj}->id
                 })->as_hashref;
 
                 while (my $value = $rsx->next){
-                    if($value->{value}){
-                        $periodos->{$value->{valid_from}}++;
+                    if ($value->{value} && $value->{valid_from} eq $ultima_data){
+                        $ultimo_periodo->{$value->{valid_from}}++;
+                    }elsif($value->{value}){
+                        $outros_periodos->{$value->{valid_from}}++;
                     }
+
                 }
+                $variaveis++;
             }
-
-            # apaga os que tem variavel faltando,
-            # signfica que nao tem valor suficiente para executar a formula
-            my $variaveis = $indicator_formula->_variable_count;
-            while(my($k, $v) = each %$periodos){
-                delete $periodos->{$k} unless $periodos->{$k} == $variaveis;
+            while(my($k, $v) = each %$outros_periodos){
+                delete $outros_periodos->{$k} unless $outros_periodos->{$k} == $variaveis;
             }
-
-            if (keys %$periodos == 0){
+            # nenhuma variavel
+            unless(scalar(keys %$outros_periodos) + scalar(keys %$ultimo_periodo)){
                 push @{$ret->{status}}, {
-                    id =>  $indicator->id,
-                    without_data          => 1,
-                    completed_except_last => 0,
-                    completed             => 0
+                    id           =>  $indicator->id,
+                    without_data => 1,
+                    has_data     => 0,
+                    has_current  => 0
                 };
                 next;
             }
 
-            my $last_year  = (DateTime->now()->year() - 1);
-            my $begin_year = 2000;
-
-            my $completed = 1;
-            my $completed_except_last = 0;
-
-            for my $year ($begin_year .. $last_year){
-                next if (exists $periodos->{"$year-01-01"});
-                $completed = 0;
-                $completed_except_last = 1 if ( $year == $last_year );
-                last;
-            }
-
             push @{$ret->{status}}, {
-                id                    =>  $indicator->id,
-                without_data          => 0,
-                completed_except_last => $completed_except_last,
-                completed             => $completed
+                id =>  $indicator->id,
+                has_current        => (exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0,
+                has_data           => (keys %$outros_periodos > 0) ? 1 : 0,
+                without_data       => 0
             };
-
         }
-
     };
 
     if ($@){
@@ -527,6 +517,7 @@ sub indicator_status_GET {
         );
     }
 }
+
 
 1;
 

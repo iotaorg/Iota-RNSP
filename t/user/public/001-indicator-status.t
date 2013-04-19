@@ -132,8 +132,8 @@ eval {
                     {
                         id                    =>  $indicator->{id},
                         without_data          =>  1,
-                        completed             =>  0,
-                        completed_except_last =>  0,
+                        has_current           =>  0,
+                        has_data              =>  0,
                     }
                 ]
             }, 'teste condicao 1');
@@ -153,8 +153,8 @@ eval {
                     {
                         id                    =>  $indicator->{id},
                         without_data          =>  1,
-                        completed             =>  0,
-                        completed_except_last =>  0,
+                        has_current           =>  0,
+                        has_data              =>  0,
                     }
                 ]
             }, 'teste condicao 1.5');
@@ -171,13 +171,13 @@ eval {
                     {
                         id                    =>  $indicator->{id},
                         without_data          =>  0,
-                        completed             =>  0,
-                        completed_except_last =>  0,
+                        has_current           =>  0,
+                        has_data              =>  1,
                     }
                 ]
             }, 'teste condicao 2');
 
-            for (2000..$last_year-1){
+            for (2005..$last_year-1){
                 $variable_url = $uri->path_query;
                 &add_value($variable_url, $_ . '-01-01', 1);
                 $variable_url = $uri2->path_query;
@@ -193,8 +193,8 @@ eval {
                     {
                         id                    =>  $indicator->{id},
                         without_data          =>  0,
-                        completed             =>  0,
-                        completed_except_last =>  1,
+                        has_current           =>  0,
+                        has_data              =>  1,
                     }
                 ]
             }, 'teste condicao 3');
@@ -213,8 +213,8 @@ eval {
                     {
                         id                    =>  $indicator->{id},
                         without_data          =>  0,
-                        completed             =>  1,
-                        completed_except_last =>  0,
+                        has_current           =>  1,
+                        has_data              =>  1,
                     }
                 ]
             }, 'teste condicao 4');

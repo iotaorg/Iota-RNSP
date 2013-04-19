@@ -3,14 +3,23 @@ http://www.redesocialdecidades.org.br/frontend/movimento/#!/myindicator
 vermelho:
 Nenhum dado preenchido
 
+without_data=true
 
-laranja: parcialmente preenchido (nao tem vigente)
+
+laranja:
+
+parcialmente preenchido (nao tem vigente)
+
+has_data=true
+has_current=false
+without_data=false
+
 
 verde:
 "Preenchido"
 
+o atual
 
-tem um anterior e o atual
-Totalmente preenchido
 
+has_current=true
 
