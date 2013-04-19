@@ -442,8 +442,6 @@ sub indicator_status_GET {
         my $rs = $c->stash->{collection};
 
         while (my $indicator = $rs->next){
-        next unless $indicator->id == 190;
-
             my $indicator_formula = new Iota::IndicatorFormula(
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
@@ -470,7 +468,7 @@ sub indicator_status_GET {
 
 
                 my $rsx = $row->values->search({
-                    'me.user_id'    => 107 # $c->stash->{user_obj}->id
+                    'me.user_id'    => $c->stash->{user_obj}->id
                 })->as_hashref;
 
                 while (my $value = $rsx->next){
@@ -490,7 +488,7 @@ sub indicator_status_GET {
             my $has_current        = ($ultima_data && exists $ultimo_periodo->{$ultima_data} && $ultimo_periodo->{$ultima_data} == $variaveis) ? 1 : 0;
             if ($variaveis && !$has_current && scalar(keys %$outros_periodos) == 0){
                 push @{$ret->{status}}, {
-                    id           =>  $indicator->id,
+                    id           => $indicator->id,
                     without_data => 1,
                     has_data     => 0,
                     has_current  => 0
@@ -502,7 +500,7 @@ sub indicator_status_GET {
                     @indicator_variables  = $indicator->indicator_variables_variations->all;
                     if ($indicator->dynamic_variations) {
                         @indicator_variations = $indicator->indicator_variations->search({
-                            user_id => [11, $c->stash->{user_obj}->id, $indicator->user_id]
+                            user_id => [$c->stash->{user_obj}->id, $indicator->user_id]
                         }, {order_by=>'order'})->all;
                     }else{
                         @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
