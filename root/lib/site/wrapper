@@ -11,7 +11,7 @@
 <![endif]-->
 
 
-[%-CALL assets.include("js/jquery-1.7.1.min.js")%]
+
 [%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
 [%-CALL assets.include("js/jquery.history.js")%]
 [%-CALL assets.include("js/jshashtable-2.1.js")%]
@@ -222,6 +222,8 @@
 </div>
 
 
+
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
 [% assets.export("js") %]

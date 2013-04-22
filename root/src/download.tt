@@ -110,5 +110,5 @@
 </div>
 
 
-[%-CALL assets.include("/static/js/download_links.js", 99)%]
+[%-CALL assets.include("/static/js/download_links.js", 999)%]
 
