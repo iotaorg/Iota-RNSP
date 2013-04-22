@@ -13,12 +13,20 @@ __PACKAGE__->config( default => 'application/json' );
 
 
 sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureArgs(0) {
-    my ( $self, $c, $id ) = @_;
+    my ( $self, $c ) = @_;
+
+    my $user_id = $c->stash->{user_obj}->id;
+    my $country = eval{$c->stash->{user_obj}->city->country_id};
 
     $c->stash->{collection} = $c->model('DB::Indicator')->search(
         {
-            'indicator_network_configs.network_id' => [$c->stash->{network}->id, undef]
-        }, { prefetch => ['indicator_network_configs'] }
+            '-or' => [
+                { visibility_level => 'public' },
+                { visibility_level => 'country', visibility_country_id => $country },
+                { visibility_level => 'private', visibility_user_id => $user_id },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => $user_id },
+            ]
+        }, { join => ['indicator_user_visibilities'] }
     );
 }
 
@@ -450,7 +458,6 @@ sub indicator_status_GET {
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
             );
-
             my $rs = $c->model('DB')->resultset('Variable')->search_rs({
                 'me.id' => [$indicator_formula->variables],
             } );
