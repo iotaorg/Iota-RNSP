@@ -12,7 +12,7 @@ before_install:
   - cpanm -n DBIx::Class::Optional::Dependencies
   - cpanm -n Catalyst::Plugin::Assets
 before_script:
-  - psql -c 'create database rnsp_pcs' -U postgres
+  - psql -c 'create database iota_production' -U postgres
   - perl script/deploy.pl
 notifications:
   irc:
