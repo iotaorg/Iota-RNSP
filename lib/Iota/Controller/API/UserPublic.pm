@@ -2,7 +2,7 @@
 package Iota::Controller::API::UserPublic;
 
 use Moose;
-
+use Iota::IndicatorFormula;
 use JSON qw(encode_json);
 
 BEGIN { extends 'Catalyst::Controller::REST' }
@@ -110,15 +110,19 @@ sub stash_comparacao {
     }, { prefetch => ['axis'], join => 'indicator_user_visibilities' })->as_hashref->all;
 
     for my $ind (@indicators){
-        push @{$ret->{indicators}}, {
-            map { $_ => $ind->{$_}  }
-                qw/name name_url goal_explanation
-                    goal_operator goal explanation goal_source
-                    formula
-                /
-        };
+        my $f = Iota::IndicatorFormula->new(
+            formula => $ind->{formula},
+            schema => $c->model('DB')->schema
+        );
+
+        my ($any_var) = $f->variables;
+        $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
+
+        $ind->{period} = defined $any_var ? $any_var->period : 'yearly';
+        $ind->{variable_type} = defined $any_var ? $any_var->type   : 'int';
     }
     $ret->{indicators} = \@indicators;
+
 
     $self->status_ok(
         $c,

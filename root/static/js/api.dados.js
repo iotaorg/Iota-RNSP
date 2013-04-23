@@ -318,11 +318,15 @@ $(document).ready(function(){
 								});
 						var series = [];
 						for (j = 0; j < data.series.length; j++){
-							if (indicadorDATA.indicator_type == "varied"){
-								series[data.series[j].label] = data.series[j].variations[$("#variationFilter").val()].value;
-							}else{
-								series[data.series[j].label] = data.series[j].sum;
-							}
+                            if(indicadorDATA.variable_type == 'str'){
+                                series[data.series[j].label] = data.series[j].data[0][1] == '-' ? '-' : 'OK';
+                            }else{
+                                if (indicadorDATA.indicator_type == "varied"){
+                                    series[data.series[j].label] = data.series[j].variations[$("#variationFilter").val()].value;
+                                }else{
+                                    series[data.series[j].label] = data.series[j].sum;
+                                }
+                            }
 						}
 
 						var data_atual = new Date();
@@ -334,9 +338,15 @@ $(document).ready(function(){
 								row_content += "<td class='valor'>-</td>";
 								valores.push(null);
 							}else{
-								row_content += "<td class='valor'>$$valor</td>".render({
-												valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
-											});
+                                if(indicadorDATA.variable_type == 'str'){
+                                    row_content += "<td class='valor'>$$valor</td>".render({
+                                        valor: series[i]
+                                    });
+                                }else{
+                                    row_content += "<td class='valor'>$$valor</td>".render({
+                                        valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
+                                    });
+                                }
 								valores.push(parseFloat(series[i]).toFixed(2));
 							}
 
@@ -348,6 +358,15 @@ $(document).ready(function(){
 									});
 
 						$(".data-content .table .content-fill tbody").append(row_content);
+
+                        if(indicadorDATA.variable_type == 'str'){
+                            $("td.grafico a").hide();
+                            $('#tab-mapa').hide();
+                            $('#tab-graficos').hide();
+                        }else{
+                            $('#tab-mapa').show();
+                            $('#tab-graficos').show();
+                        }
 
 						$("td.grafico a").click(function(e){
 							if($.getUrlVar("graphs")){

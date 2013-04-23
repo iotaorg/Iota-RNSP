@@ -210,12 +210,14 @@ sub resumo_GET {
             my $valid_from;
             my $perido;
             my $variaveis = 0;
+            my $any_var;
             while (my $row = $rs->next){
                 if (!$valid_from){
                     $valid_from = $c->model('DB')->schema->voltar_periodo(
                         $row->values->get_column('valid_from')->max(),
                         $row->period, $max_periodos)->{voltar_periodo};
                     $perido = $row->period;
+                    $any_var = $row;
                 }
                 next unless $valid_from;
 
@@ -324,6 +326,7 @@ sub resumo_GET {
                     formula     => $indicator->formula,
                     name_url    => $indicator->name_url,
                     explanation => $indicator->explanation,
+                    variable_type => defined $any_var ? $any_var->type   : 'int',
                     network_config => $config ? {
                         unfolded_in_home => $config->unfolded_in_home,
                         network_id       => $config->network_id

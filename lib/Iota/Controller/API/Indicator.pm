@@ -122,10 +122,11 @@ sub indicator_GET {
 
     my $f = new Iota::IndicatorFormula(
         formula => $object_ref->formula,
-        schema => $c->model('DB')->schema);
+        schema => $c->model('DB')->schema
+    );
 
-        my ($any_var) = $f->variables;
-        $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
+    my ($any_var) = $f->variables;
+    $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
 
     my $where = $object_ref->dynamic_variations ? {
             user_id =>  $c->stash->{user_id} || $c->user->id
@@ -334,7 +335,6 @@ sub list_GET {
                 id => $user->city_id
             })->next;
 
-    use DDP; p $user_city;
             $country_id = $user_city ? $user_city->country_id : undef;
         }
 

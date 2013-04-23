@@ -191,14 +191,17 @@ $(document).ready(function(){
 			$.each(headers, function(index,value){
 				history_table += "<th class='variavel'>$$variavel</th>".render({variavel:value});
 			});
-			history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
+
+            if (!(indicador_data.variable_type == 'str')){
+                history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
+            }
+
 			history_table += "</tr><tbody>";
 
 			dadosGrafico = {"dados": [], "labels": []};
 
 			var goal_values;
 			var observations_values;
-
 
 			var valores = [];
 			$.each(historico_data.rows, function(index,value){
@@ -210,10 +213,16 @@ $(document).ready(function(){
                    var valor_linha = historico_data.rows[index].valores[index2];
                     cont++;
                    if (valor_linha != null ){
-                        history_table += "<td class='valor'>$$valor</td>".render({
-                                valor: $.formatNumberCustom(valor_linha.value, {format:"#,##0.##", locale:"br"}),
-                                data: convertDate(valor_linha.value_of_date,"T")
-                        });
+                       if (indicador_data.variable_type == 'str'){
+                           history_table += "<td class='valor'>$$valor</td>".render({
+                                    valor: valor_linha.value,
+                            });
+                       }else{
+                            history_table += "<td class='valor'>$$valor</td>".render({
+                                    valor: $.formatNumberCustom(valor_linha.value, {format:"#,##0.##", locale:"br"}),
+                                    data: convertDate(valor_linha.value_of_date,"T")
+                            });
+                        }
                         if (valor_linha.source){
                             source_values.push(valor_linha.source);
                         }
@@ -229,11 +238,13 @@ $(document).ready(function(){
                     history_table += "<td class='valor'>-</td>";
                 }
 
-				if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
-					history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumberCustom(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
-				}else{
-					history_table += "<td class='formula_valor'>-</td>";
-				}
+                if (!(indicador_data.variable_type == 'str')){
+                    if(historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-"){
+                        history_table += "<td class='formula_valor'>$$formula_valor</td>".render({formula_valor: $.formatNumberCustom(historico_data.rows[index].formula_value, {format:"#,##0.###", locale:"br"})});
+                    }else{
+                        history_table += "<td class='formula_valor'>-</td>";
+                    }
+                }
 				history_table += "</tr>";
 				if (historico_data.rows[index].goal){
 					goal_values = historico_data.rows[index].goal;
@@ -274,7 +285,12 @@ $(document).ready(function(){
 			$("#indicador-dados .profile .dados .tabela").append("<dt>Observações:</dt><dd>$$dado</dd>".render({dado: observations_values}));
 		}
 
-		showGrafico();
+		if (!(indicador_data.variable_type == 'str')){
+            $('#indicador-grafico').show();
+            showGrafico();
+        }else{
+            $('#indicador-grafico').hide();
+        }
 
 	}
 

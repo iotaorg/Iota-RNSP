@@ -315,11 +315,17 @@ $(document).ready(function(){
 					}
 					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){
+
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
 								table_content += "<td class='valor'>-</td>";
 							}else{
-								table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:"#,##0.##", locale:"br"})});
+                                if (item.variable_type == 'str'){
+                                        table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j] ? 'OK' : '-' });
+                                }else{
+                                     table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:"#,##0.##", locale:"br"})});
+
+                                }
 							}
 						}
 						table_content += "<td class='grafico'><a href='$$url'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({id: cont, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
