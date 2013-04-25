@@ -50,10 +50,11 @@ sub institute_load: Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     my $domain = $c->req->uri->host;
+
     my $net = $c->model('DB::Network')->search({
         domain_name => $domain
     }, {
-        prefetch => [{'current_user' => 'user_files'}]
+        prefetch => 'current_user'
     })->first;
     $c->detach('/error_404', ['Nenhuma rede para o dominio ' . $domain . '!']) unless $net;
 
