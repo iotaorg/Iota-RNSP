@@ -213,7 +213,7 @@ sub values_GET {
                 @indicator_variations = $indicator->indicator_variations->search($hash->{filters}, {order_by=>'order'})->all;
             }else{
                 $hash->{filters} = {
-                    user_id => $c->user->id
+                    user_id => $c->stash->{user_id} || $c->user->id
                 };
                 @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
             }

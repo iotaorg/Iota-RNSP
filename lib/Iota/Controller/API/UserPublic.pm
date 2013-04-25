@@ -83,9 +83,21 @@ sub stash_comparacao {
 
     my $network = $c->stash->{network};
 
-    my $ret = {};
+    my $ret = {
+        network => {
+            name => $network->name,
+            id   => $network->id,
+
+            institute => {
+                id          => $network->institute_id,
+                name        => $network->institute->name,
+                description => $network->institute->description,
+            }
+        }
+    };
     my @users = $c->model('DB::User')->search({
-        'me.network_id' => $network->id
+        'me.network_id' => $network->id,
+        city_id => {'!=' => undef}
     }, {  prefetch => ['city'] } )->as_hashref->all;
 
     for my $user (@users){
