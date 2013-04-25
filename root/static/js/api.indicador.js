@@ -171,6 +171,7 @@ $(document).ready(function () {
                 $("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
                 $("#indicador-grafico .title a.link").attr("href", "/" + indicador_data.name_url + "/?view=graph&graphs=" + userID);
 
+                $('#indicador-historico label').remove();
                 if (indicador_data.indicator_type == 'varied') {
                     var html_combo = '<label>Faixa: <select id="variation" class="span6" name="variation">';
 
@@ -182,6 +183,7 @@ $(document).ready(function () {
                     html_combo = html_combo + '</select></label>';
                     $('#indicador-historico').prepend($(html_combo).change(showHistoricoData));
                 }
+
 
                 showHistoricoData();
 
