@@ -243,7 +243,7 @@ sub user_DELETE {
 
 #  $user->user_roles->delete;
 #  $user->sessions->delete;
-  $user->update({active => 0});
+  $user->update({active => 0, city_id => undef});
 
   $self->status_no_content($c);
 }
