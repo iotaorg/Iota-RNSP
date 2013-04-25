@@ -75,6 +75,9 @@ sub action_specs {
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
+
+            $var->cities->update({ uf => uc $var->name_url });
+
             return $var;
         },
 

@@ -66,6 +66,9 @@ sub action_specs {
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
+
+            $var->cities->update({ pais => $var->name_url });
+
             return $var;
         },
 

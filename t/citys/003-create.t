@@ -86,6 +86,29 @@ eval {
             is( $res->code, 200, 'list 200' );
 
 
+            ( $res, $c ) = ctx_request(
+                POST '/api/country/1',
+                [
+                    'country.update.name'         => 'BarFoo'
+                ]
+            );
+            ok( $res->is_success, 'country updated' );
+            is( $res->code, 202, 'country updated -- 202 Accepted' );
+
+            use JSON qw(from_json);
+            my $country = eval{from_json( $res->content )};
+            ok(
+                my $updated_country =
+                $schema->resultset('Country')->find( { id => $country->{id} } ),
+                'country in DB'
+            );
+            is( $updated_country->name, 'BarFoo', 'name ok' );
+
+            my @f = $updated_country->cities->all;
+            foreach (@f){
+                is($_->pais, 'barfoo', 'updated ok');
+            }
+
             die 'rollback';
         }
     );
