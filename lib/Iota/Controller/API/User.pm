@@ -2,6 +2,8 @@
 package Iota::Controller::API::User;
 
 use Moose;
+use JSON;
+use Path::Class qw(dir);
 
 use JSON qw(encode_json);
 
@@ -33,8 +35,6 @@ sub cap_user_file : Chained('object') : PathPart('arquivo') : CaptureArgs(1)  {
 sub user_file : Chained('cap_user_file') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
-use JSON;
-use Path::Class qw(dir);
 sub user_file_POST {
     my ( $self, $c) = @_;
 
@@ -81,6 +81,23 @@ sub user_file_POST {
     }
 
     $c->detach;
+}
+
+sub user_file_DELETE {
+    my ( $self, $c) = @_;
+
+    my $classe = $c->stash->{classe};
+    my $t = new Text2URI();
+
+    $classe = $t->translate(substr($classe, 0, 15));
+    $classe ||= 'perfil';
+
+    my $user_id = $c->stash->{object}->next->id;
+    $c->model('DB::User')->find($user_id)->user_files->search({
+        class_name   => $classe,
+    })->delete;
+
+    $self->status_no_content($c);
 }
 
 

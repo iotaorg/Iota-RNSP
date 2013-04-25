@@ -60,6 +60,11 @@ eval {
       ok( $res->is_success, 'user deleted' );
       is( $res->code, 204, 'user deleted - 204 no content' );
 
+      ( $res, $c ) =
+        ctx_request( DELETE '/api/user/' . $new_user->id . '/arquivo/perfil_XD?api_key=test' );
+      ok( $res->is_success, 'user deleted' );
+      is( $res->code, 204, 'user deleted - 204 no content' );
+
       # delete inexistent user
       #( $res, $c ) =
       #  ctx_request( DELETE '/api/user/' . $new_user->id . '?api_key=test' );
