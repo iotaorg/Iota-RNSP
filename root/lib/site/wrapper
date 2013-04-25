@@ -41,7 +41,10 @@
     [%- CALL assets.include("css/style-movimento.css")-%]
     [%- CALL assets.include("css/rnsp.dados-movimento.css")-%]
 [%- END -%]
-
+[% IF institute.short_name == 'gov' %]
+    [%- CALL assets.include("css/parceiros.gov.css")-%]
+    [%- CALL assets.include("js/parceiros.gov.js")-%]
+[%- END -%]
 [%-IF custom_css-%]
     [%-CALLassets.include(custom_css)-%]
 [%-END-%]
@@ -51,7 +54,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
-<body>
 <body>
 <div id="iota-app">
     <div class="navbar navbar-fixed-top navbar-inverse">
@@ -148,11 +150,7 @@
 <div class="container">
 <div class="row">
     <div class="span12">
-        <div class="thumbnails">
-            <div class="thumbnail no-border">
-                <img src="/static/images/patrocinadores.gif" alt="Realização, Apoio, Apoio de Mídia, Parceiros e Patrocinadores" />
-            </div>
-        </div>
+        [%INCLUDE 'parceiros.gov.tt'%]
     </div>
 </div>
 </div>
@@ -165,7 +163,7 @@
 
         <div class="span3">
             <div class="logo">
-                <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png">
+                <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
             </div>
             <small class="aware">
                 Desenvolvido por
@@ -214,6 +212,7 @@
                 <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
               </a>
         </div>
+  </div>
   </div>
 </footer>
 

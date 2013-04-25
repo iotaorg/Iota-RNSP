@@ -45,7 +45,7 @@
                     </div>
 
                     <div id="dados-abertos">
-                        <div class="title">Dados abertos</a></div>
+                        <div class="title">Dados abertos</div>
                         <div class="content-fill">
                             <div class="dados-botoes">
                                 <input type="button" value="Download" id="button-download" class="button-data"/>
