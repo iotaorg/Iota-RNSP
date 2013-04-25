@@ -153,6 +153,21 @@ __PACKAGE__->add_unique_constraint("institute_short_name_key", ["short_name"]);
 
 =head1 RELATIONS
 
+=head2 indicator_values
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.institute_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 networks
 
 Type: has_many
@@ -169,8 +184,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zvmyewE6RdQSTmqGRbzLWw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pF7GJQ3ZmPh8a2/oXD2qQQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

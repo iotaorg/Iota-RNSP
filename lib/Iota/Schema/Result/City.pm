@@ -233,6 +233,36 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 indicator_values
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.city_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 regions
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::Region>
+
+=cut
+
+__PACKAGE__->has_many(
+  "regions",
+  "Iota::Schema::Result::Region",
+  { "foreign.city_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 state
 
 Type: belongs_to
@@ -269,8 +299,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wRsQeGnjTVPrdKFnnYwcnA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ilv4flqwOFmh1KGiGbdp3g
 
 
 __PACKAGE__->has_many(

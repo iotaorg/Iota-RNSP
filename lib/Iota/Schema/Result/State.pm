@@ -171,9 +171,24 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 indicator_values
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-26 01:46:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wtYBAgtdVf1KOeWEVHawew
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.state_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:b+AvJW5UA/w8zsVEtJqYvA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

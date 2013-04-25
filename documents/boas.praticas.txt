@@ -10,7 +10,7 @@ objetivos
 ---------------------------------------------
 user:
 
-População: basica
+População: variavel basica
 
 Eixo: escolher
 

@@ -287,6 +287,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 indicator_values
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_variations
 
 Type: has_many
@@ -350,6 +365,36 @@ __PACKAGE__->belongs_to(
     on_delete     => "NO ACTION",
     on_update     => "NO ACTION",
   },
+);
+
+=head2 region_variable_values
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::RegionVariableValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "region_variable_values",
+  "Iota::Schema::Result::RegionVariableValue",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 regions
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::Region>
+
+=cut
+
+__PACKAGE__->has_many(
+  "regions",
+  "Iota::Schema::Result::Region",
+  { "foreign.created_by" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 sources
@@ -533,8 +578,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-26 01:46:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nKnq9AWYsxgPBdqIokiR5A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tZuNwsJPYK8o/QfdhLqHMA
 
 __PACKAGE__->has_many(
     "user_roles",
