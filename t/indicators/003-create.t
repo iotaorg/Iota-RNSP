@@ -93,6 +93,8 @@ eval {
 
             is($indicator_res->{formula_human}, '5 + Foo Bar0', 'formula_human ok');
 
+            my @variables = $save_test->indicator_variables->all;
+            is($variables[0]->variable_id, $var1, 'variable saved in table');
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
 

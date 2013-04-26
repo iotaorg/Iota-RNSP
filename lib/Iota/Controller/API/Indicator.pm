@@ -270,6 +270,8 @@ sub indicator_DELETE {
       indicator_variables_variation_id => [map {$_->id} $obj->indicator_variables_variations->all ]
    })->delete;
 
+   $obj->indicator_variables->delete;
+
    $obj->indicator_variations->delete;
 
    $obj->indicator_variables_variations->delete;

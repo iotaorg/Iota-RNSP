@@ -175,8 +175,11 @@ sub action_specs {
                 schema  => $self->result_source->schema
             );
             $values{formula_human} = $formula->as_human;
-
             my $var = $self->create( \%values );
+
+            $var->add_to_indicator_variables({
+                variable_id => $_
+            }) for $formula->variables;
 
             if ($values{visibility_level} eq 'restrict'){
                 $var->add_to_indicator_user_visibilities( {
@@ -206,18 +209,23 @@ sub action_specs {
             my $visibility_users_id = delete $values{visibility_users_id};
             my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
 
+            my $var = $self->find( delete $values{id} );
             if (exists $values{formula} && $values{formula}){
                 my $formula = Iota::IndicatorFormula->new(
                     formula => $values{formula},
                     schema  => $self->result_source->schema
                 );
                 $values{formula_human} = $formula->as_human;
+
+                $var->indicator_variables->delete;
+                $var->add_to_indicator_variables({
+                    variable_id => $_
+                }) for $formula->variables;
             }
 
-            my $var = $self->find( delete $values{id} )->update( \%values );
+            $var->update( \%values );
             if (exists $values{visibility_level}){
                 if ($values{visibility_level} eq 'restrict'){
-
 
                     $var->indicator_user_visibilities->delete;
 
@@ -227,7 +235,6 @@ sub action_specs {
                     }) for @visible_users;
 
                 }
-
             }
             $var->discard_changes;
             return $var;
