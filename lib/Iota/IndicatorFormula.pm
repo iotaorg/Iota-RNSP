@@ -57,6 +57,22 @@ has _variable => (
     }
 );
 
+
+has _variation_variable => (
+    is      => 'rw',
+    isa     => 'ArrayRef[Int]',
+    lazy    => 1,
+    default => sub { [] },
+    traits  => [qw(Array)],
+    handles => {
+        variation_variables         => 'elements',
+        _add_variation_variable     => 'push',
+        _variation_variable_count   => 'count',
+        _variation_get_varaible     => 'get',
+        _clear_variation_variables  => 'clear',
+    }
+);
+
 has _is_string => (
     is => 'rw',
     isa => 'Bool',
@@ -75,6 +91,7 @@ sub parse {
     $self->_clear_variables;
     # caputar todas as variaveis
     $self->_add_variable($1) while ($formula =~ /\$(\d+)\b/go);
+    $self->_add_variation_variable($1) while ($formula =~ /\#(\d+)\b/go);
 
     # troca por V<ID>
     $formula =~ s/\$(\d+)\b/V$1/go;
@@ -177,5 +194,41 @@ sub _check_only_numbers {
         die "variable ".$_->id ." is a ".$_->type." and it's not allowed! " if $_->type ne 'int' && $_->type ne 'num';
     }
 }
+
+
+sub as_human {
+    my ($self) = @_;
+
+    my $formula = $self->formula;
+
+    if ($formula =~ /\$/){
+        my @variables = $self->schema->resultset('Variable')->search({id => [$self->variables]} )->all;
+
+        foreach my $var (@variables){
+            my $name = $var->name;
+            my $varid = $var->id;
+            $formula =~ s/\$$varid([^\d]|$)/ $name $1/g;
+        }
+    }
+
+    if ($formula =~ /\#/){
+        my @var_variables = $self->schema->resultset('IndicatorVariablesVariation')->search({
+            id => [$self->variation_variables]
+        } )->all;
+
+        foreach my $var (@var_variables){
+            my $name = $var->name;
+            my $varid = $var->id;
+            $formula =~ s/\#$varid([^\d]|$)/ $name $1/g;
+        }
+    }
+
+    $formula =~ s/^\s+//;
+    $formula =~ s/\s+$//;
+    $formula =~ s/\s+/ /g;
+
+    return $formula;
+}
+
 
 1;

@@ -223,7 +223,7 @@ sub values_GET {
 
          }
 
-        my $indicator_formula = new Iota::IndicatorFormula(
+        my $indicator_formula = Iota::IndicatorFormula->new(
             formula => $indicator->formula,
             schema => $c->model('DB')->schema
         );
@@ -464,7 +464,7 @@ sub by_period_GET {
     eval {
         my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
-        my $indicator_formula = new Iota::IndicatorFormula(
+        my $indicator_formula = Iota::IndicatorFormula->new(
             formula => $indicator->formula,
             schema => $c->model('DB')->schema
         );

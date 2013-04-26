@@ -91,6 +91,8 @@ eval {
             is_deeply($indicator_res->{restrict_to_users}, [1], 'restrict_to_users ok');
             is($indicator_res->{name}, 'Foo Bar', 'name ok');
 
+            is($indicator_res->{formula_human}, '5 + Foo Bar0', 'formula_human ok');
+
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
 

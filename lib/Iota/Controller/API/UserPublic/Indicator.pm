@@ -182,7 +182,7 @@ sub resumo_GET {
         my $user_id = $c->stash->{user_obj}->id;
         while (my $indicator = $rs->next){
 
-            my $indicator_formula = new Iota::IndicatorFormula(
+            my $indicator_formula = Iota::IndicatorFormula->new(
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
             );
@@ -324,6 +324,7 @@ sub resumo_GET {
                 push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
                     name        => $indicator->name,
                     formula     => $indicator->formula,
+                    formula_human => $indicator->formula_human,
                     name_url    => $indicator->name_url,
                     explanation => $indicator->explanation,
                     variable_type => defined $any_var ? $any_var->type   : 'int',
@@ -457,7 +458,7 @@ sub indicator_status_GET {
         my $user_id = $c->stash->{user_obj}->id;
         while (my $indicator = $rs->next){
 
-            my $indicator_formula = new Iota::IndicatorFormula(
+            my $indicator_formula = Iota::IndicatorFormula->new(
                 formula => $indicator->formula,
                 schema => $c->model('DB')->schema
             );

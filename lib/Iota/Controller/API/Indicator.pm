@@ -120,7 +120,7 @@ sub indicator_GET {
 
     my $object_ref  = $c->stash->{object}->search(undef, {prefetch => ['owner','axis','indicator_network_configs']})->next;
 
-    my $f = new Iota::IndicatorFormula(
+    my $f = Iota::IndicatorFormula->new(
         formula => $object_ref->formula,
         schema => $c->model('DB')->schema
     );
@@ -168,6 +168,8 @@ sub indicator_GET {
                 visibility_level
                 visibility_user_id
                 visibility_country_id
+
+                formula_human
 
             )),
 

@@ -41,7 +41,7 @@ sub verifiers_specs {
                   post_check => sub {
                         my $r = shift;
                         my $f = eval {
-                           new Iota::IndicatorFormula(
+                           Iota::IndicatorFormula->new(
                               formula => $r->get_value('formula'),
                               schema  => $self->result_source->schema
                            );
@@ -170,16 +170,19 @@ sub action_specs {
             my $visibility_users_id = delete $values{visibility_users_id};
             my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
 
+            my $formula = Iota::IndicatorFormula->new(
+                formula => $values{formula},
+                schema  => $self->result_source->schema
+            );
+            $values{formula_human} = $formula->as_human;
+
             my $var = $self->create( \%values );
 
             if ($values{visibility_level} eq 'restrict'){
-
-
                 $var->add_to_indicator_user_visibilities( {
                     user_id => $_,
                     created_by => $var->user_id
                 }) for @visible_users;
-
             }
 
             $var->discard_changes;
@@ -188,7 +191,7 @@ sub action_specs {
       update => sub {
             my %values = shift->valid_values;
 
-            $values{name_url} = $text2uri->translate( $values{name} ) if $values{name};
+            $values{name_url} = $text2uri->translate( $values{name} ) if exists $values{name} && $values{name};
             do { delete $values{$_} unless defined $values{$_} }
             for keys %values;
             return unless keys %values;
@@ -202,6 +205,14 @@ sub action_specs {
 
             my $visibility_users_id = delete $values{visibility_users_id};
             my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
+
+            if (exists $values{formula} && $values{formula}){
+                my $formula = Iota::IndicatorFormula->new(
+                    formula => $values{formula},
+                    schema  => $self->result_source->schema
+                );
+                $values{formula_human} = $formula->as_human;
+            }
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             if (exists $values{visibility_level}){

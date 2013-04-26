@@ -175,6 +175,7 @@ eval {
 
 
             my $detalhes = &_get( 200, '/api/indicator/' . $indicator->{id} );
+            is($detalhes->{formula_human}, 'Pessoas + variavel para teste + Foo Bar0', 'formula as human ok');
             is(@{$detalhes->{variables}},2,'detalhes de variaveis ok');
             is(@{$detalhes->{variations}},4,'detalhes de variacoes ok');
 

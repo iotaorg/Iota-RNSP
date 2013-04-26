@@ -257,7 +257,7 @@ sub _download {
                             $indicator->axis->name,
                             $indicator->id,
                             $indicator->name,
-                            $self->formula_translate($indicator->formula, $hash->{id_nome}),
+                            $indicator->formula_human,
                             $indicator->goal,
                             $indicator->goal_explanation,
                             $indicator->goal_source,
@@ -281,7 +281,7 @@ sub _download {
                         $indicator->axis->name,
                         $indicator->id,
                         $indicator->name,
-                        $self->formula_translate($indicator->formula, $hash->{id_nome}),
+                        $indicator->formula_human,
                         $indicator->goal,
                         $indicator->goal_explanation,
                         $indicator->goal_source,
@@ -355,19 +355,6 @@ sub _concate_variables {
 
 }
 
-sub formula_translate {
-    my ( $self, $formula, $variables) = @_;
-
-    $formula =~ s/([\*\(\/\-\+])/ $1 /g;
-    foreach my $varid (keys %$variables){
-        $formula =~ s/\$$varid([^\d]|$)/ $variables->{$varid} $1/g;
-    }
-
-    $formula =~ s/^\s+//;
-    $formula =~ s/\s+$//;
-    $formula =~ s/\s\s/ /;
-    return $formula;
-}
 
 sub ymd2dmy{
     my ( $self, $str) = @_;

@@ -182,6 +182,12 @@ __PACKAGE__->table("indicator");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 formula_human
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -266,6 +272,12 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "visibility_country_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "formula_human",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -499,8 +511,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 09:12:05
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lYFHH7ysdHl8fqJ5XRDrsg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 09:17:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dHGG5mlE99mM2FtBMsrwqQ
 
 __PACKAGE__->belongs_to(
     "owner",

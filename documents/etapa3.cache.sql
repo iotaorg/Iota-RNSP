@@ -51,3 +51,5 @@ CREATE TABLE indicator_variable
       REFERENCES variable (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+alter table indicator add formula_human varchar ;
