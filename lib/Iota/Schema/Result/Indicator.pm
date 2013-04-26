@@ -368,6 +368,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 indicator_variables
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorVariable>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_variables",
+  "Iota::Schema::Result::IndicatorVariable",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_variables_variations
 
 Type: has_many
@@ -484,8 +499,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uf2jq/tZIULgyeiGvMG94g
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 09:12:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lYFHH7ysdHl8fqJ5XRDrsg
 
 __PACKAGE__->belongs_to(
     "owner",
