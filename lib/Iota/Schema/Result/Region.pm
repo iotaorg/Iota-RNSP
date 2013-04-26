@@ -184,6 +184,21 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 indicator_values
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.region_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 region_variable_values
 
 Type: has_many
@@ -235,8 +250,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qNw0gsftoyhQRMhgSi86lA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 08:59:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fjCn9ieaTetDUspmVrjP+g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

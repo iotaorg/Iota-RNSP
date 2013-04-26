@@ -136,21 +136,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 indicator_values
-
-Type: has_many
-
-Related object: L<Iota::Schema::Result::IndicatorValue>
-
-=cut
-
-__PACKAGE__->has_many(
-  "indicator_values",
-  "Iota::Schema::Result::IndicatorValue",
-  { "foreign.country_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 indicators
 
 Type: has_many
@@ -182,8 +167,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lBRKXMIng6JUUzgtE8zEpA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 08:59:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YYuVBfHFWEb/DFMVoJwmhQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

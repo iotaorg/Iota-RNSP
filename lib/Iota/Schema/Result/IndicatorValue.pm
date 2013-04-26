@@ -67,19 +67,13 @@ __PACKAGE__->table("indicator_values");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 state_id
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 0
-
-=head2 country_id
-
-  data_type: 'integer'
-  is_foreign_key: 1
-  is_nullable: 0
-
 =head2 institute_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
+=head2 region_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -124,11 +118,9 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "city_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "state_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "country_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "institute_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "region_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "value",
   {
@@ -182,37 +174,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<indicator_values_indicator_id_valid_from_aggregated_by_user_key>
-
-=over 4
-
-=item * L</indicator_id>
-
-=item * L</valid_from>
-
-=item * L</aggregated_by>
-
-=item * L</user_id>
-
-=item * L</variation_name>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint(
-  "indicator_values_indicator_id_valid_from_aggregated_by_user_key",
-  [
-    "indicator_id",
-    "valid_from",
-    "aggregated_by",
-    "user_id",
-    "variation_name",
-  ],
-);
-
 =head1 RELATIONS
 
 =head2 city
@@ -227,21 +188,6 @@ __PACKAGE__->belongs_to(
   "city",
   "Iota::Schema::Result::City",
   { id => "city_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
-);
-
-=head2 country
-
-Type: belongs_to
-
-Related object: L<Iota::Schema::Result::Country>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "country",
-  "Iota::Schema::Result::Country",
-  { id => "country_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
@@ -275,18 +221,18 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-=head2 state
+=head2 region
 
 Type: belongs_to
 
-Related object: L<Iota::Schema::Result::State>
+Related object: L<Iota::Schema::Result::Region>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "state",
-  "Iota::Schema::Result::State",
-  { id => "state_id" },
+  "region",
+  "Iota::Schema::Result::Region",
+  { id => "region_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
@@ -306,8 +252,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RnqYs4wXskqVp7h4B6ty5Q
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 08:59:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:U5zKj19Lj9cAwRb0KamM3g
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
