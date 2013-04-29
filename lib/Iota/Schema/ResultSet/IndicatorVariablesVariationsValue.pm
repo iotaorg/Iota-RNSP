@@ -9,6 +9,7 @@ with 'Iota::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
 use Iota::IndicatorFormula;
+use Iota::IndicatorData;
 use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'indicator.variation_value' }
@@ -69,8 +70,24 @@ sub action_specs {
             }
 
             my $var = $self->create( \%values );
-
             $var->discard_changes;
+
+            my $data = Iota::IndicatorData->new(
+                schema  => $self->result_source->schema
+            );
+
+            $data->upsert(
+                indicators => [
+                    $data->indicators_from_variation_variables(
+                        variables => [ $var->indicator_variables_variation_id  ]
+                    )
+                ],
+                dates => [
+                    $var->valid_from->datetime
+                ],
+                user_id => $var->user_id
+            );
+
             return $var;
         },
         update => sub {
@@ -82,6 +99,23 @@ sub action_specs {
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
+
+            my $data = Iota::IndicatorData->new(
+                schema  => $self->result_source->schema
+            );
+
+            $data->upsert(
+                indicators => [
+                    $data->indicators_from_variation_variables(
+                        variables => [ $var->indicator_variables_variation_id  ]
+                    )
+                ],
+                dates => [
+                    $var->valid_from->datetime
+                ],
+                user_id => $var->user_id
+            );
+
             return $var;
         },
 

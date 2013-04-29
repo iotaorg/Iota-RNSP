@@ -198,7 +198,6 @@ sub action_specs {
 
             $data->upsert(
                 indicators => [ $var->id ],
-                user_id => $var->user_id
             );
 
             return $var;
@@ -261,7 +260,6 @@ sub action_specs {
 
                 $data->upsert(
                     indicators => [ $var->id ],
-                    user_id => $var->user_id
                 );
             }
 

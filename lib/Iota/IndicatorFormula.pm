@@ -191,7 +191,7 @@ sub _check_period {
 sub _check_only_numbers {
     my ($self, $arr) = @_;
     foreach (@$arr){
-        die "variable ".$_->id ." is a ".$_->type." and it's not allowed! " if $_->type ne 'int' && $_->type ne 'num';
+        die "variable ".$_->id ." is a ".$_->type." and it's not allowed!\n" if $_->type ne 'int' && $_->type ne 'num';
     }
 }
 
