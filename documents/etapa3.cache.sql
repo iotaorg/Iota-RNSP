@@ -10,8 +10,11 @@ CREATE TABLE indicator_value
     region_id integer NOT NULL,
     value character varying NOT NULL,
     variation_name character varying NOT NULL DEFAULT ''::character varying,
-    aggregated_by period_enum NOT NULL,
+
     updated_at timestamp without time zone NOT NULL DEFAULT now(),
+
+    sources varchar[],
+
     CONSTRAINT indicator_value_pkey PRIMARY KEY (id),
     CONSTRAINT indicator_value_city_id_fkey FOREIGN KEY (city_id)
         REFERENCES city (id) MATCH SIMPLE
@@ -30,10 +33,10 @@ CREATE TABLE indicator_value
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-create unique index ix_indicator_value_unique_by_city on indicator_value (indicator_id, valid_from, aggregated_by, user_id, variation_name)
+create unique index ix_indicator_value_unique_by_city on indicator_value (indicator_id, valid_from, user_id, variation_name)
 where region_id is null;
 
-create unique index ix_indicator_value_unique_by_region on indicator_value (indicator_id, valid_from, aggregated_by, user_id, variation_name, region_id)
+create unique index ix_indicator_value_unique_by_region on indicator_value (indicator_id, valid_from, user_id, variation_name, region_id)
 where region_id is not null;
 
 

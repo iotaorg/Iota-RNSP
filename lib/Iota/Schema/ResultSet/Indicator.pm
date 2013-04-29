@@ -7,6 +7,8 @@ use Moose;
 extends 'DBIx::Class::ResultSet';
 with 'Iota::Role::Verification';
 with 'Iota::Schema::Role::InflateAsHashRef';
+
+use Iota::IndicatorData;
 use Text2URI;
 my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
@@ -189,6 +191,16 @@ sub action_specs {
             }
 
             $var->discard_changes;
+
+            my $data = Iota::IndicatorData->new(
+                schema  => $self->result_source->schema
+            );
+
+            $data->upsert(
+                indicators => [ $var->id ],
+                user_id => $var->user_id
+            );
+
             return $var;
       },
       update => sub {
@@ -210,7 +222,10 @@ sub action_specs {
             my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
 
             my $var = $self->find( delete $values{id} );
-            if (exists $values{formula} && $values{formula}){
+            my $formula_changed = 0;
+            if (exists $values{formula} && $values{formula} && $values{formula} ne $var->formula ){
+                $formula_changed++;
+
                 my $formula = Iota::IndicatorFormula->new(
                     formula => $values{formula},
                     schema  => $self->result_source->schema
@@ -237,6 +252,19 @@ sub action_specs {
                 }
             }
             $var->discard_changes;
+
+
+            if ($formula_changed){
+                my $data = Iota::IndicatorData->new(
+                    schema  => $self->result_source->schema
+                );
+
+                $data->upsert(
+                    indicators => [ $var->id ],
+                    user_id => $var->user_id
+                );
+            }
+
             return $var;
       },
 

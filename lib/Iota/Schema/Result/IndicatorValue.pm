@@ -94,18 +94,17 @@ __PACKAGE__->table("indicator_value");
   is_nullable: 0
   original: {data_type => "varchar"}
 
-=head2 aggregated_by
-
-  data_type: 'enum'
-  extra: {custom_type_name => "period_enum",list => ["daily","weekly","monthly","bimonthly","quarterly","semi-annual","yearly","decade"]}
-  is_nullable: 0
-
 =head2 updated_at
 
   data_type: 'timestamp'
   default_value: current_timestamp
   is_nullable: 0
   original: {default_value => \"now()"}
+
+=head2 sources
+
+  data_type: 'character varying[]'
+  is_nullable: 1
 
 =cut
 
@@ -142,24 +141,6 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { data_type => "varchar" },
   },
-  "aggregated_by",
-  {
-    data_type => "enum",
-    extra => {
-      custom_type_name => "period_enum",
-      list => [
-        "daily",
-        "weekly",
-        "monthly",
-        "bimonthly",
-        "quarterly",
-        "semi-annual",
-        "yearly",
-        "decade",
-      ],
-    },
-    is_nullable => 0,
-  },
   "updated_at",
   {
     data_type     => "timestamp",
@@ -167,6 +148,8 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
+  "sources",
+  { data_type => "character varying[]", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -259,8 +242,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 09:12:05
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CCadczpGj5OReEE/Ez17fQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-27 01:21:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wfHq151mqDlJWZ/nnyyfeQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

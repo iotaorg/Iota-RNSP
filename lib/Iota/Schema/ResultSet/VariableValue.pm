@@ -13,6 +13,8 @@ use JSON qw /encode_json/;
 use String::Random;
 use MooseX::Types::Email qw/EmailAddress/;
 
+use Iota::IndicatorData;
+
 use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'variable.value' }
@@ -215,8 +217,24 @@ sub action_specs {
             $values{valid_until} = $dates->{period_end};
 
             my $varvalue = $self->create( \%values );
-
             $varvalue->discard_changes;
+
+            my $data = Iota::IndicatorData->new(
+                schema  => $self->result_source->schema
+            );
+
+            $data->upsert(
+                indicators => [
+                    $data->indicators_from_variables(
+                        variables => [ $var->id  ]
+                    )
+                ],
+                dates => [
+                    $values{valid_from}
+                ],
+                user_id => $var->user_id
+            );
+
             return $varvalue;
         },
         update => sub {
@@ -232,6 +250,23 @@ sub action_specs {
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
+
+            my $data = Iota::IndicatorData->new(
+                schema  => $self->result_source->schema
+            );
+
+            $data->upsert(
+                indicators => [
+                    $data->indicators_from_variables(
+                        variables => [ $var->id  ]
+                    )
+                ],
+                dates => [
+                    $values{valid_from}
+                ],
+                user_id => $var->user_id
+            );
+
             return $var;
         },
         put => sub {
@@ -241,6 +276,8 @@ sub action_specs {
             my $var = $schema->resultset('Variable')->find( $values{variable_id} );
 
             $self->_put($var ? $var->period : 'yearly' , %values);
+
+
         },
 
     };
@@ -291,6 +328,23 @@ sub _put {
 
         $row = $self->create( \%values );
     }
+
+    my $data = Iota::IndicatorData->new(
+        schema  => $self->result_source->schema
+    );
+
+    $data->upsert(
+        indicators => [
+            $data->indicators_from_variables(
+                variables => [ $values{variable_id}  ]
+            )
+        ],
+        dates => [
+            $dates->{period_begin}
+        ],
+        user_id => $row->user_id
+    );
+
     return $row;
 }
 
