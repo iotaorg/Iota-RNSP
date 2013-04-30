@@ -58,3 +58,5 @@ CREATE TABLE indicator_variable
 alter table indicator add formula_human varchar ;
 alter table indicator add period varchar ;
 
+alter table indicator add variable_type varchar ;
+

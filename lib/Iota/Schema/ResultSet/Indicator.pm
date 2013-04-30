@@ -176,7 +176,11 @@ sub action_specs {
                 formula => $values{formula},
                 schema  => $self->result_source->schema
             );
-            $values{period} = 'yearly' if $formula->_variable_count == 0;
+            if ($formula->_variable_count == 0){
+                $values{period} = 'yearly';
+                $values{variable_type} = 'int';
+            }
+
 
             $values{formula_human} = $formula->as_human;
             my $var = $self->create( \%values );
@@ -194,7 +198,10 @@ sub action_specs {
 
             if ($formula->_variable_count){
                 my $anyvar = $var->indicator_variables->next->variable;
-                $var->update({period => $anyvar->period}) if (!$var->period || $var->period ne $anyvar->period);
+                $var->update({
+                    period        => $anyvar->period,
+                    variable_type => $anyvar->type,
+                }) if (!$var->period || $var->period ne $anyvar->period);
             }
 
             my $data = Iota::IndicatorData->new(
@@ -244,6 +251,7 @@ sub action_specs {
                 if ($formula->_variable_count){
                     my $anyvar = $var->indicator_variables->next->variable;
                     $values{period} = $anyvar->period;
+                    $values{variable_type} = $anyvar->type;
                 }
             }
 

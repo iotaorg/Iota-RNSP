@@ -194,6 +194,12 @@ __PACKAGE__->table("indicator");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 variable_type
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -285,6 +291,12 @@ __PACKAGE__->add_columns(
     original    => { data_type => "varchar" },
   },
   "period",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "variable_type",
   {
     data_type   => "text",
     is_nullable => 1,
@@ -523,8 +535,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-30 13:26:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qDmveamuPnajIiC/NYsjpw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-30 20:07:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mh3vqY1wZBEmYtVvpYFUGQ
 
 __PACKAGE__->belongs_to(
     "owner",
