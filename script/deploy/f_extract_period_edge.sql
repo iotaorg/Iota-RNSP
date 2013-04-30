@@ -74,6 +74,14 @@ CREATE OR REPLACE FUNCTION voltar_periodo(p_date timestamp without time zone, p_
 $BODY$DECLARE
 
 BEGIN
+    p_date := coalesce(
+        p_date,
+        ( select max(valid_from) from variable_value
+          where variable_id in (select id from variable where period = p_period)
+        ),
+        current_date
+    );
+
     IF (p_period IN ('weekly', 'monthly', 'yearly', 'decade') ) THEN
             RETURN ( p_date - ( p_num::text|| ' ' || replace(p_period::text, 'ly','') )::interval  )::date;
     ELSEIF (p_period = 'daily') THEN

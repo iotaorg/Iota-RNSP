@@ -166,189 +166,130 @@ retorna os valores dos ultimos 4 periodos de cada indicator
 sub resumo_GET {
     my ( $self, $c ) = @_;
     my $ret;
-    my $max_periodos = 4;
+    my $max_periodos = $c->req->params->{number_of_periods} || 4;
+    my $from_date    = $c->req->params->{from_date};
+
     eval {
-        my $rs = $c->stash->{collection};
-
-        my $user_axis_rs = $c->model('DB::UserIndicatorAxisItem')->search({
-
-            'user_indicator_axis.user_id' => $c->stash->{user_obj}->id
-
-        }, {
-            join => 'user_indicator_axis',
+        my $rs = $c->stash->{collection}->search(undef, {
+            prefetch => 'indicator_variations'
         });
 
-
         my $user_id = $c->stash->{user_obj}->id;
+
+
+        my $periods_begin = {};
+        my $indicators = {};
         while (my $indicator = $rs->next){
+            $indicators->{$indicator->period}{$indicator->id} = $indicator;
 
-            my $indicator_formula = Iota::IndicatorFormula->new(
-                formula => $indicator->formula,
-                schema => $c->model('DB')->schema
-            );
+            if (!exists $periods_begin->{$indicator->period}){
+                $periods_begin->{$indicator->period} = $c->model('DB')->schema->voltar_periodo(
+                    $from_date,
+                    $indicator->period, $max_periodos)->{voltar_periodo};
+            }
+        }
 
-            my @indicator_variations;
-            my @indicator_variables;
-            if ($indicator->indicator_type eq 'varied'){
-                @indicator_variables  = $indicator->indicator_variables_variations->all;
-                if ($indicator->dynamic_variations) {
-                    @indicator_variations = $indicator->indicator_variations->search({
-                        user_id => [$c->stash->{user_obj}->id, $indicator->user_id]
-                    }, {order_by=>'order'})->all;
-                }else{
-                    @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
-                }
+        while (my ($periodo, $from_this_date) = each %$periods_begin){
+
+            my $custom_axis = {};
+            my $user_axis_rs = $c->model('DB::UserIndicatorAxisItem')->search({
+                'me.indicator_id' => [keys %{$indicators->{$periodo}}],
+                'user_indicator_axis.user_id' => $user_id,
+            }, {
+                join => 'user_indicator_axis',
+                order_by => ['indicator_id', 'position']
+            });
+            while (my $row = $user_axis_rs->next){
+                push @{$custom_axis->{$row->indicator_id}}, $row->user_indicator_axis->name;
             }
 
+            my $values_rs = $c->model('DB::IndicatorValue')->search({
+                'me.indicator_id' => [keys %{$indicators->{$periodo}}],
+                'me.user_id'      => $user_id,
+                'me.valid_from'   => { '>' => $from_this_date }
+            })->as_hashref;
+            my $indicator_values = {};
 
-            my $rs = $c->model('DB')->resultset('Variable')->search_rs({
-                'me.id' => [$indicator_formula->variables],
-            } );
-
-            my $res;
-
-            my $valid_from;
-            my $perido;
-            my $variaveis = 0;
-            my $any_var;
-            while (my $row = $rs->next){
-                if (!$valid_from){
-                    $valid_from = $c->model('DB')->schema->voltar_periodo(
-                        $row->values->get_column('valid_from')->max(),
-                        $row->period, $max_periodos)->{voltar_periodo};
-                    $perido = $row->period;
-                    $any_var = $row;
-                }
-                next unless $valid_from;
-
-
-                my $rsx = $row->values->search({
-                    'me.valid_from' => {'>' => $valid_from},
-                    'me.user_id'    => $user_id
-
-                })->as_hashref;
-                while (my $value = $rsx->next){
-                    $res->{$value->{valid_from}}{$value->{variable_id}} = $value->{value};
-                }
-                $variaveis++;
+            while (my $row = $values_rs->next){
+                $indicator_values->{$row->{indicator_id}}{$row->{valid_from}}{$row->{variation_name}} = [
+                    $row->{value}#, $row->{sources} TODO usar a fonte no retorno?
+                ];
             }
-            $perido = 'yearly' if $variaveis == 0;
-            next unless $perido;
 
-            my $item = {};
-            foreach my $from (keys %{$res}){
-                $item->{$from}{nome} = Iota::IndicatorChart::PeriodAxis::get_label_of_period( $from, $perido);
+            while (my ($indicator_id, $indicator) = each %{$indicators->{$periodo}} ){
+                my $item = {};
+                while (my ($from, $variations) = each %{$indicator_values->{$indicator_id}}){
 
-                my $undef = 0;
-                map {$undef++ unless defined $_} values %{$res->{$from}};
+                    $item->{$from}{nome} = Iota::IndicatorChart::PeriodAxis::get_label_of_period( $from, $periodo);
 
-                if ($undef == 0 && keys %{$res->{$from}} == $variaveis){
+                    # nao eh variado
+                    if (exists $variations->{''}){
 
-                    if (@indicator_variables && @indicator_variations){
+                        $item->{$from}{valor} = $variations->{''}[0];
 
-                        my $vals = {};
-
-                        for my $variation (@indicator_variations){
-
-                            my $rs = $variation->indicator_variables_variations_values->search({
-                                valid_from => $from,
-                                user_id    => $user_id
-                            })->as_hashref;
-                            while (my $r = $rs->next){
-                                next unless defined $r->{value};
-                                $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
-                            }
-
-                            my $qtde_dados = keys %{$vals->{$variation->id}};
-
-                            unless ($qtde_dados == @indicator_variables){
-                                $item->{$from}{variations}{$variation->id} = {
-                                    value => '-'
-                                };
-
-                                delete $vals->{$variation->id};
-                            }
-                        }
-
-                        # TODO ler do indicador qual o totalization_method
+                    }else{
+                        # TODO ler do indicador qual o totalization_method do indicador e fazer conforme isso
                         my $sum = undef;
-                        foreach my $variation_id (keys %$vals){
+                        foreach my $variation (keys %$variations){
                             $sum ||= 0;
 
-                            my $val = $indicator_formula->evaluate_with_alias(
-                                V => $res->{$from},
-                                N => $vals->{$variation_id},
-                            );
-
-                            $item->{$from}{variations}{$variation_id} = {
-                                value => $val
+                            $item->{$from}{variations}{$variation} = {
+                                value => $variations->{$variation}[0]
                             };
-                            $sum += $val;
+                            $sum += $variations->{$variation}[0];
                         }
                         $item->{$from}{valor} = $sum;
 
+                        # gera novamente na ordem e com as variacoes que nao estao salvas
                         my @variations;
-                        # corre na ordem
-                        foreach my $var (@indicator_variations){
+                        foreach my $var (sort {$a->order <=> $b->order } $indicator->indicator_variations->all){
                             push @variations, {
                                 name  => $var->name,
-                                value => $item->{$from}{variations}{$var->id}{value}
+                                value => $item->{$from}{variations}{$var->name}{value}
                             };
                         }
                         $item->{$from}{variations} = \@variations;
 
-                    }else{
-
-
-                        if ($indicator->formula =~ /#\d/){
-                            $item->{$from}{valor} = 'ERR#';
-                        }else{
-                            $item->{$from}{valor} = $indicator_formula->evaluate(%{$res->{$from}});
-                        }
                     }
 
-                }else{
-                    $item->{$from}{valor} = '-';
                 }
-            }
-            my @axis_list = ($indicator->axis->name);
-            my @grupos = $user_axis_rs->search({
-                indicator_id => $indicator->id
-            });
-            if (@grupos){
-                @axis_list = map {$_->user_indicator_axis->name} @grupos;
-            }
-            foreach my $axis (@axis_list){
-                my ($config) = $indicator->indicator_network_configs->all;
 
-                push(@{$ret->{resumos}{$axis}{$perido}{indicadores}}, {
-                    name        => $indicator->name,
-                    formula     => $indicator->formula,
-                    formula_human => $indicator->formula_human,
-                    name_url    => $indicator->name_url,
-                    explanation => $indicator->explanation,
-                    variable_type => defined $any_var ? $any_var->type   : 'int',
-                    network_config => $config ? {
-                        unfolded_in_home => $config->unfolded_in_home,
-                        network_id       => $config->network_id
-                    } : {
-                        unfolded_in_home => 0
-                    },
-                    id          => $indicator->id,
+                my @axis_list = ($indicator->axis->name);
+                push @axis_list, @{$custom_axis->{$indicator_id}}
+                    if exists $custom_axis->{$indicator_id};
 
-                    valores     => $item
-                });
+                foreach my $axis (@axis_list){
+                    my $config = $indicator->indicator_network_configs->next;
+
+                    push(@{$ret->{resumos}{$axis}{$periodo}{indicadores}}, {
+                        name           => $indicator->name,
+                        formula        => $indicator->formula,
+                        formula_human  => $indicator->formula_human,
+                        name_url       => $indicator->name_url,
+                        explanation    => $indicator->explanation,
+                        variable_type  => $indicator->variable_type,
+                        network_config => $config ? {
+                            unfolded_in_home => $config->unfolded_in_home,
+                            network_id       => $config->network_id
+                        } : {
+                            unfolded_in_home => 0
+                        },
+                        id          => $indicator_id,
+
+                        valores     => $item
+                    });
+                }
+
+
             }
         }
+
 
 
         while( my ($axis, $periodos) = each %{$ret->{resumos}}){
 
             while( my ($periodo, $ind_info) = each %{$periodos}){
-                # ja passou por aqui
-
                 my $indicadores = $ind_info->{indicadores};
-
 
                 # procura pelas ultimas N periodos de novo, so que consideranto todos os
                 # indicadores duma vez
