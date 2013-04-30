@@ -51,7 +51,6 @@ sub upsert {
     my $ind_variation_var = $self->_get_indicator_var_variables(
         indicators => \@indicators,
     );
-use DDP; p $variation_values;
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
         values     => $period_values,
@@ -61,8 +60,72 @@ use DDP; p $variation_values;
         ind_variation_var   => $ind_variation_var
 
     );
-use DDP; p $results;
 
+
+    my $users_meta = $self->get_users_meta( users => [keys %$results] );
+
+    $self->schema->txn_do(sub {
+        my $indval_rs = $self->schema->resultset('IndicatorValue');
+
+        $indval_rs->search({
+            (exists $params{dates}      ? ('me.valid_from'   => $params{dates}) : ()),
+            (exists $params{user_id}    ? ('me.user_id'      => $params{user_id}) : ()),
+            (exists $params{indicators} ? ('me.indicator_id' => $params{indicators}) : ()),
+        })->delete;
+
+        while (my ($user_id, $indicators) = each %$results ){
+
+            while( my ($indicator_id, $dates) = each %$indicators ){
+
+                while( my ($date, $variations) = each %$dates ){
+
+                    foreach my $variation (keys %$variations){
+
+                        $indval_rs->create({
+                            user_id        => $user_id,
+                            indicator_id   => $indicator_id,
+                            valid_from     => $date,
+                            city_id        => $users_meta->{$user_id}{city_id},
+                            institute_id   => $users_meta->{$user_id}{institute_id},
+                            variation_name => $variation,
+
+                            value          => $variations->{$variation}[0],
+                            sources        => $variations->{$variation}[1],
+
+                        });
+
+                    }
+                }
+            }
+        }
+
+
+    });
+
+
+}
+
+# retorna cidade / institudo dos usuarios
+sub get_users_meta {
+    my ($self, %params) = @_;
+
+    my $user_rs = $self->schema->resultset('User')->search({
+        'me.id' => $params{users}
+    },
+    {
+        prefetch => 'network'
+    })->as_hashref;
+
+    my $users = {};
+
+    while (my $row = $user_rs->next){
+        $users->{$row->{id}} = {
+            city_id      => $row->{city_id},
+            institute_id => $row->{network}{institute_id}
+        };
+    }
+
+    return $users;
 }
 
 # monta na RAM a estrutura:

@@ -67,7 +67,7 @@ __PACKAGE__->table("indicator_value");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 institute_id
 
@@ -79,7 +79,7 @@ __PACKAGE__->table("indicator_value");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 value
 
@@ -123,11 +123,11 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "city_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "institute_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "region_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "value",
   {
     data_type   => "text",
@@ -178,7 +178,12 @@ __PACKAGE__->belongs_to(
   "city",
   "Iota::Schema::Result::City",
   { id => "city_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 indicator
@@ -223,7 +228,12 @@ __PACKAGE__->belongs_to(
   "region",
   "Iota::Schema::Result::Region",
   { id => "region_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 user
@@ -242,8 +252,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-27 01:21:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wfHq151mqDlJWZ/nnyyfeQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-30 11:01:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:24vLq9iUcHH9GGFzEFgNkg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

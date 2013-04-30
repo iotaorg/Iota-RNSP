@@ -452,6 +452,9 @@ eval {
             is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[3],'100', 'valor total da terceira variacao ok');
 
 
+            my @rows = $schema->resultset('IndicatorValue')->all;
+            is(scalar @rows, '15', '15 linhas salvas no IndicatorValue');
+
             # testa o cenario menos comum de delete
             # que seria cada endpoint
             # mas na real, geralmente eh um delete no indicador inteiro

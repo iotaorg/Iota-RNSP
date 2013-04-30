@@ -5,9 +5,9 @@ CREATE TABLE indicator_value
     indicator_id integer NOT NULL,
     valid_from date NOT NULL,
     user_id integer NOT NULL,
-    city_id integer NOT NULL,
+    city_id integer ,
     institute_id integer NOT NULL,
-    region_id integer NOT NULL,
+    region_id integer ,
     value character varying NOT NULL,
     variation_name character varying NOT NULL DEFAULT ''::character varying,
 
