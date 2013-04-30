@@ -74,6 +74,7 @@ eval {
             is( $save_test->source, 'me', 'source ok' );
             is( $save_test->observations, 'lala', 'observations ok' );
             is( $save_test->chart_name, 'pie', 'chart_name ok' );
+            is( $save_test->period, 'weekly', 'period ok' );
 
             use URI;
             my $uri = URI->new( $res->header('Location') );

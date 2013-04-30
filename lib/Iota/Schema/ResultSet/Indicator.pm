@@ -176,6 +176,8 @@ sub action_specs {
                 formula => $values{formula},
                 schema  => $self->result_source->schema
             );
+            $values{period} = 'yearly' if $formula->_variable_count == 0;
+
             $values{formula_human} = $formula->as_human;
             my $var = $self->create( \%values );
 
@@ -190,7 +192,10 @@ sub action_specs {
                 }) for @visible_users;
             }
 
-            $var->discard_changes;
+            if ($formula->_variable_count){
+                my $anyvar = $var->indicator_variables->next->variable;
+                $var->update({period => $anyvar->period}) if (!$var->period || $var->period ne $anyvar->period);
+            }
 
             my $data = Iota::IndicatorData->new(
                 schema  => $self->result_source->schema
@@ -235,6 +240,11 @@ sub action_specs {
                 $var->add_to_indicator_variables({
                     variable_id => $_
                 }) for $formula->variables;
+
+                if ($formula->_variable_count){
+                    my $anyvar = $var->indicator_variables->next->variable;
+                    $values{period} = $anyvar->period;
+                }
             }
 
             $var->update( \%values );

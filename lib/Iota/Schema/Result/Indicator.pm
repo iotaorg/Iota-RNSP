@@ -188,6 +188,12 @@ __PACKAGE__->table("indicator");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 period
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -273,6 +279,12 @@ __PACKAGE__->add_columns(
   "visibility_country_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "formula_human",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "period",
   {
     data_type   => "text",
     is_nullable => 1,
@@ -511,8 +523,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 09:17:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dHGG5mlE99mM2FtBMsrwqQ
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-30 13:26:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qDmveamuPnajIiC/NYsjpw
 
 __PACKAGE__->belongs_to(
     "owner",
