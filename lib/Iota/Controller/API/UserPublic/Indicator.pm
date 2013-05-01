@@ -171,7 +171,7 @@ sub resumo_GET {
 
     eval {
         my $rs = $c->stash->{collection}->search(undef, {
-            prefetch => 'indicator_variations'
+            prefetch => ['indicator_variations','axis','indicator_network_configs']
         });
 
         my $user_id = $c->stash->{user_obj}->id;
@@ -193,18 +193,18 @@ sub resumo_GET {
 
             my $custom_axis = {};
             my $user_axis_rs = $c->model('DB::UserIndicatorAxisItem')->search({
-                'me.indicator_id' => [keys %{$indicators->{$periodo}}],
+                'me.indicator_id' => {'in' => [keys %{$indicators->{$periodo}}]},
                 'user_indicator_axis.user_id' => $user_id,
             }, {
-                join => 'user_indicator_axis',
-                order_by => ['indicator_id', 'position']
+                prefetch => 'user_indicator_axis',
+                order_by => ['me.indicator_id', 'me.position']
             });
             while (my $row = $user_axis_rs->next){
                 push @{$custom_axis->{$row->indicator_id}}, $row->user_indicator_axis->name;
             }
 
             my $values_rs = $c->model('DB::IndicatorValue')->search({
-                'me.indicator_id' => [keys %{$indicators->{$periodo}}],
+                'me.indicator_id' => {'in' => [keys %{$indicators->{$periodo}}]},
                 'me.user_id'      => $user_id,
                 'me.valid_from'   => { '>' => $from_this_date }
             })->as_hashref;
