@@ -95,11 +95,8 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
 
-
             $values{name_url} = $text2uri->translate( $values{name} ) if exists $values{name} && $values{name};
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
-
-
 
             return unless keys %values;
 

@@ -1,5 +1,5 @@
 
-package Iota::Schema::ResultSet::VariableValue;
+package Iota::Schema::ResultSet::RegionVariableValue;
 
 use namespace::autoclean;
 
@@ -17,13 +17,12 @@ use Iota::IndicatorData;
 
 use Iota::Types qw /VariableType DataStr/;
 
-sub _build_verifier_scope_name { 'variable.value' }
+sub _build_verifier_scope_name { 'region.variable.value' }
 use DateTimeX::Easy;
 
 
 my $str2number = sub {
     my $str = shift;
-
     if ($str =~ /[^\d]/) {
         $str =~ s/\.(\d{3})/$1/g;
         $str =~ s/\s(\d{3})/$1/g;
@@ -72,6 +71,7 @@ sub verifiers_specs {
                 source        => { required => 0, type => 'Str' },
                 observations  => { required => 0, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },
+                region_id     => { required => 1, type => 'Int' },
                 value_of_date => {
                     required   => 1,
                     type       => DataStr,
@@ -163,6 +163,8 @@ sub verifiers_specs {
                 source => { required => 0, type => 'Str' },
                 file_id => { required => 0, type => 'Int' },
 
+                region_id     => { required => 1, type => 'Int' },
+
                 value => {
                     required   => 0,
                     type       => 'Str',
@@ -232,7 +234,8 @@ sub action_specs {
                 dates => [
                     $values{valid_from}
                 ],
-                user_id => $varvalue->user_id
+                user_id   => $varvalue->user_id,
+                region_id => $varvalue->region_id
             );
 
             return $varvalue;
@@ -264,7 +267,8 @@ sub action_specs {
                 dates => [
                     $values{valid_from}
                 ],
-                user_id => $var->user_id
+                user_id => $var->user_id,
+                region_id => $var->region_id,
             );
 
             return $var;
@@ -300,6 +304,7 @@ sub _put {
     my $row = $self->search(
         {
             user_id     => $values{user_id},
+            region_id   => $values{region_id},
             variable_id => $values{variable_id},
             valid_from  => $dates->{period_begin}
         }
@@ -342,7 +347,8 @@ sub _put {
         dates => [
             $dates->{period_begin}
         ],
-        user_id => $row->user_id
+        user_id => $row->user_id,
+        region_id => $row->region_id
     );
 
     return $row;
