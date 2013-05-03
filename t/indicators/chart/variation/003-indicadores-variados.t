@@ -448,7 +448,7 @@ eval {
 
 
             my $obj_public_indicator = eval{from_json( $res->content )};
-            use DDP; p $obj_public_indicator;
+
             is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{variacoes}[0][0]{value},'19', 'valor da primeira variacao ok');
             is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[0],'88', 'valor total da primeria variacao ok');
             is($obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[3],'100', 'valor total da terceira variacao ok');
@@ -544,7 +544,7 @@ sub _get {
       fail("JSON $url => $@") if $@;
       return $obj;
    }
-   use DDP; p $res;
+
    return undef;
 }
 

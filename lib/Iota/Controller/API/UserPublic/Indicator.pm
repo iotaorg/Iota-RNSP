@@ -170,7 +170,9 @@ sub resumo_GET {
     my $from_date    = $c->req->params->{from_date};
 
     eval {
-        my $rs = $c->stash->{collection}->search(undef, {
+        my $rs = $c->stash->{collection}->search({
+            'indicator_network_configs.network_id' => [undef,$c->stash->{network}->id]
+        }, {
             prefetch => ['indicator_variations','axis','indicator_network_configs']
         });
 
