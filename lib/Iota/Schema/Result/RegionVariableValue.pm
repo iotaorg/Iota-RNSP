@@ -247,5 +247,13 @@ __PACKAGE__->belongs_to(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:STYPUXPcPqjDXVVe5F1wiw
 
 
+__PACKAGE__->belongs_to(
+    "owner",
+    "Iota::Schema::Result::User",
+    { "foreign.id" => "self.user_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
