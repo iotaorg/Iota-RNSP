@@ -12,7 +12,7 @@ sub base : Chained('/api/city/region/object') : PathPart('value') : CaptureArgs(
     my ( $self, $c ) = @_;
 
     $c->stash->{region}     = $c->stash->{object}->next;
-    $c->stash->{collection} = $c->model('DB::RegionVariableValue');
+    $c->stash->{collection} = $c->stash->{region}->region_variable_values;
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -26,34 +26,7 @@ sub variable : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') 
 
 }
 
-=pod
 
-=encoding utf-8
-
-detalhe do valor da variavel
-
-GET /api/variable/$id/value/$id
-
-Retorna:
-
-    {
-        "created_at": "2012-08-20 05:41:54.427052",
-        "value": "123",
-        "cognomen": "foobar",
-        "name": "Foo Bar",
-        "type": "int",
-
-        "created_by": {
-            "name": "admin",
-            "id": 1
-        },
-        "value_of_date": "2012-08-20 05:41:54.427052",
-        source
-        observations
-
-    }
-
-=cut
 
 sub variable_GET {
     my ( $self, $c ) = @_;
@@ -69,18 +42,7 @@ sub variable_GET {
     );
 }
 
-=pod
 
-atualizar variavel
-
-POST /api/variable/$id/value/$id
-
-Retorna:
-
-    variable.value.update.value     Texto: valor
-
-
-=cut
 
 sub variable_POST {
     my ( $self, $c ) = @_;
@@ -123,15 +85,7 @@ sub variable_POST {
       if $object;
 }
 
-=pod
 
-remove o valor para a variavel para o usuario logado
-
-DELETE /api/variable/$id/value/$id
-
-Retorna: No-content ou Gone
-
-=cut
 
 sub variable_DELETE {
     my ( $self, $c ) = @_;
@@ -152,21 +106,54 @@ sub variable_DELETE {
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
-=pod
 
-define o valor para a variavel para o usuario logado
 
-POST /api/variable/$id/value
+sub list_GET {
+    my ( $self, $c ) = @_;
 
-Param:
+    my $wheres = {};
+    $wheres->{'me.valid_from'} = $c->req->params->{valid_from}
+        if exists $c->req->params->{valid_from} && $c->req->params->{valid_from} =~ /^\d{4}-\d{2}-\d{2}$/;
 
-    variable.value.create.value        Texto, Requerido: valor
+    $wheres->{'me.variable_id'} = $c->req->params->{variable_id}
+        if exists $c->req->params->{variable_id} && $c->req->params->{variable_id} =~ /^\d+$/;
 
-Retorna:
+    $wheres->{'me.file_id'} = $c->req->params->{file_id}
+        if exists $c->req->params->{file_id} && $c->req->params->{file_id} =~ /^\d+$/;
 
-    {"id":3}
+    if ($c->check_any_user_role(qw(admin superadmin))){
+        $wheres->{'me.user_id'} = $c->req->params->{user_id}
+            if exists $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^\d+$/;
+    }else{
+        $wheres->{'me.user_id'} = $c->user->id;
+    }
 
-=cut
+    my $objectect_ref = $c->stash->{collection}->search( $wheres, {
+        prefetch => [ 'owner', 'variable' ],
+        order_by => ['me.created_at','me.id']
+    } )->as_hashref;
+
+    my @objs;
+
+    while (my $obj = $objectect_ref->next) {
+        push @objs, {
+            created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
+            ( map { $_ => $obj->{variable}{$_} } qw(name type cognomen) ),
+            ( map { $_ => $obj->{$_} } qw(id value created_at value_of_date observations source region_id) ),
+
+            url => $c->uri_for_action( $self->action_for('variable'), [ $c->stash->{city}->id, $c->stash->{region}->id, $obj->{id} ] )->as_string,
+
+        };
+    }
+
+    $self->status_ok(
+        $c,
+        entity => {
+            values => \@objs
+        }
+    );
+}
+
 
 sub list_POST {
     my ( $self, $c ) = @_;
@@ -203,23 +190,6 @@ sub list_POST {
 
 }
 
-=pod
-
-cria ou atualiza o valor para a variavel para o usuario logado em determinado periodo.
-
-
-PUT /api/variable/$id/value
-
-Param:
-
-    variable.value.put.value         Texto, Requerido: valor
-    variable.value.put.value_of_date Data , Requerido: data
-
-Retorna:
-
-    {"id":3, "valid_from":"2012-01-01", "valid_until":"2012-01-02" }
-
-=cut
 
 sub list_PUT {
     my ( $self, $c ) = @_;

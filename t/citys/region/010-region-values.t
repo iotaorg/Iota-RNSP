@@ -172,6 +172,79 @@ eval {
             ( $res, $c ) = ctx_request($req);
             ok( $week1_url ne $res->header('Location'), 'variable change!!' );
 
+            ( $res, $c ) = ctx_request( GET $region_url );
+            ok( $res->is_success, 'list the values exists' );
+            is( $res->code, 200, 'list the values exists -- 200 Success' );
+
+            my $list = eval { from_json( $res->content ) };
+
+            for my $n (0..1){
+                for my $w (qw/url id created_at/){
+                    ok(delete $list->{values}[$n]{$w}, 'has ' . $w);
+                };
+            }
+
+            is_deeply(
+                $list,
+                {
+                    values=> [
+                        {
+                            cognomen     => "foobar",
+
+                            created_by   => {
+                                id  => 2,
+                                name=> "adminpref"
+                            },
+                            name         => "Foo Bar",
+                            observations => "farinha",
+                            region_id    => $reg1->{id},
+                            source       => "bazar",
+                            type         => "int",
+                            value        => '4456',
+                            value_of_date=> "2012-10-11 14:22:44"
+                        },
+                        {
+                            cognomen     => "foobar",
+                            created_by   => {
+                                id  => 2,
+                                name=> "adminpref"
+                            },
+                            name         => "Foo Bar",
+                            observations => undef,
+                            region_id    => $reg1->{id},
+                            source       => undef,
+                            type         => "int",
+                            value        => '4456',
+                            value_of_date=> "2012-10-17 14:22:44"
+                        },
+                    ]
+                },
+                'deeply ok'
+            );
+
+            ( $res, $c ) = ctx_request( GET $region_url  . '?valid_from=1990-01-02');
+            ok( $res->is_success, 'list the values exists' );
+            is( $res->code, 200, 'list the values exists -- 200 Success' );
+
+            $list = eval { from_json( $res->content ) };
+            is_deeply($list->{values}, [], 'no values in 1990');
+
+            ( $res, $c ) = ctx_request( GET $region_url  . '?user_id=1');
+            ok( $res->is_success, 'list the values exists' );
+            is( $res->code, 200, 'list the values exists -- 200 Success' );
+
+            $list = eval { from_json( $res->content ) };
+            is_deeply($list->{values}, [], 'no values for user 1');
+
+
+            ( $res, $c ) = ctx_request( GET $region_url  . '?variable_id=4');
+            ok( $res->is_success, 'list the values exists' );
+            is( $res->code, 200, 'list the values exists -- 200 Success' );
+
+            $list = eval { from_json( $res->content ) };
+            is_deeply($list->{values}, [], 'no values for variable 4');
+
+
             die 'rollback';
         }
     );
