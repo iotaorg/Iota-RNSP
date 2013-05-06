@@ -4,8 +4,8 @@
     <div class="span3">
         <h2>Cidades</h2>
         <ul>
-        [%FOREACH city IN cities %]
-            <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.uf%] - [%city.name%]</a></li>
+        [%FOREACH city IN cities.sort('name') %]
+            <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%] ([%city.uf%])</a></li>
         [%END%]
         [%city=undef%]
         </ul>
