@@ -127,8 +127,20 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
+
+sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
+    my ( $self, $c, $regiao ) = @_;
+    $c->stash->{regiao_url} = $regiao;
+
+    $self->stash_tela_regiao($c);
+
+    $c->stash->{title} = $c->stash->{region}{name} . ' - '. $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
+}
+
+sub cidade_regiao_render: Chained('cidade_regiao') PathPart('') Args(0) {
+}
+
 sub network_render : Chained('network_cidade') PathPart('') Args(0) {
-    my ( $self, $c ) = @_;
 }
 
 sub user_page : Chained('network_cidade') PathPart('pagina') CaptureArgs(2) {
@@ -322,6 +334,27 @@ sub stash_tela_cidade {
         user     => $user,
         template => 'home_cidade.tt',
         menu     => \@menu_out,
+    );
+}
+
+
+sub stash_tela_regiao {
+    my ( $self, $c ) = @_;
+
+    my $region = $c->model('DB::Region')->search(
+        {
+            name_url => lc $c->stash->{regiao_url},
+            city_id  => $c->stash->{city}{id}
+        }
+    )->as_hashref->next;
+    use DDP; p $region;
+
+    $c->detach('/error_404') unless $region;
+
+
+    $c->stash(
+        region => $region,
+        template => 'home_region.tt',
     );
 }
 
