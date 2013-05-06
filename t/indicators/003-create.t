@@ -30,30 +30,32 @@ eval {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
-                [   api_key                   => 'test',
-                    'indicator.create.name'   => 'FooBar',
+                [
+                    api_key                 => 'test',
+                    'indicator.create.name' => 'FooBar',
                 ]
             );
             ok( !$res->is_success, 'invalid request' );
             is( $res->code, 400, 'invalid request' );
 
-            my $var1 = &new_var('int', 'weekly');
+            my $var1 = &new_var( 'int', 'weekly' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
-                [   api_key                         => 'test',
-                    'indicator.create.name'         => 'Foo Bar',
-                    'indicator.create.formula'      => '5 + $' . $var1,
-                    'indicator.create.axis_id'      => '1',
-                    'indicator.create.explanation'  => 'explanation',
-                    'indicator.create.source'       => 'me',
-                    'indicator.create.goal_source'  => '@fulano',
-                    'indicator.create.chart_name'   => 'pie',
-                    'indicator.create.goal_operator'=> '>=',
-                    'indicator.create.tags'         => 'you,me,she',
+                [
+                    api_key                          => 'test',
+                    'indicator.create.name'          => 'Foo Bar',
+                    'indicator.create.formula'       => '5 + $' . $var1,
+                    'indicator.create.axis_id'       => '1',
+                    'indicator.create.explanation'   => 'explanation',
+                    'indicator.create.source'        => 'me',
+                    'indicator.create.goal_source'   => '@fulano',
+                    'indicator.create.chart_name'    => 'pie',
+                    'indicator.create.goal_operator' => '>=',
+                    'indicator.create.tags'          => 'you,me,she',
 
-                    'indicator.create.observations' => 'lala',
-                    'indicator.create.visibility_level' => 'restrict',
+                    'indicator.create.observations'        => 'lala',
+                    'indicator.create.visibility_level'    => 'restrict',
                     'indicator.create.visibility_users_id' => '1',
 
                 ]
@@ -62,20 +64,17 @@ eval {
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
             use JSON qw(from_json);
-            my $indicator = eval{from_json( $res->content )};
+            my $indicator = eval { from_json( $res->content ) };
 
-            ok(
-                my $save_test =
-                $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
-                'indicator in DB'
-            );
-            is( $save_test->name, 'Foo Bar', 'name ok' );
-            is( $save_test->explanation, 'explanation', 'explanation ok' );
-            is( $save_test->source, 'me', 'source ok' );
-            is( $save_test->observations, 'lala', 'observations ok' );
-            is( $save_test->chart_name, 'pie', 'chart_name ok' );
-            is( $save_test->period, 'weekly', 'period ok' );
-            is( $save_test->variable_type, 'int', 'variable_type ok' );
+            ok( my $save_test = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
+                'indicator in DB' );
+            is( $save_test->name,          'Foo Bar',     'name ok' );
+            is( $save_test->explanation,   'explanation', 'explanation ok' );
+            is( $save_test->source,        'me',          'source ok' );
+            is( $save_test->observations,  'lala',        'observations ok' );
+            is( $save_test->chart_name,    'pie',         'chart_name ok' );
+            is( $save_test->period,        'weekly',      'period ok' );
+            is( $save_test->variable_type, 'int',         'variable_type ok' );
 
             use URI;
             my $uri = URI->new( $res->header('Location') );
@@ -87,35 +86,36 @@ eval {
 
             like( $res->content, qr/weekly/, 'periodo de alguma variavel' );
 
-            my $indicator_res = eval{from_json( $res->content )};
-            is($indicator_res->{visibility_level}, 'restrict', 'visibility_level ok');
+            my $indicator_res = eval { from_json( $res->content ) };
+            is( $indicator_res->{visibility_level}, 'restrict', 'visibility_level ok' );
 
-            is_deeply($indicator_res->{restrict_to_users}, [1], 'restrict_to_users ok');
-            is($indicator_res->{name}, 'Foo Bar', 'name ok');
+            is_deeply( $indicator_res->{restrict_to_users}, [1], 'restrict_to_users ok' );
+            is( $indicator_res->{name}, 'Foo Bar', 'name ok' );
 
-            is($indicator_res->{formula_human}, '5 + Foo Bar0', 'formula_human ok');
+            is( $indicator_res->{formula_human}, '5 + Foo Bar0', 'formula_human ok' );
 
             my @variables = $save_test->indicator_variables->all;
-            is($variables[0]->variable_id, $var1, 'variable saved in table');
+            is( $variables[0]->variable_id, $var1, 'variable saved in table' );
 
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test');
+            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
 
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
-            my $list = eval{from_json( $res->content )};
-            is($list->{indicators}[0]{explanation}, 'explanation', 'explanation present!');
+            my $list = eval { from_json( $res->content ) };
+            is( $list->{indicators}[0]{explanation}, 'explanation', 'explanation present!' );
 
-            ( $res, $c ) = ctx_request( GET '/api/log');
+            ( $res, $c ) = ctx_request( GET '/api/log' );
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
-            my $logs = eval{from_json( $res->content )};
-            foreach my $log(@{$logs->{logs}}){
-                if ($log->{message} eq 'Adicionou variavel Foo Bar0'){
-                    is($log->{url}, 'POST /api/variable', 'Log criado com sucesso');
-                }elsif ($log->{message} eq 'Adicionou indicadorFoo Bar'){
-                    is($log->{url}, 'POST /api/indicator', 'Log do indicador criado com sucesso');
+            my $logs = eval { from_json( $res->content ) };
+            foreach my $log ( @{ $logs->{logs} } ) {
+                if ( $log->{message} eq 'Adicionou variavel Foo Bar0' ) {
+                    is( $log->{url}, 'POST /api/variable', 'Log criado com sucesso' );
+                }
+                elsif ( $log->{message} eq 'Adicionou indicadorFoo Bar' ) {
+                    is( $log->{url}, 'POST /api/indicator', 'Log do indicador criado com sucesso' );
                 }
             }
 
@@ -129,27 +129,29 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 
-
 use JSON qw(from_json);
+
 sub new_var {
-    my $type = shift;
+    my $type   = shift;
     my $period = shift;
     my ( $res, $c ) = ctx_request(
         POST '/api/variable',
-        [   api_key                        => 'test',
-            'variable.create.name'         => 'Foo Bar'.$seq++,
-            'variable.create.cognomen'     => 'foobar'.$seq++,
-            'variable.create.explanation'  => 'a foo with bar'.$seq++,
-            'variable.create.type'         => $type,
-            'variable.create.period'       => $period||'week',
-            'variable.create.source'       => 'God',
+        [
+            api_key                       => 'test',
+            'variable.create.name'        => 'Foo Bar' . $seq++,
+            'variable.create.cognomen'    => 'foobar' . $seq++,
+            'variable.create.explanation' => 'a foo with bar' . $seq++,
+            'variable.create.type'        => $type,
+            'variable.create.period'      => $period || 'week',
+            'variable.create.source'      => 'God',
         ]
     );
-    if ($res->code == 201){
-        my $xx = eval{from_json( $res->content )};
+    if ( $res->code == 201 ) {
+        my $xx = eval { from_json( $res->content ) };
         return $xx->{id};
-    }else{
-        die('fail to create new var: ' . $res->code);
+    }
+    else {
+        die( 'fail to create new var: ' . $res->code );
     }
 }
 

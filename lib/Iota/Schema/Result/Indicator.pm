@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::Indicator;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<indicator>
 
@@ -203,105 +204,100 @@ __PACKAGE__->table("indicator");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "indicator_id_seq",
-  },
-  "name",
-  { data_type => "text", is_nullable => 0 },
-  "formula",
-  { data_type => "text", is_nullable => 0 },
-  "goal",
-  { data_type => "numeric", is_nullable => 1 },
-  "goal_explanation",
-  { data_type => "text", is_nullable => 1 },
-  "goal_source",
-  { data_type => "text", is_nullable => 1 },
-  "goal_operator",
-  { data_type => "text", is_nullable => 1 },
-  "axis_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "source",
-  { data_type => "text", is_nullable => 1 },
-  "explanation",
-  { data_type => "text", is_nullable => 1 },
-  "tags",
-  { data_type => "text", is_nullable => 1 },
-  "chart_name",
-  { data_type => "text", is_nullable => 1 },
-  "sort_direction",
-  {
-    data_type => "enum",
-    extra => {
-      custom_type_name => "sort_direction_enum",
-      list => [
-        "greater value",
-        "greater rating",
-        "lowest value",
-        "lowest rating",
-      ],
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "indicator_id_seq",
     },
-    is_nullable => 1,
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 1,
-    original      => { default_value => \"now()" },
-  },
-  "name_url",
-  { data_type => "text", is_nullable => 1 },
-  "observations",
-  { data_type => "text", is_nullable => 1 },
-  "variety_name",
-  { data_type => "text", is_nullable => 1 },
-  "indicator_type",
-  { data_type => "text", default_value => "normal", is_nullable => 0 },
-  "all_variations_variables_are_required",
-  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
-  "summarization_method",
-  { data_type => "text", default_value => "sum", is_nullable => 0 },
-  "indicator_admins",
-  { data_type => "text", is_nullable => 1 },
-  "dynamic_variations",
-  { data_type => "boolean", is_nullable => 1 },
-  "visibility_level",
-  {
-    data_type => "enum",
-    extra => {
-      custom_type_name => "tp_visibility_level",
-      list => ["public", "private", "country", "restrict"],
+    "name",
+    { data_type => "text", is_nullable => 0 },
+    "formula",
+    { data_type => "text", is_nullable => 0 },
+    "goal",
+    { data_type => "numeric", is_nullable => 1 },
+    "goal_explanation",
+    { data_type => "text", is_nullable => 1 },
+    "goal_source",
+    { data_type => "text", is_nullable => 1 },
+    "goal_operator",
+    { data_type => "text", is_nullable => 1 },
+    "axis_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "source",
+    { data_type => "text", is_nullable => 1 },
+    "explanation",
+    { data_type => "text", is_nullable => 1 },
+    "tags",
+    { data_type => "text", is_nullable => 1 },
+    "chart_name",
+    { data_type => "text", is_nullable => 1 },
+    "sort_direction",
+    {
+        data_type => "enum",
+        extra     => {
+            custom_type_name => "sort_direction_enum",
+            list             => [ "greater value", "greater rating", "lowest value", "lowest rating", ],
+        },
+        is_nullable => 1,
     },
-    is_nullable => 1,
-  },
-  "visibility_user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "visibility_country_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "formula_human",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "period",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "variable_type",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 1,
+        original      => { default_value => \"now()" },
+    },
+    "name_url",
+    { data_type => "text", is_nullable => 1 },
+    "observations",
+    { data_type => "text", is_nullable => 1 },
+    "variety_name",
+    { data_type => "text", is_nullable => 1 },
+    "indicator_type",
+    { data_type => "text", default_value => "normal", is_nullable => 0 },
+    "all_variations_variables_are_required",
+    { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+    "summarization_method",
+    { data_type => "text", default_value => "sum", is_nullable => 0 },
+    "indicator_admins",
+    { data_type => "text", is_nullable => 1 },
+    "dynamic_variations",
+    { data_type => "boolean", is_nullable => 1 },
+    "visibility_level",
+    {
+        data_type => "enum",
+        extra     => {
+            custom_type_name => "tp_visibility_level",
+            list             => [ "public", "private", "country", "restrict" ],
+        },
+        is_nullable => 1,
+    },
+    "visibility_user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    "visibility_country_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    "formula_human",
+    {
+        data_type   => "text",
+        is_nullable => 1,
+        original    => { data_type => "varchar" },
+    },
+    "period",
+    {
+        data_type   => "text",
+        is_nullable => 1,
+        original    => { data_type => "varchar" },
+    },
+    "variable_type",
+    {
+        data_type   => "text",
+        is_nullable => 1,
+        original    => { data_type => "varchar" },
+    },
 );
 
 =head1 PRIMARY KEY
@@ -328,7 +324,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
+__PACKAGE__->add_unique_constraint( "indicator_cognomen_key", ["name"] );
 
 =head2 C<indicator_name_url_key2>
 
@@ -340,7 +336,7 @@ __PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
 
 =cut
 
-__PACKAGE__->add_unique_constraint("indicator_name_url_key2", ["name_url"]);
+__PACKAGE__->add_unique_constraint( "indicator_name_url_key2", ["name_url"] );
 
 =head1 RELATIONS
 
@@ -353,10 +349,9 @@ Related object: L<Iota::Schema::Result::Axis>
 =cut
 
 __PACKAGE__->belongs_to(
-  "axis",
-  "Iota::Schema::Result::Axis",
-  { id => "axis_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+    "axis", "Iota::Schema::Result::Axis",
+    { id            => "axis_id" },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 indicator_network_configs
@@ -368,10 +363,8 @@ Related object: L<Iota::Schema::Result::IndicatorNetworkConfig>
 =cut
 
 __PACKAGE__->has_many(
-  "indicator_network_configs",
-  "Iota::Schema::Result::IndicatorNetworkConfig",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "indicator_network_configs", "Iota::Schema::Result::IndicatorNetworkConfig",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_user_visibilities
@@ -383,10 +376,8 @@ Related object: L<Iota::Schema::Result::IndicatorUserVisibility>
 =cut
 
 __PACKAGE__->has_many(
-  "indicator_user_visibilities",
-  "Iota::Schema::Result::IndicatorUserVisibility",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "indicator_user_visibilities", "Iota::Schema::Result::IndicatorUserVisibility",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_values
@@ -398,10 +389,8 @@ Related object: L<Iota::Schema::Result::IndicatorValue>
 =cut
 
 __PACKAGE__->has_many(
-  "indicator_values",
-  "Iota::Schema::Result::IndicatorValue",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "indicator_values", "Iota::Schema::Result::IndicatorValue",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_variables
@@ -413,10 +402,8 @@ Related object: L<Iota::Schema::Result::IndicatorVariable>
 =cut
 
 __PACKAGE__->has_many(
-  "indicator_variables",
-  "Iota::Schema::Result::IndicatorVariable",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "indicator_variables", "Iota::Schema::Result::IndicatorVariable",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_variables_variations
@@ -428,10 +415,8 @@ Related object: L<Iota::Schema::Result::IndicatorVariablesVariation>
 =cut
 
 __PACKAGE__->has_many(
-  "indicator_variables_variations",
-  "Iota::Schema::Result::IndicatorVariablesVariation",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "indicator_variables_variations", "Iota::Schema::Result::IndicatorVariablesVariation",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_variations
@@ -443,10 +428,8 @@ Related object: L<Iota::Schema::Result::IndicatorVariation>
 =cut
 
 __PACKAGE__->has_many(
-  "indicator_variations",
-  "Iota::Schema::Result::IndicatorVariation",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "indicator_variations", "Iota::Schema::Result::IndicatorVariation",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user
@@ -458,10 +441,9 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "user", "Iota::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user_indicator_configs
@@ -473,10 +455,8 @@ Related object: L<Iota::Schema::Result::UserIndicatorConfig>
 =cut
 
 __PACKAGE__->has_many(
-  "user_indicator_configs",
-  "Iota::Schema::Result::UserIndicatorConfig",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "user_indicator_configs", "Iota::Schema::Result::UserIndicatorConfig",
+    { "foreign.indicator_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_indicators
@@ -488,10 +468,10 @@ Related object: L<Iota::Schema::Result::UserIndicator>
 =cut
 
 __PACKAGE__->has_many(
-  "user_indicators",
-  "Iota::Schema::Result::UserIndicator",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "user_indicators",
+    "Iota::Schema::Result::UserIndicator",
+    { "foreign.indicator_id" => "self.id" },
+    { cascade_copy           => 0, cascade_delete => 0 },
 );
 
 =head2 visibility_country
@@ -503,15 +483,15 @@ Related object: L<Iota::Schema::Result::Country>
 =cut
 
 __PACKAGE__->belongs_to(
-  "visibility_country",
-  "Iota::Schema::Result::Country",
-  { id => "visibility_country_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+    "visibility_country",
+    "Iota::Schema::Result::Country",
+    { id => "visibility_country_id" },
+    {
+        is_deferrable => 0,
+        join_type     => "LEFT",
+        on_delete     => "NO ACTION",
+        on_update     => "NO ACTION",
+    },
 );
 
 =head2 visibility_user
@@ -523,25 +503,23 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "visibility_user",
-  "Iota::Schema::Result::User",
-  { id => "visibility_user_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+    "visibility_user",
+    "Iota::Schema::Result::User",
+    { id => "visibility_user_id" },
+    {
+        is_deferrable => 0,
+        join_type     => "LEFT",
+        on_delete     => "NO ACTION",
+        on_update     => "NO ACTION",
+    },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-30 20:07:16
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mh3vqY1wZBEmYtVvpYFUGQ
 
 __PACKAGE__->belongs_to(
-    "owner",
-    "Iota::Schema::Result::User",
-    { "foreign.id" => "self.user_id" },
+    "owner", "Iota::Schema::Result::User",
+    { "foreign.id"  => "self.user_id" },
     { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 

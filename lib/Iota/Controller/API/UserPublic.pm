@@ -14,16 +14,15 @@ sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
     $c->stash->{collection} = $c->model('DB::User');
 }
 
-
-sub network_indicators: Chained('/institute_load') : PathPart('api/public/network') : CaptureArgs(0)  {
+sub network_indicators : Chained('/institute_load') : PathPart('api/public/network') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     $c->stash->{collection} = $c->model('DB::User');
-    $c->stash->{rede} = $c->stash->{network}->name_url;
+    $c->stash->{rede}       = $c->stash->{network}->name_url;
 }
 
-sub network: Chained('network_indicators') : PathPart('') : Args(0) : ActionClass('REST') {
-    my ( $self, $c) = @_;
+sub network : Chained('network_indicators') : PathPart('') : Args(0) : ActionClass('REST') {
+    my ( $self, $c ) = @_;
 }
 
 sub network_GET {
@@ -78,6 +77,7 @@ retorna
 }
 
 =cut
+
 sub stash_comparacao {
     my ( $self, $c ) = @_;
 
@@ -95,84 +95,84 @@ sub stash_comparacao {
             }
         }
     };
-    my @users = $c->model('DB::User')->search({
-        'me.network_id' => $network->id,
-        city_id => {'!=' => undef}
-    }, {  prefetch => ['city'] } )->as_hashref->all;
+    my @users = $c->model('DB::User')->search(
+        {
+            'me.network_id' => $network->id,
+            city_id         => { '!=' => undef }
+        },
+        { prefetch => ['city'] }
+    )->as_hashref->all;
 
-    for my $user (@users){
-        push @{$ret->{users}}, {
-            (map { $_ => $user->{$_}  } qw/name id city_id/),
-            city => {
-                map { $_ => $user->{city}{$_}  } qw/name id name_uri pais uf/,
-            }
-        };
+    for my $user (@users) {
+        push @{ $ret->{users} },
+          {
+            ( map { $_ => $user->{$_} } qw/name id city_id/ ),
+            city => { map { $_ => $user->{city}{$_} } qw/name id name_uri pais uf/, }
+          };
     }
 
-    my @countries = @{  $c->stash->{network_data}{countries}  };
-    my @users_ids = @{  $c->stash->{network_data}{users_ids}  };
+    my @countries = @{ $c->stash->{network_data}{countries} };
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-    my @indicators = $c->model('DB::Indicator')->search({
-        '-or' => [
-            { visibility_level => 'public' },
-            { visibility_level => 'country', visibility_country_id => \@countries },
-            { visibility_level => 'private', visibility_user_id => \@users_ids },
-            { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
-        ]
-    }, { prefetch => ['axis'], join => 'indicator_user_visibilities' })->as_hashref->all;
+    my @indicators = $c->model('DB::Indicator')->search(
+        {
+            '-or' => [
+                { visibility_level => 'public' },
+                { visibility_level => 'country', visibility_country_id => \@countries },
+                { visibility_level => 'private', visibility_user_id => \@users_ids },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
+            ]
+        },
+        { prefetch => ['axis'], join => 'indicator_user_visibilities' }
+    )->as_hashref->all;
 
-    for my $ind (@indicators){
+    for my $ind (@indicators) {
         my $f = Iota::IndicatorFormula->new(
             formula => $ind->{formula},
-            schema => $c->model('DB')->schema
+            schema  => $c->model('DB')->schema
         );
 
         my ($any_var) = $f->variables;
-        $any_var = $any_var ? eval{$c->model('DB')->resultset('Variable')->find($any_var)} : undef;
+        $any_var = $any_var ? eval { $c->model('DB')->resultset('Variable')->find($any_var) } : undef;
 
-        $ind->{period} = defined $any_var ? $any_var->period : 'yearly';
+        $ind->{period}        = defined $any_var ? $any_var->period : 'yearly';
         $ind->{variable_type} = defined $any_var ? $any_var->type   : 'int';
     }
     $ret->{indicators} = \@indicators;
 
-
-    $self->status_ok(
-        $c,
-        entity => $ret
-    );
+    $self->status_ok( $c, entity => $ret );
 
 }
-
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $c->detach('/error_500', ['user.id invalid!']) unless $id =~ /^[0-9]+$/;
+    $c->detach( '/error_500', ['user.id invalid!'] ) unless $id =~ /^[0-9]+$/;
 
-    $c->stash->{user} = $c->stash->{collection}->search_rs( {
-        id => $id,
-        'me.active' => 1
-    } );
+    $c->stash->{user} = $c->stash->{collection}->search_rs(
+        {
+            id          => $id,
+            'me.active' => 1
+        }
+    );
 
     $c->stash->{user_obj} = $c->stash->{user}->next;
 
     $c->detach('/error_404') unless defined $c->stash->{user_obj};
 
-    my $net = $c->model('DB::Network')->search({
-        id => $c->stash->{user_obj}->network_id
-    })->first;
+    my $net = $c->model('DB::Network')->search( { id => $c->stash->{user_obj}->network_id } )->first;
     $c->detach('/error_404') unless $net;
 
     $c->stash->{network} = $net;
-    $c->stash->{rede} = $net->name_url;
+    $c->stash->{rede}    = $net->name_url;
 
-  $c->detach('/error_404') unless defined $c->stash->{user_obj};
+    $c->detach('/error_404') unless defined $c->stash->{user_obj};
 
-  $c->stash->{user_id} = int $id;
+    $c->stash->{user_id} = int $id;
 }
 
 sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 
@@ -203,55 +203,60 @@ Retorna:
 sub user_public_load {
     my ( $self, $c ) = @_;
 
-    my $user  = $c->stash->{user_obj};
+    my $user = $c->stash->{user_obj};
 
     my $ret = {};
     do {
-        my $rs = $c->model('DB::Variable')->search_rs({
-            'values.user_id' => $user->id,
-            is_basic => 1
-        }, { prefetch => ['values','measurement_unit'] } );
+        my $rs = $c->model('DB::Variable')->search_rs(
+            {
+                'values.user_id' => $user->id,
+                is_basic         => 1
+            },
+            { prefetch => [ 'values', 'measurement_unit' ] }
+        );
 
         $rs = $rs->as_hashref;
         my $existe = {};
-        while(my $r = $rs->next){
+        while ( my $r = $rs->next ) {
 
-            @{$r->{values}} = map {$_} sort {$a->{valid_from} cmp $b->{valid_from}} @{$r->{values}};
-            my $valor = pop @{$r->{values}};
+            @{ $r->{values} } = map { $_ } sort { $a->{valid_from} cmp $b->{valid_from} } @{ $r->{values} };
+            my $valor = pop @{ $r->{values} };
 
-            push (@{$ret->{variaveis}}, {
-                name => $r->{name},
-                cognomen => $r->{cognomen},
-                period => $r->{period},
-                type => $r->{type},
-                measurement_unit => $r->{measurement_unit}{short_name},
-                measurement_unit_name => $r->{measurement_unit}{name},
-                last_value => $valor->{value},
-                last_value_date => $valor->{valid_from}
-            } );
+            push(
+                @{ $ret->{variaveis} },
+                {
+                    name                  => $r->{name},
+                    cognomen              => $r->{cognomen},
+                    period                => $r->{period},
+                    type                  => $r->{type},
+                    measurement_unit      => $r->{measurement_unit}{short_name},
+                    measurement_unit_name => $r->{measurement_unit}{name},
+                    last_value            => $valor->{value},
+                    last_value_date       => $valor->{valid_from}
+                }
+            );
         }
 
     };
 
     do {
-        my $r = $c->model('DB::City')->search_rs({
-            'id' => $user->city_id
-        })->as_hashref->next;
+        my $r = $c->model('DB::City')->search_rs( { 'id' => $user->city_id } )->as_hashref->next;
 
-        if($r){
+        if ($r) {
 
             $ret->{cidade} = {
-                name => $r->{name},
-                uf => $r->{uf},
-                pais => $r->{pais},
-                latitude => $r->{latitude},
-                longitude => $r->{longitude},
-                telefone_prefeitura => $r->{telefone_prefeitura},
-                endereco_prefeitura => $r->{endereco_prefeitura},
-                bairro_prefeitura => $r->{bairro_prefeitura},
+                name                        => $r->{name},
+                uf                          => $r->{uf},
+                pais                        => $r->{pais},
+                latitude                    => $r->{latitude},
+                longitude                   => $r->{longitude},
+                telefone_prefeitura         => $r->{telefone_prefeitura},
+                endereco_prefeitura         => $r->{endereco_prefeitura},
+                bairro_prefeitura           => $r->{bairro_prefeitura},
                 cep_prefeitura              => $r->{cep_prefeitura},
                 nome_responsavel_prefeitura => $r->{nome_responsavel_prefeitura},
                 email_prefeitura            => $r->{email_prefeitura},
+
                 # summary                     => $r->{summary},
             };
         }
@@ -259,10 +264,8 @@ sub user_public_load {
     };
 
     $ret->{usuario} = {
-        files => {
-            map { $_->class_name => $_->public_url } $user->user_files->search(undef, {
-                order_by => 'created_at'
-        }) },
+        files =>
+          { map { $_->class_name => $_->public_url } $user->user_files->search( undef, { order_by => 'created_at' } ) },
         city_summary => $user->city_summary
     };
 
@@ -273,12 +276,8 @@ sub user_GET {
     my ( $self, $c ) = @_;
 
     my $ret = $self->user_public_load($c);
-    $self->status_ok(
-        $c,
-        entity => $ret
-    );
+    $self->status_ok( $c, entity => $ret );
 }
-
 
 1;
 

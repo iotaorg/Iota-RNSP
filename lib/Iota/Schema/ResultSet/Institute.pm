@@ -18,28 +18,28 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                name         => { required => 1, type => 'Str' },
-                short_name   => { required => 1, type => 'Str' },
-                description  => { required => 0, type => 'Str' },
+                name        => { required => 1, type => 'Str' },
+                short_name  => { required => 1, type => 'Str' },
+                description => { required => 0, type => 'Str' },
 
-                users_can_edit_value   => { required => 0, type => 'Bool' },
-                users_can_edit_groups  => { required => 0, type => 'Bool' },
-                can_use_custom_css     => { required => 0, type => 'Bool' },
-                can_use_custom_pages   => { required => 0, type => 'Bool' },
+                users_can_edit_value  => { required => 0, type => 'Bool' },
+                users_can_edit_groups => { required => 0, type => 'Bool' },
+                can_use_custom_css    => { required => 0, type => 'Bool' },
+                can_use_custom_pages  => { required => 0, type => 'Bool' },
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id       => { required => 1, type => 'Int' },
-                name         => { required => 0, type => 'Str' },
-                short_name   => { required => 0, type => 'Str' },
-                description  => { required => 0, type => 'Str' },
+                id          => { required => 1, type => 'Int' },
+                name        => { required => 0, type => 'Str' },
+                short_name  => { required => 0, type => 'Str' },
+                description => { required => 0, type => 'Str' },
 
-                users_can_edit_value   => { required => 0, type => 'Bool' },
-                users_can_edit_groups  => { required => 0, type => 'Bool' },
-                can_use_custom_css     => { required => 0, type => 'Bool' },
-                can_use_custom_pages   => { required => 0, type => 'Bool' },
+                users_can_edit_value  => { required => 0, type => 'Bool' },
+                users_can_edit_groups => { required => 0, type => 'Bool' },
+                can_use_custom_css    => { required => 0, type => 'Bool' },
+                can_use_custom_pages  => { required => 0, type => 'Bool' },
             },
         ),
 

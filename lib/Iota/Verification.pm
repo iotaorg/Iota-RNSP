@@ -52,9 +52,9 @@ sub _build_map_from_specs {
         map {
             my $top = $_;
             map { $top . '.' . $_ => $final_specs->{$top}->{$_} }
-                keys %{ $final_specs->{$top} }
-            }
-            keys %$final_specs
+              keys %{ $final_specs->{$top} }
+          }
+          keys %$final_specs
     };
 }
 

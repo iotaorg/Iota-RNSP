@@ -106,7 +106,7 @@ eval {
 
             # GET
             my $week1_url = $res->header('Location');
-            my $uri = URI->new($week1_url);
+            my $uri       = URI->new($week1_url);
             $uri->query_form( api_key => 'test' );
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             ok( $res->is_success, 'variable exists' );
@@ -117,12 +117,13 @@ eval {
             is( $variable_valu->{value}, '123', 'variable created with correct value' );
             is( $variable_valu->{value_of_date}, '2012-10-10 14:22:44', 'variable created with correct value date' );
 
-            $req = POST $region_url, [
+            $req = POST $region_url,
+              [
                 'region.variable.value.put.value'         => '4456',
                 'region.variable.value.put.variable_id'   => $variable->{id},
                 'region.variable.value.put.value_of_date' => '2012-10-11 14:22:44',
                 'region.variable.value.put.observations'  => 'farinha',
-            ];
+              ];
             $req->method('PUT');
             ( $res, $c ) = ctx_request($req);
 
@@ -136,27 +137,31 @@ eval {
 
             $variable_valu = eval { from_json( $res->content ) };
 
-            is( $variable_valu->{value}, '4456', 'variable updated with correct value' );
-            is( $variable_valu->{observations}, 'farinha', 'observations updated' );
-            is( $variable_valu->{source}, 'bazar', 'observations conserved' );
+            is( $variable_valu->{value},         '4456',                'variable updated with correct value' );
+            is( $variable_valu->{observations},  'farinha',             'observations updated' );
+            is( $variable_valu->{source},        'bazar',               'observations conserved' );
             is( $variable_valu->{value_of_date}, '2012-10-11 14:22:44', 'variable updated with correct value date' );
 
-            ok(delete $variable_valu->{created_at});
-            is_deeply( $variable_valu, {
-                cognomen     =>  'foobar',
+            ok( delete $variable_valu->{created_at} );
+            is_deeply(
+                $variable_valu,
+                {
+                    cognomen => 'foobar',
 
-                created_by   =>  {
-                    id  =>  2,
-                    name=>  'adminpref'
+                    created_by => {
+                        id   => 2,
+                        name => 'adminpref'
+                    },
+                    name          => 'Foo Bar',
+                    observations  => 'farinha',
+                    region_id     => $reg1->{id},
+                    source        => 'bazar',
+                    type          => 'int',
+                    value         => '4456',
+                    value_of_date => '2012-10-11 14:22:44'
                 },
-                name         =>  'Foo Bar',
-                observations =>  'farinha',
-                region_id    =>  $reg1->{id},
-                source       =>  'bazar',
-                type         =>  'int',
-                value        =>  '4456',
-                value_of_date=>  '2012-10-11 14:22:44'
-            }, 'deeply ok');
+                'deeply ok'
+            );
 
             $req = POST $region_url, [
                 'region.variable.value.put.value'         => '4456',

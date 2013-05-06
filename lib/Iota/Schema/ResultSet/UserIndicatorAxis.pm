@@ -18,9 +18,9 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                name         => { required => 1, type => 'Str' },
-                position     => { required => 0, type => 'Int' },
-                user_id      => { required => 1, type => 'Int' },
+                name     => { required => 1, type => 'Str' },
+                position => { required => 0, type => 'Int' },
+                user_id  => { required => 1, type => 'Int' },
             },
         ),
 
@@ -31,7 +31,6 @@ sub verifiers_specs {
                 position => { required => 0, type => 'Int' },
             },
         ),
-
 
     };
 }

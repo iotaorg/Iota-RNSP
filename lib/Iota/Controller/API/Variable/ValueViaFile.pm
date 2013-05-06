@@ -15,7 +15,7 @@ sub base : Chained('/api/variable/base') : PathPart('value_via_file') : CaptureA
 
 }
 
-sub file: Chained('base') : PathPart('') : Args(0) ActionClass('REST') {
+sub file : Chained('base') : PathPart('') : Args(0) ActionClass('REST') {
     my ( $self, $c ) = @_;
 }
 
@@ -23,13 +23,13 @@ sub file_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
     my $upload = $c->req->upload('arquivo');
-    eval{
-        if ($upload){
+    eval {
+        if ($upload) {
             my $user_id = $c->user->id;
 
-            $c->logx('Enviou arquivo ' . $upload->basename);
+            $c->logx( 'Enviou arquivo ' . $upload->basename );
 
             my $file = $c->model('File')->process(
                 user_id => $user_id,
@@ -38,20 +38,18 @@ sub file_POST {
                 app     => $c
             );
 
-            $c->res->body(to_json( $file ));
+            $c->res->body( to_json($file) );
 
-        }else{
+        }
+        else {
             die "no upload found\n";
         }
     };
-    $c->res->body(to_json({ error => "$@" })) if $@;
+    $c->res->body( to_json( { error => "$@" } ) ) if $@;
 
     $c->detach;
 
 }
-
-
-
 
 1;
 

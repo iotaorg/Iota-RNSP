@@ -26,13 +26,12 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
-                id      => { required => 1, type => 'Int' },
-                name    => { required => 1, type => 'Str' },
-                type         => { required => 0, type => 'Str' },
-                explanation  => { required => 0, type => 'Str' },
+                id          => { required => 1, type => 'Int' },
+                name        => { required => 1, type => 'Str' },
+                type        => { required => 0, type => 'Str' },
+                explanation => { required => 0, type => 'Str' },
             },
         ),
-
 
     };
 }

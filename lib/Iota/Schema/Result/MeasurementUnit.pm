@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::MeasurementUnit;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<measurement_unit>
 
@@ -71,26 +72,26 @@ __PACKAGE__->table("measurement_unit");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "measurement_unit_id_seq",
-  },
-  "name",
-  { data_type => "text", is_nullable => 1 },
-  "short_name",
-  { data_type => "text", is_nullable => 1 },
-  "user_id",
-  { data_type => "integer", is_nullable => 0 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 1,
-    original      => { default_value => \"now()" },
-  },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "measurement_unit_id_seq",
+    },
+    "name",
+    { data_type => "text", is_nullable => 1 },
+    "short_name",
+    { data_type => "text", is_nullable => 1 },
+    "user_id",
+    { data_type => "integer", is_nullable => 0 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 1,
+        original      => { default_value => \"now()" },
+    },
 );
 
 =head1 PRIMARY KEY
@@ -116,16 +117,14 @@ Related object: L<Iota::Schema::Result::Variable>
 =cut
 
 __PACKAGE__->has_many(
-  "variables",
-  "Iota::Schema::Result::Variable",
-  { "foreign.measurement_unit_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "variables",
+    "Iota::Schema::Result::Variable",
+    { "foreign.measurement_unit_id" => "self.id" },
+    { cascade_copy                  => 0, cascade_delete => 0 },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9EibICjdExrDF8BES+qONw
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

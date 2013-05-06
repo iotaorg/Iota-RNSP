@@ -18,8 +18,8 @@ sub verifiers_specs {
     return {
         upsert => Data::Verifier->new(
             profile => {
-                indicator_id => { required => 1, type => 'Int' },
-                network_id   => { required => 1, type => 'Int' },
+                indicator_id     => { required => 1, type => 'Int' },
+                network_id       => { required => 1, type => 'Int' },
                 unfolded_in_home => { required => 1, type => 'Bool' },
             },
         ),
@@ -38,7 +38,7 @@ sub action_specs {
             my $var = $self->update_or_create( \%values );
             $var->discard_changes;
             return $var;
-        }
+          }
     };
 }
 

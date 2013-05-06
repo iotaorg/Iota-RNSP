@@ -9,15 +9,13 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/base') : PathPart('log') : CaptureArgs(0) {
-  my ( $self, $c ) = @_;
-  $c->stash->{collection} = $c->model('DB::ActionLog');
-
+    my ( $self, $c ) = @_;
+    $c->stash->{collection} = $c->model('DB::ActionLog');
 
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -52,31 +50,23 @@ sub list_GET {
     my $criteria;
 
     $criteria->{user_id} = $c->req->params->{user_id}
-        if exists $c->req->params->{user_id};
+      if exists $c->req->params->{user_id};
 
-    my @list = $c->stash->{collection}->search($criteria, {order_by => ['dt_when','user_id']})->all;
+    my @list = $c->stash->{collection}->search( $criteria, { order_by => [ 'dt_when', 'user_id' ] } )->all;
     my @objs;
 
-    foreach my $obj (@list){
+    foreach my $obj (@list) {
         push @objs, {
 
-            (map { $_ => $obj->$_ } qw(url message ip indicator_id)),
+            ( map { $_ => $obj->$_ } qw(url message ip indicator_id) ),
             date => $obj->dt_when->datetime,
-            user => ( $obj->user ? { id => $obj->user->id, nome => $obj->user->name  } : undef ),
+            user => ( $obj->user ? { id => $obj->user->id, nome => $obj->user->name } : undef ),
 
-        }
+        };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-            logs => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { logs => \@objs } );
 }
-
-
-
 
 with 'Iota::TraitFor::Controller::Search';
 1;

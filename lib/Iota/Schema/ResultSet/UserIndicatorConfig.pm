@@ -30,15 +30,18 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        my $exists = $self->result_source->schema->resultset('Indicator')
+                        my $exists =
+                          $self->result_source->schema->resultset('Indicator')
                           ->find( { id => $r->get_value('indicator_id') } );
                         return 0 unless $exists;
 
-                        return $self->search( {
-                            indicator_id => $r->get_value('indicator_id'),
-                            user_id      => $r->get_value('user_id'),
-                        } )->count ? 0 : 1;
-                    }
+                        return $self->search(
+                            {
+                                indicator_id => $r->get_value('indicator_id'),
+                                user_id      => $r->get_value('user_id'),
+                            }
+                        )->count ? 0 : 1;
+                      }
                 }
             }
         ),

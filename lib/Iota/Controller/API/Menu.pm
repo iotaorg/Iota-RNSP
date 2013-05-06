@@ -12,7 +12,6 @@ sub base : Chained('/api/base') : PathPart('menu') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{collection} = $c->model('DB::UserMenu');
 
-
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -21,9 +20,9 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 
-    if ($c->req->method ne 'GET' && $c->check_any_user_role(qw(user))){
+    if ( $c->req->method ne 'GET' && $c->check_any_user_role(qw(user)) ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            unless $c->user->id == $c->stash->{object}->first->user_id;
+          unless $c->user->id == $c->stash->{object}->first->user_id;
     }
 }
 
@@ -34,42 +33,35 @@ sub menu : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 sub menu_GET {
     my ( $self, $c ) = @_;
-    my $object_ref  = $c->stash->{object}->as_hashref->next;
+    my $object_ref = $c->stash->{object}->as_hashref->next;
 
-    $self->status_ok(
-        $c,
-        entity => {
-        (map { $_ => $object_ref->{$_} } qw(id user_id page_id position menu_id title))
-        }
-    );
+    $self->status_ok( $c,
+        entity => { ( map { $_ => $object_ref->{$_} } qw(id user_id page_id position menu_id title) ) } );
 }
-
 
 sub menu_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
     $c->req->params->{menu}{update}{id} = $c->stash->{object}->first->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
 
     my $obj = $dm->get_outcome_for('menu.update');
 
     $self->status_accepted(
         $c,
-        location =>
-        $c->uri_for( $self->action_for('menu'), [ $obj->id ] )->as_string,
-            entity => { id => $obj->id }
-        ),
-        $c->detach
-        if $obj;
+        location => $c->uri_for( $self->action_for('menu'), [ $obj->id ] )->as_string,
+        entity => { id => $obj->id }
+      ),
+      $c->detach
+      if $obj;
 }
-
 
 =pod
 
@@ -85,13 +77,13 @@ sub menu_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
     my $obj = $c->stash->{object}->first;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        if $c->check_any_user_role(qw(user)) && $obj->user_id != $c->user->id;
+      if $c->check_any_user_role(qw(user)) && $obj->user_id != $c->user->id;
 
     $obj->delete;
 
@@ -100,7 +92,6 @@ sub menu_DELETE {
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -123,29 +114,21 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search(undef, {
-        prefetch => ['page']
-    })->as_hashref->all;
+    my @list = $c->stash->{collection}->search( undef, { prefetch => ['page'] } )->as_hashref->all;
     my @objs;
 
-    foreach my $obj (@list){
+    foreach my $obj (@list) {
         push @objs, {
-            (map { $_ => $obj->{$_} } qw(id user_id page_id position menu_id title)),
+            ( map { $_ => $obj->{$_} } qw(id user_id page_id position menu_id title) ),
 
-            (map { "page_".$_ => $obj->{page}{$_} } qw(title title_url id)),
+            ( map { "page_" . $_ => $obj->{page}{$_} } qw(title title_url id) ),
 
             url => $c->uri_for_action( $self->action_for('menu'), [ $obj->{id} ] )->as_string,
-        }
+        };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-        menus => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { menus => \@objs } );
 }
-
 
 =pod
 
@@ -157,14 +140,14 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin user));
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
     $c->req->params->{menu}{create}{user_id} = $c->req->params->{user_id} || $c->user->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
     my $object = $dm->get_outcome_for('menu.create');
 
     $self->status_created(
@@ -172,7 +155,7 @@ sub list_POST {
         location => $c->uri_for( $self->action_for('menu'), [ $object->id ] )->as_string,
         entity => {
 
-            id   => $object->id,
+            id => $object->id,
         }
     );
 

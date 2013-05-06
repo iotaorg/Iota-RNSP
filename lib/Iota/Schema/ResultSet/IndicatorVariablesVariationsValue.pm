@@ -22,27 +22,26 @@ sub verifiers_specs {
                 value_of_date          => { required => 1, type => DataStr },
                 user_id                => { required => 1, type => 'Int' },
                 indicator_variation_id => {
-                  required => 1,
-                  type => 'Int',
-                  post_check => sub {
-                     my $r = shift;
-                     return $self->result_source->schema->resultset('IndicatorVariation')
-                        ->find( { id => $r->get_value('indicator_variation_id') } ) ? 1 : 0;
-                  }
-               },
+                    required   => 1,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->result_source->schema->resultset('IndicatorVariation')
+                          ->find( { id => $r->get_value('indicator_variation_id') } ) ? 1 : 0;
+                      }
+                },
                 indicator_variables_variation_id => { required => 1, type => 'Int' },
-                period                 => { required => 0, type => 'Str' },
-                value                  => { required => 0, type => 'Str' },
+                period                           => { required => 0, type => 'Str' },
+                value                            => { required => 0, type => 'Str' },
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id      => { required => 1, type => 'Int' },
-                value   => { required => 0, type => 'Str' },
+                id    => { required => 1, type => 'Int' },
+                value => { required => 0, type => 'Str' },
             },
         ),
-
 
     };
 }
@@ -57,34 +56,31 @@ sub action_specs {
             return unless keys %values;
             my $schema = $self->result_source->schema;
 
-            if (my $period = delete $values{period}){
-               my $dates = $schema->f_extract_period_edge($period , $values{value_of_date} );
+            if ( my $period = delete $values{period} ) {
+                my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
-               $values{valid_from}  = $dates->{period_begin};
-               $values{valid_until} = $dates->{period_end};
-            }else{
-               # pra deixar criar um dia um indicador sem variavel,
-               # só com variaveis de variacoes
-               $values{valid_from}  = substr($values{value_of_date},0,10);
-               $values{valid_until} = $values{valid_from};
+                $values{valid_from}  = $dates->{period_begin};
+                $values{valid_until} = $dates->{period_end};
+            }
+            else {
+                # pra deixar criar um dia um indicador sem variavel,
+                # só com variaveis de variacoes
+                $values{valid_from} = substr( $values{value_of_date}, 0, 10 );
+                $values{valid_until} = $values{valid_from};
             }
 
             my $var = $self->create( \%values );
             $var->discard_changes;
 
-            my $data = Iota::IndicatorData->new(
-                schema  => $self->result_source->schema
-            );
+            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
                 indicators => [
                     $data->indicators_from_variation_variables(
-                        variables => [ $var->indicator_variables_variation_id  ]
+                        variables => [ $var->indicator_variables_variation_id ]
                     )
                 ],
-                dates => [
-                    $var->valid_from->datetime
-                ],
+                dates   => [ $var->valid_from->datetime ],
                 user_id => $var->user_id
             );
 
@@ -100,19 +96,15 @@ sub action_specs {
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
 
-            my $data = Iota::IndicatorData->new(
-                schema  => $self->result_source->schema
-            );
+            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
                 indicators => [
                     $data->indicators_from_variation_variables(
-                        variables => [ $var->indicator_variables_variation_id  ]
+                        variables => [ $var->indicator_variables_variation_id ]
                     )
                 ],
-                dates => [
-                    $var->valid_from->datetime
-                ],
+                dates   => [ $var->valid_from->datetime ],
                 user_id => $var->user_id
             );
 

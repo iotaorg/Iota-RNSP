@@ -9,22 +9,21 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/base') : PathPart('variable') : CaptureArgs(0) {
-my ( $self, $c ) = @_;
-$c->stash->{collection} = $c->model('DB::Variable');
-
+    my ( $self, $c ) = @_;
+    $c->stash->{collection} = $c->model('DB::Variable');
 
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
-my ( $self, $c, $id ) = @_;
-$c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
-$c->stash->{variable} = $c->stash->{object}->first;
+    my ( $self, $c, $id ) = @_;
+    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+    $c->stash->{variable} = $c->stash->{object}->first;
 
-$c->stash->{object}->count > 0 or $c->detach('/error_404');
+    $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
 sub variable : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 
@@ -62,22 +61,18 @@ Retorna:
 
 sub variable_GET {
     my ( $self, $c ) = @_;
-    my $object_ref  = $c->stash->{object}->search(undef,
-        {prefetch => ['owner','measurement_unit']}
-        )->as_hashref->next;
+    my $object_ref =
+      $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->next;
 
     $self->status_ok(
         $c,
         entity => {
-            created_by => {
-                map { $_ => $object_ref->{owner}{$_} } qw(name id)
-            },
-            (map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic created_at)),
+            created_by => { map { $_ => $object_ref->{owner}{$_} } qw(name id) },
+            ( map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic created_at) ),
 
-
-            measurement_unit      => $object_ref->{measurement_unit} ? {
-                (map { $_ => $object_ref->{measurement_unit}{$_} } qw(name short_name id)),
-            } : undef
+            measurement_unit => $object_ref->{measurement_unit}
+            ? { ( map { $_ => $object_ref->{measurement_unit}{$_} } qw(name short_name id) ), }
+            : undef
         }
     );
 }
@@ -107,28 +102,26 @@ sub variable_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin superadmin));
 
     $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
 
     my $obj = $dm->get_outcome_for('variable.update');
 
-    $c->logx('Atualizou variavel ' . $obj->name);
+    $c->logx( 'Atualizou variavel ' . $obj->name );
     $self->status_accepted(
         $c,
-        location =>
-        $c->uri_for( $self->action_for('variable'), [ $obj->id ] )->as_string,
-            entity => { name => $obj->name, id => $obj->id }
-        ),
-        $c->detach
-        if $obj;
+        location => $c->uri_for( $self->action_for('variable'), [ $obj->id ] )->as_string,
+        entity => { name => $obj->name, id => $obj->id }
+      ),
+      $c->detach
+      if $obj;
 }
-
 
 =pod
 
@@ -144,7 +137,7 @@ sub variable_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin superadmin));
 
     my $obj = $c->stash->{variable};
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -156,7 +149,6 @@ sub variable_DELETE {
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -193,35 +185,26 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->
-        search_rs( undef, { prefetch => ['owner','measurement_unit'] } )
-    ->as_hashref->all;
+    my @list =
+      $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
     my @objs;
 
-    foreach my $obj (@list){
+    foreach my $obj (@list) {
         push @objs, {
 
-            created_by => {
-                map { $_ => $obj->{owner}{$_} } qw(name id)
-            },
+            created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
 
-            (map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at)),
+            ( map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at) ),
             url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
 
-            measurement_unit      => $obj->{measurement_unit} ? {
-                (map { $_ => $obj->{measurement_unit}{$_} } qw(name short_name id)),
-            } : undef
+            measurement_unit => $obj->{measurement_unit}
+            ? { ( map { $_ => $obj->{measurement_unit}{$_} } qw(name short_name id) ), }
+            : undef
 
-        }
+        };
     }
-    $self->status_ok(
-        $c,
-        entity => {
-        variables => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { variables => \@objs } );
 }
-
 
 =pod
 
@@ -250,23 +233,23 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin superadmin));
 
     $c->req->params->{variable}{create}{user_id} = $c->user->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
     my $object = $dm->get_outcome_for('variable.create');
-    $c->logx('Adicionou variavel ' . $object->name);
+    $c->logx( 'Adicionou variavel ' . $object->name );
 
     $self->status_created(
         $c,
         location => $c->uri_for( $self->action_for('variable'), [ $object->id ] )->as_string,
         entity => {
-        name => $object->name,
-        id   => $object->id,
+            name => $object->name,
+            id   => $object->id,
 
         }
     );

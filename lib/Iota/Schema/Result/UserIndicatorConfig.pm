@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::UserIndicatorConfig;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<user_indicator_config>
 
@@ -73,26 +74,26 @@ __PACKAGE__->table("user_indicator_config");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "user_indicator_config_id_seq",
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "indicator_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "technical_information",
-  { data_type => "text", is_nullable => 1 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 1,
-    original      => { default_value => \"now()" },
-  },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "user_indicator_config_id_seq",
+    },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "indicator_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "technical_information",
+    { data_type => "text", is_nullable => 1 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 1,
+        original      => { default_value => \"now()" },
+    },
 );
 
 =head1 PRIMARY KEY
@@ -121,10 +122,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint(
-  "user_indicator_config_user_id_indicator_id_key",
-  ["user_id", "indicator_id"],
-);
+__PACKAGE__->add_unique_constraint( "user_indicator_config_user_id_indicator_id_key", [ "user_id", "indicator_id" ], );
 
 =head1 RELATIONS
 
@@ -137,10 +135,10 @@ Related object: L<Iota::Schema::Result::Indicator>
 =cut
 
 __PACKAGE__->belongs_to(
-  "indicator",
-  "Iota::Schema::Result::Indicator",
-  { id => "indicator_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "indicator",
+    "Iota::Schema::Result::Indicator",
+    { id            => "indicator_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user
@@ -152,16 +150,13 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "user", "Iota::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LDrN2GuskBLZq5b8kFIyPw
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

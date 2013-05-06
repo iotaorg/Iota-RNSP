@@ -10,11 +10,10 @@ use DateTime::Format::Excel;
 
 use Text::Iconv;
 
-
 sub parse {
-    my ($self, $file) = @_;
+    my ( $self, $file ) = @_;
 
-    my $excel  = Spreadsheet::XLSX->new($file);
+    my $excel = Spreadsheet::XLSX->new($file);
 
     my %expected_header = (
         id    => qr /\b(id da v.riavel|v.riavel id)\b/io,
@@ -26,37 +25,38 @@ sub parse {
     my $ok      = 0;
     my $ignored = 0;
     my $header_found;
-    for my $worksheet ( @{$excel -> {Worksheet}} ) {
+    for my $worksheet ( @{ $excel->{Worksheet} } ) {
 
         my ( $row_min, $row_max ) = $worksheet->row_range();
         my ( $col_min, $col_max ) = $worksheet->col_range();
 
         my $header_map = {};
-        $header_found  = 0;
+        $header_found = 0;
 
         for my $row ( $row_min .. $row_max ) {
 
-            if (!$header_found){
+            if ( !$header_found ) {
                 for my $col ( $col_min .. $col_max ) {
                     my $cell = $worksheet->get_cell( $row, $col );
                     next unless $cell;
 
-                    foreach my $header_name (keys %expected_header){
+                    foreach my $header_name ( keys %expected_header ) {
 
-                        if ($cell->value() =~ $expected_header{$header_name}){
+                        if ( $cell->value() =~ $expected_header{$header_name} ) {
                             $header_found++;
                             $header_map->{$header_name} = $col;
                         }
                     }
                 }
-            }else{
+            }
+            else {
 
                 # aqui você pode verificar se foram encontrados todos os campos que você precisa
                 # neste caso, achar apenas 1 cabeçalho já é o suficiente
 
                 my $registro = {};
 
-                foreach my $header_name (keys %$header_map){
+                foreach my $header_name ( keys %$header_map ) {
                     my $col = $header_map->{$header_name};
 
                     my $cell = $worksheet->get_cell( $row, $col );
@@ -71,15 +71,17 @@ sub parse {
                     $registro->{$header_name} = $value;
                 }
 
-                if (keys %$registro == 3 ){
+                if ( keys %$registro == 3 ) {
 
-                    $registro->{date} = $registro->{date} =~ /^20[123][0-9]$/
-                        ? $registro->{date} . '-01-01'
-                        : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+                    $registro->{date} =
+                        $registro->{date} =~ /^20[123][0-9]$/
+                      ? $registro->{date} . '-01-01'
+                      : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
                     $ok++;
                     push @rows, $registro;
 
-                }else{
+                }
+                else {
                     $ignored++;
                 }
             }
@@ -87,9 +89,9 @@ sub parse {
         }
     }
     return {
-        rows    => \@rows,
-        ignored => $ignored,
-        ok      => $ok,
+        rows         => \@rows,
+        ignored      => $ignored,
+        ok           => $ok,
         header_found => !!$header_found
     };
 }

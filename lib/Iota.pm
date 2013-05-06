@@ -17,19 +17,19 @@ use Catalyst::Runtime 5.80;
 #                 directory
 
 use Catalyst qw/
-    ConfigLoader
-    Static::Simple
-    Unicode::Encoding
-    Params::Nested
+  ConfigLoader
+  Static::Simple
+  Unicode::Encoding
+  Params::Nested
 
-    Authentication
-    Authorization::Roles
+  Authentication
+  Authorization::Roles
 
-    +CatalystX::Plugin::Logx
+  +CatalystX::Plugin::Logx
 
-    Assets
+  Assets
 
-/;
+  /;
 
 extends 'Catalyst';
 
@@ -45,7 +45,7 @@ our $VERSION = '0.01';
 # local deployment.
 
 __PACKAGE__->config(
-    name => 'Iota',
+    name     => 'Iota',
     encoding => 'UTF-8',
 
     # Disable deprecated behavior needed by old applications
@@ -57,12 +57,11 @@ __PACKAGE__->config(
 
     'Plugin::Assets' => {
 
-        path => '/static',
+        path        => '/static',
         output_path => 'built/',
-        minify => 0,
-        stash_var => 'assets'
+        minify      => 0,
+        stash_var   => 'assets'
     },
-
 
 );
 
@@ -74,20 +73,17 @@ after 'setup_components' => sub {
         }
     }
 
-
-
 };
 
 after setup_finalize => sub {
     my $app = shift;
 
-    for ( $app->registered_plugins  ) {
+    for ( $app->registered_plugins ) {
         if ( $_->can('initialize_after_setup') ) {
             $_->initialize_after_setup($app);
         }
     }
 };
-
 
 around 'apply_default_middlewares' => sub {
     my $orig = shift;
@@ -95,15 +91,15 @@ around 'apply_default_middlewares' => sub {
 
     sub {
         my $env = shift;
-        if ( $env->{ PATH_INFO } =~ m/^\/?(prefeitura|movimento)(.*)/i ) {
+        if ( $env->{PATH_INFO} =~ m/^\/?(prefeitura|movimento)(.*)/i ) {
 
             my $sites = {
                 prefeitura => 'indicadores.cidadessustentaveis.org.br',
                 movimento  => 'www.redesocialdecidades.org.br'
             };
 
-            my $redir_url = 'http://' . $sites->{lc $1} . ($2||'');
-            return [ 301, [ "Location" => $redir_url ], [ "Moved" ] ];
+            my $redir_url = 'http://' . $sites->{ lc $1 } . ( $2 || '' );
+            return [ 301, [ "Location" => $redir_url ], ["Moved"] ];
         }
 
         $app->($env);

@@ -27,13 +27,13 @@ use JSON;
 eval {
     $schema->txn_do(
         sub {
-            my $id = 2;
+            my $id       = 2;
             my $url_user = '/api/user/' . $id;
             my ( $res, $c ) = ctx_request(
                 POST $url_user . '/arquivo/custom.css',
                 'Content-Type' => 'form-data',
-                Content =>
-                [   api_key                        => 'test',
+                Content        => [
+                    api_key   => 'test',
                     'arquivo' => ["$Bin/network_test.css"],
                 ]
             );
@@ -45,14 +45,14 @@ eval {
                 like( $obj->{files}{'custom.css'}, qr|css|, 'version updated' );
             }
             my $filename = "user_${id}_custom.css_network_test.css";
-            my $name = Iota->config->{private_path} =~ /^\//o ?
-                dir(Iota->config->{private_path})->resolve . '/' . $filename :
-                Iota->path_to( $c->config->{private_path} , $filename );
+            my $name =
+              Iota->config->{private_path} =~ /^\//o
+              ? dir( Iota->config->{private_path} )->resolve . '/' . $filename
+              : Iota->path_to( $c->config->{private_path}, $filename );
 
-            ok(-e $name, $name . ' image exists');
+            ok( -e $name, $name . ' image exists' );
 
             unlink($name) if -e $name;
-
 
             die 'rollback';
         }

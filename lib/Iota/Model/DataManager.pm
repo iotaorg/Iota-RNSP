@@ -18,7 +18,7 @@ sub build_per_context_instance {
     my %actions   = ();
     foreach my $name ( $c->models ) {
         next
-            if $name =~ /(DataManager|file)/;
+          if $name =~ /(DataManager|file)/;
         my $model = $c->model($name);
 
         next unless $model->can('meta');
@@ -32,7 +32,7 @@ sub build_per_context_instance {
 
     my $params = $c->req->params;
     $params = { %$params, %{ $c->req->data } }
-        if $c->req->data;
+      if $c->req->data;
     my $dm = Iota::Data::Manager->new(
         input     => $params,
         verifiers => \%verifiers,
@@ -52,14 +52,12 @@ sub apply {
 
     $dm->apply;
     return 1
-        if $dm->success;
+      if $dm->success;
 
-    my $c = $self->context;
-    my @params_keys
-        = keys %{ $dm->input };
-    my %errors
-        = map { $_ => $dm->message_for_scope($_) }
-        grep { defined $dm->message_for_scope($_) } @params_keys;
+    my $c           = $self->context;
+    my @params_keys = keys %{ $dm->input };
+    my %errors      = map { $_ => $dm->message_for_scope($_) }
+      grep { defined $dm->message_for_scope($_) } @params_keys;
 
     @{ $c->stash->{error} }{ keys %errors } = values %errors;
     return 0;

@@ -11,52 +11,42 @@ use JSON qw(from_json);
 
 my $schema = Iota->model('DB');
 eval {
-  $schema->txn_do(
-    sub {
-      my ( $res, $c );
-        my $city = $schema->resultset('City')->create(
-            {
-                uf   => 'SP',
-                name => 'Pederneiras'
-            },
-        );
-        $schema->resultset('User')->create(
-        {
-          name         => 'Foo Bar Quux',
-          email        => 'foo@email.com',
-          password     => '1234',
-          city         => $city
-        },
-      );
+    $schema->txn_do(
+        sub {
+            my ( $res, $c );
+            my $city = $schema->resultset('City')->create(
+                {
+                    uf   => 'SP',
+                    name => 'Pederneiras'
+                },
+            );
+            $schema->resultset('User')->create(
+                {
+                    name     => 'Foo Bar Quux',
+                    email    => 'foo@email.com',
+                    password => '1234',
+                    city     => $city
+                },
+            );
 
-      ( $res, $c ) = ctx_request(
-        POST '/api/user/forgot_password/email',
-        [
-          'user.forgot_password.email' => 'foo@email.com',
-        ]
-      );
+            ( $res, $c ) = ctx_request( POST '/api/user/forgot_password/email',
+                [ 'user.forgot_password.email' => 'foo@email.com', ] );
 
-      like( $res->content, qr/\bok\b/i, 'email ok' );
-      ok( $res->is_success, 'resposta ok' );
+            like( $res->content, qr/\bok\b/i, 'email ok' );
+            ok( $res->is_success, 'resposta ok' );
 
-		  ok(
-        my $lostkey =
-          $schema->resultset('User')->find( { email => 'foo@email.com' } )->user_forgotten_passwords->first,
-          'user have a lost key'
-      );
+            ok(
+                my $lostkey =
+                  $schema->resultset('User')->find( { email => 'foo@email.com' } )->user_forgotten_passwords->first,
+                'user have a lost key'
+            );
 
+            is( $schema->resultset('EmailsQueue')->search( { to => 'foo@email.com' } )->count,
+                1, 'a tabela de queue tem um registro' );
 
-			is(
-          $schema->resultset('EmailsQueue')->search( { to => 'foo@email.com' } )->count,
-				1,
-        'a tabela de queue tem um registro'
-      );
-
-
-
-      die 'rollback';
-    }
-  );
+            die 'rollback';
+        }
+    );
 
 };
 

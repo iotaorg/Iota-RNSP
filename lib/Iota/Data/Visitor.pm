@@ -38,9 +38,8 @@ sub visit_hash {
         }
         else {
             $self->path_size > 0
-                ? $self->final_value->{ $self->full_path }{$key}
-                = $href->{$key}
-                : $self->final_value->{$key} = $href->{$key};
+              ? $self->final_value->{ $self->full_path }{$key} = $href->{$key}
+              : $self->final_value->{$key} = $href->{$key};
         }
 
     }

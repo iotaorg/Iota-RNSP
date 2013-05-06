@@ -143,7 +143,7 @@ sub list_POST {
       unless $c->check_any_user_role(qw(admin superadmin ));
 
     my $param = $c->req->params->{city}{region}{create};
-    $param->{city_id} = $c->stash->{city}->id;
+    $param->{city_id}    = $c->stash->{city}->id;
     $param->{created_by} = $c->user->id;
 
     my $dm = $c->model('DataManager');
@@ -182,15 +182,12 @@ sub list_GET {
                   created_by
                   created_at)
             ),
-            url => $c->uri_for_action( $self->action_for('region'),
-                [ $c->stash->{city}->id, $obj->{id} ] )->as_string,
+            url => $c->uri_for_action( $self->action_for('region'), [ $c->stash->{city}->id, $obj->{id} ] )->as_string,
 
         };
     }
 
-    $self->status_ok( $c, entity => {
-        regions => \@objs
-    });
+    $self->status_ok( $c, entity => { regions => \@objs } );
 }
 
 1;

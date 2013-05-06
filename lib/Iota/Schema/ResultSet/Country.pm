@@ -13,7 +13,6 @@ use Data::Verifier;
 use Text2URI;
 my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
-
 sub _build_verifier_scope_name { 'country' }
 
 sub verifiers_specs {
@@ -21,17 +20,17 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                name        => { required => 1, type => 'Str' },
-                name_url    => { required => 0, type => 'Str' },
-                created_by  => { required => 1, type => 'Int' },
+                name       => { required => 1, type => 'Str' },
+                name_url   => { required => 0, type => 'Str' },
+                created_by => { required => 1, type => 'Int' },
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id           => { required => 1, type => 'Int' },
-                name        => { required => 1, type => 'Str' },
-                name_url    => { required => 0, type => 'Str' },
+                id       => { required => 1, type => 'Int' },
+                name     => { required => 1, type => 'Str' },
+                name_url => { required => 0, type => 'Str' },
             },
         ),
 
@@ -67,7 +66,7 @@ sub action_specs {
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
 
-            $var->cities->update({ pais => $var->name_url });
+            $var->cities->update( { pais => $var->name_url } );
 
             return $var;
         },

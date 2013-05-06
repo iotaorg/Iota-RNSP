@@ -27,12 +27,11 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
-                id      => { required => 1, type => 'Int' },
-                name    => { required => 1, type => 'Str' },
-                order   => { required => 0, type => 'Int' },
+                id    => { required => 1, type => 'Int' },
+                name  => { required => 1, type => 'Str' },
+                order => { required => 0, type => 'Int' },
             },
         ),
-
 
     };
 }

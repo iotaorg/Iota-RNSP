@@ -8,7 +8,6 @@ use Catalyst::Exception ();
 use overload ();
 use Carp;
 
-
 use namespace::clean -except => 'meta';
 
 our $VERSION = '0.35';
@@ -17,35 +16,33 @@ $VERSION = eval $VERSION;
 my $resultset;
 
 sub setup {
-  my $c = shift;
+    my $c = shift;
 
-  $c->maybe::next::method(@_);
+    $c->maybe::next::method(@_);
 
-  return $c;
+    return $c;
 }
 
 sub initialize_after_setup {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
     $c->setup_logx_plugin($c);
 }
 
 sub setup_logx_plugin {
-  my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
-  my $db = $c->model('DB');
-  $resultset = $db->resultset('ActionLog');
+    my $db = $c->model('DB');
+    $resultset = $db->resultset('ActionLog');
 
 }
-
 
 sub logx {
     my ( $c, $msg, %conf ) = @_;
 
-    my $create = {message => $msg};
+    my $create = { message => $msg };
 
     eval {
-        if ( eval { $c->req } )
-        {
+        if ( eval { $c->req } ) {
             $create->{ip}  = $c->req->address;
             $create->{url} = $c->req->method . ' /' . $c->req->path;
         }
@@ -57,7 +54,7 @@ sub logx {
 
         $create->{indicator_id} = $conf{indicator_id} if exists $conf{indicator_id};
 
-        $resultset->create($create)
+        $resultset->create($create);
     };
     print $@ if $@;
 

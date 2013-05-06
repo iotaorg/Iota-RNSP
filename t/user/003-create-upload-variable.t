@@ -37,16 +37,17 @@ eval {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
-                [   api_key                        => 'test',
-                    'user.create.name'             => 'Foo Bar',
-                    'user.create.email'            => 'foo@email.com',
-                    'user.create.password'         => 'foobarquux1',
-                    'user.create.nome_responsavel_cadastro'         => 'nome_responsavel_cadastro',
-                    'user.create.password_confirm' => 'foobarquux1',
-                    'user.create.city_id'          => $city->id,
-                    'user.create.role'             => 'admin',
-                    'user.create.network_id'       => '1',
-                    'user.create.city_summary'     => 'testeteste'
+                [
+                    api_key                                 => 'test',
+                    'user.create.name'                      => 'Foo Bar',
+                    'user.create.email'                     => 'foo@email.com',
+                    'user.create.password'                  => 'foobarquux1',
+                    'user.create.nome_responsavel_cadastro' => 'nome_responsavel_cadastro',
+                    'user.create.password_confirm'          => 'foobarquux1',
+                    'user.create.city_id'                   => $city->id,
+                    'user.create.role'                      => 'admin',
+                    'user.create.network_id'                => '1',
+                    'user.create.city_summary'              => 'testeteste'
                 ]
             );
             ok( $res->is_success, 'user created' );
@@ -55,41 +56,41 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
                 'Content-Type' => 'form-data',
-                Content =>
-                [   api_key   => 'test',
+                Content        => [
+                    api_key   => 'test',
                     'arquivo' => ["$Bin/teste-upload.xlsx"],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-            like($res->content, qr/Linhas aceitas: 3\\n"/, '3 linhas no XLSX');
+            like( $res->content, qr/Linhas aceitas: 3\\n"/, '3 linhas no XLSX' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
                 'Content-Type' => 'form-data',
-                Content =>
-                [   api_key   => 'test',
+                Content        => [
+                    api_key   => 'test',
                     'arquivo' => ["$Bin/teste-upload.xls"],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-            like($res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no XLS');
+            like( $res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no XLS' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
                 'Content-Type' => 'form-data',
-                Content =>
-                [   api_key   => 'test',
+                Content        => [
+                    api_key   => 'test',
                     'arquivo' => ["$Bin/teste-upload.csv"],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-            like($res->content, qr/Linhas aceitas: 4\\n"/, '4 linhas no CSV');
+            like( $res->content, qr/Linhas aceitas: 4\\n"/, '4 linhas no CSV' );
 
             die 'rollback';
         }

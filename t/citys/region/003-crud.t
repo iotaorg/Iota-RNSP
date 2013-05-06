@@ -31,20 +31,21 @@ eval {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
                 POST '/api/city',
-                [   api_key                        => 'test',
-                    'city.create.name'         => 'FooBar',
+                [
+                    api_key            => 'test',
+                    'city.create.name' => 'FooBar',
 
                 ]
             );
             ok( !$res->is_success, 'invalid request' );
             is( $res->code, 400, 'invalid request' );
 
-
             ( $res, $c ) = ctx_request(
                 POST '/api/city',
-                [   api_key                        => 'test',
+                [
+                    api_key                 => 'test',
                     'city.create.name'      => 'Foo Bar',
-                    'city.create.state_id'   => 1,
+                    'city.create.state_id'  => 1,
                     'city.create.latitude'  => 5666.55,
                     'city.create.longitude' => 1000.11,
                 ]
@@ -52,11 +53,11 @@ eval {
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
 
-
             my $city_uri = $res->header('Location');
             ( $res, $c ) = ctx_request(
-                POST  $city_uri . '/region',
-                [   api_key                        => 'test',
+                POST $city_uri . '/region',
+                [
+                    api_key                          => 'test',
                     'city.region.create.name'        => 'a region',
                     'city.region.create.description' => 'with no description',
                 ]
@@ -66,31 +67,35 @@ eval {
             is( $res->code, 201, 'region created!' );
 
             my $reg1_uri = $res->header('Location');
-            my $reg1 = eval{from_json( $res->content )};
+            my $reg1 = eval { from_json( $res->content ) };
 
             ( $res, $c ) = ctx_request( GET $reg1_uri );
-            my $obj = eval{from_json( $res->content )};
+            my $obj = eval { from_json( $res->content ) };
 
-            is_deeply($obj,{
-                city        =>  {
-                    name    =>  'Foo Bar',
-                    name_uri=>  'foo-bar',
-                    pais    =>  'br',
-                    uf      =>  'SP'
+            is_deeply(
+                $obj,
+                {
+                    city => {
+                        name     => 'Foo Bar',
+                        name_uri => 'foo-bar',
+                        pais     => 'br',
+                        uf       => 'SP'
+                    },
+                    depth_level  => 2,
+                    description  => 'with no description',
+                    name         => 'a region',
+                    name_url     => 'a-region',
+                    upper_region => undef
                 },
-                depth_level  =>  2,
-                description  =>  'with no description',
-                name         =>  'a region',
-                name_url     =>  'a-region',
-                upper_region =>  undef
-            }, 'created ok');
-
+                'created ok'
+            );
 
             ( $res, $c ) = ctx_request(
-                POST  $city_uri . '/region',
-                [   api_key                        => 'test',
-                    'city.region.create.name'        => 'foobar',
-                    'city.region.create.description' => 'description',
+                POST $city_uri . '/region',
+                [
+                    api_key                           => 'test',
+                    'city.region.create.name'         => 'foobar',
+                    'city.region.create.description'  => 'description',
                     'city.region.create.upper_region' => $reg1->{id},
                 ]
             );
@@ -99,39 +104,43 @@ eval {
             is( $res->code, 201, 'region created!' );
 
             my $reg2_uri = $res->header('Location');
-            my $reg2 = eval{from_json( $res->content )};
+            my $reg2 = eval { from_json( $res->content ) };
 
             ( $res, $c ) = ctx_request( GET $reg2_uri );
-            $obj = eval{from_json( $res->content )};
+            $obj = eval { from_json( $res->content ) };
 
-            is_deeply($obj, {
-                city        =>  {
-                    name    =>  'Foo Bar',
-                    name_uri=>  'foo-bar',
-                    pais    =>  'br',
-                    uf      =>  'SP'
+            is_deeply(
+                $obj,
+                {
+                    city => {
+                        name     => 'Foo Bar',
+                        name_uri => 'foo-bar',
+                        pais     => 'br',
+                        uf       => 'SP'
+                    },
+                    depth_level  => 3,
+                    description  => 'description',
+                    name         => 'foobar',
+                    name_url     => 'foobar',
+                    upper_region => {
+                        id       => $reg1->{id},
+                        name     => 'a region',
+                        name_url => 'a-region',
+                    }
                 },
-                depth_level  =>  3,
-                description  =>  'description',
-                name         =>  'foobar',
-                name_url     =>  'foobar',
-                upper_region =>  {
-                    id => $reg1->{id},
-                    name => 'a region',
-                    name_url => 'a-region',
-                }
-            }, 'created ok');
+                'created ok'
+            );
 
+            ( $res, $c ) = ctx_request( GET $city_uri . '/region' );
+            $obj = eval { from_json( $res->content ) };
 
-            ( $res, $c ) = ctx_request( GET $city_uri .'/region' );
-            $obj = eval{from_json( $res->content )};
-
-            is(@{$obj->{regions}}, 2,'total match');
+            is( @{ $obj->{regions} }, 2, 'total match' );
 
             ( $res, $c ) = ctx_request(
-                POST  $reg2_uri,
-                [   api_key                        => 'test',
-                    'city.region.update.name'        => 'xxx',
+                POST $reg2_uri,
+                [
+                    api_key                   => 'test',
+                    'city.region.update.name' => 'xxx',
                 ]
             );
 
@@ -139,38 +148,38 @@ eval {
             is( $res->code, 202, 'region updated!' );
 
             ( $res, $c ) = ctx_request( GET $reg2_uri );
-            $obj = eval{from_json( $res->content )};
+            $obj = eval { from_json( $res->content ) };
 
-            is_deeply($obj, {
-                city        =>  {
-                    name    =>  'Foo Bar',
-                    name_uri=>  'foo-bar',
-                    pais    =>  'br',
-                    uf      =>  'SP'
+            is_deeply(
+                $obj,
+                {
+                    city => {
+                        name     => 'Foo Bar',
+                        name_uri => 'foo-bar',
+                        pais     => 'br',
+                        uf       => 'SP'
+                    },
+                    depth_level  => 3,
+                    description  => 'description',
+                    name         => 'xxx',
+                    name_url     => 'xxx',
+                    upper_region => {
+                        id       => $reg1->{id},
+                        name     => 'a region',
+                        name_url => 'a-region',
+                    }
                 },
-                depth_level  =>  3,
-                description  =>  'description',
-                name         =>  'xxx',
-                name_url     =>  'xxx',
-                upper_region =>  {
-                    id => $reg1->{id},
-                    name => 'a region',
-                    name_url => 'a-region',
-                }
-            }, 'updated ok');
-
-
-            ( $res, $c ) = ctx_request(
-                DELETE $reg2_uri
+                'updated ok'
             );
+
+            ( $res, $c ) = ctx_request( DELETE $reg2_uri );
 
             ok( $res->is_success, 'region deleted!' );
 
-            ( $res, $c ) = ctx_request( GET $city_uri .'/region' );
-            $obj = eval{from_json( $res->content )};
+            ( $res, $c ) = ctx_request( GET $city_uri . '/region' );
+            $obj = eval { from_json( $res->content ) };
 
-            is(@{$obj->{regions}}, 1,'total match');
-
+            is( @{ $obj->{regions} }, 1, 'total match' );
 
             die 'rollback';
         }

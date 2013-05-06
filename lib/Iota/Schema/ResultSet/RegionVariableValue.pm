@@ -20,10 +20,9 @@ use Iota::Types qw /VariableType DataStr/;
 sub _build_verifier_scope_name { 'region.variable.value' }
 use DateTimeX::Easy;
 
-
 my $str2number = sub {
     my $str = shift;
-    if ($str =~ /[^\d]/) {
+    if ( $str =~ /[^\d]/ ) {
         $str =~ s/\.(\d{3})/$1/g;
         $str =~ s/\s(\d{3})/$1/g;
         $str =~ s/\,/./;
@@ -89,7 +88,8 @@ sub verifiers_specs {
                             {
                                 user_id     => $r->get_value('user_id'),
                                 variable_id => $r->get_value('variable_id'),
-                                valid_from  => $schema->f_extract_period_edge( $var ? $var->period : 'yearly', $date )->{period_begin}
+                                valid_from  => $schema->f_extract_period_edge( $var ? $var->period : 'yearly', $date )
+                                  ->{period_begin}
                             }
                         )->count == 0;
                       }
@@ -160,10 +160,10 @@ sub verifiers_specs {
         put => Data::Verifier->new(
             profile => {
 
-                source => { required => 0, type => 'Str' },
+                source  => { required => 0, type => 'Str' },
                 file_id => { required => 0, type => 'Int' },
 
-                region_id     => { required => 1, type => 'Int' },
+                region_id => { required => 1, type => 'Int' },
 
                 value => {
                     required   => 0,
@@ -214,28 +214,20 @@ sub action_specs {
             my $var    = $schema->resultset('Variable')->find( { id => $values{variable_id} } );
             my $date   = $values{value_of_date};
 
-            my $dates = $schema->f_extract_period_edge( $var->period ||'yearly', $date );
+            my $dates = $schema->f_extract_period_edge( $var->period || 'yearly', $date );
             $values{valid_from}  = $dates->{period_begin};
             $values{valid_until} = $dates->{period_end};
 
             my $varvalue = $self->create( \%values );
             $varvalue->discard_changes;
 
-            my $data = Iota::IndicatorData->new(
-                schema  => $self->result_source->schema
-            );
+            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
-                indicators => [
-                    $data->indicators_from_variables(
-                        variables => [ $varvalue->id  ]
-                    )
-                ],
-                dates => [
-                    $values{valid_from}
-                ],
-                user_id   => $varvalue->user_id,
-                region_id => $varvalue->region_id
+                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
+                dates      => [ $values{valid_from} ],
+                user_id    => $varvalue->user_id,
+                region_id  => $varvalue->region_id
             );
 
             return $varvalue;
@@ -249,26 +241,18 @@ sub action_specs {
             return unless keys %values;
 
             $values{observations} ||= undef;
-            $values{source} ||= undef;
+            $values{source}       ||= undef;
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
 
-            my $data = Iota::IndicatorData->new(
-                schema  => $self->result_source->schema
-            );
+            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
-                indicators => [
-                    $data->indicators_from_variables(
-                        variables => [ $var->id  ]
-                    )
-                ],
-                dates => [
-                    $values{valid_from}
-                ],
-                user_id => $var->user_id,
-                region_id => $var->region_id,
+                indicators => [ $data->indicators_from_variables( variables => [ $var->id ] ) ],
+                dates      => [ $values{valid_from} ],
+                user_id    => $var->user_id,
+                region_id  => $var->region_id,
             );
 
             return $var;
@@ -277,10 +261,9 @@ sub action_specs {
             my %values = shift->valid_values;
 
             my $schema = $self->result_source->schema;
-            my $var = $schema->resultset('Variable')->find( $values{variable_id} );
+            my $var    = $schema->resultset('Variable')->find( $values{variable_id} );
 
-            $self->_put($var ? $var->period : 'yearly' , %values);
-
+            $self->_put( $var ? $var->period : 'yearly', %values );
 
         },
 
@@ -288,13 +271,13 @@ sub action_specs {
 }
 
 sub _put {
-    my ($self, $period, %values) = @_;
+    my ( $self, $period, %values ) = @_;
     $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
     my $schema = $self->result_source->schema;
 
     do { delete $values{$_} unless defined $values{$_} }
-        for keys %values;
+      for keys %values;
     return unless keys %values;
 
     my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
@@ -334,21 +317,13 @@ sub _put {
         $row = $self->create( \%values );
     }
 
-    my $data = Iota::IndicatorData->new(
-        schema  => $self->result_source->schema
-    );
+    my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
     $data->upsert(
-        indicators => [
-            $data->indicators_from_variables(
-                variables => [ $values{variable_id}  ]
-            )
-        ],
-        dates => [
-            $dates->{period_begin}
-        ],
-        user_id => $row->user_id,
-        region_id => $row->region_id
+        indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
+        dates      => [ $dates->{period_begin} ],
+        user_id    => $row->user_id,
+        region_id  => $row->region_id
     );
 
     return $row;

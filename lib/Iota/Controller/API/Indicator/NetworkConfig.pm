@@ -7,9 +7,9 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/indicator/object') : PathPart('network_config') : CaptureArgs(0) {
-    my ( $self, $c) = @_;
+    my ( $self, $c ) = @_;
 
-    $c->stash->{indicator} = $c->stash->{object}->next;
+    $c->stash->{indicator}  = $c->stash->{object}->next;
     $c->stash->{collection} = $c->stash->{indicator}->indicator_network_configs;
 
 }
@@ -35,17 +35,10 @@ sub network_config : Chained('object') : PathPart('') : Args(0) : ActionClass('R
 sub network_config_GET {
     my ( $self, $c ) = @_;
 
-    my $object_ref  = $c->stash->{collection}->search({
-        network_id => $c->stash->{object_id}
-    })->as_hashref->next;
+    my $object_ref = $c->stash->{collection}->search( { network_id => $c->stash->{object_id} } )->as_hashref->next;
     $object_ref or $c->detach('/error_404');
 
-    $self->status_ok(
-        $c,
-        entity => {
-            (map { $_ => $object_ref->{$_} } qw(unfolded_in_home))
-        }
-    );
+    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(unfolded_in_home) ) } );
 }
 
 =pod
@@ -63,7 +56,7 @@ sub network_config_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin superadmin));
 
     my $param = $c->req->params->{indicator}{network_config}{upsert};
 
@@ -73,24 +66,21 @@ sub network_config_POST {
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
 
     my $obj = $dm->get_outcome_for('indicator.network_config.upsert');
     $self->status_accepted(
         $c,
-            location => $c->uri_for( $self->action_for('network_config'), [
-                $obj->indicator_id,
-                $obj->network_id
-            ] )->as_string,
-            entity => {
-                network_id => $obj->network_id,
-                indicator_id => $obj->indicator_id,
-            }
-    ),
+        location =>
+          $c->uri_for( $self->action_for('network_config'), [ $obj->indicator_id, $obj->network_id ] )->as_string,
+        entity => {
+            network_id   => $obj->network_id,
+            indicator_id => $obj->indicator_id,
+        }
+      ),
 
-    $c->detach;
+      $c->detach;
 }
-
 
 =pod
 
@@ -106,12 +96,9 @@ sub network_config_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin superadmin));
 
-
-    my $obj = $c->stash->{collection}->search({
-        network_id => $c->stash->{object_id}
-    })->next;
+    my $obj = $c->stash->{collection}->search( { network_id => $c->stash->{object_id} } )->next;
 
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
@@ -129,22 +116,18 @@ sub list_GET {
     my @list = $c->stash->{collection}->as_hashref->all;
     my @objs;
 
-    foreach my $obj (@list){
-        push @objs, {
-            (map { $_ => $obj->{$_} } qw(indicator_id network_id unfolded_in_home)),
-            url => $c->uri_for_action( $self->action_for('network_config'), [
-                $obj->{indicator_id}, $obj->{network_id}
-            ] )->as_string,
-        }
+    foreach my $obj (@list) {
+        push @objs,
+          {
+            ( map { $_ => $obj->{$_} } qw(indicator_id network_id unfolded_in_home) ),
+            url =>
+              $c->uri_for_action( $self->action_for('network_config'), [ $obj->{indicator_id}, $obj->{network_id} ] )
+              ->as_string,
+          };
     }
 
-    $self->status_ok( $c,
-        entity => {
-            network_configs => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { network_configs => \@objs } );
 }
-
 
 1;
 

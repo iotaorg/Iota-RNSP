@@ -3,30 +3,31 @@ use Moose;
 use Text::Iconv;
 
 has iconv => (
-    is   => 'rw',
-    isa  => 'Text::IconvPtr',
-    lazy => 1,
-    default => sub {Text::Iconv->new('UTF-8', 'ASCII//TRANSLIT')}
+    is      => 'rw',
+    isa     => 'Text::IconvPtr',
+    lazy    => 1,
+    default => sub { Text::Iconv->new( 'UTF-8', 'ASCII//TRANSLIT' ) }
 );
 
 has old_alphanumeric_regexp => (
-    is   => 'rw',
-    isa  => 'Int',
-    default => sub {0}
+    is      => 'rw',
+    isa     => 'Int',
+    default => sub { 0 }
 );
 
 sub translate {
-    my ($self, $text, $sep) = @_;
+    my ( $self, $text, $sep ) = @_;
     $sep ||= '-';
 
-    $text = lc $self->iconv->convert(  $text );
+    $text = lc $self->iconv->convert($text);
 
     $text =~ s/^\s+//o;
     $text =~ s/\s+$//o;
 
-    if ($self->old_alphanumeric_regexp){
+    if ( $self->old_alphanumeric_regexp ) {
         $text =~ s/\W+/$sep/go;
-    }else{
+    }
+    else {
         $text =~ s/[^\w\.]+/$sep/go;
     }
     $text =~ s/$sep+/$sep/go;

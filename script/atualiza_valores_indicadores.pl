@@ -11,14 +11,11 @@ use Template;
 use Encode;
 use JSON qw / decode_json /;
 
-
 use Iota;
 my $schema = Iota->model('DB');
 
 use Iota::IndicatorData;
 
-my $data = Iota::IndicatorData->new(
-    schema  => $schema
-);
+my $data = Iota::IndicatorData->new( schema => $schema );
 
 $data->upsert();

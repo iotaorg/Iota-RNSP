@@ -9,22 +9,20 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/base') : PathPart('source') : CaptureArgs(0) {
-  my ( $self, $c ) = @_;
-  $c->stash->{collection} = $c->model('DB::Source');
-
+    my ( $self, $c ) = @_;
+    $c->stash->{collection} = $c->model('DB::Source');
 
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
-  my ( $self, $c, $id ) = @_;
-  $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+    my ( $self, $c, $id ) = @_;
+    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
 
-
-  $c->stash->{object}->count > 0 or $c->detach('/error_404');
+    $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
 sub source : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 
@@ -47,15 +45,10 @@ Retorna:
 =cut
 
 sub source_GET {
-  my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->as_hashref->next;
+    my ( $self, $c ) = @_;
+    my $object_ref = $c->stash->{object}->as_hashref->next;
 
-  $self->status_ok(
-    $c,
-    entity => {
-      (map { $_ => $object_ref->{$_} } qw(name id user_id created_at))
-    }
-  );
+    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(name id user_id created_at) ) } );
 }
 
 =pod
@@ -71,30 +64,28 @@ Retorna:
 =cut
 
 sub source_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin user));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
-  $c->req->params->{source}{update}{id} = $c->stash->{object}->next->id;
+    $c->req->params->{source}{update}{id} = $c->stash->{object}->next->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+      unless $dm->success;
 
-  my $obj = $dm->get_outcome_for('source.update');
+    my $obj = $dm->get_outcome_for('source.update');
 
-  $self->status_accepted(
-    $c,
-    location =>
-      $c->uri_for( $self->action_for('source'), [ $obj->id ] )->as_string,
+    $self->status_accepted(
+        $c,
+        location => $c->uri_for( $self->action_for('source'), [ $obj->id ] )->as_string,
         entity => { name => $obj->name, id => $obj->id }
-    ),
-    $c->detach
-    if $obj;
+      ),
+      $c->detach
+      if $obj;
 }
-
 
 =pod
 
@@ -107,22 +98,21 @@ Retorna: No-content ou Gone
 =cut
 
 sub source_DELETE {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin));
 
-  my $obj = $c->stash->{object}->next;
-  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
+    my $obj = $c->stash->{object}->next;
+    $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-  $obj->delete;
+    $obj->delete;
 
-  $self->status_no_content($c);
+    $self->status_no_content($c);
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -143,26 +133,21 @@ Retorna:
 =cut
 
 sub list_GET {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
     my @list = $c->stash->{collection}->as_hashref->all;
     my @objs;
 
-    foreach my $obj (@list){
-        push @objs, {
-            (map { $_ => $obj->{$_} } qw(id name)),
+    foreach my $obj (@list) {
+        push @objs,
+          {
+            ( map { $_ => $obj->{$_} } qw(id name) ),
             url => $c->uri_for_action( $self->action_for('source'), [ $obj->{id} ] )->as_string,
-        }
+          };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-        sources => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { sources => \@objs } );
 }
-
 
 =pod
 
@@ -181,27 +166,27 @@ Retorna:
 =cut
 
 sub list_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin user));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin user));
 
-  $c->req->params->{source}{create}{user_id} = $c->user->id;
+    $c->req->params->{source}{create}{user_id} = $c->user->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
-  my $object = $dm->get_outcome_for('source.create');
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+      unless $dm->success;
+    my $object = $dm->get_outcome_for('source.create');
 
-  $self->status_created(
-    $c,
-    location => $c->uri_for( $self->action_for('source'), [ $object->id ] )->as_string,
-    entity => {
-      name => $object->name,
-      id   => $object->id,
-    }
-  );
+    $self->status_created(
+        $c,
+        location => $c->uri_for( $self->action_for('source'), [ $object->id ] )->as_string,
+        entity => {
+            name => $object->name,
+            id   => $object->id,
+        }
+    );
 
 }
 

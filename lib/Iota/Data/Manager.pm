@@ -51,16 +51,15 @@ use Data::Printer;
 
 sub apply {
     my ( $self, $input ) = @_;
-    $input
-        = ( $input || $self->input );
+    $input = ( $input || $self->input );
     my $verifiers = $self->verifiers;
     foreach my $key ( keys %$input ) {
         next
-            unless exists $verifiers->{$key};
+          unless exists $verifiers->{$key};
         my $results = $self->verify( $key, $input->{$key} );
         if ( my $action = $self->get_action_for($key) ) {
             $self->set_outcome_for( $key, $action->($results) )
-                if $results->success;
+              if $results->success;
         }
     }
     return 1;
@@ -71,9 +70,9 @@ sub errors {
     my %errors;
     for my $msg ( @{ $self->messages->messages || [] } ) {
         $errors{ join( q/./, $msg->scope, $msg->subject, 'invalid' ) } = 1
-            if $msg->msgid =~ /invalid/g;
+          if $msg->msgid =~ /invalid/g;
         $errors{ join( q/./, $msg->scope, $msg->subject, 'missing' ) } = 1
-            if $msg->msgid =~ /missing/g;
+          if $msg->msgid =~ /missing/g;
     }
     return \%errors;
 }

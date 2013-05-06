@@ -9,22 +9,20 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/base') : PathPart('city') : CaptureArgs(0) {
-  my ( $self, $c ) = @_;
-  $c->stash->{collection} = $c->model('DB::City');
-
+    my ( $self, $c ) = @_;
+    $c->stash->{collection} = $c->model('DB::City');
 
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
-  my ( $self, $c, $id ) = @_;
-  $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+    my ( $self, $c, $id ) = @_;
+    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
 
-
-  $c->stash->{object}->count > 0 or $c->detach('/error_404');
+    $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
 sub city : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 
@@ -50,18 +48,21 @@ Retorna:
 =cut
 
 sub city_GET {
-  my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->as_hashref->next;
+    my ( $self, $c ) = @_;
+    my $object_ref = $c->stash->{object}->as_hashref->next;
 
-  $self->status_ok(
-    $c,
-    entity => {
-      (map { $_ => $object_ref->{$_} } qw(name uf pais latitude longitude name_uri state_id country_id created_at
-        telefone_prefeitura endereco_prefeitura bairro_prefeitura
-            cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
-        ))
-    }
-  );
+    $self->status_ok(
+        $c,
+        entity => {
+            (
+                map { $_ => $object_ref->{$_} }
+                  qw(name uf pais latitude longitude name_uri state_id country_id created_at
+                  telefone_prefeitura endereco_prefeitura bairro_prefeitura
+                  cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
+                  )
+            )
+        }
+    );
 }
 
 =pod
@@ -81,30 +82,28 @@ Retorna:
 =cut
 
 sub city_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin));
 
-  $c->req->params->{city}{update}{id} = $c->stash->{object}->next->id;
+    $c->req->params->{city}{update}{id} = $c->stash->{object}->next->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+      unless $dm->success;
 
-  my $obj = $dm->get_outcome_for('city.update');
+    my $obj = $dm->get_outcome_for('city.update');
 
-  $self->status_accepted(
-    $c,
-    location =>
-      $c->uri_for( $self->action_for('city'), [ $obj->id ] )->as_string,
+    $self->status_accepted(
+        $c,
+        location => $c->uri_for( $self->action_for('city'), [ $obj->id ] )->as_string,
         entity => { name => $obj->name, id => $obj->id }
-    ),
-    $c->detach
-    if $obj;
+      ),
+      $c->detach
+      if $obj;
 }
-
 
 =pod
 
@@ -117,24 +116,23 @@ Retorna: No-content ou Gone
 =cut
 
 sub city_DELETE {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin));
 
-  my $obj = $c->stash->{object}->next;
-  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
+    my $obj = $c->stash->{object}->next;
+    $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-  $c->model('DB')->resultset('User')->search({city_id=>$obj->id})->update({city_id => undef});
+    $c->model('DB')->resultset('User')->search( { city_id => $obj->id } )->update( { city_id => undef } );
 
-  $obj->delete;
+    $obj->delete;
 
-  $self->status_no_content($c);
+    $self->status_no_content($c);
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -163,43 +161,44 @@ Retorna:
 =cut
 
 sub list_GET {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search(undef, {
-        prefetch => [{ current_users => { 'user' => { 'user_roles' => 'role' } } }]
-    })->as_hashref->all;
+    my @list =
+      $c->stash->{collection}
+      ->search( undef, { prefetch => [ { current_users => { 'user' => { 'user_roles' => 'role' } } } ] } )
+      ->as_hashref->all;
     my @objs;
-    foreach my $obj (@list){
+    foreach my $obj (@list) {
         push @objs, {
 
-            (map { $_ => $obj->{$_} } qw(id name uf pais latitude longitude name_uri state_id country_id
-                telefone_prefeitura endereco_prefeitura bairro_prefeitura
-                cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
-            created_at)),
+            (
+                map { $_ => $obj->{$_} }
+                  qw(id name uf pais latitude longitude name_uri state_id country_id
+                  telefone_prefeitura endereco_prefeitura bairro_prefeitura
+                  cep_prefeitura nome_responsavel_prefeitura email_prefeitura summary
+                  created_at)
+            ),
 
             current_users => [
-                map { my $t = $_; {
-                    user => {
-                        id => $t->{user}{id},
-                        name => $t->{user}{name},
-                        network_id => $t->{user}{network_id},
-                        roles => [ map { $_->{role}{name} } @{$t->{user}{user_roles}}]
+                map {
+                    my $t = $_;
+                    {
+                        user => {
+                            id         => $t->{user}{id},
+                            name       => $t->{user}{name},
+                            network_id => $t->{user}{network_id},
+                            roles      => [ map { $_->{role}{name} } @{ $t->{user}{user_roles} } ]
+                        }
                     }
-                } } @{$obj->{current_users}}
+                } @{ $obj->{current_users} }
             ],
 
             url => $c->uri_for_action( $self->action_for('city'), [ $obj->{id} ] )->as_string,
-        }
+        };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-        cities => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { cities => \@objs } );
 }
-
 
 =pod
 
@@ -223,28 +222,28 @@ Retorna:
 =cut
 
 sub list_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin superadmin));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin));
 
-  $c->req->params->{city}{create}{user_id} = $c->user->id;
+    $c->req->params->{city}{create}{user_id} = $c->user->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
-  my $object = $dm->get_outcome_for('city.create');
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+      unless $dm->success;
+    my $object = $dm->get_outcome_for('city.create');
 
-  $self->status_created(
-    $c,
-    location => $c->uri_for( $self->action_for('city'), [ $object->id ] )->as_string,
-    entity => {
-      name => $object->name,
-      id   => $object->id,
+    $self->status_created(
+        $c,
+        location => $c->uri_for( $self->action_for('city'), [ $object->id ] )->as_string,
+        entity => {
+            name => $object->name,
+            id   => $object->id,
 
-    }
-  );
+        }
+    );
 
 }
 

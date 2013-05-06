@@ -9,19 +9,19 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/user/object') : PathPart('indicator') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    $c->stash->{user} = $c->stash->{object}->next;
+    $c->stash->{user}       = $c->stash->{object}->next;
     $c->stash->{collection} = $c->stash->{user}->user_indicators;
 
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
-  my ( $self, $c, $id ) = @_;
-  $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
-  $c->stash->{object}->count > 0 or $c->detach('/error_404');
+    my ( $self, $c, $id ) = @_;
+    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+    $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
 sub indicator : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 
@@ -46,15 +46,12 @@ Retorna:
 =cut
 
 sub indicator_GET {
-  my ( $self, $c ) = @_;
-  my $object_ref  = $c->stash->{object}->as_hashref->next;
+    my ( $self, $c ) = @_;
+    my $object_ref = $c->stash->{object}->as_hashref->next;
 
-  $self->status_ok(
-    $c,
-    entity => {
-      (map { $_ => $object_ref->{$_} } qw(goal valid_from justification_of_missing_field  indicator_id))
-    }
-  );
+    $self->status_ok( $c,
+        entity =>
+          { ( map { $_ => $object_ref->{$_} } qw(goal valid_from justification_of_missing_field  indicator_id) ) } );
 }
 
 =pod
@@ -71,41 +68,38 @@ Retorna:
 =cut
 
 sub indicator_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user superadmin ));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin user superadmin ));
 
-  my $obj_rs = $c->stash->{object}->next;
+    my $obj_rs = $c->stash->{object}->next;
 
-  if ( $c->user->id != $obj_rs->user_id && !$c->check_any_user_role(qw(admin superadmin))){
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach;
-  }
+    if ( $c->user->id != $obj_rs->user_id && !$c->check_any_user_role(qw(admin superadmin)) ) {
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach;
+    }
 
     my $param = $c->req->params->{user}{indicator}{update};
-  $param->{id} = $obj_rs->id;
+    $param->{id} = $obj_rs->id;
 
+    my $dm = $c->model('DataManager');
 
-  my $dm = $c->model('DataManager');
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+      unless $dm->success;
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors )), $c->detach
-    unless $dm->success;
+    my $obj = $dm->get_outcome_for('user.indicator.update');
 
-  my $obj = $dm->get_outcome_for('user.indicator.update');
+    $c->logx( 'Adicionou informação no indicador na data ' . $obj->valid_from,
+        indicator_id => $param->{indicator_id} );
 
-  $c->logx('Adicionou informação no indicador na data ' . $obj->valid_from,
-        indicator_id => $param->{indicator_id}
-    );
-
-  $self->status_accepted(
-    $c,
+    $self->status_accepted(
+        $c,
         location => $c->uri_for( $self->action_for('indicator'), [ $c->stash->{user}->id, $obj->id ] )->as_string,
         entity => { id => $obj->id }
-    ),
+      ),
 
-    $c->detach;
+      $c->detach;
 }
-
 
 =pod
 
@@ -118,26 +112,24 @@ Retorna: No-content ou Gone
 =cut
 
 sub indicator_DELETE {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user superadmin ));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin user superadmin ));
 
-  my $obj = $c->stash->{object}->next;
-  $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
+    my $obj = $c->stash->{object}->next;
+    $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-  if ($c->user->id == $obj->user_id || $c->check_any_user_role(qw(admin superadmin))){
-    $c->logx('Apagou informação de indicador ' . $obj->id);
-    $obj->delete;
-  }
+    if ( $c->user->id == $obj->user_id || $c->check_any_user_role(qw(admin superadmin)) ) {
+        $c->logx( 'Apagou informação de indicador ' . $obj->id );
+        $obj->delete;
+    }
 
-
-  $self->status_no_content($c);
+    $self->status_no_content($c);
 }
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -164,35 +156,30 @@ Retorna:
 =cut
 
 sub list_POST {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $self->status_forbidden( $c, message => "access denied", ), $c->detach
-    unless $c->check_any_user_role(qw(admin user superadmin ));
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin user superadmin ));
 
     my $param = $c->req->params->{user}{indicator}{create};
     $param->{user_id} = $c->stash->{user}->id;
 
-  my $dm = $c->model('DataManager');
+    my $dm = $c->model('DataManager');
 
-  $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-    unless $dm->success;
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+      unless $dm->success;
 
-  my $object = $dm->get_outcome_for('user.indicator.create');
+    my $object = $dm->get_outcome_for('user.indicator.create');
 
-    $c->logx('Adicionou informação no indicador na data ' . $object->valid_from,
-        indicator_id => $param->{indicator_id}
+    $c->logx( 'Adicionou informação no indicador na data ' . $object->valid_from,
+        indicator_id => $param->{indicator_id} );
+    $self->status_created(
+        $c,
+        location => $c->uri_for( $self->action_for('indicator'), [ $c->stash->{user}->id, $object->id ] )->as_string,
+        entity => { id => $object->id }
     );
-  $self->status_created(
-    $c,
-    location => $c->uri_for( $self->action_for('indicator'), [ $c->stash->{user}->id, $object->id ] )->as_string,
-    entity => {
-      id   => $object->id
-    }
-  );
 
 }
-
-
 
 1;
 

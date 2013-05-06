@@ -30,23 +30,24 @@ eval {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
-                [   api_key                        => 'test',
-                    'variable.create.name'         => 'FooBar',
+                [
+                    api_key                => 'test',
+                    'variable.create.name' => 'FooBar',
                 ]
             );
             ok( !$res->is_success, 'invalid request' );
             is( $res->code, 400, 'invalid request' );
 
-
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
-                [   api_key                        => 'test',
-                    'variable.create.name'         => 'Foo Bar',
-                    'variable.create.cognomen'     => 'foobar',
-                    'variable.create.explanation'  => 'a foo with bar',
-                    'variable.create.type'         => 'int',
-                    'variable.create.period'       => 'yearly',
-                    'variable.create.source'       => 'God',
+                [
+                    api_key                               => 'test',
+                    'variable.create.name'                => 'Foo Bar',
+                    'variable.create.cognomen'            => 'foobar',
+                    'variable.create.explanation'         => 'a foo with bar',
+                    'variable.create.type'                => 'int',
+                    'variable.create.period'              => 'yearly',
+                    'variable.create.source'              => 'God',
                     'variable.create.measurement_unit_id' => '1',
                 ]
             );
@@ -60,12 +61,10 @@ eval {
             ok( $res->is_success, 'varible exists' );
             is( $res->code, 200, 'varible exists -- 200 Success' );
 
-
-            ( $res, $c ) = ctx_request( GET '/api/variable?api_key=test');
+            ( $res, $c ) = ctx_request( GET '/api/variable?api_key=test' );
 
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
-
 
             die 'rollback';
         }

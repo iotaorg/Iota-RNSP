@@ -17,7 +17,8 @@ eval {
             # non-existent user
             ( $res, $c ) = ctx_request(
                 POST '/api/login',
-                [   'user.login.email'    => 'foo@email.com',
+                [
+                    'user.login.email'    => 'foo@email.com',
                     'user.login.password' => '1234'
                 ],
             );
@@ -25,31 +26,35 @@ eval {
             ok( !$res->is_success, 'user is not registered' );
             is( $res->code, 400, 'status 400' );
             like( $res->content, qr/invalid/i, 'invalid request' );
+
             # user exists
             my $obj = $schema->resultset('User')->create(
-                {   name     => 'FooX Bar Quux',
+                {
+                    name     => 'FooX Bar Quux',
                     email    => 'foo@email.com',
                     password => '12345',
                     city     => $schema->resultset('City')->create(
-                        {   name => 'Campo Grande',
+                        {
+                            name => 'Campo Grande',
                             uf   => 'MS',
                         }
                     )
                 },
             );
-            $obj->add_to_roles({ name => 'user'});
+            $obj->add_to_roles( { name => 'user' } );
             ( $res, $c ) = ctx_request(
                 POST '/api/login',
-                [   'user.login.email'    => 'foo@email.com',
+                [
+                    'user.login.email'    => 'foo@email.com',
                     'user.login.password' => '12345'
                 ],
             );
 
             ok( $res->is_success, 'user ok' );
             is( $res->code, 200, 'status 200 OK' );
-            ok( my $decoded_response = from_json( $res->content ), 'valid json' );
+            ok( my $decoded_response = from_json( $res->content ),   'valid json' );
             ok( my $api_key          = $decoded_response->{api_key}, 'api_key ok' );
-            is( $decoded_response->{roles}[0], 'user', 'user role');
+            is( $decoded_response->{roles}[0], 'user', 'user role' );
 
             my $cookie;
             $cookie = $res->header('Set-Cookie');

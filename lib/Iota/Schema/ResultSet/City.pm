@@ -16,15 +16,15 @@ use JSON qw /encode_json/;
 use Geo::Coder::Google;
 
 has _geo_google => (
-    is   => 'rw',
-    isa  => 'Geo::Coder::Google::V3',
+    is  => 'rw',
+    isa => 'Geo::Coder::Google::V3',
 
-    lazy      => 1,
-    builder   => '_build_geo_google',
+    lazy    => 1,
+    builder => '_build_geo_google',
 );
 
 sub _build_geo_google {
-    Geo::Coder::Google->new(apiver => 3);
+    Geo::Coder::Google->new( apiver => 3 );
 }
 
 sub _build_verifier_scope_name { 'city' }
@@ -34,15 +34,17 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                name                        => { required => 1, type => 'Str' },
+                name => { required => 1, type => 'Str' },
 
-                state_id                    => { required => 1, type => 'Int',
+                state_id => {
+                    required   => 1,
+                    type       => 'Int',
                     post_check => sub {
                         my $r = shift;
                         my $it =
-                        $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
+                          $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
                         return defined $it;
-                     }
+                      }
                 },
 
                 latitude                    => { required => 0, type => 'Num' },
@@ -55,23 +57,23 @@ sub verifiers_specs {
                 nome_responsavel_prefeitura => { required => 0, type => 'Str' },
                 summary                     => { required => 0, type => 'Str' },
 
-
-
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id                          => { required => 1, type => 'Int' },
-                name                        => { required => 1, type => 'Str' },
+                id   => { required => 1, type => 'Int' },
+                name => { required => 1, type => 'Str' },
 
-                state_id                    => { required => 1, type => 'Int',
+                state_id => {
+                    required   => 1,
+                    type       => 'Int',
                     post_check => sub {
                         my $r = shift;
                         my $it =
-                        $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
+                          $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
                         return defined $it;
-                     }
+                      }
                 },
 
                 latitude                    => { required => 0, type => 'Num' },
@@ -101,9 +103,9 @@ sub action_specs {
 
             my $state = $self->result_source->schema->resultset('State')->find( { id => $values{state_id} } );
 
-            $values{uf} = $state->uf;
+            $values{uf}         = $state->uf;
             $values{country_id} = $state->country_id;
-            $values{pais} = $state->country->name_url;
+            $values{pais}       = $state->country->name_url;
 
             my $name_uri_o = $values{name_uri} = $text2uri->translate( $values{name} );
             my $name_o = $values{name};
@@ -121,15 +123,15 @@ sub action_specs {
                 $values{name}     = $name_o . '-' . $idx++;
             }
 
+            my $location = $0 =~ /\.t$/ ? {} : eval {
+                $self->_geo_google->geocode(
+                    location => $values{name} . ' ' . $values{uf} . ' ' . $state->country->name );
+            };
 
-            my $location = $0 =~ /\.t$/ ? {} : eval{$self->_geo_google->geocode(
-                location => $values{name} . ' ' . $values{uf} . ' ' . $state->country->name
-            )};
-
-            $values{latitude}  = $location->{geometry}{location}{lat}
-                unless defined $values{latitude};
+            $values{latitude} = $location->{geometry}{location}{lat}
+              unless defined $values{latitude};
             $values{longitude} = $location->{geometry}{location}{lng}
-                unless defined $values{longitude};
+              unless defined $values{longitude};
 
             my $var = $self->create( \%values );
 
@@ -148,8 +150,7 @@ sub action_specs {
             $values{uf} = $state->uf;
 
             $values{country_id} = $state->country_id;
-            $values{pais} = $state->country->name_url;
-
+            $values{pais}       = $state->country->name_url;
 
             my $name_uri_o = $values{name_uri} = $text2uri->translate( $values{name} );
             my $name_o = $values{name};
@@ -168,14 +169,14 @@ sub action_specs {
                 $values{name}     = $name_o . '-' . $idx++;
             }
 
-
-            my $location = $0 =~ /\.t$/ ? {} : eval{$self->_geo_google->geocode(
-                location => $values{name} . ' ' . $values{uf} . ' ' . $state->country->name
-            )};
-            $values{latitude}  = $location->{geometry}{location}{lat}
-                unless defined $values{latitude};
+            my $location = $0 =~ /\.t$/ ? {} : eval {
+                $self->_geo_google->geocode(
+                    location => $values{name} . ' ' . $values{uf} . ' ' . $state->country->name );
+            };
+            $values{latitude} = $location->{geometry}{location}{lat}
+              unless defined $values{latitude};
             $values{longitude} = $location->{geometry}{location}{lng}
-                unless defined $values{longitude};
+              unless defined $values{longitude};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

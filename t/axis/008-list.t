@@ -35,11 +35,10 @@ eval {
             is( $res->code, 200, '200 Success' );
 
             use JSON qw(from_json);
-            my $axis = eval{from_json( $res->content )};
+            my $axis = eval { from_json( $res->content ) };
 
-
-            is(ref $axis->{axis}, ref [], 'axis is array');
-            ok($axis->{axis}[0]{name}, 'defined name');
+            is( ref $axis->{axis}, ref [], 'axis is array' );
+            ok( $axis->{axis}[0]{name}, 'defined name' );
 
             die 'rollback';
         }

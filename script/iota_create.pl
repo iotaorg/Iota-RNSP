@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('Iota', 'Create');
+Catalyst::ScriptRunner->run( 'Iota', 'Create' );
 
 1;
 

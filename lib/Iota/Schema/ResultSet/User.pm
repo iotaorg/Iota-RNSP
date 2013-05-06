@@ -68,19 +68,22 @@ sub verifiers_specs {
                         my $r = shift;
 
                         my $net =
-                            $self->result_source->schema->resultset('Network')->find( { id => $r->get_value('network_id') } );
+                          $self->result_source->schema->resultset('Network')
+                          ->find( { id => $r->get_value('network_id') } );
                         return 0 unless $net;
 
-                        if ($r->get_value('role') eq 'user'){
+                        if ( $r->get_value('role') eq 'user' ) {
                             my $city =
-                            $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
+                              $self->result_source->schema->resultset('City')
+                              ->find( { id => $r->get_value('city_id') } );
                             return 0 unless $city;
 
-                            my $exists =
-                            $self->search( {
-                                city_id    => $r->get_value('city_id'),
-                                network_id => $r->get_value('network_id'),
-                            } )->count;
+                            my $exists = $self->search(
+                                {
+                                    city_id    => $r->get_value('city_id'),
+                                    network_id => $r->get_value('network_id'),
+                                }
+                            )->count;
 
                             return 0 if $exists;
 
@@ -110,38 +113,40 @@ sub verifiers_specs {
                     type     => 'Str',
                 },
                 city_id => {
-                    required => 0,
-                    type     => 'Int',
+                    required   => 0,
+                    type       => 'Int',
                     post_check => sub {
                         my $r = shift;
 
                         # cidade precisa existir
                         my $city =
-                            $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
+                          $self->result_source->schema->resultset('City')->find( { id => $r->get_value('city_id') } );
                         return 0 unless $city;
 
                         # eu preciso existir!
                         my $me = $self->find( $r->get_value('id') );
                         return 0 unless $me;
+
                         # se nao tem rede, pode ir pra qualquer cidade.
                         return 1 unless $me->network_id;
 
-                        my $roles = join(' ', map {$_->name} $me->roles);
+                        my $roles = join( ' ', map { $_->name } $me->roles );
 
-                        if ($roles =~ /\buser\b/){
+                        if ( $roles =~ /\buser\b/ ) {
 
-                            my $exists =
-                            $self->search( {
-                                city_id    => $city->id,
-                                network_id => $r->get_value('network_id')||$me->network_id,
-                            } )->count;
+                            my $exists = $self->search(
+                                {
+                                    city_id    => $city->id,
+                                    network_id => $r->get_value('network_id') || $me->network_id,
+                                }
+                            )->count;
 
                             return 0 if $exists;
 
                         }
 
                         return 1;
-                    }
+                      }
                 },
                 network_id => {
                     required   => 0,
@@ -151,7 +156,8 @@ sub verifiers_specs {
 
                         # rede precisa existir
                         my $net =
-                            $self->result_source->schema->resultset('Network')->find( { id => $r->get_value('network_id') } );
+                          $self->result_source->schema->resultset('Network')
+                          ->find( { id => $r->get_value('network_id') } );
                         return 0 unless $net;
 
                         # eu preciso existir!
@@ -162,25 +168,27 @@ sub verifiers_specs {
                         my $city_id = $r->get_value('city_id') || $me->city_id;
                         return 1 unless $city_id;
 
-                        my $roles = join(' ', map {$_->name} $me->roles);
+                        my $roles = join( ' ', map { $_->name } $me->roles );
 
-                        if ($roles =~ /\buser\b/){
+                        if ( $roles =~ /\buser\b/ ) {
+
                             # pra ser usuario, precisa ser de alguma cidade
-                            my $city = $self->result_source->schema->resultset('City')->find( $city_id );
+                            my $city = $self->result_source->schema->resultset('City')->find($city_id);
                             return 0 unless $city;
 
-                            my $exists =
-                            $self->search( {
-                                city_id    => $city_id,
-                                network_id => $r->get_value('network_id'),
-                            } )->count;
+                            my $exists = $self->search(
+                                {
+                                    city_id    => $city_id,
+                                    network_id => $r->get_value('network_id'),
+                                }
+                            )->count;
 
                             return 0 if $exists;
 
                         }
 
                         return 1;
-                    }
+                      }
                 },
                 name => {
                     required => 1,
@@ -318,7 +326,7 @@ sub action_specs {
             delete $values{password_confirm};
             my $role = delete $values{role};
 
-            my $user = $self->create( \%values, active =>1 );
+            my $user = $self->create( \%values, active => 1 );
 
             $user->add_to_user_roles( { role => { name => $role } } );
 
@@ -331,10 +339,10 @@ sub action_specs {
             delete $values{password} unless $values{password};
             delete $values{city_id}  unless $values{city_id};
 
-            delete $values{active}  unless $values{active};
+            delete $values{active} unless $values{active};
 
             do { delete $values{$_} unless defined $values{$_} }
-            for keys %values;
+              for keys %values;
             return unless keys %values;
 
             my $user = $self->find( delete $values{id} );
@@ -392,6 +400,5 @@ sub with_city {
     my ($self) = @_;
     return $self->search( { city_id => { '!=' => undef } } );
 }
-
 
 1;

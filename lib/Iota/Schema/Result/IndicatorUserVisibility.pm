@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::IndicatorUserVisibility;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<indicator_user_visibility>
 
@@ -74,26 +75,26 @@ __PACKAGE__->table("indicator_user_visibility");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "indicator_user_visibility_id_seq",
-  },
-  "indicator_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 0,
-    original      => { default_value => \"now()" },
-  },
-  "created_by",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "indicator_user_visibility_id_seq",
+    },
+    "indicator_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 0,
+        original      => { default_value => \"now()" },
+    },
+    "created_by",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -119,10 +120,9 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "created_by",
-  "Iota::Schema::Result::User",
-  { id => "created_by" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "created_by", "Iota::Schema::Result::User",
+    { id            => "created_by" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 indicator
@@ -134,15 +134,15 @@ Related object: L<Iota::Schema::Result::Indicator>
 =cut
 
 __PACKAGE__->belongs_to(
-  "indicator",
-  "Iota::Schema::Result::Indicator",
-  { id => "indicator_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+    "indicator",
+    "Iota::Schema::Result::Indicator",
+    { id => "indicator_id" },
+    {
+        is_deferrable => 0,
+        join_type     => "LEFT",
+        on_delete     => "NO ACTION",
+        on_update     => "NO ACTION",
+    },
 );
 
 =head2 user
@@ -154,21 +154,19 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+    "user",
+    "Iota::Schema::Result::User",
+    { id => "user_id" },
+    {
+        is_deferrable => 0,
+        join_type     => "LEFT",
+        on_delete     => "NO ACTION",
+        on_update     => "NO ACTION",
+    },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:w1iclF9K50z0TET2LEz0Gg
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

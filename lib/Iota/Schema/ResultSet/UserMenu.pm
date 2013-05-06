@@ -20,22 +20,22 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                user_id      => { required => 1, type => 'Str' },
-                page_id      => { required => 0, type => 'Str' },
-                title        => { required => 1, type => 'Str' },
-                position     => { required => 0, type => 'Int' },
-                menu_id      => { required => 0, type => 'Int' },
+                user_id  => { required => 1, type => 'Str' },
+                page_id  => { required => 0, type => 'Str' },
+                title    => { required => 1, type => 'Str' },
+                position => { required => 0, type => 'Int' },
+                menu_id  => { required => 0, type => 'Int' },
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id           => { required => 1, type => 'Int' },
-                user_id      => { required => 0, type => 'Str' },
-                page_id      => { required => 0, type => 'Str' },
-                menu_id      => { required => 0, type => 'Int' },
-                title        => { required => 0, type => 'Str' },
-                position     => { required => 0, type => 'Int' },
+                id       => { required => 1, type => 'Int' },
+                user_id  => { required => 0, type => 'Str' },
+                page_id  => { required => 0, type => 'Str' },
+                menu_id  => { required => 0, type => 'Int' },
+                title    => { required => 0, type => 'Str' },
+                position => { required => 0, type => 'Int' },
             },
         ),
 

@@ -18,9 +18,9 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                created_by => { required => 1, type => 'Int' },
-                name       => { required => 1, type => 'Str' },
-                name_url   => { required => 1, type => 'Str' },
+                created_by   => { required => 1, type => 'Int' },
+                name         => { required => 1, type => 'Str' },
+                name_url     => { required => 1, type => 'Str' },
                 institute_id => { required => 1, type => 'Int' },
                 domain_name  => { required => 1, type => 'Str' },
             },
@@ -28,9 +28,9 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
-                id       => { required => 1, type => 'Int' },
-                name     => { required => 0, type => 'Str' },
-                name_url => { required => 0, type => 'Str' },
+                id           => { required => 1, type => 'Int' },
+                name         => { required => 0, type => 'Str' },
+                name_url     => { required => 0, type => 'Str' },
                 institute_id => { required => 0, type => 'Int' },
                 domain_name  => { required => 0, type => 'Str' },
             },

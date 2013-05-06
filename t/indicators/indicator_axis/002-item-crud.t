@@ -9,7 +9,6 @@ use lib "$Bin/../../lib";
 
 use Catalyst::Test q(Iota);
 
-
 use HTTP::Request::Common qw(GET POST DELETE PUT);
 
 use Package::Stash;
@@ -32,16 +31,16 @@ eval {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
                 POST '/api/user_indicator_axis',
-                [   api_key                    => 'test',
-                    'user_indicator_axis.create.name'       => 'FooBar',
+                [
+                    api_key                           => 'test',
+                    'user_indicator_axis.create.name' => 'FooBar',
                 ]
             );
 
             ok( $res->is_success, 'user_indicator_axis created!' );
             is( $res->code, 201, 'created!' );
 
-            my $user_indicator_axis = eval{from_json( $res->content )};
-
+            my $user_indicator_axis = eval { from_json( $res->content ) };
 
             use URI;
             my $uri = URI->new( $res->header('Location') );
@@ -51,40 +50,35 @@ eval {
             ok( $res->is_success, 'user_indicator_axis exists' );
             is( $res->code, 200, 'user_indicator_axis exists -- 200 Success' );
 
-            like($res->content, qr|FooBar|, 'FooBar ok');
+            like( $res->content, qr|FooBar|, 'FooBar ok' );
 
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
-                [   api_key                         => 'test',
-                    'indicator.create.name'         => 'XX',
-                    'indicator.create.formula'      => '1',
-                    'indicator.create.goal'         => '33',
-                    'indicator.create.axis_id'      => '2',
-                    'indicator.create.explanation'  => 'explanation',
-                    'indicator.create.source'       => 'me',
-                    'indicator.create.goal_source'  => '@fulano',
-                    'indicator.create.chart_name'   => 'pie',
+                [
+                    api_key                             => 'test',
+                    'indicator.create.name'             => 'XX',
+                    'indicator.create.formula'          => '1',
+                    'indicator.create.goal'             => '33',
+                    'indicator.create.axis_id'          => '2',
+                    'indicator.create.explanation'      => 'explanation',
+                    'indicator.create.source'           => 'me',
+                    'indicator.create.goal_source'      => '@fulano',
+                    'indicator.create.chart_name'       => 'pie',
                     'indicator.create.visibility_level' => 'public',
-                    'indicator.create.goal_operator'=> '<=',
-                    'indicator.create.tags'         => 'you,me,she',
-
-
+                    'indicator.create.goal_operator'    => '<=',
+                    'indicator.create.tags'             => 'you,me,she',
 
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
-            my $indicator = eval{from_json( $res->content )};
+            my $indicator = eval { from_json( $res->content ) };
 
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
-            my $obj_uri = '/api/user_indicator_axis/' . $user_indicator_axis->{id}. '/item';
+            my $obj_uri = '/api/user_indicator_axis/' . $user_indicator_axis->{id} . '/item';
 
-            ( $res, $c ) = ctx_request(
-                POST $obj_uri ,
-                [
-                    'user_indicator_axis_item.create.indicator_id' => $indicator->{id},
-                ]
-            );
+            ( $res, $c ) =
+              ctx_request( POST $obj_uri , [ 'user_indicator_axis_item.create.indicator_id' => $indicator->{id}, ] );
             ok( $res->is_success, 'user_indicator_axis created!' );
             is( $res->code, 201, 'created!' );
 
@@ -95,56 +89,39 @@ eval {
             ok( $res->is_success, 'user_indicator_axis_item exists' );
             is( $res->code, 200, 'user_indicator_axis_item exists -- 200 Success' );
 
-            my $user_indicator_axis_item = eval{from_json( $res->content )};
-            is($user_indicator_axis_item->{position}, 0, 'zero position');
-
+            my $user_indicator_axis_item = eval { from_json( $res->content ) };
+            is( $user_indicator_axis_item->{position}, 0, 'zero position' );
 
             ( $res, $c ) = ctx_request( GET '/api/user_indicator_axis/' . $user_indicator_axis->{id} );
             ok( $res->is_success, 'user_indicator_axis_item exists' );
             is( $res->code, 200, 'user_indicator_axis_item exists -- 200 Success' );
 
-            my $obj = eval{from_json( $res->content )};
-            is_deeply($obj->{items}[0], $user_indicator_axis_item, 'same item!');
+            my $obj = eval { from_json( $res->content ) };
+            is_deeply( $obj->{items}[0], $user_indicator_axis_item, 'same item!' );
 
-
-            $obj_uri = '/api/user_indicator_axis/' .
-                $user_indicator_axis->{id}. '/item/' . $user_indicator_axis_item->{id};
-            ( $res, $c ) = ctx_request(
-                POST $obj_uri ,
-                [
-                    'user_indicator_axis_item.update.position' => 2
-                ]
-            );
+            $obj_uri =
+              '/api/user_indicator_axis/' . $user_indicator_axis->{id} . '/item/' . $user_indicator_axis_item->{id};
+            ( $res, $c ) = ctx_request( POST $obj_uri , [ 'user_indicator_axis_item.update.position' => 2 ] );
             ok( $res->is_success, 'user_indicator_axis_item updated!' );
             is( $res->code, 202, 'updated!' );
 
-
             ( $res, $c ) = ctx_request( GET '/api/user_indicator_axis/' . $user_indicator_axis->{id} );
             ok( $res->is_success, 'user_indicator_axis_item exists' );
             is( $res->code, 200, 'user_indicator_axis_item exists -- 200 Success' );
 
-            $obj = eval{from_json( $res->content )};
-            is($obj->{items}[0]{position}, 2, 'item updated!');
+            $obj = eval { from_json( $res->content ) };
+            is( $obj->{items}[0]{position}, 2, 'item updated!' );
 
-
-
-            ( $res, $c ) = ctx_request(
-                DELETE $obj_uri ,
-                [
-                    'user_indicator_axis_item.update.position' => 2
-                ]
-            );
+            ( $res, $c ) = ctx_request( DELETE $obj_uri , [ 'user_indicator_axis_item.update.position' => 2 ] );
             ok( $res->is_success, 'user_indicator_axis_item updated!' );
             is( $res->code, 204, 'deleted!' );
 
-
             ( $res, $c ) = ctx_request( GET '/api/user_indicator_axis/' . $user_indicator_axis->{id} );
             ok( $res->is_success, 'user_indicator_axis_item exists' );
             is( $res->code, 200, 'user_indicator_axis_item exists -- 200 Success' );
 
-            $obj = eval{from_json( $res->content )};
-            is($obj->{items}[0], undef, 'item deleted!');
-
+            $obj = eval { from_json( $res->content ) };
+            is( $obj->{items}[0], undef, 'item deleted!' );
 
             die 'rollback';
         }

@@ -30,8 +30,9 @@ eval {
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
-                [   api_key                   => 'test',
-                    'indicator.create.name'   => 'FooBar',
+                [
+                    api_key                 => 'test',
+                    'indicator.create.name' => 'FooBar',
                 ]
             );
             ok( !$res->is_success, 'invalid request' );
@@ -39,112 +40,106 @@ eval {
 
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
-                [   api_key                         => 'test',
-                    'indicator.create.name'         => 'Foo Bar',
-                    'indicator.create.formula'      => '1',
-                    'indicator.create.axis_id'      => '1',
-                    'indicator.create.explanation'  => 'explanation',
-                    'indicator.create.source'       => 'me',
-                    'indicator.create.goal_source'  => '@fulano',
-                    'indicator.create.chart_name'   => 'pie',
-                    'indicator.create.goal_operator'=> '>=',
-                    'indicator.create.tags'         => 'you,me,she',
+                [
+                    api_key                          => 'test',
+                    'indicator.create.name'          => 'Foo Bar',
+                    'indicator.create.formula'       => '1',
+                    'indicator.create.axis_id'       => '1',
+                    'indicator.create.explanation'   => 'explanation',
+                    'indicator.create.source'        => 'me',
+                    'indicator.create.goal_source'   => '@fulano',
+                    'indicator.create.chart_name'    => 'pie',
+                    'indicator.create.goal_operator' => '>=',
+                    'indicator.create.tags'          => 'you,me,she',
 
                     'indicator.create.visibility_level' => 'public',
-                    'indicator.create.observations' => 'lala'
+                    'indicator.create.observations'     => 'lala'
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
             use JSON qw(from_json);
-            my $indicator = eval{from_json( $res->content )};
-
+            my $indicator = eval { from_json( $res->content ) };
 
             use URI;
             my $uri = URI->new( $res->header('Location') );
 
-            ( $res, $c ) = ctx_request(
-                GET $uri->path . '/network_config',
-            );
-            my $list = eval{from_json( $res->content )};
-            is_deeply( $list->{network_configs}, [], 'empty list');
+            ( $res, $c ) = ctx_request( GET $uri->path . '/network_config', );
+            my $list = eval { from_json( $res->content ) };
+            is_deeply( $list->{network_configs}, [], 'empty list' );
 
             ( $res, $c ) = ctx_request(
                 POST $uri->path . '/network_config/1',
-                [   api_key                                     => 'test',
+                [
+                    api_key                                            => 'test',
                     'indicator.network_config.upsert.unfolded_in_home' => 1,
                 ]
             );
-            my $insert = eval{from_json( $res->content )};
-            is_deeply( $insert, {
-                indicator_id => $indicator->{id},
-                network_id   => 1
-            }, 'ok insert');
-
+            my $insert = eval { from_json( $res->content ) };
+            is_deeply(
+                $insert,
+                {
+                    indicator_id => $indicator->{id},
+                    network_id   => 1
+                },
+                'ok insert'
+            );
 
             ( $res, $c ) = ctx_request(
                 POST $uri->path . '/network_config/2',
-                [   api_key                                     => 'test',
+                [
+                    api_key                                            => 'test',
                     'indicator.network_config.upsert.unfolded_in_home' => 1,
                 ]
             );
 
-            my $insert2 = eval{from_json( $res->content )};
-            is_deeply( $insert2, {
-                indicator_id => $indicator->{id},
-                network_id   => 2
-            }, 'ok insert 2');
-
-            ( $res, $c ) = ctx_request(
-                GET $uri->path . '/network_config',
+            my $insert2 = eval { from_json( $res->content ) };
+            is_deeply(
+                $insert2,
+                {
+                    indicator_id => $indicator->{id},
+                    network_id   => 2
+                },
+                'ok insert 2'
             );
-            $list = eval{from_json( $res->content )};
-            is( @{$list->{network_configs}}, 2, '2 itens');
 
-            is($_->{unfolded_in_home}, 1, 'ok') for @{$list->{network_configs}};
+            ( $res, $c ) = ctx_request( GET $uri->path . '/network_config', );
+            $list = eval { from_json( $res->content ) };
+            is( @{ $list->{network_configs} }, 2, '2 itens' );
 
+            is( $_->{unfolded_in_home}, 1, 'ok' ) for @{ $list->{network_configs} };
 
             ( $res, $c ) = ctx_request(
                 POST $uri->path . '/network_config/2',
-                [   api_key                                     => 'test',
+                [
+                    api_key                                            => 'test',
                     'indicator.network_config.upsert.unfolded_in_home' => 0,
                 ]
             );
-            is_deeply(eval{from_json( $res->content )}, $insert2, 'same insert, same result');
+            is_deeply( eval { from_json( $res->content ) }, $insert2, 'same insert, same result' );
 
-            ( $res, $c ) = ctx_request(
-                GET $uri->path . '/network_config/2',
-            );
+            ( $res, $c ) = ctx_request( GET $uri->path . '/network_config/2', );
 
-            my $item = eval{from_json( $res->content )};
-            is_deeply($item, {
-                unfolded_in_home => 0
-            }, 'item updated !! ');
+            my $item = eval { from_json( $res->content ) };
+            is_deeply( $item, { unfolded_in_home => 0 }, 'item updated !! ' );
 
-
-            ( $res, $c ) = ctx_request( GET $uri->path);
+            ( $res, $c ) = ctx_request( GET $uri->path );
 
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
-            my $list_ind = eval{from_json( $res->content )};
-            is( @{$list_ind->{network_configs}}, 2, '2 network_configs in detais of indicator');
+            my $list_ind = eval { from_json( $res->content ) };
+            is( @{ $list_ind->{network_configs} }, 2, '2 network_configs in detais of indicator' );
 
-
-            for (1..2){
-                ( $res, $c ) = ctx_request(
-                    DELETE $uri->path . '/network_config/' . $_
-                );
+            for ( 1 .. 2 ) {
+                ( $res, $c ) = ctx_request( DELETE $uri->path . '/network_config/' . $_ );
                 ok( $res->is_success, 'indicator deleted' );
                 is( $res->code, 204, 'indicator deleted - 204 no content' );
             }
 
-            ( $res, $c ) = ctx_request(
-                GET $uri->path . '/network_config',
-            );
-            $list = eval{from_json( $res->content )};
-            is_deeply( $list->{network_configs}, [], 'empty list');
-
+            ( $res, $c ) = ctx_request( GET $uri->path . '/network_config', );
+            $list = eval { from_json( $res->content ) };
+            is_deeply( $list->{network_configs}, [], 'empty list' );
 
             die 'rollback';
         }

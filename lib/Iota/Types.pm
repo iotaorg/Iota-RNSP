@@ -15,11 +15,9 @@ use DateTime::Duration;
 use DateTime::Format::Duration;
 use DateTimeX::Easy;
 
-
 enum 'VariableTypeEnum', [qw(int str num)];
 
 subtype VariableType, as 'VariableTypeEnum';
-
 
 enum 'VisibilityLevelEnum', [qw(public private restrict country)];
 
@@ -33,7 +31,6 @@ subtype DataStr, as Str, where {
 coerce DataStr, from Str, via {
     DateTimeX::Easy->new($_)->datetime;
 };
-
 
 =pod
 

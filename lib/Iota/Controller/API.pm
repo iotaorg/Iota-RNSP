@@ -58,29 +58,28 @@ sub api_key_check : Private {
     my ( $self, $c ) = @_;
 
     my $api_key = $c->req->param('api_key')
-        || ( $c->req->data ? $c->req->data->{api_key} : undef );
+      || ( $c->req->data ? $c->req->data->{api_key} : undef );
 
-    unless (ref $c->user eq 'Iota::TestOnly::Mock::AuthUser'){
+    unless ( ref $c->user eq 'Iota::TestOnly::Mock::AuthUser' ) {
         $self->status_forbidden( $c, message => "access denied" ), $c->detach
-        unless defined $api_key;
+          unless defined $api_key;
 
         my $user_session = $c->model('DB::UserSession')->search(
-        {
-            api_key      => $api_key,
-            valid_until  => { '>=' => \'now()' },
-            valid_for_ip => $c->req->address
-        }
+            {
+                api_key      => $api_key,
+                valid_until  => { '>=' => \'now()' },
+                valid_for_ip => $c->req->address
+            }
         )->first;
-        my $user =
-        $user_session ? $c->find_user( { id => $user_session->user_id } ) : undef;
+        my $user = $user_session ? $c->find_user( { id => $user_session->user_id } ) : undef;
 
         $self->status_forbidden( $c, message => "access denied", ),
-        #$c->logx(
-        #'sys', "API_KEY invalida chave " . ( $api_key ? $api_key : '' )
-        #),
-        $c->detach
-        unless defined $api_key && $user;
 
+          #$c->logx(
+          #'sys', "API_KEY invalida chave " . ( $api_key ? $api_key : '' )
+          #),
+          $c->detach
+          unless defined $api_key && $user;
 
         $c->set_authenticated($user);
     }
@@ -99,23 +98,23 @@ sub login_POST {
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => 'Login invalid' ), $c->detach
-        unless $dm->success;
-
+      unless $dm->success;
 
     if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
         my $item = $c->user->sessions->create(
-        {
-            api_key      => sha1_hex( rand(time) ),
-            valid_for_ip => $c->req->address
-        }
+            {
+                api_key      => sha1_hex( rand(time) ),
+                valid_for_ip => $c->req->address
+            }
         );
 
         $c->user->discard_changes;
+
         #$c->log->info("Login de " . $c->user->as_string ." com sucesso");
         my %attrs = $c->user->get_inflated_columns;
         $attrs{api_key} = $item->api_key;
 
-        $attrs{roles} = [ map { $_->name } $c->model('DB::User')->search({ id => $c->user->id })->first->roles ];
+        $attrs{roles} = [ map { $_->name } $c->model('DB::User')->search( { id => $c->user->id } )->first->roles ];
 
         delete $attrs{password};
         $attrs{created_at} = $attrs{created_at}->datetime;
@@ -123,7 +122,7 @@ sub login_POST {
         $self->status_ok( $c, entity => \%attrs );
     }
     else {
-        $c->log->info("Falha na tentativa do login de ".$c->req->param('user.login.email').".");
+        $c->log->info( "Falha na tentativa do login de " . $c->req->param('user.login.email') . "." );
         $self->status_bad_request( $c, message => 'Login invalid(2)' );
     }
 

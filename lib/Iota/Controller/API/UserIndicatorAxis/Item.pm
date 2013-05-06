@@ -11,22 +11,20 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/userindicatoraxis/object') : PathPart('item') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-   $c->stash->{axis} = $c->stash->{object}->next;
-   $c->stash->{collection} = $c->stash->{axis}->user_indicator_axis_items;
+    $c->stash->{axis}       = $c->stash->{object}->next;
+    $c->stash->{collection} = $c->stash->{axis}->user_indicator_axis_items;
 
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
-    $c->stash->{object} = $c->stash->{collection}->search_rs( {
-        'me.id' => $id,
-    } );
+    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id, } );
 
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
 sub user_indicator_axis_item : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
-my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
 }
 
@@ -49,19 +47,10 @@ Retorna:
 sub user_indicator_axis_item_GET {
     my ( $self, $c ) = @_;
 
-    my $object_ref = $c->stash->{object}->search(undef, {
-        order_by => ['me.position']
-    })->as_hashref->next;
+    my $object_ref = $c->stash->{object}->search( undef, { order_by => ['me.position'] } )->as_hashref->next;
 
-
-    $self->status_ok(
-        $c,
-        entity => {
-            (map { $_ => $object_ref->{$_} } qw(position indicator_id id))
-        }
-    );
+    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(position indicator_id id) ) } );
 }
-
 
 =pod
 
@@ -79,27 +68,25 @@ sub user_indicator_axis_item_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(user));
+      unless $c->check_any_user_role(qw(user));
 
     my $axis_id = $c->req->params->{user_indicator_axis_item}{update}{id} = $c->stash->{object}->next->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
 
     my $obj = $dm->get_outcome_for('user_indicator_axis_item.update');
 
     $self->status_accepted(
         $c,
-        location =>
-        $c->uri_for( $self->action_for('user_indicator_axis_item'), [ $axis_id, $obj->id ] )->as_string,
-            entity => { id => $obj->id }
-        ),
-        $c->detach
-        if $obj;
+        location => $c->uri_for( $self->action_for('user_indicator_axis_item'), [ $axis_id, $obj->id ] )->as_string,
+        entity => { id => $obj->id }
+      ),
+      $c->detach
+      if $obj;
 }
-
 
 =pod
 
@@ -115,7 +102,7 @@ sub user_indicator_axis_item_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(user));
+      unless $c->check_any_user_role(qw(user));
 
     my $obj = $c->stash->{object}->next;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -127,7 +114,6 @@ sub user_indicator_axis_item_DELETE {
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -154,30 +140,27 @@ Retorna:
 =cut
 
 sub list_GET {
-my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search(undef, {
-        prefetch => ['user_indicator_axis_items'],
-        order_by => ['me.position', 'user_indicator_axis_items.position']
-    })->as_hashref->all;
+    my @list = $c->stash->{collection}->search(
+        undef,
+        {
+            prefetch => ['user_indicator_axis_items'],
+            order_by => [ 'me.position', 'user_indicator_axis_items.position' ]
+        }
+    )->as_hashref->all;
     my @objs;
 
-    foreach my $obj (@list){
+    foreach my $obj (@list) {
         push @objs, {
-            (map { $_ => $obj->{$_} } qw(id indicator_id position)),
+            ( map { $_ => $obj->{$_} } qw(id indicator_id position) ),
 
             url => $c->uri_for_action( $self->action_for('user_indicator_axis_item'), [ $obj->{id} ] )->as_string,
-        }
+        };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-        user_indicator_axis_items => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { user_indicator_axis_items => \@objs } );
 }
-
 
 =pod
 
@@ -201,28 +184,21 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(user));
+      unless $c->check_any_user_role(qw(user));
 
-
-    $c->req->params->{user_indicator_axis_item}{create}{user_indicator_axis_id}
-        = $c->stash->{axis}->id;
-
-
+    $c->req->params->{user_indicator_axis_item}{create}{user_indicator_axis_id} = $c->stash->{axis}->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
-        unless $dm->success;
+      unless $dm->success;
     my $object = $dm->get_outcome_for('user_indicator_axis_item.create');
 
     $self->status_created(
         $c,
-        location => $c->uri_for( $self->action_for('user_indicator_axis_item'), [
-            $c->stash->{axis}->id, $object->id
-        ] )->as_string,
-        entity => {
-        id   => $object->id,
-        }
+        location => $c->uri_for( $self->action_for('user_indicator_axis_item'), [ $c->stash->{axis}->id, $object->id ] )
+          ->as_string,
+        entity => { id => $object->id, }
     );
 
 }

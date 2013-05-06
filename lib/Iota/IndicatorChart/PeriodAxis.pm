@@ -242,43 +242,47 @@ exemplo agrupado por decada:
 =cut
 
 sub read_values {
-    my ($self, %options) = @_;
+    my ( $self, %options ) = @_;
 
     my $period;
 
-    do{
-        my ($anyid) = @{$self->variables};
+    do {
+        my ($anyid) = @{ $self->variables };
         my $anyvar = $self->schema->resultset('Variable')->find($anyid);
+
         # return {error => 'novar'} unless $anyvar;
 
         $period = $anyvar ? $anyvar->period : 'yearly';
 
     };
+
     # NOTE 2013-02-05
     # tirei o default de $period pois o JS só funciona com ano
-    my $group_by = $options{group_by} ? $self->_valid_or_null($options{group_by}) : 'yearly';
+    my $group_by = $options{group_by} ? $self->_valid_or_null( $options{group_by} ) : 'yearly';
 
     my $indicator = $self->indicator;
 
-    my $series    = $self->_load_variables_values(%options, group_by => $group_by);
+    my $series = $self->_load_variables_values( %options, group_by => $group_by );
     my @indicator_variations;
     my @indicator_variables;
-    if ($indicator->indicator_type eq 'varied'){
+    if ( $indicator->indicator_type eq 'varied' ) {
 
-        if ($indicator->dynamic_variations) {
-            @indicator_variations = $indicator->indicator_variations->search({
-                user_id => [$self->user_id, $indicator->user_id],
-            }, {order_by=>'order'})->all;
-        }else{
-            @indicator_variations = $indicator->indicator_variations->search(undef, {order_by=>'order'})->all;
+        if ( $indicator->dynamic_variations ) {
+            @indicator_variations =
+              $indicator->indicator_variations->search( { user_id => [ $self->user_id, $indicator->user_id ], },
+                { order_by => 'order' } )->all;
+        }
+        else {
+            @indicator_variations = $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
         }
 
-        @indicator_variables  = $indicator->indicator_variables_variations->all;
+        @indicator_variables = $indicator->indicator_variables_variations->all;
     }
     my $data = {
-        label            => $indicator->name,
-        axis             => {
-            name => $indicator->axis->name, id => $indicator->axis_id
+        label => $indicator->name,
+        axis  => {
+            name => $indicator->axis->name,
+            id   => $indicator->axis_id
         },
         goal             => $indicator->goal,
         goal_operator    => $indicator->goal_operator,
@@ -288,207 +292,229 @@ sub read_values {
         period           => $period,
         group_by         => $group_by,
 
-        min =>  9999999999999999,
+        min => 9999999999999999,
         max => -9999999999999999,
     };
 
-    my $user = $self->schema->resultset('User')->find($self->user_id);
+    my $user = $self->schema->resultset('User')->find( $self->user_id );
     my $city = $user->city;
 
-    $data->{city} = $city
-        ? {
-            name => $city->name,
-            latitude => $city->latitude,
-            longitude => $city->longitude,
-            id => $city->id
-        }
-        : {};
+    $data->{city} =
+      $city
+      ? {
+        name      => $city->name,
+        latitude  => $city->latitude,
+        longitude => $city->longitude,
+        id        => $city->id
+      }
+      : {};
 
-    my $qtde = scalar @{$self->variables};
-    my $total = 0;
+    my $qtde     = scalar @{ $self->variables };
+    my $total    = 0;
     my $total_ok = 0;
-    my $totali = 0;
-    foreach my $start (sort {$a cmp $b} keys %{$series}){
+    my $totali   = 0;
+    foreach my $start ( sort { $a cmp $b } keys %{$series} ) {
         my @data = ();
-        my $row       = {
-            begin  => $start,
-            sum    => 0,
-            data   => \@data,
-            min =>  9999999999999999,
-            max => -9999999999999999
+        my $row  = {
+            begin => $start,
+            sum   => 0,
+            data  => \@data,
+            min   => 9999999999999999,
+            max   => -9999999999999999
         };
-        my $sum = 0;
+        my $sum    = 0;
         my $sum_ok = 0;
         my $total2 = 0;
-        foreach my $dt (sort {$a cmp $b} keys %{$series->{$start}{sets}}) {
+        foreach my $dt ( sort { $a cmp $b } keys %{ $series->{$start}{sets} } ) {
             my $vals_user = $series->{$start}{sets}{$dt};
             my $valor;
 
             # numero de variaveis preenchidas ok
-            if ($qtde == keys %$vals_user){
+            if ( $qtde == keys %$vals_user ) {
 
-                if (@indicator_variables && @indicator_variations){
+                if ( @indicator_variables && @indicator_variations ) {
 
-                  my $vals = {};
+                    my $vals = {};
 
-                  for my $variation (@indicator_variations){
+                    for my $variation (@indicator_variations) {
 
-                     my $rs = $variation->indicator_variables_variations_values->search({
-                        valid_from => $dt
-                     })->as_hashref;
-                     while (my $r = $rs->next){
-                        next unless defined $r->{value};
-                        $vals->{$r->{indicator_variation_id}}{$r->{indicator_variables_variation_id}} = $r->{value}
-                     }
+                        my $rs =
+                          $variation->indicator_variables_variations_values->search( { valid_from => $dt } )
+                          ->as_hashref;
+                        while ( my $r = $rs->next ) {
+                            next unless defined $r->{value};
+                            $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
+                              $r->{value};
+                        }
 
-                     my $qtde_dados = keys %{$vals->{$variation->id}};
+                        my $qtde_dados = keys %{ $vals->{ $variation->id } };
 
-                     unless ($qtde_dados == @indicator_variables){
-                        $row->{variations}{$variation->id} = {
-                           value => '-'
-                        };
+                        unless ( $qtde_dados == @indicator_variables ) {
+                            $row->{variations}{ $variation->id } = { value => '-' };
 
-                        delete $vals->{$variation->id};
-                     }
-                  }
+                            delete $vals->{ $variation->id };
+                        }
+                    }
 
-                  # TODO ler do indicador qual o totalization_method
-                  my $sum = undef;
-                  foreach my $variation_id (keys %$vals){
-                    $sum ||= 0;
+                    # TODO ler do indicador qual o totalization_method
+                    my $sum = undef;
+                    foreach my $variation_id ( keys %$vals ) {
+                        $sum ||= 0;
 
-                     my $val = $self->indicator_formula->evaluate_with_alias(
-                        V => $vals_user,
-                        N => $vals->{$variation_id},
-                     );
+                        my $val = $self->indicator_formula->evaluate_with_alias(
+                            V => $vals_user,
+                            N => $vals->{$variation_id},
+                        );
 
-                     $row->{variations}{$variation_id} = {
-                        value => $val
-                     };
-                     $sum += $val;
-                  }
-                  $row->{formula_value} = $valor = $sum;
+                        $row->{variations}{$variation_id} = { value => $val };
+                        $sum += $val;
+                    }
+                    $row->{formula_value} = $valor = $sum;
 
-                  my @variations;
-                  # corre na ordem
-                  foreach my $var (@indicator_variations){
-                     push @variations, {
-                        name  => $var->name,
-                        value => $row->{variations}{$var->id}{value}
-                     };
-                  }
-                  $row->{variations} = \@variations;
+                    my @variations;
 
-               }else{
+                    # corre na ordem
+                    foreach my $var (@indicator_variations) {
+                        push @variations,
+                          {
+                            name  => $var->name,
+                            value => $row->{variations}{ $var->id }{value}
+                          };
+                    }
+                    $row->{variations} = \@variations;
 
-                  if ($indicator->formula =~ /#\d/ ){
-                     $valor = 'ERR#';
-                  }else{
-                    $valor = $self->indicator_formula->evaluate( %$vals_user );
-                  }
-               }
+                }
+                else {
 
+                    if ( $indicator->formula =~ /#\d/ ) {
+                        $valor = 'ERR#';
+                    }
+                    else {
+                        $valor = $self->indicator_formula->evaluate(%$vals_user);
+                    }
+                }
 
-            }else{
+            }
+            else {
                 $valor = '-';
             }
 
-            if ($valor ne '-'){
+            if ( $valor ne '-' ) {
                 $sum_ok = $total_ok = 1;
-                $total  += $valor;
-                $sum    += $valor;
+                $total += $valor;
+                $sum   += $valor;
                 $row->{max} = $valor if $valor > $row->{max};
                 $row->{min} = $valor if $valor < $row->{min};
             }
-            push @data, [$dt, $valor];
-
-
+            push @data, [ $dt, $valor ];
 
             $total2++;
             $totali++;
         }
-        if ($total2 && $sum_ok){
+        if ( $total2 && $sum_ok ) {
             $row->{sum} = $sum;
             $row->{avg} = $total2 ? $sum / $total2 : $total2;
 
             $data->{max} = $sum if $sum > $data->{max};
             $data->{min} = $sum if $sum < $data->{min};
-        }else{
+        }
+        else {
             $row->{avg} = '-';
             $row->{sum} = '-';
             $row->{max} = '-';
             $row->{min} = '-';
         }
 
-        $row->{label} = &get_label_of_period($start, $group_by);
+        $row->{label} = &get_label_of_period( $start, $group_by );
 
-        push @{$data->{series}}, $row;
+        push @{ $data->{series} }, $row;
     }
-    if ($total_ok){
+    if ($total_ok) {
         $data->{avg} = $totali ? $total / $totali : '-';
-    }else{
+    }
+    else {
         $data->{avg} = '-';
     }
-
 
     $self->_data($data);
 }
 
 sub _load_variables_values {
-    my ($self, %options) =  @_;
+    my ( $self, %options ) = @_;
 
-    my $rs = $self->schema->resultset('VariableValue')->search({
-        variable_id => $self->variables,
-        user_id     => $self->user_id,
+    my $rs = $self->schema->resultset('VariableValue')->search(
+        {
+            variable_id => $self->variables,
+            user_id     => $self->user_id,
 
-        ( $options{from} ? (valid_from  => {'>=' => DateTime::Format::Pg->parse_datetime( $options{from} )->datetime }) : () ),
-        ( $options{to}   ? (valid_until => {'<' => DateTime::Format::Pg->parse_datetime( $options{to}   )->datetime }) : () ),
+            (
+                $options{from}
+                ? ( valid_from => { '>=' => DateTime::Format::Pg->parse_datetime( $options{from} )->datetime } )
+                : ()
+            ),
+            (
+                $options{to}
+                ? ( valid_until => { '<' => DateTime::Format::Pg->parse_datetime( $options{to} )->datetime } )
+                : ()
+            ),
 
-    }, {
-        '+select' => [ \['(SELECT x.period_begin FROM f_extract_period_edge(?, me.valid_from) x)', [ plain_value => $options{group_by} ]] ],
-        '+as'     => ['group_from']
-    } );
+        },
+        {
+            '+select' => [
+                \[
+                    '(SELECT x.period_begin FROM f_extract_period_edge(?, me.valid_from) x)',
+                    [ plain_value => $options{group_by} ]
+                ]
+            ],
+            '+as' => ['group_from']
+        }
+    );
 
     my $values = {};
 
-    while( my $row = $rs->next ){
+    while ( my $row = $rs->next ) {
         my $gp = $row->get_column('group_from') || 'all';
         next unless defined $row->value;
         next if $row->value eq '';
-        $values->{$gp}{sets}{$row->valid_from}{$row->variable_id} = $row->value;
+        $values->{$gp}{sets}{ $row->valid_from }{ $row->variable_id } = $row->value;
     }
     return $values;
 }
 
 sub get_label_of_period {
-    my ($data, $period) =  @_;
+    my ( $data, $period ) = @_;
 
-    my $dt = DateTime::Format::Pg->parse_datetime( $data );
+    my $dt = DateTime::Format::Pg->parse_datetime($data);
 
-    if ($period eq 'weekly'){
+    if ( $period eq 'weekly' ) {
         return 'semana ' . $dt->week;
-    }elsif ($period eq 'monthly'){
-        return $dt->month . ' de ' . $dt->year ;
-    }elsif ($period eq 'bimonthly'){
-        return $dt->month . ' e ' . ($dt->month + 1).' de ' . $dt->year ;
-    }elsif ($period eq 'quarterly'){
+    }
+    elsif ( $period eq 'monthly' ) {
+        return $dt->month . ' de ' . $dt->year;
+    }
+    elsif ( $period eq 'bimonthly' ) {
+        return $dt->month . ' e ' . ( $dt->month + 1 ) . ' de ' . $dt->year;
+    }
+    elsif ( $period eq 'quarterly' ) {
         return $dt->quarter . ' trimeste de ' . $dt->year;
-    }elsif ($period eq 'semi-annual'){
-        return ($dt->month <= 6? '1 semestre' : '2 semestre') . ' de '. $dt->year;
-    }elsif ($period eq 'yearly'){
+    }
+    elsif ( $period eq 'semi-annual' ) {
+        return ( $dt->month <= 6 ? '1 semestre' : '2 semestre' ) . ' de ' . $dt->year;
+    }
+    elsif ( $period eq 'yearly' ) {
         return $dt->year;
-    }elsif ($period eq 'decade'){
-        return $dt->year . '-'.($dt->year+10);
-    }else{
+    }
+    elsif ( $period eq 'decade' ) {
+        return $dt->year . '-' . ( $dt->year + 10 );
+    }
+    else {
         return $data;
     }
 }
 
-
 sub _valid_or_null {
-    my ($self, $period) =  @_;
+    my ( $self, $period ) = @_;
     return $period =~ /(daily|weekly|monthly|bimonthly|quarterly|semi-annual|yearly|decade)/ ? $1 : undef;
 }
-
 
 1;

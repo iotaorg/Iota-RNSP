@@ -9,19 +9,16 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/user/object') : PathPart('variable') : CaptureArgs(0) {
-  my ( $self, $c ) = @_;
-  $c->stash->{user_rs} = $c->stash->{object};
-  $c->stash->{user}    = $c->stash->{object}->next;
+    my ( $self, $c ) = @_;
+    $c->stash->{user_rs} = $c->stash->{object};
+    $c->stash->{user}    = $c->stash->{object}->next;
 
-  $c->stash->{collection} = $c->model('DB::Variable');
-
+    $c->stash->{collection} = $c->model('DB::Variable');
 
 }
-
 
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
-
 
 =pod
 
@@ -76,33 +73,34 @@ Retorna:
 =cut
 
 sub list_GET {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
     my $rs = $c->stash->{collection};
 
-    $rs = $rs->search({is_basic => $c->req->params->{is_basic}})
-        if (defined $c->req->params->{is_basic});
+    $rs = $rs->search( { is_basic => $c->req->params->{is_basic} } )
+      if ( defined $c->req->params->{is_basic} );
 
-    $rs = $rs->search({id => $c->req->params->{variable_id}})
-        if (defined $c->req->params->{variable_id});
+    $rs = $rs->search( { id => $c->req->params->{variable_id} } )
+      if ( defined $c->req->params->{variable_id} );
 
     my @list = $rs->as_hashref->all;
     my @objs;
 
-    foreach my $obj (@list){
+    foreach my $obj (@list) {
 
         my $where = {};
         $where->{valid_from}{'>='} = $c->req->params->{valid_from_begin} if exists $c->req->params->{valid_from_begin};
-        $where->{valid_from}{'<='} = $c->req->params->{valid_from_end} if exists $c->req->params->{valid_from_end};
+        $where->{valid_from}{'<='} = $c->req->params->{valid_from_end}   if exists $c->req->params->{valid_from_end};
 
-        my @values = $rs->search({
-            id => $obj->{id}
-        })->next->values->search({user_id => $c->stash->{user}->id, %$where})->as_hashref->all;
+        my @values =
+          $rs->search( { id => $obj->{id} } )->next->values->search( { user_id => $c->stash->{user}->id, %$where } )
+          ->as_hashref->all;
         push @objs, {
-            (map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit)),
+            ( map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit) ),
             variable_id => $obj->{id},
-            values => [
-                map {+{
+            values      => [
+                map {
+                    +{
                         value         => $_->{value},
                         value_of_date => $_->{value_of_date},
                         source        => $_->{source},
@@ -110,20 +108,16 @@ sub list_GET {
                         valid_from    => $_->{valid_from},
                         valid_until   => $_->{valid_until},
                         id            => $_->{id},
-                        url           =>  $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'), [ $obj->{id}, $_->{id} ] )->as_string
-                }} sort {$a->{valid_from} cmp $b->{valid_from} } @values
+                        url => $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'),
+                            [ $obj->{id}, $_->{id} ] )->as_string
+                      }
+                } sort { $a->{valid_from} cmp $b->{valid_from} } @values
             ],
-        }
+        };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-        variables => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { variables => \@objs } );
 }
-
 
 #with 'Iota::TraitFor::Controller::Search';
 1;

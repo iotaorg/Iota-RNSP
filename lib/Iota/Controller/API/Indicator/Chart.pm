@@ -10,23 +10,22 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/indicator/object') : PathPart('chart') : CaptureArgs(0) {
-  my ( $self, $c ) = @_;
+    my ( $self, $c ) = @_;
 
-  $c->stash->{indicator}  = $c->stash->{object}->next;
+    $c->stash->{indicator} = $c->stash->{object}->next;
 }
 
 sub typify : Chained('base') : PathPart('') : CaptureArgs(1) {
-  my ( $self, $c, $type ) = @_;
-  $c->detach('/error_404') unless $type eq 'period_axis';
+    my ( $self, $c, $type ) = @_;
+    $c->detach('/error_404') unless $type eq 'period_axis';
 
-
-  $c->stash->{chart_type} = 'PeriodAxis';
+    $c->stash->{chart_type} = 'PeriodAxis';
 }
 
-sub render : Chained('typify') : PathPart('') : Args(0 ): ActionClass('REST') {
-  my ( $self, $c ) = @_;
+sub render : Chained('typify') : PathPart('') : Args(0 ) : ActionClass('REST') {
+    my ( $self, $c ) = @_;
 
-  $c->detach('/error_404'), $c->detach unless $c->stash->{indicator}->indicator_type eq 'normal';
+    $c->detach('/error_404'), $c->detach unless $c->stash->{indicator}->indicator_type eq 'normal';
 
 }
 
@@ -87,31 +86,26 @@ exemplo:
 =cut
 
 sub render_GET {
-  my ( $self, $c ) = @_;
-  my $model = Iota::IndicatorChart->new_with_traits(
-    traits => [$c->stash->{chart_type}],
-    schema    => $c->model('DB'),
-    indicator => $c->stash->{indicator_obj} || $c->stash->{indicator},
-    user_id   => $c->stash->{user_id} || $c->user->id
-  );
+    my ( $self, $c ) = @_;
+    my $model = Iota::IndicatorChart->new_with_traits(
+        traits    => [ $c->stash->{chart_type} ],
+        schema    => $c->model('DB'),
+        indicator => $c->stash->{indicator_obj} || $c->stash->{indicator},
+        user_id   => $c->stash->{user_id} || $c->user->id
+    );
 
-  my %options = (
-    from     => $c->req->params->{from},
-    to       => $c->req->params->{to},
-    group_by => $c->req->params->{group_by},
-  );
-  my $ret = eval {$model->data( %options )};
-  if ($@){
-    $self->status_bad_request(
-        $c,
-        message => $@,
+    my %options = (
+        from     => $c->req->params->{from},
+        to       => $c->req->params->{to},
+        group_by => $c->req->params->{group_by},
     );
-  }else{
-    $self->status_ok(
-        $c,
-        entity => $ret
-    );
-  }
+    my $ret = eval { $model->data(%options) };
+    if ($@) {
+        $self->status_bad_request( $c, message => $@, );
+    }
+    else {
+        $self->status_ok( $c, entity => $ret );
+    }
 }
 
 1;

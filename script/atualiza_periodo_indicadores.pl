@@ -11,37 +11,31 @@ use Template;
 use Encode;
 use JSON qw / decode_json /;
 
-
 use Iota;
 my $schema = Iota->model('DB');
 
 use Iota::IndicatorFormula;
 
-
 my @indicadores = $schema->resultset('Indicator')->all;
 
-
 foreach my $ind (@indicadores) {
-
-
 
     my $formula = Iota::IndicatorFormula->new(
         formula => $ind->formula,
         schema  => $schema
     );
 
-    $ind->formula_human($formula->as_human);
+    $ind->formula_human( $formula->as_human );
 
     $ind->indicator_variables->delete;
-    $ind->add_to_indicator_variables({
-        variable_id => $_
-    }) for $formula->variables;
+    $ind->add_to_indicator_variables( { variable_id => $_ } ) for $formula->variables;
 
-    if ($formula->_variable_count){
+    if ( $formula->_variable_count ) {
         my $anyvar = $ind->indicator_variables->next->variable;
-        $ind->period($anyvar->period);
-        $ind->variable_type($anyvar->type);
-    }else{
+        $ind->period( $anyvar->period );
+        $ind->variable_type( $anyvar->type );
+    }
+    else {
         $ind->period('yearly');
         $ind->variable_type('int');
     }

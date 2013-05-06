@@ -18,17 +18,17 @@ sub verifiers_specs {
     return {
         create => Data::Verifier->new(
             profile => {
-                name                        => { required => 1, type => 'Str' },
-                short_name                  => { required => 1, type => 'Str' },
-                user_id                     => { required => 1, type => 'Int' },
+                name       => { required => 1, type => 'Str' },
+                short_name => { required => 1, type => 'Str' },
+                user_id    => { required => 1, type => 'Int' },
             },
         ),
 
         update => Data::Verifier->new(
             profile => {
-                id                          => { required => 1, type => 'Int' },
-                name                        => { required => 1, type => 'Str' },
-                short_name                  => { required => 1, type => 'Str' },
+                id         => { required => 1, type => 'Int' },
+                name       => { required => 1, type => 'Str' },
+                short_name => { required => 1, type => 'Str' },
             },
         ),
 

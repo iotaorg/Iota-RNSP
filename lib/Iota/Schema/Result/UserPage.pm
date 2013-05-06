@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::UserPage;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<user_page>
 
@@ -84,35 +85,35 @@ __PACKAGE__->table("user_page");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "user_page_id_seq",
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 0,
-    original      => { default_value => \"now()" },
-  },
-  "published_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 1,
-    original      => { default_value => \"now()" },
-  },
-  "title",
-  { data_type => "text", is_nullable => 0 },
-  "title_url",
-  { data_type => "text", is_nullable => 0 },
-  "content",
-  { data_type => "text", is_nullable => 0 },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "user_page_id_seq",
+    },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 0,
+        original      => { default_value => \"now()" },
+    },
+    "published_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 1,
+        original      => { default_value => \"now()" },
+    },
+    "title",
+    { data_type => "text", is_nullable => 0 },
+    "title_url",
+    { data_type => "text", is_nullable => 0 },
+    "content",
+    { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -138,10 +139,9 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "user", "Iota::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user_menus
@@ -153,16 +153,14 @@ Related object: L<Iota::Schema::Result::UserMenu>
 =cut
 
 __PACKAGE__->has_many(
-  "user_menus",
-  "Iota::Schema::Result::UserMenu",
-  { "foreign.page_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "user_menus",
+    "Iota::Schema::Result::UserMenu",
+    { "foreign.page_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-30 16:07:24
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:E3FvYbg++hZnMOFNmswH1w
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

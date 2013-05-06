@@ -10,9 +10,8 @@ use DateTime::Format::Excel;
 
 use Text::Iconv;
 
-
 sub parse {
-    my ($self, $file) = @_;
+    my ( $self, $file ) = @_;
 
     my $xls = Spreadsheet::ParseExcel::Stream->new($file);
 
@@ -29,34 +28,35 @@ sub parse {
     while ( my $sheet = $xls->sheet() ) {
 
         my $header_map = {};
-        $header_found  = 0;
+        $header_found = 0;
 
         while ( my $row = $sheet->row ) {
 
             my @data = @$row;
 
-            if (!$header_found){
+            if ( !$header_found ) {
 
-                for my $col ( 0 .. (scalar @data - 1) ) {
+                for my $col ( 0 .. ( scalar @data - 1 ) ) {
                     my $cell = $data[$col];
                     next unless $cell;
 
-                    foreach my $header_name (keys %expected_header){
+                    foreach my $header_name ( keys %expected_header ) {
 
-                        if ($cell =~ $expected_header{$header_name}){
+                        if ( $cell =~ $expected_header{$header_name} ) {
                             $header_found++;
                             $header_map->{$header_name} = $col;
                         }
                     }
                 }
-            }else{
+            }
+            else {
 
                 # aqui você pode verificar se foram encontrados todos os campos que você precisa
                 # neste caso, achar apenas 1 cabeçalho já é o suficiente
 
                 my $registro = {};
 
-                foreach my $header_name (keys %$header_map){
+                foreach my $header_name ( keys %$header_map ) {
                     my $col = $header_map->{$header_name};
 
                     my $value = $data[$col];
@@ -68,18 +68,17 @@ sub parse {
                     $registro->{$header_name} = $value;
                 }
 
-                if (keys %$registro == 3 ){
+                if ( keys %$registro == 3 ) {
 
-                    $registro->{date} = $registro->{date} =~ /^20[123][0-9]$/
-                        ? $registro->{date} . '-01-01'
-                        :
-                            $registro->{date} =~ /^\d{4}\-\d{2}\-\d{2}$/
-                            ? $registro->{date}
-                            : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+                    $registro->{date} =
+                        $registro->{date} =~ /^20[123][0-9]$/        ? $registro->{date} . '-01-01'
+                      : $registro->{date} =~ /^\d{4}\-\d{2}\-\d{2}$/ ? $registro->{date}
+                      :   DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
                     $ok++;
                     push @rows, $registro;
 
-                }else{
+                }
+                else {
                     $ignored++;
                 }
 
@@ -88,9 +87,9 @@ sub parse {
     }
 
     return {
-        rows    => \@rows,
-        ignored => $ignored,
-        ok      => $ok,
+        rows         => \@rows,
+        ignored      => $ignored,
+        ok           => $ok,
         header_found => !!$header_found
     };
 }

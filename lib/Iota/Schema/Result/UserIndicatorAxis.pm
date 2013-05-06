@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::UserIndicatorAxis;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<user_indicator_axis>
 
@@ -73,26 +74,26 @@ __PACKAGE__->table("user_indicator_axis");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "user_indicator_axis_id_seq",
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "name",
-  { data_type => "text", is_nullable => 0 },
-  "position",
-  { data_type => "integer", default_value => 0, is_nullable => 0 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 0,
-    original      => { default_value => \"now()" },
-  },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "user_indicator_axis_id_seq",
+    },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "name",
+    { data_type => "text", is_nullable => 0 },
+    "position",
+    { data_type => "integer", default_value => 0, is_nullable => 0 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 0,
+        original      => { default_value => \"now()" },
+    },
 );
 
 =head1 PRIMARY KEY
@@ -118,10 +119,9 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "user", "Iota::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user_indicator_axis_items
@@ -133,16 +133,12 @@ Related object: L<Iota::Schema::Result::UserIndicatorAxisItem>
 =cut
 
 __PACKAGE__->has_many(
-  "user_indicator_axis_items",
-  "Iota::Schema::Result::UserIndicatorAxisItem",
-  { "foreign.user_indicator_axis_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+    "user_indicator_axis_items", "Iota::Schema::Result::UserIndicatorAxisItem",
+    { "foreign.user_indicator_axis_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:G0v58xJrIvpFmNlmiywANw
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

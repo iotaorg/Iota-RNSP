@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::IndicatorNetworkConfig;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<indicator_network_config>
 
@@ -60,12 +61,9 @@ __PACKAGE__->table("indicator_network_config");
 =cut
 
 __PACKAGE__->add_columns(
-  "indicator_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "network_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "unfolded_in_home",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+    "indicator_id", { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "network_id",   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "unfolded_in_home", { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -80,7 +78,7 @@ __PACKAGE__->add_columns(
 
 =cut
 
-__PACKAGE__->set_primary_key("indicator_id", "network_id");
+__PACKAGE__->set_primary_key( "indicator_id", "network_id" );
 
 =head1 RELATIONS
 
@@ -93,10 +91,10 @@ Related object: L<Iota::Schema::Result::Indicator>
 =cut
 
 __PACKAGE__->belongs_to(
-  "indicator",
-  "Iota::Schema::Result::Indicator",
-  { id => "indicator_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "indicator",
+    "Iota::Schema::Result::Indicator",
+    { id            => "indicator_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 network
@@ -108,16 +106,14 @@ Related object: L<Iota::Schema::Result::Network>
 =cut
 
 __PACKAGE__->belongs_to(
-  "network",
-  "Iota::Schema::Result::Network",
-  { id => "network_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+    "network",
+    "Iota::Schema::Result::Network",
+    { id            => "network_id" },
+    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:scZ8GSrXgXp/II0U5NFiOA
-
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
