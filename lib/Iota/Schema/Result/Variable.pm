@@ -273,6 +273,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_variable_region_configs
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserVariableRegionConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_variable_region_configs",
+  "Iota::Schema::Result::UserVariableRegionConfig",
+  { "foreign.variable_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 variable_values
 
 Type: has_many
@@ -289,8 +304,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-06 05:22:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qUwmgaRPItzVla+Q7pESMA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-06 05:58:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:otFHzoS3lYeJheWzzAXLlA
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",
