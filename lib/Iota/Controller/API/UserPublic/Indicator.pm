@@ -169,8 +169,8 @@ sub resumo_GET {
 
     eval {
         my $rs = $c->stash->{collection}->search(
-            { 'indicator_network_configs.network_id' => [ undef, $c->stash->{network}->id ] },
-            { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs' ] }
+            { 'indicator_network_configs_one.network_id' => [ undef, $c->stash->{network}->id ] },
+            { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs_one' ] }
         );
 
         my $user_id = $c->stash->{user_obj}->id;
@@ -262,7 +262,7 @@ sub resumo_GET {
                   if exists $custom_axis->{$indicator_id};
 
                 foreach my $axis (@axis_list) {
-                    my $config = $indicator->indicator_network_configs->next;
+                    my $config = $indicator->indicator_network_configs_one;
 
                     push(
                         @{ $ret->{resumos}{$axis}{$periodo}{indicadores} },
