@@ -15,6 +15,13 @@
                             <dt>Estado: </dt>
                             <dd>[%city.uf%]</dd>
 
+                            [% FOREACH vv IN basic_variables %]
+
+                            <dt>[%vv.variable.name%]: </dt>
+                            <dd>[%vv.value%]</dd>
+
+                            [% END %]
+
                         </dl></div>
                     </div>
                 </div>

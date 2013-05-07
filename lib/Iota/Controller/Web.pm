@@ -346,18 +346,68 @@ sub stash_tela_regiao {
             name_url => lc $c->stash->{regiao_url},
             city_id  => $c->stash->{city}{id}
         }
-    )->as_hashref->next;
-    use DDP; p $region;
+    )->next;
 
     $c->detach('/error_404') unless $region;
-
-
     $c->stash(
         region => $region,
         template => 'home_region.tt',
     );
+
+    $self->_load_variables($c);
 }
 
+
+sub _load_variables {
+    my ( $self, $c ) = @_;
+
+    my $region = $c->stash->{region};
+    my @admins_ids = map { $_->id } $c->stash->{network}->users->search({
+        city_id => undef # admins
+    })->all;
+    my $mid = $c->stash->{user}{id};
+    my $var_confrs = $region->user_variable_region_configs->search({
+        user_id => [
+            @admins_ids,
+            $mid
+        ]
+    });
+
+    my $aux = {};
+    while (my $conf = $var_confrs->next){
+        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id ];
+    }
+
+    my $show = {};
+    # a configuracao do usuario sempre tem preferencia sob a do admin
+    while (my ($vid, $wants) = each %$aux){
+
+        $show->{$vid}++ and last if @$wants == 1 && $wants->[0][0];
+
+        foreach my $conf (@$wants){
+            $show->{$vid}++ and last if ($conf->[1] == $mid && $conf->[0]);
+        }
+
+    }
+
+    my $values = $region->region_variable_values->search({
+        variable_id => { 'in' => [keys %$show]},
+        user_id     => $mid
+    }, {
+        order_by => [{-desc =>'valid_from'}]
+    });
+
+    my %exists;
+    my @variables;
+    while (my $val = $values->next){
+        next if $exists{$val->variable_id}++;
+
+        push @variables, $val;
+    }
+    $c->stash( basic_variables => \@variables );
+
+
+}
 
 
 __PACKAGE__->meta->make_immutable;
