@@ -13,6 +13,12 @@ sub base : Chained('/api/base') : PathPart('page') : CaptureArgs(0) {
     $c->stash->{collection} = $c->model('DB::UserPage');
 
 
+    if ($c->check_any_user_role(qw(user))) {
+        $c->stash->{collection} = $c->stash->{collection}->search({
+            'me.user_id' => $c->user->id
+        })
+    }
+
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
