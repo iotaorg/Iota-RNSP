@@ -134,7 +134,7 @@ sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) 
 
     $self->stash_tela_regiao($c);
 
-    $c->stash->{title} = $c->stash->{region}{name} . ' - '. $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
+    $c->stash->{title} = $c->stash->{region}->name . ' - '. $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
 sub cidade_regiao_render: Chained('cidade_regiao') PathPart('') Args(0) {
@@ -278,6 +278,20 @@ sub stash_tela_cidade {
     );
 
     $user = { $user->get_inflated_columns };
+
+    $self->_load_menu($c, $menurs);
+
+
+    $c->stash(
+        city     => $city,
+        user     => $user,
+        template => 'home_cidade.tt',
+    );
+}
+
+sub _load_menu {
+    my ($self, $c, $menurs) = @_;
+
     my $menu = {};
     my @menu_out;
 
@@ -330,13 +344,10 @@ sub stash_tela_cidade {
     }
 
     $c->stash(
-        city     => $city,
-        user     => $user,
-        template => 'home_cidade.tt',
         menu     => \@menu_out,
     );
-}
 
+}
 
 sub stash_tela_regiao {
     my ( $self, $c ) = @_;
