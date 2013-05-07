@@ -11,6 +11,11 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/base') : PathPart('menu') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{collection} = $c->model('DB::UserMenu');
+    if ($c->check_any_user_role(qw(user))) {
+        $c->stash->{collection} = $c->stash->{collection}->search({
+            'me.user_id' => $c->user->id
+        })
+    }
 
 }
 
