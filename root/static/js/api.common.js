@@ -233,7 +233,7 @@ $.extend({
         }else if ($.isNumber(number)){
             return $.formatNumber(number, mask);
         }else{
-            return '<abbr class="alert-error alert" title="$$err">inválido</abbr>'.render({
+            return '<abbr title="$$err">N/D</abbr>'.render({
                 err: number
             });
         }
