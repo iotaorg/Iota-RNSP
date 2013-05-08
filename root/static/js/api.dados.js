@@ -31,6 +31,13 @@ $(document).ready(function(){
 					users_list.push({id: item.id, nome: item.city.name, pais: item.city.pais, uf: item.city.uf, uri: item.city.name_uri, label: item.city.name + " - " + item.city.uf});
 				});
 
+                users_list.sort(function (a, b) {
+                    a = a.nome,
+                    b = b.nome;
+
+                    return a.localeCompare(b);
+                });
+
 				$(indicadores_list).each(function(index,value){
 					if (!findInJson(eixos_list.dados,"id",value.axis.id).found){
 						eixos_list["dados"].push({id: value.axis.id, name: value.axis.name});
