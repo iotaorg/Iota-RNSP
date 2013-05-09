@@ -484,6 +484,8 @@ sub _load_variables_values {
 sub get_label_of_period {
     my ( $data, $period ) = @_;
 
+    $data =~ s/T/ /;
+    $data = substr($data, 0, 19);
     my $dt = DateTime::Format::Pg->parse_datetime($data);
 
     if ( $period eq 'weekly' ) {

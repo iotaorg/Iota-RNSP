@@ -16,10 +16,8 @@
                             <dd>[%city.uf%]</dd>
 
                             [% FOREACH vv IN basic_variables %]
-
                             <dt>[%vv.variable.name%]: </dt>
-                            <dd>[%vv.value%]</dd>
-
+                            <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
                             [% END %]
 
                         </dl></div>

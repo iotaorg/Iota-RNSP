@@ -335,7 +335,7 @@ sub _load_variables {
         variable_id => { 'in' => [keys %$show]},
     }, {
         order_by => [{-desc =>'valid_from'}],
-        prefetch => 'variable'
+        prefetch => {'variable'=>'measurement_unit'}
     });
 
     my %exists;
@@ -479,7 +479,7 @@ sub _load_region_variables {
         user_id     => $mid
     }, {
         order_by => [{-desc =>'valid_from'}],
-        prefetch => 'variable'
+        prefetch => {'variable'=>'measurement_unit'}
     });
 
     my %exists;
