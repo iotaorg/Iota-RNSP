@@ -299,7 +299,7 @@ sub _load_variables {
     })->all;
     my $mid = $user->id;
 
-    my $var_confrs = $user->user_variable_configs->search({
+    my $var_confrs = $c->model('DB::UserVariableConfig')->search({
         user_id => [
             @admins_ids,
             $mid
@@ -308,17 +308,25 @@ sub _load_variables {
 
     my $aux = {};
     while (my $conf = $var_confrs->next){
-        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id ];
+        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id, $conf->position ];
     }
 
     my $show = {};
+    my $order = {};
     # a configuracao do usuario sempre tem preferencia sob a do admin
     while (my ($vid, $wants) = each %$aux){
 
-        $show->{$vid}++ and last if @$wants == 1 && $wants->[0][0];
+        if (@$wants == 1 && $wants->[0][0]){
+            $order->{$vid} = $wants->[0][2];
+            $show->{$vid}++ and last;
+        }
 
         foreach my $conf (@$wants){
-            $show->{$vid}++ and last if ($conf->[1] == $mid && $conf->[0]);
+            if ($conf->[1] == $mid && $conf->[0]){
+
+                $order->{$vid} = $conf->[2];
+                $show->{$vid}++ and last;
+            }
         }
 
     }
@@ -337,8 +345,12 @@ sub _load_variables {
 
         push @variables, $val;
     }
-    $c->stash( user_basic_variables => \@variables );
 
+    @variables = sort { $order->{$a->variable_id} <=> $order->{$b->variable_id} } @variables;
+
+    $c->stash(
+        user_basic_variables => \@variables
+    );
 }
 
 sub _load_menu {
@@ -438,17 +450,26 @@ sub _load_region_variables {
 
     my $aux = {};
     while (my $conf = $var_confrs->next){
-        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id ];
+        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id, $conf->position ];
     }
 
+
     my $show = {};
+    my $order = {};
     # a configuracao do usuario sempre tem preferencia sob a do admin
     while (my ($vid, $wants) = each %$aux){
 
-        $show->{$vid}++ and last if @$wants == 1 && $wants->[0][0];
+        if (@$wants == 1 && $wants->[0][0]){
+            $order->{$vid} = $wants->[0][2];
+            $show->{$vid}++ and last;
+        }
 
         foreach my $conf (@$wants){
-            $show->{$vid}++ and last if ($conf->[1] == $mid && $conf->[0]);
+            if ($conf->[1] == $mid && $conf->[0]){
+
+                $order->{$vid} = $conf->[2];
+                $show->{$vid}++ and last;
+            }
         }
 
     }
@@ -468,6 +489,9 @@ sub _load_region_variables {
 
         push @variables, $val;
     }
+
+    @variables = sort { $order->{$a->variable_id} <=> $order->{$b->variable_id} } @variables;
+
     $c->stash( basic_variables => \@variables );
 
 

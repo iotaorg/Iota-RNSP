@@ -23,7 +23,7 @@ use DateTimeX::Easy;
 my $str2number = sub {
     my $str = shift;
 
-    if ( $str =~ /[^\d]/ ) {
+    if ( $str && $str =~ /[^\d]/ ) {
         $str =~ s/\.(\d{3})/$1/g;
         $str =~ s/\s(\d{3})/$1/g;
         $str =~ s/\,/./;

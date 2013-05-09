@@ -71,6 +71,12 @@ __PACKAGE__->table("user_variable_config");
   is_nullable: 1
   original: {default_value => \"now()"}
 
+=head2 position
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -94,6 +100,8 @@ __PACKAGE__->add_columns(
     is_nullable   => 1,
     original      => { default_value => \"now()" },
   },
+  "position",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -160,8 +168,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-06 05:22:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u3QlHc1XxEAyccpF1CEqAA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-09 07:45:05
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z324dUy1NYgE18p7vuuxmQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

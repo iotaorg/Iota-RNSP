@@ -24,6 +24,10 @@ sub verifiers_specs {
                     required => 1,
                     type     => 'Int',
                 },
+                position => {
+                    required => 0,
+                    type     => 'Int',
+                },
 
                 variable_id => {
                     required   => 1,
@@ -55,6 +59,10 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->find( { id => $r->get_value('id') } ) ? 1 : 0;
                       }
+                },
+                position => {
+                    required => 0,
+                    type     => 'Int',
                 },
                 display_in_home => {
                     required => 1,

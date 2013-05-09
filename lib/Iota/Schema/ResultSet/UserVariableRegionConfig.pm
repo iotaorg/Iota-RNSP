@@ -28,6 +28,10 @@ sub verifiers_specs {
                     required => 1,
                     type     => 'Int',
                 },
+                position => {
+                    required => 0,
+                    type     => 'Int',
+                },
 
                 variable_id => {
                     required   => 1,
@@ -53,6 +57,10 @@ sub verifiers_specs {
 
         update => Data::Verifier->new(
             profile => {
+                position => {
+                    required => 0,
+                    type     => 'Int',
+                },
                 id => {
                     required   => 1,
                     type       => 'Int',
