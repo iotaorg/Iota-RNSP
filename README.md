@@ -1,9 +1,17 @@
-
 # Iota - Uma plataforma para gerenciamento de indicadores
 
 O aplicativo é uma plataforma que permite a criação dos indicadores, com o objetivo de facilitar o compartilhamento dos dados para visualização, comparação e re-utilização deles através de padrões de tecnologias abertos.
 
-Ele foi criado inicialmente para atender ao "Programa Cidades Sustentaveis" da "Rede Nossa São Paulo".
+Ele foi criado inicialmente para atender ao "Programa Cidades Sustentaveis" uma parceria da Rede Nossa São Paulo,
+Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira por Cidades Justas e Sustentáveis.
+
+Saiba mais em [www.cidadesustentaveis.org.br](www.cidadesustentaveis.org.br).
+
+Dados dos movimentos: [http://www.redesocialdecidades.org.br/](http://www.redesocialdecidades.org.br/)
+
+Dados das prefeituras: [http://indicadores.cidadessustentaveis.org.br/](http://indicadores.cidadessustentaveis.org.br/)
+
+
 
 [![Build Status](https://secure.travis-ci.org/W3CBrasil/Iota.png?branch=master)](https://travis-ci.org/W3CBrasil/Iota)
 
