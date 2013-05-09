@@ -276,17 +276,69 @@ sub stash_tela_cidade {
             prefetch => 'page'
         }
     );
-
-    $user = { $user->get_inflated_columns };
-
     $self->_load_menu($c, $menurs);
 
+    $self->_load_variables($c, $user);
 
+
+    $user = { $user->get_inflated_columns };
     $c->stash(
         city     => $city,
         user     => $user,
         template => 'home_cidade.tt',
     );
+}
+
+
+sub _load_variables {
+    my ( $self, $c, $user ) = @_;
+
+
+    my @admins_ids = map { $_->id } $c->stash->{network}->users->search({
+        city_id => undef # admins
+    })->all;
+    my $mid = $user->id;
+
+    my $var_confrs = $user->user_variable_configs->search({
+        user_id => [
+            @admins_ids,
+            $mid
+        ]
+    });
+
+    my $aux = {};
+    while (my $conf = $var_confrs->next){
+        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id ];
+    }
+
+    my $show = {};
+    # a configuracao do usuario sempre tem preferencia sob a do admin
+    while (my ($vid, $wants) = each %$aux){
+
+        $show->{$vid}++ and last if @$wants == 1 && $wants->[0][0];
+
+        foreach my $conf (@$wants){
+            $show->{$vid}++ and last if ($conf->[1] == $mid && $conf->[0]);
+        }
+
+    }
+
+    my $values = $user->variable_values->search({
+        variable_id => { 'in' => [keys %$show]},
+    }, {
+        order_by => [{-desc =>'valid_from'}],
+        prefetch => 'variable'
+    });
+
+    my %exists;
+    my @variables;
+    while (my $val = $values->next){
+        next if $exists{$val->variable_id}++;
+
+        push @variables, $val;
+    }
+    $c->stash( user_basic_variables => \@variables );
+
 }
 
 sub _load_menu {
@@ -365,11 +417,11 @@ sub stash_tela_regiao {
         template => 'home_region.tt',
     );
 
-    $self->_load_variables($c);
+    $self->_load_region_variables($c);
 }
 
 
-sub _load_variables {
+sub _load_region_variables {
     my ( $self, $c ) = @_;
 
     my $region = $c->stash->{region};
@@ -405,7 +457,8 @@ sub _load_variables {
         variable_id => { 'in' => [keys %$show]},
         user_id     => $mid
     }, {
-        order_by => [{-desc =>'valid_from'}]
+        order_by => [{-desc =>'valid_from'}],
+        prefetch => 'variable'
     });
 
     my %exists;
