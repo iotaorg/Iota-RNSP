@@ -7,11 +7,6 @@ Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira p
 
 Saiba mais em [www.cidadesustentaveis.org.br](www.cidadesustentaveis.org.br).
 
-Dados dos movimentos: [http://www.redesocialdecidades.org.br/](http://www.redesocialdecidades.org.br/)
-
-Dados das prefeituras: [http://indicadores.cidadessustentaveis.org.br/](http://indicadores.cidadessustentaveis.org.br/)
-
-
 
 [![Build Status](https://secure.travis-ci.org/W3CBrasil/Iota.png?branch=master)](https://travis-ci.org/W3CBrasil/Iota)
 
