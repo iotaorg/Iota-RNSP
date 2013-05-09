@@ -6,47 +6,8 @@ var ib;
 var cidade_data;
 var indicadores_data;
 var graficos = [];
-var infoVars = [];
-/*
-HARD-CODED variaveis que aparecem apenas em institutos especificos
-infoVars[institute_short_name] = [
- ..
-]
- */
-infoVars["gov"] = [
-				{"cognomen": "prefeito", "type": "text"},
-				{"cognomen": "vice-prefeito", "type": "text"},
-				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_rural", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_mulheres", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_homens", "type": "number", "format": "#,###"},
-				{"cognomen": "densidade_demo", "type": "number", "format": "#,##0.###"},
-				{"cognomen": "area_municipio", "type": "number", "format": "#,###"}
-/*				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
-				{"cognomen": "idh_municipal", "type": "number", "format": "#,###"},
-				{"cognomen": "gini", "type": "number", "format": "#,###"},
-				{"cognomen": "pib", "type": "number", "format": "#,###"},
-				{"cognomen": "renda_capita", "type": "number", "format": "#,##0.##"},
-				{"cognomen": "part_eleitorado", "type": "number", "format": "#,##0.##"},
-				{"cognomen": "website", "type": "text"}*/
-];
-infoVars["org"] = [
-				{"cognomen": "pop_total", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_rural", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_urbana", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_mulheres", "type": "number", "format": "#,###"},
-				{"cognomen": "pop_homens", "type": "number", "format": "#,###"},
-				{"cognomen": "densidade_demo", "type": "number", "format": "#,##0.###"},
-				{"cognomen": "area_municipio", "type": "number", "format": "#,###"}
-/*				{"cognomen": "expect_vida", "type": "number", "format": "#,###"},
-				{"cognomen": "idh_municipal", "type": "number", "format": "#,###"},
-				{"cognomen": "gini", "type": "number", "format": "#,###"},
-				{"cognomen": "pib", "type": "number", "format": "#,###"},
-				{"cognomen": "renda_capita", "type": "number", "format": "#,##0.##"},
-				{"cognomen": "part_eleitorado", "type": "number", "format": "#,##0.##"},
-				{"cognomen": "website", "type": "text"}*/
-];
+
+
 
 $(document).ready(function(){
 
@@ -168,44 +129,9 @@ $(document).ready(function(){
             $("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
         }
 
-        var $tabela = $("#cidades-dados .profile .variaveis .tabela");
-        $tabela.empty()
-            .append("<dt>Cidade:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.name}))
-            .append("<dt>Estado:</dt><dd>$$dado</dd>".render({dado: cidade_data.cidade.uf}))
-            .append("<dt>País:</dt><dd>$$dado</dd>".render({dado: paises[cidade_data.cidade.pais]}));
 
 
-        if (cidade_data.variaveis){
-            $.each(infoVars[institute_short_name],function(index,value){
-                var dadoIndex = findInJson(cidade_data.variaveis, "cognomen", infoVars[institute_short_name][index].cognomen);
-                if (dadoIndex.found){
-                    var label = cidade_data.variaveis[dadoIndex.key].name;
-                    if (infoVars[institute_short_name][index].type == "number"){
-                        var value = $.formatNumberCustom(cidade_data.variaveis[dadoIndex.key].last_value, {format:infoVars[institute_short_name][index].format, locale:"br"});
-                    }else if (infoVars[institute_short_name][index].type == "text"){
-                        var value = cidade_data.variaveis[dadoIndex.key].last_value;
-                    }
-                    if (cidade_data.variaveis[dadoIndex.key].measurement_unit != null && cidade_data.variaveis[dadoIndex.key].measurement_unit != undefined && cidade_data.variaveis[dadoIndex.key].measurement_unit != ""){
-                        var measurement_unit = " <span class='measurement_unit'>" + cidade_data.variaveis[dadoIndex.key].measurement_unit + "</span>";
-                    }else{
-                        var measurement_unit = "";
-                    }
-                    if (cidade_data.variaveis[dadoIndex.key].last_value_date != null && cidade_data.variaveis[dadoIndex.key].last_value_date != undefined && cidade_data.variaveis[dadoIndex.key].last_value_date != ""){
-                        var last_date = "<span class='last_date'>(" + convertDateToPeriod(cidade_data.variaveis[dadoIndex.key].last_value_date,cidade_data.variaveis[dadoIndex.key].period) + ")</span>";
-                    }else{
-                        var last_date = "";
-                    }
-                    $tabela.append("<dt>$$label:</dt><dd>$$value$$measurement_unit $$last_date</dd>".render(
-                        {
-                            label: label,
-                            value: value,
-                            last_date: last_date,
-                            measurement_unit: measurement_unit
-                        }
-                    ));
-                }
-            });
-        }
+
 
         var user_files = cidade_data.usuario.files;
         if (

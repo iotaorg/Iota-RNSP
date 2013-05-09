@@ -19,8 +19,6 @@
                             <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
                             [% END %]
 
-
-                            <dd><div class=loading>Carregando mais informações...</div></dd>
                         </dl></div>
                     </div>
                 </div>
