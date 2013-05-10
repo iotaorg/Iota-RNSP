@@ -263,6 +263,7 @@ sub read_values {
     my $indicator = $self->indicator;
 
     my $series = $self->_load_variables_values( %options, group_by => $group_by );
+
     my @indicator_variations;
     my @indicator_variables;
     if ( $indicator->indicator_type eq 'varied' ) {
@@ -278,6 +279,7 @@ sub read_values {
 
         @indicator_variables = $indicator->indicator_variables_variations->all;
     }
+
     my $data = {
         label => $indicator->name,
         axis  => {
@@ -325,6 +327,7 @@ sub read_values {
         my $sum    = 0;
         my $sum_ok = 0;
         my $total2 = 0;
+
         foreach my $dt ( sort { $a cmp $b } keys %{ $series->{$start}{sets} } ) {
             my $vals_user = $series->{$start}{sets}{$dt};
             my $valor;

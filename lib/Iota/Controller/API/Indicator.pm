@@ -116,15 +116,12 @@ sub indicator_GET {
     my $object_ref =
       $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'axis', 'indicator_network_configs' ] } )->next;
 
-    my $f = Iota::IndicatorFormula->new(
-        formula => $object_ref->formula,
-        schema  => $c->model('DB')->schema
-    );
+    my $where = $object_ref->dynamic_variations ? {
+        user_id => [ $object_ref->user_id , $c->stash->{user_id} || $c->user->id]
+    } : {
+        user_id => $object_ref->user_id
+    };
 
-    my ($any_var) = $f->variables;
-    $any_var = $any_var ? eval { $c->model('DB')->resultset('Variable')->find($any_var) } : undef;
-
-    my $where = $object_ref->dynamic_variations ? { user_id => $c->stash->{user_id} || $c->user->id } : undef;
     my $ret = {
 
         $object_ref->indicator_type eq 'varied'
@@ -145,9 +142,6 @@ sub indicator_GET {
               $object_ref->indicator_network_configs
         ],
 
-        ( period => defined $any_var ? $any_var->period : 'yearly' ),
-        ( variable_type => defined $any_var ? $any_var->type : 'int' ),
-
         created_by => { map { $_ => $object_ref->owner->$_ } qw(name id) },
         axis       => { map { $_ => $object_ref->axis->$_ } qw(name id) },
 
@@ -161,6 +155,10 @@ sub indicator_GET {
               visibility_level
               visibility_user_id
               visibility_country_id
+
+              period
+              variable_type
+
 
               formula_human
 

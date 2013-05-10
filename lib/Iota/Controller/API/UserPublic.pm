@@ -126,18 +126,6 @@ sub stash_comparacao {
         { prefetch => ['axis'], join => 'indicator_user_visibilities' }
     )->as_hashref->all;
 
-    for my $ind (@indicators) {
-        my $f = Iota::IndicatorFormula->new(
-            formula => $ind->{formula},
-            schema  => $c->model('DB')->schema
-        );
-
-        my ($any_var) = $f->variables;
-        $any_var = $any_var ? eval { $c->model('DB')->resultset('Variable')->find($any_var) } : undef;
-
-        $ind->{period}        = defined $any_var ? $any_var->period : 'yearly';
-        $ind->{variable_type} = defined $any_var ? $any_var->type   : 'int';
-    }
     $ret->{indicators} = \@indicators;
 
     $self->status_ok( $c, entity => $ret );
