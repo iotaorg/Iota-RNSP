@@ -36,7 +36,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         }
     }
 
-    my @users = $c->stash->{network}->users->with_city->all;
+    my @users = $c->stash->{network}->users->all;
 
     my @cities =
       $c->model('DB::City')
