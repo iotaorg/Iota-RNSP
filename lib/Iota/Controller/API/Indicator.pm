@@ -313,10 +313,9 @@ sub list_GET {
     my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
 
     my %roles = map { $_ => 1 } $c->user->roles;
-
     # superadmin visualiza todas
-    if ( exists $roles{admin} ) {
-        my $x = $c->user;
+    if ( !exists $roles{superadmin} ) {
+        my @user_ids = ($c->user->id);
         my $country_id;
 
         my $user = $c->model('DB::User')->search( { id => $c->user->id } )->next;
@@ -326,13 +325,20 @@ sub list_GET {
             $country_id = $user_city ? $user_city->country_id : undef;
         }
 
+        if ( $user->network_id ) {
+            my $rs = $c->model('DB::User')->search( { network_id => $user->network_id, city_id => undef } );
+            while(my $u = $rs->next){
+                push @user_ids, $u->id;
+            }
+        }
+
         $rs = $rs->search(
             {
                 '-or' => [
                     { visibility_level => 'public' },
                     { visibility_level => 'country', visibility_country_id => $country_id },
-                    { visibility_level => 'private', visibility_user_id => $c->user->id },
-                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => $c->user->id },
+                    { visibility_level => 'private', visibility_user_id => \@user_ids },
+                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@user_ids },
                 ]
             },
             { join => 'indicator_user_visibilities' }
