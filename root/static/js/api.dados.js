@@ -965,6 +965,7 @@ $(document).ready(function(){
 		}
 		$(".download-links").append("<a href='#' class='botao xml' formato='xml'>XML</a>");
 		$(".download-links").append("<a href='#' class='botao csv' formato='csv'>CSV</a>");
+        $(".download-links").append("<a href='#' class='botao csv' formato='xls'>XLS</a>");
 		$(".download-links").append("<a href='#' class='botao json' formato='json'>JSON</a>");
 
 		$(".download-links a.botao").unbind();

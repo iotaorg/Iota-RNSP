@@ -45,6 +45,7 @@
 
             <select name="formato" class="span5">
                 <option value="csv" selected="selected">CSV</option>
+                <option value="xls">XLS</option>
                 <option value="xml">XML</option>
                 <option value="json">JSON</option>
             </select>

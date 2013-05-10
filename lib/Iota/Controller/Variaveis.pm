@@ -349,6 +349,38 @@ sub lines2file {
     elsif ( $path =~ /xml$/ ) {
         print $fh XMLout( $lines, KeyAttr => { server => 'linhas' } );
 
+    }elsif ( $path =~ /xls$/ ) {
+        binmode($fh);
+        my $workbook = Spreadsheet::WriteExcel->new($fh);
+
+        # Add a worksheet
+        my $worksheet = $workbook->add_worksheet();
+
+        #  Add and define a format
+        my $bold = $workbook->add_format(); # Add a format
+        $bold->set_bold();
+
+        # Write a formatted and unformatted string, row and column notation.
+        my $total = @$lines;
+
+        for (my $row = 0; $row < $total; $row++){
+
+            if ($row==0){
+                $worksheet->write($row, 0, $lines->[$row], $bold);
+            }else{
+                my $total_col = @{$lines->[$row]};
+                for (my $col = 0; $col < $total_col; $col++){
+                    my $val = $lines->[$row][$col];
+
+                    if ($val && $val =~ /^\=/){
+                        $worksheet->write_string($row, $col, $val);
+                    }else{
+                        $worksheet->write($row, $col, $val);
+                    }
+                }
+            }
+        }
+
     }
     else {
         die("not a valid format");
@@ -408,6 +440,27 @@ sub down_pref_dados_csv : Chained('pref_dados_csv') : PathPart('') : Args(0) {
 }
 
 sub down_pref_dados_csv_check : Chained('pref_dados_csv_check') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+# network XLS
+sub pref_dados_xls : Chained('/institute_load') : PathPart('variaveis.xls') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'csv';
+}
+
+sub pref_dados_xls_check : Chained('/institute_load') : PathPart('variaveis.xls.checksum') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'csv.check';
+}
+
+sub down_pref_dados_xls : Chained('pref_dados_xls') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+sub down_pref_dados_xls_check : Chained('pref_dados_xls_check') : PathPart('') : Args(0) {
     my ( $self, $c ) = @_;
     $self->_download($c);
 }
@@ -479,6 +532,27 @@ sub down_pref_dados_cidade_csv_check : Chained('pref_dados_cidade_csv_check') : 
     $self->_download($c);
 }
 
+# network CSV
+sub pref_dados_cidade_xls : Chained('/network_cidade') : PathPart('variaveis.csv') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls';
+}
+
+sub pref_dados_cidade_xls_check : Chained('/network_cidade') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls.check';
+}
+
+sub down_pref_dados_cidade_xls : Chained('pref_dados_cidade_xls') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+sub down_pref_dados_cidade_xls_check : Chained('pref_dados_cidade_xls_check') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
 # network XML
 sub pref_dados_cidade_xml : Chained('/network_cidade') : PathPart('variaveis.xml') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
@@ -541,6 +615,29 @@ sub down_pref_dados_cidade_indicadorcsv : Chained('pref_dados_cidade_indicadorcs
 }
 
 sub down_pref_dados_cidade_indicadorcsv_check : Chained('pref_dados_cidade_indicadorcsv_check') : PathPart('') :
+  Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+# network XLS
+sub xls_pref_dados_cidade_indicadorcsv : Chained('/network_indicator') : PathPart('variaveis.csv') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls';
+}
+
+sub xls_pref_dados_cidade_indicadorcsv_check : Chained('/network_indicator') : PathPart('variaveis.csv.checksum') :
+  CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls.check';
+}
+
+sub xls_down_pref_dados_cidade_indicadorcsv : Chained('xls_pref_dados_cidade_indicadorcsv') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+sub xls_down_pref_dados_cidade_indicadorcsv_check : Chained('xls_pref_dados_cidade_indicadorcsv_check') : PathPart('') :
   Args(0) {
     my ( $self, $c ) = @_;
     $self->_download($c);
@@ -612,6 +709,27 @@ sub down_pref_indicador_csv : Chained('pref_indicador_csv') : PathPart('') : Arg
 }
 
 sub down_pref_indicador_csv_check : Chained('pref_indicador_csv_check') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+# network xls
+sub pref_indicador_xls : Chained('/network_indicador') : PathPart('variaveis.xls') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls';
+}
+
+sub pref_indicador_xls_check : Chained('/network_indicador') : PathPart('variaveis.xls.checksum') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls.check';
+}
+
+sub down_pref_indicador_xls : Chained('pref_indicador_xls') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+    $self->_download($c);
+}
+
+sub down_pref_indicador_xls_check : Chained('pref_indicador_xls_check') : PathPart('') : Args(0) {
     my ( $self, $c ) = @_;
     $self->_download($c);
 }

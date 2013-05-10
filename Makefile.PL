@@ -50,6 +50,7 @@ requires 'Geo::Coder::Google';
 requires 'Text::Iconv';
 requires 'Email::Sender';
 requires 'Email::Sender::Simple';
+requires 'Spreadsheet::WriteExcel';
 requires 'Email::Sender::Transport::SMTP::TLS';
 requires 'Email::MIME';
 requires 'Spreadsheet::XLSX';
