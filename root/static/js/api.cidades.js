@@ -132,7 +132,7 @@ $(document).ready(function(){
 
 
 
-
+        $tabela = $('dl.tabela');
         var user_files = cidade_data.usuario.files;
         if (
             typeof(user_files.carta_compromis) != "undefined" ||

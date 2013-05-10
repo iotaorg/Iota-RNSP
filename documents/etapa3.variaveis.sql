@@ -67,7 +67,7 @@ update user_variable_config set position=7 where variable_id = (select id from v
 insert into user_variable_config (
 variable_id, display_in_home, user_id
 )
-select id , true, ( select id from "user" where network_id=1 and city_id is null )
+select id , true, ( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1 )
 from variable
 where
 cognomen ='prefeito' or
@@ -81,13 +81,13 @@ cognomen ='densidade_demo' or
 cognomen ='area_municipio';
 
 
-update user_variable_config set position=1 where variable_id = (select id from variable where cognomen = 'prefeito') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=2 where variable_id = (select id from variable where cognomen = 'vice-prefeito') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=3 where variable_id = (select id from variable where cognomen = 'pop_total') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=4 where variable_id = (select id from variable where cognomen = 'pop_rural') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=5 where variable_id = (select id from variable where cognomen = 'pop_urbana') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=6 where variable_id = (select id from variable where cognomen = 'pop_mulheres') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=7 where variable_id = (select id from variable where cognomen = 'pop_homens') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=8 where variable_id = (select id from variable where cognomen = 'densidade_demo') and user_id =( select id from "user" where network_id=1 and city_id is null );
-update user_variable_config set position=9 where variable_id = (select id from variable where cognomen = 'area_municipio') and user_id =( select id from "user" where network_id=1 and city_id is null );
+update user_variable_config set position=1 where variable_id = (select id from variable where cognomen = 'prefeito') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1 );
+update user_variable_config set position=2 where variable_id = (select id from variable where cognomen = 'vice-prefeito') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=3 where variable_id = (select id from variable where cognomen = 'pop_total') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=4 where variable_id = (select id from variable where cognomen = 'pop_rural') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=5 where variable_id = (select id from variable where cognomen = 'pop_urbana') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=6 where variable_id = (select id from variable where cognomen = 'pop_mulheres') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=7 where variable_id = (select id from variable where cognomen = 'pop_homens') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=8 where variable_id = (select id from variable where cognomen = 'densidade_demo') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
+update user_variable_config set position=9 where variable_id = (select id from variable where cognomen = 'area_municipio') and user_id =( select id from "user" where network_id=1 and city_id is null  order by 1 limit 1);
 
