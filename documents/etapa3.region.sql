@@ -1,4 +1,4 @@
-drop table if exists region;
+drop table if exists region cascade;
 
 CREATE TABLE region
 (
