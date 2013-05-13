@@ -60,7 +60,13 @@ __PACKAGE__->add_columns(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z9VwP8eJgfMDW2Jy0D1laQ
 
+__PACKAGE__->add_columns(
+    "city_id", { data_type => "integer", is_nullable => 0 },
+    "user_id", { data_type => "integer", is_nullable => 0 },
+);
+
 __PACKAGE__->set_primary_key( "user_id", "city_id" );
+
 
 __PACKAGE__->belongs_to( "user", "Iota::Schema::Result::User", { id => "user_id" }, );
 
