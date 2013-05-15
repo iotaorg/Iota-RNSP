@@ -105,6 +105,8 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            # TODO atualizar o nomes la no indicador, se mudou.
+
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
             return $var;

@@ -1,7 +1,7 @@
 
     <div id="content" class="content">
         <div class="row" id="cidades-dados">
-            <div class="span4">
+            <div class="span6">
                 <div class="profile">
                     <div class="content-fill">
                         <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
@@ -9,6 +9,17 @@
 
                             <dt>[%region.depth_level == 2 ? 'Subprefeitura' : 'Distrito'%]: </dt>
                             <dd>[%region.name%]</dd>
+
+                            [%IF subregions.size %]
+                                <dt>Distritos</dt>
+                                <dd>
+                                    <ul>
+                                [%FOR rr IN subregions %]
+                                    <li><a href="[%rr.url%]">[%rr.name%]</a></li>
+                                [%END%]
+                                    </ul>
+                                </dd>
+                            [%END%]
 
                             <dt>Cidade: </dt>
                             <dd>[%city.name%]</dd>

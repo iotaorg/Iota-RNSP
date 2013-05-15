@@ -465,6 +465,16 @@ sub stash_tela_regiao {
         template => 'home_region.tt',
     );
 
+    if ($region->depth_level == 2){
+        my @subregions = $c->model('DB::Region')->search(
+            {
+                city_id      => $c->stash->{city}{id},
+                upper_region => $region->id
+            }
+        )->all;
+        $c->stash->{subregions} = \@subregions;
+    }
+
     $self->_load_region_variables($c);
 }
 
