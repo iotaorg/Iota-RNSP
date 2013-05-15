@@ -71,14 +71,14 @@
                     </div>
                 </div>
             </div>
-        [% IF city.regions %]
+        [% IF city.regions.size>0 %]
             <div class="span4" id="regioes">
                 <h5>Regiões</h5>
                 <ul>
                     [%FOREACH r IN city.regions %]
                         <li>
                             <a href="[%r.url%]">[%r.name%]</a>
-                            [%IF r.subregions%]
+                            [%IF r.subregions.size > 0 %]
                                 <ul>
                                 [%FOREACH rr IN r.subregions%]
                                     <li><a href="[%rr.url%]">[%rr.name%]</a></li>
