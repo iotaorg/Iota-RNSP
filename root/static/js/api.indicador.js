@@ -274,6 +274,7 @@ $(document).ready(function () {
 
 
 
+            source_values = [];
             var valores = [];
             $.each(historico_data.rows, function (index, value) {
 
