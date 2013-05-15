@@ -171,6 +171,7 @@ sub indicator_GET {
 
     };
     $ret->{created_at} = $object_ref->created_at->datetime;
+    $c->stash->{indicator_ref} = $object_ref;
 
     $self->status_ok( $c, entity => $ret );
 

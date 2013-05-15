@@ -70,6 +70,17 @@ sub indicator_GET {
     $c->stash->{object} = $c->stash->{indicator};
     my $controller = $c->controller('API::Indicator');
     $controller->indicator_GET($c);
+
+    my $indicator = $c->stash->{indicator_ref};
+    my $conf = $indicator->user_indicator_configs->search({
+        user_id => $c->stash->{user_id}
+    })->next;
+
+    if ($conf){
+        $c->stash->{rest}{user_indicator_config} = {
+            technical_information => $conf->technical_information
+        };
+    }
 }
 
 sub resumo : Chained('base') : PathPart('') : Args( 0 ) : ActionClass('REST') { }
