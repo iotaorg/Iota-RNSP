@@ -216,7 +216,7 @@ $(document).ready(function () {
 
                 if (indicador_data.user_indicator_config && indicador_data.user_indicator_config.technical_information) {
                     $("#indicador-dados .profile .dados .tabela").append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
-                        dado: indicador_data.user_indicator_config.technical_information.replace('\n', '<br/>')
+                        dado: indicador_data.user_indicator_config.technical_information.replace("\n", '<br/>')
                     }));
                 }
 
