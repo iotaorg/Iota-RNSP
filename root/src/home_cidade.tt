@@ -62,15 +62,40 @@
             </div>
         </div>
 
-
-        <div id="cidades-indicadores">
-                <h5>Indicadores separados por eixos</h5>
-                <div class="table">
-                    <div class="loading"><p>Carregando...</p></div>
+        <div class="row" >
+            <div class="[% IF city.regions %]span8[%ELSE%]span12[%END%]">
+                <div id="cidades-indicadores">
+                    <h5>Indicadores separados por eixos</h5>
+                    <div class="table">
+                        <div class="loading"><p>Carregando...</p></div>
+                    </div>
                 </div>
+            </div>
+        [% IF city.regions %]
+            <div class="span4" id="regioes">
+                <h5>Regiões</h5>
+                <ul>
+                    [%FOREACH r IN city.regions %]
+                        <li>
+                            <a href="[%r.url%]">[%r.name%]</a>
+                            [%IF r.subregions%]
+                                <ul>
+                                [%FOREACH rr IN r.subregions%]
+                                    <li><a href="[%rr.url%]">[%rr.name%]</a></li>
+                                [%END%]
+                                </ul>
+                            [%END%]
+                        </li>
+                    [%END%]
+
+                </ul>
+            </div>
+        [%END%]
         </div>
 
+
     </div>
+
 
 
 <script type="text/javascript">

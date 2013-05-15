@@ -241,10 +241,15 @@ sub stash_tela_cidade {
             pais     => lc $c->stash->{pais},
             uf       => uc $c->stash->{estado},
             name_uri => lc $c->stash->{cidade}
+        },
+        {
+            prefetch => 'regions'
         }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $city;
+
+    $self->_setup_regions_level($c, $city) if ($city->{regions} && @{$city->{regions}} > 0);
 
     my $user = $c->model('DB::User')->search(
         {
@@ -289,6 +294,37 @@ sub stash_tela_cidade {
     );
 }
 
+sub _setup_regions_level {
+    my ( $self, $c, $city ) = @_;
+
+    my $out = {};
+    foreach my $reg (@{$city->{regions}}){
+        my $x = $reg->{upper_region} || $reg->{id};
+        push @{$out->{$x}}, $reg;
+    }
+
+    my @regions;
+    foreach my $id( keys %$out ){
+        my $pai;
+        my @subs;
+        foreach my $r (@{$out->{$id}}){
+            $r->{url} = $c->uri_for($self->action_for('cidade_regiao_render'), [
+                $city->{pais},$city->{uf},$city->{name_uri}, $r->{name_url}
+            ])->as_string;
+
+
+            if (!$r->{upper_region}){
+                $pai = $r;
+            }else{
+                push @subs, $r;
+            }
+        }
+        $pai->{subregions} = \@subs;
+        push @regions, $pai;
+    }
+
+    $city->{regions} = \@regions;
+}
 
 sub _load_variables {
     my ( $self, $c, $user ) = @_;
@@ -475,10 +511,10 @@ sub _load_region_variables {
     }
 
     my $values = $region->region_variable_values->search({
-        variable_id => { 'in' => [keys %$show]},
-        user_id     => $mid
+        'me.variable_id' => { 'in' => [keys %$show]},
+        'me.user_id'     => $mid
     }, {
-        order_by => [{-desc =>'valid_from'}],
+        order_by => [{-desc =>'me.valid_from'}],
         prefetch => {'variable'=>'measurement_unit'}
     });
 
