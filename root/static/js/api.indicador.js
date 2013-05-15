@@ -23,7 +23,7 @@ $(document).ready(function () {
                 loadIndicadorData();
             },
             error: function (data) {
-                console.log("erro ao carregar informações da cidade");
+                console.log("erro ao carregar informaObservaçõesções da cidade");
             }
         });
     }
@@ -211,6 +211,12 @@ $(document).ready(function () {
                 if ((observations_values) && observations_values.trim() != "") {
                     $("#indicador-dados .profile .dados .tabela").append("<dt>Observações:</dt><dd>$$dado</dd>".render({
                         dado: observations_values
+                    }));
+                }
+
+                if (indicador_data.user_indicator_config && indicador_data.user_indicator_config.technical_information) {
+                    $("#indicador-dados .profile .dados .tabela").append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
+                        dado: indicador_data.user_indicator_config.technical_information
                     }));
                 }
 
