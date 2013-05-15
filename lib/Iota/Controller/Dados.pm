@@ -96,6 +96,7 @@ sub _download {
             'Valor',
             'Meta do valor',
             'Justificativa do valor não preenchido',
+            'Informações Tecnicas'
         ]
     );
 
@@ -115,6 +116,12 @@ sub _download {
             )->as_hashref->next;
             $c->detach('/error_404') if $c->stash->{cidade} && !$user;
             next if !$user;
+
+            my $conf = $indicator->user_indicator_configs->search({
+                user_id => $user->{id}
+            })->next;
+
+            my $technical_information = $conf ? $conf->technical_information : '';
 
             my @indicator_variations;
             my @indicator_variables;
@@ -266,7 +273,8 @@ sub _download {
                             $indicator->observations, $self->_period_pt($period),
                             $variacao->{name},        $self->ymd2dmy($begin),
                             $variacao->{value},       $item->{goal},
-                            $item->{justification_of_missing_field}
+                            $item->{justification_of_missing_field},
+                            $technical_information
                         );
                         push @lines, \@this_row;
                     }
@@ -282,7 +290,8 @@ sub _download {
                         $indicator->observations, $self->_period_pt($period),
                         '',                       $self->ymd2dmy($begin),
                         $item->{formula_value},   $item->{goal},
-                        $item->{justification_of_missing_field}
+                        $item->{justification_of_missing_field},
+                        $technical_information
                     );
                     push @lines, \@this_row;
                 }
