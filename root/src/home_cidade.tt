@@ -63,7 +63,7 @@
         </div>
 
         <div class="row" >
-            <div class="[% IF city.regions %]span8[%ELSE%]span12[%END%]">
+            <div class="[% IF city.regions.size > 0 %]span8[%ELSE%]span12[%END%]">
                 <div id="cidades-indicadores">
                     <h5>Indicadores separados por eixos</h5>
                     <div class="table">
