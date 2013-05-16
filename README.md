@@ -19,6 +19,9 @@ Saiba mais em [www.cidadesustentaveis.org.br](www.cidadesustentaveis.org.br).
 > [02 Iota Como instalar uma cópia no linux](https://github.com/W3CBrasil/Iota/wiki/02---Iota---Como-instalar-uma-c%C3%B3pia-no-linux)
 
 
+[Também existe um grupo para desenvolvedores no Google Groups](https://groups.google.com/forum/embed/?place=forum/iota-br&showsearch=true&showpopout=true&showtabs=false#!forum/iota-br)
+
+
 ## Programa Cidades Sustentaveis
 
 Uma grande rede de organizações da sociedade civil está aproveitando as
