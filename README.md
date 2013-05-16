@@ -10,6 +10,12 @@ Saiba mais em [www.cidadesustentaveis.org.br](www.cidadesustentaveis.org.br).
 
 [![Build Status](https://secure.travis-ci.org/W3CBrasil/Iota.png?branch=master)](https://travis-ci.org/W3CBrasil/Iota)
 
+## Wiki
+
+[Você pode consultar a wikipédia para saber mais detalhes](https://github.com/W3CBrasil/Iota/wiki)
+> [01 Iota Uma plataforma para gerenciamento de indicadores](https://github.com/W3CBrasil/Iota/wiki/01---Iota---Uma-plataforma-para-gerenciamento-de-indicadores)
+> [02 Iota Como instalar uma cópia no linux](https://github.com/W3CBrasil/Iota/wiki/02---Iota---Como-instalar-uma-c%C3%B3pia-no-linux)
+
 ## Programa Cidades Sustentaveis
 
 Uma grande rede de organizações da sociedade civil está aproveitando as
