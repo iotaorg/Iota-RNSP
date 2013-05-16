@@ -85,7 +85,7 @@ eval {
                     automatic_fill  => 0,
                     description  => 'with no description',
                     name         => 'a region',
-                    name_url     => 'a-region',
+                    name_url     => 'subprefeitura:a-region',
                     upper_region => undef
                 },
                 'created ok'
@@ -127,7 +127,7 @@ eval {
                     upper_region => {
                         id       => $reg1->{id},
                         name     => 'a region',
-                        name_url => 'a-region',
+                        name_url => 'subprefeitura:a-region',
                     }
                 },
                 'created ok'
@@ -169,7 +169,7 @@ eval {
                     upper_region => {
                         id       => $reg1->{id},
                         name     => 'a region',
-                        name_url => 'a-region',
+                        name_url => 'subprefeitura:a-region',
                     }
                 },
                 'updated ok'

@@ -51,7 +51,6 @@ sub verifiers_specs {
                 id          => { required => 1, type => 'Int' },
                 name        => { required => 0, type => 'Str' },
                 description => { required => 0, type => 'Str' },
-                name_url    => { required => 0, type => 'Str' },
 
                 upper_region => {
                     required   => 0,
@@ -86,6 +85,10 @@ sub action_specs {
 
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
 
+            if (!exists $values{depth_level} || $values{depth_level} == 2){
+                $values{name_url} = 'subprefeitura:' . $values{name_url};
+            }
+
             my $var = $self->create( \%values );
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
@@ -102,10 +105,18 @@ sub action_specs {
             $values{name_url} = $text2uri->translate( $values{name} ) if exists $values{name} && $values{name};
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
 
+            if (exists $values{depth_level}
+                && exists $values{name}
+                && $values{depth_level} == 2){
+
+                $values{name_url} = 'subprefeitura:' . $values{name_url};
+
+            }
+
             return unless keys %values;
 
-            my $var = $self->find( delete $values{id} );
 
+            my $var = $self->find( delete $values{id} );
             $var->update( \%values );
 
             $var->discard_changes;
