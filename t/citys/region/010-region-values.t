@@ -53,6 +53,7 @@ eval {
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
 
+
             my $city_uri = $res->header('Location');
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
@@ -87,6 +88,26 @@ eval {
             is( $res->code, 201, 'created!' );
 
             my $variable = eval { from_json( $res->content ) };
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/indicator',
+                [
+                    api_key                          => 'test',
+                    'indicator.create.name'          => 'Foo Bar',
+                    'indicator.create.formula'       => '1 + $' . $variable->{id},
+                    'indicator.create.axis_id'       => '1',
+                    'indicator.create.explanation'   => 'explanation',
+                    'indicator.create.source'        => 'me',
+                    'indicator.create.goal_source'   => '@fulano',
+                    'indicator.create.chart_name'    => 'pie',
+                    'indicator.create.goal_operator' => '>=',
+                    'indicator.create.tags'          => 'you,me,she',
+
+                    'indicator.create.observations'        => 'lala',
+                    'indicator.create.visibility_level'    => 'public',
+                ]
+            );
+
 
             my $region_url = $reg1_uri . '/value';
 

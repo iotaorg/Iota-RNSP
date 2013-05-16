@@ -8,7 +8,7 @@ extends 'DBIx::Class::ResultSet';
 with 'Iota::Role::Verification';
 with 'Iota::Schema::Role::InflateAsHashRef';
 
-use Iota::IndicatorData;
+
 use Text2URI;
 my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
@@ -90,11 +90,6 @@ sub action_specs {
             }
 
             my $var = $self->create( \%values );
-
-            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
-
-            $data->upsert( region_id => [ $var->id ] );
-
             return $var;
         },
         update => sub {
