@@ -15,6 +15,7 @@ sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 technical_information => {
                     required => 1,
@@ -47,6 +48,7 @@ sub verifiers_specs {
         ),
 
         update => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 id => {
                     required   => 1,

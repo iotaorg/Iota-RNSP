@@ -57,6 +57,7 @@ sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
 
                 value => {
@@ -108,6 +109,7 @@ sub verifiers_specs {
         ),
 
         update => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
 
                 source => { required => 0, type => 'Str' },
@@ -158,6 +160,7 @@ sub verifiers_specs {
         ),
 
         put => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
 
                 source  => { required => 0, type => 'Str' },

@@ -18,6 +18,7 @@ sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 name => {
                     required => 1,
@@ -107,6 +108,7 @@ sub verifiers_specs {
         ),
 
         update => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 id => {
                     required => 1,
@@ -236,6 +238,7 @@ sub verifiers_specs {
         ),
 
         login => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 email => {
                     required   => 1,
@@ -254,6 +257,7 @@ sub verifiers_specs {
         ),
 
         reset_password => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 secret_key => {
                     required   => 1,
@@ -301,6 +305,7 @@ sub verifiers_specs {
             },
         ),
         forgot_password => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 email => {
                     required   => 1,

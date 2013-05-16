@@ -17,6 +17,7 @@ sub verifiers_specs {
     my $self = shift;
     return {
         create => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 name       => { required => 1, type => 'Str' },
                 short_name => { required => 1, type => 'Str' },
@@ -25,6 +26,7 @@ sub verifiers_specs {
         ),
 
         update => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 id         => { required => 1, type => 'Int' },
                 name       => { required => 1, type => 'Str' },

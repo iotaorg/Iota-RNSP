@@ -16,9 +16,10 @@ sub _build_verifier_scope_name { 'axis' }
 sub verifiers_specs {
     my $self = shift;
     return {
-        create => Data::Verifier->new( profile => { name => { required => 1, type => 'Str' }, }, ),
+        create => Data::Verifier->new( filters => [qw(trim)], profile => { name => { required => 1, type => 'Str' }, }, ),
 
         update => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 id   => { required => 1, type => 'Int' },
                 name => { required => 1, type => 'Str' },
