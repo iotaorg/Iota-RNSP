@@ -44,7 +44,7 @@ sub region_GET {
             (
                 map { $_ => $object_ref->{$_} }
                   qw(
-                  name name_url description depth_level
+                  name name_url description depth_level automatic_fill
                   )
             ),
             city => {
@@ -180,7 +180,8 @@ sub list_GET {
                   upper_region
                   depth_level
                   created_by
-                  created_at)
+                  created_at
+                  automatic_fill)
             ),
             url => $c->uri_for_action( $self->action_for('region'), [ $c->stash->{city}->id, $obj->{id} ] )->as_string,
 

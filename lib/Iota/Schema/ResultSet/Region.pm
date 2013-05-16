@@ -39,6 +39,8 @@ sub verifiers_specs {
                       }
                 },
 
+                automatic_fill => { required => 0, type => 'Bool' },
+
             },
         ),
 
@@ -61,6 +63,8 @@ sub verifiers_specs {
                       }
                 },
 
+                automatic_fill => { required => 0, type => 'Bool' },
+
             },
         ),
 
@@ -72,6 +76,9 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
+
+            do { delete $values{$_} unless defined $values{$_} }
+              for keys %values;
 
             $values{name_url} = $text2uri->translate( $values{name} );
 

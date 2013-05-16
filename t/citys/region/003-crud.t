@@ -82,6 +82,7 @@ eval {
                         uf       => 'SP'
                     },
                     depth_level  => 2,
+                    automatic_fill  => 0,
                     description  => 'with no description',
                     name         => 'a region',
                     name_url     => 'a-region',
@@ -121,6 +122,7 @@ eval {
                     depth_level  => 3,
                     description  => 'description',
                     name         => 'foobar',
+                    automatic_fill  => 0,
                     name_url     => 'foobar',
                     upper_region => {
                         id       => $reg1->{id},
@@ -162,6 +164,7 @@ eval {
                     depth_level  => 3,
                     description  => 'description',
                     name         => 'xxx',
+                    automatic_fill  => 0,
                     name_url     => 'xxx',
                     upper_region => {
                         id       => $reg1->{id},
@@ -171,6 +174,7 @@ eval {
                 },
                 'updated ok'
             );
+
 
             ( $res, $c ) = ctx_request( DELETE $reg2_uri );
 
