@@ -7,7 +7,7 @@
                         <h1 class="title">[% city.name %], [%city.uf%]</h1>
                         <div class="variaveis"><dl class="tabela">
                             <dt>Cidade: </dt>
-                            <dd>[%city.name%]</dd>
+                            <dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
                             <dt>Estado: </dt>
                             <dd>[%city.uf%]</dd>
 
