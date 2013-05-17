@@ -496,7 +496,13 @@ $(document).ready(function(){
         _resize_canvas();
 		RGraph.ObjectRegistry.Clear();
 		var color_meta = '#ff0000';
-		var colors = ['#124646','#238080','#3cd3d3','#00a5d4','#015b75','#013342'];
+		var colors = [
+            '#009d56','#96746a','#00a5d4','#84a145','#f69a57','#46489e','#a1214a','#7475b6', '#696a6c', '#4099f0',
+            '#009d56','#96746a','#00a5d4','#84a145','#f69a57','#46489e','#a1214a','#7475b6', '#696a6c', '#4099f0',
+
+
+
+        ];
 //		RGraph.Clear(document.getElementById(canvasId));
 
 		var legendas = [];

@@ -276,6 +276,8 @@ $(document).ready(function () {
 
             source_values = [];
             var valores = [];
+            var grafico_variado;
+
             $.each(historico_data.rows, function (index, value) {
 
                 history_table += "<tr><td class='periodo'>$$periodo</td>".render({
@@ -295,8 +297,6 @@ $(document).ready(function () {
                             });
                         }
                         else {
-
-
 
                             history_table += "<td class='valor'>$$valor</td>".render({
                                 valor: $.formatNumberCustom(valor_linha.value, {
@@ -329,9 +329,20 @@ $(document).ready(function () {
                 if (!(indicador_data.variable_type == 'str')) {
 
                     if (indicador_data.indicator_type == 'varied') {
+                        if (grafico_variado==undefined){
+                            grafico_variado={};
+                        }
 
                         var valor = '';
                         $.each(historico_data.rows[index].variations, function(i, vv){
+                            if (grafico_variado[vv.name] == undefined){
+                                grafico_variado[vv.name] = [];
+                            }
+                            if (vv.value == '-'){
+                                grafico_variado[vv.name][index] = null;
+                            }else{
+                                grafico_variado[vv.name][index] = vv.value;
+                            }
                             if (vv.name == $('#variation').val()){
                                 valor = vv.value;
                             }
@@ -373,14 +384,39 @@ $(document).ready(function () {
 
             });
             history_table += "</tbody></table>";
-            dadosGrafico.dados.push({
-                id: userID,
-                nome: cidade_data.cidade.name,
-                valores: valores,
-                data: cidade_data,
-                show: true
-            });
-        }
+
+            if (grafico_variado == undefined){
+                dadosGrafico.dados.push({
+                    id: userID,
+                    nome: cidade_data.cidade.name,
+                    valores: valores,
+                    show: true
+                });
+            }else{
+
+                var em_ordem = [];
+
+                $.each(grafico_variado, function(a, b){
+                    em_ordem.push(a);
+                });
+                em_ordem.sort();
+                console.log(grafico_variado);
+
+                $.each(em_ordem, function(index, chave){
+
+                    dadosGrafico.dados.push({
+                        id: userID,
+                        nome: chave,
+                        valores: grafico_variado[chave],
+                        show: true
+                    });
+
+                });
+
+            }
+
+            }
+
         else {
             var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
             dadosGrafico.dados = [];

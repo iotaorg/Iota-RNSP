@@ -233,9 +233,13 @@ $.extend({
         }else if ($.isNumber(number)){
             return $.formatNumber(number, mask);
         }else{
-            return '<abbr title="$$err">N/D</abbr>'.render({
-                err: number
-            });
+            if (number == '-'){
+                return '-';
+            }else{
+                return '<abbr title="$$err">N/D</abbr>'.render({
+                    err: number
+                });
+            }
         }
     },
 	getUrlVars: function(){
