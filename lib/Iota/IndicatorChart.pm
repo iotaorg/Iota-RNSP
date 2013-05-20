@@ -5,7 +5,6 @@ with 'MooseX::Traits';
 has '+_trait_namespace' => ( default => 'Iota::IndicatorChart' );
 
 use Iota::Schema::Result::Indicator;
-use Iota::IndicatorFormula;
 
 has indicator => (
     is       => 'ro',
@@ -13,22 +12,6 @@ has indicator => (
     required => 1
 );
 
-has indicator_formula => (
-    is      => 'ro',
-    isa     => 'Iota::IndicatorFormula',
-    lazy    => 1,
-    default => sub {
-        my ($self) = @_;
-        new Iota::IndicatorFormula( formula => $self->indicator->formula, schema => $self->schema );
-    }
-);
-
-has variables => (
-    is      => 'ro',
-    isa     => 'ArrayRef',
-    lazy    => 1,
-    default => sub { [ $_[0]->indicator_formula->variables ] }
-);
 
 has schema => (
     is       => 'ro',

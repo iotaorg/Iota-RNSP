@@ -61,7 +61,6 @@ sub upsert {
             out => $period_values,
             rs  => $rr_values_rs
         );
-        use DDP; p $period_values;
     }
 
     my $variation_values = $self->_get_values_variation( indicators => \@indicators, );

@@ -244,30 +244,18 @@ exemplo agrupado por decada:
 sub read_values {
     my ( $self, %options ) = @_;
 
-    my $period;
-
-    do {
-        my ($anyid) = @{ $self->variables };
-        my $anyvar = $self->schema->resultset('Variable')->find($anyid);
-
-        # return {error => 'novar'} unless $anyvar;
-
-        $period = $anyvar ? $anyvar->period : 'yearly';
-
-    };
+    my $indicator = $self->indicator;
+    my $period    = $indicator->period;
 
     # NOTE 2013-02-05
     # tirei o default de $period pois o JS só funciona com ano
     my $group_by = $options{group_by} ? $self->_valid_or_null( $options{group_by} ) : 'yearly';
 
-    my $indicator = $self->indicator;
-
     my $series = $self->_load_variables_values( %options, group_by => $group_by );
 
     my @indicator_variations;
-    my @indicator_variables;
-    if ( $indicator->indicator_type eq 'varied' ) {
 
+    if ( $indicator->indicator_type eq 'varied' ) {
         if ( $indicator->dynamic_variations ) {
             @indicator_variations =
               $indicator->indicator_variations->search( { user_id => [ $self->user_id, $indicator->user_id ], },
@@ -276,8 +264,6 @@ sub read_values {
         else {
             @indicator_variations = $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
         }
-
-        @indicator_variables = $indicator->indicator_variables_variations->all;
     }
 
     my $data = {
@@ -311,7 +297,6 @@ sub read_values {
       }
       : {};
 
-    my $qtde     = scalar @{ $self->variables };
     my $total    = 0;
     my $total_ok = 0;
     my $totali   = 0;
@@ -332,75 +317,32 @@ sub read_values {
             my $vals_user = $series->{$start}{sets}{$dt};
             my $valor;
 
-            # numero de variaveis preenchidas ok
-            if ( $qtde == keys %$vals_user ) {
+            if ( $indicator->indicator_type eq 'varied' ) {
 
-                if ( @indicator_variables && @indicator_variations ) {
+                my $sum = undef;
+                for my $variation (@indicator_variations) {
 
-                    my $vals = {};
+                    my $value =
+                        exists $vals_user->{$variation->name} &&
+                        defined $vals_user->{$variation->name} ? $vals_user->{$variation->name} : '-';
 
-                    for my $variation (@indicator_variations) {
+                    push @{$row->{variations}}, {
+                        name => $variation->name,
+                        value => $value
+                    };
 
-                        my $rs =
-                          $variation->indicator_variables_variations_values->search( { valid_from => $dt } )
-                          ->as_hashref;
-                        while ( my $r = $rs->next ) {
-                            next unless defined $r->{value};
-                            $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                              $r->{value};
-                        }
-
-                        my $qtde_dados = keys %{ $vals->{ $variation->id } };
-
-                        unless ( $qtde_dados == @indicator_variables ) {
-                            $row->{variations}{ $variation->id } = { value => '-' };
-
-                            delete $vals->{ $variation->id };
-                        }
-                    }
-
-                    # TODO ler do indicador qual o totalization_method
-                    my $sum = undef;
-                    foreach my $variation_id ( keys %$vals ) {
+                    if ($value ne '-'){
                         $sum ||= 0;
-
-                        my $val = $self->indicator_formula->evaluate_with_alias(
-                            V => $vals_user,
-                            N => $vals->{$variation_id},
-                        );
-
-                        $row->{variations}{$variation_id} = { value => $val };
-                        $sum += $val;
-                    }
-                    $row->{formula_value} = $valor = $sum;
-
-                    my @variations;
-
-                    # corre na ordem
-                    foreach my $var (@indicator_variations) {
-                        push @variations,
-                          {
-                            name  => $var->name,
-                            value => $row->{variations}{ $var->id }{value}
-                          };
-                    }
-                    $row->{variations} = \@variations;
-
-                }
-                else {
-
-                    if ( $indicator->formula =~ /#\d/ ) {
-                        $valor = 'ERR#';
-                    }
-                    else {
-                        $valor = $self->indicator_formula->evaluate(%$vals_user);
+                        $sum += $value;
                     }
                 }
 
+                $row->{formula_value} = $valor = $sum;
+
+            }else{
+                $valor = $vals_user->{''};
             }
-            else {
-                $valor = '-';
-            }
+
 
             if ( $valor ne '-' ) {
                 $sum_ok = $total_ok = 1;
@@ -444,23 +386,18 @@ sub read_values {
 
 sub _load_variables_values {
     my ( $self, %options ) = @_;
+    my $valid_from;
 
-    my $rs = $self->schema->resultset('VariableValue')->search(
+    $valid_from->{'>='} = DateTime::Format::Pg->parse_datetime( $options{from} )->datetime if $options{from};
+    $valid_from->{'<='} = DateTime::Format::Pg->parse_datetime( $options{to} )->datetime if $options{to};
+
+    my $rs = $self->schema->resultset('IndicatorValue')->search(
         {
-            variable_id => $self->variables,
-            user_id     => $self->user_id,
+            user_id      => $self->user_id,
+            indicator_id => $self->indicator->id,
+            active_value => 1,
 
-            (
-                $options{from}
-                ? ( valid_from => { '>=' => DateTime::Format::Pg->parse_datetime( $options{from} )->datetime } )
-                : ()
-            ),
-            (
-                $options{to}
-                ? ( valid_until => { '<' => DateTime::Format::Pg->parse_datetime( $options{to} )->datetime } )
-                : ()
-            ),
-
+            (valid_from => $valid_from)x!! $valid_from,
         },
         {
             '+select' => [
@@ -472,15 +409,17 @@ sub _load_variables_values {
             '+as' => ['group_from']
         }
     );
-
     my $values = {};
 
     while ( my $row = $rs->next ) {
+
         my $gp = $row->get_column('group_from') || 'all';
         next unless defined $row->value;
         next if $row->value eq '';
-        $values->{$gp}{sets}{ $row->valid_from }{ $row->variable_id } = $row->value;
+
+        $values->{$gp}{sets}{ $row->valid_from }{ $row->variation_name } = $row->value;
     }
+
     return $values;
 }
 
