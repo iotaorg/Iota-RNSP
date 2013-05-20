@@ -340,6 +340,7 @@ $(document).ready(function(){
 						var ano_anterior = data_atual.getFullYear() - 1;
 						var date_labels = [];
 
+                        var preenchido = 0;
 						for (i = ano_anterior - 3; i <= ano_anterior; i++){
 							if (series[i] == "-" || series[i] == undefined){
 								row_content += "<td class='valor'>-</td>";
@@ -349,22 +350,27 @@ $(document).ready(function(){
                                     row_content += "<td class='valor'>$$valor</td>".render({
                                         valor: series[i]
                                     });
+                                    preenchido++;
                                 }else{
                                     row_content += "<td class='valor'>$$valor</td>".render({
                                         valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
                                     });
+                                    preenchido++;
                                 }
 								valores.push(parseFloat(series[i]).toFixed(2));
 							}
-
 						}
 
-						row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
-										id: index,
-										data_id: item.id
-									});
+                        row_content += "<td class='grafico'><a href='#' user-id='$$data_id'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({
+                                id: index,
+                                data_id: item.id
+                        });
 
-						$(".data-content .table .content-fill tbody").append(row_content);
+                        var $it = $(row_content);
+                        $(".data-content .table .content-fill tbody").append($it);
+                        if (preenchido == 0){
+                            $it.hide();
+                        }
 
                         if(indicadorDATA.variable_type == 'str'){
                             $("td.grafico a").hide();
