@@ -2,6 +2,7 @@ package Iota::Controller::API::Indicator::VariablesVariation::Values;
 
 use Moose;
 use Iota::IndicatorFormula;
+use Iota::IndicatorData;
 use JSON qw (encode_json);
 BEGIN { extends 'Catalyst::Controller::REST' }
 
@@ -36,13 +37,13 @@ sub values : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 sub values_GET {
     my ( $self, $c ) = @_;
-    my $object_ref = $c->stash->{object}->as_hashref->next;
+    my $obj_ref = $c->stash->{object}->as_hashref->next;
 
     $self->status_ok(
         $c,
         entity => {
             (
-                map { $_ => $object_ref->{$_} }
+                map { $_ => $obj_ref->{$_} }
                   qw(
                   id
                   indicator_variation_id
@@ -126,7 +127,23 @@ sub values_DELETE {
 
     if ( $c->user->id == $obj->user_id || $c->check_any_user_role(qw(admin superadmin)) ) {
         $c->logx( 'Apagou informação de indicator_valuess ' . $obj->id );
+
+        my $data = Iota::IndicatorData->new( schema => $c->model('DB') );
+
+        my $conf = {
+            indicators => [
+                $data->indicators_from_variation_variables(
+                    variables => [ $obj->indicator_variables_variation_id ]
+                )
+            ],
+            dates      => [ $obj->valid_from->datetime ],
+            user_id    => $obj->user_id,
+        };
+
         $obj->delete;
+        # apaga os dados dos indicadores, ja q o valor nao existe mais
+        $data->upsert(%$conf);
+
     }
 
     $self->status_no_content($c);
@@ -220,14 +237,14 @@ sub list_POST {
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $object = $dm->get_outcome_for('indicator.variation_value.create');
+    my $obj = $dm->get_outcome_for('indicator.variation_value.create');
     $self->status_created(
         $c,
         location => $c->uri_for( $self->action_for('values'),
-            [ $c->stash->{indicator}->id, $param->{indicator_variables_variation_id}, $object->id ] )->as_string,
+            [ $c->stash->{indicator}->id, $param->{indicator_variables_variation_id}, $obj->id ] )->as_string,
         entity => {
-            id         => $object->id,
-            valid_from => $object->valid_from->ymd,
+            id         => $obj->id,
+            valid_from => $obj->valid_from->ymd,
         }
     );
 }

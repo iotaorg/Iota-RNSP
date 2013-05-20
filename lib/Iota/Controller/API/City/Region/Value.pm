@@ -3,6 +3,7 @@ package Iota::Controller::API::City::Region::Value;
 
 use Moose;
 use JSON qw(encode_json);
+use Iota::IndicatorData;
 
 BEGIN { extends 'Catalyst::Controller::REST' }
 
@@ -97,7 +98,20 @@ sub variable_DELETE {
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $object;
 
     if ( $c->user->id == $object->owner->id || $c->check_any_user_role(qw(admin superadmin)) ) {
+
+        my $data = Iota::IndicatorData->new( schema => $c->model('DB') );
+
+        my $conf = {
+            indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
+            dates      => [ $object->valid_from->datetime ],
+            user_id    => $object->user_id,
+            region_id  => $object->region_id
+        };
+
         $object->delete;
+        # apaga os dados dos indicadores, ja q o valor nao existe mais
+        $data->upsert(%$conf);
+
     }
 
     $self->status_no_content($c);
