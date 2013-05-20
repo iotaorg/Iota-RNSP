@@ -169,6 +169,8 @@ sub list_GET {
 
             ( $user_id ? ( user_id => $user_id ) : () ),
 
+            region_id => undef
+
         }
     )->as_hashref->all;
     my @objs;

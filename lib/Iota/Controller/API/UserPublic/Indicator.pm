@@ -506,7 +506,8 @@ sub indicator_status_GET {
                             my $rs = $variation->indicator_variables_variations_values->search(
                                 {
                                     valid_from => $from,
-                                    user_id    => $user_id
+                                    user_id    => $user_id,
+                                    region_id => undef
                                 }
                             )->as_hashref;
                             while ( my $r = $rs->next ) {
@@ -562,7 +563,7 @@ sub _get_values_dates {
     foreach my $variation (@$variations) {
 
         my @dates = $variation->indicator_variables_variations_values->search(
-            { user_id => $user_id, },
+            { user_id => $user_id, region_id => undef},
             {
                 select   => [qw/valid_from/],
                 as       => [qw/valid_from/],

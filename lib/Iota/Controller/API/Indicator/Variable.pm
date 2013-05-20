@@ -256,7 +256,7 @@ sub values_GET {
         for my $variation (@indicator_variations) {
 
             my $rs = $variation->indicator_variables_variations_values->search(
-                $hash->{filters},
+                {%{$hash->{filters}}, region_id => undef},
                 {
                     select   => [qw/valid_from/],
                     as       => [qw/valid_from/],
@@ -316,7 +316,8 @@ sub values_GET {
                         my $rs = $variation->indicator_variables_variations_values->search(
                             {
                                 valid_from => $begin,
-                                user_id    => $user_id
+                                user_id    => $user_id,
+                                region_id => undef
                             }
                         )->as_hashref;
                         while ( my $r = $rs->next ) {

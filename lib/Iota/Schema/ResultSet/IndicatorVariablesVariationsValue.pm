@@ -22,6 +22,7 @@ sub verifiers_specs {
             profile => {
                 value_of_date          => { required => 1, type => DataStr },
                 user_id                => { required => 1, type => 'Int' },
+                region_id              => { required => 0, type => 'Int' },
                 indicator_variation_id => {
                     required   => 1,
                     type       => 'Int',

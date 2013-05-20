@@ -201,7 +201,8 @@ sub _download {
                             my $rs = $variation->indicator_variables_variations_values->search(
                                 {
                                     valid_from => $begin,
-                                    user_id    => $user->{id}
+                                    user_id    => $user->{id},
+                                    region_id => undef,
                                 }
                             )->as_hashref;
                             while ( my $r = $rs->next ) {
