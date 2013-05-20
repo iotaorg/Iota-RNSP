@@ -8,7 +8,7 @@ var dadosMapa = [];
 var markerCluster;
 var carregouTabela = false;
 var carregaVariacoes = true;
-
+var ano_atual_dados;
 $(document).ready(function(){
 
 	zoom_padrao = 4;
@@ -186,6 +186,8 @@ $(document).ready(function(){
 		if (indicadorID){
 			$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
+
+            montaDateRuler();
 		}
 		$(".indicators .item").click( function (){
 
@@ -218,6 +220,7 @@ $(document).ready(function(){
 
 				dadosGrafico = {"dados": [], "labels": []};
 
+
 				if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
 					carregouTabela = false;
 					carregaDadosTabela();
@@ -236,7 +239,7 @@ $(document).ready(function(){
 			}
 		});
 		if (ref == "comparacao"){
-			carregaDadosTabela();
+			//carregaDadosTabela();
 		}
   	}
 
@@ -250,8 +253,10 @@ $(document).ready(function(){
 
 			dadosGrafico = {"dados": [], "labels": []};
 
-			var data_atual = new Date();
-			var ano_anterior = data_atual.getFullYear() - 1;
+            var ymd_atual  = ano_atual_dados.split('-');
+
+			var data_atual = new Date(ymd_atual[0], ymd_atual[1], ymd_atual[2]);
+			var ano_anterior = data_atual.getFullYear() + 3;
 			var date_labels = [];
 			for (i = ano_anterior - 3; i <= ano_anterior; i++){
 				dadosGrafico.labels.push(String(i));
@@ -265,14 +270,13 @@ $(document).ready(function(){
 				removeFiltroVariacao();
 			}
 
-			montaDateRuler();
 
 			var table_content = ""
 			$(".data-content .table .content-fill").empty();
 			table_content += "<table id='table-data'>";
 			table_content += "<thead><tr><th>Cidade</th>";
-			var data_atual = new Date();
-			var ano_anterior = data_atual.getFullYear() - 1;
+			var data_atual = new Date(ymd_atual[0], ymd_atual[1], ymd_atual[2]);
+			var ano_anterior = data_atual.getFullYear() + 3;
 			for (i = ano_anterior - 3; i <= ano_anterior; i++){
 				table_content += "<th>" + i + "</th>";
 			}
@@ -289,9 +293,11 @@ $(document).ready(function(){
 				$.ajax({
 					type: 'GET',
 					dataType: 'json',
-					url: api_path + '/api/public/user/$$userid/indicator/$$indicatorid/chart/period_axis'.render({
+					url: api_path + '/api/public/user/$$userid/indicator/$$indicatorid/chart/period_axis?from=$$from&to=$$to'.render({
 								userid: item.id,
-								indicatorid: indicador
+								indicatorid: indicador,
+                                from: ano_atual_dados,
+                                to: ano_anterior + '-01-01'
 						}),
 					success: function(data, textStatus, jqXHR){
 
@@ -336,8 +342,8 @@ $(document).ready(function(){
                             }
 						}
 
-						var data_atual = new Date();
-						var ano_anterior = data_atual.getFullYear() - 1;
+						var data_atual = new Date(ymd_atual[0], ymd_atual[1], ymd_atual[2]);
+						var ano_anterior = data_atual.getFullYear() + 3;
 						var date_labels = [];
 
                         var preenchido = 0;
@@ -458,7 +464,7 @@ $(document).ready(function(){
 		var periodo = '';
 		for (i = ano_i; i <= ano_anterior; i++){
 			if (cont == 0){
-				periodo += "<div class='item'>" + i;
+				periodo += "<div class='item' data-begin='"+ i +"-01-01'>" + i;
 			}else if (cont == 3){
 				periodo += "-" + i + "</div>";
 				cont = -1;
@@ -466,14 +472,23 @@ $(document).ready(function(){
 			cont++;
 		}
 		$("#date-ruler").append(periodo);
-		$("#date-ruler .item:last").addClass("active");
-		setDateArrow();
+		//setDateArrow();
 
 		$("#date-ruler .item").click(function(){
-			$("#date-ruler").find(".item").removeClass("active");
-			$(this).addClass("active");
-			setDateArrow();
+            var $self = $(this);
+            geraGraficos();
+            if (!$self.hasClass('active')){
+                $("#date-ruler").find(".item").removeClass("active");
+                $self.addClass("active");
+                ano_atual_dados = $self.attr('data-begin');
+
+                carregouTabela = false;
+                carregaDadosTabela();
+                setDateArrow();
+            }
 		});
+
+		$("#date-ruler .item:last").click();
 	}
 
 	function setDateArrow(){
