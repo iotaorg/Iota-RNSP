@@ -24,169 +24,399 @@ sub values : Chained('base') : PathPart('value') : Args(0 ) : ActionClass('REST'
 GET /api/indicator/<ID>/variable/value
 
 retorna os valores das variaveis em forma de tabela
-{
-    "rows": [
-        {
-            "formula_value": 22,
-            "valores": [
-                {
-                    "value": "21",
-                    "value_of_date": "1192-01-21T00:00:00"
-                },
-                {
-                    "value": "1",
-                    "value_of_date": "1192-01-21T00:00:00"
+com variacao:
+\ {
+    filters:  {
+        user_id:  [
+            [0] 2,
+            [1] 2
+        ]
+    },
+    header :  {
+        'Foo Bar0':  0
+    },
+    rows   :  [
+        [0] {
+            formula_value:  88,
+            valid_from   :  "2010-01-01T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13783,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  15,
+                    value_of_date:  "2010-01-01T00:00:00",
+                    variable_id  :  3784
                 }
             ],
-            "valid_from": "1192-01-19T00:00:00"
+            variations   :  [
+                [0] {
+                    name :  "Até 1/2 salário mínimo.",
+                    value:  19
+                },
+                [1] {
+                    name :  "Mais de 1/2 a 1 salário mínimo.",
+                    value:  21
+                },
+                [2] {
+                    name :  "Mais de 1 a 2 salários mínimos.",
+                    value:  22
+                },
+                [3] {
+                    name :  "outros.",
+                    value:  26
+                }
+            ]
         },
-        {
-            "formula_value": 24,
-            "valores": [
-                {
-                    "value": "22",
-                    "value_of_date": "1192-02-12T00:00:00"
-                },
-                {
-                    "value": "2",
-                    "value_of_date": "1192-02-12T00:00:00"
+        [1] {
+            formula_value:  82,
+            valid_from   :  "2011-01-01T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13785,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  16,
+                    value_of_date:  "2011-01-01T00:00:00",
+                    variable_id  :  3784
                 }
             ],
-            "valid_from": "1192-02-09T00:00:00"
+            variations   :  [
+                [0] {
+                    name :  "Até 1/2 salário mínimo.",
+                    value:  21
+                },
+                [1] {
+                    name :  "Mais de 1/2 a 1 salário mínimo.",
+                    value:  21
+                },
+                [2] {
+                    name :  "Mais de 1 a 2 salários mínimos.",
+                    value:  18
+                },
+                [3] {
+                    name :  "outros.",
+                    value:  22
+                }
+            ]
         },
-        {
-            "formula_value": 30,
-            "valores": [
-                {
-                    "value": "25",
-                    "value_of_date": "1192-03-25T00:00:00"
-                },
-                {
-                    "value": "5",
-                    "value_of_date": "1192-03-25T00:00:00"
+        [2] {
+            formula_value:  95,
+            valid_from   :  "2012-01-01T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13787,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  17,
+                    value_of_date:  "2012-01-01T00:00:00",
+                    variable_id  :  3784
                 }
             ],
-            "valid_from": "1192-03-22T00:00:00"
+            variations   :  [
+                [0] {
+                    name :  "Até 1/2 salário mínimo.",
+                    value:  23
+                },
+                [1] {
+                    name :  "Mais de 1/2 a 1 salário mínimo.",
+                    value:  22
+                },
+                [2] {
+                    name :  "Mais de 1 a 2 salários mínimos.",
+                    value:  24
+                },
+                [3] {
+                    name :  "outros.",
+                    value:  26
+                }
+            ]
         },
-        {
-            "formula_value": 30,
-            "valores": [
-                {
-                    "value": "25",
-                    "value_of_date": "2011-01-21T00:00:00"
-                },
-                {
-                    "value": "5",
-                    "value_of_date": "2011-01-21T00:00:00"
+        [3] {
+            formula_value:  100,
+            valid_from   :  "2013-01-01T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13788,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  18,
+                    value_of_date:  "2013-01-01T00:00:00",
+                    variable_id  :  3784
                 }
             ],
-            "valid_from": "2011-01-16T00:00:00"
-        },
-        {
-            "formula_value": 34,
-            "valores": [
-                {
-                    "value": "27",
-                    "value_of_date": "2011-02-12T00:00:00"
+            variations   :  [
+                [0] {
+                    name :  "Até 1/2 salário mínimo.",
+                    value:  23
                 },
-                {
-                    "value": "7",
-                    "value_of_date": "2011-02-12T00:00:00"
-                }
-            ],
-            "valid_from": "2011-02-06T00:00:00"
-        },
-        {
-            "formula_value": 34,
-            "valores": [
-                {
-                    "value": "27",
-                    "value_of_date": "2011-03-25T00:00:00"
+                [1] {
+                    name :  "Mais de 1/2 a 1 salário mínimo.",
+                    value:  23
                 },
-                {
-                    "value": "7",
-                    "value_of_date": "2011-03-25T00:00:00"
-                }
-            ],
-            "valid_from": "2011-03-20T00:00:00"
-        },
-        {
-            "formula_value": 38,
-            "valores": [
-                {
-                    "value": "29",
-                    "value_of_date": "2011-04-16T00:00:00"
+                [2] {
+                    name :  "Mais de 1 a 2 salários mínimos.",
+                    value:  26
                 },
-                {
-                    "value": "9",
-                    "value_of_date": "2011-04-16T00:00:00"
+                [3] {
+                    name :  "outros.",
+                    value:  28
                 }
-            ],
-            "valid_from": "2011-04-10T00:00:00"
-        },
-        {
-            "formula_value": 26,
-            "valores": [
-                {
-                    "value": "23",
-                    "value_of_date": "2012-01-01T00:00:00"
-                },
-                {
-                    "value": "3",
-                    "value_of_date": "2012-01-01T00:00:00"
-                }
-            ],
-            "valid_from": "2012-01-01T00:00:00"
-        },
-        {
-            "formula_value": 30,
-            "valores": [
-                {
-                    "value": "25",
-                    "value_of_date": "2012-02-22T00:00:00"
-                },
-                {
-                    "value": "5",
-                    "value_of_date": "2012-02-22T00:00:00"
-                }
-            ],
-            "valid_from": "2012-02-19T00:00:00"
-        },
-        {
-            "formula_value": 32,
-            "valores": [
-                {
-                    "value": "26",
-                    "value_of_date": "2012-03-08T00:00:00"
-                },
-                {
-                    "value": "6",
-                    "value_of_date": "2012-03-08T00:00:00"
-                }
-            ],
-            "valid_from": "2012-03-04T00:00:00"
-        },
-        {
-            "formula_value": 36,
-            "valores": [
-                {
-                    "value": "28",
-                    "value_of_date": "2012-04-12T00:00:00"
-                },
-                {
-                    "value": "8",
-                    "value_of_date": "2012-04-12T00:00:00"
-                }
-            ],
-            "valid_from": "2012-04-08T00:00:00"
+            ]
         }
-    ],
-    "header": {
-        "nostradamus": 1,
-        "Temperatura semanal": 0
-    }
+    ]
 }
-
+sem variacao:
+\ {
+    header:  {
+        nostradamus          :  1,
+        'Temperatura semanal':  0
+    },
+    rows  :  [
+        [0]  {
+            formula_value:  22,
+            valid_from   :  "1192-01-19T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13752,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  21,
+                    value_of_date:  "1192-01-21T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13763,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  1,
+                    value_of_date:  "1192-01-21T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [1]  {
+            formula_value:  24,
+            valid_from   :  "1192-02-09T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13753,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  22,
+                    value_of_date:  "1192-02-12T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13764,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  2,
+                    value_of_date:  "1192-02-12T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [2]  {
+            formula_value:  30,
+            valid_from   :  "1192-03-22T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13754,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  25,
+                    value_of_date:  "1192-03-25T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13765,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  5,
+                    value_of_date:  "1192-03-25T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [3]  {
+            formula_value:  30,
+            valid_from   :  "2011-01-16T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13748,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  25,
+                    value_of_date:  "2011-01-21T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13759,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  5,
+                    value_of_date:  "2011-01-21T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [4]  {
+            formula_value:  34,
+            valid_from   :  "2011-02-06T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13749,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  27,
+                    value_of_date:  "2011-02-12T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13760,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  7,
+                    value_of_date:  "2011-02-12T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [5]  {
+            formula_value:  34,
+            valid_from   :  "2011-03-20T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13750,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  27,
+                    value_of_date:  "2011-03-25T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13761,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  7,
+                    value_of_date:  "2011-03-25T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [6]  {
+            formula_value:  38,
+            valid_from   :  "2011-04-10T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13751,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  29,
+                    value_of_date:  "2011-04-16T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13762,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  9,
+                    value_of_date:  "2011-04-16T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [7]  {
+            formula_value:  26,
+            valid_from   :  "2012-01-01T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13744,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  23,
+                    value_of_date:  "2012-01-01T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13755,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  3,
+                    value_of_date:  "2012-01-01T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [8]  {
+            formula_value:  30,
+            valid_from   :  "2012-02-19T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13745,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  25,
+                    value_of_date:  "2012-02-22T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13756,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  5,
+                    value_of_date:  "2012-02-22T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [9]  {
+            formula_value:  32,
+            valid_from   :  "2012-03-04T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13746,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  26,
+                    value_of_date:  "2012-03-08T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13757,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  6,
+                    value_of_date:  "2012-03-08T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        },
+        [10] {
+            formula_value:  36,
+            valid_from   :  "2012-04-08T00:00:00",
+            valores      :  [
+                [0] {
+                    id           :  13747,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  28,
+                    value_of_date:  "2012-04-12T00:00:00",
+                    variable_id  :  3776
+                },
+                [1] {
+                    id           :  13758,
+                    observations :  undef,
+                    source       :  undef,
+                    value        :  8,
+                    value_of_date:  "2012-04-12T00:00:00",
+                    variable_id  :  3783
+                }
+            ]
+        }
+    ]
+}
 
 =cut
 
@@ -380,6 +610,7 @@ sub values_GET {
             push @{ $hash->{rows} }, $item;
 
         }
+
         $ret = $hash;
     };
     if ($@) {
