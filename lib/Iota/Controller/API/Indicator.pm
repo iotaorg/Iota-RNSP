@@ -3,7 +3,6 @@ package Iota::Controller::API::Indicator;
 
 use Moose;
 use JSON qw(encode_json);
-use Iota::IndicatorFormula;
 
 BEGIN { extends 'Catalyst::Controller::REST' }
 

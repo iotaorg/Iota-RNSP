@@ -1,7 +1,6 @@
 package Iota::Controller::API::Indicator::VariablesVariation::Values;
 
 use Moose;
-use Iota::IndicatorFormula;
 use Iota::IndicatorData;
 use JSON qw (encode_json);
 BEGIN { extends 'Catalyst::Controller::REST' }
@@ -84,12 +83,7 @@ sub values_POST {
     $param->{indicator_id}           = $c->stash->{indicator}->id;
     $param->{user_id}                = $c->user->id;
 
-    my $f = Iota::IndicatorFormula->new(
-        formula => $c->stash->{indicator}->formula,
-        schema  => $c->model('DB')->schema
-    );
-    my ($any_var) = $f->variables;
-    $param->{period} = $any_var ? eval { $c->model('DB')->resultset('Variable')->find($any_var)->period } : 'yearly';
+    $param->{period} = $c->stash->{indicator}->period;
 
     $param->{id} = $obj_rs->id;
 
@@ -228,12 +222,7 @@ sub list_POST {
     $param->{indicator_id}                     = $c->stash->{indicator}->id;
     $param->{user_id}                          = $c->user->id;
 
-    my $f = Iota::IndicatorFormula->new(
-        formula => $c->stash->{indicator}->formula,
-        schema  => $c->model('DB')->schema
-    );
-    my ($any_var) = $f->variables;
-    $param->{period} = $any_var ? eval { $c->model('DB')->resultset('Variable')->find($any_var)->period } : '';
+    $param->{period} = $c->stash->{indicator}->period;
 
     my $dm = $c->model('DataManager');
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach

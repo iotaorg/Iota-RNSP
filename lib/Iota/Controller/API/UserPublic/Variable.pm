@@ -2,7 +2,6 @@ package Iota::Controller::API::UserPublic::Variable;
 
 use Moose;
 
-use Iota::IndicatorFormula;
 use Iota::IndicatorChart::PeriodAxis;
 
 use JSON qw(encode_json);
