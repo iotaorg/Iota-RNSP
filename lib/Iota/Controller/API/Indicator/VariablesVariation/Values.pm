@@ -169,7 +169,7 @@ sub list_GET {
 
             ( $user_id ? ( user_id => $user_id ) : () ),
 
-            region_id => undef
+            region_id => $c->req->params->{region_id}
 
         }
     )->as_hashref->all;

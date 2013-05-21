@@ -78,6 +78,7 @@ sub upsert {
     my $users_meta = $self->get_users_meta( users => [
         map { keys %{$results->{$_}} } keys %$results
     ] );
+    my $regions_meta = $self->get_regions_meta( keys %$results );
 
     $self->schema->txn_do(
         sub {
@@ -112,7 +113,9 @@ sub upsert {
                                         user_id        => $user_id,
                                         indicator_id   => $indicator_id,
                                         valid_from     => $date,
-                                        city_id        => $users_meta->{$user_id}{city_id},
+                                        city_id        => defined $region_id
+                                                            ? $regions_meta->{$region_id}{city_id}
+                                                            : $users_meta->{$user_id}{city_id},
                                         institute_id   => $users_meta->{$user_id}{institute_id},
                                         variation_name => $variation,
 
@@ -147,6 +150,26 @@ sub get_users_meta {
         $users->{ $row->{id} } = {
             city_id      => $row->{city_id},
             institute_id => $row->{network}{institute_id}
+        };
+    }
+
+    return $users;
+}
+
+# retorna cidade das regioes
+sub get_regions_meta {
+    my ( $self, @regions ) = @_;
+
+    my $citys =
+      $self->schema->resultset('Region')->search( {
+        'me.id' => {'in' => [grep {/\d/o} @regions ]}
+    })->as_hashref;
+
+    my $users = {};
+
+    while ( my $row = $citys->next ) {
+        $users->{ $row->{id} } = {
+            city_id      => $row->{city_id},
         };
     }
 
