@@ -61,7 +61,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 }
 
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
+    my ( $self, $c ) = @_;
 
     my @countries = @{ $c->stash->{network_data}{countries} };
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
@@ -70,9 +70,9 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         {
             '-or' => [
                 { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => \@countries },
-                { visibility_level => 'private', visibility_user_id => \@users_ids },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
+                { visibility_level => 'country', visibility_country_id => {'in' => \@countries} },
+                { visibility_level => 'private', visibility_user_id => {'in' => \@users_ids} },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@users_ids} },
             ]
         },
         { join => 'indicator_user_visibilities', order_by => 'me.name' }
@@ -90,15 +90,12 @@ sub download_redir : Chained('root') PathPart('download') Args(0) {
     $c->res->redirect( '/dados-abertos', 301 );
 }
 
-sub download : Chained('root') PathPart('dados-abertos') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
+sub download : Chained('institute_load') PathPart('dados-abertos') Args(0) {
+    my ( $self, $c) = @_;
 
-    my @cities     = $c->model('DB::City')->as_hashref->all;
-    my @indicators = $c->model('DB::Indicator')->as_hashref->all;
+    $self->mapa_site($c);
 
     $c->stash(
-        cities     => \@cities,
-        indicators => \@indicators,
         template   => 'download.tt',
         title      => 'Dados abertos'
     );
@@ -219,9 +216,9 @@ sub stash_tela_indicator {
             name_url => $c->stash->{indicator},
             '-or'    => [
                 { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => \@countries },
-                { visibility_level => 'private', visibility_user_id => \@users_ids },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@users_ids },
+                { visibility_level => 'country', visibility_country_id => {'in' => \@countries} },
+                { visibility_level => 'private', visibility_user_id => {'in' => \@users_ids} },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@users_ids} },
             ]
         },
         { join => 'indicator_user_visibilities' }

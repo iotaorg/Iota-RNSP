@@ -29,8 +29,8 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
             '-or' => [
                 { visibility_level => 'public' },
                 { visibility_level => 'country', visibility_country_id => $country },
-                { visibility_level => 'private', visibility_user_id => \@user_ids },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => \@user_ids },
+                { visibility_level => 'private', visibility_user_id => {'in' => \@user_ids} },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@user_ids} },
             ]
         },
         { join => ['indicator_user_visibilities'] }

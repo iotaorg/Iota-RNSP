@@ -131,3 +131,40 @@ create view city_current_user as
 select c.id as city_id, u.id as user_id
 from city c
 join "user" u on u.city_id = c.id;
+
+
+
+CREATE VIEW download_data AS
+SELECT m.city_id,
+       c.name AS city_name,
+       e.name AS axis_name,
+       m.indicator_id,
+       i.name AS indicator_name,
+       i.formula_human,
+       i.goal,
+       i.goal_explanation,
+       i.goal_source,
+       i.goal_operator,
+       i.explanation,
+       i.tags,
+       i.observations,
+       i.period,
+       m.variation_name,
+       m.valid_from,
+       m.value,
+       a.goal AS user_goal,
+       a.justification_of_missing_field,
+       t.technical_information,
+       m.institute_id,
+       m.user_id,
+       m.region_id,
+       m.sources,
+       r.name AS region_name
+FROM indicator_value m
+JOIN city AS c ON m.city_id = c.id
+JOIN indicator AS i ON i.id = m.indicator_id
+LEFT JOIN axis AS e ON e.id = i.axis_id
+LEFT JOIN user_indicator a ON a.user_id = m.user_id AND a.valid_from = m.valid_from AND a.indicator_id = m.indicator_id
+LEFT JOIN user_indicator_config t ON t.user_id = m.user_id AND t.indicator_id = i.id
+LEFT JOIN region r ON r.id = m.region_id
+WHERE active_value = TRUE;

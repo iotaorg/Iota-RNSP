@@ -40,6 +40,13 @@ use Digest::MD5;
 sub _download {
     my ( $self, $c ) = @_;
 
+    my $data_rs = $c->model('DB::DownloadData')->search({
+        institute_id => $c->stash->{institute}->id
+    }, {
+        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+    });
+
+
     my $network = $c->stash->{network};
 
     my $file = $network->name_url;
@@ -52,28 +59,34 @@ sub _download {
     my $path = ( $c->config->{downloads}{tmp_dir} || '/tmp' ) . '/' . lc $file;
 
     if ( -e $path ) {
-
         # apaga o arquivo caso passe 12 horas
         my $epoch_timestamp = ( stat($path) )[9];
-        unlink($path) if time() - $epoch_timestamp > 43200;
+        unlink($path) if time() - $epoch_timestamp > 10;
     }
     $self->_download_and_detach( $c, $path ) if -e $path;
 
-    # procula pela cidade, se existir.
-    my $cities = $c->model('DB::City')->as_hashref;
+    if ($c->stash->{cidade}){
+        # procula pela cidade, se existir.
+        my $cities = $c->model('DB::City')->as_hashref->search(
+            {
+                pais     => lc $c->stash->{pais},
+                uf       => uc $c->stash->{estado},
+                name_uri => lc $c->stash->{cidade}
+            }
+        )->next;
 
-    $cities = $cities->search(
-        {
-            pais     => lc $c->stash->{pais},
-            uf       => uc $c->stash->{estado},
-            name_uri => lc $c->stash->{cidade}
-        }
-    ) if $c->stash->{cidade};
+        my $id = $cities ? $cities->{id} : -9012345; # download vazio
+        $data_rs = $data_rs->search({ city_id => $id });
+    }
 
-    $c->detach('/error_404') if $c->stash->{cidade} && !$cities->count;
+    if (exists $c->stash->{indicator}){
+        $data_rs = $data_rs->search({ indicator_id => $c->stash->{indicator}{id} });
+    }
 
-    #my $role_id = $c->model('DB::Role')->search( {name => $c->stash->{find_role}})->next;
-    #$c->detach('/error_404') unless $role_id;
+    if (exists $c->stash->{region}){
+        $data_rs = $data_rs->search({ region_id => $c->stash->{region}{id} });
+    }
+
 
     my @lines = (
         [
@@ -96,211 +109,38 @@ sub _download {
             'Valor',
             'Meta do valor',
             'Justificativa do valor não preenchido',
-            'Informações Tecnicas'
+            'Informações Tecnicas',
+            'Nome da região',
+            'Fontes'
         ]
     );
 
-    while ( my $city = $cities->next ) {
-        my $indicadores = $c->stash->{indicator}{id} ? { 'me.id' => $c->stash->{indicator}{id} } : undef;
-
-        my $rs = $c->model('DB::Indicator')->search( $indicadores, { prefetch => ['axis'] } );
-        while ( my $indicator = $rs->next ) {
-
-            my $user = $c->model('DB::User')->search(
-                {
-                    city_id         => $city->{id},
-                    'me.active'     => 1,
-                    'me.network_id' => $network->id
-                },
-                { join => 'user_roles' }
-            )->as_hashref->next;
-            $c->detach('/error_404') if $c->stash->{cidade} && !$user;
-            next if !$user;
-
-            my $conf = $indicator->user_indicator_configs->search({
-                user_id => $user->{id}
-            })->next;
-
-            my $technical_information = $conf ? $conf->technical_information : '';
-
-            my @indicator_variations;
-            my @indicator_variables;
-            if ( $indicator->indicator_type eq 'varied' ) {
-
-                if ( $indicator->dynamic_variations ) {
-                    @indicator_variations =
-                      $indicator->indicator_variations->search( { user_id => [ $user->{id}, $indicator->user_id ] },
-                        { order_by => 'order' } )->all;
-                }
-                else {
-                    @indicator_variations =
-                      $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
-                }
-
-                @indicator_variables = $indicator->indicator_variables_variations->all;
-            }
-
-            my $indicator_formula = new Iota::IndicatorFormula(
-                formula => $indicator->formula,
-                schema  => $c->model('DB')->schema
-            );
-
-            my $rs =
-              $c->model('DB')->resultset('Variable')->search_rs( { 'me.id' => [ $indicator_formula->variables ] } );
-
-            my $hash   = {};
-            my $tmp    = {};
-            my $x      = 0;
-            my $period = 'yearly';
-            while ( my $row = $rs->next ) {
-                $hash->{header}{ $row->name } = $x;
-                $hash->{id_nome}{ $row->id }  = $row->name;
-                $period                       = $row->period;
-
-                my @values = $row->values->search( { user_id => $user->{id} } )->all;
-                foreach my $value (@values) {
-                    push @{ $tmp->{ $value->valid_from } },
-                      {
-                        col   => $x,
-                        varid => $row->id,
-                        varn  => $row->name,
-                        value => $value->value,
-                      };
-                }
-                $x++;
-            }
-
-            my $definidos = scalar keys %{ $hash->{header} };
-
-            foreach my $begin ( sort { $a cmp $b } keys %$tmp ) {
-
-                my @order =
-                  sort { $a->{col} <=> $b->{col} } grep { exists $_->{col} && defined $_->{value} } @{ $tmp->{$begin} };
-                my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs(
-                    {
-                        user_id      => $user->{id},
-                        valid_from   => $begin,
-                        indicator_id => $indicator->id
-                    }
-                )->next;
-
-                my $item = {};
-                if ($attrs) {
-                    $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
-                    $item->{goal}                           = $attrs->goal;
-                }
-
-                if ( $definidos == scalar @order ) {
-
-                    if ( @indicator_variables && @indicator_variations ) {
-
-                        my $vals = {};
-
-                        for my $variation (@indicator_variations) {
-
-                            my $rs = $variation->indicator_variables_variations_values->search(
-                                {
-                                    valid_from => $begin,
-                                    user_id    => $user->{id},
-                                    region_id => undef,
-                                }
-                            )->as_hashref;
-                            while ( my $r = $rs->next ) {
-                                next unless defined $r->{value};
-                                $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                                  $r->{value};
-                            }
-
-                            my $qtde_dados = keys %{ $vals->{ $variation->id } };
-
-                            unless ( $qtde_dados == @indicator_variables ) {
-                                $item->{variations}{ $variation->id } = { value => '-' };
-
-                                delete $vals->{ $variation->id };
-                            }
-                        }
-
-                        # TODO ler do indicador qual o totalization_method
-                        my $sum = undef;
-                        foreach my $variation_id ( keys %$vals ) {
-                            $sum ||= 0;
-
-                            my $val = $indicator_formula->evaluate_with_alias(
-                                V => { map { $_->{varid} => $_->{value} } @order },
-                                N => $vals->{$variation_id},
-                            );
-
-                            $item->{variations}{$variation_id} = { value => $val };
-                            $sum += $val;
-                        }
-                        $item->{formula_value} = $sum;
-
-                        my @variations;
-
-                        # corre na ordem
-                        foreach my $var (@indicator_variations) {
-                            push @variations,
-                              {
-                                name  => $var->name,
-                                value => $item->{variations}{ $var->id }{value}
-                              };
-                        }
-                        $item->{variations} = \@variations;
-
-                    }
-                    else {
-
-                        if ( $indicator->formula =~ /#\d/ ) {
-                            $item->{formula_value} = 'ERR#';
-                        }
-                        else {
-
-                            $item->{formula_value} =
-                              $indicator_formula->evaluate( map { $_->{varid} => $_->{value} } @order );
-                        }
-                    }
-
-                }
-
-                if ( ref $item->{variations} eq 'ARRAY' ) {
-                    foreach my $variacao ( @{ $item->{variations} } ) {
-                        my @this_row = (
-                            $city->{id},              $city->{name},
-                            $indicator->axis->name,   $indicator->id,
-                            $indicator->name,         $indicator->formula_human,
-                            $indicator->goal,         $indicator->goal_explanation,
-                            $indicator->goal_source,  $indicator->goal_operator,
-                            $indicator->explanation,  $indicator->tags,
-                            $indicator->observations, $self->_period_pt($period),
-                            $variacao->{name},        $self->ymd2dmy($begin),
-                            $variacao->{value},       $item->{goal},
-                            $item->{justification_of_missing_field},
-                            $technical_information
-                        );
-                        push @lines, \@this_row;
-                    }
-                }
-                else {
-                    my @this_row = (
-                        $city->{id},              $city->{name},
-                        $indicator->axis->name,   $indicator->id,
-                        $indicator->name,         $indicator->formula_human,
-                        $indicator->goal,         $indicator->goal_explanation,
-                        $indicator->goal_source,  $indicator->goal_operator,
-                        $indicator->explanation,  $indicator->tags,
-                        $indicator->observations, $self->_period_pt($period),
-                        '',                       $self->ymd2dmy($begin),
-                        $item->{formula_value},   $item->{goal},
-                        $item->{justification_of_missing_field},
-                        $technical_information
-                    );
-                    push @lines, \@this_row;
-                }
-
-            }
-
-        }
-
+    while ( my $data = $data_rs->next ) {
+        my @this_row = (
+            $data->{city_id},
+            $data->{city_name},
+            $data->{axis_name},
+            $data->{indicator_id},
+            $data->{indicator_name},
+            $data->{formula_human},
+            $data->{goal},
+            $data->{goal_explanation},
+            $data->{goal_source},
+            $data->{goal_operator},
+            $data->{explanation},
+            $data->{tags},
+            $data->{observations},
+            $self->_period_pt( $data->{period} ),
+            $data->{variation_name},
+            $self->ymd2dmy( $data->{valid_from}),
+            $data->{value},
+            $data->{user_goal},
+            $data->{justification_of_missing_field},
+            $data->{technical_information},
+            $data->{region_name},
+            ref $data->{sources} eq 'ARRAY' ? (join "\n", @{$data->{sources}}) : ''
+        );
+        push @lines, \@this_row;
     }
 
     eval { $self->lines2file( $c, $path, \@lines ) };

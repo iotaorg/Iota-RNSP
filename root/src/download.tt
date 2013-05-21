@@ -79,6 +79,8 @@
             <li>Faixa</li>
             <li>Meta do valor</li>
             <li>Justificativa do valor não preenchido</li>
+            <li>Região, se existir</li>
+            <li>Fontes</li>
         </ul>
 
 
