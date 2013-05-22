@@ -11,6 +11,9 @@
 <![endif]-->
 
 
+[% IF institute.short_name == 'gov' %]
+<meta name="google-site-verification" content="W0scFeWasYZRtz6MYIohgpNuTzhWwAftmcFEUCk5jFM" />
+[%END%]
 
 [%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
 [%-CALL assets.include("js/jquery.history.js")%]
