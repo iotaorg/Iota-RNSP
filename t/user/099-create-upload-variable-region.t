@@ -6,13 +6,15 @@ use Test::More;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
-
+use File::Temp qw/ tempfile /;
+use Text::CSV_XS;
 use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common;
 use Package::Stash;
 use Path::Class qw(dir);
 use Iota::TestOnly::Mock::AuthUser;
+use JSON;
 
 my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
@@ -34,7 +36,23 @@ eval {
                 },
             );
 
-            my ( $res, $c );
+
+            my ( $res, $c ) = ctx_request(
+                POST '/api/city/' . $city->id. '/region',
+                [
+                    api_key                          => 'test',
+                    'city.region.create.name'        => 'a region',
+                    'city.region.create.description' => 'with no description',
+                ]
+            );
+
+            ok( $res->is_success, 'region created!' );
+            is( $res->code, 201, 'region created!' );
+
+            my $reg1_uri = $res->header('Location');
+            my $reg1 = eval { from_json( $res->content ) };
+            ok($reg1->{id}, 'has id');
+
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
                 [
@@ -53,63 +71,70 @@ eval {
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
 
-            ( $res, $c ) = ctx_request(
-                POST '/api/variable/value_via_file',
-                'Content-Type' => 'form-data',
-                Content        => [
-                    api_key   => 'test',
-                    'arquivo' => ["$Bin/teste-upload.xlsx"],
-                ]
-            );
-            ok( $res->is_success, 'OK' );
-            is( $res->code, 200, 'upload done!' );
+            my ($fh, $filename) = tempfile(SUFFIX => '.csv');
+            my $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
+                or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
 
-            like( $res->content, qr/Linhas aceitas: 3\\n"/, '3 linhas no XLSX' );
+            $csv->print( $fh, [ 'ID da váriavel', 'Data', 'Valor', 'fonte', 'observacao', 'regiao id' ] );
+
+            $csv->print( $fh, [ 19, '2010-01-01', '123', 'foobar', 'obs', $reg1->{id} ] );
+            $csv->print( $fh, [ 19, '2011-01-01', '456', 'foobar', '222', $reg1->{id} ] );
+            close $fh;
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
                 'Content-Type' => 'form-data',
                 Content        => [
                     api_key   => 'test',
-                    'arquivo' => ["$Bin/teste-upload.xls"],
+                    'arquivo' => [$filename],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-            like( $res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no XLS' );
+            like( $res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no CSV' );
 
-            ( $res, $c ) = ctx_request(
-                POST '/api/variable/value_via_file',
-                'Content-Type' => 'form-data',
-                Content        => [
-                    api_key   => 'test',
-                    'arquivo' => ["$Bin/teste-upload.csv"],
-                ]
-            );
-            ok( $res->is_success, 'OK' );
-            is( $res->code, 200, 'upload done!' );
-
-            like( $res->content, qr/Linhas aceitas: 4\\n"/, '4 linhas no CSV' );
-
-
-
-            my @values = $schema->resultset('VariableValue')->search(undef, {
-                order_by => 'valid_from',
-                rows => 2
-            })->all;
-
-            is($values[0]->valid_from->ymd, '2012-01-01', 'valid from ok');
-            is($values[1]->valid_from->ymd, '2013-01-01', 'valid from ok');
-
-            is($values[0]->value, '0', 'value ok');
-            is($values[1]->value, '1', 'value ok');
-
-            is($values[0]->observations, undef, 'observations ok');
-            is($values[0]->source, 'isso eh uma fonte', 'source ok');
 
             my @sources = $schema->resultset('Source')->all;
-            is(scalar @sources, '2', 'tem as duas fontes!');
+            is(scalar @sources, '1', 'tem uma fonte!');
+
+            my @values = $schema->resultset('RegionVariableValue')->search(undef, {
+                order_by => 'valid_from'
+            })->all;
+
+            is($values[0]->valid_from->ymd, '2010-01-01', 'valid from ok');
+            is($values[1]->valid_from->ymd, '2011-01-01', 'valid from ok');
+
+            is($values[0]->value, '123', 'value ok');
+            is($values[1]->value, '456', 'value ok');
+
+            is($values[0]->observations, 'obs', 'observations ok');
+            is($values[1]->observations, '222', 'observations ok');
+
+
+            ($fh, $filename) = tempfile(SUFFIX => '.csv');
+            $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
+                or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+
+            $csv->print( $fh, [ 'ID da váriavel', 'Data', 'Valor', 'fonte', 'observacao', 'regiao id' ] );
+            $csv->print( $fh, [ 19, '2011-01-01', '456', 'foobar', 'obs', 'foobar' ] );
+
+            close $fh;
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/variable/value_via_file',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [$filename],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+
+            like( $res->content, qr/invalid region id/, 'invalid region id' );
+
+
 
             die 'rollback';
         }

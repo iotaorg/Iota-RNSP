@@ -226,6 +226,15 @@ sub action_specs {
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
+            if (exists $values{source} && $values{source}){
+                my $source = $self->result_source->schema->resultset('Source')->find_or_new({
+                    name => $values{source}
+                });
+                if( !$source->in_storage ) {
+                    $source->user_id( $values{user_id} );
+                    $source->insert;
+                }
+            }
             $data->upsert(
                 indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
                 dates      => [ $values{valid_from} ],
@@ -250,6 +259,16 @@ sub action_specs {
             $var->discard_changes;
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
+
+            if (exists $values{source} && $values{source}){
+                my $source = $self->result_source->schema->resultset('Source')->find_or_new({
+                    name => $values{source}
+                });
+                if( !$source->in_storage ) {
+                    $source->user_id( $values{user_id} );
+                    $source->insert;
+                }
+            }
 
             $data->upsert(
                 indicators => [ $data->indicators_from_variables( variables => [ $var->id ] ) ],
@@ -285,6 +304,14 @@ sub _put {
 
     my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
+    # confere se a regiao eh mesmo da cidade desse usuario
+    my $region = $schema->resultset('Region')->find( $values{region_id} );
+    my $user   = $schema->resultset('User')->find( $values{user_id} );
+
+    if ($user->city_id && $region->city_id != $user->city_id){
+        die 'Illegal region for user.';
+    }
+
     # procura por uma variavel daquele usuario naquele periodo, se
     # existir, atualiza a data e o valor!
     my $row = $self->search(
@@ -318,6 +345,16 @@ sub _put {
         $values{valid_until} = $dates->{period_end};
 
         $row = $self->create( \%values );
+    }
+
+    if (exists $values{source} && $values{source}){
+        my $source = $self->result_source->schema->resultset('Source')->find_or_new({
+            name => $values{source}
+        });
+        if( !$source->in_storage ) {
+            $source->user_id( $values{user_id} );
+            $source->insert;
+        }
     }
 
     my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );

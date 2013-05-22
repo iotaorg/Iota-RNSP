@@ -20,8 +20,10 @@ sub parse {
         date  => qr /\bdata\b/io,
         value => qr /\bvalor\b/io,
 
-        obs => qr /\bobserva..\b/io,
+        obs => qr /\bobserva..o\b/io,
         source => qr /\bfonte\b/io,
+
+        region_id => qr /\b(id da regi.o|regi.o id)\b/io,
     );
 
     my @rows;
@@ -80,6 +82,9 @@ sub parse {
                         $registro->{date} =~ /^20[123][0-9]$/
                       ? $registro->{date} . '-01-01'
                       : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+
+                    die 'invalid variable id' unless $registro->{id} =~ /^\d+$/;
+                    die 'invalid region id' if $registro->{region_id} && $registro->{region_id} !~ /^\d+$/;
                     $ok++;
                     push @rows, $registro;
 

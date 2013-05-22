@@ -64,6 +64,9 @@ sub process {
         );
         $file_id = $file->id;
 
+        my $vv_rs = $schema->resultset('VariableValue');
+        my $rvv_rs = $schema->resultset('RegionVariableValue');
+
         $schema->txn_do(
             sub {
                 # percorre as linhas e insere no banco
@@ -72,14 +75,20 @@ sub process {
                     my $ref = {};
                     $ref->{variable_id}   = $r->{id};
                     $ref->{user_id}       = $param{user_id};
-                    $ref->{value}         = $param{value};
+                    $ref->{value}         = $r->{value};
                     $ref->{value_of_date} = $r->{date};
                     $ref->{file_id}       = $file_id;
 
                     $ref->{observations}  = $r->{obs};
                     $ref->{source}        = $r->{source};
 
-                    eval { $schema->resultset('VariableValue')->_put( $periods{ $r->{id} }, %$ref ); };
+                    if (exists $r->{region_id} && $r->{region_id}){
+                        $ref->{region_id} = $r->{region_id};
+
+                        eval { $rvv_rs->_put( $periods{ $r->{id} }, %$ref ); };
+                    }else{
+                        eval { $vv_rs->_put( $periods{ $r->{id} }, %$ref ); };
+                    }
                     $status .= $@ if $@;
                     die $@ if $@;
                 }

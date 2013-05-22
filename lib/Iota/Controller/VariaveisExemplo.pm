@@ -7,7 +7,7 @@ Download em /variaveis.csv
 
 =cut
 
-package Iota::Controller::VariaveisCSV;
+package Iota::Controller::VariaveisExemplo;
 use Moose;
 BEGIN { extends 'Catalyst::Controller' }
 use utf8;
@@ -118,13 +118,13 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_csv : Chained('/') : PathPart('variaveis_exemplo.csv') : Args(0) {
+sub download_csv : Chained('/institute_load') : PathPart('variaveis_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
     $self->_download($c);
 }
 
-sub download_xls : Chained('/') : PathPart('variaveis_exemplo.xls') : Args(0) {
+sub download_xls : Chained('/institute_load') : PathPart('variaveis_exemplo.xls') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xls';
     $self->_download($c);
