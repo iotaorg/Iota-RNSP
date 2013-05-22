@@ -61,7 +61,7 @@ sub _download {
     if ( -e $path ) {
         # apaga o arquivo caso passe 12 horas
         my $epoch_timestamp = ( stat($path) )[9];
-        unlink($path) if time() - $epoch_timestamp > 10;
+        unlink($path) if time() - $epoch_timestamp > 60;
     }
     $self->_download_and_detach( $c, $path ) if -e $path;
 
