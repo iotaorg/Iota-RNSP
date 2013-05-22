@@ -107,10 +107,15 @@ sub _download {
     if (exists $c->stash->{indicator}){
         $data_rs = $data_rs->search({ variable_id => {
             'in' => [
-                map { $_->variable_id }
+                (map { $_->variable_id }
                     $c->model('DB::IndicatorVariable')->search({
                         indicator_id => $c->stash->{indicator}{id}
-                    })->all
+                    })->all),
+
+                (map { -($_->id) }
+                    $c->model('DB::IndicatorVariation')->search({
+                        indicator_id => $c->stash->{indicator}{id}
+                    })->all)
             ]
         } });
     }
