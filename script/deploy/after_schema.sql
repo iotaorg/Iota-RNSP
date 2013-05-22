@@ -132,6 +132,8 @@ select c.id as city_id, u.id as user_id
 from city c
 join "user" u on u.city_id = c.id;
 
+drop table if exists download_data;
+drop table if exists download_variable;
 
 
 CREATE VIEW download_data AS
