@@ -56,12 +56,48 @@ sub lines2file {
     my ( $self, $c, $path, $lines ) = @_;
 
     open my $fh, ">:encoding(utf8)", $path or die "$path: $!";
+    if ( $path =~ /csv$/ ) {
+        my $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
+          or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
 
-    my $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
-      or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+        $csv->print( $fh, $_ ) for @$lines;
 
-    $csv->print( $fh, $_ ) for @$lines;
+    }elsif ( $path =~ /xls$/ ) {
+        binmode($fh);
+        my $workbook = Spreadsheet::WriteExcel->new($fh);
 
+        # Add a worksheet
+        my $worksheet = $workbook->add_worksheet();
+
+        #  Add and define a format
+        my $bold = $workbook->add_format(); # Add a format
+        $bold->set_bold();
+
+        # Write a formatted and unformatted string, row and column notation.
+        my $total = @$lines;
+
+        for (my $row = 0; $row < $total; $row++){
+
+            if ($row==0){
+                $worksheet->write($row, 0, $lines->[$row], $bold);
+            }else{
+                my $total_col = @{$lines->[$row]};
+                for (my $col = 0; $col < $total_col; $col++){
+                    my $val = $lines->[$row][$col];
+
+                    if ($val && $val =~ /^\=/){
+                        $worksheet->write_string($row, $col, $val);
+                    }else{
+                        $worksheet->write($row, $col, $val);
+                    }
+                }
+            }
+        }
+
+    }
+    else {
+        die("not a valid format");
+    }
     close $fh or die "$path: $!";
 
 }
@@ -69,8 +105,12 @@ sub lines2file {
 sub _download_and_detach {
     my ( $self, $c, $path ) = @_;
 
-    $c->response->content_type('text/csv');
-    $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis_exemplo.csv" );
+    if ( $c->stash->{type} =~ /(csv)/ ) {
+        $c->response->content_type('text/csv');
+    }elsif ( $c->stash->{type} =~ /(xls)/ ) {
+        $c->response->content_type('application/vnd.ms-excel');
+    }
+    $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis_exemplo.$1" );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
@@ -80,6 +120,13 @@ sub _download_and_detach {
 
 sub download_csv : Chained('/') : PathPart('variaveis_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
+    $c->stash->{type} = 'csv';
+    $self->_download($c);
+}
+
+sub download_xls : Chained('/') : PathPart('variaveis_exemplo.xls') : Args(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{type} = 'xls';
     $self->_download($c);
 }
 

@@ -262,6 +262,8 @@ sub _download_and_detach {
     }
     elsif ( $c->stash->{type} =~ /(csv)/ ) {
         $c->response->content_type('text/csv');
+    }elsif ( $c->stash->{type} =~ /(xls)/ ) {
+        $c->response->content_type('application/vnd.ms-excel');
     }
     $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis.$1" );
 
