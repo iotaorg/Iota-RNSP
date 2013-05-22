@@ -222,6 +222,16 @@ sub action_specs {
             my $varvalue = $self->create( \%values );
             $varvalue->discard_changes;
 
+            if (exists $values{source} && $values{source}){
+                my $source = $self->result_source->schema->resultset('Source')->find_or_new({
+                    name => $values{source}
+                });
+                if( !$source->in_storage ) {
+                    $source->user_id( $values{user_id} );
+                    $source->insert;
+                }
+            }
+
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
@@ -245,6 +255,16 @@ sub action_specs {
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
+
+            if (exists $values{source} && $values{source}){
+                my $source = $self->result_source->schema->resultset('Source')->find_or_new({
+                    name => $values{source}
+                });
+                if( !$source->in_storage ) {
+                    $source->user_id( $values{user_id} );
+                    $source->insert;
+                }
+            }
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
@@ -313,6 +333,16 @@ sub _put {
         $values{valid_until} = $dates->{period_end};
 
         $row = $self->create( \%values );
+    }
+
+    if (exists $values{source} && $values{source}){
+        my $source = $self->result_source->schema->resultset('Source')->find_or_new({
+            name => $values{source}
+        });
+        if( !$source->in_storage ) {
+            $source->user_id( $values{user_id} );
+            $source->insert;
+        }
     }
 
     my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );

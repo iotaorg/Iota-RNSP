@@ -1,5 +1,5 @@
-variavel id,variavel nome (apenas referencia),data,valor,colunas,a mais são,ignoradas
-19,popoulacao,2012-02-01,0,,asdasd,
-19,popoulacao,2013,1,xxx,3333333333,
-19,xx,2015-01-02,655,aaa,,
-19,aa,2015,6,,,
+variavel id,variavel nome (apenas referencia),data,valor,colunas,a mais são,ignoradas,fonte,observacao
+19,popoulacao,2012-02-01,0,,asdasd,,isso eh uma fonte,
+19,popoulacao,2013,1,xxx,3333333333,,,
+19,xx,2015-01-02,655,aaa,,,segunda fonte,alguma obs
+19,aa,2015,6,,,,,

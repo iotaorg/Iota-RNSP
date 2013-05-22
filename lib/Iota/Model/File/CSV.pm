@@ -17,7 +17,9 @@ sub parse {
     my %expected_header = (
         id    => qr /\b(id da v.riavel|v.riavel id)\b/io,
         date  => qr /\bdata\b/io,
-        value => qr /\bvalor\b/io
+        value => qr /\bvalor\b/io,
+        obs => qr /\bobserva..\b/io,
+        source => qr /\bfonte\b/io,
     );
 
     my @rows;
@@ -65,7 +67,7 @@ sub parse {
                 $registro->{$header_name} = $value;
             }
 
-            if ( keys %$registro == 3 ) {
+            if ( exists $registro->{id} && exists $registro->{date} && exists $registro->{value} ) {
 
                 $registro->{date} =
                     $registro->{date} =~ /^20[123][0-9]$/        ? $registro->{date} . '-01-01'

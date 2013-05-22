@@ -32,10 +32,10 @@ sub _download {
     # procula pela cidade, se existir.
     my $rs = $c->model('DB')->resultset('Variable')->as_hashref;
 
-    my @lines = ( [ 'ID da váriavel', 'Nome', 'Data', 'Valor', ] );
+    my @lines = ( [ 'ID da váriavel', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
-        push @lines, [ $var->{id}, $var->{name}, undef, undef ];
+        push @lines, [ $var->{id}, $var->{name}, undef, undef, undef, undef ];
     }
 
     if ( $0 && $0 =~ /\.t$/ ) {

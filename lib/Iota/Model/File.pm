@@ -70,12 +70,14 @@ sub process {
                 # usando o modelo certo.
                 foreach my $r ( @{ $parse->{rows} } ) {
                     my $ref = {};
-
                     $ref->{variable_id}   = $r->{id};
                     $ref->{user_id}       = $param{user_id};
                     $ref->{value}         = $param{value};
                     $ref->{value_of_date} = $r->{date};
                     $ref->{file_id}       = $file_id;
+
+                    $ref->{observations}  = $r->{obs};
+                    $ref->{source}        = $r->{source};
 
                     eval { $schema->resultset('VariableValue')->_put( $periods{ $r->{id} }, %$ref ); };
                     $status .= $@ if $@;

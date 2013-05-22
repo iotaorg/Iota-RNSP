@@ -92,6 +92,10 @@ eval {
 
             like( $res->content, qr/Linhas aceitas: 4\\n"/, '4 linhas no CSV' );
 
+
+            my @sources = $schema->resultset('Source')->all;
+            is(scalar @sources, '2', 'tem as duas fontes!');
+
             die 'rollback';
         }
     );
