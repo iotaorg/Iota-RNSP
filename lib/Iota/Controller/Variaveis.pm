@@ -52,212 +52,96 @@ sub _download {
 
         # apaga o arquivo caso passe 12 horas
         my $epoch_timestamp = ( stat($path) )[9];
-        unlink($path) if time() - $epoch_timestamp > 43200;
+        unlink($path) #if time() - $epoch_timestamp > 43200;
     }
     $self->_download_and_detach( $c, $path ) if -e $path;
 
-    # procula pela cidade, se existir.
-    my $cities = $c->model('DB::City')->as_hashref;
-
-    $cities = $cities->search(
-        {
-            pais     => lc $c->stash->{pais},
-            uf       => uc $c->stash->{estado},
-            name_uri => lc $c->stash->{cidade}
-        }
-    ) if $c->stash->{cidade};
-
-    $c->detach('/error_404') if $c->stash->{cidade} && !$cities->count;
-
     my @lines = (
         [
-            'ID da cidade', 'Nome da cidade ',
-            'ID', 'Tipo', 'Apelido', 'Período de atualização',
-            'Fonte', 'É Básica?', 'Unidade de medida',
-            'Nome', 'Data', 'Valor', 'Observações', 'Fonte do valor',
+            'ID da cidade',
+            'Nome da cidade ',
+            'ID',
+            'Tipo',
+            'Apelido',
+            'Período de atualização',
+            'Fonte esperada',
+            'É Básica?',
+            'Unidade de medida',
+            'Nome',
+            'Data',
+            'Valor',
+            'Observações',
+            'Fonte preenchida',
         ]
     );
 
-    while ( my $city = $cities->next ) {
-        my $indicadores = $c->stash->{indicator}{id} ? { 'me.id' => $c->stash->{indicator}{id} } : undef;
+    my $data_rs = $c->model('DB')->resultset('DownloadVariable')->search(
+        {
+            institute_id => $c->stash->{institute}->id
+        },
+        {result_class => 'DBIx::Class::ResultClass::HashRefInflator'}
+    );
 
-        my $rs = $c->model('DB::Indicator')->search( $indicadores, { prefetch => ['axis'] } );
-        while ( my $indicator = $rs->next ) {
-
-            my $user = $c->model('DB::User')->search(
-                {
-                    city_id         => $city->{id},
-                    'me.active'     => 1,
-                    'me.network_id' => $network->id
-                }
-            )->as_hashref->next;
-            $c->detach('/error_404') if $c->stash->{cidade} && !$user;
-            next if !$user;
-
-            my @indicator_variations;
-            my @indicator_variables;
-            if ( $indicator->indicator_type eq 'varied' ) {
-
-                if ( $indicator->dynamic_variations ) {
-                    @indicator_variations =
-                      $indicator->indicator_variations->search( { user_id => [ $user->{id}, $indicator->user_id ] },
-                        { order_by => 'order' } )->all;
-                }
-                else {
-                    @indicator_variations =
-                      $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
-                }
-
-                @indicator_variables = $indicator->indicator_variables_variations->all;
+    if ($c->stash->{cidade}){
+        # procula pelas cidades para procurar os usuarios
+        my $city = $c->model('DB::City')->as_hashref->search(
+            {
+                pais     => lc $c->stash->{pais},
+                uf       => uc $c->stash->{estado},
+                name_uri => lc $c->stash->{cidade}
             }
+        )->next;
 
-            my $indicator_formula = new Iota::IndicatorFormula(
-                formula => $indicator->formula,
-                schema  => $c->model('DB')->schema
-            );
+        my $id = $city ? $city->{id} : -9012345; # download vazio
 
-            my $rs = $c->model('DB')->resultset('Variable')->search_rs(
-                {
-                    -or => [
-                        'values.user_id' => $user->{id},
-                        'values.user_id' => undef,
-                    ],
-                    'me.id' => [ $indicator_formula->variables ]
-                },
-                { prefetch => ['values'] }
-            );
-
-            my $hash   = {};
-            my $tmp    = {};
-            my $x      = 0;
-            my $period = 'yearly';
-            while ( my $row = $rs->next ) {
-                $hash->{header}{ $row->name } = $x;
-                $hash->{id_nome}{ $row->id }  = $row;
-                $period                       = $row->period;
-
-                foreach my $value ( $row->values ) {
-                    push @{ $tmp->{ $value->valid_from } },
-                      {
-                        col    => $x,
-                        varid  => $row->id,
-                        varn   => $row->name,
-                        value  => $value->value,
-                        obs    => $value->observations,
-                        source => $value->source,
-                      };
-                }
-                $x++;
+        my $user = $c->model('DB::User')->as_hashref->search(
+            {
+                city_id    => $id,
+                network_id => $network->id
             }
-            my $definidos = scalar keys %{ $hash->{header} };
+        )->next;
 
-            foreach my $begin ( sort { $a cmp $b } keys %$tmp ) {
-
-                my @order =
-                  sort { $a->{col} <=> $b->{col} } grep { exists $_->{col} && defined $_->{value} } @{ $tmp->{$begin} };
-
-                my $item = {};
-
-                if ( $definidos == scalar @order ) {
-
-                    if ( @indicator_variables && @indicator_variations ) {
-
-                        my $vals = {};
-
-                        my $variables = {};
-                        foreach my $v (@indicator_variables) {
-                            $variables->{ $v->id }{$_} = $v->$_ for qw/name type explanation/;
-                        }
-                        for my $variation (@indicator_variations) {
-
-                            my $rs = $variation->indicator_variables_variations_values->search(
-                                {
-                                    valid_from => $begin,
-                                    user_id    => $user->{id},
-                                    region_id => undef
-                                }
-                            )->as_hashref;
-                            while ( my $r = $rs->next ) {
-                                next unless defined $r->{value};
-                                $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } = $r;
-                                $r->{variable} = $variables->{ $r->{indicator_variables_variation_id} };
-                            }
-                        }
-
-                        my @variations;
-
-                        # corre na ordem
-                        foreach my $var (@indicator_variations) {
-                            push @variations, {
-                                name   => $var->name,
-                                values => $vals->{ $var->id }
-
-                            };
-                        }
-                        $item->{variations} = \@variations;
-
-                    }
-                }
-
-                foreach my $varmt (@order) {
-                    my $var = $hash->{id_nome}{ $varmt->{varid} };
-
-                    my @this_row = (
-                        $city->{id},
-                        $city->{name},
-                        $var->id,
-                        $var->type   eq 'int' ? 'Inteiro'
-                        : $var->type eq 'str' ? 'Alfanumérico'
-                        : 'Valor',
-                        $var->cognomen,
-                        $self->_period_pt( $var->period ),
-                        $var->source,
-                        $var->is_basic ? 'sim' : 'não',
-                        $var->measurement_unit ? $var->measurement_unit->name : '-',
-                        $var->name,
-                        $self->ymd2dmy($begin),
-                        $varmt->{value},
-                        $varmt->{obs},
-                        $varmt->{source}
-                    );
-                    push @lines, \@this_row;
-                }
-
-                if ( ref $item->{variations} eq 'ARRAY' ) {
-                    foreach my $variacao ( @{ $item->{variations} } ) {
-
-                        foreach my $variavel_id ( keys %{ $variacao->{values} } ) {
-                            my $valor = $variacao->{values}{$variavel_id};
-
-                            my @this_row = (
-                                $city->{id},
-                                $city->{name},
-                                '',
-                                $valor->{variable}{type} ? 'Inteiro'
-                                : $valor->{variable}{type} eq 'str' ? 'Alfanumérico'
-                                : 'Valor',
-                                $valor->{variable}{name},
-                                $self->_period_pt($period),
-                                '',
-                                'váriavel de indicador',
-                                '',
-                                $variacao->{name} . ' ' . $valor->{variable}{name},
-                                $self->ymd2dmy($begin),
-                                $valor->{value},
-                                '',
-                                ''
-                            );
-                            push @lines, \@this_row;
-                        }
-
-                    }
-                }
-
-            }
-
-        }
-
+        $data_rs = $data_rs->search({ user_id => $user ? $user->{id} : -9012345 });
     }
+
+    if (exists $c->stash->{indicator}){
+        $data_rs = $data_rs->search({ variable_id => {
+            'in' => [
+                map { $_->variable_id }
+                    $c->model('DB::IndicatorVariable')->search({
+                        indicator_id => $c->stash->{indicator}{id}
+                    })->all
+            ]
+        } });
+    }
+
+    if (exists $c->stash->{region}){
+        # TODO
+        #$data_rs = $data_rs->search({ region_id => $c->stash->{region}{id} });
+    }
+
+    while (my $data = $data_rs->next){
+        my @this_row = (
+            $data->{city_id},
+            $data->{city_name},
+            $data->{variable_id},
+                $data->{type}   eq 'int' ? 'Inteiro'
+                : $data->{type} eq 'str' ? 'Alfanumérico'
+                : 'Valor',
+            $data->{cognomen},
+            $self->_period_pt( $data->{period} ),
+            $data->{exp_source},
+            $data->{is_basic} ? 'sim' : 'não',
+            $data->{measurement_unit_name},
+            $data->{name},
+            $self->ymd2dmy( $data->{valid_from} ),
+            $data->{value},
+            $data->{observations},
+            $data->{source}
+        );
+        push @lines, \@this_row;
+    }
+
 
     eval { $self->lines2file( $c, $path, \@lines ) };
 
@@ -283,45 +167,6 @@ sub _period_pt {
     return $period;    # outros nao usados
 }
 
-sub _add_variables {
-    my ( $self, $c, $hash, $arr ) = @_;
-    my @rows = $c->model('DB')->resultset('Variable')->as_hashref->search( undef, { order_by => 'name' } )->all;
-    my $i = scalar @$arr;
-    foreach my $var (@rows) {
-        $hash->{ $var->{id} } = $i++;
-        push @$arr, $var->{name};
-    }
-}
-
-sub _concate_variables {
-    my ( $self, $c, $header, $values, $row ) = @_;
-
-    my %id_val = map { $_->{varid} => $_->{value} } @$values;
-
-    foreach my $id ( sort { $header->{$a} <=> $header->{$b} } keys %$header ) {
-        if ( exists $id_val{$id} ) {
-            push @$row, $id_val{$id};
-        }
-        else {
-            push @$row, '';
-        }
-    }
-
-}
-
-sub formula_translate {
-    my ( $self, $formula, $variables ) = @_;
-
-    $formula =~ s/([\*\(\/\-\+])/ $1 /g;
-
-    foreach my $varid ( keys %$variables ) {
-        $formula =~ s/\$$varid([^\d]|$)/ $variables->{$varid} $1/g;
-    }
-    $formula =~ s/^\s+//;
-    $formula =~ s/\s+$//;
-    $formula =~ s/\s\s/ /;
-    return $formula;
-}
 
 sub ymd2dmy {
     my ( $self, $str ) = @_;
@@ -448,12 +293,12 @@ sub down_pref_dados_csv_check : Chained('pref_dados_csv_check') : PathPart('') :
 # network XLS
 sub pref_dados_xls : Chained('/institute_load') : PathPart('variaveis.xls') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
+    $c->stash->{type} = 'xls';
 }
 
 sub pref_dados_xls_check : Chained('/institute_load') : PathPart('variaveis.xls.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
+    $c->stash->{type} = 'xls.check';
 }
 
 sub down_pref_dados_xls : Chained('pref_dados_xls') : PathPart('') : Args(0) {
@@ -536,12 +381,12 @@ sub down_pref_dados_cidade_csv_check : Chained('pref_dados_cidade_csv_check') : 
 # network CSV
 sub pref_dados_cidade_xls : Chained('/network_cidade') : PathPart('variaveis.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls';
+    $c->stash->{type} = 'csv';
 }
 
 sub pref_dados_cidade_xls_check : Chained('/network_cidade') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls.check';
+    $c->stash->{type} = 'csv.check';
 }
 
 sub down_pref_dados_cidade_xls : Chained('pref_dados_cidade_xls') : PathPart('') : Args(0) {
@@ -624,13 +469,13 @@ sub down_pref_dados_cidade_indicadorcsv_check : Chained('pref_dados_cidade_indic
 # network XLS
 sub xls_pref_dados_cidade_indicadorcsv : Chained('/network_indicator') : PathPart('variaveis.csv') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls';
+    $c->stash->{type} = 'csv';
 }
 
 sub xls_pref_dados_cidade_indicadorcsv_check : Chained('/network_indicator') : PathPart('variaveis.csv.checksum') :
   CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls.check';
+    $c->stash->{type} = 'csv.check';
 }
 
 sub xls_down_pref_dados_cidade_indicadorcsv : Chained('xls_pref_dados_cidade_indicadorcsv') : PathPart('') : Args(0) {

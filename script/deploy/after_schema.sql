@@ -168,3 +168,33 @@ LEFT JOIN user_indicator a ON a.user_id = m.user_id AND a.valid_from = m.valid_f
 LEFT JOIN user_indicator_config t ON t.user_id = m.user_id AND t.indicator_id = i.id
 LEFT JOIN region r ON r.id = m.region_id
 WHERE active_value = TRUE;
+
+CREATE VIEW download_variable AS
+SELECT
+
+    c.id as city_id,
+    c.name as city_name,
+    v.id as variable_id,
+    v.type,
+    v.cognomen,
+    v.period,
+    v.source as exp_source,
+    v.is_basic,
+    m.name as measurement_unit_name,
+    v.name,
+    vv.valid_from,
+    vv.value,
+    vv.observations,
+    vv.source,
+    vv.user_id,
+    i.id as institute_id
+
+from variable_value vv
+join variable v on v.id = vv.variable_id
+left join measurement_unit m on m.id = v.measurement_unit_id
+join "user" u on u.id = vv.user_id
+join network n on n.id = u.network_id
+join institute i on i.id = n.institute_id
+join city c on c.id = u.city_id
+where value is not null and value != '';
+
