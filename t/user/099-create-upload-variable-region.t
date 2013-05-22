@@ -111,6 +111,15 @@ eval {
             is($values[0]->observations, 'obs', 'observations ok');
             is($values[1]->observations, '222', 'observations ok');
 
+            ( $res, $c ) = ctx_request(
+                GET '/api/file'
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'list files done!' );
+
+            my $files = eval { from_json( $res->content ) };
+            my $x = quotemeta $files->{files}[0]{name};
+            like( $filename, qr/$x/, 'file saved ');
 
             ($fh, $filename) = tempfile(SUFFIX => '.csv');
             $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
@@ -120,6 +129,7 @@ eval {
             $csv->print( $fh, [ 19, '2011-01-01', '456', 'foobar', 'obs', 'foobar' ] );
 
             close $fh;
+
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
