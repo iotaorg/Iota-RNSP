@@ -12,7 +12,7 @@
             <div class="controls">
                 <select name="cidade" class="span5">
                     <option value="" selected="selected">Todas</option>
-                    [%FOREACH c IN cities %]
+                    [%FOREACH c IN cities.sort('name') %]
                     <option value="br/[%c.uf%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</option>
                     [%END%]
                 </select>
@@ -29,7 +29,7 @@
                 <div class="controls">
                 <select name="indicador" class="span8">
                     <option value="" selected="selected">Todos</option>
-                    [%FOREACH i IN indicators %]
+                    [%FOREACH i IN indicators.sort('name') %]
                     <option value="[%i.name_url%]">[%i.name%]</option>
                     [%END%]
                 </select>
