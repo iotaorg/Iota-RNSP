@@ -260,6 +260,16 @@ $(document).ready(function () {
                     variavel: value
                 });
             });
+            var hvariado = Array();
+            if (historico_data.variables_variations){
+
+                $.each(historico_data.variables_variations, function (index, tv) {
+                    history_table += "<th class='variavel'>$$variavel</th>".render({
+                        variavel: tv.name
+                    });
+                    hvariado.push(tv.id);
+                });
+            }
 
             if (!(indicador_data.variable_type == 'str')) {
                 history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
@@ -336,8 +346,11 @@ $(document).ready(function () {
                             grafico_variado={};
                         }
 
+
+
                         var valor = '';
-                        console.log(historico_data.rows[index].variations);
+                        var valoresxx;
+
                         $.each(historico_data.rows[index].variations, function(i, vv){
                             if (grafico_variado[vv.name] == undefined){
                                 grafico_variado[vv.name] = [];
@@ -347,11 +360,36 @@ $(document).ready(function () {
                             }else{
                                 grafico_variado[vv.name][index] = vv.value;
                             }
+
                             if (vv.name == $('#variation').val()){
                                 valor = vv.value;
+                                valoresxx = vv.original;
                             }
                         });
 
+
+                        if (hvariado.length){
+
+                            $.each(hvariado, function (index, id) {
+
+                                if (valoresxx == undefined || valoresxx[id] == undefined || valoresxx[id] == '' || valoresxx[id] == '-'){
+
+
+                                    history_table += "<td class='formula_valor'>-</td>";
+
+                                }else{
+
+                                    history_table += "<td class='formula_valor'>$$valor</td>".render({
+                                        valor: $.formatNumberCustom(valoresxx[id], {
+                                            format: "#,##0.##",
+                                            locale: "br"
+                                        })
+                                    });
+
+                                }
+                            });
+
+                        }
                         history_table += "<td class='formula_valor'>$$valor</td>".render({
                             valor: $.formatNumberCustom(valor, {
                                 format: "#,##0.##",
