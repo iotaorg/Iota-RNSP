@@ -280,6 +280,9 @@ $(document).ready(function () {
 
             $.each(historico_data.rows, function (index, value) {
 
+                if (historico_data.rows[index].valores.length==0){
+                    return;
+                }
                 history_table += "<tr><td class='periodo'>$$periodo</td>".render({
                     periodo: convertDateToPeriod(historico_data.rows[index].valid_from, indicador_data.period)
                 });
@@ -334,6 +337,7 @@ $(document).ready(function () {
                         }
 
                         var valor = '';
+                        console.log(historico_data.rows[index].variations);
                         $.each(historico_data.rows[index].variations, function(i, vv){
                             if (grafico_variado[vv.name] == undefined){
                                 grafico_variado[vv.name] = [];
@@ -385,6 +389,34 @@ $(document).ready(function () {
             });
             history_table += "</tbody></table>";
 
+            if (indicador_data.indicator_type == 'varied') {
+                history_table = history_table + '<div class="title">'+indicador_data.variety_name+'</div>' + "<table class='history table table-striped table-condensed'><thead><tr><th>Período</th><th>Soma das faixas</th>";
+
+                history_table += "</tr><tbody>";
+                $.each(historico_data.rows, function (index, value) {
+
+                    history_table += "<tr><td class='periodo'>$$periodo</td>".render({
+                        periodo: convertDateToPeriod(historico_data.rows[index].valid_from, indicador_data.period)
+                    });
+
+
+                    if (historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-") {
+                        history_table += "<td class='formula_valor'>$$formula_valor</td>".render({
+                            formula_valor: $.formatNumberCustom(historico_data.rows[index].formula_value, {
+                                format: "#,##0.###",
+                                locale: "br"
+                            })
+                        });
+                    }
+                    else {
+                        history_table += "<td class='formula_valor'>-</td>";
+                    }
+
+                    history_table += "</tr>";
+                });
+                history_table += "</tbody></table>";
+            }
+
             if (grafico_variado == undefined){
                 dadosGrafico.dados.push({
                     id: userID,
@@ -400,7 +432,6 @@ $(document).ready(function () {
                     em_ordem.push(a);
                 });
                 em_ordem.sort();
-                console.log(grafico_variado);
 
                 $.each(em_ordem, function(index, chave){
 
