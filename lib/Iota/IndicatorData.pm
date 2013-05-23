@@ -65,8 +65,15 @@ sub upsert {
         $period_values = $self->_get_values_periods($values_rs);
     }
 
-    my $variation_values = $self->_get_values_variation( indicators => \@indicators, );
-    my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators, );
+    my $variation_values = $self->_get_values_variation(
+        indicators => \@indicators,
+
+        # se nao foi informado a regiao, nao tem calculo dela.
+        exists $params{regions_id}
+            ? ('region_id'    => $params{regions_id} )
+            : ('region_id'    => undef ),
+    );
+    my $ind_variation_var = $self->_get_indicator_var_variables(indicators => \@indicators );
 
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
@@ -235,7 +242,10 @@ sub _get_values_variation {
 
     my $variations_rs =
       $self->schema->resultset('IndicatorVariation')
-      ->search( { indicator_id => \@indicator_ids }, { prefetch => 'indicator_variables_variations_values' } )
+      ->search( {
+        indicator_id => \@indicator_ids,
+        'indicator_variables_variations_values.region_id' =>  $params{region_id}
+      }, { prefetch => 'indicator_variables_variations_values' } )
       ->as_hashref;
 
     my $out = {};
@@ -265,7 +275,9 @@ sub _get_indicator_var_variables {
     return {} unless scalar @indicator_ids;
 
     my $variables_rs =
-      $self->schema->resultset('IndicatorVariablesVariation')->search( { indicator_id => \@indicator_ids } )
+      $self->schema->resultset('IndicatorVariablesVariation')->search( {
+        indicator_id => \@indicator_ids,
+     } )
       ->as_hashref;
 
     my $out = {};
