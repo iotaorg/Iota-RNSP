@@ -322,16 +322,16 @@ sub read_values {
                 my $sum = undef;
                 for my $variation (@indicator_variations) {
 
-                    my $value =
-                        exists $vals_user->{$variation->name} &&
-                        defined $vals_user->{$variation->name} ? $vals_user->{$variation->name} : '-';
+                    my $value = exists $vals_user->{ $variation->name }
+                      && defined $vals_user->{ $variation->name } ? $vals_user->{ $variation->name } : '-';
 
-                    push @{$row->{variations}}, {
-                        name => $variation->name,
+                    push @{ $row->{variations} },
+                      {
+                        name  => $variation->name,
                         value => $value
-                    };
+                      };
 
-                    if ($value ne '-'){
+                    if ( $value ne '-' ) {
                         $sum ||= 0;
                         $sum += $value;
                     }
@@ -339,10 +339,10 @@ sub read_values {
 
                 $row->{formula_value} = $valor = $sum;
 
-            }else{
+            }
+            else {
                 $valor = $vals_user->{''};
             }
-
 
             if ( $valor ne '-' ) {
                 $sum_ok = $total_ok = 1;
@@ -389,7 +389,7 @@ sub _load_variables_values {
     my $valid_from;
 
     $valid_from->{'>='} = DateTime::Format::Pg->parse_datetime( $options{from} )->datetime if $options{from};
-    $valid_from->{'<='} = DateTime::Format::Pg->parse_datetime( $options{to} )->datetime if $options{to};
+    $valid_from->{'<='} = DateTime::Format::Pg->parse_datetime( $options{to} )->datetime   if $options{to};
 
     my $rs = $self->schema->resultset('IndicatorValue')->search(
         {
@@ -397,7 +397,7 @@ sub _load_variables_values {
             indicator_id => $self->indicator->id,
             active_value => 1,
 
-            (valid_from => $valid_from)x!! $valid_from,
+            ( valid_from => $valid_from ) x !!$valid_from,
         },
         {
             '+select' => [
@@ -427,7 +427,7 @@ sub get_label_of_period {
     my ( $data, $period ) = @_;
 
     $data =~ s/T/ /;
-    $data = substr($data, 0, 19);
+    $data = substr( $data, 0, 19 );
     my $dt = DateTime::Format::Pg->parse_datetime($data);
 
     if ( $period eq 'weekly' ) {

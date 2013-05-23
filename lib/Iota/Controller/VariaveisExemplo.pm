@@ -62,7 +62,8 @@ sub lines2file {
 
         $csv->print( $fh, $_ ) for @$lines;
 
-    }elsif ( $path =~ /xls$/ ) {
+    }
+    elsif ( $path =~ /xls$/ ) {
         binmode($fh);
         my $workbook = Spreadsheet::WriteExcel->new($fh);
 
@@ -70,25 +71,27 @@ sub lines2file {
         my $worksheet = $workbook->add_worksheet();
 
         #  Add and define a format
-        my $bold = $workbook->add_format(); # Add a format
+        my $bold = $workbook->add_format();    # Add a format
         $bold->set_bold();
 
         # Write a formatted and unformatted string, row and column notation.
         my $total = @$lines;
 
-        for (my $row = 0; $row < $total; $row++){
+        for ( my $row = 0 ; $row < $total ; $row++ ) {
 
-            if ($row==0){
-                $worksheet->write($row, 0, $lines->[$row], $bold);
-            }else{
-                my $total_col = @{$lines->[$row]};
-                for (my $col = 0; $col < $total_col; $col++){
+            if ( $row == 0 ) {
+                $worksheet->write( $row, 0, $lines->[$row], $bold );
+            }
+            else {
+                my $total_col = @{ $lines->[$row] };
+                for ( my $col = 0 ; $col < $total_col ; $col++ ) {
                     my $val = $lines->[$row][$col];
 
-                    if ($val && $val =~ /^\=/){
-                        $worksheet->write_string($row, $col, $val);
-                    }else{
-                        $worksheet->write($row, $col, $val);
+                    if ( $val && $val =~ /^\=/ ) {
+                        $worksheet->write_string( $row, $col, $val );
+                    }
+                    else {
+                        $worksheet->write( $row, $col, $val );
                     }
                 }
             }
@@ -107,7 +110,8 @@ sub _download_and_detach {
 
     if ( $c->stash->{type} =~ /(csv)/ ) {
         $c->response->content_type('text/csv');
-    }elsif ( $c->stash->{type} =~ /(xls)/ ) {
+    }
+    elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
     $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis_exemplo.$1" );

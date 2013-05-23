@@ -15,10 +15,10 @@ sub parse {
     open my $fh, "<:encoding(utf8)", $file or die "$file: $!";
 
     my %expected_header = (
-        id    => qr /\b(id da v.riavel|v.riavel id)\b/io,
-        date  => qr /\bdata\b/io,
-        value => qr /\bvalor\b/io,
-        obs => qr /\bobserva..o\b/io,
+        id     => qr /\b(id da v.riavel|v.riavel id)\b/io,
+        date   => qr /\bdata\b/io,
+        value  => qr /\bvalor\b/io,
+        obs    => qr /\bobserva..o\b/io,
         source => qr /\bfonte\b/io,
 
         region_id => qr /\b(id da regi.o|regi.o id)\b/io,

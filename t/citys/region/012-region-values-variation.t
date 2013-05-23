@@ -25,7 +25,7 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 2;
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 my $indicator;
-my $seq =0;
+my $seq = 0;
 
 eval {
     $schema->txn_do(
@@ -54,7 +54,6 @@ eval {
             );
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
-
 
             my $city_uri = $res->header('Location');
             ( $res, $c ) = ctx_request(
@@ -139,10 +138,8 @@ eval {
                 ]
               );
 
-
             my $list = &_get( 200, '/api/indicator/' . $indicator->{id} . '/variation' );
             is( @{ $list->{variations} }, 2, 'total match' );
-
 
             my @subvar = ();
 
@@ -185,21 +182,22 @@ eval {
             # Pessoas
             &_populate( $reg1->{id}, $subvar[0]{id}, \@variacoes, '2010-01-01', qw/3 5/ );
             &_populate( $reg1->{id}, $subvar[0]{id}, \@variacoes, '1992-01-01', qw/8 9/ );
+
             # fixo
             &_populate( $reg1->{id}, $subvar[1]{id}, \@variacoes, '2010-01-01', qw/1 1 / );
 
             my @rows = $schema->resultset('IndicatorValue')->all;
-            is(scalar @rows, 0 , 'sem linhas, pois os dados estao incompletos');
+            is( scalar @rows, 0, 'sem linhas, pois os dados estao incompletos' );
 
             &add_value( $reg1_uri, $var1, '2010-01-01', 15 );
             @rows = $schema->resultset('IndicatorValue')->all;
 
-            is(scalar @rows, 2 , 'udas linhas, pois agora temos os dados');
-            is($rows[0]->variation_name, 'faixa0', 'faixa ok');
-            is($rows[0]->value, '19', 'valor ok');
+            is( scalar @rows,             2,        'udas linhas, pois agora temos os dados' );
+            is( $rows[0]->variation_name, 'faixa0', 'faixa ok' );
+            is( $rows[0]->value,          '19',     'valor ok' );
 
-            is($rows[1]->variation_name, 'faixa1', 'faixa ok');
-            is($rows[1]->value, '21', 'valor ok');
+            is( $rows[1]->variation_name, 'faixa1', 'faixa ok' );
+            is( $rows[1]->value,          '21',     'valor ok' );
 
             my $period = &_get( 200,
                     '/api/indicator/'
@@ -214,10 +212,10 @@ eval {
                   . $indicator->{id}
                   . '/variables_variation/'
                   . $subvar[0]{id}
-                  . '/values?valid_from=2010-01-01&region_id='.$reg1->{id} );
+                  . '/values?valid_from=2010-01-01&region_id='
+                  . $reg1->{id} );
 
             is( @{ $period->{values} }, 2, 'nenhum resultado sem regiao' );
-
 
             die 'rollback';
         }
@@ -302,13 +300,12 @@ sub add_value {
     my ( $region_url, $variable, $date, $value ) = @_;
 
     $region_url .= '/value';
-    my $req = POST $region_url,
-      [
+    my $req = POST $region_url, [
         'region.variable.value.put.value'         => $value,
         'region.variable.value.put.variable_id'   => $variable,
         'region.variable.value.put.value_of_date' => $date,
 
-      ];
+    ];
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value . ' on ' . $date . ' created!' );

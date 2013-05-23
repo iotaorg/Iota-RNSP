@@ -170,9 +170,9 @@ sub list_GET {
 
     my $config = $c->stash->{collection}->search_rs(
         {
-            variable_id  => $c->req->params->{variable_id},
-            region_id    => $c->req->params->{region_id},
-            user_id      => $c->stash->{user}->id
+            variable_id => $c->req->params->{variable_id},
+            region_id   => $c->req->params->{region_id},
+            user_id     => $c->stash->{user}->id
         }
     )->as_hashref->next;
 

@@ -14,12 +14,12 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    my @user_ids = ($c->stash->{user_obj}->id);
+    my @user_ids = ( $c->stash->{user_obj}->id );
     my $country = eval { $c->stash->{user_obj}->city->country_id };
 
     if ( $c->stash->{user_obj}->network_id ) {
         my $rs = $c->model('DB::User')->search( { network_id => $c->stash->{user_obj}->network_id, city_id => undef } );
-        while(my $u = $rs->next){
+        while ( my $u = $rs->next ) {
             push @user_ids, $u->id;
         }
     }
@@ -29,8 +29,8 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
             '-or' => [
                 { visibility_level => 'public' },
                 { visibility_level => 'country', visibility_country_id => $country },
-                { visibility_level => 'private', visibility_user_id => {'in' => \@user_ids} },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@user_ids} },
+                { visibility_level => 'private', visibility_user_id => { 'in' => \@user_ids } },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@user_ids } },
             ]
         },
         { join => ['indicator_user_visibilities'] }
@@ -72,14 +72,10 @@ sub indicator_GET {
     $controller->indicator_GET($c);
 
     my $indicator = $c->stash->{indicator_ref};
-    my $conf = $indicator->user_indicator_configs->search({
-        user_id => $c->stash->{user_id}
-    })->next;
+    my $conf = $indicator->user_indicator_configs->search( { user_id => $c->stash->{user_id} } )->next;
 
-    if ($conf){
-        $c->stash->{rest}{user_indicator_config} = {
-            technical_information => $conf->technical_information
-        };
+    if ($conf) {
+        $c->stash->{rest}{user_indicator_config} = { technical_information => $conf->technical_information };
     }
 }
 
@@ -507,7 +503,7 @@ sub indicator_status_GET {
                                 {
                                     valid_from => $from,
                                     user_id    => $user_id,
-                                    region_id => undef
+                                    region_id  => undef
                                 }
                             )->as_hashref;
                             while ( my $r = $rs->next ) {
@@ -563,7 +559,7 @@ sub _get_values_dates {
     foreach my $variation (@$variations) {
 
         my @dates = $variation->indicator_variables_variations_values->search(
-            { user_id => $user_id, region_id => undef},
+            { user_id => $user_id, region_id => undef },
             {
                 select   => [qw/valid_from/],
                 as       => [qw/valid_from/],

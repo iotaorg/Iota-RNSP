@@ -40,12 +40,8 @@ use Digest::MD5;
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $data_rs = $c->model('DB::DownloadData')->search({
-        institute_id => $c->stash->{institute}->id
-    }, {
-        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-    });
-
+    my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
+        { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     my $network = $c->stash->{network};
 
@@ -59,13 +55,15 @@ sub _download {
     my $path = ( $c->config->{downloads}{tmp_dir} || '/tmp' ) . '/' . lc $file;
 
     if ( -e $path ) {
+
         # apaga o arquivo caso passe 12 horas
         my $epoch_timestamp = ( stat($path) )[9];
         unlink($path) if time() - $epoch_timestamp > 60;
     }
     $self->_download_and_detach( $c, $path ) if -e $path;
 
-    if ($c->stash->{cidade}){
+    if ( $c->stash->{cidade} ) {
+
         # procula pela cidade, se existir.
         my $cities = $c->model('DB::City')->as_hashref->search(
             {
@@ -75,18 +73,17 @@ sub _download {
             }
         )->next;
 
-        my $id = $cities ? $cities->{id} : -9012345; # download vazio
-        $data_rs = $data_rs->search({ city_id => $id });
+        my $id = $cities ? $cities->{id} : -9012345;    # download vazio
+        $data_rs = $data_rs->search( { city_id => $id } );
     }
 
-    if (exists $c->stash->{indicator}){
-        $data_rs = $data_rs->search({ indicator_id => $c->stash->{indicator}{id} });
+    if ( exists $c->stash->{indicator} ) {
+        $data_rs = $data_rs->search( { indicator_id => $c->stash->{indicator}{id} } );
     }
 
-    if (exists $c->stash->{region}){
-        $data_rs = $data_rs->search({ region_id => $c->stash->{region}{id} });
+    if ( exists $c->stash->{region} ) {
+        $data_rs = $data_rs->search( { region_id => $c->stash->{region}{id} } );
     }
-
 
     my @lines = (
         [
@@ -132,13 +129,13 @@ sub _download {
             $data->{observations},
             $self->_period_pt( $data->{period} ),
             $data->{variation_name},
-            $self->ymd2dmy( $data->{valid_from}),
+            $self->ymd2dmy( $data->{valid_from} ),
             $data->{value},
             $data->{user_goal},
             $data->{justification_of_missing_field},
             $data->{technical_information},
             $data->{region_name},
-            ref $data->{sources} eq 'ARRAY' ? (join "\n", @{$data->{sources}}) : ''
+            ref $data->{sources} eq 'ARRAY' ? ( join "\n", @{ $data->{sources} } ) : ''
         );
         push @lines, \@this_row;
     }
@@ -228,25 +225,27 @@ sub lines2file {
         my $worksheet = $workbook->add_worksheet();
 
         #  Add and define a format
-        my $bold = $workbook->add_format(); # Add a format
+        my $bold = $workbook->add_format();    # Add a format
         $bold->set_bold();
 
         # Write a formatted and unformatted string, row and column notation.
         my $total = @$lines;
 
-        for (my $row = 0; $row < $total; $row++){
+        for ( my $row = 0 ; $row < $total ; $row++ ) {
 
-            if ($row==0){
-                $worksheet->write($row, 0, $lines->[$row], $bold);
-            }else{
-                my $total_col = @{$lines->[$row]};
-                for (my $col = 0; $col < $total_col; $col++){
+            if ( $row == 0 ) {
+                $worksheet->write( $row, 0, $lines->[$row], $bold );
+            }
+            else {
+                my $total_col = @{ $lines->[$row] };
+                for ( my $col = 0 ; $col < $total_col ; $col++ ) {
                     my $val = $lines->[$row][$col];
 
-                    if ($val && $val =~ /^\=/){
-                        $worksheet->write_string($row, $col, $val);
-                    }else{
-                        $worksheet->write($row, $col, $val);
+                    if ( $val && $val =~ /^\=/ ) {
+                        $worksheet->write_string( $row, $col, $val );
+                    }
+                    else {
+                        $worksheet->write( $row, $col, $val );
                     }
                 }
             }
@@ -317,7 +316,6 @@ sub down_pref_dados_csv_check : Chained('pref_dados_csv_check') : PathPart('') :
     my ( $self, $c ) = @_;
     $self->_download($c);
 }
-
 
 # network xLS
 sub pref_dados_xls : Chained('/institute_load') : PathPart('indicadores.xls') : CaptureArgs(0) {
@@ -411,7 +409,8 @@ sub xls_pref_dados_cidade_csv : Chained('/network_cidade') : PathPart('indicador
     $c->stash->{type} = 'xls';
 }
 
-sub xls_pref_dados_cidade_csv_check : Chained('/network_cidade') : PathPart('indicadores.xls.checksum') : CaptureArgs(0) {
+sub xls_pref_dados_cidade_csv_check : Chained('/network_cidade') : PathPart('indicadores.xls.checksum') :
+  CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xls.check';
 }
@@ -512,8 +511,8 @@ sub xls_down_pref_dados_cidade_indicadorcsv : Chained('xls_pref_dados_cidade_ind
     $self->_download($c);
 }
 
-sub xls_down_pref_dados_cidade_indicadorcsv_check : Chained('xls_pref_dados_cidade_indicadorcsv_check') : PathPart('') :
-  Args(0) {
+sub xls_down_pref_dados_cidade_indicadorcsv_check : Chained('xls_pref_dados_cidade_indicadorcsv_check') : PathPart('')
+  : Args(0) {
     my ( $self, $c ) = @_;
     $self->_download($c);
 }
@@ -610,8 +609,6 @@ sub xls_down_pref_indicador_csv_check : Chained('xls_pref_indicador_csv_check') 
     my ( $self, $c ) = @_;
     $self->_download($c);
 }
-
-
 
 # network XML
 sub pref_indicador_xml : Chained('/network_indicador') : PathPart('dados.xml') : CaptureArgs(0) {

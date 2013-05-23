@@ -12,10 +12,8 @@ sub base : Chained('/api/base') : PathPart('file') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{collection} = $c->model('DB::File');
 
-    unless ($c->check_any_user_role(qw(admin superadmin))){
-        $c->stash->{collection} = $c->stash->{collection}->search({
-            created_by => $c->user->id
-        });
+    unless ( $c->check_any_user_role(qw(admin superadmin)) ) {
+        $c->stash->{collection} = $c->stash->{collection}->search( { created_by => $c->user->id } );
     }
 }
 
@@ -93,7 +91,6 @@ sub list_GET {
 
     $self->status_ok( $c, entity => { files => \@objs } );
 }
-
 
 with 'Iota::TraitFor::Controller::Search';
 1;

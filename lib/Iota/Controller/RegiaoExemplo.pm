@@ -32,12 +32,14 @@ sub _download {
     # procula pela cidade, se existir.
     my $rs = $c->stash->{collation};
 
-    my @lines = ( [ 'ID da regiao', 'Subprefeitura','Distrito', 'ID da variavel', 'Data', 'Valor', 'fonte', 'observacao' ] );
+    my @lines =
+      ( [ 'ID da regiao', 'Subprefeitura', 'Distrito', 'ID da variavel', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
-        if ($var->{depth_level} == 2){
+        if ( $var->{depth_level} == 2 ) {
             push @lines, [ $var->{id}, $var->{name}, '-', undef, undef, undef, undef, undef ];
-        }else{
+        }
+        else {
             push @lines, [ $var->{id}, $var->{upper_region}{name}, $var->{name}, undef, undef, undef, undef, undef ];
         }
     }
@@ -66,7 +68,8 @@ sub lines2file {
 
         $csv->print( $fh, $_ ) for @$lines;
 
-    }elsif ( $path =~ /xls$/ ) {
+    }
+    elsif ( $path =~ /xls$/ ) {
         binmode($fh);
         my $workbook = Spreadsheet::WriteExcel->new($fh);
 
@@ -74,25 +77,27 @@ sub lines2file {
         my $worksheet = $workbook->add_worksheet();
 
         #  Add and define a format
-        my $bold = $workbook->add_format(); # Add a format
+        my $bold = $workbook->add_format();    # Add a format
         $bold->set_bold();
 
         # Write a formatted and unformatted string, row and column notation.
         my $total = @$lines;
 
-        for (my $row = 0; $row < $total; $row++){
+        for ( my $row = 0 ; $row < $total ; $row++ ) {
 
-            if ($row==0){
-                $worksheet->write($row, 0, $lines->[$row], $bold);
-            }else{
-                my $total_col = @{$lines->[$row]};
-                for (my $col = 0; $col < $total_col; $col++){
+            if ( $row == 0 ) {
+                $worksheet->write( $row, 0, $lines->[$row], $bold );
+            }
+            else {
+                my $total_col = @{ $lines->[$row] };
+                for ( my $col = 0 ; $col < $total_col ; $col++ ) {
                     my $val = $lines->[$row][$col];
 
-                    if ($val && $val =~ /^\=/){
-                        $worksheet->write_string($row, $col, $val);
-                    }else{
-                        $worksheet->write($row, $col, $val);
+                    if ( $val && $val =~ /^\=/ ) {
+                        $worksheet->write_string( $row, $col, $val );
+                    }
+                    else {
+                        $worksheet->write( $row, $col, $val );
                     }
                 }
             }
@@ -111,7 +116,8 @@ sub _download_and_detach {
 
     if ( $c->stash->{type} =~ /(csv)/ ) {
         $c->response->content_type('text/csv');
-    }elsif ( $c->stash->{type} =~ /(xls)/ ) {
+    }
+    elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
     $c->response->headers->header( 'content-disposition' => "attachment;filename=regiao_exemplo.$1" );
@@ -122,17 +128,18 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub load_user: Chained('/institute_load') : PathPart('dados/usuario') : CaptureArgs(1) {
+sub load_user : Chained('/institute_load') : PathPart('dados/usuario') : CaptureArgs(1) {
     my ( $self, $c, $user_id ) = @_;
 
     my $user = $c->model('DB')->resultset('User')->find($user_id);
 
-    my $rs = $c->model('DB')->resultset('Region')->search({
-        'me.city_id' => eval{$user->city_id}
-    }, {
-        prefetch => 'upper_region',
-        order_by => [ \'COALESCE(me.upper_region, me.id)' ]
-    })->as_hashref;
+    my $rs = $c->model('DB')->resultset('Region')->search(
+        { 'me.city_id' => eval { $user->city_id } },
+        {
+            prefetch => 'upper_region',
+            order_by => [ \'COALESCE(me.upper_region, me.id)' ]
+        }
+    )->as_hashref;
 
     $c->stash->{collation} = $rs;
 }

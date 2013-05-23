@@ -425,15 +425,15 @@ eval {
                         'valid_from' => '2013-01-01T00:00:00'
                     }
                 ],
-                filters  => { user_id    => 2 },
-                'header' => { 'Foo Bar0' => 0 },
+                filters              => { user_id    => 2 },
+                'header'             => { 'Foo Bar0' => 0 },
                 variables_variations => [
-                    {id => $subvar[0]{id}, name => 'Pessoas.' },
-                    {id => $subvar[1]{id}, name => 'variavel para teste.' },
+                    { id => $subvar[0]{id}, name => 'Pessoas.' },
+                    { id => $subvar[1]{id}, name => 'variavel para teste.' },
                 ]
             };
             delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0 .. 3;
-            for my $f (0..3){
+            for my $f ( 0 .. 3 ) {
                 delete $res_variable_value->{rows}[$_]{variations}[$f]{original} for 0 .. 3;
             }
             is_deeply( $res_variable_value, $expe,

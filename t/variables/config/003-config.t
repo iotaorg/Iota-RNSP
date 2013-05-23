@@ -18,7 +18,7 @@ my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::TestOnly::Mock::AuthUser::_id    = 1;
+$Iota::TestOnly::Mock::AuthUser::_id = 1;
 use JSON qw(from_json);
 @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin user /;
 
@@ -64,14 +64,13 @@ eval {
             ok( $res->is_success, 'varible exists' );
             is( $res->code, 200, 'varible exists -- 200 Success' );
 
-
             my $url_user = '/api/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/variable_config';
 
             ( $res, $c ) = ctx_request(
                 POST $url_user,
                 [
-                    api_key                                              => 'test',
-                    'user.variable_config.create.variable_id'          => $variable->{id},
+                    api_key                                       => 'test',
+                    'user.variable_config.create.variable_id'     => $variable->{id},
                     'user.variable_config.create.display_in_home' => '0',
                 ]
             );
@@ -84,8 +83,8 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $url_user,
                 [
-                    api_key                                              => 'test',
-                    'user.variable_config.create.variable_id'          => $variable->{id},
+                    api_key                                       => 'test',
+                    'user.variable_config.create.variable_id'     => $variable->{id},
                     'user.variable_config.create.display_in_home' => '1',
                 ]
             );
@@ -103,7 +102,7 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $url_user . '/' . $config_id->{id},
                 [
-                    api_key                                              => 'test',
+                    api_key                                       => 'test',
                     'user.variable_config.update.display_in_home' => '1',
                 ]
             );

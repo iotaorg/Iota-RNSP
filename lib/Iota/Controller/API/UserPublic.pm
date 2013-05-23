@@ -118,9 +118,9 @@ sub stash_comparacao {
         {
             '-or' => [
                 { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => {'in' => \@countries} },
-                { visibility_level => 'private', visibility_user_id => {'in' => \@users_ids} },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@users_ids} },
+                { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
+                { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
             ]
         },
         { prefetch => ['axis'], join => 'indicator_user_visibilities' }

@@ -43,7 +43,7 @@ sub verifiers_specs {
                         return $self->search(
                             {
                                 variable_id => $r->get_value('variable_id'),
-                                user_id      => $r->get_value('user_id'),
+                                user_id     => $r->get_value('user_id'),
                             }
                         )->count ? 0 : 1;
                       }

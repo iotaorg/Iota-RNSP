@@ -443,11 +443,12 @@ sub values_GET {
 
             @indicator_variables = $indicator->indicator_variables_variations->all;
 
-            foreach my $v (@indicator_variables){
-                push @{$hash->{variables_variations}}, {
-                    id => $v->id,
+            foreach my $v (@indicator_variables) {
+                push @{ $hash->{variables_variations} },
+                  {
+                    id   => $v->id,
                     name => $v->name,
-                };
+                  };
             }
         }
 
@@ -492,7 +493,7 @@ sub values_GET {
         for my $variation (@indicator_variations) {
 
             my $rs = $variation->indicator_variables_variations_values->search(
-                {%{$hash->{filters}}, region_id => undef},
+                { %{ $hash->{filters} }, region_id => undef },
                 {
                     select   => [qw/valid_from/],
                     as       => [qw/valid_from/],
@@ -553,7 +554,7 @@ sub values_GET {
                             {
                                 valid_from => $begin,
                                 user_id    => $user_id,
-                                region_id => undef
+                                region_id  => undef
                             }
                         )->as_hashref;
                         while ( my $r = $rs->next ) {

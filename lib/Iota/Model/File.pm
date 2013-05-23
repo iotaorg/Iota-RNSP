@@ -64,7 +64,7 @@ sub process {
         );
         $file_id = $file->id;
 
-        my $vv_rs = $schema->resultset('VariableValue');
+        my $vv_rs  = $schema->resultset('VariableValue');
         my $rvv_rs = $schema->resultset('RegionVariableValue');
 
         $schema->txn_do(
@@ -79,14 +79,15 @@ sub process {
                     $ref->{value_of_date} = $r->{date};
                     $ref->{file_id}       = $file_id;
 
-                    $ref->{observations}  = $r->{obs};
-                    $ref->{source}        = $r->{source};
+                    $ref->{observations} = $r->{obs};
+                    $ref->{source}       = $r->{source};
 
-                    if (exists $r->{region_id} && $r->{region_id}){
+                    if ( exists $r->{region_id} && $r->{region_id} ) {
                         $ref->{region_id} = $r->{region_id};
 
                         eval { $rvv_rs->_put( $periods{ $r->{id} }, %$ref ); };
-                    }else{
+                    }
+                    else {
                         eval { $vv_rs->_put( $periods{ $r->{id} }, %$ref ); };
                     }
                     $status .= $@ if $@;

@@ -12,7 +12,6 @@ use JSON::XS;
 #
 __PACKAGE__->config( namespace => '' );
 
-
 sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
@@ -70,9 +69,9 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         {
             '-or' => [
                 { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => {'in' => \@countries} },
-                { visibility_level => 'private', visibility_user_id => {'in' => \@users_ids} },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@users_ids} },
+                { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
+                { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
             ]
         },
         { join => 'indicator_user_visibilities', order_by => 'me.name' }
@@ -91,13 +90,13 @@ sub download_redir : Chained('root') PathPart('download') Args(0) {
 }
 
 sub download : Chained('institute_load') PathPart('dados-abertos') Args(0) {
-    my ( $self, $c) = @_;
+    my ( $self, $c ) = @_;
 
     $self->mapa_site($c);
 
     $c->stash(
-        template   => 'download.tt',
-        title      => 'Dados abertos'
+        template => 'download.tt',
+        title    => 'Dados abertos'
     );
 }
 
@@ -124,17 +123,16 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
-
 sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
     my ( $self, $c, $regiao ) = @_;
     $c->stash->{regiao_url} = $regiao;
 
     $self->stash_tela_regiao($c);
 
-    $c->stash->{title} = $c->stash->{region}->name . ' - '. $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
+    $c->stash->{title} = $c->stash->{region}->name . ' - ' . $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
-sub cidade_regiao_render: Chained('cidade_regiao') PathPart('') Args(0) {
+sub cidade_regiao_render : Chained('cidade_regiao') PathPart('') Args(0) {
 }
 
 sub network_render : Chained('network_cidade') PathPart('') Args(0) {
@@ -175,8 +173,6 @@ sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0)
     $c->stash( template => 'home_indicador.tt' );
 }
 
-
-
 sub network_indicador : Chained('institute_load') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
     $self->stash_indicator( $c, $nome );
@@ -216,9 +212,9 @@ sub stash_tela_indicator {
             name_url => $c->stash->{indicator},
             '-or'    => [
                 { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => {'in' => \@countries} },
-                { visibility_level => 'private', visibility_user_id => {'in' => \@users_ids} },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@users_ids} },
+                { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
+                { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
             ]
         },
         { join => 'indicator_user_visibilities' }
@@ -239,14 +235,12 @@ sub stash_tela_cidade {
             uf       => uc $c->stash->{estado},
             name_uri => lc $c->stash->{cidade}
         },
-        {
-            prefetch => 'regions'
-        }
+        { prefetch => 'regions' }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $city;
 
-    $self->_setup_regions_level($c, $city) if ($city->{regions} && @{$city->{regions}} > 0);
+    $self->_setup_regions_level( $c, $city ) if ( $city->{regions} && @{ $city->{regions} } > 0 );
 
     my $user = $c->model('DB::User')->search(
         {
@@ -278,10 +272,9 @@ sub stash_tela_cidade {
             prefetch => 'page'
         }
     );
-    $self->_load_menu($c, $menurs);
+    $self->_load_menu( $c, $menurs );
 
-    $self->_load_variables($c, $user);
-
+    $self->_load_variables( $c, $user );
 
     $user = { $user->get_inflated_columns };
     $c->stash(
@@ -295,24 +288,23 @@ sub _setup_regions_level {
     my ( $self, $c, $city ) = @_;
 
     my $out = {};
-    foreach my $reg (@{$city->{regions}}){
+    foreach my $reg ( @{ $city->{regions} } ) {
         my $x = $reg->{upper_region} || $reg->{id};
-        push @{$out->{$x}}, $reg;
+        push @{ $out->{$x} }, $reg;
     }
 
     my @regions;
-    foreach my $id( keys %$out ){
+    foreach my $id ( keys %$out ) {
         my $pai;
         my @subs;
-        foreach my $r (@{$out->{$id}}){
-            $r->{url} = $c->uri_for($self->action_for('cidade_regiao_render'), [
-                $city->{pais},$city->{uf},$city->{name_uri}, $r->{name_url}
-            ])->as_string;
+        foreach my $r ( @{ $out->{$id} } ) {
+            $r->{url} = $c->uri_for( $self->action_for('cidade_regiao_render'),
+                [ $city->{pais}, $city->{uf}, $city->{name_uri}, $r->{name_url} ] )->as_string;
 
-
-            if (!$r->{upper_region}){
+            if ( !$r->{upper_region} ) {
                 $pai = $r;
-            }else{
+            }
+            else {
                 push @subs, $r;
             }
         }
@@ -326,36 +318,33 @@ sub _setup_regions_level {
 sub _load_variables {
     my ( $self, $c, $user ) = @_;
 
-
-    my @admins_ids = map { $_->id } $c->stash->{network}->users->search({
-        city_id => undef # admins
-    })->all;
+    my @admins_ids = map { $_->id } $c->stash->{network}->users->search(
+        {
+            city_id => undef    # admins
+        }
+    )->all;
     my $mid = $user->id;
 
-    my $var_confrs = $c->model('DB::UserVariableConfig')->search({
-        user_id => [
-            @admins_ids,
-            $mid
-        ]
-    });
+    my $var_confrs = $c->model('DB::UserVariableConfig')->search( { user_id => [ @admins_ids, $mid ] } );
 
     my $aux = {};
-    while (my $conf = $var_confrs->next){
-        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id, $conf->position ];
+    while ( my $conf = $var_confrs->next ) {
+        push @{ $aux->{ $conf->variable_id } }, [ $conf->display_in_home, $conf->user_id, $conf->position ];
     }
 
-    my $show = {};
+    my $show  = {};
     my $order = {};
-    # a configuracao do usuario sempre tem preferencia sob a do admin
-    while (my ($vid, $wants) = each %$aux){
 
-        if (@$wants == 1 && $wants->[0][0]){
+    # a configuracao do usuario sempre tem preferencia sob a do admin
+    while ( my ( $vid, $wants ) = each %$aux ) {
+
+        if ( @$wants == 1 && $wants->[0][0] ) {
             $order->{$vid} = $wants->[0][2];
             $show->{$vid}++ and last;
         }
 
-        foreach my $conf (@$wants){
-            if ($conf->[1] == $mid && $conf->[0]){
+        foreach my $conf (@$wants) {
+            if ( $conf->[1] == $mid && $conf->[0] ) {
 
                 $order->{$vid} = $conf->[2];
                 $show->{$vid}++ and last;
@@ -364,30 +353,29 @@ sub _load_variables {
 
     }
 
-    my $values = $user->variable_values->search({
-        variable_id => { 'in' => [keys %$show]},
-    }, {
-        order_by => [{-desc =>'valid_from'}],
-        prefetch => {'variable'=>'measurement_unit'}
-    });
+    my $values = $user->variable_values->search(
+        { variable_id => { 'in' => [ keys %$show ] }, },
+        {
+            order_by => [            { -desc => 'valid_from' } ],
+            prefetch => { 'variable' => 'measurement_unit' }
+        }
+    );
 
     my %exists;
     my @variables;
-    while (my $val = $values->next){
-        next if $exists{$val->variable_id}++;
+    while ( my $val = $values->next ) {
+        next if $exists{ $val->variable_id }++;
 
         push @variables, $val;
     }
 
-    @variables = sort { $order->{$a->variable_id} <=> $order->{$b->variable_id} } @variables;
+    @variables = sort { $order->{ $a->variable_id } <=> $order->{ $b->variable_id } } @variables;
 
-    $c->stash(
-        user_basic_variables => \@variables
-    );
+    $c->stash( user_basic_variables => \@variables );
 }
 
 sub _load_menu {
-    my ($self, $c, $menurs) = @_;
+    my ( $self, $c, $menurs ) = @_;
 
     my $menu = {};
     my @menu_out;
@@ -440,9 +428,7 @@ sub _load_menu {
         }
     }
 
-    $c->stash(
-        menu     => \@menu_out,
-    );
+    $c->stash( menu => \@menu_out, );
 
 }
 
@@ -458,11 +444,11 @@ sub stash_tela_regiao {
 
     $c->detach('/error_404') unless $region;
     $c->stash(
-        region => $region,
+        region   => $region,
         template => 'home_region.tt',
     );
 
-    if ($region->depth_level == 2){
+    if ( $region->depth_level == 2 ) {
         my @subregions = $c->model('DB::Region')->search(
             {
                 city_id      => $c->stash->{city}{id},
@@ -475,40 +461,36 @@ sub stash_tela_regiao {
     $self->_load_region_variables($c);
 }
 
-
 sub _load_region_variables {
     my ( $self, $c ) = @_;
 
     my $region = $c->stash->{region};
-    my @admins_ids = map { $_->id } $c->stash->{network}->users->search({
-        city_id => undef # admins
-    })->all;
+    my @admins_ids = map { $_->id } $c->stash->{network}->users->search(
+        {
+            city_id => undef    # admins
+        }
+    )->all;
     my $mid = $c->stash->{user}{id};
-    my $var_confrs = $region->user_variable_region_configs->search({
-        user_id => [
-            @admins_ids,
-            $mid
-        ]
-    });
+    my $var_confrs = $region->user_variable_region_configs->search( { user_id => [ @admins_ids, $mid ] } );
 
     my $aux = {};
-    while (my $conf = $var_confrs->next){
-        push @{$aux->{$conf->variable_id}}, [ $conf->display_in_home, $conf->user_id, $conf->position ];
+    while ( my $conf = $var_confrs->next ) {
+        push @{ $aux->{ $conf->variable_id } }, [ $conf->display_in_home, $conf->user_id, $conf->position ];
     }
 
-
-    my $show = {};
+    my $show  = {};
     my $order = {};
-    # a configuracao do usuario sempre tem preferencia sob a do admin
-    while (my ($vid, $wants) = each %$aux){
 
-        if (@$wants == 1 && $wants->[0][0]){
+    # a configuracao do usuario sempre tem preferencia sob a do admin
+    while ( my ( $vid, $wants ) = each %$aux ) {
+
+        if ( @$wants == 1 && $wants->[0][0] ) {
             $order->{$vid} = $wants->[0][2];
             $show->{$vid}++ and last;
         }
 
-        foreach my $conf (@$wants){
-            if ($conf->[1] == $mid && $conf->[0]){
+        foreach my $conf (@$wants) {
+            if ( $conf->[1] == $mid && $conf->[0] ) {
 
                 $order->{$vid} = $conf->[2];
                 $show->{$vid}++ and last;
@@ -517,29 +499,30 @@ sub _load_region_variables {
 
     }
 
-    my $values = $region->region_variable_values->search({
-        'me.variable_id' => { 'in' => [keys %$show]},
-        'me.user_id'     => $mid
-    }, {
-        order_by => [{-desc =>'me.valid_from'}],
-        prefetch => {'variable'=>'measurement_unit'}
-    });
+    my $values = $region->region_variable_values->search(
+        {
+            'me.variable_id' => { 'in' => [ keys %$show ] },
+            'me.user_id'     => $mid
+        },
+        {
+            order_by => [            { -desc => 'me.valid_from' } ],
+            prefetch => { 'variable' => 'measurement_unit' }
+        }
+    );
 
     my %exists;
     my @variables;
-    while (my $val = $values->next){
-        next if $exists{$val->variable_id}++;
+    while ( my $val = $values->next ) {
+        next if $exists{ $val->variable_id }++;
 
         push @variables, $val;
     }
 
-    @variables = sort { $order->{$a->variable_id} <=> $order->{$b->variable_id} } @variables;
+    @variables = sort { $order->{ $a->variable_id } <=> $order->{ $b->variable_id } } @variables;
 
     $c->stash( basic_variables => \@variables );
 
-
 }
-
 
 __PACKAGE__->meta->make_immutable;
 

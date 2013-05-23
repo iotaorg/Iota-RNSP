@@ -20,7 +20,7 @@ sub parse {
         date  => qr /\bdata\b/io,
         value => qr /\bvalor\b/io,
 
-        obs => qr /\bobserva..o\b/io,
+        obs    => qr /\bobserva..o\b/io,
         source => qr /\bfonte\b/io,
 
         region_id => qr /\b(id da regi.o|regi.o id)\b/io,

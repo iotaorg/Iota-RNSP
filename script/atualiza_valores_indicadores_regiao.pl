@@ -20,6 +20,6 @@ my $data = Iota::IndicatorData->new( schema => $schema );
 
 $data->upsert(
     regions_id => [2],
-    user_id => 11,
+    user_id    => 11,
     indicators => [5]
 );

@@ -27,8 +27,6 @@ sub variable : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') 
 
 }
 
-
-
 sub variable_GET {
     my ( $self, $c ) = @_;
     my $objectect_ref = $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'variable' ] } )->as_hashref->next;
@@ -42,8 +40,6 @@ sub variable_GET {
         }
     );
 }
-
-
 
 sub variable_POST {
     my ( $self, $c ) = @_;
@@ -86,8 +82,6 @@ sub variable_POST {
       if $object;
 }
 
-
-
 sub variable_DELETE {
     my ( $self, $c ) = @_;
 
@@ -109,6 +103,7 @@ sub variable_DELETE {
         };
 
         $object->delete;
+
         # apaga os dados dos indicadores, ja q o valor nao existe mais
         $data->upsert(%$conf);
 
@@ -120,54 +115,51 @@ sub variable_DELETE {
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
-
-
 sub list_GET {
     my ( $self, $c ) = @_;
 
     my $wheres = {};
     $wheres->{'me.valid_from'} = $c->req->params->{valid_from}
-        if exists $c->req->params->{valid_from} && $c->req->params->{valid_from} =~ /^\d{4}-\d{2}-\d{2}$/;
+      if exists $c->req->params->{valid_from} && $c->req->params->{valid_from} =~ /^\d{4}-\d{2}-\d{2}$/;
 
     $wheres->{'me.variable_id'} = $c->req->params->{variable_id}
-        if exists $c->req->params->{variable_id} && $c->req->params->{variable_id} =~ /^\d+$/;
+      if exists $c->req->params->{variable_id} && $c->req->params->{variable_id} =~ /^\d+$/;
 
     $wheres->{'me.file_id'} = $c->req->params->{file_id}
-        if exists $c->req->params->{file_id} && $c->req->params->{file_id} =~ /^\d+$/;
+      if exists $c->req->params->{file_id} && $c->req->params->{file_id} =~ /^\d+$/;
 
-    if ($c->check_any_user_role(qw(admin superadmin))){
+    if ( $c->check_any_user_role(qw(admin superadmin)) ) {
         $wheres->{'me.user_id'} = $c->req->params->{user_id}
-            if exists $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^\d+$/;
-    }else{
+          if exists $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^\d+$/;
+    }
+    else {
         $wheres->{'me.user_id'} = $c->user->id;
     }
 
-    my $objectect_ref = $c->stash->{collection}->search( $wheres, {
-        prefetch => [ 'owner', 'variable' ],
-        order_by => ['me.created_at','me.id']
-    } )->as_hashref;
+    my $objectect_ref = $c->stash->{collection}->search(
+        $wheres,
+        {
+            prefetch => [ 'owner',         'variable' ],
+            order_by => [ 'me.created_at', 'me.id' ]
+        }
+    )->as_hashref;
 
     my @objs;
 
-    while (my $obj = $objectect_ref->next) {
+    while ( my $obj = $objectect_ref->next ) {
         push @objs, {
             created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
             ( map { $_ => $obj->{variable}{$_} } qw(name type cognomen) ),
             ( map { $_ => $obj->{$_} } qw(id value created_at value_of_date observations source region_id) ),
 
-            url => $c->uri_for_action( $self->action_for('variable'), [ $c->stash->{city}->id, $c->stash->{region}->id, $obj->{id} ] )->as_string,
+            url => $c->uri_for_action( $self->action_for('variable'),
+                [ $c->stash->{city}->id, $c->stash->{region}->id, $obj->{id} ] )->as_string,
 
         };
     }
 
-    $self->status_ok(
-        $c,
-        entity => {
-            values => \@objs
-        }
-    );
+    $self->status_ok( $c, entity => { values => \@objs } );
 }
-
 
 sub list_POST {
     my ( $self, $c ) = @_;
@@ -203,7 +195,6 @@ sub list_POST {
     );
 
 }
-
 
 sub list_PUT {
     my ( $self, $c ) = @_;

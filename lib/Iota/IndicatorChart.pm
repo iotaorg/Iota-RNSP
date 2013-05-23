@@ -12,7 +12,6 @@ has indicator => (
     required => 1
 );
 
-
 has schema => (
     is       => 'ro',
     isa      => 'Any',

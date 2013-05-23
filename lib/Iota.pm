@@ -63,11 +63,7 @@ __PACKAGE__->config(
         stash_var   => 'assets'
     },
 
-
-    'View::HTML' => {
-        expose_methods  => ['date4period','value4human']
-    }
-
+    'View::HTML' => { expose_methods => [ 'date4period', 'value4human' ] }
 
 );
 

@@ -58,31 +58,21 @@ sub _download {
 
     my @lines = (
         [
-            'ID da cidade',
-            'Nome da cidade ',
-            'ID',
-            'Tipo',
-            'Apelido',
+            'ID da cidade', 'Nome da cidade ',
+            'ID', 'Tipo', 'Apelido',
             'Período de atualização',
             'Fonte esperada',
-            'É Básica?',
-            'Unidade de medida',
-            'Nome',
-            'Data',
-            'Valor',
-            'Observações',
-            'Fonte preenchida',
+            'É Básica?', 'Unidade de medida',
+            'Nome', 'Data', 'Valor', 'Observações', 'Fonte preenchida',
         ]
     );
 
-    my $data_rs = $c->model('DB')->resultset('DownloadVariable')->search(
-        {
-            institute_id => $c->stash->{institute}->id
-        },
-        {result_class => 'DBIx::Class::ResultClass::HashRefInflator'}
-    );
+    my $data_rs =
+      $c->model('DB')->resultset('DownloadVariable')->search( { institute_id => $c->stash->{institute}->id },
+        { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
-    if ($c->stash->{cidade}){
+    if ( $c->stash->{cidade} ) {
+
         # procula pelas cidades para procurar os usuarios
         my $city = $c->model('DB::City')->as_hashref->search(
             {
@@ -92,7 +82,7 @@ sub _download {
             }
         )->next;
 
-        my $id = $city ? $city->{id} : -9012345; # download vazio
+        my $id = $city ? $city->{id} : -9012345;    # download vazio
 
         my $user = $c->model('DB::User')->as_hashref->search(
             {
@@ -101,38 +91,45 @@ sub _download {
             }
         )->next;
 
-        $data_rs = $data_rs->search({ user_id => $user ? $user->{id} : -9012345 });
+        $data_rs = $data_rs->search( { user_id => $user ? $user->{id} : -9012345 } );
     }
 
-    if (exists $c->stash->{indicator}){
-        $data_rs = $data_rs->search({ variable_id => {
-            'in' => [
-                (map { $_->variable_id }
-                    $c->model('DB::IndicatorVariable')->search({
-                        indicator_id => $c->stash->{indicator}{id}
-                    })->all),
+    if ( exists $c->stash->{indicator} ) {
+        $data_rs = $data_rs->search(
+            {
+                variable_id => {
+                    'in' => [
+                        (
+                            map { $_->variable_id }
+                              $c->model('DB::IndicatorVariable')
+                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
+                        ),
 
-                (map { -($_->id) }
-                    $c->model('DB::IndicatorVariation')->search({
-                        indicator_id => $c->stash->{indicator}{id}
-                    })->all)
-            ]
-        } });
+                        (
+                            map { -( $_->id ) }
+                              $c->model('DB::IndicatorVariation')
+                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
+                        )
+                    ]
+                }
+            }
+        );
     }
 
-    if (exists $c->stash->{region}){
+    if ( exists $c->stash->{region} ) {
+
         # TODO
         #$data_rs = $data_rs->search({ region_id => $c->stash->{region}{id} });
     }
 
-    while (my $data = $data_rs->next){
+    while ( my $data = $data_rs->next ) {
         my @this_row = (
             $data->{city_id},
             $data->{city_name},
             $data->{variable_id},
-                $data->{type}   eq 'int' ? 'Inteiro'
-                : $data->{type} eq 'str' ? 'Alfanumérico'
-                : 'Valor',
+            $data->{type}   eq 'int' ? 'Inteiro'
+            : $data->{type} eq 'str' ? 'Alfanumérico'
+            : 'Valor',
             $data->{cognomen},
             $self->_period_pt( $data->{period} ),
             $data->{exp_source},
@@ -146,7 +143,6 @@ sub _download {
         );
         push @lines, \@this_row;
     }
-
 
     eval { $self->lines2file( $c, $path, \@lines ) };
 
@@ -171,7 +167,6 @@ sub _period_pt {
 
     return $period;    # outros nao usados
 }
-
 
 sub ymd2dmy {
     my ( $self, $str ) = @_;
@@ -200,7 +195,8 @@ sub lines2file {
     elsif ( $path =~ /xml$/ ) {
         print $fh XMLout( $lines, KeyAttr => { server => 'linhas' } );
 
-    }elsif ( $path =~ /xls$/ ) {
+    }
+    elsif ( $path =~ /xls$/ ) {
         binmode($fh);
         my $workbook = Spreadsheet::WriteExcel->new($fh);
 
@@ -208,25 +204,27 @@ sub lines2file {
         my $worksheet = $workbook->add_worksheet();
 
         #  Add and define a format
-        my $bold = $workbook->add_format(); # Add a format
+        my $bold = $workbook->add_format();    # Add a format
         $bold->set_bold();
 
         # Write a formatted and unformatted string, row and column notation.
         my $total = @$lines;
 
-        for (my $row = 0; $row < $total; $row++){
+        for ( my $row = 0 ; $row < $total ; $row++ ) {
 
-            if ($row==0){
-                $worksheet->write($row, 0, $lines->[$row], $bold);
-            }else{
-                my $total_col = @{$lines->[$row]};
-                for (my $col = 0; $col < $total_col; $col++){
+            if ( $row == 0 ) {
+                $worksheet->write( $row, 0, $lines->[$row], $bold );
+            }
+            else {
+                my $total_col = @{ $lines->[$row] };
+                for ( my $col = 0 ; $col < $total_col ; $col++ ) {
                     my $val = $lines->[$row][$col];
 
-                    if ($val && $val =~ /^\=/){
-                        $worksheet->write_string($row, $col, $val);
-                    }else{
-                        $worksheet->write($row, $col, $val);
+                    if ( $val && $val =~ /^\=/ ) {
+                        $worksheet->write_string( $row, $col, $val );
+                    }
+                    else {
+                        $worksheet->write( $row, $col, $val );
                     }
                 }
             }
@@ -262,7 +260,8 @@ sub _download_and_detach {
     }
     elsif ( $c->stash->{type} =~ /(csv)/ ) {
         $c->response->content_type('text/csv');
-    }elsif ( $c->stash->{type} =~ /(xls)/ ) {
+    }
+    elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
     $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis.$1" );
@@ -490,8 +489,8 @@ sub xls_down_pref_dados_cidade_indicadorcsv : Chained('xls_pref_dados_cidade_ind
     $self->_download($c);
 }
 
-sub xls_down_pref_dados_cidade_indicadorcsv_check : Chained('xls_pref_dados_cidade_indicadorcsv_check') : PathPart('') :
-  Args(0) {
+sub xls_down_pref_dados_cidade_indicadorcsv_check : Chained('xls_pref_dados_cidade_indicadorcsv_check') : PathPart('')
+  : Args(0) {
     my ( $self, $c ) = @_;
     $self->_download($c);
 }

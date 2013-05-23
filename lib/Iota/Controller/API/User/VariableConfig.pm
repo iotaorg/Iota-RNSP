@@ -85,8 +85,7 @@ sub variable_config_POST {
 
     $self->status_accepted(
         $c,
-        location =>
-          $c->uri_for( $self->action_for('variable_config'), [ $c->stash->{user}->id, $obj->id ] )->as_string,
+        location => $c->uri_for( $self->action_for('variable_config'), [ $c->stash->{user}->id, $obj->id ] )->as_string,
         entity => { id => $obj->id }
       ),
 
@@ -171,7 +170,7 @@ sub list_GET {
     my $config = $c->stash->{collection}->search_rs(
         {
             variable_id => $c->req->params->{variable_id},
-            user_id      => $c->stash->{user}->id
+            user_id     => $c->stash->{user}->id
         }
     )->as_hashref->next;
 

@@ -271,10 +271,10 @@ eval {
                         ],
                         'variations' => [
                             {
-                                'value' => 19,
+                                'value'  => 19,
                                 original => {
-                                     $subvar[0]{id} => 3,
-                                     $subvar[1]{id} => 1,
+                                    $subvar[0]{id} => 3,
+                                    $subvar[1]{id} => 1,
                                 },
 
                                 'name' =>
@@ -282,30 +282,30 @@ eval {
                             },
                             {
 
-                                'value' => 21,
-original => {
-                                     $subvar[0]{id} => 5,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 21,
+                                original => {
+                                    $subvar[0]{id} => 5,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
                                   "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
                             },
                             {
 
-                                'value' => 22,
-original => {
-                                     $subvar[0]{id} => 6,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 22,
+                                original => {
+                                    $subvar[0]{id} => 6,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
                                   "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
                             },
                             {
 
-                                'value' => 26,
-original => {
-                                     $subvar[0]{id} => 10,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 26,
+                                original => {
+                                    $subvar[0]{id} => 10,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' => 'outros.'
                             }
@@ -326,40 +326,40 @@ original => {
                         'variations' => [
                             {
 
-                                'value' => 21,
-original => {
-                                     $subvar[0]{id} => 4,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 21,
+                                original => {
+                                    $subvar[0]{id} => 4,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
 "At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
                             },
                             {
 
-                                'value' => 21,
-original => {
-                                     $subvar[0]{id} => 4,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 21,
+                                original => {
+                                    $subvar[0]{id} => 4,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
                                   "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
                             },
                             {
 
-                                'value' => 18,
-original => {
-                                     $subvar[0]{id} => 1,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 18,
+                                original => {
+                                    $subvar[0]{id} => 1,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
                                   "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
                             },
                             {
 
-                                'value' => 22,
-original => {
-                                     $subvar[0]{id} => 5,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 22,
+                                original => {
+                                    $subvar[0]{id} => 5,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' => 'outros.'
                             }
@@ -380,40 +380,40 @@ original => {
                         'variations' => [
                             {
 
-                                'value' => 23,
-original => {
-                                     $subvar[0]{id} => 5,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 23,
+                                original => {
+                                    $subvar[0]{id} => 5,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
 "At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
                             },
                             {
 
-                                'value' => 22,
-original => {
-                                     $subvar[0]{id} => 4,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 22,
+                                original => {
+                                    $subvar[0]{id} => 4,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
                                   "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
                             },
                             {
 
-                                'value' => 24,
-original => {
-                                     $subvar[0]{id} => 6,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 24,
+                                original => {
+                                    $subvar[0]{id} => 6,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' =>
                                   "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
                             },
                             {
 
-                                'value' => 26,
-original => {
-                                     $subvar[0]{id} => 8,
-                                     $subvar[1]{id} => 1,
+                                'value'  => 26,
+                                original => {
+                                    $subvar[0]{id} => 8,
+                                    $subvar[1]{id} => 1,
                                 },
                                 'name' => 'outros.'
                             }
@@ -434,10 +434,10 @@ original => {
                         'variations' => [
                             {
 
-                                'value' => 23,
+                                'value'  => 23,
                                 original => {
-                                     $subvar[0]{id} => 4,
-                                     $subvar[1]{id} => 1,
+                                    $subvar[0]{id} => 4,
+                                    $subvar[1]{id} => 1,
                                 },
 
                                 'name' =>
@@ -445,10 +445,10 @@ original => {
                             },
                             {
 
-                                'value' => 23,
+                                'value'  => 23,
                                 original => {
-                                     $subvar[0]{id} => 4,
-                                     $subvar[1]{id} => 1,
+                                    $subvar[0]{id} => 4,
+                                    $subvar[1]{id} => 1,
                                 },
 
                                 'name' =>
@@ -459,8 +459,8 @@ original => {
                                 'value' => 26,
 
                                 original => {
-                                     $subvar[0]{id} => 7,
-                                     $subvar[1]{id} => 1,
+                                    $subvar[0]{id} => 7,
+                                    $subvar[1]{id} => 1,
                                 },
 
                                 'name' =>
@@ -468,10 +468,10 @@ original => {
                             },
                             {
 
-                                'value' => 28,
+                                'value'  => 28,
                                 original => {
-                                     $subvar[0]{id} => 9,
-                                     $subvar[1]{id} => 1,
+                                    $subvar[0]{id} => 9,
+                                    $subvar[1]{id} => 1,
                                 },
 
                                 'name' => 'outros.'
@@ -483,8 +483,8 @@ original => {
                 'header'  => { 'Foo Bar0' => 0 },
                 'filters' => { user_id    => [ 2, 2 ] },
                 variables_variations => [
-                    {id => $subvar[0]{id}, name => 'Pessoas.' },
-                    {id => $subvar[1]{id}, name => 'variavel para teste.' },
+                    { id => $subvar[0]{id}, name => 'Pessoas.' },
+                    { id => $subvar[1]{id}, name => 'variavel para teste.' },
                 ]
             };
             delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0 .. 3;

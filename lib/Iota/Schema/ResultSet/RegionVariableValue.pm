@@ -226,11 +226,10 @@ sub action_specs {
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
-            if (exists $values{source} && $values{source}){
-                my $source = $self->result_source->schema->resultset('Source')->find_or_new({
-                    name => $values{source}
-                });
-                if( !$source->in_storage ) {
+            if ( exists $values{source} && $values{source} ) {
+                my $source =
+                  $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
+                if ( !$source->in_storage ) {
                     $source->user_id( $values{user_id} );
                     $source->insert;
                 }
@@ -239,7 +238,7 @@ sub action_specs {
                 indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $varvalue->user_id,
-                regions_id  => [$varvalue->region_id]
+                regions_id => [ $varvalue->region_id ]
             );
 
             return $varvalue;
@@ -260,11 +259,10 @@ sub action_specs {
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
-            if (exists $values{source} && $values{source}){
-                my $source = $self->result_source->schema->resultset('Source')->find_or_new({
-                    name => $values{source}
-                });
-                if( !$source->in_storage ) {
+            if ( exists $values{source} && $values{source} ) {
+                my $source =
+                  $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
+                if ( !$source->in_storage ) {
                     $source->user_id( $values{user_id} );
                     $source->insert;
                 }
@@ -274,7 +272,7 @@ sub action_specs {
                 indicators => [ $data->indicators_from_variables( variables => [ $var->id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $var->user_id,
-                regions_id  => [$var->region_id],
+                regions_id => [ $var->region_id ],
             );
 
             return $var;
@@ -308,7 +306,7 @@ sub _put {
     my $region = $schema->resultset('Region')->find( $values{region_id} );
     my $user   = $schema->resultset('User')->find( $values{user_id} );
 
-    if ($user->city_id && $region->city_id != $user->city_id){
+    if ( $user->city_id && $region->city_id != $user->city_id ) {
         die 'Illegal region for user.';
     }
 
@@ -347,11 +345,9 @@ sub _put {
         $row = $self->create( \%values );
     }
 
-    if (exists $values{source} && $values{source}){
-        my $source = $self->result_source->schema->resultset('Source')->find_or_new({
-            name => $values{source}
-        });
-        if( !$source->in_storage ) {
+    if ( exists $values{source} && $values{source} ) {
+        my $source = $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
+        if ( !$source->in_storage ) {
             $source->user_id( $values{user_id} );
             $source->insert;
         }
@@ -363,7 +359,7 @@ sub _put {
         indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
         dates      => [ $dates->{period_begin} ],
         user_id    => $row->user_id,
-        regions_id => [$row->region_id]
+        regions_id => [ $row->region_id ]
     );
 
     return $row;

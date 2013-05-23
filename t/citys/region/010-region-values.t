@@ -53,7 +53,6 @@ eval {
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
 
-
             my $city_uri = $res->header('Location');
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
@@ -103,11 +102,10 @@ eval {
                     'indicator.create.goal_operator' => '>=',
                     'indicator.create.tags'          => 'you,me,she',
 
-                    'indicator.create.observations'        => 'lala',
-                    'indicator.create.visibility_level'    => 'public',
+                    'indicator.create.observations'     => 'lala',
+                    'indicator.create.visibility_level' => 'public',
                 ]
             );
-
 
             my $region_url = $reg1_uri . '/value';
 
@@ -199,72 +197,70 @@ eval {
 
             my $list = eval { from_json( $res->content ) };
 
-            for my $n (0..1){
-                for my $w (qw/url id created_at/){
-                    ok(delete $list->{values}[$n]{$w}, 'has ' . $w);
-                };
+            for my $n ( 0 .. 1 ) {
+                for my $w (qw/url id created_at/) {
+                    ok( delete $list->{values}[$n]{$w}, 'has ' . $w );
+                }
             }
 
             is_deeply(
                 $list,
                 {
-                    values=> [
+                    values => [
                         {
-                            cognomen     => "foobar",
+                            cognomen => "foobar",
 
-                            created_by   => {
-                                id  => 2,
-                                name=> "adminpref"
+                            created_by => {
+                                id   => 2,
+                                name => "adminpref"
                             },
-                            name         => "Foo Bar",
-                            observations => "farinha",
-                            region_id    => $reg1->{id},
-                            source       => "bazar",
-                            type         => "int",
-                            value        => '4456',
-                            value_of_date=> "2012-10-11 14:22:44"
+                            name          => "Foo Bar",
+                            observations  => "farinha",
+                            region_id     => $reg1->{id},
+                            source        => "bazar",
+                            type          => "int",
+                            value         => '4456',
+                            value_of_date => "2012-10-11 14:22:44"
                         },
                         {
-                            cognomen     => "foobar",
-                            created_by   => {
-                                id  => 2,
-                                name=> "adminpref"
+                            cognomen   => "foobar",
+                            created_by => {
+                                id   => 2,
+                                name => "adminpref"
                             },
-                            name         => "Foo Bar",
-                            observations => undef,
-                            region_id    => $reg1->{id},
-                            source       => undef,
-                            type         => "int",
-                            value        => '4456',
-                            value_of_date=> "2012-10-17 14:22:44"
+                            name          => "Foo Bar",
+                            observations  => undef,
+                            region_id     => $reg1->{id},
+                            source        => undef,
+                            type          => "int",
+                            value         => '4456',
+                            value_of_date => "2012-10-17 14:22:44"
                         },
                     ]
                 },
                 'deeply ok'
             );
 
-            ( $res, $c ) = ctx_request( GET $region_url  . '?valid_from=1990-01-02');
+            ( $res, $c ) = ctx_request( GET $region_url . '?valid_from=1990-01-02' );
             ok( $res->is_success, 'list the values exists' );
             is( $res->code, 200, 'list the values exists -- 200 Success' );
 
             $list = eval { from_json( $res->content ) };
-            is_deeply($list->{values}, [], 'no values in 1990');
+            is_deeply( $list->{values}, [], 'no values in 1990' );
 
-            ( $res, $c ) = ctx_request( GET $region_url  . '?user_id=1');
+            ( $res, $c ) = ctx_request( GET $region_url . '?user_id=1' );
             ok( $res->is_success, 'list the values exists' );
             is( $res->code, 200, 'list the values exists -- 200 Success' );
 
             $list = eval { from_json( $res->content ) };
-            is_deeply($list->{values}, [], 'no values for user 1');
+            is_deeply( $list->{values}, [], 'no values for user 1' );
 
-
-            ( $res, $c ) = ctx_request( GET $region_url  . '?variable_id=4');
+            ( $res, $c ) = ctx_request( GET $region_url . '?variable_id=4' );
             ok( $res->is_success, 'list the values exists' );
             is( $res->code, 200, 'list the values exists -- 200 Success' );
 
             $list = eval { from_json( $res->content ) };
-            is_deeply($list->{values}, [], 'no values for variable 4');
-
+            is_deeply( $list->{values}, [], 'no values for variable 4' );
 
             die 'rollback';
         }

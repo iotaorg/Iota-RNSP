@@ -36,9 +36,8 @@ eval {
                 },
             );
 
-
             my ( $res, $c ) = ctx_request(
-                POST '/api/city/' . $city->id. '/region',
+                POST '/api/city/' . $city->id . '/region',
                 [
                     api_key                          => 'test',
                     'city.region.create.name'        => 'a region',
@@ -51,7 +50,7 @@ eval {
 
             my $reg1_uri = $res->header('Location');
             my $reg1 = eval { from_json( $res->content ) };
-            ok($reg1->{id}, 'has id');
+            ok( $reg1->{id}, 'has id' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
@@ -71,9 +70,9 @@ eval {
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
 
-            my ($fh, $filename) = tempfile(SUFFIX => '.csv');
+            my ( $fh, $filename ) = tempfile( SUFFIX => '.csv' );
             my $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
-                or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+              or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
 
             $csv->print( $fh, [ 'ID da váriavel', 'Data', 'Valor', 'fonte', 'observacao', 'regiao id' ] );
 
@@ -94,42 +93,36 @@ eval {
 
             like( $res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no CSV' );
 
-
             my @sources = $schema->resultset('Source')->all;
-            is(scalar @sources, '1', 'tem uma fonte!');
+            is( scalar @sources, '1', 'tem uma fonte!' );
 
-            my @values = $schema->resultset('RegionVariableValue')->search(undef, {
-                order_by => 'valid_from'
-            })->all;
+            my @values = $schema->resultset('RegionVariableValue')->search( undef, { order_by => 'valid_from' } )->all;
 
-            is($values[0]->valid_from->ymd, '2010-01-01', 'valid from ok');
-            is($values[1]->valid_from->ymd, '2011-01-01', 'valid from ok');
+            is( $values[0]->valid_from->ymd, '2010-01-01', 'valid from ok' );
+            is( $values[1]->valid_from->ymd, '2011-01-01', 'valid from ok' );
 
-            is($values[0]->value, '123', 'value ok');
-            is($values[1]->value, '456', 'value ok');
+            is( $values[0]->value, '123', 'value ok' );
+            is( $values[1]->value, '456', 'value ok' );
 
-            is($values[0]->observations, 'obs', 'observations ok');
-            is($values[1]->observations, '222', 'observations ok');
+            is( $values[0]->observations, 'obs', 'observations ok' );
+            is( $values[1]->observations, '222', 'observations ok' );
 
-            ( $res, $c ) = ctx_request(
-                GET '/api/file'
-            );
+            ( $res, $c ) = ctx_request( GET '/api/file' );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'list files done!' );
 
             my $files = eval { from_json( $res->content ) };
             my $x = quotemeta $files->{files}[0]{name};
-            like( $filename, qr/$x/, 'file saved ');
+            like( $filename, qr/$x/, 'file saved ' );
 
-            ($fh, $filename) = tempfile(SUFFIX => '.csv');
+            ( $fh, $filename ) = tempfile( SUFFIX => '.csv' );
             $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
-                or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+              or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
 
             $csv->print( $fh, [ 'ID da váriavel', 'Data', 'Valor', 'fonte', 'observacao', 'regiao id' ] );
             $csv->print( $fh, [ 19, '2011-01-01', '456', 'foobar', 'obs', 'foobar' ] );
 
             close $fh;
-
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
@@ -143,8 +136,6 @@ eval {
             is( $res->code, 200, 'upload done!' );
 
             like( $res->content, qr/invalid region id/, 'invalid region id' );
-
-
 
             die 'rollback';
         }

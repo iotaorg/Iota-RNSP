@@ -148,6 +148,7 @@ sub variable_DELETE {
         };
 
         $object->delete;
+
         # apaga os dados dos indicadores, ja q o valor nao existe mais
         $data->upsert(%$conf);
 

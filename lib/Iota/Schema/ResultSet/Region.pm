@@ -8,7 +8,6 @@ extends 'DBIx::Class::ResultSet';
 with 'Iota::Role::Verification';
 with 'Iota::Schema::Role::InflateAsHashRef';
 
-
 use Text2URI;
 my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
@@ -85,7 +84,7 @@ sub action_specs {
 
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
 
-            if (!exists $values{depth_level} || $values{depth_level} == 2){
+            if ( !exists $values{depth_level} || $values{depth_level} == 2 ) {
                 $values{name_url} = 'subprefeitura:' . $values{name_url};
             }
 
@@ -100,16 +99,15 @@ sub action_specs {
             $values{name_url} = $text2uri->translate( $values{name} ) if exists $values{name} && $values{name};
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
 
-            if (exists $values{depth_level}
+            if (   exists $values{depth_level}
                 && exists $values{name}
-                && $values{depth_level} == 2){
+                && $values{depth_level} == 2 ) {
 
                 $values{name_url} = 'subprefeitura:' . $values{name_url};
 
             }
 
             return unless keys %values;
-
 
             my $var = $self->find( delete $values{id} );
             $var->update( \%values );

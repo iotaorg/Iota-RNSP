@@ -92,24 +92,25 @@ eval {
 
             like( $res->content, qr/Linhas aceitas: 4\\n"/, '4 linhas no CSV' );
 
+            my @values = $schema->resultset('VariableValue')->search(
+                undef,
+                {
+                    order_by => 'valid_from',
+                    rows     => 2
+                }
+            )->all;
 
+            is( $values[0]->valid_from->ymd, '2012-01-01', 'valid from ok' );
+            is( $values[1]->valid_from->ymd, '2013-01-01', 'valid from ok' );
 
-            my @values = $schema->resultset('VariableValue')->search(undef, {
-                order_by => 'valid_from',
-                rows => 2
-            })->all;
+            is( $values[0]->value, '0', 'value ok' );
+            is( $values[1]->value, '1', 'value ok' );
 
-            is($values[0]->valid_from->ymd, '2012-01-01', 'valid from ok');
-            is($values[1]->valid_from->ymd, '2013-01-01', 'valid from ok');
-
-            is($values[0]->value, '0', 'value ok');
-            is($values[1]->value, '1', 'value ok');
-
-            is($values[0]->observations, undef, 'observations ok');
-            is($values[0]->source, 'isso eh uma fonte', 'source ok');
+            is( $values[0]->observations, undef, 'observations ok' );
+            is( $values[0]->source, 'isso eh uma fonte', 'source ok' );
 
             my @sources = $schema->resultset('Source')->all;
-            is(scalar @sources, '2', 'tem as duas fontes!');
+            is( scalar @sources, '2', 'tem as duas fontes!' );
 
             die 'rollback';
         }

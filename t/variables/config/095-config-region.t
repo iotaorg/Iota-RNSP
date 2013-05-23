@@ -18,7 +18,7 @@ my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::TestOnly::Mock::AuthUser::_id    = 1;
+$Iota::TestOnly::Mock::AuthUser::_id = 1;
 use JSON qw(from_json);
 @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin user /;
 
@@ -104,15 +104,14 @@ eval {
             ok( $res->is_success, 'varible exists' );
             is( $res->code, 200, 'varible exists -- 200 Success' );
 
-
             my $url_user = '/api/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/variable_region_config';
 
             ( $res, $c ) = ctx_request(
                 POST $url_user,
                 [
                     api_key                                              => 'test',
-                    'user.variable_region_config.create.variable_id'          => $variable->{id},
-                    'user.variable_region_config.create.region_id'          => $reg1->{id},
+                    'user.variable_region_config.create.variable_id'     => $variable->{id},
+                    'user.variable_region_config.create.region_id'       => $reg1->{id},
                     'user.variable_region_config.create.display_in_home' => '0',
                 ]
             );
@@ -126,8 +125,8 @@ eval {
                 POST $url_user,
                 [
                     api_key                                              => 'test',
-                    'user.variable_region_config.create.variable_id'          => $variable->{id},
-                    'user.variable_region_config.create.region_id'          => $reg1->{id},
+                    'user.variable_region_config.create.variable_id'     => $variable->{id},
+                    'user.variable_region_config.create.region_id'       => $reg1->{id},
                     'user.variable_region_config.create.display_in_home' => '1',
                 ]
             );
@@ -156,7 +155,8 @@ eval {
             $config = eval { from_json( $res->content ) };
             is( $config->{display_in_home}, '1', 'display_in_home: ok' );
 
-            ( $res, $c ) = ctx_request( GET $url_user . '?variable_id=' . $variable->{id} . '&region_id='.$reg1->{id} );
+            ( $res, $c ) =
+              ctx_request( GET $url_user . '?variable_id=' . $variable->{id} . '&region_id=' . $reg1->{id} );
             my $config2 = eval { from_json( $res->content ) };
             is( $config2->{id}, $config_id->{id}, 'pesquisa funcionando' );
 

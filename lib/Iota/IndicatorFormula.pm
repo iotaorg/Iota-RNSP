@@ -120,9 +120,10 @@ sub evaluate_with_alias {
     }
 
     my $ret = eval { $self->_compiled()->($tmp) };
-    if ($@ && $@ =~ /by zero/) {
+    if ( $@ && $@ =~ /by zero/ ) {
         return 0;
-    }elsif ($@) {
+    }
+    elsif ($@) {
         my $err = "$@";
         foreach my $var ( keys %alias ) {
             foreach my $varx ( keys %{ $tmp->{"$var$_"} } ) {
@@ -147,9 +148,10 @@ sub evaluate {
           ? $self->as_string(%vars)
           : $self->_compiled()->( { ( map { "V" . $_ => $vars{$_} } $self->variables ) } );
     };
-    if ($@ && $@ =~ /by zero/) {
+    if ( $@ && $@ =~ /by zero/ ) {
         return 0;
-    }elsif ($@) {
+    }
+    elsif ($@) {
         my $err = "$@";
         $err .= join ', ', ( map { "V" . $_ . '=' . $vars{$_} } $self->variables );
         return $err;

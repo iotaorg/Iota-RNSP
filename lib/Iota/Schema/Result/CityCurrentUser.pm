@@ -67,7 +67,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key( "user_id", "city_id" );
 
-
 __PACKAGE__->belongs_to( "user", "Iota::Schema::Result::User", { id => "user_id" }, );
 
 __PACKAGE__->belongs_to( "city", "Iota::Schema::Result::City", { id => "city_id" }, );

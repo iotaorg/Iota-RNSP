@@ -125,16 +125,14 @@ sub values_DELETE {
         my $data = Iota::IndicatorData->new( schema => $c->model('DB') );
 
         my $conf = {
-            indicators => [
-                $data->indicators_from_variation_variables(
-                    variables => [ $obj->indicator_variables_variation_id ]
-                )
-            ],
-            dates      => [ $obj->valid_from->datetime ],
-            user_id    => $obj->user_id,
+            indicators =>
+              [ $data->indicators_from_variation_variables( variables => [ $obj->indicator_variables_variation_id ] ) ],
+            dates   => [ $obj->valid_from->datetime ],
+            user_id => $obj->user_id,
         };
 
         $obj->delete;
+
         # apaga os dados dos indicadores, ja q o valor nao existe mais
         $data->upsert(%$conf);
 

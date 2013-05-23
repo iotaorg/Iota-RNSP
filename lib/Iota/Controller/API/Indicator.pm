@@ -115,11 +115,10 @@ sub indicator_GET {
     my $object_ref =
       $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'axis', 'indicator_network_configs' ] } )->next;
 
-    my $where = $object_ref->dynamic_variations ? {
-        user_id => [ $object_ref->user_id , $c->stash->{user_id} || $c->user->id]
-    } : {
-        user_id => $object_ref->user_id
-    };
+    my $where =
+      $object_ref->dynamic_variations
+      ? { user_id => [ $object_ref->user_id, $c->stash->{user_id} || $c->user->id ] }
+      : { user_id => $object_ref->user_id };
 
     my $ret = {
 
@@ -157,7 +156,6 @@ sub indicator_GET {
 
               period
               variable_type
-
 
               formula_human
 
@@ -313,9 +311,10 @@ sub list_GET {
     my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
 
     my %roles = map { $_ => 1 } $c->user->roles;
+
     # superadmin visualiza todas
     if ( !exists $roles{superadmin} ) {
-        my @user_ids = ($c->user->id);
+        my @user_ids = ( $c->user->id );
         my $country_id;
 
         my $user = $c->model('DB::User')->search( { id => $c->user->id } )->next;
@@ -327,7 +326,7 @@ sub list_GET {
 
         if ( $user->network_id ) {
             my $rs = $c->model('DB::User')->search( { network_id => $user->network_id, city_id => undef } );
-            while(my $u = $rs->next){
+            while ( my $u = $rs->next ) {
                 push @user_ids, $u->id;
             }
         }
@@ -337,8 +336,8 @@ sub list_GET {
                 '-or' => [
                     { visibility_level => 'public' },
                     { visibility_level => 'country', visibility_country_id => $country_id },
-                    { visibility_level => 'private', visibility_user_id => {'in' => \@user_ids} },
-                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => {'in' => \@user_ids} },
+                    { visibility_level => 'private', visibility_user_id => { 'in' => \@user_ids } },
+                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@user_ids } },
                 ]
             },
             { join => 'indicator_user_visibilities' }

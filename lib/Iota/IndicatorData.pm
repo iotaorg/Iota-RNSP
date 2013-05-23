@@ -37,13 +37,13 @@ sub upsert {
 
     $values_rs = $values_rs->search(
         {
-           ('me.user_id' => $params{user_id})x!! exists $params{user_id},
-            'me.variable_id' => { 'in' => [ keys %$variable_ids ]}
+            ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
+            'me.variable_id' => { 'in' => [ keys %$variable_ids ] }
         }
     );
     my $period_values = {};
 
-    if (exists $params{regions_id}){
+    if ( exists $params{regions_id} ) {
 
         # procura pelos valores salvos naquela regiao
         my $rr_values_rs = $self->schema->resultset('RegionVariableValue');
@@ -51,7 +51,7 @@ sub upsert {
 
         $rr_values_rs = $rr_values_rs->search(
             {
-               ('me.user_id' => $params{user_id} )x!! exists $params{user_id},
+                ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
                 'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
                 'me.region_id'   => { 'in' => $params{regions_id} }
             }
@@ -61,7 +61,8 @@ sub upsert {
             out => $period_values,
             rs  => $rr_values_rs
         );
-    }else{
+    }
+    else {
         $period_values = $self->_get_values_periods($values_rs);
     }
 
@@ -70,10 +71,10 @@ sub upsert {
 
         # se nao foi informado a regiao, nao tem calculo dela.
         exists $params{regions_id}
-            ? ('region_id'    => $params{regions_id} )
-            : ('region_id'    => undef ),
+        ? ( 'region_id' => $params{regions_id} )
+        : ( 'region_id' => undef ),
     );
-    my $ind_variation_var = $self->_get_indicator_var_variables(indicators => \@indicators );
+    my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
 
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
@@ -84,9 +85,7 @@ sub upsert {
         ind_variation_var   => $ind_variation_var
 
     );
-    my $users_meta = $self->get_users_meta( users => [
-        map { keys %{$results->{$_}} } keys %$results
-    ] );
+    my $users_meta = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
     my $regions_meta = $self->get_regions_meta( keys %$results );
 
     $self->schema->txn_do(
@@ -95,14 +94,14 @@ sub upsert {
 
             $indval_rs->search(
                 {
-                    ('me.valid_from'   => $params{dates}      )x!! exists $params{dates},
-                    ('me.user_id'      => $params{user_id}    )x!! exists $params{user_id},
-                    ('me.indicator_id' => $params{indicators} )x!! exists $params{indicators},
+                    ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
+                    ( 'me.user_id'      => $params{user_id} ) x !!exists $params{user_id},
+                    ( 'me.indicator_id' => $params{indicators} ) x !!exists $params{indicators},
 
                     # se nao foi informado a regiao, nao tem calculo dela.
                     exists $params{regions_id}
-                        ? ('me.region_id'    => $params{regions_id} )
-                        : ('me.region_id'    => undef ),
+                    ? ( 'me.region_id' => $params{regions_id} )
+                    : ( 'me.region_id' => undef ),
                 }
             )->delete;
 
@@ -119,17 +118,17 @@ sub upsert {
 
                                 $indval_rs->create(
                                     {
-                                        user_id        => $user_id,
-                                        indicator_id   => $indicator_id,
-                                        valid_from     => $date,
-                                        city_id        => defined $region_id
-                                                            ? $regions_meta->{$region_id}{city_id}
-                                                            : $users_meta->{$user_id}{city_id},
+                                        user_id      => $user_id,
+                                        indicator_id => $indicator_id,
+                                        valid_from   => $date,
+                                        city_id      => defined $region_id
+                                        ? $regions_meta->{$region_id}{city_id}
+                                        : $users_meta->{$user_id}{city_id},
                                         institute_id   => $users_meta->{$user_id}{institute_id},
                                         variation_name => $variation,
 
-                                        value     => $variations->{$variation}[0],
-                                        sources   => $variations->{$variation}[1],
+                                        value   => $variations->{$variation}[0],
+                                        sources => $variations->{$variation}[1],
 
                                         region_id => $region_id
                                     }
@@ -170,16 +169,12 @@ sub get_regions_meta {
     my ( $self, @regions ) = @_;
 
     my $citys =
-      $self->schema->resultset('Region')->search( {
-        'me.id' => {'in' => [grep {/\d/o} @regions ]}
-    })->as_hashref;
+      $self->schema->resultset('Region')->search( { 'me.id' => { 'in' => [ grep { /\d/o } @regions ] } } )->as_hashref;
 
     my $users = {};
 
     while ( my $row = $citys->next ) {
-        $users->{ $row->{id} } = {
-            city_id      => $row->{city_id},
-        };
+        $users->{ $row->{id} } = { city_id => $row->{city_id}, };
     }
 
     return $users;
@@ -201,7 +196,8 @@ sub _get_values_periods {
 
         next if !defined $row->{value} || $row->{value} eq '';
 
-        $out->{'null'}{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } = [ $row->{value}, $row->{source}, ];
+        $out->{'null'}{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
+          [ $row->{value}, $row->{source}, ];
     }
 
     return $out;
@@ -216,7 +212,8 @@ sub _get_values_periods_region {
 
     while ( my $row = $rs->next ) {
         next if !defined $row->{value} || $row->{value} eq '';
-        $out->{$row->{region_id}}{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } = [ $row->{value}, $row->{source}, ];
+        $out->{ $row->{region_id} }{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
+          [ $row->{value}, $row->{source}, ];
     }
 
     return $out;
@@ -240,13 +237,13 @@ sub _get_values_variation {
     }
     return {} unless scalar @indicator_ids;
 
-    my $variations_rs =
-      $self->schema->resultset('IndicatorVariation')
-      ->search( {
-        indicator_id => \@indicator_ids,
-        'indicator_variables_variations_values.region_id' =>  $params{region_id}
-      }, { prefetch => 'indicator_variables_variations_values' } )
-      ->as_hashref;
+    my $variations_rs = $self->schema->resultset('IndicatorVariation')->search(
+        {
+            indicator_id                                      => \@indicator_ids,
+            'indicator_variables_variations_values.region_id' => $params{region_id}
+        },
+        { prefetch => 'indicator_variables_variations_values' }
+    )->as_hashref;
 
     my $out = {};
     while ( my $row = $variations_rs->next ) {
@@ -255,8 +252,8 @@ sub _get_values_variation {
             next if !defined $val->{value} || $val->{value} eq '';
 
             my $region_id = $val->{region_id} || 'null';
-            $out->{$region_id}{ $val->{user_id} }{ $val->{indicator_variables_variation_id} }{ $row->{name} }{ $val->{valid_from} }
-              = $val->{value};
+            $out->{$region_id}{ $val->{user_id} }{ $val->{indicator_variables_variation_id} }{ $row->{name} }
+              { $val->{valid_from} } = $val->{value};
 
         }
     }
@@ -275,9 +272,7 @@ sub _get_indicator_var_variables {
     return {} unless scalar @indicator_ids;
 
     my $variables_rs =
-      $self->schema->resultset('IndicatorVariablesVariation')->search( {
-        indicator_id => \@indicator_ids,
-     } )
+      $self->schema->resultset('IndicatorVariablesVariation')->search( { indicator_id => \@indicator_ids, } )
       ->as_hashref;
 
     my $out = {};
@@ -316,7 +311,7 @@ sub _get_indicator_values {
                             foreach my $date ( keys %{ $var_values->{$var_variable_id}{$variation} } ) {
 
                                 $params{values}{$region_id}{$user_id}{$date} = {}
-                                if !exists $params{values}{$region_id}{$user_id}{$date};
+                                  if !exists $params{values}{$region_id}{$user_id}{$date};
                             }
                         }
                     }
@@ -329,7 +324,7 @@ sub _get_indicator_values {
                     # verifica se todas as variaveis estao preenchidas
                     my $filled = 0;
                     do { $filled++ if exists $data->{$_} }
-                    for @variables;
+                      for @variables;
                     next unless $filled == @variables;
 
                     my %sources;
@@ -370,7 +365,8 @@ sub _get_indicator_values {
                                 V => \%values,
                                 N => \%varied_values
                             );
-                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} = [ $valor, [ keys %sources ] ];
+                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} =
+                              [ $valor, [ keys %sources ] ];
                         }
 
                     }

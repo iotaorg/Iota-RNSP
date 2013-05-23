@@ -523,9 +523,6 @@ __PACKAGE__->belongs_to(
     { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-
-
-
 # supress warnings on prefetchs!
 __PACKAGE__->might_have(
     "indicator_network_configs_one", "Iota::Schema::Result::IndicatorNetworkConfig",
