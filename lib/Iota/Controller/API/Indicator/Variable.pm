@@ -443,6 +443,12 @@ sub values_GET {
 
             @indicator_variables = $indicator->indicator_variables_variations->all;
 
+            foreach my $v (@indicator_variables){
+                push @{$hash->{variables_variations}}, {
+                    id => $v->id,
+                    name => $v->name,
+                };
+            }
         }
 
         my $indicator_formula = Iota::IndicatorFormula->new(
@@ -575,7 +581,7 @@ sub values_GET {
                             N => $vals->{$variation_id},
                         );
 
-                        $item->{variations}{$variation_id} = { value => $val };
+                        $item->{variations}{$variation_id} = { value => $val, orig => $vals->{$variation_id} };
                         $sum += $val;
                     }
                     $item->{formula_value} = $sum;
@@ -586,8 +592,9 @@ sub values_GET {
                     foreach my $var (@indicator_variations) {
                         push @variations,
                           {
-                            name  => $var->name,
-                            value => $item->{variations}{ $var->id }{value}
+                            name     => $var->name,
+                            value    => $item->{variations}{ $var->id }{value},
+                            original => $item->{variations}{ $var->id }{orig},
                           };
                     }
                     $item->{variations} = \@variations;
