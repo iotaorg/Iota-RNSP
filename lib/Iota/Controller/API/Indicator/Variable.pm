@@ -456,16 +456,21 @@ sub values_GET {
             formula => $indicator->formula,
             schema  => $c->model('DB')->schema
         );
+        my $valuetb = $c->req->params->{region_id} ? 'region_variable_values' : 'values';
+
+        my $cond = {
+            -or => [
+                $valuetb.'.user_id' => $c->stash->{user_id} || $c->user->id,
+                $valuetb.'.user_id' => undef,
+            ],
+            'me.id' => [ $indicator_formula->variables ],
+
+            ( $valuetb eq 'region_variable_values' ? ($valuetb.'.region_id', [$c->req->params->{region_id}, undef]) : ())
+        };
 
         my $rs = $c->model('DB')->resultset('Variable')->search_rs(
-            {
-                -or => [
-                    'values.user_id' => $c->stash->{user_id} || $c->user->id,
-                    'values.user_id' => undef,
-                ],
-                'me.id' => [ $indicator_formula->variables ]
-            },
-            { prefetch => ['values'] }
+            $cond,
+            { prefetch => [$valuetb] }
         );
 
         my $tmp = {};
@@ -473,7 +478,7 @@ sub values_GET {
         while ( my $row = $rs->next ) {
             $hash->{header}{ $row->name } = $x;
 
-            foreach my $value ( $row->values ) {
+            foreach my $value ( $row->$valuetb ) {
                 push @{ $tmp->{ $value->valid_from } },
                   {
                     col           => $x,
@@ -493,7 +498,10 @@ sub values_GET {
         for my $variation (@indicator_variations) {
 
             my $rs = $variation->indicator_variables_variations_values->search(
-                { %{ $hash->{filters} }, region_id => undef },
+                {
+                    %{ $hash->{filters} },
+                    region_id => $c->req->params->{region_id}
+                },
                 {
                     select   => [qw/valid_from/],
                     as       => [qw/valid_from/],
@@ -554,7 +562,7 @@ sub values_GET {
                             {
                                 valid_from => $begin,
                                 user_id    => $user_id,
-                                region_id  => undef
+                                region_id  => $c->req->params->{region_id}
                             }
                         )->as_hashref;
                         while ( my $r = $rs->next ) {

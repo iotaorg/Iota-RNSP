@@ -1,7 +1,7 @@
 <div id="content" class="content">
     <div class="row" id="cidades-dados">
         <div class="span6">
-            <div class="profile">
+            <div class=" ">
                 <div class="content-fill">
                     <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
                     <div class="variaveis"><dl class="tabela">
@@ -39,6 +39,8 @@
         </div>
     </div>
 
+</div>
+
 
 
     <div class="row" >
@@ -52,9 +54,6 @@
         </div>
     </div>
 
-
-
-</div>
 </div>
 
 

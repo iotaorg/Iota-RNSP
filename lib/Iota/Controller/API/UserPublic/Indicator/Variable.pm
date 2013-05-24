@@ -24,7 +24,6 @@ sub values_GET {
     my ( $self, $c ) = @_;
 
     $c->stash->{user_id} = $c->stash->{user_obj}->id;
-
     my $controller = $c->controller('API::Indicator::Variable');
     $controller->values_GET($c);
 }

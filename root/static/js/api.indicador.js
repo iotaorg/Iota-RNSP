@@ -4,6 +4,7 @@ var variaveis_data = [];
 var data_vvariables = [];
 var cidade_uri;
 var cidade_data;
+var $dados;
 
 $(document).ready(function () {
 
@@ -11,11 +12,12 @@ $(document).ready(function () {
     var goal_values;
     var observations_values;
 
+    var param = typeof regionID == "undefined" ? '' : '?region_id=' +regionID;
     $.loadCidadeDataIndicador = function () {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: api_path + '/api/public/user/$$id'.render({
+            url: (api_path + '/api/public/user/$$id' + param).render({
                 id: userID
             }),
             success: function (data, textStatus, jqXHR) {
@@ -29,10 +31,11 @@ $(document).ready(function () {
     }
 
     function loadIndicadorData() {
+
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: api_path + '/api/public/user/$$id/indicator/$$indicator_id'.render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id'+param).render({
                 id: userID,
                 indicator_id: indicadorID
             }),
@@ -131,13 +134,25 @@ $(document).ready(function () {
 
     function showIndicadorData() {
 
-        $("#indicador-dados .profile .title").html(indicador_data.name);
 
-        $("h1").text(indicador_data.name + ' - ' + cidade_data.cidade.name + ', ' + cidade_data.cidade.uf);
-        $("#indicador-dados .profile .explanation").html(indicador_data.explanation);
-        $("#indicador-dados .profile .dados .tabela").empty();
+        if (ref == 'indicador'){
+            $("#indicador-dados .profile .title").html(indicador_data.name);
+            $("h1").text(indicador_data.name + ' - ' + cidade_data.cidade.name + ', ' + cidade_data.cidade.uf);
+
+            $("#indicador-dados .profile .explanation").html(indicador_data.explanation);
+            $dados = $("#indicador-dados .profile .dados");
+            $(".tabela", $dados).empty();
+        }else{
+
+            $(".indicador-dados .title").html(indicador_data.name);
+
+            $(".indicador-dados .explanation").html(indicador_data.explanation);
+            $dados = $(".indicador-dados .dados");
+            $(".tabela", $dados).empty();
+
+        }
         if (indicador_data.formula.indexOf("CONCATENAR") < 0) {
-            $("#indicador-dados .profile .dados .tabela")
+            $(".tabela", $dados)
                 .append("<dt>Fórmula:</dt><dd>$$dado</dd>"
                 .render({
                 dado: formataFormula(indicador_data.formula, variaveis_data, data_vvariables)
@@ -148,7 +163,7 @@ $(document).ready(function () {
             fonte_meta = indicador_data.goal_source;
         }
         if (indicador_data.goal_explanation) {
-            $("#indicador-dados .profile .dados .tabela")
+            $(".tabela", $dados)
                 .append('<dt>Referência de Meta:</dt><dd>$$dado<blockquote><small><cite title="Fonte: $$fonte_meta">$$fonte_meta</cite></small></blockquote></dd>'
                 .render({
                 dado: indicador_data.goal_explanation,
@@ -161,7 +176,7 @@ $(document).ready(function () {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value'.render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value'+param).render({
                 id: userID,
                 indicator_id: indicadorID
             }),
@@ -193,7 +208,7 @@ $(document).ready(function () {
                         goal_values = goal_values.replace("fonte:", "Fonte:");
                         goal_values = goal_values.replace("Fonte:", '<blockquote><small><cite title="Fonte da meta">') + "</cite></small></blockquote>";
                     }
-                    $("#indicador-dados .profile .dados .tabela").append("<dt>Meta:</dt><dd>$$dado</dd>".render({
+                    $(".tabela", $dados).append("<dt>Meta:</dt><dd>$$dado</dd>".render({
                         dado: goal_values
                     }));
                 }
@@ -204,18 +219,18 @@ $(document).ready(function () {
                     $.each(source_values, function (i, el) {
                         if ($.inArray(el, source_values_unique) === -1) source_values_unique.push(el);
                     });
-                    $("#indicador-dados .profile .dados .tabela").append("<dt>Fontes do Indicador:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
+                    $(".tabela", $dados).append("<dt>Fontes do Indicador:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
                         dado: source_values_unique.join("</li><li>")
                     }));
                 }
                 if ((observations_values) && observations_values.trim() != "") {
-                    $("#indicador-dados .profile .dados .tabela").append("<dt>Observações:</dt><dd>$$dado</dd>".render({
+                    $(".tabela", $dados).append("<dt>Observações:</dt><dd>$$dado</dd>".render({
                         dado: observations_values
                     }));
                 }
 
                 if (indicador_data.user_indicator_config && indicador_data.user_indicator_config.technical_information) {
-                    $("#indicador-dados .profile .dados .tabela").append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
+                    $(".tabela", $dados).append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
                         dado: indicador_data.user_indicator_config.technical_information.replace(/\n/g, '<br/>')
                     }));
                 }
@@ -507,7 +522,7 @@ $(document).ready(function () {
         }
     }
 
-    if (ref == "indicador") {
+    if (ref == "indicador" || ref == "region_indicator") {
         $.loadCidadeDataIndicador();
     }
 

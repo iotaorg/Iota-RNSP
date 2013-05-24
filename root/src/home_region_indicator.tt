@@ -1,7 +1,7 @@
 <div id="content" class="content">
     <div class="row" id="cidades-dados">
-        <div class="span6">
-            <div class="profile">
+        <div class="span4">
+            <div class=" ">
                 <div class="content-fill">
                     <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
                     <div class="variaveis"><dl class="tabela">
@@ -40,34 +40,108 @@
     </div>
 
 
-    <div class="span6 profile">
+    <div class="span8 indicador-dados">
         <h1 class="title">[%indicator.name%]</h1>
         <p class="explanation">[%indicator.explanation%]</p>
 
         <div class="dados"><dl class="tabela dl-horizontal ">
             <dt>Fórmula:</dt>
             <dd>[%indicator.formula_human%]</dd>
-            <dt>Meta:</dt>
-                <dd>[%indicator.goal_explanation%] <blockquote><small><cite title="Fonte da meta"> [%indicator.goal_source%]</cite></small></blockquote>
+            [%IF indicator.goal_explanation%]
+                <dt>Referência de Meta:</dt>
+                <dd>[%indicator.goal_explanation%]
+                    [%IF indicator.goal_source%]<blockquote><small><cite title="Fonte da meta">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
                 </dd>
-            <dt>Fontes do Indicador:</dt>
-            <dd>
-                <ul>
-                    <li>TODO</li><li>TODO</li><li>TODO</li>
-                </ul>
-            </dd>
+            [%END%]
+
         </dl></div>
 
     </div>
-
 </div>
+
+
+
+
+    <div class="row" id="indicador-dados">
+        <div class="span4">
+            <div class="menu-left">
+                <div class="content-fill">
+                    <div class="title">Indicadores</div>
+                    <div class="category" id="axis_list">
+
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <div class="input-append">
+                                <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
+                                <span class="add-on"><i class="icon-search"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="indicators">
+                        <div class="loading"><p>Carregando...</p></div>
+                    </div>
+                    <p>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="span8">
+            <div class="data-right">
+                <div class="content-fill">
+                    <div id="indicador-historico">
+                        <div class="title">Série Histórica de <span class="cidade"></span></div>
+                        <div class="content-fill">
+
+                            <div class="table">
+                                <div class="content-fill">
+                                    <div class="loading"><p>Carregando...</p></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="indicador-grafico">
+                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>comparar com outras cidades</a></div>
+                        <div class="content-fill">
+                            <div class="graph">
+                                <div class="content-fill">
+                                    <canvas id="main-graph" width='600' height='280'></canvas>
+                                    <div class="legend"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="dados-abertos">
+                        <div class="title">Dados abertos</div>
+                        <div class="content-fill">
+                            <div class="dados-botoes">
+                                <input type="button" value="Download" id="button-download" class="button-data"/>
+                                <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+                            </div>
+                            <div class="download-links">
+                            </div>
+                            <div class="share-link">
+                                <input type="text" id="share-link" value="url" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 </div>
 <script type="text/javascript">
     var userID = [% user.id %];
     var cityID = [% city.id %];
     var regionID = [% region.id %];
-    var indicatorID = [% indicator.id %];
+    var indicadorID = [% indicator.id %];
 
     var ref = 'region_indicator';
     [% PROCESS 'network_javascript.tt'%]
