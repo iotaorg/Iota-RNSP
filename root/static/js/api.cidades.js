@@ -173,7 +173,7 @@ $(document).ready(function(){
 	}
 
 	function loadIndicadoresData(){
-        var param = typeof regionID == undefined ? '' : '?region_id=' +regionID;
+        var param = typeof regionID == "undefined" ? '' : '?region_id=' +regionID;
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',

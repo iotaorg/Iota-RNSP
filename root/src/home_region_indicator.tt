@@ -40,29 +40,35 @@
     </div>
 
 
+    <div class="span6 profile">
+        <h1 class="title">[%indicator.name%]</h1>
+        <p class="explanation">[%indicator.explanation%]</p>
 
-    <div class="row" >
-        <div class="span12">
-            <div id="cidades-indicadores">
-                <h5>Indicadores separados por eixos</h5>
-                <div class="table">
-                    <div class="loading"><p>Carregando...</p></div>
-                </div>
-            </div>
-        </div>
+        <div class="dados"><dl class="tabela dl-horizontal ">
+            <dt>Fórmula:</dt>
+            <dd>[%indicator.formula_human%]</dd>
+            <dt>Meta:</dt>
+                <dd>[%indicator.goal_explanation%] <blockquote><small><cite title="Fonte da meta"> [%indicator.goal_source%]</cite></small></blockquote>
+                </dd>
+            <dt>Fontes do Indicador:</dt>
+            <dd>
+                <ul>
+                    <li>TODO</li><li>TODO</li><li>TODO</li>
+                </ul>
+            </dd>
+        </dl></div>
+
     </div>
 
-
-
-</div>
 </div>
 
-
+</div>
 <script type="text/javascript">
     var userID = [% user.id %];
     var cityID = [% city.id %];
     var regionID = [% region.id %];
+    var indicatorID = [% indicator.id %];
 
-    var ref = 'region';
+    var ref = 'region_indicator';
     [% PROCESS 'network_javascript.tt'%]
 </script>

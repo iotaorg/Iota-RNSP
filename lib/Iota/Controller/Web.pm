@@ -132,6 +132,22 @@ sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) 
     $c->stash->{title} = $c->stash->{region}->name . ' - ' . $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
+
+sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(1) {
+    my ( $self, $c, $indicator ) = @_;
+
+    $c->stash->{indicator} = $indicator;
+    $self->stash_tela_indicator($c);
+
+    $c->stash(
+        template   => 'home_region_indicator.tt'
+    );
+}
+
+
+sub cidade_regiao_indicator_render : Chained('cidade_regiao_indicator') PathPart('') Args(0) {
+}
+
 sub cidade_regiao_render : Chained('cidade_regiao') PathPart('') Args(0) {
 }
 
