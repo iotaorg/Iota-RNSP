@@ -8,11 +8,12 @@ var indicadores_data;
 var graficos = [];
 
 
-
+var functions = {};
 $(document).ready(function(){
 
 	function loadCidadeData(){
 
+        loadIndicadoresData();
         if (!(typeof google == "undefined")){
             loadMap();
         }
@@ -25,7 +26,6 @@ $(document).ready(function(){
 			success: function(data, textStatus, jqXHR){
 				cidade_data = data;
 				showCidadeData();
-				loadIndicadoresData();
 			},
 			error: function(data){
 				console.log("erro ao carregar informações da cidade");
@@ -173,10 +173,11 @@ $(document).ready(function(){
 	}
 
 	function loadIndicadoresData(){
+        var param = typeof regionID == undefined ? '' : '?region_id=' +regionID;
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/user/$$id/indicator'.render({
+			url: (api_path + '/api/public/user/$$id/indicator'+param).render({
 							id: userID
 					}),
 			success: function(data, textStatus, jqXHR){
@@ -188,6 +189,7 @@ $(document).ready(function(){
 			}
 		});
 	}
+	functions['loadIndicadoresData'] = loadIndicadoresData;
 
 	function showIndicadoresData(){
         var table_content = '<table class="table table-striped table-hover">';
@@ -302,8 +304,11 @@ $(document).ready(function(){
 		}
 	}
 
-	if (ref == "cidade"){
-		loadCidadeData();
-	}
+    if (ref == "cidade"){
+        loadCidadeData();
+    }
+    if (ref == "region"){
+        loadIndicadoresData();
+    }
 
 });

@@ -38,12 +38,29 @@
 
         </div>
     </div>
+
+
+
+    <div class="row" >
+        <div class="span12">
+            <div id="cidades-indicadores">
+                <h5>Indicadores separados por eixos</h5>
+                <div class="table">
+                    <div class="loading"><p>Carregando...</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 
 <script type="text/javascript">
     var userID = [% user.id %];
     var cityID = [% city.id %];
+    var regionID = [% region.id %];
 
     var ref = 'region';
     [% PROCESS 'network_javascript.tt'%]

@@ -222,7 +222,9 @@ sub resumo_GET {
                 {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
-                    'me.valid_from'   => { '>'  => $from_this_date }
+                    'me.valid_from'   => { '>'  => $from_this_date },
+
+                    ('me.region_id' => $c->req->params->{region_id})x!! exists $c->req->params->{region_id}
                 }
             )->as_hashref;
             my $indicator_values = {};
