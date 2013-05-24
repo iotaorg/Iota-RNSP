@@ -533,11 +533,27 @@ $(document).ready(function(){
 		var tooltips = [];
 
 		if (indicadorDATA.goal){
-			linhas.push([ indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal, indicadorDATA.goal ]);
-			tooltips.push(indicadorDATA.goal);
-			tooltips.push(indicadorDATA.goal);
-			tooltips.push(indicadorDATA.goal);
-			tooltips.push(indicadorDATA.goal);
+
+            var $maximo_linhas = 4;
+
+            $.each(dadosGrafico.dados, function(i,item){
+                if (item.show){
+                    if (item.valores.length > $maximo_linhas){
+                        $maximo_linhas = item.valores.length;
+                    }
+                }
+            });
+
+            var $labels = new Array();
+            for (var $i=0; $i < $maximo_linhas; $i++){
+                $labels.push(indicadorDATA.goal);
+            }
+			linhas.push($labels);
+
+            for (var $i=0; $i < $maximo_linhas; $i++){
+                tooltips.push(indicadorDATA.goal);
+            }
+
 			legendas.push({name: "Referência de Meta", color: color_meta, meta: true});
 
 			var ymax = indicadorDATA.goal;
@@ -572,6 +588,7 @@ $(document).ready(function(){
 				color_index++;
 			}
 		});
+
 
 		if (maxlength < 10) maxlength = 10;
 
