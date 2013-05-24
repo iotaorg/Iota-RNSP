@@ -232,7 +232,7 @@ $(document).ready(function(){
 					carregouTabela = false;
 					carregaDadosTabela();
 				}
-			}else if (ref == "indicador"){
+			}else if (ref == "indicador" || ref == "region_indicator"){
 				var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
 				History.pushState(null, null, url);
 				$.loadCidadeDataIndicador();
@@ -1024,7 +1024,7 @@ $(document).ready(function(){
 
 	}
 
-	if (ref == "comparacao" || ref == "indicador" || ref == "home"){
+	if (ref == "comparacao" || ref == "indicador" || ref == "home" || ref == "region_indicator"){
 		carregaIndicadoresCidades();
 		setaDadosAbertos();
 		$("#share-link").val(window.location.href);
@@ -1037,7 +1037,7 @@ $(document).ready(function(){
 			setaTabs();
 			setaGraficos();
 		}
-		if (ref == "home" || ref == "indicador" || ref == "comparacao"){
+		if (ref == "home" || ref == "indicador" || ref == "comparacao" || ref == "region_indicator"){
 
 			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
