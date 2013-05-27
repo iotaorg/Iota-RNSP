@@ -207,20 +207,17 @@ $(document).ready(function(){
 			}
 			indicadorID = $(this).attr("indicator-id");
 
-			$(indicadores_list).each(function(index,item){
-				if (item.id == indicadorID){
-					indicadorDATA = item;
-				}
-			});
+            $(indicadores_list).each(function(index,item){
+                if (item.id == indicadorID){
+                    indicadorDATA = item;
+                }
+            });
 
-			$(".indicators .item").removeClass("selected");
+            $(".indicators .item").removeClass("selected");
             $(".indicators").addClass("meloading");
-			$(this).addClass("selected");
-            var title = $(".indicators .selected").html();
-			$(".data-right .data-title .title").html(title);
-			$(".data-right .data-title .description").html(indicadorDATA.explanation);
+            $(this).addClass("selected");
 
-			carregaVariacoes = true;
+            var title = $(".indicators .selected").html();
 
 			if (ref == "comparacao"){
 				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -228,16 +225,6 @@ $(document).ready(function(){
 				History.pushState({
                     indicator_id : indicadorID
                 }, title, url);
-
-				dadosGrafico = {"dados": [], "labels": []};
-
-
-				if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
-					$(".data-content .table").show();
-				}
-
-                carregouTabela = false;
-                carregaDadosTabela();
 
 			}else if (ref == "indicador" ){
                 var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -732,7 +719,6 @@ $(document).ready(function(){
 	function geraGraficos(){
         _resize_canvas();
 		for (i = 0; i < graficos.length; i++){
-
 			var ymin = 0;
 
 			$.each(graficos[i], function(index, valor){
@@ -741,6 +727,9 @@ $(document).ready(function(){
 					if (valor < ymin) ymin = valor;
 				}
 			});
+            if (typeof $('#graph-'+i)[0] == "undefined"){
+                continue;
+            }
 
 			var line = new RGraph.Line('graph-'+i, graficos[i]);
  			line.Set('chart.ylabels', false);
@@ -1075,17 +1064,50 @@ $(document).ready(function(){
     History.Adapter.bind(window,'statechange',function(){
         var State = History.getState();
 
+
+        if (!(typeof State.data.indicator_id == "undefined")){
+            indicadorID = State.data.indicator_id;
+
+            $(indicadores_list).each(function(index,item){
+                if (item.id == indicadorID){
+                    indicadorDATA = item;
+                }
+            });
+
+            $(".indicators .item").removeClass("selected");
+            $(".indicators").addClass("meloading");
+            $('div.item[indicator-id="$$id"]'.render({id: indicadorID})).addClass("selected");
+
+            var title = $(".indicators .selected").html();
+            $(".data-right .data-title .title").html(title);
+            $(".data-right .data-title .description").html(indicadorDATA.explanation);
+
+            carregaVariacoes = true;
+
+        }
+
 		if (ref == "comparacao"){
-			setaTabs();
-			setaGraficos();
+            if (!(typeof State.data.indicator_id == "undefined")){
+                dadosGrafico = {"dados": [], "labels": []};
+
+                if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
+                    $(".data-content .table").show();
+                }
+
+                carregouTabela = false;
+                carregaDadosTabela();
+            }
+            setaTabs();
+            setaGraficos();
 		}
+
 		if (ref == "home" || ref == "indicador" || ref == "comparacao" || ref == "region_indicator"){
 
 			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
 
-            geraGraficos();
 
+            geraGraficos();
 
             if (ref == "region_indicator" || ref == "indicador"){
                 activeMenuOfIndicator(State.data.indicator_id);
