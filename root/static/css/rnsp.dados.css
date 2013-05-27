@@ -41,7 +41,7 @@ table{
 .indicators.meloading .item {
     background-color: #FFF;
     opacity: 0.4;
-    cursor: wait;
+    cursor: wait!important;
 }
 
 #indicador-dados .menu-left .title,

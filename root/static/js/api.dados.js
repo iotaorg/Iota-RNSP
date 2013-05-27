@@ -224,6 +224,7 @@ $(document).ready(function(){
 
 			if (ref == "comparacao"){
 				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
+
 				History.pushState({
                     indicator_id : indicadorID
                 }, title, url);
@@ -232,16 +233,12 @@ $(document).ready(function(){
 
 
 				if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
-					carregouTabela = false;
-					carregaDadosTabela();
 					$(".data-content .table").show();
-				}else if ($(".data-content .tabs .selected").attr("id") == "tab-graficos"){
-					carregouTabela = false;
-					carregaDadosTabela();
-				}else if ($(".data-content .tabs .selected").attr("id") == "tab-mapa"){
-					carregouTabela = false;
-					carregaDadosTabela();
 				}
+
+                carregouTabela = false;
+                carregaDadosTabela();
+
 			}else if (ref == "indicador" ){
                 var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
                 History.pushState({
@@ -282,6 +279,7 @@ $(document).ready(function(){
 
 		if (!carregouTabela){
 			$.xhrPool.abortAll();
+            $(".indicators").addClass("meloading");
 
 			var indicador = indicadorID;
 			var indicador_uri = $(".indicators div.selected").attr("name-uri");
@@ -322,7 +320,7 @@ $(document).ready(function(){
 
 			var total_users = users_list.length;
 			var users_ready = 0;
-
+            var total_visible = 0;
 			$(users_list).each(function(index,item){
 
 				$.ajax({
@@ -411,6 +409,8 @@ $(document).ready(function(){
                         $(".data-content .table .content-fill tbody").append($it);
                         if (preenchido == 0){
                             $it.hide();
+                        }else{
+                            total_visible++;
                         }
 
                         if(indicadorDATA.variable_type == 'str'){
@@ -461,8 +461,13 @@ $(document).ready(function(){
                             if (!(typeof google == "undefined")){
                                 geraMapa();
                             }
+                            if (total_visible == 0){
+                                $(".data-content .table .content-fill tbody").append('<tr><td colspan="20">Nenhuma cidade preencheu este indicador!</td></tr>');
+                            }
+
+                            carregouTabela = true;
+                            $(".indicators").removeClass("meloading");
 						}
-						carregouTabela = true;
 
 						setaTabs();
 
@@ -1070,7 +1075,6 @@ $(document).ready(function(){
     History.Adapter.bind(window,'statechange',function(){
         var State = History.getState();
 
-        activeMenuOfIndicator(State.data.indicator_id);
 		if (ref == "comparacao"){
 			setaTabs();
 			setaGraficos();
@@ -1084,6 +1088,8 @@ $(document).ready(function(){
 
 
             if (ref == "region_indicator" || ref == "indicador"){
+                activeMenuOfIndicator(State.data.indicator_id);
+
                 $.loadCidadeDataIndicador();
             }
 		}
