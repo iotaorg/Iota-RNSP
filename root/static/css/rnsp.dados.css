@@ -38,6 +38,11 @@ table{
 .indicators .item:hover{
 	background-color: #e1ffff;
 }
+.indicators.meloading .item {
+    background-color: #FFF;
+    opacity: 0.4;
+    cursor: wait;
+}
 
 #indicador-dados .menu-left .title,
 #indicadores-dados .menu-left .title{

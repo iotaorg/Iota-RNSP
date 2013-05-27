@@ -22,7 +22,6 @@ Retorna a mesma coisa que o GET /api/indicator/<ID>/variable/value porem com o u
 
 sub values_GET {
     my ( $self, $c ) = @_;
-
     $c->stash->{user_id} = $c->stash->{user_obj}->id;
     my $controller = $c->controller('API::Indicator::Variable');
     $controller->values_GET($c);

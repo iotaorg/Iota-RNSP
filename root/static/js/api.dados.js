@@ -193,6 +193,10 @@ $(document).ready(function(){
 
 		$(".indicators .item").click( function (){
 
+            if ($(".indicators").hasClass("meloading")){
+                alert('Por favor, espere o indicador carregar.');
+                return;
+            }
 			if (ref == "home"){
 				window.location.href = "/" + $(this).attr("name-uri") + $.getUrlParams();
 				return;
@@ -210,6 +214,7 @@ $(document).ready(function(){
 			});
 
 			$(".indicators .item").removeClass("selected");
+            $(".indicators").addClass("meloading");
 			$(this).addClass("selected");
             var title = $(".indicators .selected").html();
 			$(".data-right .data-title .title").html(title);
@@ -242,13 +247,11 @@ $(document).ready(function(){
                 History.pushState({
                     indicator_id : indicadorID
                 }, title, url);
-                $.loadCidadeDataIndicador();
             }else if (ref == "region_indicator"){
                 var url = "/"+cidade_uri + "/regiao/" +  region_name_url + "/" + $(this).attr("name-uri") + $.getUrlParams();
                 History.pushState({
                     indicator_id : indicadorID
                 }, title, url);
-                $.loadCidadeDataIndicador();
             }
 		});
 

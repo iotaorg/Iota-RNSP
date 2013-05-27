@@ -202,6 +202,7 @@ $(document).ready(function () {
                 showHistoricoData();
 
 
+
                 if ((goal_values) && goal_values.trim() != "") {
                     if (goal_values.toLowerCase().indexOf("fonte:") > 0) {
                         goal_values = goal_values.replace("fonte:", "Fonte:");
@@ -242,10 +243,12 @@ $(document).ready(function () {
                     $('#indicador-grafico').hide();
                 }
 
+                $(".indicators").removeClass("meloading");
 
             },
             error: function (data) {
                 console.log("erro ao carregar série histórica");
+                $(".indicators").removeClass("meloading");
             }
         });
     }
@@ -522,6 +525,7 @@ $(document).ready(function () {
     }
 
     if (ref == "indicador" || ref == "region_indicator") {
+        $(".indicators").addClass("meloading");
         $.loadCidadeDataIndicador();
     }
 
