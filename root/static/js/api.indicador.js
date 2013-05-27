@@ -134,7 +134,6 @@ $(document).ready(function () {
 
     function showIndicadorData() {
 
-
         if (ref == 'indicador'){
             $("#indicador-dados .profile .title").html(indicador_data.name);
             $("h1").text(indicador_data.name + ' - ' + cidade_data.cidade.name + ', ' + cidade_data.cidade.uf);

@@ -142,6 +142,7 @@
     var cityID = [% city.id %];
     var regionID = [% region.id %];
     var indicadorID = [% indicator.id %];
+    var region_name_url = '[% region.name_url %]';
 
     var ref = 'region_indicator';
     [% PROCESS 'network_javascript.tt'%]

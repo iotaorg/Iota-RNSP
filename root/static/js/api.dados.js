@@ -183,12 +183,14 @@ $(document).ready(function(){
 				indicadorDATA = indicadores_list[i];
 			}
 		});
+
 		if (indicadorID){
 			$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
 
             montaDateRuler();
 		}
+
 		$(".indicators .item").click( function (){
 
 			if (ref == "home"){
@@ -209,14 +211,17 @@ $(document).ready(function(){
 
 			$(".indicators .item").removeClass("selected");
 			$(this).addClass("selected");
-			$(".data-right .data-title .title").html($(".indicators .selected").html());
+            var title = $(".indicators .selected").html();
+			$(".data-right .data-title .title").html(title);
 			$(".data-right .data-title .description").html(indicadorDATA.explanation);
 
 			carregaVariacoes = true;
 
 			if (ref == "comparacao"){
 				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
-				History.pushState(null, null, url);
+				History.pushState({
+                    indicator_id : indicadorID
+                }, title, url);
 
 				dadosGrafico = {"dados": [], "labels": []};
 
@@ -232,16 +237,43 @@ $(document).ready(function(){
 					carregouTabela = false;
 					carregaDadosTabela();
 				}
-			}else if (ref == "indicador" || ref == "region_indicator"){
-				var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
-				History.pushState(null, null, url);
-				$.loadCidadeDataIndicador();
-			}
+			}else if (ref == "indicador" ){
+                var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
+                History.pushState({
+                    indicator_id : indicadorID
+                }, title, url);
+                $.loadCidadeDataIndicador();
+            }else if (ref == "region_indicator"){
+                var url = "/"+cidade_uri + "/regiao/" +  region_name_url + "/" + $(this).attr("name-uri") + $.getUrlParams();
+                History.pushState({
+                    indicator_id : indicadorID
+                }, title, url);
+                $.loadCidadeDataIndicador();
+            }
 		});
-		if (ref == "comparacao"){
-			//carregaDadosTabela();
-		}
+
   	}
+
+  	function activeMenuOfIndicator(id){
+
+        indicadorID = id;
+        selectAxis(id);
+
+        $(".indicators .item").removeClass("selected");
+        $(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).addClass("selected");
+
+        $.each(indicadores_list, function(i,item){
+            if (item.id == indicadorID){
+                indicadorDATA = indicadores_list[i];
+            }
+        });
+
+        $(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
+        $(".data-right .data-title .description").html(indicadorDATA.explanation);
+
+        montaDateRuler();
+
+    }
 
 	function carregaDadosTabela(){
 
@@ -954,8 +986,8 @@ $(document).ready(function(){
 	});
 
 	function selectAxis(id){
-
 		var indicador = $(".indicators .item[indicator-id='$$id']".render({id: id}));
+
 		var eixo = $("#axis_list .option[axis-id='$$id']".render({id: $(indicador).attr("axis-id")}));
 		$("#axis_list .select").attr("axis-id",$(eixo).attr("axis-id"));
 		$("#axis_list .select .content-fill").html($(eixo).html());
@@ -1033,6 +1065,9 @@ $(document).ready(function(){
 	var History = window.History;
 
     History.Adapter.bind(window,'statechange',function(){
+        var State = History.getState();
+
+        activeMenuOfIndicator(State.data.indicator_id);
 		if (ref == "comparacao"){
 			setaTabs();
 			setaGraficos();
@@ -1043,6 +1078,11 @@ $(document).ready(function(){
 			$("#share-link").val(window.location.href);
 
             geraGraficos();
+
+
+            if (ref == "region_indicator" || ref == "indicador"){
+                $.loadCidadeDataIndicador();
+            }
 		}
     });
 
