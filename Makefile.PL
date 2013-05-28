@@ -62,7 +62,7 @@ requires 'Catalyst::Plugin::Assets';
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';
-
+requires 'Text2URI';
 requires 'MooseX::Traits';
 requires 'DBD::Pg';
 requires 'XML::Simple';
