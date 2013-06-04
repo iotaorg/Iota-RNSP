@@ -309,7 +309,11 @@ sub _put {
         }
     )->next;
 
+
     if ($row) {
+        $values{observations} ||= undef;
+        $values{source}       ||= undef;
+
         $row->update(
             {
                 value         => $values{value},
