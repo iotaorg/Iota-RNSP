@@ -1,3 +1,4 @@
+[%IF !without_wrapper%]
 <!DOCTYPE HTML>
 <html lang="pt-br">
 <head>
@@ -251,3 +252,4 @@
 </script>
 </body>
 </html>
+[%ELSE%][%content%][%END%]

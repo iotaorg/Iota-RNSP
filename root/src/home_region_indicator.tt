@@ -40,23 +40,36 @@
     </div>
 
 
-    <div class="span8 indicador-dados">
-        <h1 class="title">[%indicator.name%]</h1>
-        <p class="explanation">[%indicator.explanation%]</p>
+    <div class="span8">
+        <div class="indicador-dados">
+            <h1 class="title">[%indicator.name%]</h1>
+            <p class="explanation">[%indicator.explanation%]</p>
 
-        <div class="dados"><dl class="tabela dl-horizontal ">
-            <dt>Fórmula:</dt>
-            <dd>[%indicator.formula_human%]</dd>
-            [%IF indicator.goal_explanation%]
-                <dt>Referência de Meta:</dt>
-                <dd>[%indicator.goal_explanation%]
-                    [%IF indicator.goal_source%]<blockquote><small><cite title="Fonte da meta">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
-                </dd>
-            [%END%]
+            <div class="dados"><dl class="tabela dl-horizontal ">
+                <dt>Fórmula:</dt>
+                <dd>[%indicator.formula_human%]</dd>
+                [%IF indicator.goal_explanation%]
+                    <dt>Referência de Meta:</dt>
+                    <dd>[%indicator.goal_explanation%]
+                        [%IF indicator.goal_source%]<blockquote><small><cite title="Fonte da meta">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
+                    </dd>
+                [%END%]
 
-        </dl></div>
+            </dl></div>
+
+        </div>
+
+        [%IF region.depth_level == 2%]
+        <div>
+            <h2>Fator de desigualdade</h2>
+            [% INCLUDE parts/fator_desigualdade.tt %]
+        </div>
+        [%END%]
 
     </div>
+
+
+
 </div>
 
 

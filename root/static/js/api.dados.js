@@ -9,6 +9,7 @@ var markerCluster;
 var carregouTabela = false;
 var carregaVariacoes = true;
 var ano_atual_dados;
+
 $(document).ready(function(){
 
 	zoom_padrao = 4;
@@ -1115,6 +1116,15 @@ $(document).ready(function(){
                 $.loadCidadeDataIndicador();
             }
 		}
+
+
+		$('[data-part-onchange-location]').each(function(a,b){
+            var $me = $(b);
+            var newURL = updateURLParameter(window.location.href, 'part', $me.attr('data-part-onchange-location'));
+            $.get(newURL, function(data) {
+                $me.replaceWith(data);
+            });
+        });
     });
 
 });

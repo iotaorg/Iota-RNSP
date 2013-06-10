@@ -1,0 +1,26 @@
+<div data-part-onchange-location="fator_desigualdade">
+[%IF fator_desigualdade && fator_desigualdade.size > 0%]
+    <table class="table table-striped table-condensed">
+        <thead>
+            <tr>
+                <th>Período</th>
+                <th>Máximo</th>
+                <th>Mínimo</th>
+                <th>Desigualdade (vezes)</th>
+            </tr>
+        </thead>
+        <tbody>
+            [%FOREACH v IN fator_desigualdade %]
+            <tr>
+                <td>[%v.valid_from%]</td>
+                <td>[%value4human(v.max_valor, 'num')%] <small>([%v.max_nomes%])</small></td>
+                <td>[%value4human(v.min_valor, 'num')%] <small>([%v.min_nomes%])</small></td>
+                <td>[%value4human(v.fator, 'num')%] </td>
+            </tr>
+            [%END%]
+        </tbody>
+    </table>
+[%ELSE%]
+<p>Sem dados</p>
+[%END%]
+</div>
