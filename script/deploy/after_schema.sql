@@ -200,7 +200,7 @@ join "user" u on u.id = vv.user_id
 join network n on n.id = u.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
-where value is not null and value != ''
+--where value is not null and value != ''
 union all
 SELECT
 
@@ -229,5 +229,6 @@ join "user" u on u.id = vv.user_id
 join network n on n.id = u.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
-where value is not null and value != '';
+--where value is not null and value != ''
+;
 
