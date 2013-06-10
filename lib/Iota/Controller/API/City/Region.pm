@@ -79,7 +79,7 @@ sub region_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin ));
+      unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $obj_rs = $c->stash->{object}->next;
 
@@ -116,7 +116,7 @@ sub region_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin ));
+      unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $obj = $c->stash->{object}->next;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -140,7 +140,7 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin ));
+      unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $param = $c->req->params->{city}{region}{create};
     $param->{city_id}    = $c->stash->{city}->id;
