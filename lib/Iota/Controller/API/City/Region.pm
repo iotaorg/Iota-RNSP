@@ -164,24 +164,38 @@ sub list_POST {
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->as_hashref->all;
+    my @list = $c->stash->{collection}->search( undef, { prefetch => 'upper_region' } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list) {
         push @objs, {
             (
-                map { $_ => $obj->{$_} }
+                (map { $_ => $obj->{$_} }
                   qw(
                   id
                   name
                   name_url
                   description
                   city_id
-                  upper_region
                   depth_level
                   created_by
                   created_at
-                  automatic_fill)
+                  automatic_fill)),
+                city => {
+                    (
+                        map { $_ => $c->stash->{city}->$_ }
+                        qw(
+                        name name_uri uf pais
+                        )
+                    ),
+                },
+                upper_region => $obj->{upper_region}
+                ? {
+                    id       => $obj->{upper_region}{id},
+                    name     => $obj->{upper_region}{name},
+                    name_url => $obj->{upper_region}{name_url},
+                }
+                : undef
             ),
             url => $c->uri_for_action( $self->action_for('region'), [ $c->stash->{city}->id, $obj->{id} ] )->as_string,
 
