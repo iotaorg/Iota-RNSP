@@ -731,11 +731,14 @@ sub by_period_GET {
                 measurement_unit_name => $row->measurement_unit ? $row->measurement_unit->name       : undef,
 
             };
+            my $region_id   = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
+            my $value_table = $region_id ? 'region_variable_values' : 'values';
 
-            my $rsx = $row->values->search(
+            my $rsx = $row->$value_table->search(
                 {
                     'me.valid_from' => $c->stash->{valid_from},
                     'me.user_id'    => $c->stash->{user_id} || $c->user->id,
+                   ('me.region_id' => $region_id)x!! $region_id
                 }
             );
             my $value = $rsx->first;

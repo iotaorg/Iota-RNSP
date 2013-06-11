@@ -107,6 +107,8 @@ eval {
                 ]
             );
 
+            my $indicator = eval { from_json( $res->content ) };
+
             my $region_url = $reg1_uri . '/value';
 
             # PUT normal
@@ -261,6 +263,12 @@ eval {
 
             $list = eval { from_json( $res->content ) };
             is_deeply( $list->{values}, [], 'no values for variable 4' );
+
+
+            ( $res, $c ) = ctx_request( GET '/api/indicator/'.$indicator->{id}.'/variable/period/2012-10-17?region_id=' . $reg1->{id} );
+            is( $res->code, 200, 'list the values exists -- 200 Success' );
+            $list = eval { from_json( $res->content ) };
+            is_deeply( scalar @{$list->{rows}}, 1);
 
             die 'rollback';
         }
