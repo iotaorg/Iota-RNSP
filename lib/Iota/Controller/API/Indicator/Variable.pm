@@ -523,7 +523,8 @@ sub values_GET {
                 {
                     user_id      => $user_id,
                     valid_from   => $begin,
-                    indicator_id => $indicator->id
+                    indicator_id => $indicator->id,
+                    region_id => $c->req->params->{region_id}
                 }
             )->next;
 
@@ -716,6 +717,7 @@ sub by_period_GET {
 
         my @rows;
 
+        my $region_id   = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
         while ( my $row = $rs->next ) {
             my $rowx = {
                 ( map { $_ => $row->$_ } qw /id name explanation cognomen type source is_basic/ ),
@@ -731,7 +733,6 @@ sub by_period_GET {
                 measurement_unit_name => $row->measurement_unit ? $row->measurement_unit->name       : undef,
 
             };
-            my $region_id   = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
             my $value_table = $region_id ? 'region_variable_values' : 'values';
 
             my $rsx = $row->$value_table->search(
@@ -758,9 +759,10 @@ sub by_period_GET {
 
         my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs(
             {
-                user_id => $c->stash->{user_id} || $c->user->id,
+                user_id      => $c->stash->{user_id} || $c->user->id,
                 valid_from   => $c->stash->{valid_from},
-                indicator_id => $indicator->id
+                indicator_id => $indicator->id,
+                region_id    => $region_id
             }
         )->next;
 

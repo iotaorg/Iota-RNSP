@@ -37,6 +37,11 @@ sub verifiers_specs {
                     type     => 'Int',
                 },
 
+                region_id => {
+                    required => 0,
+                    type     => 'Int',
+                },
+
                 indicator_id => {
                     required   => 1,
                     type       => 'Int',
