@@ -65,6 +65,7 @@ requires 'Digest::MD5';
 requires 'Text2URI';
 requires 'MooseX::Traits';
 requires 'DBD::Pg';
+requires 'Statistics::Descriptive';
 requires 'XML::Simple';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
