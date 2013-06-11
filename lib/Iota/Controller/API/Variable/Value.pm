@@ -231,8 +231,8 @@ Retorna:
 sub list_PUT {
     my ( $self, $c ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin user));
+#    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+ #     unless $c->check_any_user_role(qw(admin superadmin user));
 
     $c->req->params->{variable}{value}{put}{variable_id} = $c->stash->{variable}->id;
     $c->req->params->{variable}{value}{put}{user_id}     = $c->user->id;
