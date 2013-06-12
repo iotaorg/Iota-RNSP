@@ -59,6 +59,7 @@ eval {
                 [
                     api_key                          => 'test',
                     'city.region.create.name'        => 'a region',
+                    'city.region.create.polygon_path'=> 'str',
                     'city.region.create.description' => 'with no description',
                 ]
             );
@@ -83,6 +84,7 @@ eval {
                     },
                     depth_level    => 2,
                     automatic_fill => 0,
+                    polygon_path   => 'str',
                     description    => 'with no description',
                     name           => 'a region',
                     name_url       => 'subprefeitura:a-region',
@@ -121,6 +123,7 @@ eval {
                     },
                     depth_level    => 3,
                     description    => 'description',
+                    polygon_path   => undef,
                     name           => 'foobar',
                     automatic_fill => 0,
                     name_url       => 'foobar',
@@ -162,6 +165,7 @@ eval {
                         uf       => 'SP'
                     },
                     depth_level    => 3,
+                    polygon_path   => undef,
                     description    => 'description',
                     name           => 'xxx',
                     automatic_fill => 0,

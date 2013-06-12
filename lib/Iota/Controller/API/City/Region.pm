@@ -44,7 +44,7 @@ sub region_GET {
             (
                 map { $_ => $object_ref->{$_} }
                   qw(
-                  name name_url description depth_level automatic_fill
+                  name name_url description depth_level automatic_fill polygon_path
                   )
             ),
             city => {
@@ -180,7 +180,10 @@ sub list_GET {
                   depth_level
                   created_by
                   created_at
-                  automatic_fill)),
+                  automatic_fill),
+                    ('polygon_path')x!! exists $c->req->params->{with_polygon_path}
+                ),
+
                 city => {
                     (
                         map { $_ => $c->stash->{city}->$_ }
