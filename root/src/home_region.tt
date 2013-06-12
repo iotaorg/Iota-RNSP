@@ -33,11 +33,27 @@
     <dt>[%vv.variable.name%]: </dt>
     <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
 [% END %]
-                </dl></div>
-            </div>
+                    </dl></div>
+                </div><!-- content-fill -->
+            </div><!-- " " -->
+        </div><!-- span6 -->
 
+        <div class="offset2 span4">
+            [%IF region.polygon_path || region.depth_level == 2 %]
+            <div class="map" id="gmap">
+                <div class="content-fill">
+                    <div id="x-container">
+                        <div class="x-dummy"></div>
+                        <div class="x-element">
+                            <div id="mapa"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            [%ELSE%]
+            <p>Sem mapa da região</p>
+            [%END%]
         </div>
-    </div>
 
 </div>
 
@@ -61,6 +77,29 @@
     var userID = [% user.id %];
     var cityID = [% city.id %];
     var regionID = [% region.id %];
+
+[%IF region.depth_level == 2%]
+    var load_map = {
+        map_elm: '#mapa',
+        polygons: [
+            [%-FOR rr IN subregions -%]
+                { p : '[% rr.polygon_path.replace("'", "\\'") %]', color: '#FF0000' },
+            [%END%]
+        ]
+    };
+
+[%ELSE%]
+    [%IF region.polygon_path%]
+    var load_map = {
+        map_elm: '#mapa',
+        polygons: [
+            { p : '[% region.polygon_path.replace("'", "\\'") %]', color: '#FF0000' }
+        ]
+    };
+    [%END%]
+
+[%END%]
+
 
     var ref = 'region';
     [% PROCESS 'network_javascript.tt'%]

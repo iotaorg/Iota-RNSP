@@ -334,4 +334,80 @@ $(window).resize(function() {
     _resize_canvas();
 });
 
+if (!(typeof google == "undefined") && !(typeof load_map == "undefined") ){
 
+    var map_used_things = {};
+    function initialize_maps() {
+            var map = new google.maps.Map($(load_map.map_elm)[0], {
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+//                disableDefaultUI: true,
+                zoomControl: true,
+            });
+
+            google.maps.event.addListenerOnce(map, 'idle', function(){
+
+                $.each(load_map.polygons, function(a, elm){
+
+                    var zoo = {
+                        coords: google.maps.geometry.encoding.decodePath(elm.p)
+                    };
+
+                    zoo.polygon = new google.maps.Polygon({
+                        paths: zoo.coords,
+                        strokeColor: elm.color,
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: elm.color,
+                        fillOpacity: 0.5
+                    });
+
+
+                    zoo.polygon.setMap(map);
+
+                    if (typeof map_used_things[load_map.map_elm] == "undefined")
+                        map_used_things[load_map.map_elm] = [];
+
+                    map_used_things[load_map.map_elm].push(zoo);
+
+                });
+
+
+                var super_bound = null;
+                $.each(map_used_things[load_map.map_elm], function(a, elm){
+
+                    if (super_bound == null){
+                        super_bound = elm.polygon.getBounds();
+                        return true;
+                    }
+
+                    super_bound = super_bound.union( elm.polygon.getBounds() );
+                });
+
+                if (!(super_bound == null)){
+                    map.fitBounds(super_bound);
+                }
+            });
+
+        }
+
+        if (!google.maps.Polygon.prototype.getBounds) {
+
+            google.maps.Polygon.prototype.getBounds = function(latLng) {
+
+                    var bounds = new google.maps.LatLngBounds();
+                    var paths = this.getPaths();
+                    var path;
+
+                    for (var p = 0; p < paths.getLength(); p++) {
+                            path = paths.getAt(p);
+                            for (var i = 0; i < path.getLength(); i++) {
+                                    bounds.extend(path.getAt(i));
+                            }
+                    }
+
+                    return bounds;
+            }
+
+    }
+    google.maps.event.addDomListener(window, 'load', initialize_maps);
+}
