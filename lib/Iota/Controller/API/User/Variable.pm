@@ -88,6 +88,7 @@ sub list_GET {
     my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
     my $vtable = $region_id ? 'region_variable_values' : 'values';
 
+    my $city_id = $c->stash->{user}->city_id || '1'; # test fix
     foreach my $obj (@list) {
 
         my $where = {};
@@ -97,6 +98,7 @@ sub list_GET {
         my @values =
           $rs->search( { id => $obj->{id} } )->next->$vtable->search( { user_id => $c->stash->{user}->id, %$where } )
           ->as_hashref->all;
+
 
         push @objs, {
             ( map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit) ),
@@ -112,9 +114,10 @@ sub list_GET {
                         valid_until   => $_->{valid_until},
                         id            => $_->{id},
 
-                        url => $region_id
-                            ? $c->uri_for_action( $c->controller('API::City::Region::Value')->action_for('variable'),
-                                [ 1,2,3] )->as_string
+                        url =>
+                           $region_id ?
+                            $c->uri_for_action( $c->controller('API::City::Region::Value')->action_for('variable'),
+                                [ $city_id, $region_id, $_->{id} ] )->as_string
                             : $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'),
                                 [ $obj->{id}, $_->{id} ] )->as_string
 
