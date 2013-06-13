@@ -85,6 +85,8 @@ sub list_GET {
 
     my @list = $rs->as_hashref->all;
     my @objs;
+    my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
+    my $vtable = $region_id ? 'region_variable_values' : 'values';
 
     foreach my $obj (@list) {
 
@@ -93,7 +95,7 @@ sub list_GET {
         $where->{valid_from}{'<='} = $c->req->params->{valid_from_end}   if exists $c->req->params->{valid_from_end};
 
         my @values =
-          $rs->search( { id => $obj->{id} } )->next->values->search( { user_id => $c->stash->{user}->id, %$where } )
+          $rs->search( { id => $obj->{id} } )->next->$vtable->search( { user_id => $c->stash->{user}->id, %$where } )
           ->as_hashref->all;
         push @objs, {
             ( map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit) ),
