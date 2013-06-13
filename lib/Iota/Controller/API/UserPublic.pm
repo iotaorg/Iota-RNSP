@@ -98,6 +98,7 @@ sub stash_comparacao {
     my @users = $c->model('DB::User')->search(
         {
             'me.network_id' => $network->id,
+            active          => 1,
             city_id         => { '!=' => undef }
         },
         { prefetch => ['city'] }
@@ -108,6 +109,21 @@ sub stash_comparacao {
           {
             ( map { $_ => $user->{$_} } qw/name id city_id/ ),
             city => { map { $_ => $user->{city}{$_} } qw/name id name_uri pais uf/, }
+          };
+    }
+
+    my @users_admin = $c->model('DB::User')->search(
+        {
+            'me.network_id' => $network->id,
+            active          => 1,
+            city_id         => undef
+        }
+    )->as_hashref->all;
+
+    for my $user (@users_admin) {
+        push @{ $ret->{admin_users} },
+          {
+            ( map { $_ => $user->{$_} } qw/name id/ )
           };
     }
 
