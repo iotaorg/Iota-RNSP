@@ -97,6 +97,7 @@ sub list_GET {
         my @values =
           $rs->search( { id => $obj->{id} } )->next->$vtable->search( { user_id => $c->stash->{user}->id, %$where } )
           ->as_hashref->all;
+
         push @objs, {
             ( map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit) ),
             variable_id => $obj->{id},
@@ -110,8 +111,14 @@ sub list_GET {
                         valid_from    => $_->{valid_from},
                         valid_until   => $_->{valid_until},
                         id            => $_->{id},
-                        url => $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'),
-                            [ $obj->{id}, $_->{id} ] )->as_string
+
+                        url => $region_id
+                            ? $c->uri_for_action( $c->controller('API::City::Region::Value')->action_for('variable'),
+                                [ 1,2,3] )->as_string
+                            : $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'),
+                                [ $obj->{id}, $_->{id} ] )->as_string
+
+
                       }
                 } sort { $a->{valid_from} cmp $b->{valid_from} } @values
             ],

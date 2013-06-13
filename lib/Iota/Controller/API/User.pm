@@ -20,8 +20,14 @@ sub base : Chained('/api/base') : PathPart('user') : CaptureArgs(0) {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
+    my $url = $c->req->uri;
+    if ($url =~ /variable_config$/ || $url =~ /variable_config\/\d+$/ && $c->user->id != $id && $c->req->method eq 'GET'){
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->check_any_user_role(qw(user));
+    }else{
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
+    }
 
     $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
