@@ -270,6 +270,13 @@ eval {
             $list = eval { from_json( $res->content ) };
             is_deeply( scalar @{$list->{rows}}, 1);
 
+
+            ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $reg1->{id} . '&is_basic=0' );
+            is( $res->code, 200, 'list the values exists -- 200 Success' );
+            $list = eval { from_json( $res->content ) };
+
+            is_deeply( scalar @{$list->{variables}}, 1);
+
             die 'rollback';
         }
     );
