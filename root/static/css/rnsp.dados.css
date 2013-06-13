@@ -289,7 +289,7 @@ table{
 	margin-top: 20px;
 }
 
-#cidades-dados #mapa{
+#cidades-dados #mapa, #x-container .mapa{
     min-height: 150px;
     max-height: 900px;
     height: 100%;

@@ -59,12 +59,7 @@
 
         </div>
 
-        [%IF region.depth_level == 2%]
-        <div>
-            <h2>Fator de desigualdade</h2>
-            [% INCLUDE parts/fator_desigualdade.tt %]
-        </div>
-        [%END%]
+
 
     </div>
 
@@ -100,6 +95,21 @@
             </div>
         </div>
         <div class="span8">
+
+
+        [%IF region.depth_level == 2%]
+        <div>
+            <h2>Fator de desigualdade</h2>
+            [% INCLUDE parts/fator_desigualdade.tt %]
+        </div>
+
+        <div>
+            <h2>Análise comparativa</h2>
+            [% INCLUDE parts/analise_comparativa.tt %]
+        </div>
+        [%END%]
+
+
             <div class="data-right">
                 <div class="content-fill">
                     <div id="indicador-historico">

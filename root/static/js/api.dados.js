@@ -1123,6 +1123,8 @@ $(document).ready(function(){
             var newURL = updateURLParameter(window.location.href, 'part', $me.attr('data-part-onchange-location'));
             $.get(newURL, function(data) {
                 $me.replaceWith(data);
+
+                initialize_maps();
             });
         });
     });

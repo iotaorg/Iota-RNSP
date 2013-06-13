@@ -148,6 +148,7 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
     if ($region->depth_level == 2){
 
         $self->stash_distritos($c);
+        $self->stash_comparacao_distritos($c);
     }
 
 }
@@ -174,7 +175,32 @@ sub stash_distritos {
             template        => 'parts/fator_desigualdade.tt',
             without_wrapper => 1
         );
+    }
+}
 
+
+sub stash_comparacao_distritos {
+    my ( $self, $c ) = @_;
+
+    my $schema = $c->model('DB');
+    my $region = $c->stash->{region};
+    my $indicator = $c->stash->{indicator};
+    my $user = $c->stash->{user};
+
+    my @fatores = $schema->resultset( 'ViewFatorDesigualdade' )->search( {},
+    {
+        bind  => [ $region->id, $indicator->{id}, $user->{id} ],
+        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+    }
+    )->all;
+
+    $c->stash->{analise_comparativa} = \@fatores;
+
+    if (exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa'){
+        $c->stash(
+            template        => 'parts/analise_comparativa.tt',
+            without_wrapper => 1
+        );
     }
 }
 
