@@ -189,12 +189,13 @@ sub stash_comparacao_distritos {
     my $user = $c->stash->{user};
 
 
-    $c->stash->{color_index} = [qw/
-        #D7E7FF
-        #A5DFF7
-        #5A9CE8
-        #0041B5
-        #20007B/];
+    $c->stash->{color_index} = [
+        '#D7E7FF',
+        '#A5DFF7',
+        '#5A9CE8',
+        '#0041B5',
+        '#20007B',
+    ];
 
     my $valor_rs = $schema->resultset( 'ViewValoresDistritos' )->search( {},
     {

@@ -81,13 +81,14 @@ sub verifiers_specs {
                         #return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
-                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id') } );
+                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id'),} );
                         my $date   = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
 
                         # f_extract_period_edge
                         return $self->search(
                             {
                                 user_id     => $r->get_value('user_id'),
+                                region_id   => $r->get_value('region_id'),
                                 variable_id => $r->get_value('variable_id'),
                                 valid_from  => $schema->f_extract_period_edge( $var ? $var->period : 'yearly', $date )
                                   ->{period_begin}
