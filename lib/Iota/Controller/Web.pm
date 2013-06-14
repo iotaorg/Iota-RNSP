@@ -225,7 +225,7 @@ sub stash_comparacao_distritos {
                 my $stat = $freq->iterate($distritos);
                 $out->{$ano}{$variacao} = {
                     all    => $distritos,
-                    top3   => [ $distritos->[2], $distritos->[1], $distritos->[0], ],
+                    top3   => [ $distritos->[0], $distritos->[1], $distritos->[2], ],
                     lower3 => [ $distritos->[-3], $distritos->[-2], $distritos->[-1] ],
                     mean   => $stat->mean()
                 };
