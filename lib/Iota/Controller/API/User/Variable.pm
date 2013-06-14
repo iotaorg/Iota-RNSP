@@ -96,7 +96,11 @@ sub list_GET {
         $where->{valid_from}{'<='} = $c->req->params->{valid_from_end}   if exists $c->req->params->{valid_from_end};
 
         my @values =
-          $rs->search( { id => $obj->{id} } )->next->$vtable->search( { user_id => $c->stash->{user}->id, %$where } )
+          $rs->search( { id => $obj->{id} } )->next->$vtable->search( {
+            user_id => $c->stash->{user}->id,
+           (region_id => $region_id)x!! $region_id,
+            %$where,
+        } )
           ->as_hashref->all;
 
 
