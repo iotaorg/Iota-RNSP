@@ -66,7 +66,7 @@ sub value4human {
         }
     }
     else {
-        $pre = $value;
+        $pre = int $value;
     }
 
     if ( length($pre) > 3 ) {

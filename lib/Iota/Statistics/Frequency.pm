@@ -23,7 +23,7 @@ sub iterate {
         }
     }
 
-    return $rows;
+    return $stat;
 }
 
 

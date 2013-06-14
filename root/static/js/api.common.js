@@ -338,20 +338,26 @@ if (!(typeof google == "undefined")) {
 
     var map_used_things = {};
     function initialize_maps() {
-            if (typeof load_map == "undefined")
-                return false;
-            if (!$(load_map.map_elm)[0])
-                return false;
+        if (typeof load_map == "undefined")
+            return false;
+        $.grep(load_map, function(xmap){
 
-            $(load_map.map_elm).html('');
-            var map = new google.maps.Map($(load_map.map_elm)[0], {
+            if (xmap.polygons.length == 0)
+                return true;
+
+            if (!$(xmap.map_elm)[0])
+                return true;
+
+            $(xmap.map_elm).html('');
+            var map = new google.maps.Map($(xmap.map_elm)[0], {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 zoomControl: true,
             });
+            var opacity = xmap.opacity ? xmap.opacity : 0.5;
 
             google.maps.event.addListenerOnce(map, 'idle', function(){
 
-                $.each(load_map.polygons, function(a, elm){
+                $.each(xmap.polygons, function(a, elm){
 
                     var zoo = {
                         coords: google.maps.geometry.encoding.decodePath(elm.p)
@@ -360,25 +366,25 @@ if (!(typeof google == "undefined")) {
                     zoo.polygon = new google.maps.Polygon({
                         paths: zoo.coords,
                         strokeColor: elm.color,
-                        strokeOpacity: 0.8,
+                        strokeOpacity: Math.min(opacity+0.3,1),
                         strokeWeight: 2,
                         fillColor: elm.color,
-                        fillOpacity: 0.5
+                        fillOpacity: Math.min(opacity, 1)
                     });
 
 
                     zoo.polygon.setMap(map);
 
-                    if (typeof map_used_things[load_map.map_elm] == "undefined")
-                        map_used_things[load_map.map_elm] = [];
+                    if (typeof map_used_things[xmap.map_elm] == "undefined")
+                        map_used_things[xmap.map_elm] = [];
 
-                    map_used_things[load_map.map_elm].push(zoo);
+                    map_used_things[xmap.map_elm].push(zoo);
 
                 });
 
 
                 var super_bound = null;
-                $.each(map_used_things[load_map.map_elm], function(a, elm){
+                $.each(map_used_things[xmap.map_elm], function(a, elm){
 
                     if (super_bound == null){
                         super_bound = elm.polygon.getBounds();
@@ -392,8 +398,8 @@ if (!(typeof google == "undefined")) {
                     map.fitBounds(super_bound);
                 }
             });
-
-        }
+        });
+    }
 
     if (!google.maps.Polygon.prototype.getBounds) {
         google.maps.Polygon.prototype.getBounds = function(latLng) {

@@ -5,6 +5,7 @@ use namespace::autoclean;
 BEGIN { extends 'Catalyst::Controller' }
 use utf8;
 use JSON::XS;
+use Iota::Statistics::Frequency;
 
 #
 # Sets the actions in this controller to be registered with no prefix
@@ -187,14 +188,46 @@ sub stash_comparacao_distritos {
     my $indicator = $c->stash->{indicator};
     my $user = $c->stash->{user};
 
-    my @fatores = $schema->resultset( 'ViewFatorDesigualdade' )->search( {},
+
+    $c->stash->{color_index} = [qw/
+        #D7E7FF
+        #A5DFF7
+        #5A9CE8
+        #0041B5
+        #20007B/];
+
+    my $valor_rs = $schema->resultset( 'ViewValoresDistritos' )->search( {},
     {
-        bind  => [ $region->id, $indicator->{id}, $user->{id} ],
+        bind  => [ $indicator->{id},$user->{id}, $region->id ],
         result_class => 'DBIx::Class::ResultClass::HashRefInflator'
     }
-    )->all;
+    );
+    my $por_ano = {};
+    while (my $r = $valor_rs->next){
+        push @{$por_ano->{delete $r->{valid_from}}{delete $r->{variation_name}}}, $r;
+    }
 
-    $c->stash->{analise_comparativa} = \@fatores;
+    my $freq = Iota::Statistics::Frequency->new();
+
+    my $out = {};
+    while (my ($ano, $variacoes) = each %$por_ano){
+        while (my ($variacao, $distritos) = each %$variacoes){
+            if (@$distritos < 5){
+                $out->{$ano}{$variacao} = { status => 'Dados Insuficientes'};
+            }else{
+                my $stat = $freq->iterate($distritos);
+                $out->{$ano}{$variacao} = {
+                    all    => $distritos,
+                    top3   => [ $distritos->[2], $distritos->[1], $distritos->[0], ],
+                    lower3 => [ $distritos->[-3], $distritos->[-2], $distritos->[-1] ],
+                    mean   => $stat->mean()
+                };
+
+            }
+        }
+
+    }
+    $c->stash->{analise_comparativa} = $out;
 
     if (exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa'){
         $c->stash(

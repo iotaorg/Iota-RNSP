@@ -78,18 +78,18 @@
     var cityID = [% city.id %];
     var regionID = [% region.id %];
 [%IF region.depth_level == 2-%]
-    var load_map = {
+    var load_map = [{
         map_elm: '#mapa',
         polygons: [[%-FOR rr IN subregions -%]{p:'[% rr.polygon_path.replace("'", "\\'") %]',color:'#1E90FF'},[%-END-%]]
-    };
+    }];
 [%ELSE%]
     [%IF region.polygon_path%]
-    var load_map = {
+    var load_map = [{
         map_elm: '#mapa',
         polygons: [
             { p : '[% region.polygon_path.replace("'", "\\'") %]', color: '#1E90FF' }
         ]
-    };
+    }];
     [%END%]
 [%END-%]
     var ref = 'region';
