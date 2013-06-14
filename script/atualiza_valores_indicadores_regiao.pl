@@ -23,5 +23,4 @@ my $to  = shift;
 $data->upsert(
     regions_id => [ $min .. $to],
     user_id    => 11,
-    indicators => [5]
 );

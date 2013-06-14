@@ -147,10 +147,10 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
     );
 
     if ($region->depth_level == 2){
-
         $self->stash_distritos($c);
-        $self->stash_comparacao_distritos($c);
     }
+
+    $self->stash_comparacao_distritos($c);
 
 }
 
@@ -197,7 +197,13 @@ sub stash_comparacao_distritos {
         '#20007B',
     ];
 
-    my $valor_rs = $schema->resultset( 'ViewValoresDistritos' )->search( {},
+
+
+    my $valor_rs = $schema->resultset(
+        $region->depth_level == 2
+        ? 'ViewValoresSubprefeituras'
+        : 'ViewValoresDistritos'
+    )->search( {},
     {
         bind  => [ $indicator->{id},$user->{id}, $region->id ],
         result_class => 'DBIx::Class::ResultClass::HashRefInflator'

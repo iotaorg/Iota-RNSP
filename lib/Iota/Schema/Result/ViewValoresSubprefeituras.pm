@@ -1,6 +1,6 @@
 use utf8;
 
-package Iota::Schema::Result::ViewValoresDistritos;
+package Iota::Schema::Result::ViewValoresSubprefeituras;
 use strict;
 use warnings;
 use base qw/DBIx::Class::Core/;
@@ -8,7 +8,7 @@ use base qw/DBIx::Class::Core/;
 __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
 
 # For the time being this is necessary even for virtual views
-__PACKAGE__->table('ViewValoresDistritos');
+__PACKAGE__->table('ViewValoresSubprefeituras');
 
 __PACKAGE__->add_columns(qw/variation_name valid_from name num polygon_path/);
 
@@ -31,7 +31,7 @@ __PACKAGE__->result_source_instance->view_definition(q[
     and v.region_id in (
         select id
         from region
-        where depth_level = 3 and city_id = (
+        where depth_level = 2 and city_id = (
             select city_id from region where id = ?
         )
     )
