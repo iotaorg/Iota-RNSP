@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use utf8;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
@@ -55,8 +56,8 @@ eval {
 
             my $user1_uri = $res->header('Location');
             my $user1 = eval { from_json( $res->content ) };
-=pod
-            for my $invalido_nome(qw/invalido.kml invalido2.kml invalido3.kml/){
+
+            for my $invalido_nome(qw/invalido2.kml invalido3.kml invalido.kml /){
                 ( $res, $c ) = ctx_request(
                     POST $user1_uri. '/kml',
                     'Content-Type' => 'form-data',
@@ -68,9 +69,8 @@ eval {
                 ok( $res->is_success, 'OK' );
                 is( $res->code, 200, 'upload done!' );
 
-                is( $res->content, '{"error":"Unssuported KML\n"}', 'nao suportado formato/invalido');
+                is( $res->content, '{"error":"Unssuported KML\n"}', 'nao suportado formato/invalido ' . $invalido_nome);
             }
-=cut
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
@@ -125,7 +125,69 @@ eval {
                         ]
                 }, 'parse ok!');
 
+
+
+            ( $res, $c ) = ctx_request(
+                POST $user1_uri. '/kml',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [$Bin.'/sp_segundo_layout_sem_dados.kml'],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+            $ret2 = eval { from_json( $res->content ) };
+            is( @{$ret2->{vec}}, 2, 'tem 2 vetores');
+
+            is_deeply($ret2, {
+                'vec' => [
+                            {
+                            'latlng' => [
+                                            [
+                                            '-46.58166',
+                                            '-23.552155'
+                                            ],
+                                            [
+                                            '-46.581659',
+                                            '-23.552154'
+                                            ]
+                                        ],
+                            'name' => 'ÁGUA RASA'
+                            },
+                            {
+                            'latlng' => [
+                                    [
+                                        '-46.714476',
+                                        '-23.535314'
+                                    ],
+                                    [
+                                        '-46.714221',
+                                        '-23.535285'
+                                    ]
+                                ],
+                            'name' => 'ALTO DE PINHEIROS'
+                            }
+                        ]
+                }, 'parse ok!');
+
+
+            ( $res, $c ) = ctx_request(
+                POST $user1_uri. '/kml',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [$Bin.'/sp_segundo_layout.kml'],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+            $ret2 = eval { from_json( $res->content ) };
+            is( @{$ret2->{vec}}, 96, 'tem 96 vetores');
+
             die 'rollback';
+
+
         }
     );
 

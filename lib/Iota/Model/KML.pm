@@ -5,6 +5,9 @@ use JSON qw/encode_json/;
 use XML::Simple qw(:strict);
 
 use Iota::Model::KML::LineString;
+use Iota::Model::KML::Polygon;
+
+
 
 sub process {
     my ( $self, %param ) = @_;
@@ -19,12 +22,13 @@ sub process {
 
     my $parsed;
 
-    for my $mod (qw/LineString/){
+    for my $mod (qw/LineString Polygon/){
         my $class = "Iota::Model::KML::$mod";
         my $test = $class->new->parse( $kml );
         next unless defined $test;
 
         $parsed = $test;
+        last;
     }
 
     if (defined $parsed){

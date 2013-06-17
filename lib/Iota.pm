@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
+use open qw(:std :utf8);
 
 # Set flags and add plugins for the application.
 #

@@ -25,8 +25,10 @@ sub parse {
 
                 return undef unless
                     exists $line->{coordinates} &&
-                    ref $line->{coordinates} eq 'ARRAY' &&
-                    $line->{coordinates}[0].' ' =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+\s)+$/;
+                    ref $line->{coordinates} eq 'ARRAY';
+                my $str = $line->{coordinates}[0].' ';
+                my $ok  = $str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+\s)+$/o;
+                return undef unless $ok;
             }
     }
 
