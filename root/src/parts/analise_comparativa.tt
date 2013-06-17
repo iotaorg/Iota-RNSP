@@ -3,7 +3,7 @@
 
     <ul class="nav nav-tabs">
         [%-FOR x IN analise_comparativa -%]
-        <li [%IF loop.last%]class="active"[%END%]><a href="#tab[%loop.index%]" data-toggle="tab">[% date4period(x.key, indicator.period)%]</a></li>
+        <li [%IF loop.last%]class="active"[%END%]><a href="#tab[%loop.index%]" class="mapa" data-toggle="tab">[% date4period(x.key, indicator.period)%]</a></li>
         [%END%]
     </ul>
   <div class="tab-content">

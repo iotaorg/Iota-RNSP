@@ -1122,11 +1122,22 @@ $(document).ready(function(){
             var $me = $(b);
             var newURL = updateURLParameter(window.location.href, 'part', $me.attr('data-part-onchange-location'));
             $.get(newURL, function(data) {
-                $me.replaceWith(data);
+                var $c = $(data);
+                $me.replaceWith($c);
 
                 initialize_maps();
+
+
+                var $it = $me.find('a[data-toggle="tab"]');
+                if ($it[0]){
+                    $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
+                }
+
+
             });
         });
+
+
     });
 
 });
