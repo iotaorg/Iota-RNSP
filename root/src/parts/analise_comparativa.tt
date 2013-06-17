@@ -14,7 +14,7 @@
 
     [%-FOR kvariacao IN xx.value -%]
         [%-SET ultima_analise = kvariacao.value -%]
-<div class="tab-pane [%IF is_last%]active[%END%]" id="tab[%index%]">
+<div class="tab-pane active [%IF is_last%]active[%END%]" id="tab[%index%]">
 <script type="text/javascript">[%SET existe_vetor = 0%]
 load_map.push( {
     map_elm: '#colmapa[%index%]',
@@ -33,7 +33,7 @@ load_map.push( {
 
         <h5>Classificação visual</h5>
         [%IF existe_vetor %]
-        <div class="map" id="gmap">
+        <div class="map" id="gmap[%index%]">
             <div class="content-fill">
                 <div id="x-container">
                     <div class="x-dummy"></div>
