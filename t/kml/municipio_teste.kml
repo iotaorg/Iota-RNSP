@@ -1,0 +1,15 @@
+<!DOCTYPE kml>
+<kml xmlns="">
+ <Document>
+  <Placemark>
+   <LineString>
+    <coordinates>-69.6214070,-8.2150924 -69.5869513,-8.2445153</coordinates>
+   </LineString>
+  </Placemark>
+  <Placemark>
+   <LineString>
+    <coordinates>-68.2793555,-9.8218697</coordinates>
+   </LineString>
+  </Placemark>
+ </Document>
+</kml>

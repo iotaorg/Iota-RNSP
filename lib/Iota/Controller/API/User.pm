@@ -431,6 +431,46 @@ sub list_POST {
 
 }
 
+
+sub kml_file : Chained('object') : PathPart('kml') : Args(0) ActionClass('REST') {
+    my ( $self, $c ) = @_;
+}
+
+sub kml_file_POST {
+    my ( $self, $c ) = @_;
+
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin user));
+    my $upload = $c->req->upload('arquivo');
+
+    eval {
+        if ($upload) {
+            my $user_id = $c->user->id;
+
+            $c->logx( 'Enviou KML ' . $upload->basename );
+
+            my $file = $c->model('KML')->process(
+                user_id => $user_id,
+                upload  => $upload,
+                schema  => $c->model('DB'),
+                app     => $c
+            );
+
+            $c->res->body( to_json($file) );
+
+        }
+        else {
+            die "no upload found\n";
+        }
+    };
+    $c->res->body( to_json( { error => "$@" } ) ) if $@;
+
+    $c->detach;
+
+}
+
+
+
 with 'Iota::TraitFor::Controller::Search';
 1;
 
