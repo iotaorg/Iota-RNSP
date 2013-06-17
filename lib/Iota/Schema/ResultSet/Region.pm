@@ -104,17 +104,14 @@ sub action_specs {
 
             $values{polygon_path} = undef unless exists $values{polygon_path};
 
-            if (   exists $values{depth_level}
-                && exists $values{name}
-                && $values{depth_level} == 2 ) {
-
+            my $var = $self->find( delete $values{id} );
+            if (exists $values{name}
+                && $var->depth_level == 2 ) {
                 $values{name_url} = 'subprefeitura:' . $values{name_url};
-
             }
 
             return unless keys %values;
 
-            my $var = $self->find( delete $values{id} );
             $var->update( \%values );
 
             $var->discard_changes;

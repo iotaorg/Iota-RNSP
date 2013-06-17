@@ -181,7 +181,7 @@ sub list_GET {
                   created_by
                   created_at
                   automatic_fill),
-                    ('polygon_path')x!! exists $c->req->params->{with_polygon_path}
+                    ('polygon_path' => $obj->{polygon_path})x!! exists $c->req->params->{with_polygon_path}
                 ),
 
                 city => {
