@@ -396,7 +396,10 @@ if (!(typeof google == "undefined")) {
 
                 if (!(super_bound == null)){
                     map.fitBounds(super_bound);
+
                 }
+
+                $(xmap.map_elm).parents('div.hideme:first').removeClass('active');
             });
         });
     }

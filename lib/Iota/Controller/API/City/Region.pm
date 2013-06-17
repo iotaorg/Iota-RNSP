@@ -207,6 +207,6 @@ sub list_GET {
 
     $self->status_ok( $c, entity => { regions => \@objs } );
 }
-#with 'Iota::TraitFor::Controller::Search';
+with 'Iota::TraitFor::Controller::Search';
 1;
 
