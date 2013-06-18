@@ -390,8 +390,8 @@ if (!(typeof google == "undefined")) {
 
                     zoo.polygon = new google.maps.Polygon({
                         paths: zoo.coords,
-                        strokeColor: elm.color,
-                        strokeOpacity: Math.min(opacity+0.3,1),
+                        strokeColor: '#333',
+                        strokeOpacity: 0.6,
                         strokeWeight: 2,
                         fillColor: elm.color,
                         fillOpacity: Math.min(opacity, 1)
