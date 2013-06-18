@@ -64,7 +64,6 @@ table{
 h5 {font-size: 14px;}
 h4 {font-size: 17.5px;}
 
-
 #indicadores-dados .data-title{
 	border: 1px solid #d5d5d5;
 	padding: 10px;
@@ -843,3 +842,22 @@ footer .thumbnails-unstyled li {
     margin-right: 10px;
 }
 
+
+.table-xonde .x {
+    padding-left: 0.5em;
+}
+.table-xonde .active {
+    background-color: #666!important;
+    color: white!important;
+}
+.table-xonde tr.active {
+    background-color: #555!important;
+    color: white!important;
+}
+.table-xonde tr.active td {
+    background-color: transparent!important;
+}
+.table-xonde .active a {
+    color: white!important;
+    font-weight: bold!important;
+}
