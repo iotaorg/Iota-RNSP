@@ -181,8 +181,8 @@ $(document).ready(function () {
             }),
             success: function (data, textStatus, jqXHR) {
                 historico_data = data;
-                $("#indicador-historico span.cidade").html(cidade_data.cidade.name);
-                $("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
+                $("#indicador-historico span.cidade").html(cidade_data.cidade.name + (cidade_data.region?  '/' + cidade_data.region.name : ''));
+                $("#indicador-grafico span.cidade").html(cidade_data.cidade.name + (cidade_data.region?  '/' + cidade_data.region.name : ''));
                 $("#indicador-grafico .title a.link").attr("href", "/" + indicador_data.name_url + "/?view=graph&graphs=" + userID);
 
                 $('#indicador-historico label').remove();
@@ -473,9 +473,11 @@ $(document).ready(function () {
             }
 
             if (grafico_variado == undefined){
+                var nome_grafico = regionID == "undefined" ? cidade_data.cidade.name : cidade_data.region.name;
+
                 dadosGrafico.dados.push({
                     id: userID,
-                    nome: cidade_data.cidade.name,
+                    nome: nome_grafico,
                     valores: valores,
                     show: true
                 });

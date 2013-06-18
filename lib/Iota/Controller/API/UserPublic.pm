@@ -267,6 +267,19 @@ sub user_public_load {
 
     };
 
+    do {
+        my $r = $c->model('DB::Region')->search_rs( { 'id' => $c->req->params->{region_id} } )->as_hashref->next;
+
+        if ($r) {
+
+            $ret->{region} = {
+                name                        => $r->{name},
+                name_url                    => $r->{name_url}
+            };
+        }
+
+    } if exists $c->req->params->{region_id};
+
     $ret->{usuario} = {
         files =>
           { map { $_->class_name => $_->public_url } $user->user_files->search( undef, { order_by => 'created_at' } ) },
