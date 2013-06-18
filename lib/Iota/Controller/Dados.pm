@@ -82,7 +82,9 @@ sub _download {
     }
 
     if ( exists $c->stash->{region} ) {
-        $data_rs = $data_rs->search( { region_id => $c->stash->{region}{id} } );
+        $data_rs = $data_rs->search( { region_id => $c->stash->{region}->id } );
+    }else{
+        $data_rs = $data_rs->search( { region_id => undef } );
     }
 
     my @lines = (
@@ -296,7 +298,7 @@ sub _download_and_detach {
 ##################################################
 ### be happy to read bellow this line!
 
-for my $chain (qw/institute_load network_cidade/){
+for my $chain (qw/institute_load network_cidade cidade_regiao/){
     for my $tipo (qw/csv json xls xml/){
         eval("
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('indicadores.$tipo') : CaptureArgs(0) {
@@ -324,7 +326,7 @@ for my $chain (qw/institute_load network_cidade/){
 
 #################
 
-for my $chain (qw/network_indicator network_indicador/){
+for my $chain (qw/network_indicator network_indicador cidade_regiao_indicator/){
     for my $tipo (qw/csv json xls xml/){
         eval("
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('dados.$tipo') : CaptureArgs(0) {
