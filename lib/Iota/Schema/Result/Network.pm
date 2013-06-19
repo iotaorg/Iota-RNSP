@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::Network;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<network>
 
@@ -84,30 +83,30 @@ __PACKAGE__->table("network");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "network_id_seq",
-    },
-    "name",
-    { data_type => "text", is_nullable => 0 },
-    "name_url",
-    { data_type => "text", is_nullable => 0 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 0,
-        original      => { default_value => \"now()" },
-    },
-    "created_by",
-    { data_type => "integer", is_nullable => 0 },
-    "institute_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-    "domain_name",
-    { data_type => "varchar", is_nullable => 0, size => 100 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "network_id_seq",
+  },
+  "name",
+  { data_type => "text", is_nullable => 0 },
+  "name_url",
+  { data_type => "text", is_nullable => 0 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
+  "created_by",
+  { data_type => "integer", is_nullable => 0 },
+  "institute_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "domain_name",
+  { data_type => "varchar", is_nullable => 0, size => 100 },
 );
 
 =head1 PRIMARY KEY
@@ -134,7 +133,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "network_domain_name_key", ["domain_name"] );
+__PACKAGE__->add_unique_constraint("network_domain_name_key", ["domain_name"]);
 
 =head2 C<network_name_url_key>
 
@@ -146,7 +145,7 @@ __PACKAGE__->add_unique_constraint( "network_domain_name_key", ["domain_name"] )
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "network_name_url_key", ["name_url"] );
+__PACKAGE__->add_unique_constraint("network_name_url_key", ["name_url"]);
 
 =head1 RELATIONS
 
@@ -159,8 +158,10 @@ Related object: L<Iota::Schema::Result::IndicatorNetworkConfig>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_network_configs", "Iota::Schema::Result::IndicatorNetworkConfig",
-    { "foreign.network_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_network_configs",
+  "Iota::Schema::Result::IndicatorNetworkConfig",
+  { "foreign.network_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 institute
@@ -172,28 +173,40 @@ Related object: L<Iota::Schema::Result::Institute>
 =cut
 
 __PACKAGE__->belongs_to(
-    "institute",
-    "Iota::Schema::Result::Institute",
-    { id            => "institute_id" },
-    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  "institute",
+  "Iota::Schema::Result::Institute",
+  { id => "institute_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-=head2 users
+=head2 network_users
 
 Type: has_many
 
-Related object: L<Iota::Schema::Result::User>
+Related object: L<Iota::Schema::Result::NetworkUser>
 
 =cut
 
 __PACKAGE__->has_many(
-    "users", "Iota::Schema::Result::User",
-    { "foreign.network_id" => "self.id" },
-    { cascade_copy         => 0, cascade_delete => 0 },
+  "network_users",
+  "Iota::Schema::Result::NetworkUser",
+  { "foreign.network_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TzP4W760eOmwJuLPXMrJ3w
+=head2 users
+
+Type: many_to_many
+
+Composing rels: L</network_users> -> user
+
+=cut
+
+__PACKAGE__->many_to_many("users", "network_users", "user");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8EQK0tZGSXZF/LgiTBnIKw
 
 __PACKAGE__->might_have(
     "current_user",
