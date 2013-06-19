@@ -636,13 +636,6 @@ __PACKAGE__->many_to_many("networks", "network_users", "network");
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:42
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J1WeRyqw8FLIUnzn0Y9nDw
 
-__PACKAGE__->has_many(
-    "user_roles",
-    "Iota::Schema::Result::UserRole",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
-);
-
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 
 __PACKAGE__->remove_column('password');

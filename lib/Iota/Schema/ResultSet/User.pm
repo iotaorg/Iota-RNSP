@@ -81,8 +81,8 @@ sub verifiers_specs {
 
                             my $exists = $self->search(
                                 {
-                                    city_id    => $r->get_value('city_id'),
-                                    network_id => $r->get_value('network_id'),
+                                    city_id      => $r->get_value('city_id'),
+                                    institute_id => $net->institute_id,
                                 }
                             )->count;
 
@@ -119,7 +119,6 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return 1;    # TODO arrumar isso
 
                         # cidade precisa existir
                         my $city =
@@ -130,8 +129,13 @@ sub verifiers_specs {
                         my $me = $self->find( $r->get_value('id') );
                         return 0 unless $me;
 
-                        # se nao tem rede, pode ir pra qualquer cidade.
-                        return 1 unless $me->network_id;
+                        my $institute_id = $me->institute_id;
+
+                        my $network_ids = $r->get_value('network_ids');
+                        # deixa o validate do networks_ids se virar sozinho!
+                        if ($network_ids ne 'DO_NOT_UPDATE'){
+                            return 1;
+                        }
 
                         my $roles = join( ' ', map { $_->name } $me->roles );
 
@@ -140,56 +144,69 @@ sub verifiers_specs {
                             my $exists = $self->search(
                                 {
                                     city_id    => $city->id,
-                                    network_id => $r->get_value('network_id') || $me->network_id,
+                                    institute_id => $institute_id,
                                 }
-                            )->count;
+                            )->next;
 
-                            return 0 if $exists;
+                            return 0 if $exists && $exists->id != $me->id;
 
                         }
 
                         return 1;
                       }
                 },
-                network_id => {
-                    required   => 0,
-                    type       => 'Int',
+                network_ids => {
+                    required   => 1,
+                    type       => 'Str',
                     post_check => sub {
                         my $r = shift;
 
-                        # rede precisa existir
-                        my $net =
-                          $self->result_source->schema->resultset('Network')
-                          ->find( { id => $r->get_value('network_id') } );
-                        return 0 unless $net;
+                        my $str = $r->get_value('network_ids');
+                        return 1 if $str =~ /^DO_NOT_UPDATE$/;
+                        return 1 if $str =~ /^0$/;
+
+                        return 0 unless $str =~ /^([0-9]+,)*[0-9]+$/;
 
                         # eu preciso existir!
                         my $me = $self->find( $r->get_value('id') );
                         return 0 unless $me;
 
-                        # se nao tem cidade, pode trocar de rede !
-                        my $city_id = $r->get_value('city_id') || $me->city_id;
-                        return 1 unless $city_id;
-
                         my $roles = join( ' ', map { $_->name } $me->roles );
 
-                        if ( $roles =~ /\buser\b/ ) {
+                        my $city_id = $r->get_value('city_id') || $me->city_id;
 
-                            # pra ser usuario, precisa ser de alguma cidade
-                            my $city = $self->result_source->schema->resultset('City')->find($city_id);
-                            return 0 unless $city;
+                        my @nets = split /,/, $str;
+                        my $invalid = 0;
+                        my $institutes = {};
 
-                            my $exists = $self->search(
-                                {
-                                    city_id    => $city_id,
-                                    network_id => $r->get_value('network_id'),
-                                }
-                            )->count;
+                        foreach my $netid (@nets){
+                            # rede precisa existir
+                            my $net = $self->result_source->schema->resultset('Network')->find( { id => $netid } );
+                            $invalid++ and last unless $net;
 
-                            return 0 if $exists;
+                            if ( $roles =~ /\buser\b/ ) {
 
+                                $institutes->{$net->institute_id} = 1;
+
+                                # pra ser usuario, precisa ser de alguma cidade
+                                my $city = $self->result_source->schema->resultset('City')->find($city_id);
+                                $invalid++ and last unless $city;
+
+                                my $exists = $self->search(
+                                    {
+                                        city_id      => $city_id,
+                                        institute_id => $net->institute_id,
+                                    }
+                                )->next;
+
+
+                                $invalid++ and last if ($exists && $exists->id != $me->id);
+                            }
                         }
+                            # nao pode ficar em duas redes de institutos diferentes
+                        return 0 if keys %$institutes != 1;
 
+                        return 0 if $invalid;
                         return 1;
                       }
                 },
@@ -332,9 +349,19 @@ sub action_specs {
             delete $values{password_confirm};
             my $role = delete $values{role};
 
+            my $network_id = delete $values{network_id};
+
+            if ($network_id){
+                my $net =
+                    $self->result_source->schema->resultset('Network')
+                    ->find( { id => $network_id } );
+                $values{institute_id} = $net->institute_id;
+            }
+
             my $user = $self->create( \%values, active => 1 );
 
             $user->add_to_user_roles( { role => { name => $role } } );
+            $user->add_to_network_users( { network_id => $network_id  } );
 
             $user->discard_changes;
             return $user;
@@ -351,7 +378,25 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            my $network_ids = delete $values{network_ids};
             my $user = $self->find( delete $values{id} );
+
+            if ($network_ids ne 'DO_NOT_UPDATE'){
+                my @network_ids = split /,/, $network_ids;
+                $user->network_users->delete;
+
+                my $institute_id;
+                for (grep {$_>0} @network_ids){
+                    $user->add_to_network_users( { network_id => $_ } ) ;
+
+                    if (!$institute_id){
+                        my $net = $self->result_source->schema->resultset('Network')->find( { id => $_ } );
+                        $institute_id = $net->institute_id;
+                    }
+                }
+
+                $values{institute_id} = $institute_id;
+            }
 
             $user->update( \%values );
 
