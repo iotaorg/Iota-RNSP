@@ -18,16 +18,28 @@
       <div class="inner">
 
         <header>
-          <h1>Iota</h1>
+          <h1><img alt="Iota" src="images/logo.png"/></h1>
           <h2>Plataforma para gerenciamento de indicadores</h2>
         </header>
 
+
+        <h4>API e website</h4>
+        <small><a href="http://www.perl.org/">Perl</a>, <a href="http://www.catalyst.org/">Catalyst</a>, <a href="https://metacpan.org/module/DBIx::Class">DBIx::Class</a>, <a href="http://www.postgresql.org/">postgreSQL</a>, <a href="http://www.template-toolkit.org/">template-toolkit</a></small>
         <section id="downloads" class="clearfix">
           <a href="https://github.com/W3CBrasil/Iota/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
           <a href="https://github.com/W3CBrasil/Iota/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
           <a href="https://github.com/W3CBrasil/Iota" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
+        <h4>Frontend da administração</h4>
+        <small>HTML e JavaScript</small>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/W3CBrasil/Iota-Admin-Frontend/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/W3CBrasil/Iota-Admin-Frontend/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/W3CBrasil/Iota-Admin-Frontend" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <p></p>
         <hr>
 
         <section id="main_content">
@@ -43,6 +55,7 @@
 
 <p>Indicador social é uma medida, geralmente estatística, usada para traduzir quantitativamente um conceito social abstrato e informar algo sobre determinado aspecto da realidade social, para fins de pesquisa ou visando a formulação, monitoramento e avaliação de programas e políticas públicas.</p>
 
+
 <h3>
 <a name="lista-de-discusso" class="anchor" href="#lista-de-discusso"><span class="octicon octicon-link"></span></a>Lista de discussão</h3>
 
@@ -50,11 +63,94 @@
 
 <p><a href="https://groups.google.com/forum/embed/?place=forum/iota-br"> https://groups.google.com/forum/embed/?place=forum/iota-br</a></p>
 
+
+<h3>
+<a name="wiki" class="anchor" href="#wiki"><span class="octicon octicon-link"></span></a>Wiki</h3>
+
+<p>Temos uma Wiki no github, onde colocamos informações sobre como a plataforma funciona e como fazer a instalação.</p>
+
+<p><a href="https://github.com/W3CBrasil/Iota/wiki/02---Iota---Como-instalar-uma-c%C3%B3pia-no-linux"> Como executar uma versão própria no linux, debian 6</a></p>
+
+
 <h3>
 <a name="contribuir" class="anchor" href="#contribuir"><span class="octicon octicon-link"></span></a>Contribuir</h3>
 
+<p>Para contribuir, você precisa do códido do repositório. O seguinte repositório contém o código da API e deploy do banco de dados.</p>
 <pre><code>$ git clone git@github.com:W3CBrasil/Iota.git
 </code></pre>
+
+<p>Este outro repositório contém o código do administrador, feito interamente em javascript e html.</p>
+<pre><code>$ git clone git@github.com:W3CBrasil/Iota-Admin-Frontend.git
+</code></pre>
+
+
+<hr/>
+<h3>
+<a name="interamente" class="anchor" href="#wiki"><span class="octicon octicon-link"></span></a>Estrutura funcional</h3>
+
+<p>Cada indicador contém uma formula, que é composta por váriaveis.</p>
+<p>Váriaveis são preenchidas por usuários, como valor, data e hora do ocorrido. Cada usuário pertence a uma cidade, portanto, todos os valores preenchido por ele é da cidade dele. Entretanto, pode-se salvar os dados por regiões dentro da cidade.</p>
+
+<p>Para facilitar o entendimento, podemos visualizar o Iota assim:</p>
+<div class="img-center"><img src="images/iota-indicadores.png" alt="Instituições e indicadores - iota">
+<div class="img-content">
+<dl>
+    <dt>SuperAdmin</dt>
+    <dd>O SuperAdmin controla tudo no Iota. Ele pode criar indicadores, os dominios e os admins.</dd>
+    <dt>Admins</dt>
+    <dd>Cada admin pode criar mais indicadores (apenas para o dominio dele, ou alguns usuários) e crair usuários e cidades.</dd>
+    <dt>Instituições</dt>
+    <dd>Cada instituição tem seu próprio conjunto de cidades e de usuários.</dd>
+    <dt>Usuário</dt>
+    <dd>Usuário é quem preenche cada váriavel que vai compor o valor do indicador em cada periodo. Ele sempre precisa ter uma cidade, e cada cidade só pode ter um usuário. Porém, <strong>vários usuários podem pertencer a mesma cidade apenas se estes usuários sejam de instituições diferentes</strong>.</dd>
+</dl>
+</div>
+
+</div>
+<h4>Exemplo:</h4>
+<p>O SuperAdmin criou a instituição <strong>movimento</strong> e <strong>prefeitura</strong>.<br/>
+Depois, criou os dominíos (também chamado de <i>rede</i>) com a seguinte configuração:<br/>
+<strong>prefeitura-azul.com.br</strong> = instituição <strong>prefeitura</strong><br/>
+<strong>prefeitura-verde.com.br</strong> = instituição <strong>prefeitura</strong><br/>
+<strong>movimentos.com.br</strong> = instituição <strong>movimento</strong><br/>
+</p>
+<p>Para cada um dos dominíos, ele criou um usuario <strong>admin</strong>.<br/>
+<strong>prefeitura-azul.com.br</strong> = admin id <strong>3, prefazul@email.com</strong><br/>
+<strong>prefeitura-verde.com.br</strong> = admin id <strong>4, prefverde@email.com</strong><br/>
+<strong>movimentos.com.br</strong> = admin id <strong>5, admin@mov.com</strong><br/>
+</p>
+<p>O SuperAdmin criou agora, duas váriaveis mensais: <strong>tamanho da cidade em km</strong> e <strong>Taxa de precipitação em milímetros</strong>.<br/>
+Depois, criou o indicador <strong>Precipitação por quilómetros</strong> com a formula <strong> <code>Taxa de precipitação em milímetros / tamanho da cidade em km</code></strong>.</br>
+Esse indicador é publico, portanto todos os usuários das redes (dominios) podem preencher.</p>
+
+<p>O admin 3 criou a cidade de <strong>São Paulo</strong> e o admin 4 criou a cidade de <strong>Campinas</strong>. O SuperAdmin criou a cidade de <strong>Joinville</strong>.<br/>
+Com as cidades já criadas, o admin 5 criou um usuário e para preencher os dados para <strong>Joinville</strong>, outro usuario para preencher os dados de <strong>Campinas</strong> e nenhum usuário ficou responsável por preencher os dados de <strong>São Paulo</strong>, e como esse é o unico admin que existe nessa instituição, essa instituição não terá os dados de São Paulo.
+</p>
+<p>No final, a estruta final ficou como a tabela abaixo:
+
+<table>
+<thead>
+<tr>
+    <th>Admin / Dominio</th>
+    <th>Usuario</th>
+    <th>Cidade</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>5 / movimentos.com.br</td> <td>fulano@mov.com.br</td> <td>Joinville</td></tr>
+<tr><td>5 / movimentos.com.br</td> <td>fulano2@mov.com.br</td> <td>Campinas</td></tr>
+<tr><td>4 / prefeitura-verde.com.br</td> <td>verde-campinas@gmail.com</td> <td>Campinas</td></tr>
+<tr><td>4 / prefeitura-verde.com.br</td> <td>verde@Joinville.com</td> <td>Joinville</td></tr>
+<tr><td>3 / prefeitura-azul.com.br</td> <td>sao-paulo@sao-paulo.com</td> <td>São Paulo</td></tr>
+<tr><td>3 / prefeitura-azul.com.br</td> <td>campinas@sao-paulo.com</td> <td>Campinas</td></tr>
+</tbody>
+</table>
+</p>
+
+<p>Veja então, que as cidades são compartilhadas entre todos os admins. Cada dominío é apenas um filtro de cidades. E os dados das variaveis ficam nos usuários, e cada usuário só pode estar em uma instituição, e ainda, cada instituição só pode ter um usuário por cidade.</p>
+
+
+
         </section>
 
         <footer>
@@ -62,7 +158,7 @@
           This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
         </footer>
 
-        
+
       </div>
     </div>
   </body>
