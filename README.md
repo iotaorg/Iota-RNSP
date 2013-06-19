@@ -5,14 +5,14 @@ O aplicativo é uma plataforma que permite a criação dos indicadores, com o ob
 Ele foi criado inicialmente para atender ao "Programa Cidades Sustentaveis" uma parceria da Rede Nossa São Paulo,
 Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira por Cidades Justas e Sustentáveis.
 
-Saiba mais em [www.cidadesustentaveis.org.br](www.cidadesustentaveis.org.br).
+[Consulte o site do Iota!](http://w3cbrasil.github.io/Iota/)
 
 
 [![Build Status](https://secure.travis-ci.org/W3CBrasil/Iota.png?branch=master)](https://travis-ci.org/W3CBrasil/Iota)
 
 ## Wiki
 
-[Você pode consultar a wikipédia para saber mais detalhes](https://github.com/W3CBrasil/Iota/wiki)
+[Você pode consultar a wiki para saber mais detalhes](https://github.com/W3CBrasil/Iota/wiki)
 
 > [01 Iota Uma plataforma para gerenciamento de indicadores](https://github.com/W3CBrasil/Iota/wiki/01---Iota---Uma-plataforma-para-gerenciamento-de-indicadores)
 
