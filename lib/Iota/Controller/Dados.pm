@@ -48,6 +48,8 @@ sub _download {
     my $file = $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
+    $file .= '_' . $c->stash->{region}->name_url
+      if $c->stash->{region};
     $file .= '_' . $c->stash->{indicator}{name_url}
       if $c->stash->{indicator};
     $file .= '.' . $c->stash->{type};
