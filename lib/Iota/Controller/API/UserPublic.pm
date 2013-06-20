@@ -164,13 +164,10 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
     $c->detach('/error_404') unless defined $c->stash->{user_obj};
 
-    my $net = $c->model('DB::Network')->search( { id => $c->stash->{user_obj}->network_id } )->first;
-    $c->detach('/error_404') unless $net;
+    my @networks = $c->stash->{user_obj}->networks->all;
+    $c->detach('/error_404') unless @networks;
 
-    $c->stash->{network} = $net;
-    $c->stash->{rede}    = $net->name_url;
-
-    $c->detach('/error_404') unless defined $c->stash->{user_obj};
+    $c->stash->{networks} = \@networks;
 
     $c->stash->{user_id} = int $id;
 }

@@ -208,18 +208,5 @@ __PACKAGE__->many_to_many("users", "network_users", "user");
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:41
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8EQK0tZGSXZF/LgiTBnIKw
 
-__PACKAGE__->might_have(
-    "current_user",
-    "Iota::Schema::Result::User",
-    sub {
-        my $args = shift;
-
-        return {
-            "$args->{foreign_alias}.network_id" => { -ident => "$args->{self_alias}.id" },
-            "$args->{foreign_alias}.active"     => 1,
-        };
-    }
-);
-
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

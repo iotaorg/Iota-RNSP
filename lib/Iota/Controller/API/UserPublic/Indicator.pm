@@ -17,8 +17,12 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
     my @user_ids = ( $c->stash->{user_obj}->id );
     my $country = eval { $c->stash->{user_obj}->city->country_id };
 
-    if ( $c->stash->{user_obj}->network_id ) {
-        my $rs = $c->model('DB::User')->search( { network_id => $c->stash->{user_obj}->network_id, city_id => undef } );
+    my @networks = $c->stash->{user_obj}->networks->all;
+    if ( @networks ) {
+        my $rs = $c->model('DB::User')->search( {
+            'network_users.network_id' => [ map {$_->id} @networks ],
+            city_id => undef
+        }, { join => 'network_users' } );
         while ( my $u = $rs->next ) {
             push @user_ids, $u->id;
         }
@@ -183,7 +187,7 @@ sub resumo_GET {
 
     eval {
         my $rs = $c->stash->{collection}->search(
-            { 'indicator_network_configs_one.network_id' => [ undef, $c->stash->{network}->id ] },
+            { 'indicator_network_configs_one.network_id' => [ undef, map {$_->id } @{$c->stash->{networks}} ] },
             { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs_one' ] }
         );
 

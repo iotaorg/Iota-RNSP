@@ -324,8 +324,12 @@ sub list_GET {
             $country_id = $user_city ? $user_city->country_id : undef;
         }
 
-        if ( $user->network_id ) {
-            my $rs = $c->model('DB::User')->search( { network_id => $user->network_id, city_id => undef } );
+        my @networks = $user->networks->all;
+        if ( @networks ) {
+            my $rs = $c->model('DB::User')->search( {
+                'network_users.network_id' => [ map {$_->id} @networks ],
+                city_id => undef
+            }, { join => 'network_users' } );
             while ( my $u = $rs->next ) {
                 push @user_ids, $u->id;
             }

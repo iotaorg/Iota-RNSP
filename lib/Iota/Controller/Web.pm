@@ -18,15 +18,24 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     my $domain = $c->req->uri->host;
 
-    my $net = $c->model('DB::Network')->search( { domain_name => $domain }, { prefetch => 'current_user' } )->first;
+    my $net = $c->model('DB::Network')->search( { domain_name => $domain } )->first;
     $c->detach( '/error_404', [ 'Nenhuma rede para o dominio ' . $domain . '!' ] ) unless $net;
 
     $c->stash->{network} = $net;
+    use DDP; p $net;
 
     $c->stash->{institute} = $net->institute;
 
-    if ( $net->current_user ) {
-        my @files = $net->current_user->user_files;
+    my @current_users = $c->model('DB::User')->search( {
+        active  => 1,
+        city_id => undef,
+        institute_id => $c->stash->{institute}->id
+    }, { prefetch => 'user_files'} )->all;
+
+    $c->detach( '/error_404', [ 'Nenhum admin de rede encontrado!' ] ) unless @current_users;
+
+    foreach my $current_user ( @current_users ) {
+        my @files = $current_user->user_files;
 
         foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
             if ( $file->class_name eq 'custom.css' ) {

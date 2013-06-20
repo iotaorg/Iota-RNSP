@@ -150,14 +150,14 @@ sub get_users_meta {
     my ( $self, %params ) = @_;
 
     my $user_rs =
-      $self->schema->resultset('User')->search( { 'me.id' => $params{users} }, { prefetch => 'network' } )->as_hashref;
+      $self->schema->resultset('User')->search( { 'me.id' => $params{users} } )->as_hashref;
 
     my $users = {};
 
     while ( my $row = $user_rs->next ) {
         $users->{ $row->{id} } = {
             city_id      => $row->{city_id},
-            institute_id => $row->{network}{institute_id}
+            institute_id => $row->{institute_id}
         };
     }
 

@@ -60,7 +60,7 @@ eval {
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
-            is( eval { $new_user->network->id }, 1, 'criado como prefeito' );
+            is( eval { $new_user->networks->next->id }, 1, 'criado como prefeito' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
