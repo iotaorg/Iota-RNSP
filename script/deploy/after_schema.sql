@@ -58,16 +58,26 @@ values
 (2, 2, 'rnsp.org', 'RNSP', 'movim', 1),
 (3, 2, 'latino.org', 'Rede latino americana', 'latino', 1);
 
-INSERT INTO "user"(id, name, email, password, network_id, city_id) VALUES
+INSERT INTO "user"(id, name, email, password, institute_id, city_id) VALUES
 (2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1, null),
-(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
-(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3, null),
 (4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1,1),
+
+(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
+(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
 (5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,1),
 (6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,2),
-(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3,1);
+(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,1);
 
 
+INSERT INTO network_user ( network_id, user_id )
+VALUES
+(1,2),
+(2,3),
+(1,4),
+(2,5),
+(2,6),
+(3,7),
+(3,8);
 
 -- role: superadmin                                     user:
 INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 0); -- superadmin
@@ -197,7 +207,8 @@ from variable_value vv
 join variable v on v.id = vv.variable_id
 left join measurement_unit m on m.id = v.measurement_unit_id
 join "user" u on u.id = vv.user_id
-join network n on n.id = u.network_id
+join network_user nu on nu.user_id = u.id
+join network n on n.id = nu.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
 --where value is not null and value != ''
@@ -226,7 +237,8 @@ join indicator_variations vvv on vvv.id = indicator_variation_id
 join indicator_variables_variations v on v.id = vv.indicator_variables_variation_id
 join indicator ix on ix.id = vvv.indicator_id
 join "user" u on u.id = vv.user_id
-join network n on n.id = u.network_id
+join network_user nu on nu.user_id = u.id
+join network n on n.id = nu.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
 --where value is not null and value != ''
