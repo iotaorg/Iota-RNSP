@@ -22,7 +22,6 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->detach( '/error_404', [ 'Nenhuma rede para o dominio ' . $domain . '!' ] ) unless $net;
 
     $c->stash->{network} = $net;
-    use DDP; p $net;
 
     $c->stash->{institute} = $net->institute;
 
@@ -370,8 +369,8 @@ sub stash_tela_cidade {
         {
             city_id         => $city->{id},
             'me.active'     => 1,
-            'me.network_id' => $c->stash->{network}->id
-        }
+            'network_users.network_id' => $c->stash->{network}->id
+        }, { join => 'network_users'}
     )->next;
 
     $c->detach('/error_404') unless $user;

@@ -472,8 +472,8 @@ $(document).ready(function () {
                 history_table += "</tbody></table>";
             }
 
-            if (grafico_variado == undefined){
-                var nome_grafico = regionID == "undefined" ? cidade_data.cidade.name : cidade_data.region.name;
+            if (typeof grafico_variado == "undefined"){
+                var nome_grafico = typeof regionID == "undefined" ? cidade_data.cidade.name : cidade_data.region.name;
 
                 dadosGrafico.dados.push({
                     id: userID,

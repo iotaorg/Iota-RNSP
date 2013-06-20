@@ -97,11 +97,11 @@ sub stash_comparacao {
     };
     my @users = $c->model('DB::User')->search(
         {
-            'me.network_id' => $network->id,
+            'network_users.network_id' => $network->id,
             active          => 1,
             city_id         => { '!=' => undef }
         },
-        { prefetch => ['city'] }
+        { prefetch => ['city'], join => 'network_users' }
     )->as_hashref->all;
 
     for my $user (@users) {
@@ -114,10 +114,10 @@ sub stash_comparacao {
 
     my @users_admin = $c->model('DB::User')->search(
         {
-            'me.network_id' => $network->id,
+            'network_users.network_id' => $network->id,
             active          => 1,
             city_id         => undef
-        }
+        }, { join => 'network_users'}
     )->as_hashref->all;
 
     for my $user (@users_admin) {
