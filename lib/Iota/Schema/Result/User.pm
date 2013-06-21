@@ -427,6 +427,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_best_pratices
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPratice>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_best_pratices",
+  "Iota::Schema::Result::UserBestPratice",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_files
 
 Type: has_many
@@ -633,8 +648,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:42
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J1WeRyqw8FLIUnzn0Y9nDw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-21 17:49:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rBfVYBqetjdv3EM3NeqMuQ
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 

@@ -45,7 +45,6 @@ sub change_lang_redir: Chained('change_lang') PathPart('') Args(0) {
 
     my $refer = $c->req->headers->referer;
     if ($refer && $refer =~ /^http:\/\/$host/){
-use DDP; p $refer;
         $c->res->redirect( $refer );
     }else{
         $c->res->redirect( $c->uri_for('/') );
