@@ -35,12 +35,13 @@ sub index : Path : Args(0) {
     $c->forward('root');
     $c->forward('institute_load');
     $c->stash( template => 'home_comparacao.tt' );
+
 }
 
 sub root : Chained('/') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    $c->languages( ['pt'] );
+    #$c->languages( ['pt'] );
 }
 
 sub default : Path {

@@ -6,12 +6,52 @@ BEGIN { extends 'Catalyst::Controller' }
 use utf8;
 use JSON::XS;
 use Iota::Statistics::Frequency;
+use I18N::AcceptLanguage;
 
 #
 # Sets the actions in this controller to be registered with no prefix
 # so they function identically to actions created in MyApp.pm
 #
 __PACKAGE__->config( namespace => '' );
+
+has 'lang_acceptor' => (
+    is => 'rw',
+    isa => 'I18N::AcceptLanguage',
+    lazy => 1,
+    default => sub { I18N::AcceptLanguage->new( defaultLanguage => 'pt-br'  ) }
+);
+
+
+sub change_lang: Chained('root') PathPart('lang') CaptureArgs(1) {
+    my ( $self, $c, $lang ) = @_;
+    $c->stash->{lang} = $lang;
+}
+
+sub change_lang_redir: Chained('change_lang') PathPart('') Args(0) {
+    my ( $self, $c) = @_;
+
+    my $cur_lang = $c->stash->{lang};
+    my %langs = map { $_ => 1 } @{$c->config->{'I18N::DBI'}{languages}};
+
+    $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
+    my $host  = $c->req->uri->host;
+
+    $c->response->cookies->{'lang'} = {
+        value => $cur_lang,
+        path => '/',
+        domain => '.' . $host,
+        expires => '+3600h',
+    };
+
+    my $refer = $c->req->headers->referer;
+    if ($refer && $refer =~ /^http:\/\/$host/){
+use DDP; p $refer;
+        $c->res->redirect( $refer );
+    }else{
+        $c->res->redirect( $c->uri_for('/') );
+    }
+    $c->detach;
+}
 
 sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
@@ -64,6 +104,28 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
               }
         ],
         cities => \@cities
+    };
+
+
+    my $cur_lang = exists $c->req->cookies->{lang} ? $c->req->cookies->{lang}->value : undef;
+
+    if (!defined $cur_lang){
+        my $al = $c->req->headers->header('Accept-language');
+        my $language = $self->lang_acceptor->accepts($al, $c->config->{'I18N::DBI'}{languages});
+
+        $cur_lang = $language;
+    }else{
+        my %langs = map { $_ => 1 } @{$c->config->{'I18N::DBI'}{languages}};
+        $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
+    }
+
+    $c->languages([$cur_lang]);
+
+    $c->response->cookies->{'lang'} = {
+        value => $cur_lang,
+        path => '/',
+        domain => '.' . $domain,
+        expires => '+3600h',
     };
 
 }
