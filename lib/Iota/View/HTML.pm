@@ -79,5 +79,11 @@ sub value4human {
     return "$pre$mid$end";
 }
 
+sub l {
+    my ( $self, $c, $text, @args ) = @_;
+    return unless $text;
+    return $c->loc($text, @args) || $text;
+}
+
 1;
 

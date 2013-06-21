@@ -3,7 +3,7 @@
         <div class="span4">
             <div class="menu-left">
                 <div class="content-fill">
-                    <div class="title">Indicadores</div>
+                    <div class="title">[%l('Indicadores')%]</div>
                     <div class="category" id="axis_list">
 
                     </div>
@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="indicators">
-                        <div class="loading"><p>Carregando...</p></div>
+                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                 </div>
             </div>
@@ -38,9 +38,9 @@
                         <div class="content-fill">
                             <div class="clearfix">
                                 <div class="tabs">
-                                    <div class="item selected" id="tab-tabela">tabela</div>
-                                    <div class="item" id="tab-mapa">mapa</div>
-                                    <div class="item" id="tab-graficos">gráficos</div>
+                                    <div class="item selected" id="tab-tabela">[%l('tabela')%]</div>
+                                    <div class="item" id="tab-mapa">[%l('mapa')%]</div>
+                                    <div class="item" id="tab-graficos">[%l('gráficos')%]</div>
                                 </div>
                             </div>
 
@@ -49,11 +49,11 @@
                                     <div class="item"></div>
                                 </div>
                                 <div class="content-fill">
-                                    <div class="loading"><p>Carregando...</p></div>
+                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                                 </div>
 
                                 <div id="dados-abertos">
-                                    <div class="title">Dados abertos</div>
+                                    <div class="title">[%l('Dados abertos')%]</div>
 
                                     <div class="content-fillx">
                                         <div class="dados-botoes">
@@ -76,7 +76,7 @@
                                 <div class="clearfix">
                                 <form class="form-horizontal">
                                 <fieldset>
-                                        <label class="control-label"  for="graph-search-user">Cidade</label>
+                                        <label class="control-label"  for="graph-search-user">[%l('Cidade')%]</label>
                                         <div class='input'>
                                             <div class="control-group">
                                                 <div class="controls">
@@ -101,8 +101,8 @@
 
                             </div>
                             <div class="map">
-                                <div id="mapa-filtro"><div class="loading"><p>Carregando...</p></div></div>
-                                <div id="mapa"><div class="loading"><p>Carregando...</p></div></div>
+                                <div id="mapa-filtro"><div class="loading"><p>[%l('Carregando...')%]</p></div></div>
+                                <div id="mapa"><div class="loading"><p>[%l('Carregando...')%]</p></div></div>
                             </div>
 
                         </div>

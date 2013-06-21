@@ -7,10 +7,10 @@
         <col/>
         <thead>
             <tr>
-                <th>Período</th>
-                <th>Máximo</th>
-                <th>Mínimo ¹</th>
-                <th>Desigualdade (vezes)</th>
+                <th>[%l('Período')%]</th>
+                <th>[%l('Máximo')%]</th>
+                <th>[%l('Mínimo')%] ¹</th>
+                <th>[%l('Desigualdade')%] ([%l('vezes')%])</th>
             </tr>
         </thead>
         <tbody>
@@ -24,8 +24,8 @@
             [%END%]
         </tbody>
     </table>
-    <small>¹ Descontados distritos cujo valor é zero.</small>
+    <small>¹ [%l('Descontados distritos cujo valor é zero')%].</small>
 [%ELSE%]
-<p>Sem dados</p>
+<p>[%l('Sem dados')%]</p>
 [%END%]
 </div>

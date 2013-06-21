@@ -7,14 +7,14 @@
                     <div class="variaveis"><dl class="tabela">
 
 [%IF region.upper_region %]
-    <dt>Subprefeitura</dt>
+    <dt>[%l('Subprefeitura')%]</dt>
     <dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>
 [%END%]
 <dt>[%region.depth_level == 2 ? 'Subprefeitura' : 'Distrito'%]: </dt>
 <dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
 
 [%IF subregions.size %]
-    <dt>Distritos</dt>
+    <dt>[%l('Distritos')%]</dt>
     <dd><ul  style="margin-bottom:0">
     [%-FOR rr IN subregions -%]
         <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
@@ -62,9 +62,9 @@
     <div class="row" >
         <div class="span12">
             <div id="cidades-indicadores">
-                <h5>Indicadores separados por eixos</h5>
+                <h5>[%l('Indicadores separados por eixos')%]</h5>
                 <div class="table">
-                    <div class="loading"><p>Carregando...</p></div>
+                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                 </div>
             </div>
         </div>

@@ -1,17 +1,17 @@
 <script>var ref='';</script>
 
-<h1>Dados abertos de indicadores</h1>
+<h1>[%l('Dados abertos de indicadores')%]</h1>
 
 <div class="row">
     <div class="span12">
     <form class="form-horizontal">
         <div class="control-group">
 
-            <label class="control-label">Cidades</label>
+            <label class="control-label">[%l('Cidades')%]</label>
 
             <div class="controls">
                 <select name="cidade" class="span5">
-                    <option value="" selected="selected">Todas</option>
+                    <option value="" selected="selected">[%l('Todas')%]</option>
                     [%FOREACH c IN cities.sort('name') %]
                     <option value="br/[%c.uf%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</option>
                     [%END%]
@@ -24,11 +24,11 @@
         <div class="control-group">
 
             <div class="grupo">
-                <label class="control-label">Indicador</label>
+                <label class="control-label">[%l('Indicador')%]</label>
 
                 <div class="controls">
                 <select name="indicador" class="span8">
-                    <option value="" selected="selected">Todos</option>
+                    <option value="" selected="selected">[%l('Todos')%]</option>
                     [%FOREACH i IN indicators.sort('name') %]
                     <option value="[%i.name_url%]">[%i.name%]</option>
                     [%END%]
@@ -40,70 +40,70 @@
 
         <div class="control-group">
 
-            <label class="control-label">Formato</label>
+            <label class="control-label">[%l('Formato')%]</label>
             <div class="controls">
 
             <select name="formato" class="span5">
-                <option value="csv" selected="selected">CSV</option>
-                <option value="xls">XLS</option>
-                <option value="xml">XML</option>
-                <option value="json">JSON</option>
+                <option value="csv" selected="selected">[%l('CSV')%]</option>
+                <option value="xls">[%l('XLS')%]</option>
+                <option value="xml">[%l('XML')%]</option>
+                <option value="json">[%l('JSON')%]</option>
             </select>
             </div>
 
         </div>
 
-        <legend>Links</legend>
+        <legend>[%l('Links')%]</legend>
 
-        <h4>Arquivo de indicadores</h4>
+        <h4>[%l('Arquivo de indicadores')%]</h4>
         <input type="text" onclick="this.focus();this.select()" name="url" readonly="readonly" class="input-block-level"/>
-        <p><a target="_blank" id="id_link" href="">Efetuar download dos indicadores</a></p>
-        <p>O arquivo de indicador contém as seguintes informações:</p>
+        <p><a target="_blank" id="id_link" href="">[%l('Efetuar download dos indicadores')%]</a></p>
+        <p>[%l('O arquivo de indicador contém as seguintes informações')%]:</p>
         <ul>
-            <li><strong>Nome da cidade</strong></li>
-            <li><strong>Nome do indicador</strong></li>
-            <li><strong>Data</strong></li>
-            <li><strong>Valor</strong></li>
-            <li>ID da cidade</li>
-            <li>Eixo</li>
-            <li>ID Indicador</li>
-            <li>Formula do indicador</li>
-            <li>Meta do indicador</li>
-            <li>Descrição da meta do indicador</li>
-            <li>Fonte da meta do indicador</li>
-            <li>Operação da meta do indicador</li>
-            <li>Descrição do indicador</li>
-            <li>Tags do indicador</li>
-            <li>Observações do indicador</li>
-            <li>Período do indicador</li>
-            <li>Faixa</li>
-            <li>Meta do valor</li>
-            <li>Justificativa do valor não preenchido</li>
-            <li>Região, se existir</li>
-            <li>Fontes</li>
+            <li><strong>[%l('Nome da cidade')%]</strong></li>
+            <li><strong>[%l('Nome do indicador')%]</strong></li>
+            <li><strong>[%l('Data')%]</strong></li>
+            <li><strong>[%l('Valor')%]</strong></li>
+            <li>[%l('ID da cidade')%]</li>
+            <li>[%l('Eixo')%]</li>
+            <li>[%l('ID Indicador')%]</li>
+            <li>[%l('Formula do indicador')%]</li>
+            <li>[%l('Meta do indicador')%]</li>
+            <li>[%l('Descrição da meta do indicador')%]</li>
+            <li>[%l('Fonte da meta do indicador')%]</li>
+            <li>[%l('Operação da meta do indicador')%]</li>
+            <li>[%l('Descrição do indicador')%]</li>
+            <li>[%l('Tags do indicador')%]</li>
+            <li>[%l('Observações do indicador')%]</li>
+            <li>[%l('Período do indicador')%]</li>
+            <li>[%l('Faixa')%]</li>
+            <li>[%l('Meta do valor')%]</li>
+            <li>[%l('Justificativa do valor não preenchido')%]</li>
+            <li>[%l('Região')%], [%l('se existir')%]</li>
+            <li>[%l('Fontes')%]</li>
         </ul>
 
 
 
-        <h4>Arquivo de variáveis</h4>
+        <h4>[%l('Arquivo de variáveis')%]</h4>
         <input type="text" onclick="this.focus();this.select()" name="url2" readonly="readonly" class="input-block-level"/>
-        <p><a target="_blank" id="id_link2" href="">Efetuar download das variáveis</a></p>
-        <p>O arquivo de variável contém as seguintes informações:</p>
+        <p><a target="_blank" id="id_link2" href="">[%l('Efetuar download das variáveis')%]</a></p>
+        <p>[%l('O arquivo de variável contém as seguintes informações')%]:</p>
         <ul>
-            <li><strong>Nome da cidade</strong></li>
-            <li><strong>Nome</strong></li>
-            <li><strong>Data</strong></li>
-            <li><strong>Valor</strong></li>
-            <li>ID da cidade</li>
-            <li>ID</li>
-            <li>Tipo</li>
-            <li>Apelido</li>
-            <li>Período de atualização</li>
-            <li>Fonte</li>
-            <li>É Básica?</li>
-            <li>Unidade de medida</li>
-            <li>Observações</li>
-            <li>Fonte do valor</li>
+            <li><strong>[%l('Nome da cidade')%]</strong></li>
+            <li><strong>[%l('Nome')%]</strong></li>
+            <li><strong>[%l('Data')%]</strong></li>
+            <li><strong>[%l('Valor')%]</strong></li>
+            <li>[%l('ID da cidade')%]</li>
+            <li>[%l('ID')%]</li>
+            <li>[%l('Tipo')%]</li>
+            <li>[%l('Apelido')%]</li>
+            <li>[%l('Período de atualização')%]</li>
+            <li>[%l('Fonte')%]</li>
+            <li>[%l('É Básica?')%]</li>
+            <li>[%l('Unidade de medida')%]</li>
+            <li>[%l('Observações')%]</li>
+            <li>[%l('Fonte do valor')%]</li>
         </ul>
 
 

@@ -7,14 +7,14 @@
                     <div class="variaveis"><dl class="tabela">
 
 [%IF region.upper_region %]
-    <dt>Subprefeitura</dt>
+    <dt>[%l('Subprefeitura')%]</dt>
     <dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>
 [%END%]
 <dt>[%region.depth_level == 2 ? 'Subprefeitura' : 'Distrito'%]: </dt>
 <dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
 
 [%IF subregions.size %]
-    <dt>Distritos</dt>
+    <dt>[%l('Distritos')%]</dt>
     <dd><ul  style="margin-bottom:0">
     [%-FOR rr IN subregions -%]
         <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
@@ -74,7 +74,7 @@
         <div class="span4">
             <div class="menu-left">
                 <div class="content-fill">
-                    <div class="title">Indicadores</div>
+                    <div class="title">[%l('Indicadores')%]</div>
                     <div class="category" id="axis_list">
 
                     </div>
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="indicators">
-                        <div class="loading"><p>Carregando...</p></div>
+                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                     <p>
                     </p>
@@ -99,7 +99,7 @@
 
         [%IF region.depth_level == 2%]
         <div>
-            <h2>Fator de desigualdade</h2>
+            <h2>[%l('Fator de desigualdade')%]</h2>
             [% INCLUDE parts/fator_desigualdade.tt %]
         </div>
 
@@ -118,7 +118,7 @@
 
                             <div class="table">
                                 <div class="content-fill">
-                                    <div class="loading"><p>Carregando...</p></div>
+                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                                 </div>
                             </div>
 
@@ -126,7 +126,7 @@
                     </div>
 
                     <div id="indicador-grafico">
-                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>comparar com outras cidades</a></div>
+                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a></div>
                         <div class="content-fill">
                             <div class="graph">
                                 <div class="content-fill">
@@ -138,7 +138,7 @@
                     </div>
 
                     <div id="dados-abertos">
-                        <div class="title">Dados abertos</div>
+                        <div class="title">[%l('Dados abertos')%]</div>
                         <div class="content-fill">
                             <div class="dados-botoes">
                                 <input type="button" value="Download" id="button-download" class="button-data"/>

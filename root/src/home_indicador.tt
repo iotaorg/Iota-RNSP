@@ -4,7 +4,7 @@
         <div class="span4">
             <div class="menu-left">
                 <div class="content-fill">
-                    <div class="title">Indicadores</div>
+                    <div class="title">[%l('Indicadores')%]</div>
                     <div class="category" id="axis_list">
 
                     </div>
@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="indicators">
-                        <div class="loading"><p>Carregando...</p></div>
+                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                     <p>
                     </p>
@@ -45,7 +45,7 @@
 
                             <div class="table">
                                 <div class="content-fill">
-                                    <div class="loading"><p>Carregando...</p></div>
+                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                                 </div>
                             </div>
 
@@ -53,7 +53,7 @@
                     </div>
 
                     <div id="indicador-grafico">
-                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>comparar com outras cidades</a></div>
+                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a></div>
                         <div class="content-fill">
                             <div class="graph">
                                 <div class="content-fill">
@@ -65,7 +65,7 @@
                     </div>
 
                     <div id="dados-abertos">
-                        <div class="title">Dados abertos</div>
+                        <div class="title">[%l('Dados abertos')%]</div>
                         <div class="content-fill">
                             <div class="dados-botoes">
                                 <input type="button" value="Download" id="button-download" class="button-data"/>

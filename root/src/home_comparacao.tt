@@ -3,7 +3,7 @@
         <div class="span4">
             <div class="menu-left">
                 <div class="content-fill">
-                    <div class="title">Por Indicador</div>
+                    <div class="title">[%l('Por Indicador')%]</div>
                     <div class="category" id="axis_list">
 
                     </div>
@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="indicators">
-                        <div class="loading"><p>Carregando...</p></div>
+                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                 </div>
             </div>
@@ -38,14 +38,14 @@
                                 </div>
 
                                 <div id="mapa">
-                                    <div class="loading"><p>Carregando...</p></div>
+                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                                 </div>
 
                         </div>
                     </div>
 
                     <div id="dados-abertos">
-                        <div class="title">Dados abertos</div>
+                        <div class="title">[%l('Dados abertos')%]</div>
                         <div class="content-fill">
                             <div class="dados-botoes">
                                 <input type="button" value="Download" id="button-download" class="button-data"/>
@@ -73,6 +73,6 @@
         var userID = "";
 </script>
 <div id="bubble-intro">
-    <p>Selecione um estado acima e clique sobre os pontos do mapa para visualizar os indicadores</p>
+    <p>[%l('Selecione um estado acima e clique sobre os pontos do mapa para visualizar os indicadores')%]</p>
 </div>
 

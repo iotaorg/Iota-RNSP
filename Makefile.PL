@@ -19,7 +19,9 @@ requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
-requires 'Catalyst::Plugin::Authorization::Roles';
+requires 'Catalyst::Plugin::I18N::DBI';
+
+
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Component::InstancePerContext';
 requires 'Catalyst::Plugin::Params::Nested';

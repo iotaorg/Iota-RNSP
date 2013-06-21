@@ -22,6 +22,7 @@ use Catalyst qw/
   Static::Simple
   Unicode::Encoding
   Params::Nested
+  I18N::DBI
 
   Authentication
   Authorization::Roles
@@ -64,8 +65,14 @@ __PACKAGE__->config(
         stash_var   => 'assets'
     },
 
-    'View::HTML' => { expose_methods => [ 'date4period', 'value4human' ] }
+    'View::HTML' => { expose_methods => [ 'date4period', 'value4human', 'l' ] },
 
+    'I18N::DBI' => {
+        languages    => [qw(pt-br es)],
+        lexicons     => [qw(*)],
+        lex_class    => 'DB::Lexicon',
+        default_lang => 'pt-br',
+    },
 );
 
 after 'setup_components' => sub {

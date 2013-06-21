@@ -12,7 +12,7 @@
                             <dd>[%city.uf%]</dd>
 
                             <dt>País: </dt>
-                            <dd>Brasil</dd>
+                            <dd>[%l('Brasil')%]</dd>
 
                             [% FOREACH vv IN user_basic_variables %]
                             <dt>[%vv.variable.name%]: </dt>
@@ -65,15 +65,15 @@
         <div class="row" >
             <div class="[% IF city.regions.size > 0 %]span8[%ELSE%]span12[%END%]">
                 <div id="cidades-indicadores">
-                    <h5>Indicadores separados por eixos</h5>
+                    <h5>[%l('Indicadores separados por eixos')%]</h5>
                     <div class="table">
-                        <div class="loading"><p>Carregando...</p></div>
+                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                 </div>
             </div>
         [% IF city.regions.size>0 %]
             <div class="span4" id="regioes">
-                <h5>Subprefeituras</h5>
+                <h5>[%l('Subprefeituras')%]</h5>
                 <ul class="nav nav-list">
                     [%FOREACH r IN city.regions.sort('name') %]
                         <li class="nav-header">

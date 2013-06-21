@@ -16,16 +16,10 @@ my $schema = Iota::Schema->connect(
     $config->{'Model::DB'}{connect_info}{password}
 );
 
-$schema->storage->dbh_do(
-    sub {
-        my ( $storage, $dbh ) = @_;
-        $dbh->do("");
-    }
-);
-
 &run_sql( $schema, "$Bin/deploy/before_schema.sql" );
 $schema->deploy;
 &run_sql( $schema, "$Bin/deploy/after_schema.sql" );
+&run_sql( $schema, "$Bin/deploy/after_schema.lang.sql" );
 
 &run_sql( $schema, "$Bin/deploy/f_extract_period_edge.sql" );
 
