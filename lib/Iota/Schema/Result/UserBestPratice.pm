@@ -42,7 +42,9 @@ __PACKAGE__->table("user_best_pratice");
 =head2 id
 
   data_type: 'integer'
+  is_auto_increment: 1
   is_nullable: 0
+  sequence: 'user_best_pratice_id_seq'
 
 =head2 user_id
 
@@ -112,11 +114,22 @@ __PACKAGE__->table("user_best_pratice");
   is_nullable: 0
   original: {default_value => \"now()"}
 
+=head2 name_url
+
+  data_type: 'text'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_nullable => 0 },
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "user_best_pratice_id_seq",
+  },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "axis_id",
@@ -147,6 +160,12 @@ __PACKAGE__->add_columns(
     default_value => \"current_timestamp",
     is_nullable   => 0,
     original      => { default_value => \"now()" },
+  },
+  "name_url",
+  {
+    data_type   => "text",
+    is_nullable => 0,
+    original    => { data_type => "varchar" },
   },
 );
 
@@ -195,8 +214,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-21 17:49:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Jj+nPUHoaVy8ofeJtu7H3A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-24 12:03:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5HTt0ZOvqGZK/iI6JMpJUA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -1,8 +1,10 @@
+-- Table: user_best_pratice
 
+-- DROP TABLE user_best_pratice;
 
 CREATE TABLE user_best_pratice
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   user_id integer NOT NULL,
   axis_id integer NOT NULL,
   name text NOT NULL,
@@ -16,6 +18,7 @@ CREATE TABLE user_best_pratice
   sources text,
   tags text,
   created_at timestamp without time zone NOT NULL DEFAULT now(),
+  name_url character varying NOT NULL,
   CONSTRAINT user_best_pratice_pkey PRIMARY KEY (id),
   CONSTRAINT user_best_pratice_user_id_fkey FOREIGN KEY (user_id)
       REFERENCES "user" (id) MATCH SIMPLE
@@ -25,10 +28,9 @@ WITH (
   OIDS=FALSE
 );
 
-
 CREATE TABLE user_best_pratice_axis
 (
-  id integer NOT NULL,
+  id serial NOT NULL,
   axis_id integer NOT NULL,
   user_best_pratice_id integer NOT NULL,
   CONSTRAINT user_best_pratice_axis_pkey PRIMARY KEY (id),
@@ -42,4 +44,3 @@ CREATE TABLE user_best_pratice_axis
 WITH (
   OIDS=FALSE
 );
-

@@ -20,7 +20,6 @@ use open qw(:std :utf8);
 use Catalyst qw/
   ConfigLoader
   Static::Simple
-  Unicode::Encoding
   Params::Nested
   I18N::DBI
 

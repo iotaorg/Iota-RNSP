@@ -60,3 +60,4 @@ create table user_best_pratice_axis (
     axis_id int not null,
     user_best_pratice_id int not null
 );
+alter table user_best_pratice add column name_url varchar not null;

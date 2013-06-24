@@ -42,7 +42,9 @@ __PACKAGE__->table("user_best_pratice_axis");
 =head2 id
 
   data_type: 'integer'
+  is_auto_increment: 1
   is_nullable: 0
+  sequence: 'user_best_pratice_axis_id_seq'
 
 =head2 axis_id
 
@@ -60,7 +62,12 @@ __PACKAGE__->table("user_best_pratice_axis");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_nullable => 0 },
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "user_best_pratice_axis_id_seq",
+  },
   "axis_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "user_best_pratice_id",
@@ -112,8 +119,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-21 17:49:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bQh7kFiU6Zt6GilS1viuiA
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-24 12:03:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QrruFp1DEecnB2X7xPIy/A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
