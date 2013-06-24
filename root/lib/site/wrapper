@@ -77,6 +77,13 @@
             </li>
             [% IF city %]
                 <li class="active"><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
+
+                [%IF best_pratices_link%]
+                <li [% IF "/${c.req.path}" == best_pratices_link.path %]class="active"[%END%]>
+                    <a href="[%best_pratices_link%]">[%l('Boas Práticas')%]</a>
+                </li>
+                [%END%]
+
             [% END %]
             [% IF menu %]
                 [% FOREACH m IN menu %]

@@ -218,5 +218,11 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5HTt0ZOvqGZK/iI6JMpJUA
 
 
+__PACKAGE__->has_one(
+  "axis",
+  "Iota::Schema::Result::Axis",
+  { "foreign.id" => "self.axis_id" },
+);
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

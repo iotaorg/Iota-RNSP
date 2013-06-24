@@ -191,6 +191,15 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
     $self->stash_tela_cidade($c);
 
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
+
+    if ($self->load_best_pratices($c, only_count => 1)){
+        $c->stash->{best_pratices_link} = $c->uri_for(
+            $self->action_for('best_pratice_list'),
+            [
+                $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}
+            ]
+        );
+    }
 }
 
 sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
@@ -340,9 +349,74 @@ sub user_page : Chained('network_cidade') PathPart('pagina') CaptureArgs(2) {
         title    => $page->{title}
     );
 
+
 }
 
 sub user_page_render : Chained('user_page') PathPart('') Args(0) {
+    my ( $self, $c ) = @_;
+}
+
+sub load_best_pratices {
+    my ($self, $c, %flags) = @_;
+
+    my $rs = $c->model('DB::UserBestPratice')->search({
+        user_id => $c->stash->{user}{id}
+    }, {
+        prefetch => 'axis'
+    })->as_hashref;
+
+    return $rs->count if exists $flags{only_count};
+
+    my $out;
+    while (my $obj = $rs->next){
+        push @{$out->{$obj->{axis}{name}}}, $obj;
+
+        $obj->{link} = $c->uri_for(
+                $self->action_for('best_pratice_render'),
+                [
+                    $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade},
+                    $obj->{id},  $obj->{name_url},
+                ]
+        );
+    }
+    $c->stash->{best_pratices} = $out;
+}
+
+
+sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs(2) {
+    my ( $self, $c, $page_id, $title ) = @_;
+
+    $self->load_best_pratices($c);
+
+    my $page = $c->model('DB::UserBestPratice')->search(
+        {
+            'me.id'      => $page_id,
+            'me.user_id' => $c->stash->{user}{id}
+        }, {
+            prefetch=> ['axis', {user_best_pratice_axes => 'axis'}]
+        }
+    )->as_hashref->next;
+
+    $c->detach('/error_404') unless $page;
+    $c->stash->{best_pratice} = $page;
+
+    $c->stash(
+        template => 'home_cidade_boas_praticas.tt',
+        title    => $page->{name}
+    );
+
+}
+
+sub best_pratice_list : Chained('network_cidade') PathPart('boas-praticas') Args(0) {
+    my ( $self, $c ) = @_;
+    $self->load_best_pratices($c);
+    $c->stash(
+        template => 'home_cidade_boas_praticas_list.tt',
+        title    => 'Boas Praticas de ' . $c->stash->{city}{name} .'/' . $c->stash->{estado}
+    );
+}
+
+sub best_pratice_render : Chained('best_pratice') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 }
 
