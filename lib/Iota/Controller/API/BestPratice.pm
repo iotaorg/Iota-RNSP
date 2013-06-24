@@ -37,13 +37,21 @@ sub best_pratice : Chained('object') : PathPart('') : Args(0) : ActionClass('RES
 
 sub best_pratice_GET {
     my ( $self, $c ) = @_;
-    my $object_ref = $c->stash->{object}->as_hashref->next;
+    my $object_ref = $c->stash->{object}->search(undef, {
+        prefetch => 'user_best_pratice_axes'
+    })->as_hashref->next;
 
     $self->status_ok( $c,
         entity =>
-          { ( map { $_ => $object_ref->{$_} } qw(id user_id axis_id name description methodology goals
-       schedule results institutions_involved contatcts sources
-       tags) ) } );
+          { ( map { $_ => $object_ref->{$_} } qw(
+            id user_id axis_id name description methodology goals
+            schedule results institutions_involved contatcts sources
+            tags) ),
+           axis => [
+                map { +{ axis_id => $_->{axis_id}, id => $_->{id}  } } @{ $object_ref->{user_best_pratice_axes}  }
+           ]
+
+        } );
 }
 
 sub best_pratice_POST {

@@ -65,16 +65,24 @@ eval {
             ok( $res->is_success, 'axis exists' );
             is( $res->code, 200, 'axis exists -- 200 Success' );
 
+
             my $axis = eval { from_json( $res->content ) };
             ok( my $updated_axis = $schema->resultset('UserBestPraticeAxis')->find( { id => $axis->{id} } ), 'axis in DB' );
             is( $updated_axis->axis_id, '1', 'axis_id ok' );
 
 
+            ( $res, $c ) = ctx_request( GET $bpurl );
+            ok( $res->is_success, 'listing ok!' );
+            is( $res->code, 200, 'list 200' );
+            my $list = eval { from_json( $res->content ) };
+
+            is($list->{axis}[0]{id}, $axis->{id}, 'axis id ok');
+
             ( $res, $c ) = ctx_request( GET $bpurl . '/axis?api_key=test' );
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
 
-            my $list = eval { from_json( $res->content ) };
+            $list = eval { from_json( $res->content ) };
 
             is( ref $list->{axis}[0], 'HASH', 'have item ok' );
 
@@ -85,7 +93,7 @@ eval {
 
             ( $res, $c ) = ctx_request( GET $bpurl . '/axis?api_key=test' );
             ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );use DDP; p $res;
+            is( $res->code, 200, 'list 200' );
 
             $list = eval { from_json( $res->content ) };
             is( @{ $list->{axis} }, '0', 'empty list' );
