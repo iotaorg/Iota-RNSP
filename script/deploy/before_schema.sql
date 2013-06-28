@@ -16,3 +16,10 @@ period_end date);
     'country',
     'restrict');
 */
+
+CREATE AGGREGATE array_accum (anyarray)
+(
+    sfunc = array_cat,
+    stype = anyarray,
+    initcond = '{}'
+);

@@ -228,7 +228,8 @@ sub resumo_GET {
                     'me.user_id'      => $user_id,
                     'me.valid_from'   => { '>'  => $from_this_date },
 
-                    'me.region_id'    => $c->req->params->{region_id}
+                    'me.region_id'    => $c->req->params->{region_id},
+                    'me.active_value' => 1
                 }
             )->as_hashref;
             my $indicator_values = {};

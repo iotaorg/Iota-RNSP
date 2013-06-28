@@ -77,6 +77,7 @@ left join (
 
 where u.institute_id = ?
 and u.active
+order by 2
 ]);
 
 1;

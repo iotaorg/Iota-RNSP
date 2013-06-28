@@ -106,6 +106,17 @@ __PACKAGE__->table("region_variable_value");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 generated_by_compute
+
+  data_type: 'boolean'
+  is_nullable: 1
+
+=head2 active_value
+
+  data_type: 'boolean'
+  default_value: true
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -143,6 +154,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "file_id",
   { data_type => "integer", is_nullable => 1 },
+  "generated_by_compute",
+  { data_type => "boolean", is_nullable => 1 },
+  "active_value",
+  { data_type => "boolean", default_value => \"true", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -171,13 +186,21 @@ __PACKAGE__->set_primary_key("id");
 
 =item * L</valid_from>
 
+=item * L</active_value>
+
 =back
 
 =cut
 
 __PACKAGE__->add_unique_constraint(
   "region_variable_value_region_id_variable_id_user_id_valid_f_key",
-  ["region_id", "variable_id", "user_id", "valid_from"],
+  [
+    "region_id",
+    "variable_id",
+    "user_id",
+    "valid_from",
+    "active_value",
+  ],
 );
 
 =head1 RELATIONS
@@ -228,8 +251,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-11 17:58:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mlFghrQRRvb2mzNj7wxYVg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-28 11:11:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:39tBY332ydB8IFpF3tCFlw
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

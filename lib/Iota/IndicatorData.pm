@@ -100,7 +100,7 @@ sub upsert {
 
                     # se nao foi informado a regiao, nao tem calculo dela.
                     exists $params{regions_id}
-                    ? ( 'me.region_id' => $params{regions_id} )
+                    ? ( 'me.region_id' => $params{regions_id},  )
                     : ( 'me.region_id' => undef ),
                 }
             )->delete;
@@ -124,6 +124,12 @@ sub upsert {
                                         city_id      => defined $region_id
                                         ? $regions_meta->{$region_id}{city_id}
                                         : $users_meta->{$user_id}{city_id},
+
+
+                                        active_value  => defined $region_id
+                                        ? $regions_meta->{$region_id}{active}
+                                        : 1,
+
                                         institute_id   => $users_meta->{$user_id}{institute_id},
                                         variation_name => $variation,
 
@@ -139,7 +145,9 @@ sub upsert {
                     }
                 }
             }
-
+            my @regions = grep { $_ ne 'null' } keys $results;
+            use DDP; p @regions;
+            $self->schema->compute_upper_regions(\@regions) if scalar @regions;
         }
     );
 
@@ -174,7 +182,10 @@ sub get_regions_meta {
     my $users = {};
 
     while ( my $row = $citys->next ) {
-        $users->{ $row->{id} } = { city_id => $row->{city_id}, };
+        $users->{ $row->{id} } = {
+            city_id => $row->{city_id},
+            active  => $row->{depth_level} == 3 ? 1 : 0
+        };
     }
 
     return $users;
