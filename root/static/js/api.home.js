@@ -25,7 +25,7 @@ if (!(typeof google == "undefined")){
 					row_class = "even";
 				}
 				$(".data-right #result-cidades table tbody").append("<tr class='$$row_class' uri='$$uri' pais='$$pais' uf='$$uf'><td>$$cidade</td><td>$$estado</td></tr>".render({
-					cidade: item.cidade,
+					cidade: item.nome,
 					estado: item.uf.toUpperCase(),
 					uf: item.uf.toLowerCase(),
 					pais: item.pais.toLowerCase(),
@@ -84,11 +84,14 @@ if (!(typeof google == "undefined")){
 				}
 			}
 		});
-
-		$(".data-right #result-cidades table tbody tr").bind('click', function(e) {
-			window.location.href = "/" + $(this).attr("pais") + "/" + + $(this).attr("uf") + "/" + + $(this).attr("uri");
-		});
-
+		if ($(".data-right #result-cidades table tbody tr").length <= 0){
+			$(".data-right #result-cidades table tbody").append("<tr class='even'><td colspan='10' align='center'>Nenhuma cidade encontrada</td></tr>");
+			$(".data-right #result-cidades table tbody tr").unbind();
+		}else{
+			$(".data-right #result-cidades table tbody tr").bind('click', function(e) {
+				window.location.href = "/" + $(this).attr("pais") + "/" + $(this).attr("uf") + "/" + $(this).attr("uri");
+			});
+		}
 	}
 
 	$.clearMarkers = function(){
