@@ -37,7 +37,6 @@ if (!(typeof google == "undefined")){
 				var lat = "";
 				var lng = "";
 				$.ajax({
-					async: false,
 					type: 'GET',
 					dataType: 'json',
 					url: api_path + '/api/public/user/$$userid/'.render({
@@ -46,42 +45,41 @@ if (!(typeof google == "undefined")){
 					success: function(data, textStatus, jqXHR){
 						if (data.cidade.latitude) lat = data.cidade.latitude;
 						if (data.cidade.longitude) lng = data.cidade.longitude;
+
+						if (lat != "" && lng != ""){
+							var latlng = new google.maps.LatLng(lat, lng);
+							var image = new google.maps.MarkerImage("/static/images/pin.png");
+
+							var marker = new google.maps.Marker({
+								position: latlng,
+								map: map,
+								icon: image,
+								draggable: false
+							});
+
+							marker.__uf = item.uf;
+							marker.__pais = item.pais;
+							marker.__uri = item.uri;
+							marker.__cidade = item.nome;
+							marker.__id = item.id;
+							marker.__position = latlng;
+
+							markers.push(marker);
+
+							google.maps.event.addListener(marker, 'click', function(e) {
+								$("#bubble-intro").fadeOut("slow");
+								map.setCenter(marker.__position);
+								if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
+								window.location.href = "/" + marker.__pais.toLowerCase() + "/" + marker.__uf.toLowerCase() + "/" + marker.__uri;
+							});
+
+							google.maps.event.addListener(marker, 'mouseover', function(e) {
+								$("#bubble-intro").fadeOut("slow");
+								$.showInfoCidade(marker);
+							});
+						}
 					}
 				});
-
-				if (lat != "" && lng != ""){
-					var latlng = new google.maps.LatLng(lat, lng);
-					var image = new google.maps.MarkerImage("/static/images/pin.png");
-
-					var marker = new google.maps.Marker({
-						position: latlng,
-						map: map,
-						icon: image,
-						draggable: false
-					});
-
-					marker.__uf = item.uf;
-					marker.__pais = item.pais;
-					marker.__uri = item.uri;
-					marker.__cidade = item.nome;
-					marker.__id = item.id;
-					marker.__position = latlng;
-
-					markers.push(marker);
-
-					google.maps.event.addListener(marker, 'click', function(e) {
-						$("#bubble-intro").fadeOut("slow");
-						map.setCenter(marker.__position);
-						if (map.getZoom() < zoom_padrao) map.setZoom(zoom_padrao);
-						window.location.href = "/" + marker.__pais.toLowerCase() + "/" + marker.__uf.toLowerCase() + "/" + marker.__uri;
-					});
-
-					google.maps.event.addListener(marker, 'mouseover', function(e) {
-						$("#bubble-intro").fadeOut("slow");
-						$.showInfoCidade(marker);
-					});
-
-				}
 			}
 		});
 		if ($(".data-right #result-cidades table tbody tr").length <= 0){
