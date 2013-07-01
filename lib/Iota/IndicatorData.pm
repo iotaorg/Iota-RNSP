@@ -104,11 +104,13 @@ sub upsert {
                     ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
                     ( 'me.user_id'      => $params{user_id} ) x !!exists $params{user_id},
                     ( 'me.indicator_id' => $params{indicators} ) x !!exists $params{indicators},
+                    ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute},
 
                     # se nao foi informado a regiao, nao tem calculo dela.
                     exists $params{regions_id}
                     ? ( 'me.region_id' => $params{regions_id},  )
                     : ( 'me.region_id' => undef ),
+
                 }
             )->delete;
 
