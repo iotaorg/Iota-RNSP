@@ -25,6 +25,10 @@ sub verifiers_specs {
                     required => 1,
                     type     => 'Int',
                 },
+                hide_indicator => {
+                    required => 0,
+                    type     => 'Bool'
+                },
 
                 indicator_id => {
                     required   => 1,
@@ -61,6 +65,10 @@ sub verifiers_specs {
                 technical_information => {
                     required => 1,
                     type     => 'Str'
+                },
+                hide_indicator => {
+                    required => 0,
+                    type     => 'Bool'
                 }
             }
         ),
@@ -76,7 +84,6 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
-
             my $obj = $self->create( \%values );
             return $obj;
         },

@@ -79,7 +79,10 @@ sub indicator_GET {
     my $conf = $indicator->user_indicator_configs->search( { user_id => $c->stash->{user_id} } )->next;
 
     if ($conf) {
-        $c->stash->{rest}{user_indicator_config} = { technical_information => $conf->technical_information };
+        $c->stash->{rest}{user_indicator_config} = {
+            technical_information => $conf->technical_information,
+            hide_indicator => $conf->hide_indicator
+        };
     }
 }
 

@@ -71,6 +71,7 @@ eval {
                     api_key                                              => 'test',
                     'user.indicator_config.create.indicator_id'          => $indicator->{id},
                     'user.indicator_config.create.technical_information' => 'DetalheFoo',
+                    'user.indicator_config.create.hide_indicator' => '1',
                 ]
             );
             ok( $res->is_success, 'indicator created!' );
@@ -97,11 +98,14 @@ eval {
             my $config = eval { from_json( $res->content ) };
             is( $config->{technical_information}, 'DetalheFoo', 'technical_information: ok' );
 
+            is( $config->{hide_indicator}, '1', 'hide_indicator: ok' );
+
             ( $res, $c ) = ctx_request(
                 POST $url_user . '/' . $config_id->{id},
                 [
                     api_key                                              => 'test',
                     'user.indicator_config.update.technical_information' => 'foobar',
+                    'user.indicator_config.update.hide_indicator' => '0',
                 ]
             );
             ok( $res->is_success, 'indicator updated!' );
@@ -109,7 +113,9 @@ eval {
 
             ( $res, $c ) = ctx_request( GET $url_user . '/' . $config_id->{id} );
             $config = eval { from_json( $res->content ) };
+
             is( $config->{technical_information}, 'foobar', 'technical_information: ok' );
+            is( $config->{hide_indicator}, '0', 'hide_indicator: ok' );
 
             ( $res, $c ) = ctx_request( GET $url_user . '?indicator_id=' . $indicator->{id} );
             my $config2 = eval { from_json( $res->content ) };
