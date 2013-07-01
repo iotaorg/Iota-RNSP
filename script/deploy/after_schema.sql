@@ -247,7 +247,7 @@ join city c on c.id = u.city_id
 
 
 CREATE OR REPLACE FUNCTION compute_upper_regions(_ids integer[])
-  RETURNS int[] AS
+  RETURNS integer[] AS
 $BODY$DECLARE
 v_ret int[];
 BEGIN
@@ -302,8 +302,62 @@ BEGIN
 
     select ARRAY(select upper_region from _x group by 1) into v_ret;
     drop table _x;
+
+    create temp table _x as
+    select
+     r.upper_region,
+     iv.valid_from,
+     iv.user_id,
+     iv.indicator_variation_id,
+     iv.indicator_variables_variation_id,
+
+     sum(iv.value::numeric) as total
+
+    from region r
+    join indicator_variables_variations_value iv on iv.region_id = r.id
+    join indicator_variables_variations v on iv.indicator_variables_variation_id = v.id
+
+    where r.upper_region in (
+    select upper_region from region x where x.id in (SELECT unnest($1)) and x.depth_level= 3
+    )
+    and active_value = true
+    and r.depth_level= 3
+
+    and v.type in ('int', 'num')
+    group by 1,2,3,4,5;
+
+    delete from indicator_variables_variations_value where (region_id, user_id, valid_from, indicator_variation_id, indicator_variables_variation_id) IN (
+        SELECT upper_region, user_id, valid_from, indicator_variation_id, indicator_variables_variation_id from _x
+    ) AND generated_by_compute = TRUE;
+
+    insert into indicator_variables_variations_value (
+        region_id,
+        indicator_variation_id,
+        indicator_variables_variation_id,
+        valid_from,
+        user_id,
+        value_of_date,
+        value,
+        generated_by_compute
+    )
+    select
+        x.upper_region,
+        x.indicator_variation_id,
+        x.indicator_variables_variation_id,
+        x.valid_from,
+        x.user_id,
+        x.valid_from,
+
+        x.total::varchar,
+        true
+    from _x x;
+
+
+    drop table _x;
     return v_ret;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+ALTER FUNCTION compute_upper_regions(integer[])
+  OWNER TO postgres;

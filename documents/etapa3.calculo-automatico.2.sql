@@ -40,3 +40,14 @@ ALTER TABLE indicator_variables_variations_value DROP CONSTRAINT indicator_varia
 
 ALTER TABLE indicator_variables_variations_value
   ADD CONSTRAINT indicator_variables_variation_indicator_variation_id_indica_key UNIQUE(indicator_variation_id, indicator_variables_variation_id, valid_from, user_id, active_value);
+
+
+ALTER TABLE indicator_variables_variations_value DROP CONSTRAINT indicator_variables_variation_indicator_variation_id_indica_key;
+
+CREATE UNIQUE INDEX on indicator_variables_variations_value(indicator_variation_id, indicator_variables_variation_id, valid_from, user_id, active_value)
+  WHERE region_id is null;
+
+CREATE UNIQUE INDEX on indicator_variables_variations_value(indicator_variation_id, indicator_variables_variation_id, valid_from, user_id, region_id, active_value)
+  WHERE region_id is not null;
+
+

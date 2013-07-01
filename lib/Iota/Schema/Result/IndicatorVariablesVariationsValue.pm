@@ -158,37 +158,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<indicator_variables_variation_indicator_variation_id_indica_key>
-
-=over 4
-
-=item * L</indicator_variation_id>
-
-=item * L</indicator_variables_variation_id>
-
-=item * L</valid_from>
-
-=item * L</user_id>
-
-=item * L</active_value>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint(
-  "indicator_variables_variation_indicator_variation_id_indica_key",
-  [
-    "indicator_variation_id",
-    "indicator_variables_variation_id",
-    "valid_from",
-    "user_id",
-    "active_value",
-  ],
-);
-
 =head1 RELATIONS
 
 =head2 indicator_variables_variation
@@ -242,8 +211,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:41:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/PW78wo6pQT6TnvbhWSDDg
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 12:09:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fmkr1k68uDsmUk34bLfuOQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

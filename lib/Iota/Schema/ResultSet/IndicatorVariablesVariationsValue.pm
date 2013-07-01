@@ -62,6 +62,13 @@ sub action_specs {
             if ( my $period = delete $values{period} ) {
                 my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
+                if (exists $dates->{region_id}){
+                    my $region = $schema->resultset('Region')->find( $values{region_id} );
+                    if ($region->depth_level == 2){
+                        $values{active_value} = 0;
+                    }
+                }
+
                 $values{valid_from}  = $dates->{period_begin};
                 $values{valid_until} = $dates->{period_end};
             }
