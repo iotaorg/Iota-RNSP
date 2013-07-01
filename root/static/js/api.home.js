@@ -9,9 +9,30 @@ $(document).ready(function(){
 
 if (!(typeof google == "undefined")){
 	$.carregaMarkers = function(){
+		if ($(".data-right #result-cidades").length > 0){
+			$(".data-right #result-cidades").empty();
+		}else{
+			$(".data-right .data-content .content-fill").append("<div id='result-cidades'></div>");
+		}
+		$(".data-right #result-cidades").append("<table class='result-cidades'><thead><tr><th>Cidade</th><th>Estado</th></tr></thead><tbody></tbody></table>");
 		$.clearMarkers();
+		var row_class = "even";
 		$(users_list).each(function(index,item){
 			if (item.uf == $("#uf_filter").val()){
+				if (row_class == "even"){
+					row_class = "odd";
+				}else{
+					row_class = "even";
+				}
+				$(".data-right #result-cidades table tbody").append("<tr class='$$row_class' uri='$$uri' pais='$$pais' uf='$$uf'><td>$$cidade</td><td class='center'>$$estado</td></tr>".render({
+					cidade: item.nome,
+					estado: item.uf.toUpperCase(),
+					uf: item.uf.toLowerCase(),
+					pais: item.pais.toLowerCase(),
+					uri: item.uri,
+					row_class: row_class
+				}));
+				
 				$("#bubble-intro").fadeOut("slow");
 				var lat = "";
 				var lng = "";
@@ -63,7 +84,14 @@ if (!(typeof google == "undefined")){
 				}
 			}
 		});
-
+		if ($(".data-right #result-cidades table tbody tr").length <= 0){
+			$(".data-right #result-cidades table tbody").append("<tr class='even'><td colspan='10' class='center'>Nenhuma cidade encontrada</td></tr>");
+			$(".data-right #result-cidades table tbody tr").unbind();
+		}else{
+			$(".data-right #result-cidades table tbody tr").bind('click', function(e) {
+				window.location.href = "/" + $(this).attr("pais") + "/" + $(this).attr("uf") + "/" + $(this).attr("uri");
+			});
+		}
 	}
 
 	$.clearMarkers = function(){

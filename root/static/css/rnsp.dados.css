@@ -29,6 +29,10 @@ table{
 	background-color: #ccffff;
 }
 
+td.center{
+	text-align: center;
+}
+
 .indicators .item:hover,
 .indicators .item.selected:hover{
 	cursor: hand;
@@ -860,4 +864,37 @@ footer .thumbnails-unstyled li {
 .table-xonde .active a {
     color: white!important;
     font-weight: bold!important;
+}
+
+#result-cidades {
+	border: 1px solid #e0e0e0;
+	margin-top: 15px;
+	padding: 2px;
+}
+
+#result-cidades table.result-cidades{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+#result-cidades thead tr{
+	background-color: #f0f0f0;
+}
+
+#result-cidades thead tr th{
+	color: #009999;
+}
+#result-cidades tbody tr td{
+	padding: 2px 5px
+}
+#result-cidades tbody tr.even{
+	background-color: #fbfbfb;
+}
+#result-cidades tbody tr.odd{
+	background-color: #fff;
+}
+#result-cidades tbody tr:hover{
+	cursor: hand;
+	cursor: pointer;
+	background-color: #e1ffff;
 }
