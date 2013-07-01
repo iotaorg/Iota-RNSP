@@ -284,7 +284,7 @@ h4 {font-size: 17.5px;}
 #mapa-do-site-header .title{
 	color: #009999;
 	font-size: 20pt;
-	font-weight: bolder;
+	font-weight: bold;
 }
 
 
@@ -381,7 +381,7 @@ h4 {font-size: 17.5px;}
 	border: 1px solid #e0e0e0;
 	padding: 2px 5px;
 	font-size: 12pt;
-	font-weight: bolder;
+	font-weight: bold;
 }
 
 #dados-abertos .title{
@@ -731,7 +731,7 @@ td.settinhas.down {
 	text-align: center;
 	line-height: 1.5em;
 	color: #009999;
-	font-weight: bolder;
+	font-weight: bold;
 	-moz-text-shadow:1px 1px 1px #f0f0f0; -webkit-text-shadow:1px 1px 1px #f0f0f0; text-shadow:1px 1px 1px #f0f0f0;
 }
 
@@ -836,7 +836,7 @@ footer .copyright .footer-copyright-content {
 footer h4 {
     color: #666;
     margin: 3px 0;
-    font-weight: bolder;
+    font-weight: bold;
     font-size: 1.2em;
     line-height: 1.5em;
 }
@@ -871,16 +871,13 @@ footer .thumbnails-unstyled li {
 	margin-top: 15px;
 	padding: 2px;
 }
-
 #result-cidades table.result-cidades{
 	border-collapse: collapse;
 	width: 100%;
 }
-
 #result-cidades thead tr{
 	background-color: #f0f0f0;
 }
-
 #result-cidades thead tr th{
 	color: #009999;
 }
