@@ -193,7 +193,7 @@ sub resumo_GET {
 
         my $user_id = $c->stash->{user_obj}->id;
 
-        my $active_value  = exists $c->req->params->{not_computed} && $c->req->params->{not_computed} ? 0 : 1;
+        my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
         my $periods_begin = {};
         my $indicators    = {};
@@ -412,7 +412,7 @@ Retorna o status de prenchimento dos indicadores
 }
 
 =cut
-
+# TODO: verificar isso
 sub indicator_status_GET {
     my ( $self, $c ) = @_;
     my $ret;

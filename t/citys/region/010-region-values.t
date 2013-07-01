@@ -176,6 +176,8 @@ eval {
                     name          => 'Foo Bar',
                     observations  => 'farinha',
                     region_id     => $reg1->{id},
+                    active_value  => 0,
+                    generated_by_compute  => undef,
                     source        => 'bazar',
                     type          => 'int',
                     value         => '4456',

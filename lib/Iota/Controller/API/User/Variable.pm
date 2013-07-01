@@ -92,7 +92,8 @@ sub list_GET {
     my $region = exists $c->req->params->{region_id} ? $c->model('DB::Region')->find( $c->req->params->{region_id} ) : undef;
 
     my $city_id = $c->stash->{user}->city_id || '1'; # test fix
-    my $compute = $c->req->params->{not_computed} ? undef : 1;
+
+    my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
     foreach my $obj (@list) {
 
@@ -105,7 +106,7 @@ sub list_GET {
             user_id => $c->stash->{user}->id,
            ((region_id => $region_id)x!! $region_id),
 
-           ( defined $region && $region->depth_level == 2 ? (generated_by_compute => $compute) : () ),
+           ( defined $region && $region->depth_level == 2 ? (active_value => $active_value) : () ),
             %$where,
         } )
           ->as_hashref->all;

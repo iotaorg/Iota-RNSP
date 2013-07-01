@@ -457,6 +457,7 @@ sub values_GET {
             schema  => $c->model('DB')->schema
         );
         my $valuetb = $c->req->params->{region_id} ? 'region_variable_values' : 'values';
+        my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
         my $cond = {
             -or => [
@@ -465,7 +466,12 @@ sub values_GET {
             ],
             'me.id' => [ $indicator_formula->variables ],
 
-            ( $valuetb eq 'region_variable_values' ? ($valuetb.'.region_id', [$c->req->params->{region_id}, undef]) : ())
+
+
+            ( $valuetb eq 'region_variable_values' ? (
+                $valuetb.'.region_id'    => [$c->req->params->{region_id}, undef],
+                $valuetb.'.active_value' => $active_value
+            ) : ())
         };
 
         my $rs = $c->model('DB')->resultset('Variable')->search_rs(
@@ -500,7 +506,8 @@ sub values_GET {
             my $rs = $variation->indicator_variables_variations_values->search(
                 {
                     %{ $hash->{filters} },
-                    region_id => $c->req->params->{region_id}
+                    region_id    => $c->req->params->{region_id},
+                    active_value => $active_value
                 },
                 {
                     select   => [qw/valid_from/],
@@ -563,7 +570,8 @@ sub values_GET {
                             {
                                 valid_from => $begin,
                                 user_id    => $user_id,
-                                region_id  => $c->req->params->{region_id}
+                                region_id  => $c->req->params->{region_id},
+                                active_value => $active_value
                             }
                         )->as_hashref;
                         while ( my $r = $rs->next ) {

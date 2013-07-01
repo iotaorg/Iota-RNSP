@@ -266,8 +266,8 @@ sub add_value {
 sub get_values {
     my ($region, $not) = @_;
 
-    $not = $not ? 1 : 0;
-    my ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $region->{id} . '&is_basic=0&variable_id='.$variable->{id} . '&not_computed=' . $not );
+    $not = $not ? 0 : 1;
+    my ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $region->{id} . '&is_basic=0&variable_id='.$variable->{id} . '&active_value=' . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
 
@@ -277,9 +277,9 @@ sub get_values {
 sub get_indicator {
     my ($region, $year, $not) = @_;
 
-    $not = $not ? 1 : 0;
+    $not = $not ? 0 : 1;
 
-    my ( $res, $c ) = ctx_request( GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/indicator?from_date='.$year.'-01-01&number_of_periods=1&region_id=' . $region->{id} . '&not_computed=' . $not );
+    my ( $res, $c ) = ctx_request( GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/indicator?from_date='.$year.'-01-01&number_of_periods=1&region_id=' . $region->{id} . '&active_value=' . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
     $list = &get_the_key(  &get_the_key ( &get_the_key ($list) ) )->{indicadores}[0]{valores};

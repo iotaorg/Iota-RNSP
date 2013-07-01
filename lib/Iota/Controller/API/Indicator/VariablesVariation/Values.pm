@@ -52,6 +52,8 @@ sub values_GET {
                   valid_from
                   user_id
                   created_at
+                  generated_by_compute
+                  active_value
                   )
             )
         }
@@ -180,7 +182,10 @@ sub list_GET {
                   value_of_date
                   valid_from
                   user_id
-                  created_at)
+                  created_at
+                  generated_by_compute
+                  active_value
+                  )
             ),
             url => $c->uri_for_action( $self->action_for('values'),
                 [ $c->stash->{indicator}->id, $c->stash->{variables_variation}->id, $obj->{id} ] )->as_string,

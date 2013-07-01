@@ -756,11 +756,12 @@ sub _load_region_variables {
         }
 
     }
-
+    my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
     my $values = $region->region_variable_values->search(
         {
             'me.variable_id' => { 'in' => [ keys %$show ] },
-            'me.user_id'     => $mid
+            'me.user_id'     => $mid,
+            'me.active_value' => $active_value
         },
         {
             order_by => [            { -desc => 'me.valid_from' } ],
