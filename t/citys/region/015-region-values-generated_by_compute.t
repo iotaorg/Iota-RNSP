@@ -11,6 +11,7 @@ use lib "$Bin/../../lib";
 use Catalyst::Test q(Iota);
 
 my $variable;
+my $indicator;
 use HTTP::Request::Common qw(GET POST DELETE PUT);
 use Package::Stash;
 
@@ -149,16 +150,20 @@ eval {
                 ]
             );
 
-            my $indicator = eval { from_json( $res->content ) };
+            $indicator = eval { from_json( $res->content ) };
 
             &add_value($reg2_uri, '100', '2010');
             my $tmp = &get_values($reg2);
 
             is(scalar keys @$tmp, '1', 'só tem 1 linha');
+            my $ii = &get_indicator($reg2, '2010');
+            is_deeply($ii, [101], 'valores salvos ok');
 
             &add_value($reg2_uri, '200', '2011');
             $tmp = &get_values($reg2);
             is(scalar keys @$tmp, '2', 'tem 2 linhas');
+            $ii = &get_indicator($reg2, '2011');
+            is_deeply($ii, [201], 'valores salvos ok');
 
             $tmp = &get_values($reg1);
             is(scalar keys @$tmp, '2', 'tem 2 linhas tambem na regiao 1');
@@ -167,8 +172,16 @@ eval {
             is($tmp->[0]{value}, '100');
             is($tmp->[1]{value}, '200');
 
-            diag('testando com 2 subregs');
+            $ii = &get_indicator($reg1, '2010');
+            is_deeply($ii, [101], 'valores salvos ok');
+
+            $ii = &get_indicator($reg1, '2011');
+            is_deeply($ii, [201], 'valores salvos ok');
+
             &add_value($reg3_uri, '150,6668', '2010');
+
+            $ii = &get_indicator($reg1, '2010');
+            is_deeply($ii, ['251.6668'], 'valores salvos ok');
 
             $tmp = &get_values($reg1);
 
@@ -179,12 +192,17 @@ eval {
             $tmp = &get_values($reg1, 1);
             is(scalar keys @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras');
 
-            &add_value($reg1_uri, '230', '2011');
+            &add_value($reg1_uri, '666', '2011');
             $tmp = &get_values($reg1, 1);
             is(scalar keys @$tmp, '1', 'tem 1 linha');
-            is($tmp->[0]{value}, '230', 'valor salvo!');
+            is($tmp->[0]{value}, '666', 'valor salvo!');
             is($tmp->[0]{active_value}, '0', 'valor nao ativo');
 
+            $ii = &get_indicator($reg1, '2010');
+            is_deeply($ii, ['251.6668'], 'ainda existe esse valor!');
+
+            $ii = &get_indicator($reg1, '2011', 1);
+            is_deeply($ii, ['667'], 'e tem como pegar o valor nao computado');
 
             $tmp = &get_values($reg1);
             is(scalar keys @$tmp, '2', 'tem 2 linhas ainda');
@@ -192,6 +210,8 @@ eval {
             is($tmp->[0]{value}, '250.6668', 'valor ainda eh o mesmo!');
             is($tmp->[0]{active_value}, '1', 'valor ativo');
 
+            $ii = &get_indicator($reg1, '2010');
+            is_deeply($ii, ['251.6668'], 'ainda existe esse valor!');
 
 
 
@@ -235,4 +255,24 @@ sub get_values {
     my $list = eval { from_json( $res->content ) };
 
     return $list->{variables}[0]{values};
+}
+
+sub get_indicator {
+    my ($region, $year, $not) = @_;
+
+    $not = $not ? 1 : 0;
+
+    my ( $res, $c ) = ctx_request( GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/indicator?from_date='.$year.'-01-01&number_of_periods=1&region_id=' . $region->{id} . '&not_computed=' . $not );
+    is( $res->code, 200, 'list the values exists -- 200 Success' );
+    my $list = eval { from_json( $res->content ) };
+    $list = &get_the_key(  &get_the_key ( &get_the_key ($list) ) )->{indicadores}[0]{valores};
+
+    return $list;
+}
+
+# see end() in php
+sub get_the_key {
+    my ($hash) = @_;
+    my ($k) = keys %$hash;
+    return $hash->{$k};
 }

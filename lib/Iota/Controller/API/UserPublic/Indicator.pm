@@ -193,6 +193,8 @@ sub resumo_GET {
 
         my $user_id = $c->stash->{user_obj}->id;
 
+        my $active_value  = exists $c->req->params->{not_computed} && $c->req->params->{not_computed} ? 0 : 1;
+
         my $periods_begin = {};
         my $indicators    = {};
         while ( my $indicator = $rs->next ) {
@@ -226,10 +228,14 @@ sub resumo_GET {
                 {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
-                    'me.valid_from'   => { '>'  => $from_this_date },
+                    'me.valid_from'   => {
+                        '>'  => $from_this_date,
+
+                        ('<=' => $from_date)x!! $from_date
+                    },
 
                     'me.region_id'    => $c->req->params->{region_id},
-                    'me.active_value' => 1
+                    'me.active_value' => $active_value
                 }
             )->as_hashref;
             my $indicator_values = {};

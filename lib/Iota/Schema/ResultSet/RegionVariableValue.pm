@@ -225,6 +225,7 @@ sub action_specs {
             my $region = $schema->resultset('Region')->find( $values{region_id} );
             if ($region->depth_level == 2){
                 $values{active_value} = 0;
+
             }
 
             my $varvalue = $self->create( \%values );
@@ -244,7 +245,7 @@ sub action_specs {
                 indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $varvalue->user_id,
-                regions_id => [ $varvalue->region_id ]
+                regions_id => [ $varvalue->region_id ],
             );
 
             return $varvalue;
@@ -279,6 +280,7 @@ sub action_specs {
                 dates      => [ $values{valid_from} ],
                 user_id    => $var->user_id,
                 regions_id => [ $var->region_id ],
+
             );
 
             return $var;
@@ -318,7 +320,6 @@ sub _put {
     if ($region->depth_level == 2){
         $values{active_value} = 0;
     }
-
     # procura por uma variavel daquele usuario naquele periodo, se
     # existir, atualiza a data e o valor!
     my $row = $self->search(
@@ -369,7 +370,8 @@ sub _put {
         indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
         dates      => [ $dates->{period_begin} ],
         user_id    => $row->user_id,
-        regions_id => [ $row->region_id ]
+        regions_id => [ $row->region_id ],
+
     );
 
     return $row;

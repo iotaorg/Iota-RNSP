@@ -90,6 +90,7 @@ sub upsert {
         ind_variation_var   => $ind_variation_var
 
     );
+
     my $users_meta = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
     my $level3       = [];
     my $regions_meta = $self->get_regions_meta($level3, keys %$results );
@@ -120,37 +121,43 @@ sub upsert {
 
                         while ( my ( $date, $variations ) = each %$dates ) {
 
-                            foreach my $variation ( keys %$variations ) {
+                            while ( my ( $variation, $actives ) = each %$variations ) {
 
-                                $indval_rs->create(
-                                    {
-                                        user_id      => $user_id,
-                                        indicator_id => $indicator_id,
-                                        valid_from   => $date,
-                                        city_id      => defined $region_id
-                                        ? $regions_meta->{$region_id}{city_id}
-                                        : $users_meta->{$user_id}{city_id},
+                                foreach my $active_value ( keys %$actives ) {
 
 
-                                        active_value  => defined $region_id
-                                        ? $regions_meta->{$region_id}{active}
-                                        : 1,
+                                    $indval_rs->create(
+                                        {
+                                            user_id      => $user_id,
+                                            indicator_id => $indicator_id,
+                                            valid_from   => $date,
+                                            city_id      => defined $region_id
+                                            ? $regions_meta->{$region_id}{city_id}
+                                            : $users_meta->{$user_id}{city_id},
 
-                                        institute_id   => $users_meta->{$user_id}{institute_id},
-                                        variation_name => $variation,
 
-                                        value   => $variations->{$variation}[0],
-                                        sources => $variations->{$variation}[1],
+                                            active_value  => defined $region_id
+                                            ? $regions_meta->{$region_id}{active}
+                                            : 1,
 
-                                        region_id => $region_id,
+                                            institute_id   => $users_meta->{$user_id}{institute_id},
+                                            variation_name => $variation,
 
-                                        (exists $params{generated_by_compute} ? (
-                                            generated_by_compute => 1,
-                                            active_value => 1
-                                        ) : ())
+                                            value   => $variations->{$variation}{$active_value}[0],
+                                            sources => $variations->{$variation}{$active_value}[1],
 
-                                    }
-                                );
+                                            region_id => $region_id,
+
+                                            active_value => $active_value,
+
+                                            (exists $params{generated_by_compute} ? (
+                                                generated_by_compute => 1,
+                                            ) : ())
+
+                                        }
+                                    );
+
+                                }
 
                             }
                         }
@@ -162,7 +169,7 @@ sub upsert {
                 $self->upsert(
                     %params,
                     regions_id           => $level2->{compute_upper_regions},
-                    generated_by_compute => 1
+                    generated_by_compute => 1,
                 );
             }
         }
@@ -225,7 +232,7 @@ sub _get_values_periods {
 
         next if !defined $row->{value} || $row->{value} eq '';
 
-        $out->{'null'}{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
+        $out->{'1'}{'null'}{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
           [ $row->{value}, $row->{source}, ];
     }
 
@@ -241,7 +248,7 @@ sub _get_values_periods_region {
 
     while ( my $row = $rs->next ) {
         next if !defined $row->{value} || $row->{value} eq '';
-        $out->{ $row->{region_id} }{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
+        $out->{$row->{active_value}}{ $row->{region_id} }{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
           [ $row->{value}, $row->{source}, ];
     }
 
@@ -281,7 +288,7 @@ sub _get_values_variation {
             next if !defined $val->{value} || $val->{value} eq '';
 
             my $region_id = $val->{region_id} || 'null';
-            $out->{$region_id}{ $val->{user_id} }{ $val->{indicator_variables_variation_id} }{ $row->{name} }
+            $out->{ $val->{active_value} }{$region_id}{ $val->{user_id} }{ $val->{indicator_variables_variation_id} }{ $row->{name} }
               { $val->{valid_from} } = $val->{value};
 
         }
@@ -322,93 +329,102 @@ sub _get_indicator_values {
           ? sort { $a <=> $b } @{ $params{indicator_variables}{ $indicator->id } }
           : ();
 
-        foreach my $region_id ( keys %{ $params{values} } ) {
 
-            foreach my $user_id ( keys %{ $params{values}{$region_id} } ) {
+          foreach my $active_value ( keys %{ $params{values} } ) {
 
-                # todo esse IF serve para colocar as datas faltantes
-                # nos indicadores que nao tem variaveis "normais"
-                # entao eles nunca entrariam no loop
-                # entao aqui procursa-se por todos as datas dos valores das variacoes
-                if ( $indicator->indicator_type eq 'varied' ) {
-                    my $var_values = $params{variation_values}{$region_id}{$user_id};
+            foreach my $region_id ( keys %{ $params{values}{$active_value} } ) {
 
-                    foreach my $var_variable_id ( keys %{ $params{ind_variation_var}{ $indicator->id } } ) {
+                foreach my $user_id ( keys %{ $params{values}{$active_value}{$region_id} } ) {
 
-                        foreach my $variation ( keys %{ $var_values->{$var_variable_id} } ) {
 
-                            foreach my $date ( keys %{ $var_values->{$var_variable_id}{$variation} } ) {
-
-                                $params{values}{$region_id}{$user_id}{$date} = {}
-                                  if !exists $params{values}{$region_id}{$user_id}{$date};
-                            }
-                        }
-                    }
-                }
-
-                # percorre todos os periodos desse usuario
-                foreach my $date ( keys %{ $params{values}{$region_id}{$user_id} } ) {
-                    my $data = $params{values}{$region_id}{$user_id}{$date};
-
-                    # verifica se todas as variaveis estao preenchidas
-                    my $filled = 0;
-                    do { $filled++ if exists $data->{$_} }
-                      for @variables;
-                    next unless $filled == @variables;
-
-                    my %sources;
-                    for my $var (@variables) {
-                        my $str = $data->{$var}[1];
-                        next unless $str;
-                        $sources{$str}++;
-                    }
-
-                    my $formula = Iota::IndicatorFormula->new(
-                        formula => $indicator->formula,
-                        schema  => $self->schema
-                    );
-
-                    my %values = map { $_ => $data->{$_}[0] } @variables;
-
+                    # todo esse IF serve para colocar as datas faltantes
+                    # nos indicadores que nao tem variaveis "normais"
+                    # entao eles nunca entrariam no loop
+                    # entao aqui procursa-se por todos as datas dos valores das variacoes
                     if ( $indicator->indicator_type eq 'varied' ) {
+                        my $var_values = $params{variation_values}{$active_value}{$region_id}{$user_id};
 
-                        my $var_variables = $params{ind_variation_var}{ $indicator->id };
-                        my $var_values    = $params{variation_values}{$region_id}{$user_id};
+                        foreach my $var_variable_id ( keys %{ $params{ind_variation_var}{ $indicator->id } } ) {
 
-                        my $filled_variations = {};
-                        foreach my $var_variable_id ( keys %$var_variables ) {
                             foreach my $variation ( keys %{ $var_values->{$var_variable_id} } ) {
-                                next unless exists $var_values->{$var_variable_id}{$variation}{$date};
-                                $filled_variations->{$variation}++;
+
+                                foreach my $date ( keys %{ $var_values->{$var_variable_id}{$variation} } ) {
+
+                                    if (!exists $params{values}{$active_value}{$region_id}{$user_id}{$date}){
+                                        $params{values}{$active_value}{$region_id}{$user_id}{$date} = {};
+                                    }
+                                }
                             }
                         }
+                    }
 
-                        foreach my $variation ( keys %$filled_variations ) {
+                    # percorre todos os periodos desse usuario
+                    foreach my $date ( keys %{ $params{values}{$active_value}{$region_id}{$user_id} } ) {
+                        my $data = $params{values}{$active_value}{$region_id}{$user_id}{$date};
 
-                            # pula as variaveis nao totalmente preenchidas em todas as variações
-                            next unless $filled_variations->{$variation} == scalar keys %$var_variables;
+                        # verifica se todas as variaveis estao preenchidas
+                        my $filled = 0;
+                        do { $filled++ if exists $data->{$_} } for @variables;
+                        next unless $filled == @variables;
 
-                            my %varied_values = map { $_ => $var_values->{$_}{$variation}{$date} } keys %$var_variables;
 
-                            my $valor = $formula->evaluate_with_alias(
-                                V => \%values,
-                                N => \%varied_values
-                            );
-                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} =
-                              [ $valor, [ keys %sources ] ];
+
+                        my %sources;
+                        for my $var (@variables) {
+                            my $str = $data->{$var}[1];
+                            next unless $str;
+                            $sources{$str}++;
+                        }
+                        my $formula = Iota::IndicatorFormula->new(
+                            formula => $indicator->formula,
+                            schema  => $self->schema
+                        );
+
+                        my %values = map { $_ => $data->{$_}[0] } @variables;
+
+                        if ( $indicator->indicator_type eq 'varied' ) {
+
+                            my $var_variables = $params{ind_variation_var}{ $indicator->id };
+                            my $var_values    = $params{variation_values}{$active_value}{$region_id}{$user_id};
+
+                            my $filled_variations = {};
+                            foreach my $var_variable_id ( keys %$var_variables ) {
+                                foreach my $variation ( keys %{ $var_values->{$var_variable_id} } ) {
+                                    next unless exists $var_values->{$var_variable_id}{$variation}{$date};
+                                    $filled_variations->{$variation}++;
+                                }
+                            }
+
+                            foreach my $variation ( keys %$filled_variations ) {
+
+                                # pula as variaveis nao totalmente preenchidas em todas as variações
+                                next unless $filled_variations->{$variation} == scalar keys %$var_variables;
+
+                                my %varied_values = map { $_ => $var_values->{$_}{$variation}{$date} } keys %$var_variables;
+
+                                my $valor = $formula->evaluate_with_alias(
+                                    V => \%values,
+                                    N => \%varied_values
+                                );
+
+                                $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation}{$active_value} =
+                                [ $valor, [ keys %sources ] ];
+                            }
+
+                        }
+                        else {
+                            my $valor = $formula->evaluate(%values);
+
+                            # '' = variacao
+                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''}{$active_value} = [ $valor, [ keys %sources ] ];
                         }
 
-                    }
-                    else {
-                        my $valor = $formula->evaluate(%values);
 
-                        # '' = variacao
-                        $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} = [ $valor, [ keys %sources ] ];
                     }
-
                 }
-            }
-        }
+            } # region
+
+        } # status
 
     }
     return $out;
