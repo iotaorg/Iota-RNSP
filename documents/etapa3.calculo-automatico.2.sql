@@ -11,12 +11,7 @@ ALTER TABLE region
 ------- adicionado dia 28
 
 
-alter table variable_value add column active_value boolean not null default true;
-update variable_value set active_value = true;
-ALTER TABLE variable_value DROP CONSTRAINT user_value_period_key;
 
-ALTER TABLE variable_value
-  ADD CONSTRAINT user_value_period_key UNIQUE(variable_id, user_id, valid_from, active_value);
 
 
 
