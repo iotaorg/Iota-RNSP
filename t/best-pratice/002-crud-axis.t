@@ -33,8 +33,8 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/best_pratice',
                 [
-                    api_key               => 'test',
-                    'best_pratice.create.name'   => 'teste com',
+                    api_key                       => 'test',
+                    'best_pratice.create.name'    => 'teste com',
                     'best_pratice.create.axis_id' => 2,
                 ]
             );
@@ -49,7 +49,7 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $bpurl . '/axis',
                 [
-                    api_key               => 'test',
+                    api_key                            => 'test',
                     'best_pratice.axis.create.axis_id' => 1
                 ]
             );
@@ -65,18 +65,17 @@ eval {
             ok( $res->is_success, 'axis exists' );
             is( $res->code, 200, 'axis exists -- 200 Success' );
 
-
             my $axis = eval { from_json( $res->content ) };
-            ok( my $updated_axis = $schema->resultset('UserBestPraticeAxis')->find( { id => $axis->{id} } ), 'axis in DB' );
+            ok( my $updated_axis = $schema->resultset('UserBestPraticeAxis')->find( { id => $axis->{id} } ),
+                'axis in DB' );
             is( $updated_axis->axis_id, '1', 'axis_id ok' );
-
 
             ( $res, $c ) = ctx_request( GET $bpurl );
             ok( $res->is_success, 'listing ok!' );
             is( $res->code, 200, 'list 200' );
             my $list = eval { from_json( $res->content ) };
 
-            is($list->{axis}[0]{id}, $axis->{id}, 'axis id ok');
+            is( $list->{axis}[0]{id}, $axis->{id}, 'axis id ok' );
 
             ( $res, $c ) = ctx_request( GET $bpurl . '/axis?api_key=test' );
             ok( $res->is_success, 'listing ok!' );

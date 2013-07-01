@@ -22,7 +22,7 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/network'.render(),
+			url: api_path + '/api/public/network?user_id=$$user_id'.render({user_id : userID}),
 			success: function(data, textStatus, jqXHR){
 				users_list = [];
 				indicadores_list = data.indicators;

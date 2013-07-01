@@ -32,10 +32,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/best_pratice',
                 [
-                    api_key               => 'test',
-                    'best_pratice.create.name'   => 'FooBar',
+                    api_key                           => 'test',
+                    'best_pratice.create.name'        => 'FooBar',
                     'best_pratice.create.description' => 'xx',
-                    'best_pratice.create.axis_id' => '2',
+                    'best_pratice.create.axis_id'     => '2',
                 ]
             );
 
@@ -57,7 +57,7 @@ eval {
                 POST $obj_uri,
                 [
                     'best_pratice.update.name'        => 'BarFoo',
-                    'best_pratice.update.description'      => 'aa',
+                    'best_pratice.update.description' => 'aa',
 
                 ]
             );
@@ -66,10 +66,12 @@ eval {
 
             use JSON qw(from_json);
             my $best_pratice = eval { from_json( $res->content ) };
-            ok( my $updated_best_pratice = $schema->resultset('UserBestPratice')->find( { id => $best_pratice->{id} } ), 'best_pratice in DB' );
-            is( $updated_best_pratice->name,   'BarFoo', 'name ok' );
+            ok(
+                my $updated_best_pratice = $schema->resultset('UserBestPratice')->find( { id => $best_pratice->{id} } ),
+                'best_pratice in DB'
+            );
+            is( $updated_best_pratice->name,        'BarFoo', 'name ok' );
             is( $updated_best_pratice->description, 'aa',     'content ok' );
-
 
             ( $res, $c ) = ctx_request( GET '/api/best_pratice?api_key=test' );
             ok( $res->is_success, 'listing ok!' );

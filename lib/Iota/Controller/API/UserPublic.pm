@@ -83,6 +83,15 @@ sub stash_comparacao {
 
     my $network = $c->stash->{network};
 
+    my @hide_indicator;
+
+    if ( $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^[0-9]+$/ ) {
+        @hide_indicator =
+          map { $_->indicator_id }
+          $c->model('DB::User')->find( { id => $c->req->params->{user_id} } )
+          ->user_indicator_configs->search( { hide_indicator => 1 } )->all;
+    }
+
     my $ret = {
         network => {
             name => $network->name,
@@ -98,8 +107,8 @@ sub stash_comparacao {
     my @users = $c->model('DB::User')->search(
         {
             'network_users.network_id' => $network->id,
-            active          => 1,
-            city_id         => { '!=' => undef }
+            active                     => 1,
+            city_id                    => { '!=' => undef }
         },
         { prefetch => ['city'], join => 'network_users' }
     )->as_hashref->all;
@@ -115,16 +124,14 @@ sub stash_comparacao {
     my @users_admin = $c->model('DB::User')->search(
         {
             'network_users.network_id' => $network->id,
-            active          => 1,
-            city_id         => undef
-        }, { join => 'network_users'}
+            active                     => 1,
+            city_id                    => undef
+        },
+        { join => 'network_users' }
     )->as_hashref->all;
 
     for my $user (@users_admin) {
-        push @{ $ret->{admin_users} },
-          {
-            ( map { $_ => $user->{$_} } qw/name id/ )
-          };
+        push @{ $ret->{admin_users} }, { ( map { $_ => $user->{$_} } qw/name id/ ) };
     }
 
     my @countries = @{ $c->stash->{network_data}{countries} };
@@ -137,7 +144,8 @@ sub stash_comparacao {
                 { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
                 { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
                 { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
-            ]
+            ],
+            'me.id' => { '-not_in' => \@hide_indicator }
         },
         { prefetch => ['axis'], join => 'indicator_user_visibilities' }
     )->as_hashref->all;
@@ -270,8 +278,8 @@ sub user_public_load {
         if ($r) {
 
             $ret->{region} = {
-                name                        => $r->{name},
-                name_url                    => $r->{name_url}
+                name     => $r->{name},
+                name_url => $r->{name_url}
             };
         }
 

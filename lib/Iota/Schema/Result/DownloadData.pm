@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::DownloadData;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<download_data>
 
@@ -167,58 +168,32 @@ __PACKAGE__->table("download_data");
 =cut
 
 __PACKAGE__->add_columns(
-  "city_id",
-  { data_type => "integer", is_nullable => 1 },
-  "city_name",
-  { data_type => "text", is_nullable => 1 },
-  "axis_name",
-  { data_type => "text", is_nullable => 1 },
-  "indicator_id",
-  { data_type => "integer", is_nullable => 1 },
-  "indicator_name",
-  { data_type => "text", is_nullable => 1 },
-  "formula_human",
-  { data_type => "text", is_nullable => 1 },
-  "goal",
-  { data_type => "numeric", is_nullable => 1 },
-  "goal_explanation",
-  { data_type => "text", is_nullable => 1 },
-  "goal_source",
-  { data_type => "text", is_nullable => 1 },
-  "goal_operator",
-  { data_type => "text", is_nullable => 1 },
-  "explanation",
-  { data_type => "text", is_nullable => 1 },
-  "tags",
-  { data_type => "text", is_nullable => 1 },
-  "observations",
-  { data_type => "text", is_nullable => 1 },
-  "period",
-  { data_type => "text", is_nullable => 1 },
-  "variation_name",
-  { data_type => "text", is_nullable => 1 },
-  "valid_from",
-  { data_type => "date", is_nullable => 1 },
-  "value",
-  { data_type => "text", is_nullable => 1 },
-  "user_goal",
-  { data_type => "text", is_nullable => 1 },
-  "justification_of_missing_field",
-  { data_type => "text", is_nullable => 1 },
-  "technical_information",
-  { data_type => "text", is_nullable => 1 },
-  "institute_id",
-  { data_type => "integer", is_nullable => 1 },
-  "user_id",
-  { data_type => "integer", is_nullable => 1 },
-  "region_id",
-  { data_type => "integer", is_nullable => 1 },
-  "sources",
-  { data_type => "character varying[]", is_nullable => 1 },
-  "region_name",
-  { data_type => "text", is_nullable => 1 },
+    "city_id",                        { data_type => "integer",             is_nullable => 1 },
+    "city_name",                      { data_type => "text",                is_nullable => 1 },
+    "axis_name",                      { data_type => "text",                is_nullable => 1 },
+    "indicator_id",                   { data_type => "integer",             is_nullable => 1 },
+    "indicator_name",                 { data_type => "text",                is_nullable => 1 },
+    "formula_human",                  { data_type => "text",                is_nullable => 1 },
+    "goal",                           { data_type => "numeric",             is_nullable => 1 },
+    "goal_explanation",               { data_type => "text",                is_nullable => 1 },
+    "goal_source",                    { data_type => "text",                is_nullable => 1 },
+    "goal_operator",                  { data_type => "text",                is_nullable => 1 },
+    "explanation",                    { data_type => "text",                is_nullable => 1 },
+    "tags",                           { data_type => "text",                is_nullable => 1 },
+    "observations",                   { data_type => "text",                is_nullable => 1 },
+    "period",                         { data_type => "text",                is_nullable => 1 },
+    "variation_name",                 { data_type => "text",                is_nullable => 1 },
+    "valid_from",                     { data_type => "date",                is_nullable => 1 },
+    "value",                          { data_type => "text",                is_nullable => 1 },
+    "user_goal",                      { data_type => "text",                is_nullable => 1 },
+    "justification_of_missing_field", { data_type => "text",                is_nullable => 1 },
+    "technical_information",          { data_type => "text",                is_nullable => 1 },
+    "institute_id",                   { data_type => "integer",             is_nullable => 1 },
+    "user_id",                        { data_type => "integer",             is_nullable => 1 },
+    "region_id",                      { data_type => "integer",             is_nullable => 1 },
+    "sources",                        { data_type => "character varying[]", is_nullable => 1 },
+    "region_name",                    { data_type => "text",                is_nullable => 1 },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-11 17:58:45
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XNQGAxRyRqXyoPHNiPqCmg

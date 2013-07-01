@@ -37,21 +37,23 @@ sub best_pratice : Chained('object') : PathPart('') : Args(0) : ActionClass('RES
 
 sub best_pratice_GET {
     my ( $self, $c ) = @_;
-    my $object_ref = $c->stash->{object}->search(undef, {
-        prefetch => 'user_best_pratice_axes'
-    })->as_hashref->next;
+    my $object_ref = $c->stash->{object}->search( undef, { prefetch => 'user_best_pratice_axes' } )->as_hashref->next;
 
-    $self->status_ok( $c,
-        entity =>
-          { ( map { $_ => $object_ref->{$_} } qw(
-            id user_id axis_id name description methodology goals
-            schedule results institutions_involved contatcts sources
-            tags) ),
-           axis => [
-                map { +{ axis_id => $_->{axis_id}, id => $_->{id}  } } @{ $object_ref->{user_best_pratice_axes}  }
-           ]
+    $self->status_ok(
+        $c,
+        entity => {
+            (
+                map { $_ => $object_ref->{$_} }
+                  qw(
+                  id user_id axis_id name description methodology goals
+                  schedule results institutions_involved contatcts sources
+                  tags)
+            ),
+            axis =>
+              [ map { +{ axis_id => $_->{axis_id}, id => $_->{id} } } @{ $object_ref->{user_best_pratice_axes} } ]
 
-        } );
+        }
+    );
 }
 
 sub best_pratice_POST {
@@ -133,14 +135,16 @@ sub list_GET {
     my @objs;
 
     foreach my $obj (@list) {
-        push @objs,
-          {
-            ( map { $_ => $obj->{$_} } qw(id
-                    user_id axis_id name description methodology goals
-                schedule results institutions_involved contatcts sources
-            ) ),
+        push @objs, {
+            (
+                map { $_ => $obj->{$_} }
+                  qw(id
+                  user_id axis_id name description methodology goals
+                  schedule results institutions_involved contatcts sources
+                  )
+            ),
             url => $c->uri_for_action( $self->action_for('best_pratice'), [ $obj->{id} ] )->as_string,
-          };
+        };
     }
 
     $self->status_ok( $c, entity => { best_pratices => \@objs } );

@@ -74,10 +74,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
-                    api_key                          => 'test',
-                    'city.region.create.name'        => 'second region',
-                    'city.region.create.upper_region'=> $reg1->{id},
-                    'city.region.create.description' => 'with Description',
+                    api_key                           => 'test',
+                    'city.region.create.name'         => 'second region',
+                    'city.region.create.upper_region' => $reg1->{id},
+                    'city.region.create.description'  => 'with Description',
                 ]
             );
 
@@ -87,15 +87,15 @@ eval {
             my $reg2_uri = $res->header('Location');
             ( $res, $c ) = ctx_request( GET $reg2_uri );
             my $reg2 = eval { from_json( $res->content ) };
-            ($reg2->{id}) = $reg2_uri =~ /\/([0-9]+)$/;
+            ( $reg2->{id} ) = $reg2_uri =~ /\/([0-9]+)$/;
 
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
-                    api_key                          => 'test',
-                    'city.region.create.name'        => 'second region x',
-                    'city.region.create.upper_region'=> $reg1->{id},
-                    'city.region.create.description' => 'with Descriptionx',
+                    api_key                           => 'test',
+                    'city.region.create.name'         => 'second region x',
+                    'city.region.create.upper_region' => $reg1->{id},
+                    'city.region.create.description'  => 'with Descriptionx',
                 ]
             );
 
@@ -105,9 +105,7 @@ eval {
             my $reg3_uri = $res->header('Location');
             ( $res, $c ) = ctx_request( GET $reg3_uri );
             my $reg3 = eval { from_json( $res->content ) };
-            ($reg3->{id}) = $reg3_uri =~ /\/([0-9]+)$/;
-
-
+            ( $reg3->{id} ) = $reg3_uri =~ /\/([0-9]+)$/;
 
             ( $res, $c ) = ctx_request( GET $reg1_uri );
             my $obj = eval { from_json( $res->content ) };
@@ -127,9 +125,6 @@ eval {
             is( $res->code, 201, 'created!' );
 
             $variable = eval { from_json( $res->content ) };
-
-
-
 
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
@@ -152,85 +147,83 @@ eval {
 
             $indicator = eval { from_json( $res->content ) };
 
-            &add_value($reg2_uri, '100', '2010');
+            &add_value( $reg2_uri, '100', '2010' );
             my $tmp = &get_values($reg2);
 
-            is(scalar keys @$tmp, '1', 'só tem 1 linha');
-            my $ii = &get_indicator($reg2, '2010');
-            is_deeply($ii, [101], 'valores salvos ok');
+            is( scalar keys @$tmp, '1', 'só tem 1 linha' );
+            my $ii = &get_indicator( $reg2, '2010' );
+            is_deeply( $ii, [101], 'valores salvos ok' );
 
-            &add_value($reg2_uri, '200', '2011');
+            &add_value( $reg2_uri, '200', '2011' );
             $tmp = &get_values($reg2);
-            is(scalar keys @$tmp, '2', 'tem 2 linhas');
-            $ii = &get_indicator($reg2, '2011');
-            is_deeply($ii, [201], 'valores salvos ok');
+            is( scalar keys @$tmp, '2', 'tem 2 linhas' );
+            $ii = &get_indicator( $reg2, '2011' );
+            is_deeply( $ii, [201], 'valores salvos ok' );
 
             $tmp = &get_values($reg1);
-            is(scalar keys @$tmp, '2', 'tem 2 linhas tambem na regiao 1');
+            is( scalar keys @$tmp, '2', 'tem 2 linhas tambem na regiao 1' );
 
-            $tmp = [sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp}];
-            is($tmp->[0]{value}, '100');
-            is($tmp->[1]{value}, '200');
+            $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
+            is( $tmp->[0]{value}, '100' );
+            is( $tmp->[1]{value}, '200' );
 
-            $ii = &get_indicator($reg1, '2010');
-            is_deeply($ii, [101], 'valores salvos ok');
+            $ii = &get_indicator( $reg1, '2010' );
+            is_deeply( $ii, [101], 'valores salvos ok' );
 
-            $ii = &get_indicator($reg1, '2011');
-            is_deeply($ii, [201], 'valores salvos ok');
+            $ii = &get_indicator( $reg1, '2011' );
+            is_deeply( $ii, [201], 'valores salvos ok' );
 
-            &add_value($reg3_uri, '150,6668', '2010');
+            &add_value( $reg3_uri, '150,6668', '2010' );
 
-            $ii = &get_indicator($reg1, '2010');
-            is_deeply($ii, ['251.6668'], 'valores salvos ok');
-
-            $tmp = &get_values($reg1);
-
-            is(scalar keys @$tmp, '2', 'tem 2 linhas ainda, mas somados');
-            $tmp = [sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp}];
-            is($tmp->[0]{value}, '250.6668');
-
-            $tmp = &get_values($reg1, 1);
-            is(scalar keys @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras');
-
-
-            &add_value($reg1_uri, '666', '2011');
-            $tmp = &get_values($reg1, 1);
-            is(scalar keys @$tmp, '1', 'tem 1 linha');
-            is($tmp->[0]{value}, '666', 'valor salvo!');
-            is($tmp->[0]{active_value}, '0', 'valor nao ativo');
-
-            $ii = &get_indicator($reg1, '2010');
-            is_deeply($ii, ['251.6668'], 'ainda existe esse valor!');
-
-            $ii = &get_indicator($reg1, '2011', 1);
-            is_deeply($ii, ['667'], 'e tem como pegar o valor nao computado');
+            $ii = &get_indicator( $reg1, '2010' );
+            is_deeply( $ii, ['251.6668'], 'valores salvos ok' );
 
             $tmp = &get_values($reg1);
-            is(scalar keys @$tmp, '2', 'tem 2 linhas ainda');
-            $tmp = [sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp}];
-            is($tmp->[0]{value}, '250.6668', 'valor ainda eh o mesmo!');
-            is($tmp->[0]{active_value}, '1', 'valor ativo');
 
-            $ii = &get_indicator($reg1, '2010');
-            is_deeply($ii, ['251.6668'], 'ainda existe esse valor!');
+            is( scalar keys @$tmp, '2', 'tem 2 linhas ainda, mas somados' );
+            $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
+            is( $tmp->[0]{value}, '250.6668' );
 
-            &add_value($reg1_uri, '444', '2010');
-            $ii = &get_indicator($reg1, '2010', 1);
-            is_deeply($ii, ['445'], 'existe o do usuario pra 2010');
+            $tmp = &get_values( $reg1, 1 );
+            is( scalar keys @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras' );
 
-            &add_value($reg2_uri, '22', '2010');
+            &add_value( $reg1_uri, '666', '2011' );
+            $tmp = &get_values( $reg1, 1 );
+            is( scalar keys @$tmp,       '1',   'tem 1 linha' );
+            is( $tmp->[0]{value},        '666', 'valor salvo!' );
+            is( $tmp->[0]{active_value}, '0',   'valor nao ativo' );
+
+            $ii = &get_indicator( $reg1, '2010' );
+            is_deeply( $ii, ['251.6668'], 'ainda existe esse valor!' );
+
+            $ii = &get_indicator( $reg1, '2011', 1 );
+            is_deeply( $ii, ['667'], 'e tem como pegar o valor nao computado' );
+
+            $tmp = &get_values($reg1);
+            is( scalar keys @$tmp, '2', 'tem 2 linhas ainda' );
+            $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
+            is( $tmp->[0]{value},        '250.6668', 'valor ainda eh o mesmo!' );
+            is( $tmp->[0]{active_value}, '1',        'valor ativo' );
+
+            $ii = &get_indicator( $reg1, '2010' );
+            is_deeply( $ii, ['251.6668'], 'ainda existe esse valor!' );
+
+            &add_value( $reg1_uri, '444', '2010' );
+            $ii = &get_indicator( $reg1, '2010', 1 );
+            is_deeply( $ii, ['445'], 'existe o do usuario pra 2010' );
+
+            &add_value( $reg2_uri, '22', '2010' );
             $tmp = &get_values($reg2);
 
-            is(scalar keys @$tmp, '2', 'tem 2 linhas, uma de 2010 e outra de 2011');
-            $ii = &get_indicator($reg2, '2010');
-            is_deeply($ii, [23], 'valores atualizado');
+            is( scalar keys @$tmp, '2', 'tem 2 linhas, uma de 2010 e outra de 2011' );
+            $ii = &get_indicator( $reg2, '2010' );
+            is_deeply( $ii, [23], 'valores atualizado' );
 
-            $ii = &get_indicator($reg1, '2010');
-            is_deeply($ii, ['173.6668'], 'valores atualizado');
+            $ii = &get_indicator( $reg1, '2010' );
+            is_deeply( $ii, ['173.6668'], 'valores atualizado' );
 
-            $ii = &get_indicator($reg1, '2010', 1);
-            is_deeply($ii, ['445'], 'ainda existe o do usuario');
-
+            $ii = &get_indicator( $reg1, '2010', 1 );
+            is_deeply( $ii, ['445'], 'ainda existe o do usuario' );
 
             die 'rollback';
         }
@@ -242,17 +235,16 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 
-
 sub add_value {
-    my ($region, $value, $year) = @_;
+    my ( $region, $value, $year ) = @_;
 
-        # PUT normal
+    # PUT normal
     my $req = POST $region . '/value',
-    [
+      [
         'region.variable.value.put.value'         => $value,
         'region.variable.value.put.variable_id'   => $variable->{id},
-        'region.variable.value.put.value_of_date' => $year.'-01-01'
-    ];
+        'region.variable.value.put.value_of_date' => $year . '-01-01'
+      ];
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
 
@@ -264,10 +256,18 @@ sub add_value {
 }
 
 sub get_values {
-    my ($region, $not) = @_;
+    my ( $region, $not ) = @_;
 
     $not = $not ? 0 : 1;
-    my ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $region->{id} . '&is_basic=0&variable_id='.$variable->{id} . '&active_value=' . $not );
+    my ( $res, $c ) =
+      ctx_request( GET '/api/user/'
+          . $Iota::TestOnly::Mock::AuthUser::_id
+          . '/variable?region_id='
+          . $region->{id}
+          . '&is_basic=0&variable_id='
+          . $variable->{id}
+          . '&active_value='
+          . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
 
@@ -275,14 +275,22 @@ sub get_values {
 }
 
 sub get_indicator {
-    my ($region, $year, $not) = @_;
+    my ( $region, $year, $not ) = @_;
 
     $not = $not ? 0 : 1;
 
-    my ( $res, $c ) = ctx_request( GET '/api/public/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/indicator?from_date='.$year.'-01-01&number_of_periods=1&region_id=' . $region->{id} . '&active_value=' . $not );
+    my ( $res, $c ) =
+      ctx_request( GET '/api/public/user/'
+          . $Iota::TestOnly::Mock::AuthUser::_id
+          . '/indicator?from_date='
+          . $year
+          . '-01-01&number_of_periods=1&region_id='
+          . $region->{id}
+          . '&active_value='
+          . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
-    $list = &get_the_key(  &get_the_key ( &get_the_key ($list) ) )->{indicadores}[0]{valores};
+    $list = &get_the_key( &get_the_key( &get_the_key($list) ) )->{indicadores}[0]{valores};
 
     return $list;
 }
@@ -290,6 +298,6 @@ sub get_indicator {
 # see end() in php
 sub get_the_key {
     my ($hash) = @_;
-    my ($k) = keys %$hash;
+    my ($k)    = keys %$hash;
     return $hash->{$k};
 }

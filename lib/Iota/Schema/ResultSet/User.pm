@@ -132,8 +132,9 @@ sub verifiers_specs {
                         my $institute_id = $me->institute_id;
 
                         my $network_ids = $r->get_value('network_ids');
+
                         # deixa o validate do networks_ids se virar sozinho!
-                        if ($network_ids ne 'DO_NOT_UPDATE'){
+                        if ( $network_ids ne 'DO_NOT_UPDATE' ) {
                             return 1;
                         }
 
@@ -143,7 +144,7 @@ sub verifiers_specs {
 
                             my $exists = $self->search(
                                 {
-                                    city_id    => $city->id,
+                                    city_id      => $city->id,
                                     institute_id => $institute_id,
                                 }
                             )->next;
@@ -175,18 +176,19 @@ sub verifiers_specs {
 
                         my $city_id = $r->get_value('city_id') || $me->city_id;
 
-                        my @nets = split /,/, $str;
-                        my $invalid = 0;
+                        my @nets       = split /,/, $str;
+                        my $invalid    = 0;
                         my $institutes = {};
 
-                        foreach my $netid (@nets){
+                        foreach my $netid (@nets) {
+
                             # rede precisa existir
                             my $net = $self->result_source->schema->resultset('Network')->find( { id => $netid } );
                             $invalid++ and last unless $net;
 
                             if ( $roles =~ /\buser\b/ ) {
 
-                                $institutes->{$net->institute_id} = 1;
+                                $institutes->{ $net->institute_id } = 1;
 
                                 # pra ser usuario, precisa ser de alguma cidade
                                 my $city = $self->result_source->schema->resultset('City')->find($city_id);
@@ -199,11 +201,11 @@ sub verifiers_specs {
                                     }
                                 )->next;
 
-
-                                $invalid++ and last if ($exists && $exists->id != $me->id);
+                                $invalid++ and last if ( $exists && $exists->id != $me->id );
                             }
                         }
-                            # nao pode ficar em duas redes de institutos diferentes
+
+                        # nao pode ficar em duas redes de institutos diferentes
                         return 0 if keys %$institutes != 1;
 
                         return 0 if $invalid;
@@ -351,17 +353,15 @@ sub action_specs {
 
             my $network_id = delete $values{network_id};
 
-            if ($network_id){
-                my $net =
-                    $self->result_source->schema->resultset('Network')
-                    ->find( { id => $network_id } );
+            if ($network_id) {
+                my $net = $self->result_source->schema->resultset('Network')->find( { id => $network_id } );
                 $values{institute_id} = $net->institute_id;
             }
 
             my $user = $self->create( \%values, active => 1 );
 
             $user->add_to_user_roles( { role => { name => $role } } );
-            $user->add_to_network_users( { network_id => $network_id  } );
+            $user->add_to_network_users( { network_id => $network_id } );
 
             $user->discard_changes;
             return $user;
@@ -379,17 +379,17 @@ sub action_specs {
             return unless keys %values;
 
             my $network_ids = delete $values{network_ids};
-            my $user = $self->find( delete $values{id} );
+            my $user        = $self->find( delete $values{id} );
 
-            if ($network_ids ne 'DO_NOT_UPDATE'){
+            if ( $network_ids ne 'DO_NOT_UPDATE' ) {
                 my @network_ids = split /,/, $network_ids;
                 $user->network_users->delete;
 
                 my $institute_id;
-                for (grep {$_>0} @network_ids){
-                    $user->add_to_network_users( { network_id => $_ } ) ;
+                for ( grep { $_ > 0 } @network_ids ) {
+                    $user->add_to_network_users( { network_id => $_ } );
 
-                    if (!$institute_id){
+                    if ( !$institute_id ) {
                         my $net = $self->result_source->schema->resultset('Network')->find( { id => $_ } );
                         $institute_id = $net->institute_id;
                     }

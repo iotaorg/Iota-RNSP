@@ -55,7 +55,7 @@ sub upsert {
                 'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
                 'me.region_id'   => { 'in' => $params{regions_id} },
 
-                ('me.generated_by_compute' => 1)x!! exists $params{generated_by_compute}
+                ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
 
             }
         );
@@ -77,7 +77,7 @@ sub upsert {
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
 
-        ('me.generated_by_compute' => 1)x!! exists $params{generated_by_compute}
+        ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
     );
     my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
 
@@ -91,9 +91,9 @@ sub upsert {
 
     );
 
-    my $users_meta = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
+    my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
     my $level3       = [];
-    my $regions_meta = $self->get_regions_meta($level3, keys %$results );
+    my $regions_meta = $self->get_regions_meta( $level3, keys %$results );
 
     $self->schema->txn_do(
         sub {
@@ -102,13 +102,13 @@ sub upsert {
             $indval_rs->search(
                 {
                     ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
-                    ( 'me.user_id'      => $params{user_id} ) x !!exists $params{user_id},
-                    ( 'me.indicator_id' => $params{indicators} ) x !!exists $params{indicators},
+                    ( 'me.user_id'              => $params{user_id} ) x !!exists $params{user_id},
+                    ( 'me.indicator_id'         => $params{indicators} ) x !!exists $params{indicators},
                     ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute},
 
                     # se nao foi informado a regiao, nao tem calculo dela.
                     exists $params{regions_id}
-                    ? ( 'me.region_id' => $params{regions_id},  )
+                    ? ( 'me.region_id' => $params{regions_id}, )
                     : ( 'me.region_id' => undef ),
 
                 }
@@ -127,7 +127,6 @@ sub upsert {
 
                                 foreach my $active_value ( keys %$actives ) {
 
-
                                     $indval_rs->create(
                                         {
                                             user_id      => $user_id,
@@ -137,8 +136,7 @@ sub upsert {
                                             ? $regions_meta->{$region_id}{city_id}
                                             : $users_meta->{$user_id}{city_id},
 
-
-                                            active_value  => defined $region_id
+                                            active_value => defined $region_id
                                             ? $regions_meta->{$region_id}{active}
                                             : 1,
 
@@ -152,9 +150,11 @@ sub upsert {
 
                                             active_value => $active_value,
 
-                                            (exists $params{generated_by_compute} ? (
-                                                generated_by_compute => 1,
-                                            ) : ())
+                                            (
+                                                exists $params{generated_by_compute}
+                                                ? ( generated_by_compute => 1, )
+                                                : ()
+                                              )
 
                                         }
                                     );
@@ -166,7 +166,7 @@ sub upsert {
                     }
                 }
             }
-            if (scalar @$level3){
+            if ( scalar @$level3 ) {
                 my $level2 = $self->schema->compute_upper_regions($level3);
                 $self->upsert(
                     %params,
@@ -183,8 +183,7 @@ sub upsert {
 sub get_users_meta {
     my ( $self, %params ) = @_;
 
-    my $user_rs =
-      $self->schema->resultset('User')->search( { 'me.id' => $params{users} } )->as_hashref;
+    my $user_rs = $self->schema->resultset('User')->search( { 'me.id' => $params{users} } )->as_hashref;
 
     my $users = {};
 
@@ -250,8 +249,8 @@ sub _get_values_periods_region {
 
     while ( my $row = $rs->next ) {
         next if !defined $row->{value} || $row->{value} eq '';
-        $out->{$row->{active_value}}{ $row->{region_id} }{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
-          [ $row->{value}, $row->{source}, ];
+        $out->{ $row->{active_value} }{ $row->{region_id} }{ $row->{user_id} }{ $row->{valid_from} }
+          { $row->{variable_id} } = [ $row->{value}, $row->{source}, ];
     }
 
     return $out;
@@ -290,8 +289,8 @@ sub _get_values_variation {
             next if !defined $val->{value} || $val->{value} eq '';
 
             my $region_id = $val->{region_id} || 'null';
-            $out->{ $val->{active_value} }{$region_id}{ $val->{user_id} }{ $val->{indicator_variables_variation_id} }{ $row->{name} }
-              { $val->{valid_from} } = $val->{value};
+            $out->{ $val->{active_value} }{$region_id}{ $val->{user_id} }{ $val->{indicator_variables_variation_id} }
+              { $row->{name} }{ $val->{valid_from} } = $val->{value};
 
         }
     }
@@ -331,13 +330,11 @@ sub _get_indicator_values {
           ? sort { $a <=> $b } @{ $params{indicator_variables}{ $indicator->id } }
           : ();
 
-
-          foreach my $active_value ( keys %{ $params{values} } ) {
+        foreach my $active_value ( keys %{ $params{values} } ) {
 
             foreach my $region_id ( keys %{ $params{values}{$active_value} } ) {
 
                 foreach my $user_id ( keys %{ $params{values}{$active_value}{$region_id} } ) {
-
 
                     # todo esse IF serve para colocar as datas faltantes
                     # nos indicadores que nao tem variaveis "normais"
@@ -352,7 +349,7 @@ sub _get_indicator_values {
 
                                 foreach my $date ( keys %{ $var_values->{$var_variable_id}{$variation} } ) {
 
-                                    if (!exists $params{values}{$active_value}{$region_id}{$user_id}{$date}){
+                                    if ( !exists $params{values}{$active_value}{$region_id}{$user_id}{$date} ) {
                                         $params{values}{$active_value}{$region_id}{$user_id}{$date} = {};
                                     }
                                 }
@@ -366,10 +363,9 @@ sub _get_indicator_values {
 
                         # verifica se todas as variaveis estao preenchidas
                         my $filled = 0;
-                        do { $filled++ if exists $data->{$_} } for @variables;
+                        do { $filled++ if exists $data->{$_} }
+                          for @variables;
                         next unless $filled == @variables;
-
-
 
                         my %sources;
                         for my $var (@variables) {
@@ -402,7 +398,8 @@ sub _get_indicator_values {
                                 # pula as variaveis nao totalmente preenchidas em todas as variações
                                 next unless $filled_variations->{$variation} == scalar keys %$var_variables;
 
-                                my %varied_values = map { $_ => $var_values->{$_}{$variation}{$date} } keys %$var_variables;
+                                my %varied_values =
+                                  map { $_ => $var_values->{$_}{$variation}{$date} } keys %$var_variables;
 
                                 my $valor = $formula->evaluate_with_alias(
                                     V => \%values,
@@ -410,7 +407,7 @@ sub _get_indicator_values {
                                 );
 
                                 $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation}{$active_value} =
-                                [ $valor, [ keys %sources ] ];
+                                  [ $valor, [ keys %sources ] ];
                             }
 
                         }
@@ -418,15 +415,15 @@ sub _get_indicator_values {
                             my $valor = $formula->evaluate(%values);
 
                             # '' = variacao
-                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''}{$active_value} = [ $valor, [ keys %sources ] ];
+                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''}{$active_value} =
+                              [ $valor, [ keys %sources ] ];
                         }
-
 
                     }
                 }
-            } # region
+            }    # region
 
-        } # status
+        }    # status
 
     }
     return $out;

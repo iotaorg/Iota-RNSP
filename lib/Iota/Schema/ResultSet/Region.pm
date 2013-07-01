@@ -27,7 +27,7 @@ sub verifiers_specs {
                 city_id     => { required => 1, type => 'Int' },
                 created_by  => { required => 1, type => 'Int' },
 
-                polygon_path=> { required => 0, type => 'Str' },
+                polygon_path => { required => 0, type => 'Str' },
 
                 upper_region => {
                     required   => 0,
@@ -49,10 +49,10 @@ sub verifiers_specs {
         update => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                id          => { required => 1, type => 'Int' },
-                name        => { required => 0, type => 'Str' },
-                description => { required => 0, type => 'Str' },
-                polygon_path=> { required => 0, type => 'Str' },
+                id           => { required => 1, type => 'Int' },
+                name         => { required => 0, type => 'Str' },
+                description  => { required => 0, type => 'Str' },
+                polygon_path => { required => 0, type => 'Str' },
 
                 upper_region => {
                     required   => 0,
@@ -105,7 +105,7 @@ sub action_specs {
             $values{polygon_path} = undef unless exists $values{polygon_path};
 
             my $var = $self->find( delete $values{id} );
-            if (exists $values{name}
+            if ( exists $values{name}
                 && $var->depth_level == 2 ) {
                 $values{name_url} = 'subprefeitura:' . $values{name_url};
             }

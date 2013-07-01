@@ -36,53 +36,52 @@ eval {
             my $list = eval { from_json( $res->content ) };
             my $epec = {
                 'stats' => [
-                        {
-                            'total_regions3' => undef,
-                            'name' => 'movimento',
-                            'total_values2' => undef,
-                            'total_vars_last_perc' => undef,
-                            'total_values3' => undef,
-                            'total_vars_last' => undef,
-                            'total_regions3_perc' => undef,
-                            'total_regions2' => undef,
-                            'total_vars' => '15',
-                            'user_id' => 5,
-                            'city_name' => "S\x{c3}\x{a3}o Paulo",
-                            'total_regions2_perc' => undef
-                        },
-                        {
-                            'total_regions3' => undef,
-                            'name' => 'movimento2',
-                            'total_values2' => undef,
-                            'total_vars_last_perc' => undef,
-                            'total_values3' => undef,
-                            'total_vars_last' => undef,
-                            'total_regions3_perc' => undef,
-                            'total_regions2' => undef,
-                            'total_vars' => '15',
-                            'user_id' => 6,
-                            'city_name' => 'Outracidade',
-                            'total_regions2_perc' => undef
-                        },
-                        {
-                            'total_regions3' => undef,
-                            'name' => 'latina',
-                            'total_values2' => undef,
-                            'total_vars_last_perc' => undef,
-                            'total_values3' => undef,
-                            'total_vars_last' => undef,
-                            'total_regions3_perc' => undef,
-                            'total_regions2' => undef,
-                            'total_vars' => '15',
-                            'user_id' => 7,
-                            'city_name' => "S\x{c3}\x{a3}o Paulo",
-                            'total_regions2_perc' => undef
-                        }
-                        ]
+                    {
+                        'total_regions3'       => undef,
+                        'name'                 => 'movimento',
+                        'total_values2'        => undef,
+                        'total_vars_last_perc' => undef,
+                        'total_values3'        => undef,
+                        'total_vars_last'      => undef,
+                        'total_regions3_perc'  => undef,
+                        'total_regions2'       => undef,
+                        'total_vars'           => '15',
+                        'user_id'              => 5,
+                        'city_name'            => "S\x{c3}\x{a3}o Paulo",
+                        'total_regions2_perc'  => undef
+                    },
+                    {
+                        'total_regions3'       => undef,
+                        'name'                 => 'movimento2',
+                        'total_values2'        => undef,
+                        'total_vars_last_perc' => undef,
+                        'total_values3'        => undef,
+                        'total_vars_last'      => undef,
+                        'total_regions3_perc'  => undef,
+                        'total_regions2'       => undef,
+                        'total_vars'           => '15',
+                        'user_id'              => 6,
+                        'city_name'            => 'Outracidade',
+                        'total_regions2_perc'  => undef
+                    },
+                    {
+                        'total_regions3'       => undef,
+                        'name'                 => 'latina',
+                        'total_values2'        => undef,
+                        'total_vars_last_perc' => undef,
+                        'total_values3'        => undef,
+                        'total_vars_last'      => undef,
+                        'total_regions3_perc'  => undef,
+                        'total_regions2'       => undef,
+                        'total_vars'           => '15',
+                        'user_id'              => 7,
+                        'city_name'            => "S\x{c3}\x{a3}o Paulo",
+                        'total_regions2_perc'  => undef
+                    }
+                ]
             };
 
-            is_deeply($list, $epec, 'ok');
-
+            is_deeply( $list, $epec, 'ok' );
 
             die 'rollback';
         }

@@ -15,7 +15,8 @@ __PACKAGE__->add_columns(qw/variation_name valid_from name num polygon_path name
 # do not attempt to deploy() this view
 __PACKAGE__->result_source_instance->is_virtual(1);
 
-__PACKAGE__->result_source_instance->view_definition(q[
+__PACKAGE__->result_source_instance->view_definition(
+    q[
     select
         variation_name,
         v.valid_from,
@@ -37,6 +38,7 @@ __PACKAGE__->result_source_instance->view_definition(q[
         )
     )
     order by num
-]);
+]
+);
 
 1;

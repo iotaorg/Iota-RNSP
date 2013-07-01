@@ -170,26 +170,27 @@ sub list_GET {
     foreach my $obj (@list) {
         push @objs, {
             (
-                (map { $_ => $obj->{$_} }
-                  qw(
-                  id
-                  name
-                  name_url
-                  description
-                  city_id
-                  depth_level
-                  created_by
-                  created_at
-                  automatic_fill),
-                    ('polygon_path' => $obj->{polygon_path})x!! exists $c->req->params->{with_polygon_path}
+                (
+                    map { $_ => $obj->{$_} }
+                      qw(
+                      id
+                      name
+                      name_url
+                      description
+                      city_id
+                      depth_level
+                      created_by
+                      created_at
+                      automatic_fill),
+                    ( 'polygon_path' => $obj->{polygon_path} ) x !!exists $c->req->params->{with_polygon_path}
                 ),
 
                 city => {
                     (
                         map { $_ => $c->stash->{city}->$_ }
-                        qw(
-                        name name_uri uf pais
-                        )
+                          qw(
+                          name name_uri uf pais
+                          )
                     ),
                 },
                 upper_region => $obj->{upper_region}
@@ -197,7 +198,7 @@ sub list_GET {
                     id       => $obj->{upper_region}{id},
                     name     => $obj->{upper_region}{name},
                     name_url => $obj->{upper_region}{name_url},
-                }
+                  }
                 : undef
             ),
             url => $c->uri_for_action( $self->action_for('region'), [ $c->stash->{city}->id, $obj->{id} ] )->as_string,

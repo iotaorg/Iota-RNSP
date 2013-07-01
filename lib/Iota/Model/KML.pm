@@ -7,35 +7,35 @@ use XML::Simple qw(:strict);
 use Iota::Model::KML::LineString;
 use Iota::Model::KML::Polygon;
 
-
-
 sub process {
     my ( $self, %param ) = @_;
 
     my $upload = $param{upload};
     my $schema = $param{schema};
 
-    my $kml    = XMLin($upload->tempname,
+    my $kml = XMLin(
+        $upload->tempname,
         ForceArray => 1,
         KeyAttr    => {},
     );
 
     my $parsed;
 
-    for my $mod (qw/LineString Polygon/){
+    for my $mod (qw/LineString Polygon/) {
         my $class = "Iota::Model::KML::$mod";
-        my $test = $class->new->parse( $kml );
+        my $test  = $class->new->parse($kml);
         next unless defined $test;
 
         $parsed = $test;
         last;
     }
 
-    if (defined $parsed){
+    if ( defined $parsed ) {
 
         return $parsed;
 
-    }else{
+    }
+    else {
 
         die("Unssuported KML\n");
     }

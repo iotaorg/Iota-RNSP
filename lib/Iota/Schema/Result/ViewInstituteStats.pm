@@ -10,16 +10,19 @@ __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
 # For the time being this is necessary even for virtual views
 __PACKAGE__->table('ViewInstituteStats');
 
-__PACKAGE__->add_columns(qw/
-        name user_id city_name total_regions2 total_values2 total_regions2_perc
-       total_regions3 total_values3 total_regions3_perc total_vars_last
-       total_vars total_vars_last_perc
-/);
+__PACKAGE__->add_columns(
+    qw/
+      name user_id city_name total_regions2 total_values2 total_regions2_perc
+      total_regions3 total_values3 total_regions3_perc total_vars_last
+      total_vars total_vars_last_perc
+      /
+);
 
 # do not attempt to deploy() this view
 __PACKAGE__->result_source_instance->is_virtual(1);
 
-__PACKAGE__->result_source_instance->view_definition(q[
+__PACKAGE__->result_source_instance->view_definition(
+    q[
 with var as (
     select count(1) as total_vars from variable
 )
@@ -78,6 +81,7 @@ left join (
 where u.institute_id = ?
 and u.active
 order by 2
-]);
+]
+);
 
 1;

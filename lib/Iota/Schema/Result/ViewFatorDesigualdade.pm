@@ -15,7 +15,8 @@ __PACKAGE__->add_columns(qw/valid_from max_valor min_valor fator max_nomes min_n
 # do not attempt to deploy() this view
 __PACKAGE__->result_source_instance->is_virtual(1);
 
-__PACKAGE__->result_source_instance->view_definition(q[
+__PACKAGE__->result_source_instance->view_definition(
+    q[
     with tmp as (
         SELECT
             region_id, valid_from, value::numeric, variation_name, r.name as rname
@@ -37,6 +38,7 @@ __PACKAGE__->result_source_instance->view_definition(q[
             min(value) as min_valor
         from tmp group by 1 ) zo
     ORDER BY valid_from
-]);
+]
+);
 
 1;

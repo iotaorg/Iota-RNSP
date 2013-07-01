@@ -44,7 +44,6 @@ sub best_pratice_GET {
     );
 }
 
-
 =pod
 
 Apaga o registro da tabela CityAxis
@@ -86,7 +85,7 @@ sub list_POST {
       unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $param = $c->req->params->{best_pratice}{axis}{create};
-    $param->{user_best_pratice_id}    = $c->stash->{best_pratice}->id;
+    $param->{user_best_pratice_id} = $c->stash->{best_pratice}->id;
 
     my $dm = $c->model('DataManager');
 
@@ -97,7 +96,8 @@ sub list_POST {
 
     $self->status_created(
         $c,
-        location => $c->uri_for( $self->action_for('best_pratice'), [ $c->stash->{best_pratice}->id, $object->id ] )->as_string,
+        location =>
+          $c->uri_for( $self->action_for('best_pratice'), [ $c->stash->{best_pratice}->id, $object->id ] )->as_string,
         entity => { id => $object->id }
     );
 
@@ -112,14 +112,17 @@ sub list_GET {
     foreach my $obj (@list) {
         push @objs, {
             (
-                (map { $_ => $obj->{$_} }
-                  qw(
-                  id
-                  axis_id
-                  user_best_pratice_id),
+                (
+                    map { $_ => $obj->{$_} }
+                      qw(
+                      id
+                      axis_id
+                      user_best_pratice_id),
                 ),
             ),
-            url => $c->uri_for_action( $self->action_for('best_pratice'), [ $c->stash->{best_pratice}->id, $obj->{id} ] )->as_string,
+            url =>
+              $c->uri_for_action( $self->action_for('best_pratice'), [ $c->stash->{best_pratice}->id, $obj->{id} ] )
+              ->as_string,
 
         };
     }

@@ -21,12 +21,14 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     my $url = $c->req->uri->path;
-    if ($url =~ /variable_config$/ || $url =~ /variable_config\/\d+$/ && $c->user->id != $id && $c->req->method eq 'GET'){
+    if (   $url =~ /variable_config$/
+        || $url =~ /variable_config\/\d+$/ && $c->user->id != $id && $c->req->method eq 'GET' ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->check_any_user_role(qw(user));
-    }else{
+          unless $c->check_any_user_role(qw(user));
+    }
+    else {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-        unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
+          unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
     }
 
     $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
@@ -133,8 +135,7 @@ Retorna:
 sub user_GET {
     my ( $self, $c ) = @_;
 
-    my $user  = $c->stash->{object}->search(undef,{prefetch => ['institute','user_files' ]})->next;
-
+    my $user = $c->stash->{object}->search( undef, { prefetch => [ 'institute', 'user_files' ] } )->next;
 
     my %attrs = $user->get_inflated_columns;
     $self->status_ok(
@@ -191,11 +192,13 @@ sub user_GET {
             ),
 
             networks => [
-                map { my $net = $_;
+                map {
+                    my $net = $_;
                     +{
-                        (map {$_ => $net->$_} qw/name name_url id/),
-                        url => $c->uri_for( $c->controller('API::Network')->action_for('network'), [ $net->id ] )->as_string,
-                    }
+                        ( map { $_ => $net->$_ } qw/name name_url id/ ),
+                        url =>
+                          $c->uri_for( $c->controller('API::Network')->action_for('network'), [ $net->id ] )->as_string,
+                      }
                 } $user->networks
             ],
 
@@ -300,19 +303,18 @@ sub list_GET {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin));
 
-    my $rs = $c->stash->{collection}->search_rs( { 'me.active' => 1 },
-        { prefetch => [ 'city', 'institute', { user_roles => 'role' } ] } );
+    my $rs =
+      $c->stash->{collection}
+      ->search_rs( { 'me.active' => 1 }, { prefetch => [ 'city', 'institute', { user_roles => 'role' } ] } );
 
     if ( $c->req->params->{role} ) {
         $rs = $rs->search( { 'role.name' => $c->req->params->{role} } );
     }
 
-    if ( $c->req->params->{network_id} ){
+    if ( $c->req->params->{network_id} ) {
 
-        $rs = $rs->search(
-            { 'network_users.network_id' => $c->req->params->{network_id} },
-            { join => 'network_users' }
-        ) ;
+        $rs =
+          $rs->search( { 'network_users.network_id' => $c->req->params->{network_id} }, { join => 'network_users' } );
     }
 
     $self->status_ok(
@@ -345,7 +347,6 @@ sub list_GET {
                             }
                           )
                         : ( city => undef ),
-
 
                         $_->{user_roles}
                         ? ( roles => [ map { $_->{role}->{name} } @{ $_->{user_roles} } ] )
@@ -428,7 +429,6 @@ sub list_POST {
 
 }
 
-
 sub kml_file : Chained('object') : PathPart('kml') : Args(0) ActionClass('REST') {
     my ( $self, $c ) = @_;
 }
@@ -465,8 +465,6 @@ sub kml_file_POST {
     $c->detach;
 
 }
-
-
 
 with 'Iota::TraitFor::Controller::Search';
 1;

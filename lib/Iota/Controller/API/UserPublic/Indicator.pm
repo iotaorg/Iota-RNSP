@@ -18,11 +18,14 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
     my $country = eval { $c->stash->{user_obj}->city->country_id };
 
     my @networks = $c->stash->{user_obj}->networks->all;
-    if ( @networks ) {
-        my $rs = $c->model('DB::User')->search( {
-            'network_users.network_id' => [ map {$_->id} @networks ],
-            city_id => undef
-        }, { join => 'network_users' } );
+    if (@networks) {
+        my $rs = $c->model('DB::User')->search(
+            {
+                'network_users.network_id' => [ map { $_->id } @networks ],
+                city_id                    => undef
+            },
+            { join => 'network_users' }
+        );
         while ( my $u = $rs->next ) {
             push @user_ids, $u->id;
         }
@@ -81,7 +84,7 @@ sub indicator_GET {
     if ($conf) {
         $c->stash->{rest}{user_indicator_config} = {
             technical_information => $conf->technical_information,
-            hide_indicator => $conf->hide_indicator
+            hide_indicator        => $conf->hide_indicator
         };
     }
 }
@@ -190,20 +193,19 @@ sub resumo_GET {
 
     eval {
         my $user_id = $c->stash->{user_obj}->id;
-        my @hide_indicator = map { $_->indicator_id } $c->stash->{user_obj}->user_indicator_configs->search({
-            hide_indicator => 1
-        })->all;
+        my @hide_indicator =
+          map { $_->indicator_id }
+          $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
         my $rs = $c->stash->{collection}->search(
             {
-                'indicator_network_configs_one.network_id' => [ undef, map {$_->id } @{$c->stash->{networks}} ],
-                'me.id' => { '-not_in' => \@hide_indicator  }
+                'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
+                'me.id' => { '-not_in' => \@hide_indicator }
             },
             { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs_one' ] }
         );
 
-
-        my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
+        my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
         my $periods_begin = {};
         my $indicators    = {};
@@ -239,9 +241,9 @@ sub resumo_GET {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
                     'me.valid_from'   => {
-                        '>'  => $from_this_date,
+                        '>' => $from_this_date,
 
-                        ('<=' => $from_date)x!! $from_date
+                        ( '<=' => $from_date ) x !!$from_date
                     },
 
                     'me.region_id'    => $c->req->params->{region_id},
@@ -422,6 +424,7 @@ Retorna o status de prenchimento dos indicadores
 }
 
 =cut
+
 # TODO: verificar isso
 sub indicator_status_GET {
     my ( $self, $c ) = @_;

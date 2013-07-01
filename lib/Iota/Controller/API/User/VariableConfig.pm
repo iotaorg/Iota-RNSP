@@ -167,7 +167,7 @@ sub list_POST {
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    if (exists $c->req->params->{variable_id}){
+    if ( exists $c->req->params->{variable_id} ) {
         my $config = $c->stash->{collection}->search_rs(
             {
                 variable_id => $c->req->params->{variable_id},
@@ -178,17 +178,14 @@ sub list_GET {
         $c->detach('/error_404') unless $config;
 
         $self->status_ok( $c, entity => { ( map { $_ => $config->{$_} } qw(id display_in_home variable_id) ) } );
-    }else{
+    }
+    else {
 
-        my $configrs = $c->stash->{collection}->search_rs(
-            {
-                user_id     => $c->stash->{user}->id
-            }
-        )->as_hashref;
+        my $configrs = $c->stash->{collection}->search_rs( { user_id => $c->stash->{user}->id } )->as_hashref;
 
         my $out = {};
-        while (my $r = $configrs->next){
-            $out->{$r->{variable_id}} = { ( map { $_ => $r->{$_} } qw(id display_in_home) ) };
+        while ( my $r = $configrs->next ) {
+            $out->{ $r->{variable_id} } = { ( map { $_ => $r->{$_} } qw(id display_in_home) ) };
         }
         $self->status_ok( $c, entity => $out );
     }

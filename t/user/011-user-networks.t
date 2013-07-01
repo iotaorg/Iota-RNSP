@@ -58,8 +58,7 @@ eval {
             is( $res->code, 201, 'user created' );
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
             is( eval { $new_user->networks->next->name_url }, 'movim', 'criado como movimento' );
-            is($new_user->networks->count, 1, 'só uma rede');
-
+            is( $new_user->networks->count, 1, 'só uma rede' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/user',
@@ -132,16 +131,16 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/user/' . $new_user->id,
                 [
-                    api_key                  => 'test',
-                    'user.update.name'       => 'Foo Bar',
-                    'user.update.email'      => 'bar@email.com',
+                    api_key             => 'test',
+                    'user.update.name'  => 'Foo Bar',
+                    'user.update.email' => 'bar@email.com',
                 ]
             );
             ok( $res->is_success, 'user updated ' );
             is( $res->code, 202, 'user updated -- 202 Accepted' );
 
             ok( $new_user = $schema->resultset('User')->find( $new_user->id ), 'user in DB' );
-            is( $new_user->institute_id, 2, 'institute_id=2 pq é movimento');
+            is( $new_user->institute_id, 2, 'institute_id=2 pq é movimento' );
 
             ok( eval { $new_user->networks->next }, 'ainda tem rede (nao enviar nao pode mudar a rede)' );
             ok( my $changecity = $schema->resultset('User')->find( { email => 'errorme@email.com' } ), 'user in DB' );
@@ -174,10 +173,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/user/' . $changecity->id,
                 [
-                    api_key                  => 'test',
-                    'user.update.name'       => 'Foo Bar',
-                    'user.update.email'      => 'errorme@email.com',
-                    'user.update.city_id'    => $city->id,
+                    api_key                   => 'test',
+                    'user.update.name'        => 'Foo Bar',
+                    'user.update.email'       => 'errorme@email.com',
+                    'user.update.city_id'     => $city->id,
                     'user.update.network_ids' => 2,
                 ]
             );
@@ -188,10 +187,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/user/' . $changecity->id,
                 [
-                    api_key                  => 'test',
-                    'user.update.name'       => 'Foo Bar XXX',
-                    'user.update.email'      => 'errorme@email.com',
-                    'user.update.city_id'    => $city2->id,
+                    api_key                   => 'test',
+                    'user.update.name'        => 'Foo Bar XXX',
+                    'user.update.email'       => 'errorme@email.com',
+                    'user.update.city_id'     => $city2->id,
                     'user.update.network_ids' => 3,
                 ]
             );
@@ -200,15 +199,14 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/user/' . $changecity->id,
                 [
-                    api_key                  => 'test',
-                    'user.update.name'       => 'Foo Bar XXX',
-                    'user.update.email'      => 'errorme@email.com',
-                    'user.update.city_id'    => $city2->id,
+                    api_key                   => 'test',
+                    'user.update.name'        => 'Foo Bar XXX',
+                    'user.update.email'       => 'errorme@email.com',
+                    'user.update.city_id'     => $city2->id,
                     'user.update.network_ids' => '3,2',
                 ]
             );
             ok( $res->is_success, 'mudou de rede sem mudar cidade [duas redes]' );
-
 
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ superadmin /;
 
@@ -247,28 +245,26 @@ eval {
 
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
-
             ( $res, $c ) = ctx_request(
                 POST '/api/user/' . $changecity->id,
                 [
-                    api_key                  => 'test',
-                    'user.update.name'       => 'Foo Bar XXX',
-                    'user.update.email'      => 'errorme@email.com',
-                    'user.update.city_id'    => $city->id,
+                    api_key                   => 'test',
+                    'user.update.name'        => 'Foo Bar XXX',
+                    'user.update.email'       => 'errorme@email.com',
+                    'user.update.city_id'     => $city->id,
                     'user.update.network_ids' => $network->{id},
                 ]
             );
 
             ok( $res->is_success, 'mudou de rede entao pra uma cidade livre' );
 
-
             ( $res, $c ) = ctx_request(
                 POST '/api/user/' . $changecity->id,
                 [
-                    api_key                  => 'test',
-                    'user.update.name'       => 'Foo Bar XXX',
-                    'user.update.email'      => 'errorme@email.com',
-                    'user.update.city_id'    => $city2->id,
+                    api_key                   => 'test',
+                    'user.update.name'        => 'Foo Bar XXX',
+                    'user.update.email'       => 'errorme@email.com',
+                    'user.update.city_id'     => $city2->id,
                     'user.update.network_ids' => $network->{id},
                 ]
             );

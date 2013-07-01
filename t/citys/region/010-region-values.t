@@ -173,15 +173,15 @@ eval {
                         id   => 2,
                         name => 'adminpref'
                     },
-                    name          => 'Foo Bar',
-                    observations  => 'farinha',
-                    region_id     => $reg1->{id},
-                    active_value  => 0,
-                    generated_by_compute  => undef,
-                    source        => 'bazar',
-                    type          => 'int',
-                    value         => '4456',
-                    value_of_date => '2012-10-11 14:22:44'
+                    name                 => 'Foo Bar',
+                    observations         => 'farinha',
+                    region_id            => $reg1->{id},
+                    active_value         => 0,
+                    generated_by_compute => undef,
+                    source               => 'bazar',
+                    type                 => 'int',
+                    value                => '4456',
+                    value_of_date        => '2012-10-11 14:22:44'
                 },
                 'deeply ok'
             );
@@ -266,18 +266,22 @@ eval {
             $list = eval { from_json( $res->content ) };
             is_deeply( $list->{values}, [], 'no values for variable 4' );
 
-
-            ( $res, $c ) = ctx_request( GET '/api/indicator/'.$indicator->{id}.'/variable/period/2012-10-17?region_id=' . $reg1->{id} );
+            ( $res, $c ) = ctx_request(
+                GET '/api/indicator/' . $indicator->{id} . '/variable/period/2012-10-17?region_id=' . $reg1->{id} );
             is( $res->code, 200, 'list the values exists -- 200 Success' );
             $list = eval { from_json( $res->content ) };
-            is_deeply( scalar @{$list->{rows}}, 1);
+            is_deeply( scalar @{ $list->{rows} }, 1 );
 
-
-            ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $reg1->{id} . '&is_basic=0' );
+            ( $res, $c ) =
+              ctx_request( GET '/api/user/'
+                  . $Iota::TestOnly::Mock::AuthUser::_id
+                  . '/variable?region_id='
+                  . $reg1->{id}
+                  . '&is_basic=0' );
             is( $res->code, 200, 'list the values exists -- 200 Success' );
             $list = eval { from_json( $res->content ) };
 
-            is_deeply( scalar @{$list->{variables}}, 1);
+            is_deeply( scalar @{ $list->{variables} }, 1 );
 
             die 'rollback';
         }

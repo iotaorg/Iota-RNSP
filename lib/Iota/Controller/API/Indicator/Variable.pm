@@ -456,28 +456,27 @@ sub values_GET {
             formula => $indicator->formula,
             schema  => $c->model('DB')->schema
         );
-        my $valuetb = $c->req->params->{region_id} ? 'region_variable_values' : 'values';
-        my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
+        my $valuetb      = $c->req->params->{region_id}           ? 'region_variable_values'        : 'values';
+        my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
         my $cond = {
             -or => [
-                $valuetb.'.user_id' => $c->stash->{user_id} || $c->user->id,
-                $valuetb.'.user_id' => undef,
+                $valuetb . '.user_id' => $c->stash->{user_id} || $c->user->id,
+                $valuetb . '.user_id' => undef,
             ],
             'me.id' => [ $indicator_formula->variables ],
 
-
-
-            ( $valuetb eq 'region_variable_values' ? (
-                $valuetb.'.region_id'    => [$c->req->params->{region_id}, undef],
-                $valuetb.'.active_value' => $active_value
-            ) : ())
+            (
+                $valuetb eq 'region_variable_values'
+                ? (
+                    $valuetb . '.region_id'    => [ $c->req->params->{region_id}, undef ],
+                    $valuetb . '.active_value' => $active_value
+                  )
+                : ()
+            )
         };
 
-        my $rs = $c->model('DB')->resultset('Variable')->search_rs(
-            $cond,
-            { prefetch => [$valuetb] }
-        );
+        my $rs = $c->model('DB')->resultset('Variable')->search_rs( $cond, { prefetch => [$valuetb] } );
 
         my $tmp = {};
         my $x   = 0;
@@ -531,7 +530,7 @@ sub values_GET {
                     user_id      => $user_id,
                     valid_from   => $begin,
                     indicator_id => $indicator->id,
-                    region_id => $c->req->params->{region_id}
+                    region_id    => $c->req->params->{region_id}
                 }
             )->next;
 
@@ -568,9 +567,9 @@ sub values_GET {
 
                         my $rs = $variation->indicator_variables_variations_values->search(
                             {
-                                valid_from => $begin,
-                                user_id    => $user_id,
-                                region_id  => $c->req->params->{region_id},
+                                valid_from   => $begin,
+                                user_id      => $user_id,
+                                region_id    => $c->req->params->{region_id},
                                 active_value => $active_value
                             }
                         )->as_hashref;
@@ -725,7 +724,7 @@ sub by_period_GET {
 
         my @rows;
 
-        my $region_id   = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
+        my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
         while ( my $row = $rs->next ) {
             my $rowx = {
                 ( map { $_ => $row->$_ } qw /id name explanation cognomen type source is_basic/ ),
@@ -747,7 +746,7 @@ sub by_period_GET {
                 {
                     'me.valid_from' => $c->stash->{valid_from},
                     'me.user_id'    => $c->stash->{user_id} || $c->user->id,
-                   ('me.region_id' => $region_id)x!! $region_id
+                    ( 'me.region_id' => $region_id ) x !!$region_id
                 }
             );
             my $value = $rsx->first;
@@ -767,7 +766,7 @@ sub by_period_GET {
 
         my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs(
             {
-                user_id      => $c->stash->{user_id} || $c->user->id,
+                user_id => $c->stash->{user_id} || $c->user->id,
                 valid_from   => $c->stash->{valid_from},
                 indicator_id => $indicator->id,
                 region_id    => $region_id

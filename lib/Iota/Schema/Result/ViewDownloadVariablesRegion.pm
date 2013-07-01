@@ -10,17 +10,20 @@ __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
 # For the time being this is necessary even for virtual views
 __PACKAGE__->table('ViewDownloadVariablesRegion');
 
-__PACKAGE__->add_columns(qw/
-    city_id city_name variable_id type cognomen period exp_source
-    is_basic measurement_unit_name name valid_from value observations
-    source user_id institute_id
-    region_name region_id
-/);
+__PACKAGE__->add_columns(
+    qw/
+      city_id city_name variable_id type cognomen period exp_source
+      is_basic measurement_unit_name name valid_from value observations
+      source user_id institute_id
+      region_name region_id
+      /
+);
 
 # do not attempt to deploy() this view
 __PACKAGE__->result_source_instance->is_virtual(1);
 
-__PACKAGE__->result_source_instance->view_definition(q[
+__PACKAGE__->result_source_instance->view_definition(
+    q[
     SELECT
 
         c.id as city_id,
@@ -88,6 +91,7 @@ __PACKAGE__->result_source_instance->view_definition(q[
     where --value is not null and value != ''
     vv.region_id = ?
 
-]);
+]
+);
 
 1;

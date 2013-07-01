@@ -57,32 +57,33 @@ eval {
             my $user1_uri = $res->header('Location');
             my $user1 = eval { from_json( $res->content ) };
 
-            for my $invalido_nome(qw/invalido2.kml invalido3.kml invalido.kml /){
+            for my $invalido_nome (qw/invalido2.kml invalido3.kml invalido.kml /) {
                 ( $res, $c ) = ctx_request(
                     POST $user1_uri. '/kml',
                     'Content-Type' => 'form-data',
                     Content        => [
                         api_key   => 'test',
-                        'arquivo' => [$Bin.'/'.$invalido_nome],
+                        'arquivo' => [ $Bin . '/' . $invalido_nome ],
                     ]
                 );
                 ok( $res->is_success, 'OK' );
                 is( $res->code, 200, 'upload done!' );
 
-                is( $res->content, '{"error":"Unssuported KML\n"}', 'nao suportado formato/invalido ' . $invalido_nome);
+                is( $res->content, '{"error":"Unssuported KML\n"}',
+                    'nao suportado formato/invalido ' . $invalido_nome );
             }
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
                 Content        => [
                     api_key   => 'test',
-                    'arquivo' => [$Bin.'/municipio_ac.kml'],
+                    'arquivo' => [ $Bin . '/municipio_ac.kml' ],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             my $ret1 = eval { from_json( $res->content ) };
-            is( @{$ret1->{vec}}, 22, 'tem 22 vetores');
+            is( @{ $ret1->{vec} }, 22, 'tem 22 vetores' );
             undef $ret1;
 
             ( $res, $c ) = ctx_request(
@@ -90,103 +91,75 @@ eval {
                 'Content-Type' => 'form-data',
                 Content        => [
                     api_key   => 'test',
-                    'arquivo' => [$Bin.'/municipio_teste.kml'],
+                    'arquivo' => [ $Bin . '/municipio_teste.kml' ],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             my $ret2 = eval { from_json( $res->content ) };
-            is( @{$ret2->{vec}}, 2, 'tem 2 vetores');
+            is( @{ $ret2->{vec} }, 2, 'tem 2 vetores' );
 
-            is_deeply($ret2, {
-                'vec' => [
-                            {
-                            'latlng' => [
-                                            [
-                                            '-69.6214070',
-                                            '-8.2150924'
-                                            ],
-                                            [
-                                            '-69.5869513',
-                                            '-8.2445153'
-                                            ]
-                                        ],
+            is_deeply(
+                $ret2,
+                {
+                    'vec' => [
+                        {
+                            'latlng' => [ [ '-69.6214070', '-8.2150924' ], [ '-69.5869513', '-8.2445153' ] ],
                             'name' => undef
-                            },
-                            {
-                            'latlng' => [
-                                            [
-                                            '-68.2793555',
-                                            '-9.8218697'
-                                            ]
-                                        ],
+                        },
+                        {
+                            'latlng' => [ [ '-68.2793555', '-9.8218697' ] ],
                             'name' => undef
-                            }
-                        ]
-                }, 'parse ok!');
-
-
+                        }
+                    ]
+                },
+                'parse ok!'
+            );
 
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
                 Content        => [
                     api_key   => 'test',
-                    'arquivo' => [$Bin.'/sp_segundo_layout_sem_dados.kml'],
+                    'arquivo' => [ $Bin . '/sp_segundo_layout_sem_dados.kml' ],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             $ret2 = eval { from_json( $res->content ) };
-            is( @{$ret2->{vec}}, 2, 'tem 2 vetores');
+            is( @{ $ret2->{vec} }, 2, 'tem 2 vetores' );
 
-            is_deeply($ret2, {
-                'vec' => [
-                            {
-                            'latlng' => [
-                                            [
-                                            '-46.58166',
-                                            '-23.552155'
-                                            ],
-                                            [
-                                            '-46.581659',
-                                            '-23.552154'
-                                            ]
-                                        ],
+            is_deeply(
+                $ret2,
+                {
+                    'vec' => [
+                        {
+                            'latlng' => [ [ '-46.58166', '-23.552155' ], [ '-46.581659', '-23.552154' ] ],
                             'name' => 'ÁGUA RASA'
-                            },
-                            {
-                            'latlng' => [
-                                    [
-                                        '-46.714476',
-                                        '-23.535314'
-                                    ],
-                                    [
-                                        '-46.714221',
-                                        '-23.535285'
-                                    ]
-                                ],
+                        },
+                        {
+                            'latlng' => [ [ '-46.714476', '-23.535314' ], [ '-46.714221', '-23.535285' ] ],
                             'name' => 'ALTO DE PINHEIROS'
-                            }
-                        ]
-                }, 'parse ok!');
-
+                        }
+                    ]
+                },
+                'parse ok!'
+            );
 
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
                 Content        => [
                     api_key   => 'test',
-                    'arquivo' => [$Bin.'/sp_segundo_layout.kml'],
+                    'arquivo' => [ $Bin . '/sp_segundo_layout.kml' ],
                 ]
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             $ret2 = eval { from_json( $res->content ) };
-            is( @{$ret2->{vec}}, 96, 'tem 96 vetores');
+            is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
 
             die 'rollback';
-
 
         }
     );

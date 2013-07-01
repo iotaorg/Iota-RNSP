@@ -325,11 +325,14 @@ sub list_GET {
         }
 
         my @networks = $user->networks->all;
-        if ( @networks ) {
-            my $rs = $c->model('DB::User')->search( {
-                'network_users.network_id' => [ map {$_->id} @networks ],
-                city_id => undef
-            }, { join => 'network_users' } );
+        if (@networks) {
+            my $rs = $c->model('DB::User')->search(
+                {
+                    'network_users.network_id' => [ map { $_->id } @networks ],
+                    city_id                    => undef
+                },
+                { join => 'network_users' }
+            );
             while ( my $u = $rs->next ) {
                 push @user_ids, $u->id;
             }

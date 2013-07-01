@@ -15,38 +15,38 @@ use I18N::AcceptLanguage;
 __PACKAGE__->config( namespace => '' );
 
 has 'lang_acceptor' => (
-    is => 'rw',
-    isa => 'I18N::AcceptLanguage',
-    lazy => 1,
-    default => sub { I18N::AcceptLanguage->new( defaultLanguage => 'pt-br'  ) }
+    is      => 'rw',
+    isa     => 'I18N::AcceptLanguage',
+    lazy    => 1,
+    default => sub { I18N::AcceptLanguage->new( defaultLanguage => 'pt-br' ) }
 );
 
-
-sub change_lang: Chained('root') PathPart('lang') CaptureArgs(1) {
+sub change_lang : Chained('root') PathPart('lang') CaptureArgs(1) {
     my ( $self, $c, $lang ) = @_;
     $c->stash->{lang} = $lang;
 }
 
-sub change_lang_redir: Chained('change_lang') PathPart('') Args(0) {
-    my ( $self, $c) = @_;
+sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
+    my ( $self, $c ) = @_;
 
     my $cur_lang = $c->stash->{lang};
-    my %langs = map { $_ => 1 } @{$c->config->{'I18N::DBI'}{languages}};
+    my %langs = map { $_ => 1 } @{ $c->config->{'I18N::DBI'}{languages} };
 
     $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
-    my $host  = $c->req->uri->host;
+    my $host = $c->req->uri->host;
 
     $c->response->cookies->{'lang'} = {
-        value => $cur_lang,
-        path => '/',
-        domain => '.' . $host,
+        value   => $cur_lang,
+        path    => '/',
+        domain  => '.' . $host,
         expires => '+3600h',
     };
 
     my $refer = $c->req->headers->referer;
-    if ($refer && $refer =~ /^http:\/\/$host/){
-        $c->res->redirect( $refer );
-    }else{
+    if ( $refer && $refer =~ /^http:\/\/$host/ ) {
+        $c->res->redirect($refer);
+    }
+    else {
         $c->res->redirect( $c->uri_for('/') );
     }
     $c->detach;
@@ -64,15 +64,18 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{institute} = $net->institute;
 
-    my @current_users = $c->model('DB::User')->search( {
-        active  => 1,
-        city_id => undef,
-        institute_id => $c->stash->{institute}->id
-    }, { prefetch => 'user_files'} )->all;
+    my @current_users = $c->model('DB::User')->search(
+        {
+            active       => 1,
+            city_id      => undef,
+            institute_id => $c->stash->{institute}->id
+        },
+        { prefetch => 'user_files' }
+    )->all;
 
-    $c->detach( '/error_404', [ 'Nenhum admin de rede encontrado!' ] ) unless @current_users;
+    $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] ) unless @current_users;
 
-    foreach my $current_user ( @current_users ) {
+    foreach my $current_user (@current_users) {
         my @files = $current_user->user_files;
 
         foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
@@ -105,25 +108,25 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         cities => \@cities
     };
 
-
     my $cur_lang = exists $c->req->cookies->{lang} ? $c->req->cookies->{lang}->value : undef;
 
-    if (!defined $cur_lang){
+    if ( !defined $cur_lang ) {
         my $al = $c->req->headers->header('Accept-language');
-        my $language = $self->lang_acceptor->accepts($al, $c->config->{'I18N::DBI'}{languages});
+        my $language = $self->lang_acceptor->accepts( $al, $c->config->{'I18N::DBI'}{languages} );
 
         $cur_lang = $language;
-    }else{
-        my %langs = map { $_ => 1 } @{$c->config->{'I18N::DBI'}{languages}};
+    }
+    else {
+        my %langs = map { $_ => 1 } @{ $c->config->{'I18N::DBI'}{languages} };
         $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
     }
 
-    $c->languages([$cur_lang]);
+    $c->languages( [$cur_lang] );
 
     $c->response->cookies->{'lang'} = {
-        value => $cur_lang,
-        path => '/',
-        domain => '.' . $domain,
+        value   => $cur_lang,
+        path    => '/',
+        domain  => '.' . $domain,
         expires => '+3600h',
     };
 
@@ -192,13 +195,9 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
 
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 
-    if ($self->load_best_pratices($c, only_count => 1)){
-        $c->stash->{best_pratices_link} = $c->uri_for(
-            $self->action_for('best_pratice_list'),
-            [
-                $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}
-            ]
-        );
+    if ( $self->load_best_pratices( $c, only_count => 1 ) ) {
+        $c->stash->{best_pratices_link} = $c->uri_for( $self->action_for('best_pratice_list'),
+            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
 }
 
@@ -211,7 +210,6 @@ sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) 
     $c->stash->{title} = $c->stash->{region}->name . ' - ' . $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
 
-
 sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $indicator ) = @_;
 
@@ -220,11 +218,9 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
 
     my $region = $c->stash->{region};
 
-    $c->stash(
-        template   => 'home_region_indicator.tt'
-    );
+    $c->stash( template => 'home_region_indicator.tt' );
 
-    if ($region->depth_level == 2){
+    if ( $region->depth_level == 2 ) {
         $self->stash_distritos($c);
     }
 
@@ -235,21 +231,22 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
 sub stash_distritos {
     my ( $self, $c ) = @_;
 
-    my $schema = $c->model('DB');
-    my $region = $c->stash->{region};
+    my $schema    = $c->model('DB');
+    my $region    = $c->stash->{region};
     my $indicator = $c->stash->{indicator};
-    my $user = $c->stash->{user};
+    my $user      = $c->stash->{user};
 
-    my @fatores = $schema->resultset( 'ViewFatorDesigualdade' )->search( {},
-    {
-        bind  => [ $region->id, $indicator->{id}, $user->{id} ],
-        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-    }
+    my @fatores = $schema->resultset('ViewFatorDesigualdade')->search(
+        {},
+        {
+            bind         => [ $region->id, $indicator->{id}, $user->{id} ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
     )->all;
 
     $c->stash->{fator_desigualdade} = \@fatores;
 
-    if (exists $c->req->params->{part} && $c->req->params->{part} eq 'fator_desigualdade'){
+    if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'fator_desigualdade' ) {
         $c->stash(
             template        => 'parts/fator_desigualdade.tt',
             without_wrapper => 1
@@ -257,49 +254,42 @@ sub stash_distritos {
     }
 }
 
-
 sub stash_comparacao_distritos {
     my ( $self, $c ) = @_;
 
-    my $schema = $c->model('DB');
-    my $region = $c->stash->{region};
+    my $schema    = $c->model('DB');
+    my $region    = $c->stash->{region};
     my $indicator = $c->stash->{indicator};
-    my $user = $c->stash->{user};
+    my $user      = $c->stash->{user};
 
-
-    $c->stash->{color_index} = [
-        '#D7E7FF',
-        '#A5DFF7',
-        '#5A9CE8',
-        '#0041B5',
-        '#20007B',
-    ];
-
-
+    $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', ];
 
     my $valor_rs = $schema->resultset(
         $region->depth_level == 2
         ? 'ViewValoresSubprefeituras'
         : 'ViewValoresDistritos'
-    )->search( {},
-    {
-        bind  => [ $indicator->{id},$user->{id}, $region->id ],
-        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-    }
-    );
+      )->search(
+        {},
+        {
+            bind         => [ $indicator->{id}, $user->{id}, $region->id ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+      );
     my $por_ano = {};
-    while (my $r = $valor_rs->next){
-        push @{$por_ano->{delete $r->{valid_from}}{delete $r->{variation_name}}}, $r;
+
+    while ( my $r = $valor_rs->next ) {
+        push @{ $por_ano->{ delete $r->{valid_from} }{ delete $r->{variation_name} } }, $r;
     }
 
     my $freq = Iota::Statistics::Frequency->new();
 
     my $out = {};
-    while (my ($ano, $variacoes) = each %$por_ano){
-        while (my ($variacao, $distritos) = each %$variacoes){
-            if (@$distritos < 5){
-                $out->{$ano}{$variacao} = { status => 'Dados Insuficientes'};
-            }else{
+    while ( my ( $ano, $variacoes ) = each %$por_ano ) {
+        while ( my ( $variacao, $distritos ) = each %$variacoes ) {
+            if ( @$distritos < 5 ) {
+                $out->{$ano}{$variacao} = { status => 'Dados Insuficientes' };
+            }
+            else {
                 my $stat = $freq->iterate($distritos);
                 $out->{$ano}{$variacao} = {
                     all    => $distritos,
@@ -314,7 +304,7 @@ sub stash_comparacao_distritos {
     }
     $c->stash->{analise_comparativa} = $out;
 
-    if (exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa'){
+    if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa' ) {
         $c->stash(
             template        => 'parts/analise_comparativa.tt',
             without_wrapper => 1
@@ -349,7 +339,6 @@ sub user_page : Chained('network_cidade') PathPart('pagina') CaptureArgs(2) {
         title    => $page->{title}
     );
 
-
 }
 
 sub user_page_render : Chained('user_page') PathPart('') Args(0) {
@@ -357,31 +346,23 @@ sub user_page_render : Chained('user_page') PathPart('') Args(0) {
 }
 
 sub load_best_pratices {
-    my ($self, $c, %flags) = @_;
+    my ( $self, $c, %flags ) = @_;
 
-    my $rs = $c->model('DB::UserBestPratice')->search({
-        user_id => $c->stash->{user}{id}
-    }, {
-        prefetch => 'axis'
-    })->as_hashref;
+    my $rs =
+      $c->model('DB::UserBestPratice')->search( { user_id => $c->stash->{user}{id} }, { prefetch => 'axis' } )
+      ->as_hashref;
 
     return $rs->count if exists $flags{only_count};
 
     my $out;
-    while (my $obj = $rs->next){
-        push @{$out->{$obj->{axis}{name}}}, $obj;
+    while ( my $obj = $rs->next ) {
+        push @{ $out->{ $obj->{axis}{name} } }, $obj;
 
-        $obj->{link} = $c->uri_for(
-                $self->action_for('best_pratice_render'),
-                [
-                    $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade},
-                    $obj->{id},  $obj->{name_url},
-                ]
-        );
+        $obj->{link} = $c->uri_for( $self->action_for('best_pratice_render'),
+            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] );
     }
     $c->stash->{best_pratices} = $out;
 }
-
 
 sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs(2) {
     my ( $self, $c, $page_id, $title ) = @_;
@@ -392,9 +373,8 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
         {
             'me.id'      => $page_id,
             'me.user_id' => $c->stash->{user}{id}
-        }, {
-            prefetch=> ['axis', {user_best_pratice_axes => 'axis'}]
-        }
+        },
+        { prefetch => [ 'axis', { user_best_pratice_axes => 'axis' } ] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;
@@ -412,7 +392,7 @@ sub best_pratice_list : Chained('network_cidade') PathPart('boas-praticas') Args
     $self->load_best_pratices($c);
     $c->stash(
         template => 'home_cidade_boas_praticas_list.tt',
-        title    => 'Boas Praticas de ' . $c->stash->{city}{name} .'/' . $c->stash->{estado}
+        title    => 'Boas Praticas de ' . $c->stash->{city}{name} . '/' . $c->stash->{estado}
     );
 }
 
@@ -502,10 +482,11 @@ sub stash_tela_cidade {
 
     my $user = $c->model('DB::User')->search(
         {
-            city_id         => $city->{id},
-            'me.active'     => 1,
+            city_id                    => $city->{id},
+            'me.active'                => 1,
             'network_users.network_id' => $c->stash->{network}->id
-        }, { join => 'network_users'}
+        },
+        { join => 'network_users' }
     )->next;
 
     $c->detach('/error_404') unless $user;
@@ -756,11 +737,11 @@ sub _load_region_variables {
         }
 
     }
-    my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
+    my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
     my $values = $region->region_variable_values->search(
         {
-            'me.variable_id' => { 'in' => [ keys %$show ] },
-            'me.user_id'     => $mid,
+            'me.variable_id'  => { 'in' => [ keys %$show ] },
+            'me.user_id'      => $mid,
             'me.active_value' => $active_value
         },
         {

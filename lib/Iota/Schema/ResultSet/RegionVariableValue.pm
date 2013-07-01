@@ -81,7 +81,7 @@ sub verifiers_specs {
                         #return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
-                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id'),} );
+                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id'), } );
                         my $date   = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
 
                         # f_extract_period_edge
@@ -119,7 +119,8 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return $self->search( { id => $r->get_value('id'), generated_by_compute => undef} )->count == 1;
+                        return $self->search( { id => $r->get_value('id'), generated_by_compute => undef } )->count ==
+                          1;
                       }
 
                 },
@@ -223,7 +224,7 @@ sub action_specs {
             $values{valid_until} = $dates->{period_end};
 
             my $region = $schema->resultset('Region')->find( $values{region_id} );
-            if ($region->depth_level == 2){
+            if ( $region->depth_level == 2 ) {
                 $values{active_value} = 0;
 
             }
@@ -317,17 +318,18 @@ sub _put {
     if ( $user->city_id && $region->city_id != $user->city_id ) {
         die 'Illegal region for user.';
     }
-    if ($region->depth_level == 2){
+    if ( $region->depth_level == 2 ) {
         $values{active_value} = 0;
     }
+
     # procura por uma variavel daquele usuario naquele periodo, se
     # existir, atualiza a data e o valor!
     my $row = $self->search(
         {
-            user_id     => $values{user_id},
-            region_id   => $values{region_id},
-            variable_id => $values{variable_id},
-            valid_from  => $dates->{period_begin},
+            user_id              => $values{user_id},
+            region_id            => $values{region_id},
+            variable_id          => $values{variable_id},
+            valid_from           => $dates->{period_begin},
             generated_by_compute => undef
         }
     )->next;

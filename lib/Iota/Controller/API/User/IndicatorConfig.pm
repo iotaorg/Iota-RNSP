@@ -46,7 +46,8 @@ sub indicator_config_GET {
     my ( $self, $c ) = @_;
     my $object_ref = $c->stash->{object}->as_hashref->next;
 
-    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(technical_information hide_indicator indicator_id) ) } );
+    $self->status_ok( $c,
+        entity => { ( map { $_ => $object_ref->{$_} } qw(technical_information hide_indicator indicator_id) ) } );
 }
 
 =pod
@@ -177,7 +178,8 @@ sub list_GET {
 
     $c->detach('/error_404') unless $config;
 
-    $self->status_ok( $c, entity => { ( map { $_ => $config->{$_} } qw(id technical_information hide_indicator indicator_id) ) } );
+    $self->status_ok( $c,
+        entity => { ( map { $_ => $config->{$_} } qw(id technical_information hide_indicator indicator_id) ) } );
 }
 
 1;

@@ -74,10 +74,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
-                    api_key                          => 'test',
-                    'city.region.create.name'        => 'second region',
-                    'city.region.create.upper_region'=> $reg0->{id},
-                    'city.region.create.description' => 'with Description',
+                    api_key                           => 'test',
+                    'city.region.create.name'         => 'second region',
+                    'city.region.create.upper_region' => $reg0->{id},
+                    'city.region.create.description'  => 'with Description',
                 ]
             );
 
@@ -206,25 +206,25 @@ eval {
             is( scalar @rows, 0, 'sem linhas, pois os dados estao incompletos' );
 
             &add_value( $reg1_uri, $var1, '2010-01-01', 15 );
-            @rows = $schema->resultset('IndicatorValue')->search(undef, {order_by => 'id'})->all;
+            @rows = $schema->resultset('IndicatorValue')->search( undef, { order_by => 'id' } )->all;
 
-            is( scalar @rows,             4,        'quatro linhas, pois agora temos os dados (regian upper calculada sozinho)' );
+            is( scalar @rows, 4, 'quatro linhas, pois agora temos os dados (regian upper calculada sozinho)' );
             is( $rows[0]->variation_name, 'faixa0', 'faixa ok' );
             is( $rows[0]->value,          '19',     'valor ok' );
-            is( $rows[0]->region_id,      $reg1->{id});
-            is( $rows[0]->generated_by_compute, 0);
+            is( $rows[0]->region_id,      $reg1->{id} );
+            is( $rows[0]->generated_by_compute, 0 );
 
             is( $rows[1]->variation_name, 'faixa1', 'faixa ok' );
             is( $rows[1]->value,          '21',     'valor ok' );
 
-            is( $rows[1]->region_id,      $reg1->{id});
-            is( $rows[1]->generated_by_compute, 0);
+            is( $rows[1]->region_id,            $reg1->{id} );
+            is( $rows[1]->generated_by_compute, 0 );
 
-            is( $rows[2]->region_id,      $reg0->{id});
-            is( $rows[2]->generated_by_compute, 1);
+            is( $rows[2]->region_id,            $reg0->{id} );
+            is( $rows[2]->generated_by_compute, 1 );
 
-            is( $rows[3]->region_id,      $reg0->{id});
-            is( $rows[3]->generated_by_compute, 1);
+            is( $rows[3]->region_id,            $reg0->{id} );
+            is( $rows[3]->generated_by_compute, 1 );
 
             my $period = &_get( 200,
                     '/api/indicator/'

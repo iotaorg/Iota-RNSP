@@ -32,7 +32,7 @@ if (!(typeof google == "undefined")){
 					uri: item.uri,
 					row_class: row_class
 				}));
-				
+
 				$("#bubble-intro").fadeOut("slow");
 				var lat = "";
 				var lng = "";

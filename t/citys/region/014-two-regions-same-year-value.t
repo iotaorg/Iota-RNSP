@@ -103,7 +103,6 @@ eval {
 
             my $variable = eval { from_json( $res->content ) };
 
-
             my $region_url1 = $reg1_uri . '/value';
 
             # PUT normal
@@ -118,7 +117,6 @@ eval {
 
             ok( $res->is_success, 'variable value created' );
             is( $res->code, 201, 'value added -- 201 ' );
-
 
             ( $res, $c ) = ctx_request( GET $region_url1 );
             ok( $res->is_success, 'list the values exists' );
@@ -153,7 +151,6 @@ eval {
                 'deeply ok'
             );
 
-
             my $region_url2 = $reg2_uri . '/value';
 
             # PUT normal
@@ -167,7 +164,6 @@ eval {
             ( $res, $c ) = ctx_request($req);
             ok( $res->is_success, 'variable value created' );
             is( $res->code, 201, 'value added -- 201 ' );
-
 
             ( $res, $c ) = ctx_request( GET $region_url2 );
             ok( $res->is_success, 'list the values exists' );
@@ -201,8 +197,6 @@ eval {
                 },
                 'deeply ok'
             );
-
-
 
             die 'rollback';
         }

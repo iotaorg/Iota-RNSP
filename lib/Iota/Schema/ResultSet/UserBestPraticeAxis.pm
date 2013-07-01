@@ -19,8 +19,8 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                axis_id  => { required => 1, type => 'Int' },
-                user_best_pratice_id  => { required => 1, type => 'Int' },
+                axis_id              => { required => 1, type => 'Int' },
+                user_best_pratice_id => { required => 1, type => 'Int' },
             },
         ),
 

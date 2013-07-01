@@ -57,10 +57,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
-                    api_key                          => 'test',
-                    'city.region.create.name'        => 'a region',
-                    'city.region.create.polygon_path'=> 'str',
-                    'city.region.create.description' => 'with no description',
+                    api_key                           => 'test',
+                    'city.region.create.name'         => 'a region',
+                    'city.region.create.polygon_path' => 'str',
+                    'city.region.create.description'  => 'with no description',
                 ]
             );
 

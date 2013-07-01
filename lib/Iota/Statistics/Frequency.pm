@@ -4,7 +4,7 @@ use Moose;
 use Statistics::Descriptive;
 
 sub iterate {
-    my ($self, $rows) = @_;
+    my ( $self, $rows ) = @_;
 
     my @numbers = map { $_->{num} } @{$rows};
 
@@ -13,10 +13,10 @@ sub iterate {
 
     my %f = $stat->frequency_distribution(5);
 
-    my @order = sort {$a <=> $b} keys %f;
-    foreach my $r (@{$rows}){
-        for my $i ( 0.. 4 ){
-            if ( $r->{num} <= $order[$i] ){
+    my @order = sort { $a <=> $b } keys %f;
+    foreach my $r ( @{$rows} ) {
+        for my $i ( 0 .. 4 ) {
+            if ( $r->{num} <= $order[$i] ) {
                 $r->{i} = $i;
                 last;
             }
@@ -25,7 +25,5 @@ sub iterate {
 
     return $stat;
 }
-
-
 
 1;

@@ -36,7 +36,10 @@ sub variable_GET {
         entity => {
             created_by => { map { $_ => $objectect_ref->{owner}{$_} } qw(name id) },
             ( map { $_ => $objectect_ref->{variable}{$_} } qw(name type cognomen) ),
-            ( map { $_ => $objectect_ref->{$_} } qw(value created_at value_of_date observations source region_id active_value generated_by_compute) )
+            (
+                map { $_ => $objectect_ref->{$_} }
+                  qw(value created_at value_of_date observations source region_id active_value generated_by_compute)
+            )
         }
     );
 }

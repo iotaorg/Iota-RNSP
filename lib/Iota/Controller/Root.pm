@@ -31,7 +31,6 @@ The root page (/)
 sub index : Path : Args(0) {
     my ( $self, $c ) = @_;
 
-
     $c->forward('root');
     $c->forward('institute_load');
     $c->stash( template => 'home_comparacao.tt' );

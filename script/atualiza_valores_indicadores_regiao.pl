@@ -21,6 +21,6 @@ my $data = Iota::IndicatorData->new( schema => $schema );
 my $min = shift;
 my $to  = shift;
 $data->upsert(
-    regions_id => [ $min .. $to],
+    regions_id => [ $min .. $to ],
     user_id    => 11,
 );
