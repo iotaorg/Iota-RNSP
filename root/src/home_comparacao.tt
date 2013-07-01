@@ -73,6 +73,6 @@
         var userID = "";
 </script>
 <div id="bubble-intro">
-    <p>[%l('Selecione um estado acima e clique sobre os pontos do mapa para visualizar os indicadores')%]</p>
+    <p>[%l('Selecione um estado acima e clique sobre os pontos do mapa ou nas cidades listadas abaixo, para visualizar os indicadores')%]</p>
 </div>
 
