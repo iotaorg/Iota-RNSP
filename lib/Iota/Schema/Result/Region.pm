@@ -102,7 +102,6 @@ __PACKAGE__->table("region");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -138,11 +137,7 @@ __PACKAGE__->add_columns(
   "automatic_fill",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "polygon_path",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -300,8 +295,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-12 15:04:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FoaEbCi51cl6yHdFqoeypw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:29:49
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LMeYn+v3OgU1ylDdqNVNUA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

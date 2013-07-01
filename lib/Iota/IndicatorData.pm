@@ -53,7 +53,10 @@ sub upsert {
             {
                 ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
                 'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
-                'me.region_id'   => { 'in' => $params{regions_id} }
+                'me.region_id'   => { 'in' => $params{regions_id} },
+
+                ('me.generated_by_compute' => 1)x!! exists $params{generated_by_compute}
+
             }
         );
 
@@ -73,6 +76,8 @@ sub upsert {
         exists $params{regions_id}
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
+
+        ('me.generated_by_compute' => 1)x!! exists $params{generated_by_compute}
     );
     my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
 
@@ -86,7 +91,8 @@ sub upsert {
 
     );
     my $users_meta = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
-    my $regions_meta = $self->get_regions_meta( keys %$results );
+    my $level3       = [];
+    my $regions_meta = $self->get_regions_meta($level3, keys %$results );
 
     $self->schema->txn_do(
         sub {
@@ -136,7 +142,13 @@ sub upsert {
                                         value   => $variations->{$variation}[0],
                                         sources => $variations->{$variation}[1],
 
-                                        region_id => $region_id
+                                        region_id => $region_id,
+
+                                        (exists $params{generated_by_compute} ? (
+                                            generated_by_compute => 1,
+                                            active_value => 1
+                                        ) : ())
+
                                     }
                                 );
 
@@ -145,9 +157,14 @@ sub upsert {
                     }
                 }
             }
-            my @regions = grep { $_ ne 'null' } keys $results;
-            use DDP; p @regions;
-            $self->schema->compute_upper_regions(\@regions) if scalar @regions;
+            if (scalar @$level3){
+                my $level2 = $self->schema->compute_upper_regions($level3);
+                $self->upsert(
+                    %params,
+                    regions_id           => $level2->{compute_upper_regions},
+                    generated_by_compute => 1
+                );
+            }
         }
     );
 
@@ -174,7 +191,7 @@ sub get_users_meta {
 
 # retorna cidade das regioes
 sub get_regions_meta {
-    my ( $self, @regions ) = @_;
+    my ( $self, $level3, @regions ) = @_;
 
     my $citys =
       $self->schema->resultset('Region')->search( { 'me.id' => { 'in' => [ grep { /\d/o } @regions ] } } )->as_hashref;
@@ -186,6 +203,7 @@ sub get_regions_meta {
             city_id => $row->{city_id},
             active  => $row->{depth_level} == 3 ? 1 : 0
         };
+        push @$level3, $row->{id} if $row->{depth_level} == 3;
     }
 
     return $users;

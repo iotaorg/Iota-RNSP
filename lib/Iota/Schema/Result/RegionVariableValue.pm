@@ -115,7 +115,7 @@ __PACKAGE__->table("region_variable_value");
 
   data_type: 'boolean'
   default_value: true
-  is_nullable: 1
+  is_nullable: 0
 
 =cut
 
@@ -157,7 +157,7 @@ __PACKAGE__->add_columns(
   "generated_by_compute",
   { data_type => "boolean", is_nullable => 1 },
   "active_value",
-  { data_type => "boolean", default_value => \"true", is_nullable => 1 },
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -251,8 +251,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-28 11:11:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:39tBY332ydB8IFpF3tCFlw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:41:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:oyuO1QM6SsEPkC9808FCZA
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::IndicatorVariablesVariationsValue;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<indicator_variables_variations_value>
 
@@ -97,39 +96,54 @@ __PACKAGE__->table("indicator_variables_variations_value");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 generated_by_compute
+
+  data_type: 'boolean'
+  is_nullable: 1
+
+=head2 active_value
+
+  data_type: 'boolean'
+  default_value: true
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "indicator_variables_variations_value_id_seq",
-    },
-    "indicator_variation_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-    "indicator_variables_variation_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-    "value",
-    { data_type => "text", is_nullable => 1 },
-    "value_of_date",
-    { data_type => "timestamp", is_nullable => 1 },
-    "valid_from",
-    { data_type => "date", is_nullable => 1 },
-    "valid_until",
-    { data_type => "date", is_nullable => 1 },
-    "user_id",
-    { data_type => "integer", is_nullable => 0 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 1,
-        original      => { default_value => \"now()" },
-    },
-    "region_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "indicator_variables_variations_value_id_seq",
+  },
+  "indicator_variation_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "indicator_variables_variation_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "value",
+  { data_type => "text", is_nullable => 1 },
+  "value_of_date",
+  { data_type => "timestamp", is_nullable => 1 },
+  "valid_from",
+  { data_type => "date", is_nullable => 1 },
+  "valid_until",
+  { data_type => "date", is_nullable => 1 },
+  "user_id",
+  { data_type => "integer", is_nullable => 0 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 1,
+    original      => { default_value => \"now()" },
+  },
+  "region_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "generated_by_compute",
+  { data_type => "boolean", is_nullable => 1 },
+  "active_value",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -158,13 +172,21 @@ __PACKAGE__->set_primary_key("id");
 
 =item * L</user_id>
 
+=item * L</active_value>
+
 =back
 
 =cut
 
 __PACKAGE__->add_unique_constraint(
-    "indicator_variables_variation_indicator_variation_id_indica_key",
-    [ "indicator_variation_id", "indicator_variables_variation_id", "valid_from", "user_id", ],
+  "indicator_variables_variation_indicator_variation_id_indica_key",
+  [
+    "indicator_variation_id",
+    "indicator_variables_variation_id",
+    "valid_from",
+    "user_id",
+    "active_value",
+  ],
 );
 
 =head1 RELATIONS
@@ -178,10 +200,10 @@ Related object: L<Iota::Schema::Result::IndicatorVariablesVariation>
 =cut
 
 __PACKAGE__->belongs_to(
-    "indicator_variables_variation",
-    "Iota::Schema::Result::IndicatorVariablesVariation",
-    { id            => "indicator_variables_variation_id" },
-    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  "indicator_variables_variation",
+  "Iota::Schema::Result::IndicatorVariablesVariation",
+  { id => "indicator_variables_variation_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 indicator_variation
@@ -193,10 +215,10 @@ Related object: L<Iota::Schema::Result::IndicatorVariation>
 =cut
 
 __PACKAGE__->belongs_to(
-    "indicator_variation",
-    "Iota::Schema::Result::IndicatorVariation",
-    { id            => "indicator_variation_id" },
-    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  "indicator_variation",
+  "Iota::Schema::Result::IndicatorVariation",
+  { id => "indicator_variation_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 region
@@ -208,19 +230,20 @@ Related object: L<Iota::Schema::Result::Region>
 =cut
 
 __PACKAGE__->belongs_to(
-    "region",
-    "Iota::Schema::Result::Region",
-    { id => "region_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "region",
+  "Iota::Schema::Result::Region",
+  { id => "region_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-20 17:13:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZdwrxgddmvRo+qOR+peYbA
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:41:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/PW78wo6pQT6TnvbhWSDDg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

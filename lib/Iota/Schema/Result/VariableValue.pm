@@ -101,16 +101,11 @@ __PACKAGE__->table("variable_value");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 generated_by_compute
-
-  data_type: 'boolean'
-  is_nullable: 1
-
 =head2 active_value
 
   data_type: 'boolean'
   default_value: true
-  is_nullable: 1
+  is_nullable: 0
 
 =cut
 
@@ -147,10 +142,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "file_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "generated_by_compute",
-  { data_type => "boolean", is_nullable => 1 },
   "active_value",
-  { data_type => "boolean", default_value => \"true", is_nullable => 1 },
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -241,8 +234,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-28 11:11:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ku7BgoLDeWyX2Vay8Mex8w
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:41:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DuXCPJjuEcj5LQM5v6sXPQ
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

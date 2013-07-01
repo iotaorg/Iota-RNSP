@@ -123,9 +123,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_best_pratices
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-21 17:49:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LvDxOnLUvOX2bb8jt/sejg
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPratice>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_best_pratices",
+  "Iota::Schema::Result::UserBestPratice",
+  { "foreign.axis_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:29:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9kFNNdVr/gBQC1S9n7P0Qw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

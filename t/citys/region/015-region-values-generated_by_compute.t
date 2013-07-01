@@ -88,6 +88,26 @@ eval {
             my $reg2 = eval { from_json( $res->content ) };
             ($reg2->{id}) = $reg2_uri =~ /\/([0-9]+)$/;
 
+            ( $res, $c ) = ctx_request(
+                POST $city_uri . '/region',
+                [
+                    api_key                          => 'test',
+                    'city.region.create.name'        => 'second region x',
+                    'city.region.create.upper_region'=> $reg1->{id},
+                    'city.region.create.description' => 'with Descriptionx',
+                ]
+            );
+
+            ok( $res->is_success, 'region created!' );
+            is( $res->code, 201, 'region created!' );
+
+            my $reg3_uri = $res->header('Location');
+            ( $res, $c ) = ctx_request( GET $reg3_uri );
+            my $reg3 = eval { from_json( $res->content ) };
+            ($reg3->{id}) = $reg3_uri =~ /\/([0-9]+)$/;
+
+
+
             ( $res, $c ) = ctx_request( GET $reg1_uri );
             my $obj = eval { from_json( $res->content ) };
 
@@ -99,7 +119,7 @@ eval {
                     'variable.create.cognomen'    => 'foobar',
                     'variable.create.period'      => 'yearly',
                     'variable.create.explanation' => 'a foo with bar',
-                    'variable.create.type'        => 'int',
+                    'variable.create.type'        => 'num',
                 ]
             );
             ok( $res->is_success, 'variable created!' );
@@ -133,19 +153,47 @@ eval {
 
             &add_value($reg2_uri, '100', '2010');
             my $tmp = &get_values($reg2);
+
             is(scalar keys @$tmp, '1', 'só tem 1 linha');
 
             &add_value($reg2_uri, '200', '2011');
             $tmp = &get_values($reg2);
             is(scalar keys @$tmp, '2', 'tem 2 linhas');
 
-
             $tmp = &get_values($reg1);
-            use DDP; p $tmp;
             is(scalar keys @$tmp, '2', 'tem 2 linhas tambem na regiao 1');
 
-my @a = $schema->resultset('RegionVariableValue')->all;
-use DDP; p @a;
+            $tmp = [sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp}];
+            is($tmp->[0]{value}, '100');
+            is($tmp->[1]{value}, '200');
+
+            diag('testando com 2 subregs');
+            &add_value($reg3_uri, '150,6668', '2010');
+
+            $tmp = &get_values($reg1);
+
+            is(scalar keys @$tmp, '2', 'tem 2 linhas ainda, mas somados');
+            $tmp = [sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp}];
+            is($tmp->[0]{value}, '250.6668');
+
+            $tmp = &get_values($reg1, 1);
+            is(scalar keys @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras');
+
+            &add_value($reg1_uri, '230', '2011');
+            $tmp = &get_values($reg1, 1);
+            is(scalar keys @$tmp, '1', 'tem 1 linha');
+            is($tmp->[0]{value}, '230', 'valor salvo!');
+            is($tmp->[0]{active_value}, '0', 'valor nao ativo');
+
+
+            $tmp = &get_values($reg1);
+            is(scalar keys @$tmp, '2', 'tem 2 linhas ainda');
+            $tmp = [sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp}];
+            is($tmp->[0]{value}, '250.6668', 'valor ainda eh o mesmo!');
+            is($tmp->[0]{active_value}, '1', 'valor ativo');
+
+
+
 
             die 'rollback';
         }
@@ -160,6 +208,7 @@ done_testing;
 
 sub add_value {
     my ($region, $value, $year) = @_;
+
         # PUT normal
     my $req = POST $region . '/value',
     [
@@ -178,9 +227,10 @@ sub add_value {
 }
 
 sub get_values {
-    my ($region) = @_;
+    my ($region, $not) = @_;
 
-    my ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $region->{id} . '&is_basic=0&variable_id='.$variable->{id} );
+    $not = $not ? 1 : 0;
+    my ( $res, $c ) = ctx_request( GET '/api/user/'.$Iota::TestOnly::Mock::AuthUser::_id.'/variable?region_id=' . $region->{id} . '&is_basic=0&variable_id='.$variable->{id} . '&not_computed=' . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
 

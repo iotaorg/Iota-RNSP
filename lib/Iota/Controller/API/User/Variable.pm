@@ -88,7 +88,12 @@ sub list_GET {
     my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
     my $vtable = $region_id ? 'region_variable_values' : 'values';
 
+
+    my $region = exists $c->req->params->{region_id} ? $c->model('DB::Region')->find( $c->req->params->{region_id} ) : undef;
+
     my $city_id = $c->stash->{user}->city_id || '1'; # test fix
+    my $compute = $c->req->params->{not_computed} ? undef : 1;
+
     foreach my $obj (@list) {
 
         my $where = {};
@@ -98,11 +103,12 @@ sub list_GET {
         my @values =
           $rs->search( { id => $obj->{id} } )->next->$vtable->search( {
             user_id => $c->stash->{user}->id,
-           (region_id => $region_id)x!! $region_id,
+           ((region_id => $region_id)x!! $region_id),
+
+           ( defined $region && $region->depth_level == 2 ? (generated_by_compute => $compute) : () ),
             %$where,
         } )
           ->as_hashref->all;
-
 
         push @objs, {
             ( map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit) ),
@@ -115,6 +121,7 @@ sub list_GET {
                         source        => $_->{source},
                         observations  => $_->{observations},
                         valid_from    => $_->{valid_from},
+                        active_value  => $_->{active_value},
                         valid_until   => $_->{valid_until},
                         id            => $_->{id},
 

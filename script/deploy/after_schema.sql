@@ -244,71 +244,13 @@ join city c on c.id = u.city_id
 --where value is not null and value != ''
 ;
 
--- Function: compute_upper_regions(integer[])
 
--- DROP FUNCTION compute_upper_regions(integer[]);
 
 CREATE OR REPLACE FUNCTION compute_upper_regions(_ids integer[])
-  RETURNS void AS
-$BODY$
-
+  RETURNS int[] AS
+$BODY$DECLARE
+v_ret int[];
 BEGIN
-
-    create temp table _x as
-    select
-     r.upper_region,
-     iv.city_id,
-     iv.valid_from,
-     iv.variation_name,
-     iv.user_id,
-     iv.indicator_id,
-     iv.institute_id,
-     sum(iv.value::numeric) as total,
-     ARRAY(SELECT DISTINCT UNNEST( array_accum(sources) ) ORDER BY 1)  as sources
-
-    from region r
-    join indicator_value iv on iv.region_id = r.id
-    join indicator i on iv.indicator_id = i.id
-
-    where r.id in (SELECT unnest($1))
-    and active_value = true
-    and r.depth_level= 3
-    and variable_type in ('int', 'num')
-    group by 1,2,3,4,5,6,7;
-
-    delete from indicator_value where (region_id, user_id, valid_from, variation_name,indicator_id) IN (
-        SELECT upper_region, user_id, valid_from, variation_name,indicator_id from _x
-    ) AND generated_by_compute = TRUE;
-
-    insert into indicator_value (
-        region_id,
-        indicator_id,
-        valid_from,
-        user_id,
-        city_id,
-        institute_id,
-        value,
-        variation_name,
-        sources,
-        generated_by_compute
-    )
-    select
-        x.upper_region,
-        x.indicator_id,
-        x.valid_from,
-        x.user_id,
-        x.city_id,
-        x.institute_id,
-        x.total::varchar,
-        x.variation_name,
-        x.sources,
-        true
-    from _x x;
-
-
-
-    drop table _x;
-
     create temp table _x as
     select
      r.upper_region,
@@ -323,7 +265,9 @@ BEGIN
     join region_variable_value iv on iv.region_id = r.id
     join variable v on iv.variable_id = v.id
 
-    where r.id in (SELECT unnest($1))
+    where r.upper_region in (
+    select upper_region from region x where x.id in (SELECT unnest($1)) and x.depth_level= 3
+    )
     and active_value = true
     and r.depth_level= 3
 
@@ -356,12 +300,10 @@ BEGIN
         true
     from _x x;
 
-
-
+    select ARRAY(select upper_region from _x group by 1) into v_ret;
     drop table _x;
+    return v_ret;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION compute_upper_regions(integer[])
-  OWNER TO postgres;
