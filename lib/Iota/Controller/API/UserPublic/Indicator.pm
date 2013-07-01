@@ -189,12 +189,19 @@ sub resumo_GET {
     my $from_date = $c->req->params->{from_date};
 
     eval {
+        my $user_id = $c->stash->{user_obj}->id;
+        my @hide_indicator = map { $_->indicator_id } $c->stash->{user_obj}->user_indicator_configs->search({
+            hide_indicator => 1
+        })->all;
+
         my $rs = $c->stash->{collection}->search(
-            { 'indicator_network_configs_one.network_id' => [ undef, map {$_->id } @{$c->stash->{networks}} ] },
+            {
+                'indicator_network_configs_one.network_id' => [ undef, map {$_->id } @{$c->stash->{networks}} ],
+                'me.id' => { '-not_in' => \@hide_indicator  }
+            },
             { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs_one' ] }
         );
 
-        my $user_id = $c->stash->{user_obj}->id;
 
         my $active_value  = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
