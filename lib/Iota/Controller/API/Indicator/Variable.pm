@@ -741,12 +741,15 @@ sub by_period_GET {
 
             };
             my $value_table = $region_id ? 'region_variable_values' : 'values';
+            my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
             my $rsx = $row->$value_table->search(
                 {
                     'me.valid_from' => $c->stash->{valid_from},
                     'me.user_id'    => $c->stash->{user_id} || $c->user->id,
-                    ( 'me.region_id' => $region_id ) x !!$region_id
+                    ( 'me.region_id'    => $region_id,
+                      'me.active_value' => $active_value
+                    ) x !!$region_id
                 }
             );
             my $value = $rsx->first;

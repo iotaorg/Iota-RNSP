@@ -18,7 +18,7 @@ sub verifiers_specs {
             filters => [qw(trim)],
             profile => {
                 technical_information => {
-                    required => 1,
+                    required => 0,
                     type     => 'Str'
                 },
                 user_id => {
@@ -63,7 +63,7 @@ sub verifiers_specs {
                       }
                 },
                 technical_information => {
-                    required => 1,
+                    required => 0,
                     type     => 'Str'
                 },
                 hide_indicator => {
