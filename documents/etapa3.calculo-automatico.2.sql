@@ -46,3 +46,7 @@ CREATE UNIQUE INDEX on indicator_variables_variations_value(indicator_variation_
   WHERE region_id is not null;
 
 
+drop index ix_indicator_value_unique_by_region;
+
+create unique index ix_indicator_value_unique_by_region on indicator_value (indicator_id, valid_from, user_id, variation_name, region_id, active_value)
+where region_id is not null;

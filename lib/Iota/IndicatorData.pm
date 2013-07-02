@@ -45,19 +45,42 @@ sub upsert {
 
     if ( exists $params{regions_id} ) {
 
+        my $rs = $self->schema->resultset('Region')->search({
+            id          => $params{regions_id}
+        }, { columns => ['id','depth_level'] })->as_hashref;
+        my %region_by_lvl;
+        while (my $r = $rs->next){
+            push @{$region_by_lvl{$r->{depth_level}}}, $r->{id};
+        }
+
         # procura pelos valores salvos naquela regiao
         my $rr_values_rs = $self->schema->resultset('RegionVariableValue');
         $rr_values_rs = $rr_values_rs->search( { valid_from => $params{dates} } ) if exists $params{dates};
 
+        my $where = {
+            ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
+            'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
+
+            (exists $params{generated_by_compute}
+            ? (
+                'me.generated_by_compute' => 1,
+                'me.region_id'   => { 'in' => $params{regions_id} }
+            )
+            : (
+                '-or' => [
+                    ({
+                        'me.region_id'    => { 'in' => $region_by_lvl{2} },
+                        'me.active_value' => 0
+                    } )x!! scalar $region_by_lvl{2},
+                    ({
+                        'me.region_id' => {'in' =>  $region_by_lvl{3} }
+                    }) x!! scalar $region_by_lvl{3},
+                ]
+            ))
+        };
+
         $rr_values_rs = $rr_values_rs->search(
-            {
-                ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
-                'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
-                'me.region_id'   => { 'in' => $params{regions_id} },
-
-                ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
-
-            }
+            $where
         );
 
         $self->_get_values_periods_region(
@@ -99,20 +122,20 @@ sub upsert {
         sub {
             my $indval_rs = $self->schema->resultset('IndicatorValue');
 
-            $indval_rs->search(
-                {
-                    ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
-                    ( 'me.user_id'              => $params{user_id} ) x !!exists $params{user_id},
-                    ( 'me.indicator_id'         => $params{indicators} ) x !!exists $params{indicators},
-                    ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute},
+            my $where = {
+                ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
+                ( 'me.user_id'              => $params{user_id} ) x !!exists $params{user_id},
+                ( 'me.indicator_id'         => $params{indicators} ) x !!exists $params{indicators},
 
-                    # se nao foi informado a regiao, nao tem calculo dela.
-                    exists $params{regions_id}
-                    ? ( 'me.region_id' => $params{regions_id}, )
-                    : ( 'me.region_id' => undef ),
+                ( 'me.generated_by_compute' => $params{generated_by_compute} ) x!! exists $params{generated_by_compute},
 
-                }
-            )->delete;
+                # se nao foi informado a regiao, nao tem calculo dela.
+                exists $params{regions_id}
+                ? ( 'me.region_id' => $params{regions_id}, )
+                : ( 'me.region_id' => undef ),
+
+            };
+            $indval_rs->search($where)->delete;
 
             while ( my ( $region_id, $region_data ) = each %$results ) {
                 undef $region_id if $region_id eq 'null';
@@ -127,37 +150,32 @@ sub upsert {
 
                                 foreach my $active_value ( keys %$actives ) {
 
-                                    $indval_rs->create(
-                                        {
-                                            user_id      => $user_id,
-                                            indicator_id => $indicator_id,
-                                            valid_from   => $date,
-                                            city_id      => defined $region_id
-                                            ? $regions_meta->{$region_id}{city_id}
-                                            : $users_meta->{$user_id}{city_id},
+                                    my $ins = {
+                                        user_id      => $user_id,
+                                        indicator_id => $indicator_id,
+                                        valid_from   => $date,
+                                        city_id      => defined $region_id
+                                        ? $regions_meta->{$region_id}{city_id}
+                                        : $users_meta->{$user_id}{city_id},
 
-                                            active_value => defined $region_id
-                                            ? $regions_meta->{$region_id}{active}
-                                            : 1,
+                                        institute_id   => $users_meta->{$user_id}{institute_id},
+                                        variation_name => $variation,
 
-                                            institute_id   => $users_meta->{$user_id}{institute_id},
-                                            variation_name => $variation,
+                                        value   => $variations->{$variation}{$active_value}[0],
+                                        sources => $variations->{$variation}{$active_value}[1],
 
-                                            value   => $variations->{$variation}{$active_value}[0],
-                                            sources => $variations->{$variation}{$active_value}[1],
+                                        region_id => $region_id,
 
-                                            region_id => $region_id,
+                                        active_value => $active_value,
 
-                                            active_value => $active_value,
+                                        (
+                                            exists $params{generated_by_compute}
+                                            ? ( generated_by_compute => 1, )
+                                            : ()
+                                            )
 
-                                            (
-                                                exists $params{generated_by_compute}
-                                                ? ( generated_by_compute => 1, )
-                                                : ()
-                                              )
-
-                                        }
-                                    );
+                                    };
+                                    $indval_rs->create($ins);
 
                                 }
 
@@ -209,7 +227,7 @@ sub get_regions_meta {
     while ( my $row = $citys->next ) {
         $users->{ $row->{id} } = {
             city_id => $row->{city_id},
-            active  => $row->{depth_level} == 3 ? 1 : 0
+            #active  => $row->{depth_level} == 3 ? 1 : 0
         };
         push @$level3, $row->{id} if $row->{depth_level} == 3;
     }

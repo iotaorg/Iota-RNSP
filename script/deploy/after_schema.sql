@@ -266,10 +266,10 @@ BEGIN
     join variable v on iv.variable_id = v.id
 
     where r.upper_region in (
-    select upper_region from region x where x.id in (SELECT unnest($1)) and x.depth_level= 3
+        select upper_region from region x where x.id in (SELECT unnest($1)) and x.depth_level= 3
     )
     and active_value = true
-    and r.depth_level= 3
+    and r.depth_level = 3
 
     and v.type in ('int', 'num')
     group by 1,2,3,4;

@@ -209,6 +209,7 @@ eval {
             is_deeply( $ii, ['251.6668'], 'ainda existe esse valor!' );
 
             &add_value( $reg1_uri, '444', '2010' );
+
             $ii = &get_indicator( $reg1, '2010', 1 );
             is_deeply( $ii, ['445'], 'existe o do usuario pra 2010' );
 
