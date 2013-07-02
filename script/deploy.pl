@@ -1,13 +1,19 @@
-
-use lib './lib';
+use strict;
 use utf8;
-
-use Iota::Schema;
-
+use lib './lib';
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(Iota);
+package Iota;
+use Catalyst qw( ConfigLoader  );
+
+__PACKAGE__->setup();
+
+package main;
+
+
+use Iota::Schema;
+
 my $config = Iota->config;
 
 my $schema = Iota::Schema->connect(
