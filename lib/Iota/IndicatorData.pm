@@ -45,12 +45,15 @@ sub upsert {
 
     if ( exists $params{regions_id} ) {
 
-        my $rs = $self->schema->resultset('Region')->search({
-            id          => $params{regions_id}
-        }, { columns => ['id','depth_level'] })->as_hashref;
         my %region_by_lvl;
-        while (my $r = $rs->next){
-            push @{$region_by_lvl{$r->{depth_level}}}, $r->{id};
+        # apenas carrega se for necessario
+        unless (exists $params{generated_by_compute}){
+            my $rs = $self->schema->resultset('Region')->search({
+                id          => $params{regions_id}
+            }, { columns => ['id','depth_level'] })->as_hashref;
+            while (my $r = $rs->next){
+                push @{$region_by_lvl{$r->{depth_level}}}, $r->{id};
+            }
         }
 
         # procura pelos valores salvos naquela regiao
@@ -68,6 +71,9 @@ sub upsert {
             )
             : (
                 '-or' => [
+                    # quando a regiao for level 2, carregar apenas os valores dos usuarios
+                    # e nao os calculados
+                    # pois os calculados estao no ternario acima.
                     ({
                         'me.region_id'    => { 'in' => $region_by_lvl{2} },
                         'me.active_value' => 0
