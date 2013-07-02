@@ -64,7 +64,7 @@ requires 'Catalyst::Plugin::Assets';
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';
-requires 'Text2URI';
+requires 'Text2URI' => '0.3001';
 requires 'MooseX::Traits';
 requires 'DBD::Pg';
 requires 'Statistics::Descriptive';
