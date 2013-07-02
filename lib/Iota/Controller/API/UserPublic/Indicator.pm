@@ -432,8 +432,20 @@ sub indicator_status_GET {
     my $ultimos = {};
     eval {
         my $rs = $c->stash->{collection};
-
         my $user_id = $c->stash->{user_obj}->id;
+
+        my $rs_x = $c->model('DB')->resultset('ViewIndicatorGoalRatio')->search_rs(
+            undef,
+            {
+                'bind' => [ $user_id ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            }
+        );
+        my $ratios = {};
+        while (my $f = $rs_x->next){
+            $ratios->{delete $f->{id}} = $f;
+        }
+
         while ( my $indicator = $rs->next ) {
 
             my $indicator_formula = Iota::IndicatorFormula->new(
@@ -562,8 +574,9 @@ sub indicator_status_GET {
                   {
                     id           => $indicator->id,
                     has_current  => $has_current,
-                    has_data     => ( keys %$outros_periodos > 0 ) ? 1 : 0,
-                    without_data => ( !$has_current && ( keys %$outros_periodos == 0 ) ) ? 1 : 0
+                    (has_data     => ( keys %$outros_periodos > 0 ) ? 1 : 0),
+                    (without_data => ( !$has_current && ( keys %$outros_periodos == 0 ) ) ? 1 : 0),
+                    (ratio        => $ratios->{$indicator->id})x!! exists $ratios->{$indicator->id}
                   };
             }
         }
