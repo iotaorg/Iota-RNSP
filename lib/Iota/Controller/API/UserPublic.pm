@@ -32,6 +32,8 @@ sub network_GET {
 
 =pod
 
+=encoding utf-8
+
 retorna
 {
     "users": [
@@ -187,7 +189,6 @@ sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 =pod
 
-=encoding utf-8
 
 Retorna as informações das ultimas versoes das variveis basicas, cidade, foto da capa,
 
