@@ -23,7 +23,7 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my $url = $c->req->uri->path;
     if (   $url =~ /variable_config$/
         || $url =~ /variable_config\/\d+$/ && $c->user->id != $id && $c->req->method eq 'GET' ) {
-        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+        $self->status_forbidden( $c, message => "access denied x $url", ), $c->detach
           unless $c->check_any_user_role(qw(user));
     }
     else {
