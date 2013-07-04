@@ -146,7 +146,7 @@ drop table if exists download_data;
 drop table if exists download_variable;
 
 
-CREATE VIEW download_data AS
+CREATE OR REPLACE VIEW download_data AS
 SELECT m.city_id,
        c.name AS city_name,
        e.name AS axis_name,
@@ -241,7 +241,8 @@ join network_user nu on nu.user_id = u.id
 join network n on n.id = nu.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
---where value is not null and value != ''
+where --value is not null and value != ''
+active_value = TRUE
 ;
 
 
