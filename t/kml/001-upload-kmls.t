@@ -159,6 +159,34 @@ eval {
             $ret2 = eval { from_json( $res->content ) };
             is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
 
+            ( $res, $c ) = ctx_request(
+                POST $user1_uri. '/kml',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [ $Bin . '/sp_outro_layout.kml' ],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+            $ret2 = eval { from_json( $res->content ) };
+            is( @{ $ret2->{vec} }, 289, 'tem 96 vetores' );
+
+
+            ( $res, $c ) = ctx_request(
+                POST $user1_uri. '/kml',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [ $Bin . '/sp_mais_um_outro.kml' ],
+                ]
+            );
+
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+            my $ret2 = eval { from_json( $res->content ) };
+            is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
+
             die 'rollback';
 
         }

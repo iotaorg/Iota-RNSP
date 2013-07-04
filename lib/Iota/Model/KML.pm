@@ -6,6 +6,8 @@ use XML::Simple qw(:strict);
 
 use Iota::Model::KML::LineString;
 use Iota::Model::KML::Polygon;
+use Iota::Model::KML::LinearRing;
+
 
 sub process {
     my ( $self, %param ) = @_;
@@ -21,7 +23,7 @@ sub process {
 
     my $parsed;
 
-    for my $mod (qw/LineString Polygon/) {
+    for my $mod (qw/LinearRing LineString Polygon/) {
         my $class = "Iota::Model::KML::$mod";
         my $test  = $class->new->parse($kml);
         next unless defined $test;

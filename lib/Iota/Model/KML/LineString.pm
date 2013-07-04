@@ -14,6 +14,12 @@ sub parse {
       && ref $kml->{Document}[0]{Placemark} eq 'ARRAY';
 
     foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
+
+        $place = $place->{MultiGeometry}[0]
+            if ref $place eq 'HASH'
+            && exists $place->{MultiGeometry}
+            && ref $place->{MultiGeometry} eq 'ARRAY';
+
         return undef
           unless ref $place eq 'HASH'
           && exists $place->{LineString}

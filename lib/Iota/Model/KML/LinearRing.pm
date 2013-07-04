@@ -1,4 +1,4 @@
-package Iota::Model::KML::Polygon;
+package Iota::Model::KML::LinearRing;
 use strict;
 use utf8;
 use Moose;
@@ -10,12 +10,12 @@ sub parse {
       unless ref $kml eq 'HASH'
       && exists $kml->{Document}
       && ref $kml->{Document} eq 'ARRAY'
-      && exists $kml->{Document}[0]{Folder}
-      && ref $kml->{Document}[0]{Folder} eq 'ARRAY'
-      && @{ $kml->{Document}[0]{Folder} } == 1
-      && exists $kml->{Document}[0]{Folder}[0]{Placemark}
-      && ref $kml->{Document}[0]{Folder}[0]{Placemark} eq 'ARRAY';
-    foreach my $place ( @{ $kml->{Document}[0]{Folder}[0]{Placemark} } ) {
+      && exists $kml->{Document}[0]{Placemark}
+      && ref $kml->{Document}[0]{Placemark} eq 'ARRAY';
+
+    foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
+
+
 
         return undef
           unless ref $place eq 'HASH'
@@ -28,15 +28,22 @@ sub parse {
           && exists $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}
           && ref $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates} eq 'ARRAY';
 
-        my $str = $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}[0] . ' ';
+
+        my $str = $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}[0];
+        $str =~ s/\s+/ /go;
+        $str =~ s/^\s//o;
+        $str =~ s/\s$//o;
+        $str .= ' ';
         my $xok = $str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+,\d+\.\d+\s+)+$/o;
         return undef unless $xok;
+
+        $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}[0] = $str;
     }
 
     # valido!
 
     my @vecs;
-    foreach my $place ( @{ $kml->{Document}[0]{Folder}[0]{Placemark} } ) {
+    foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
 
         my @latlng = split / /o, $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}[0];
 
