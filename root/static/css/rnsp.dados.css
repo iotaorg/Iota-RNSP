@@ -744,14 +744,14 @@ td.settinhas.down {
 	border: 1px solid #ccc;
 }
 
-
-
-
-
-
-
-
-
+#filtro_mapa #filtro-mapa-uf,
+#filtro_mapa #filtro-mapa-cidade	{
+	display: inline-block
+}
+#filtro_mapa #filtro-mapa-cidade	{
+	display: none;
+	margin-left: 15px;
+}
 
 div.sociais>h5 {color: #666}
 a.social-icon {
