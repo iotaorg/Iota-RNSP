@@ -262,7 +262,10 @@ sub stash_comparacao_distritos {
     my $indicator = $c->stash->{indicator};
     my $user      = $c->stash->{user};
 
-    $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', ];
+    $c->stash->{color_index} = [
+        '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B',
+        '#FCEC35'
+    ];
 
     my $valor_rs = $schema->resultset(
         $region->depth_level == 2
@@ -287,17 +290,24 @@ sub stash_comparacao_distritos {
     while ( my ( $ano, $variacoes ) = each %$por_ano ) {
         while ( my ( $variacao, $distritos ) = each %$variacoes ) {
             if ( @$distritos < 5 ) {
-                $out->{$ano}{$variacao} = { status => 'Dados Insuficientes' };
+                $_->{i} = 5 for @$distritos;
+                $out->{$ano}{$variacao} = {
+                    all => $distritos,
+                };
             }
             else {
                 my $stat = $freq->iterate($distritos);
+                # melhor = mais alto, entao inverte as cores
+                if ($indicator->{sort_direction} eq 'greater value' ){
+                    $_->{i} = 4 - $_->{i} for @$distritos;
+                    $distritos = [reverse @$distritos]
+                }
                 $out->{$ano}{$variacao} = {
                     all    => $distritos,
                     top3   => [ $distritos->[0], $distritos->[1], $distritos->[2], ],
                     lower3 => [ $distritos->[-3], $distritos->[-2], $distritos->[-1] ],
                     mean   => $stat->mean()
                 };
-
             }
         }
 
