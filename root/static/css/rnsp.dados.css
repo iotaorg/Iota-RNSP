@@ -752,7 +752,9 @@ td.settinhas.down {
 	display: none;
 	margin-left: 15px;
 }
-
+select#uf_filter{
+	width: 80px;
+}
 div.sociais>h5 {color: #666}
 a.social-icon {
     float: left;

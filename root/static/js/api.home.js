@@ -89,7 +89,7 @@ if (!(typeof google == "undefined")){
 			}
 		});
 		
-		$("#filtro-mapa-cidade").fadeIn();
+		$("#filtro-mapa-cidade").fadeIn().css("display","inline-block");;
 		if ($(".data-right #result-cidades table tbody tr").length <= 0){
 			$(".data-right #result-cidades table tbody").append("<tr class='even'><td colspan='10' class='center'>Nenhuma cidade encontrada</td></tr>");
 			$(".data-right #result-cidades table tbody tr").unbind();
