@@ -264,17 +264,18 @@ sub stash_comparacao_distritos {
 
     $c->stash->{color_index} = [
         '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B',
-        '#FCEC35'
+        '#F1F174'
     ];
 
-    my $valor_rs = $schema->resultset(
-        $region->depth_level == 2
-        ? 'ViewValoresSubprefeituras'
-        : 'ViewValoresDistritos'
-      )->search(
+    my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
         {},
         {
-            bind         => [ $indicator->{id}, $user->{id}, $region->id ],
+            bind         => [
+                $user->{id}, $indicator->{id},
+                $user->{id}, $indicator->{id},
+                $region->depth_level,
+                $region->id
+            ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
       );
@@ -289,29 +290,52 @@ sub stash_comparacao_distritos {
     my $out = {};
     while ( my ( $ano, $variacoes ) = each %$por_ano ) {
         while ( my ( $variacao, $distritos ) = each %$variacoes ) {
-            if ( @$distritos < 5 ) {
-                $_->{i} = 5 for @$distritos;
-                $out->{$ano}{$variacao} = {
-                    all => $distritos,
-                };
+
+            my $stat = $freq->iterate($distritos);
+
+            my $definidos = [ grep {defined $_->{num}} @$distritos ];
+            # melhor = mais alto, entao inverte as cores
+            if ($indicator->{sort_direction} eq 'greater value' ){
+                $_->{i} = 4 - $_->{i} for @$definidos;
+                $definidos = [reverse @$definidos]
             }
-            else {
-                my $stat = $freq->iterate($distritos);
-                # melhor = mais alto, entao inverte as cores
-                if ($indicator->{sort_direction} eq 'greater value' ){
-                    $_->{i} = 4 - $_->{i} for @$distritos;
-                    $distritos = [reverse @$distritos]
-                }
+
+            if ($stat) {
                 $out->{$ano}{$variacao} = {
                     all    => $distritos,
-                    top3   => [ $distritos->[0], $distritos->[1], $distritos->[2], ],
-                    lower3 => [ $distritos->[-3], $distritos->[-2], $distritos->[-1] ],
+                    top3   => [ $definidos->[0], $definidos->[1], $definidos->[2], ],
+                    lower3 => [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
                     mean   => $stat->mean()
                 };
+            }elsif (@$definidos == 4){
+                $definidos->[0]{i} = 0; # Alta / Melhor
+                $definidos->[1]{i} = 2; # média
+                $definidos->[2]{i} = 2; # média
+                $definidos->[3]{i} = 4; # Baixa / Pior
+            }elsif (@$definidos == 3){
+                $definidos->[0]{i} = 0; # Alta / Melhor
+                $definidos->[1]{i} = 2; # média
+                $definidos->[2]{i} = 4; # Baixa / Pior
+            }elsif (@$definidos == 2){
+                $definidos->[0]{i} = 0; # Alta / Melhor
+                $definidos->[1]{i} = 4; # Baixa / Pior
+            }else{
+                $_->{i} = 5 for @$definidos;
             }
-        }
 
+            $out->{$ano}{$variacao} = {
+                all    => $distritos
+            } unless exists $out->{$ano}{$variacao};
+
+            my @nao_definidos = grep {!defined $_->{num}} @$distritos;
+            for (@nao_definidos){
+                $_->{i} = 5; # amarelo/sem valor
+                $_->{num} = 'n/d';
+            }
+            push @$definidos, @nao_definidos;
+        }
     }
+
     $c->stash->{analise_comparativa} = $out;
 
     if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa' ) {
