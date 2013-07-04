@@ -17,6 +17,9 @@ if (!(typeof google == "undefined")){
 		$(".data-right #result-cidades").append("<table class='result-cidades'><thead><tr><th>Cidade</th><th>Estado</th></tr></thead><tbody></tbody></table>");
 		$.clearMarkers();
 		var row_class = "even";
+		//carrega tabela e combo de cidades
+		$("#cidade_filter").empty();
+		$("#cidade_filter").append("<option value=''>Selecione");
 		$(users_list).each(function(index,item){
 			if (item.uf == $("#uf_filter").val()){
 				if (row_class == "even"){
@@ -24,15 +27,18 @@ if (!(typeof google == "undefined")){
 				}else{
 					row_class = "even";
 				}
-				$(".data-right #result-cidades table tbody").append("<tr class='$$row_class' uri='$$uri' pais='$$pais' uf='$$uf'><td>$$cidade</td><td class='center'>$$estado</td></tr>".render({
+				$(".data-right #result-cidades table tbody").append("<tr class='$$row_class' uri='$$uri' city-id='$$id' pais='$$pais' uf='$$uf'><td>$$cidade</td><td class='center'>$$estado</td></tr>".render({
 					cidade: item.nome,
 					estado: item.uf.toUpperCase(),
 					uf: item.uf.toLowerCase(),
 					pais: item.pais.toLowerCase(),
+					id: item.id,
 					uri: item.uri,
 					row_class: row_class
 				}));
 
+				$("#cidade_filter").append("<option value='$$id'>$$cidade".render({id: item.id, cidade: item.nome}));
+				
 				$("#bubble-intro").fadeOut("slow");
 				var lat = "";
 				var lng = "";
@@ -82,14 +88,27 @@ if (!(typeof google == "undefined")){
 				});
 			}
 		});
+		
+		$("#filtro-mapa-cidade").fadeIn().css("display","inline-block");;
 		if ($(".data-right #result-cidades table tbody tr").length <= 0){
 			$(".data-right #result-cidades table tbody").append("<tr class='even'><td colspan='10' class='center'>Nenhuma cidade encontrada</td></tr>");
 			$(".data-right #result-cidades table tbody tr").unbind();
+			$("#cidade_filter").empty();
+			$("#cidade_filter").append("<option value=''>Nenhuma cidade encontrada");
 		}else{
 			$(".data-right #result-cidades table tbody tr").bind('click', function(e) {
 				window.location.href = "/" + $(this).attr("pais") + "/" + $(this).attr("uf") + "/" + $(this).attr("uri");
 			});
 		}
+		$("#cidade_filter").change(function(e){
+			var selected = $(".data-right #result-cidades table tbody tr[city-id=$$id]".render({
+				id: $(this).find("option:selected").val()
+			}));
+			
+			if (selected.length > 0){
+				window.location.href = "/" + $(selected).attr("pais") + "/" + $(selected).attr("uf") + "/" + $(selected).attr("uri");
+			}
+		});
 	}
 
 	$.clearMarkers = function(){

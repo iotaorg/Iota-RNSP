@@ -32,9 +32,16 @@
                         <div class="content-fill">
 
                                 <div id="filtro_mapa">
-                                    Estado: <select id="uf_filter">
-                                            <option value="">Selecione
-                                        </select>
+									<div id='filtro-mapa-uf'>
+										Estado: <select id="uf_filter">
+												<option value="">Selecione
+											</select>
+									</div>
+									<div id='filtro-mapa-cidade'>
+										Cidade: <select id="cidade_filter">
+												<option value="">Selecione
+											</select>
+									</div>
                                 </div>
 
                                 <div id="mapa">
