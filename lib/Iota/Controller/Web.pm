@@ -271,10 +271,10 @@ sub stash_comparacao_distritos {
         {},
         {
             bind         => [
-                $user->{id}, $indicator->{id},
-                $user->{id}, $indicator->{id},
                 $region->depth_level,
-                $region->id
+                $region->id,
+                $user->{id}, $indicator->{id},
+                $user->{id}, $indicator->{id},
             ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }

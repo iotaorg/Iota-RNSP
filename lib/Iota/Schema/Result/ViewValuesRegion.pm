@@ -17,14 +17,22 @@ __PACKAGE__->result_source_instance->is_virtual(1);
 
 __PACKAGE__->result_source_instance->view_definition(
     q[
-    with periods as  (
+    with tregions as (
+     select id
+        from region
+        where depth_level = ? and city_id = (
+            select city_id from region where id = ?
+        )
+    ), periods as  (
        select valid_from
        from indicator_value v
+       join tregions x on x.id = v.region_id
        where v.city_id = (select city_id from "user" where id = ?) and v.indicator_id = ?
+
        group by 1
    )
    select
-        coalesce(variation_name, '') as variation_name,
+        variation_name,
         pp.valid_from,
         r.name,
         value::numeric as num,
@@ -32,16 +40,10 @@ __PACKAGE__->result_source_instance->view_definition(
         r.name_url
 
     from region as r
+    join tregions x on x.id=r.id
     CROSS join periods pp
     left join indicator_value v on r.id = v.region_id and v.city_id = (select city_id from "user" where id = ?) and v.indicator_id = ? and pp.valid_from = v.valid_from
-    where
-     r.id in (
-        select id
-        from region
-        where depth_level = ? and city_id = (
-            select city_id from region where id = ?
-        )
-    )
+
     order by num
 ]
 );
