@@ -60,6 +60,7 @@ requires 'Spreadsheet::ParseExcel::Stream';
 requires 'DateTime::Format::Excel';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
+requires 'common::sense';
 requires 'Catalyst::Plugin::Assets';
 
 requires 'Text::CSV_XS';

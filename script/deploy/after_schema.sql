@@ -362,3 +362,38 @@ $BODY$
   COST 100;
 ALTER FUNCTION compute_upper_regions(integer[])
   OWNER TO postgres;
+
+
+
+CREATE OR REPLACE FUNCTION clone_values(new_id integer, from_id integer, var_id integer, periods timestamp without time zone[])
+  RETURNS int AS
+$BODY$DECLARE integer_var int;
+BEGIN
+
+delete from variable_value
+where variable_id = var_id
+and   user_id = new_id
+and valid_from in (select x from unnest(periods::date[]) as x);
+
+insert into variable_value(
+"value", variable_id, user_id, created_at, value_of_date, valid_from,
+       valid_until, observations, source, file_id, cloned_from_user
+)
+SELECT
+
+"value", variable_id, new_id, now(), value_of_date, valid_from,
+       valid_until, observations, source, file_id, from_id
+
+From variable_value
+where variable_id = var_id
+and   user_id = from_id
+and valid_from in (select x from unnest(periods::date[]) as x);
+
+GET DIAGNOSTICS integer_var = ROW_COUNT;
+
+
+return integer_var;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;

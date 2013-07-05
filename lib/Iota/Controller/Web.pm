@@ -309,8 +309,8 @@ sub stash_comparacao_distritos {
                 };
             }elsif (@$definidos == 4){
                 $definidos->[0]{i} = 0; # Alta / Melhor
-                $definidos->[1]{i} = 2; # média
-                $definidos->[2]{i} = 2; # média
+                $definidos->[1]{i} = 1; # acima media
+                $definidos->[2]{i} = 3; # abaixo da media
                 $definidos->[3]{i} = 4; # Baixa / Pior
             }elsif (@$definidos == 3){
                 $definidos->[0]{i} = 0; # Alta / Melhor

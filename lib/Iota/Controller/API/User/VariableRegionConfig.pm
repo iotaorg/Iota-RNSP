@@ -178,6 +178,7 @@ sub list_GET {
 
     $c->detach('/error_404') unless $config;
 
+
     $self->status_ok( $c, entity => { ( map { $_ => $config->{$_} } qw(id display_in_home variable_id) ) } );
 }
 
