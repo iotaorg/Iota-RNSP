@@ -38,7 +38,7 @@ if (!(typeof google == "undefined")){
 				}));
 
 				$("#cidade_filter").append("<option value='$$id'>$$cidade".render({id: item.id, cidade: item.nome}));
-				
+
 				$("#bubble-intro").fadeOut("slow");
 				var lat = "";
 				var lng = "";
@@ -88,7 +88,7 @@ if (!(typeof google == "undefined")){
 				});
 			}
 		});
-		
+
 		$("#filtro-mapa-cidade").fadeIn().css("display","inline-block");;
 		if ($(".data-right #result-cidades table tbody tr").length <= 0){
 			$(".data-right #result-cidades table tbody").append("<tr class='even'><td colspan='10' class='center'>Nenhuma cidade encontrada</td></tr>");
@@ -104,7 +104,7 @@ if (!(typeof google == "undefined")){
 			var selected = $(".data-right #result-cidades table tbody tr[city-id=$$id]".render({
 				id: $(this).find("option:selected").val()
 			}));
-			
+
 			if (selected.length > 0){
 				window.location.href = "/" + $(selected).attr("pais") + "/" + $(selected).attr("uf") + "/" + $(selected).attr("uri");
 			}

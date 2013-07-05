@@ -336,7 +336,7 @@ Related object: L<Iota::Schema::Result::Axis>
 __PACKAGE__->belongs_to(
     "axis", "Iota::Schema::Result::Axis",
     { id            => "axis_id" },
-    { is_deferrable => 1, on_delete => "CASCADE,", on_update => "CASCADE," },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 indicator_network_configs

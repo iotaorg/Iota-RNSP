@@ -23,6 +23,7 @@ my $schema = Iota::Schema->connect(
 
 &run_sql( $schema, "$Bin/deploy/before_schema.sql" );
 $schema->deploy;
+
 &run_sql( $schema, "$Bin/deploy/after_schema.sql" );
 &run_sql( $schema, "$Bin/deploy/after_schema.lang.sql" );
 

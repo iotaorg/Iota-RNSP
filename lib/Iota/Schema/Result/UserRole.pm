@@ -100,7 +100,7 @@ Related object: L<Iota::Schema::Result::Role>
 __PACKAGE__->belongs_to(
     "role", "Iota::Schema::Result::Role",
     { id            => "role_id" },
-    { is_deferrable => 1, on_delete => "CASCADE,", on_update => "CASCADE," },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 user
@@ -114,7 +114,7 @@ Related object: L<Iota::Schema::Result::User>
 __PACKAGE__->belongs_to(
     "user", "Iota::Schema::Result::User",
     { id            => "user_id" },
-    { is_deferrable => 1, on_delete => "CASCADE,", on_update => "CASCADE," },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 # Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-07-05 18:12:56
