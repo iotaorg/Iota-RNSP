@@ -183,7 +183,7 @@ eval {
 
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
-            my $ret2 = eval { from_json( $res->content ) };
+            $ret2 = eval { from_json( $res->content ) };
             is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
 
             die 'rollback';

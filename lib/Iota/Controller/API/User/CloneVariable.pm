@@ -2,7 +2,7 @@ package Iota::Controller::API::User::CloneVariable;
 
 use Moose;
 use JSON qw (encode_json);
-use common::sense;
+
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
