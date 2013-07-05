@@ -121,15 +121,13 @@ eval {
             my $config2 = eval { from_json( $res->content ) };
             is( $config2->{id}, $config_id->{id}, 'pesquisa funcionando' );
 
-            ( $res, $c ) = ctx_request( GET '/api/indicator?user_id=' .$Iota::TestOnly::Mock::AuthUser::_id );
+            ( $res, $c ) = ctx_request( GET '/api/indicator?user_id=' . $Iota::TestOnly::Mock::AuthUser::_id );
             my $test_info = eval { from_json( $res->content ) };
-            is($test_info->{indicators}[0]{user_indicator_config}{id}, $config_id->{id}, 'appear in search');
+            is( $test_info->{indicators}[0]{user_indicator_config}{id}, $config_id->{id}, 'appear in search' );
 
             ( $res, $c ) = ctx_request( DELETE $url_user . '/' . $config_id->{id} );
             ok( $res->is_success, 'indicator deleted!' );
             is( $res->code, 204, 'deleted!' );
-
-
 
             die 'rollback';
         }

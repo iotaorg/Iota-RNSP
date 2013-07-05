@@ -1,0 +1,40 @@
+perltidy version 20121207 log file on a linux system, OLD_PERL_VERSION=5.016002
+Configuration and command line parameters for this run:
+-bar -it=4 -l
+To find error messages search for 'WARNING' with your editor
+Indentation will be with 4 spaces
+Line 2 implies starting-indentation-level = 0
+The nesting depths in the table below are at the start of the lines.
+The indicated output line numbers are not always exact.
+ci = levels of continuation indentation; bk = 1 if in BLOCK, 0 if not.
+
+in:out indent c b  nesting   code + messages; (messages begin with >>>)
+lines  levels i k            (code begins with one '.' per indent level)
+------  ----- - - --------   -------------------------------------------
+L50:50   i3:3 0 1 {({        ...ok(delete $list->{variables_name ....
+L53:52   i4:5 0 0 {({({      >>>Start indentation disagreement: input=4; output=5
+L68:69   i3:3 0 1 {({        >>>End indentation disagreement from input line 53
+L99:99   i4:5 0 0 {({({      >>>Start indentation disagreement: input=4; output=5
+L100:99  i5:6 0 0 {({({{     ......19 => {
+L114:116 i3:3 0 1 {({        >>>End indentation disagreement from input line 99
+L125:126 i0:0 0 1            sub add_value {
+L143:144 i0:0 0 1            sub list_status {
+L158:156 i0:0 0 1            sub post_2010 {
+L204:197 i0:0 0 1            sub post_2011 {
+L222:215 i0:0 0 1            sub is_same_value {
+L227:219 i2:3 0 0 {({        >>>Start indentation disagreement: input=2; output=3
+L231:226 i1:1 0 1 {          >>>End indentation disagreement from input line 227
+L239:231 i0:0 0 1            sub value_not_exists {
+L244:235 i2:3 0 0 {({        >>>Start indentation disagreement: input=2; output=3
+L248:242 i1:1 0 1 {          >>>End indentation disagreement from input line 244
+L251:244 i2:3 0 0 {({        >>>Start indentation disagreement: input=2; output=3
+L255:251 i1:1 0 1 {          >>>End indentation disagreement from input line 251
+L257:253 i0:0 0 1 {          >>>Last line
+
+First indentation disagreement seen at input line 53
+Last indentation disagreement seen at input line 254
+Note: Indentation disagreement detection is not accurate for outdenting and -lp.
+
+No lines exceeded 120 characters
+  Maximum output line length was 107 at line 149
+Converged.  Output for iteration 2 same as for iter 1.

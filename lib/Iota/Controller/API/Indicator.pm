@@ -310,7 +310,6 @@ sub list_GET {
 
     my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
 
-
     my %roles = map { $_ => 1 } $c->user->roles;
 
     # superadmin visualiza todas
@@ -386,17 +385,19 @@ sub list_GET {
         };
     }
 
-    if ($c->req->params->{user_id}){
-        my $rs = $c->model('DB::UserIndicatorConfig')->search({
-            indicator_id => {'in' => [map { $_->{id}} @objs]},
-            user_id      =>$c->req->params->{user_id}
-        })->as_hashref;
+    if ( $c->req->params->{user_id} ) {
+        my $rs = $c->model('DB::UserIndicatorConfig')->search(
+            {
+                indicator_id => { 'in' => [ map { $_->{id} } @objs ] },
+                user_id      => $c->req->params->{user_id}
+            }
+        )->as_hashref;
 
         my $out = {};
-        while (my $r = $rs->next){
-            $out->{delete $r->{indicator_id}} = $r;
+        while ( my $r = $rs->next ) {
+            $out->{ delete $r->{indicator_id} } = $r;
         }
-        $_->{user_indicator_config} = delete $out->{$_->{id}} for (@objs);
+        $_->{user_indicator_config} = delete $out->{ $_->{id} } for (@objs);
     }
 
     $self->status_ok( $c, entity => { indicators => \@objs } );

@@ -46,13 +46,17 @@ sub upsert {
     if ( exists $params{regions_id} ) {
 
         my %region_by_lvl;
+
         # apenas carrega se for necessario
-        unless (exists $params{generated_by_compute}){
-            my $rs = $self->schema->resultset('Region')->search({
-                id          => $params{regions_id}
-            }, { columns => ['id','depth_level'] })->as_hashref;
-            while (my $r = $rs->next){
-                push @{$region_by_lvl{$r->{depth_level}}}, $r->{id};
+        unless ( exists $params{generated_by_compute} ) {
+            my $rs = $self->schema->resultset('Region')->search(
+                {
+                    id => $params{regions_id}
+                },
+                { columns => [ 'id', 'depth_level' ] }
+            )->as_hashref;
+            while ( my $r = $rs->next ) {
+                push @{ $region_by_lvl{ $r->{depth_level} } }, $r->{id};
             }
         }
 
@@ -64,30 +68,35 @@ sub upsert {
             ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
             'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
 
-            (exists $params{generated_by_compute}
-            ? (
-                'me.generated_by_compute' => 1,
-                'me.region_id'   => { 'in' => $params{regions_id} }
+            (
+                exists $params{generated_by_compute}
+                ? (
+                    'me.generated_by_compute' => 1,
+                    'me.region_id'            => { 'in' => $params{regions_id} }
+                  )
+                : (
+                    '-or' => [
+
+                        # quando a regiao for level 2, carregar apenas os valores dos usuarios
+                        # e nao os calculados
+                        # pois os calculados estao no ternario acima.
+                        (
+                            {
+                                'me.region_id'    => { 'in' => $region_by_lvl{2} },
+                                'me.active_value' => 0
+                            }
+                        ) x !!scalar $region_by_lvl{2},
+                        (
+                            {
+                                'me.region_id' => { 'in' => $region_by_lvl{3} }
+                            }
+                        ) x !!scalar $region_by_lvl{3},
+                    ]
+                )
             )
-            : (
-                '-or' => [
-                    # quando a regiao for level 2, carregar apenas os valores dos usuarios
-                    # e nao os calculados
-                    # pois os calculados estao no ternario acima.
-                    ({
-                        'me.region_id'    => { 'in' => $region_by_lvl{2} },
-                        'me.active_value' => 0
-                    } )x!! scalar $region_by_lvl{2},
-                    ({
-                        'me.region_id' => {'in' =>  $region_by_lvl{3} }
-                    }) x!! scalar $region_by_lvl{3},
-                ]
-            ))
         };
 
-        $rr_values_rs = $rr_values_rs->search(
-            $where
-        );
+        $rr_values_rs = $rr_values_rs->search($where);
 
         $self->_get_values_periods_region(
             out => $period_values,
@@ -130,10 +139,10 @@ sub upsert {
 
             my $where = {
                 ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
-                ( 'me.user_id'              => $params{user_id} ) x !!exists $params{user_id},
-                ( 'me.indicator_id'         => $params{indicators} ) x !!exists $params{indicators},
+                ( 'me.user_id'      => $params{user_id} ) x !!exists $params{user_id},
+                ( 'me.indicator_id' => $params{indicators} ) x !!exists $params{indicators},
 
-                ( 'me.generated_by_compute' => $params{generated_by_compute} ) x!! exists $params{generated_by_compute},
+                ( 'me.generated_by_compute' => $params{generated_by_compute} ) x !!exists $params{generated_by_compute},
 
                 # se nao foi informado a regiao, nao tem calculo dela.
                 exists $params{regions_id}
@@ -178,7 +187,7 @@ sub upsert {
                                             exists $params{generated_by_compute}
                                             ? ( generated_by_compute => 1, )
                                             : ()
-                                            )
+                                          )
 
                                     };
                                     $indval_rs->create($ins);
@@ -233,6 +242,7 @@ sub get_regions_meta {
     while ( my $row = $citys->next ) {
         $users->{ $row->{id} } = {
             city_id => $row->{city_id},
+
             #active  => $row->{depth_level} == 3 ? 1 : 0
         };
         push @$level3, $row->{id} if $row->{depth_level} == 3;

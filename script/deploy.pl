@@ -11,7 +11,6 @@ __PACKAGE__->setup();
 
 package main;
 
-
 use Iota::Schema;
 
 my $config = Iota->config;

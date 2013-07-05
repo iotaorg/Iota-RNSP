@@ -16,9 +16,9 @@ sub parse {
     foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
 
         $place = $place->{MultiGeometry}[0]
-            if ref $place eq 'HASH'
-            && exists $place->{MultiGeometry}
-            && ref $place->{MultiGeometry} eq 'ARRAY';
+          if ref $place eq 'HASH'
+          && exists $place->{MultiGeometry}
+          && ref $place->{MultiGeometry} eq 'ARRAY';
 
         return undef
           unless ref $place eq 'HASH'
@@ -31,7 +31,7 @@ sub parse {
               unless exists $line->{coordinates}
               && ref $line->{coordinates} eq 'ARRAY';
             my $str = $line->{coordinates}[0] . ' ';
-            my $ok = $str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+\s)+$/o;
+            my $ok  = $str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+\s)+$/o;
             return undef unless $ok;
         }
     }

@@ -144,7 +144,7 @@ sub _download {
             $data->{city_id},
             $data->{city_name},
             $data->{variable_id},
-            $data->{type}   eq 'int' ? 'Inteiro'
+            $data->{type} eq 'int'   ? 'Inteiro'
             : $data->{type} eq 'str' ? 'Alfanumérico'
             : 'Valor',
             $data->{cognomen},

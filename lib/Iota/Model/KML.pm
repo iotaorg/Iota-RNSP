@@ -8,7 +8,6 @@ use Iota::Model::KML::LineString;
 use Iota::Model::KML::Polygon;
 use Iota::Model::KML::LinearRing;
 
-
 sub process {
     my ( $self, %param ) = @_;
 

@@ -15,8 +15,6 @@ sub parse {
 
     foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
 
-
-
         return undef
           unless ref $place eq 'HASH'
           && exists $place->{Polygon}
@@ -27,7 +25,6 @@ sub parse {
           && ref $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing} eq 'ARRAY'
           && exists $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}
           && ref $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates} eq 'ARRAY';
-
 
         my $str = $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}[0];
         $str =~ s/\s+/ /go;

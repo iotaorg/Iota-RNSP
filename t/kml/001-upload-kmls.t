@@ -172,7 +172,6 @@ eval {
             $ret2 = eval { from_json( $res->content ) };
             is( @{ $ret2->{vec} }, 289, 'tem 96 vetores' );
 
-
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',

@@ -6,11 +6,12 @@ use Statistics::Descriptive;
 sub iterate {
     my ( $self, $rows ) = @_;
 
-    my @numbers = map { $_->{num} } grep {defined $_->{num}} @{$rows};
+    my @numbers = map { $_->{num} } grep { defined $_->{num} } @{$rows};
 
-    if (scalar @numbers < 5){
+    if ( scalar @numbers < 5 ) {
         $_->{i} = 5 for @{$rows};
-    }else{
+    }
+    else {
         my $stat = Statistics::Descriptive::Full->new();
         $stat->add_data(@numbers);
 

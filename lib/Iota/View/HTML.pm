@@ -70,7 +70,7 @@ sub value4human {
     }
 
     if ( length($pre) > 3 ) {
-        $pre = reverse $pre;    # reverse the number's digits
+        $pre = reverse $pre;         # reverse the number's digits
         $pre =~ s/(\d{3})/$1\./g;    # insert dot every 3 digits, from beginning
         $pre = reverse $pre;         # Reverse the result
         $pre =~ s/^\.//;             # remove leading dot, if any

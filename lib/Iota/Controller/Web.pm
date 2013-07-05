@@ -262,23 +262,16 @@ sub stash_comparacao_distritos {
     my $indicator = $c->stash->{indicator};
     my $user      = $c->stash->{user};
 
-    $c->stash->{color_index} = [
-        '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B',
-        '#F1F174'
-    ];
+    $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
 
     my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
         {},
         {
-            bind         => [
-                $region->depth_level,
-                $region->id,
-                $user->{id}, $indicator->{id},
-                $user->{id}, $indicator->{id},
-            ],
+            bind =>
+              [ $region->depth_level, $region->id, $user->{id}, $indicator->{id}, $user->{id}, $indicator->{id}, ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
-      );
+    );
     my $por_ano = {};
 
     while ( my $r = $valor_rs->next ) {
@@ -293,11 +286,12 @@ sub stash_comparacao_distritos {
 
             my $stat = $freq->iterate($distritos);
 
-            my $definidos = [ grep {defined $_->{num}} @$distritos ];
+            my $definidos = [ grep { defined $_->{num} } @$distritos ];
+
             # melhor = mais alto, entao inverte as cores
-            if ($indicator->{sort_direction} eq 'greater value' ){
+            if ( $indicator->{sort_direction} eq 'greater value' ) {
                 $_->{i} = 4 - $_->{i} for @$definidos;
-                $definidos = [reverse @$definidos]
+                $definidos = [ reverse @$definidos ];
             }
 
             if ($stat) {
@@ -307,29 +301,32 @@ sub stash_comparacao_distritos {
                     lower3 => [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
                     mean   => $stat->mean()
                 };
-            }elsif (@$definidos == 4){
-                $definidos->[0]{i} = 0; # Alta / Melhor
-                $definidos->[1]{i} = 1; # acima media
-                $definidos->[2]{i} = 3; # abaixo da media
-                $definidos->[3]{i} = 4; # Baixa / Pior
-            }elsif (@$definidos == 3){
-                $definidos->[0]{i} = 0; # Alta / Melhor
-                $definidos->[1]{i} = 2; # média
-                $definidos->[2]{i} = 4; # Baixa / Pior
-            }elsif (@$definidos == 2){
-                $definidos->[0]{i} = 0; # Alta / Melhor
-                $definidos->[1]{i} = 4; # Baixa / Pior
-            }else{
+            }
+            elsif ( @$definidos == 4 ) {
+                $definidos->[0]{i} = 0;    # Alta / Melhor
+                $definidos->[1]{i} = 1;    # acima media
+                $definidos->[2]{i} = 3;    # abaixo da media
+                $definidos->[3]{i} = 4;    # Baixa / Pior
+            }
+            elsif ( @$definidos == 3 ) {
+                $definidos->[0]{i} = 0;    # Alta / Melhor
+                $definidos->[1]{i} = 2;    # média
+                $definidos->[2]{i} = 4;    # Baixa / Pior
+            }
+            elsif ( @$definidos == 2 ) {
+                $definidos->[0]{i} = 0;    # Alta / Melhor
+                $definidos->[1]{i} = 4;    # Baixa / Pior
+            }
+            else {
                 $_->{i} = 5 for @$definidos;
             }
 
-            $out->{$ano}{$variacao} = {
-                all    => $distritos
-            } unless exists $out->{$ano}{$variacao};
+            $out->{$ano}{$variacao} = { all => $distritos }
+              unless exists $out->{$ano}{$variacao};
 
-            my @nao_definidos = grep {!defined $_->{num}} @$distritos;
-            for (@nao_definidos){
-                $_->{i} = 5; # amarelo/sem valor
+            my @nao_definidos = grep { !defined $_->{num} } @$distritos;
+            for (@nao_definidos) {
+                $_->{i}   = 5;             # amarelo/sem valor
                 $_->{num} = 'n/d';
             }
             push @$definidos, @nao_definidos;

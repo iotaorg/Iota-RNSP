@@ -747,8 +747,9 @@ sub by_period_GET {
                 {
                     'me.valid_from' => $c->stash->{valid_from},
                     'me.user_id'    => $c->stash->{user_id} || $c->user->id,
-                    ( 'me.region_id'    => $region_id,
-                      'me.active_value' => $active_value
+                    (
+                        'me.region_id'    => $region_id,
+                        'me.active_value' => $active_value
                     ) x !!$region_id
                 }
             );
