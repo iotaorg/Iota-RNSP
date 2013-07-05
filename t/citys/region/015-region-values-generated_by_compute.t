@@ -150,18 +150,18 @@ eval {
             &add_value( $reg2_uri, '100', '2010' );
             my $tmp = &get_values($reg2);
 
-            is( scalar keys @$tmp, '1', 'só tem 1 linha' );
+            is( scalar @$tmp, '1', 'só tem 1 linha' );
             my $ii = &get_indicator( $reg2, '2010' );
             is_deeply( $ii, [101], 'valores salvos ok' );
 
             &add_value( $reg2_uri, '200', '2011' );
             $tmp = &get_values($reg2);
-            is( scalar keys @$tmp, '2', 'tem 2 linhas' );
+            is( scalar @$tmp, '2', 'tem 2 linhas' );
             $ii = &get_indicator( $reg2, '2011' );
             is_deeply( $ii, [201], 'valores salvos ok' );
 
             $tmp = &get_values($reg1);
-            is( scalar keys @$tmp, '2', 'tem 2 linhas tambem na regiao 1' );
+            is( scalar @$tmp, '2', 'tem 2 linhas tambem na regiao 1' );
 
             $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
             is( $tmp->[0]{value}, '100' );
@@ -180,16 +180,16 @@ eval {
 
             $tmp = &get_values($reg1);
 
-            is( scalar keys @$tmp, '2', 'tem 2 linhas ainda, mas somados' );
+            is( scalar @$tmp, '2', 'tem 2 linhas ainda, mas somados' );
             $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
             is( $tmp->[0]{value}, '250.6668' );
 
             $tmp = &get_values( $reg1, 1 );
-            is( scalar keys @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras' );
+            is( scalar @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras' );
 
             &add_value( $reg1_uri, '666', '2011' );
             $tmp = &get_values( $reg1, 1 );
-            is( scalar keys @$tmp,       '1',   'tem 1 linha' );
+            is( scalar @$tmp,       '1',   'tem 1 linha' );
             is( $tmp->[0]{value},        '666', 'valor salvo!' );
             is( $tmp->[0]{active_value}, '0',   'valor nao ativo' );
 
@@ -200,7 +200,7 @@ eval {
             is_deeply( $ii, ['667'], 'e tem como pegar o valor nao computado' );
 
             $tmp = &get_values($reg1);
-            is( scalar keys @$tmp, '2', 'tem 2 linhas ainda' );
+            is( scalar @$tmp, '2', 'tem 2 linhas ainda' );
             $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
             is( $tmp->[0]{value},        '250.6668', 'valor ainda eh o mesmo!' );
             is( $tmp->[0]{active_value}, '1',        'valor ativo' );
@@ -216,7 +216,7 @@ eval {
             &add_value( $reg2_uri, '22', '2010' );
             $tmp = &get_values($reg2);
 
-            is( scalar keys @$tmp, '2', 'tem 2 linhas, uma de 2010 e outra de 2011' );
+            is( scalar @$tmp, '2', 'tem 2 linhas, uma de 2010 e outra de 2011' );
             $ii = &get_indicator( $reg2, '2010' );
             is_deeply( $ii, [23], 'valores atualizado' );
 
