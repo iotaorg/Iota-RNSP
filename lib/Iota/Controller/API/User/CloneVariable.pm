@@ -77,19 +77,28 @@ sub list_POST {
 
     # chega de validar!
 
-    my $schema       = $c->model('DB');
+    my $db       = $c->model('DB');
+    my $data = Iota::IndicatorData->new( schema => $db->schema );
+
+
     my $all_ok       = 0;
     my $per_variable = {};
     eval {
-        $schema->txn_do(
+        $db->txn_do(
             sub {
 
                 for my $var_id ( keys %$variables ) {
 
                     my @dates = keys %{ $variables->{$var_id} };
-                    my $ok = $schema->schema->clone_values( $me->id, $another_user->id, $var_id, \@dates );
+                    my $ok = $db->schema->clone_values( $me->id, $another_user->id, $var_id, \@dates );
                     $all_ok += $ok->{clone_values};
                     $per_variable->{$var_id} = $ok;
+
+                    $data->upsert(
+                        indicators => [ $data->indicators_from_variables( variables => [ $var_id ] ) ],
+                        dates      => [ @dates ],
+                        user_id    => $me->id
+                    );
                 }
             }
         );

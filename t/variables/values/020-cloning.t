@@ -21,10 +21,10 @@ my $user  = Iota::TestOnly::Mock::AuthUser->new;
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 
-@Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
 my $schema = Iota->model('DB');
 
 my $values_ids = {};
+my $indicator;
 
 # test copia de prefeitura para movimento
 my $pref = 4;
@@ -34,8 +34,17 @@ eval {
     $schema->txn_do(
         sub {
 
+            $Iota::TestOnly::Mock::AuthUser::_id = 1;
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ superadmin /;
+
+            &add_indicator();
+
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
+
             &add_value( '2010', 19, $pref, 1 );
             &add_value( '2010', 20, $pref, 1 );
+
+            &check_value( '2010', $pref, 2 );
 
             &add_value( '2011', 20, $pref, 1 );
 
@@ -68,6 +77,9 @@ eval {
 
             my $x2010 = &post_2010();
             is( $x2010->{number_of_clones}, 2, '2 clones' );
+
+            &check_value( '2010', $mov, 2 );
+
 
             # check if the value is the same
             # check if the values from the copy already exists
@@ -252,3 +264,45 @@ sub value_not_exists {
 
 }
 
+sub add_indicator {
+
+    my ( $res, $c ) = ctx_request(
+        POST '/api/indicator',
+        [
+            api_key                          => 'test',
+            'indicator.create.name'          => 'Foo Bar',
+            'indicator.create.formula'       => '$19+$20',
+            'indicator.create.axis_id'       => '1',
+            'indicator.create.explanation'   => 'explanation',
+            'indicator.create.source'        => 'me',
+            'indicator.create.goal_source'   => '@fulano',
+            'indicator.create.chart_name'    => 'pie',
+            'indicator.create.goal_operator' => '>=',
+            'indicator.create.tags'          => 'you,me,she',
+
+            'indicator.create.observations'        => 'lala',
+            'indicator.create.visibility_level'    => 'public',
+
+        ]
+    );
+
+    ok( $res->is_success, 'indicator created!' );
+    is( $res->code, 201, 'created!' );
+
+    $indicator = eval { from_json( $res->content ) };
+}
+
+
+sub check_value {
+    my ($ano, $user, $valor) = @_;
+
+    my $row = $schema->resultset('IndicatorValue')->search(
+        {
+            valid_from  => $ano . '-01-01',
+            user_id     => $user
+        }
+    )->next;
+    ok( $row, 'IndicatorValue found in db' );
+    is( $row->value, $valor, 'indicator have the correct value' ) if $row;
+
+}
