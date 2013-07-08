@@ -200,6 +200,15 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
         $c->stash->{best_pratices_link} = $c->uri_for( $self->action_for('best_pratice_list'),
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
+
+    if ($c->model('DB::UserFile')->search( {
+        user_id      => $c->stash->{user}{id},
+        hide_listing => 0
+    })->count){
+        $c->stash->{files_link} = $c->uri_for( $self->action_for('user_file_list'),
+            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
+    }
+
 }
 
 sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
@@ -377,25 +386,6 @@ sub user_page_render : Chained('user_page') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 }
 
-sub load_best_pratices {
-    my ( $self, $c, %flags ) = @_;
-
-    my $rs =
-      $c->model('DB::UserBestPratice')->search( { user_id => $c->stash->{user}{id} }, { prefetch => 'axis' } )
-      ->as_hashref;
-
-    return $rs->count if exists $flags{only_count};
-
-    my $out;
-    while ( my $obj = $rs->next ) {
-        push @{ $out->{ $obj->{axis}{name} } }, $obj;
-
-        $obj->{link} = $c->uri_for( $self->action_for('best_pratice_render'),
-            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] );
-    }
-    $c->stash->{best_pratices} = $out;
-}
-
 sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs(2) {
     my ( $self, $c, $page_id, $title ) = @_;
 
@@ -419,12 +409,59 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
 
 }
 
+sub load_best_pratices {
+    my ( $self, $c, %flags ) = @_;
+
+    my $rs =
+      $c->model('DB::UserBestPratice')->search( { user_id => $c->stash->{user}{id} }, { prefetch => 'axis' } )
+      ->as_hashref;
+
+    return $rs->count if exists $flags{only_count};
+
+    my $out;
+    while ( my $obj = $rs->next ) {
+        push @{ $out->{ $obj->{axis}{name} } }, $obj;
+
+        $obj->{link} = $c->uri_for( $self->action_for('best_pratice_render'),
+            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] );
+    }
+    $c->stash->{best_pratices} = $out;
+}
+
 sub best_pratice_list : Chained('network_cidade') PathPart('boas-praticas') Args(0) {
     my ( $self, $c ) = @_;
     $self->load_best_pratices($c);
     $c->stash(
         template => 'home_cidade_boas_praticas_list.tt',
         title    => 'Boas Praticas de ' . $c->stash->{city}{name} . '/' . $c->stash->{estado}
+    );
+}
+
+
+sub load_files {
+    my ( $self, $c ) = @_;
+
+    my $rs =
+      $c->model('DB::UserFile')->search( {
+        user_id      => $c->stash->{user}{id},
+        hide_listing => 0
+    }, {
+        order_by => ['class_name', 'public_name']
+    });
+
+    my $out;
+    while ( my $obj = $rs->next ) {
+        push @{ $out->{ $obj->{class_name} } }, $obj;
+    }
+    $c->stash->{files} = $out;
+}
+
+sub user_file_list : Chained('network_cidade') PathPart('arquivos') Args(0) {
+    my ( $self, $c ) = @_;
+    $self->load_files($c);
+    $c->stash(
+        template => 'home_cidade_file_list.tt',
+        title    => 'Lista de arquivos de ' . $c->stash->{city}{name} . '/' . $c->stash->{estado}
     );
 }
 

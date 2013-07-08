@@ -76,11 +76,17 @@
                 <a href="/">[%l('Indicadores')%]</a>
             </li>
             [% IF city %]
-                <li class="active"><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
+                <li [% IF "${c.req.path}" == "${city.pais}/$city.uf/$city.name_uri" %]class="active"[%END%]><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
 
                 [%IF best_pratices_link%]
                 <li [% IF "/${c.req.path}" == best_pratices_link.path %]class="active"[%END%]>
                     <a href="[%best_pratices_link%]">[%l('Boas Práticas')%]</a>
+                </li>
+                [%END%]
+
+                [%IF files_link%]
+                <li [% IF "/${c.req.path}" == files_link.path %]class="active"[%END%]>
+                    <a href="[%files_link%]">[%l('Arquivos')%]</a>
                 </li>
                 [%END%]
 
