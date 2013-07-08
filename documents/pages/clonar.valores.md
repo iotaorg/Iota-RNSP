@@ -3,16 +3,19 @@ Clonar valores
 
 Um usuario com cidade pode copiar valor da mesma cidade de outra instituição.
 
-O usuario atual = usuario da API_KEY. é nele que o valor vai ser clonado.
+* O usuario atual = usuario da API_KEY. é nele que o valor vai ser clonado.
 
-O usuario fonte = usuário que será fonte para os dados copiados.
+* O usuario fonte = usuário que será fonte para os dados copiados.
 
 # consultando diferenças
 
 Para verificar a diferença entre os usuarios, envie um GET:
 
-?variables=id1,id2,id3...idn
-?institute_id=id
+`?variables=id1,id2,id3...idn`
+
+`?institute_id=id`
+
+
 
 O institute_id não pode ser o mesmo que o usuario logado, pois não faz sentido copiar os dados de você mesmo.
 
@@ -33,8 +36,8 @@ O institute_id não pode ser o mesmo que o usuario logado, pois não faz sentido
             [1] "2011-01-01"
         ],
         variables_names:  {
-            19:  "PopulaÃ§Ã£o total",
-            20:  "PopulaÃ§Ã£o rural e urbana"
+            19:  "Populacao total",
+            20:  "Populacao rural e urbana"
         }
     }
 
@@ -84,7 +87,7 @@ Mais exemplos de posts:
             'institute_id'  => 1
         ]
 
-Retorna:
+Retorna o número total de clones e numero de clones por variavel.
 
     {
         clones          :  {
@@ -100,4 +103,3 @@ Retorna:
     }
 
 
-Número total de clones e numero de clones por variavel.
