@@ -78,7 +78,7 @@ __PACKAGE__->table("user_file");
 =head2 hide_listing
 
   data_type: 'boolean'
-  default_value: false
+  default_value: true
   is_nullable: 0
 
 =head2 description
@@ -119,7 +119,7 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "hide_listing",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "description",
   {
     data_type   => "text",
@@ -164,8 +164,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 16:19:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+LY6rOghvIt+TiAvjv6Ykw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 17:50:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JSCpXXVvG6TOYemYr2iahA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
