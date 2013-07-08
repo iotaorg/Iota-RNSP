@@ -243,7 +243,7 @@ sub action_specs {
                 }
             }
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
+                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->variable_id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $varvalue->user_id,
                 regions_id => [ $varvalue->region_id ],
@@ -277,7 +277,7 @@ sub action_specs {
             }
 
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $var->id ] ) ],
+                indicators => [ $data->indicators_from_variables( variables => [ $var->variable_id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $var->user_id,
                 regions_id => [ $var->region_id ],
