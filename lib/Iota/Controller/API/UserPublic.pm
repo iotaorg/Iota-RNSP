@@ -288,7 +288,9 @@ sub user_public_load {
 
     $ret->{usuario} = {
         files =>
-          { map { $_->class_name => $_->public_url } $user->user_files->search( undef, { order_by => 'created_at' } ) },
+          { map { $_->class_name => $_->public_url } $user->user_files->search( {
+            hide_listing => 1
+          }, { order_by => 'created_at' } ) },
         city_summary => $user->city_summary
     };
 

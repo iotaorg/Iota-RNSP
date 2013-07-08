@@ -68,7 +68,8 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         {
             active       => 1,
             city_id      => undef,
-            institute_id => $c->stash->{institute}->id
+            institute_id => $c->stash->{institute}->id,
+            'user_files.hide_listing' => [1, undef]
         },
         { prefetch => 'user_files' }
     )->all;
