@@ -126,7 +126,7 @@ eval {
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
+                            id           => $indicator->{id}, justification_count => undef,
                             without_data => 1,
                             has_current  => 0,
                             has_data     => 0,
@@ -146,12 +146,13 @@ eval {
             $obj = eval { from_json( $res->content ) };
             delete $obj->{totals};
 
+
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
+                            id           => $indicator->{id}, justification_count => undef,
                             without_data => 1,
                             has_current  => 0,
                             has_data     => 0,
@@ -171,12 +172,13 @@ eval {
             delete $obj->{status}[0]{ratio};
             delete $obj->{totals};
 
+
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
+                            id           => $indicator->{id}, justification_count => undef,
                             without_data => 0,
                             has_current  => 0,
                             has_data     => 1,
@@ -200,12 +202,13 @@ eval {
 
             delete $obj->{status}[0]{ratio};
             delete $obj->{totals};
+
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
+                            id           => $indicator->{id}, justification_count => undef,
                             without_data => 0,
                             has_current  => 0,
                             has_data     => 1,
@@ -227,12 +230,13 @@ eval {
 
             delete $obj->{status}[0]{ratio};
             delete $obj->{totals};
+
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
+                            id           => $indicator->{id}, justification_count => undef,
                             without_data => 0,
                             has_current  => 1,
                             has_data     => 1,

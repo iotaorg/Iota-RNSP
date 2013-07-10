@@ -466,12 +466,14 @@ sub indicator_status_GET {
                         $user_id,
                         $region_id,
                         $user_id,
+                        $region_id,
+                        $user_id,
                         $region_id
                     ]
                     : # sem regiao
                     [
                         [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
-                        $user_id, $user_id, $user_id, $user_id
+                        $user_id, $user_id, $user_id, $user_id, $user_id
 
                     ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'

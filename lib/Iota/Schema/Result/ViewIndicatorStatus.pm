@@ -12,7 +12,7 @@ __PACKAGE__->table('ViewIndicatorStatus');
 
 __PACKAGE__->add_columns(
     qw/
-      id has_current has_data without_data
+      id has_current has_data without_data justification_count
       /
 );
 
@@ -24,12 +24,14 @@ __PACKAGE__->result_source_instance->is_virtual(1);
 # user_id
 # user_id
 # user_id
+# user_id
 __PACKAGE__->result_source_instance->view_definition(
     q[
 select
    r.id,
    r._count_last = r.var_count as has_current,
    r._count_any = r.var_count as has_data,
+   r.justification_count,
 
    (NOT (r._count_last = r.var_count) AND NOT(r._count_any = r.var_count) ) as without_data
 
@@ -61,12 +63,14 @@ from (
           count(distinct iv_any.variation_name)
        END as _count_any,
 
-       greatest(1, (select count(1) from indicator_variations x WHERE x.indicator_id = i.id and user_id in (?, i.user_id))) as var_count
+       greatest(1, (select count(1) from indicator_variations x WHERE x.indicator_id = i.id and user_id in (?, i.user_id))) as var_count,
+       jm.count as justification_count
 
     from indicators i
     left join indicator_value iv_last on iv_last.user_id = ? and iv_last.indicator_id = i.id AND iv_last.active_value AND iv_last.valid_from = last_period AND iv_last.region_id is null
     left join indicator_value iv_any on iv_any.user_id = ? and iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id is null
-    group by i.id,i.last_period, i.user_id,i.indicator_type
+    LEFT JOIN (SELECT indicator_id, count(1) FROM user_indicator x WHERE x.user_id = ? and justification_of_missing_field != '' group by 1) jm on i.id = jm.indicator_id
+    group by i.id,i.last_period, i.user_id,i.indicator_type,jm.count
 ) r
 
 
