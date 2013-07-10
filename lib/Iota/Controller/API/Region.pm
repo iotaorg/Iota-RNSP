@@ -47,8 +47,7 @@ sub list_GET {
         my $x = $reg->{upper_region} || $reg->{id};
         push @{ $out->{$x} }, $reg;
     }
-    use DDP;
-    p $out;
+
     undef @regions;
     foreach my $id ( keys %$out ) {
         my $pai;

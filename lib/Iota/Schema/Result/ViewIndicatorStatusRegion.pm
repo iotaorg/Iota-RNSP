@@ -1,6 +1,6 @@
 use utf8;
 
-package Iota::Schema::Result::ViewIndicatorStatus;
+package Iota::Schema::Result::ViewIndicatorStatusRegion;
 use strict;
 use warnings;
 use base qw/DBIx::Class::Core/;
@@ -8,7 +8,7 @@ use base qw/DBIx::Class::Core/;
 __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
 
 # For the time being this is necessary even for virtual views
-__PACKAGE__->table('ViewIndicatorStatus');
+__PACKAGE__->table('ViewIndicatorStatusRegion');
 
 __PACKAGE__->add_columns(
     qw/
@@ -21,9 +21,10 @@ __PACKAGE__->result_source_instance->is_virtual(1);
 # bind order:
 # [indicator ids]
 # user_id
+# region_id
 # user_id
-# user_id
-# user_id
+# user_id region_id
+# user_id region_id
 __PACKAGE__->result_source_instance->view_definition(
     q[
 select
@@ -54,7 +55,7 @@ from (
             coalesce((select max(c) from (
              select a.valid_from, count(distinct a.variation_name) as c
              from indicator_value a
-             where  a.indicator_id = i.id and user_id = ? and region_id is null
+             where  a.indicator_id = i.id and user_id = ? and region_id = ?
              group by 1
             ) x),0)
        else
@@ -64,8 +65,8 @@ from (
        greatest(1, (select count(1) from indicator_variations x WHERE x.indicator_id = i.id and user_id in (?, i.user_id))) as var_count
 
     from indicators i
-    left join indicator_value iv_last on iv_last.user_id = ? and iv_last.indicator_id = i.id AND iv_last.active_value AND iv_last.valid_from = last_period AND iv_last.region_id is null
-    left join indicator_value iv_any on iv_any.user_id = ? and iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id is null
+    left join indicator_value iv_last on iv_last.user_id = ? and iv_last.indicator_id = i.id AND iv_last.active_value AND iv_last.valid_from = last_period AND iv_last.region_id = ?
+    left join indicator_value iv_any on iv_any.user_id = ? and iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id = ?
     group by i.id,i.last_period, i.user_id,i.indicator_type
 ) r
 

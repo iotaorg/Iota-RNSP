@@ -434,11 +434,16 @@ sub indicator_status_GET {
         my @indicator_ids = map { $_->{id} } $c->stash->{collection}->as_hashref->all;
         my $user_id = $c->stash->{user_obj}->id;
 
+        my $region_tb = exists $c->req->params->{region_id} ? 'Region' : '';
+        my $region_id = $c->req->params->{region_id};
         # % em relacao a meta # WARNING non-sense for a while.
-        my $rs_x = $c->model('DB')->resultset('ViewIndicatorGoalRatio')->search_rs(
+        my $rs_x = $c->model('DB')->resultset('ViewIndicatorGoalRatio' . $region_tb)->search_rs(
             undef,
             {
-                'bind'       => [$user_id],
+                'bind'       => [
+                    $user_id,
+                    ($c->req->params->{region_id})x!! $region_tb
+                ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
         );
@@ -448,10 +453,27 @@ sub indicator_status_GET {
         }
 
         # status
-        my $rs = $c->model('DB')->resultset('ViewIndicatorStatus')->search_rs(
+        my $rs = $c->model('DB')->resultset('ViewIndicatorStatus' . $region_tb)->search_rs(
             undef,
             {
-                bind => [ [ { sqlt_datatype => 'int[]' }, \@indicator_ids ], $user_id, $user_id, $user_id, $user_id ],
+                 bind =>
+                    # com regiao
+                    $region_tb ? [
+                        [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
+                        $user_id,
+                        $region_id,
+                        $user_id,
+                        $user_id,
+                        $region_id,
+                        $user_id,
+                        $region_id
+                    ]
+                    : # sem regiao
+                    [
+                        [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
+                        $user_id, $user_id, $user_id, $user_id
+
+                    ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
         );
