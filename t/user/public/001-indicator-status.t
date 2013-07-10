@@ -167,6 +167,7 @@ eval {
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
             delete $obj->{status}[0]{ratio};
+
             is_deeply(
                 $obj,
                 {

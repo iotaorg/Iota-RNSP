@@ -66,8 +66,6 @@ sub list_GET {
         push @regions, $pai;
     }
     @regions = sort { $a->{name} cmp $b->{name} } @regions;
-    use DDP;
-    p @regions;
     $self->status_ok( $c, entity => { regions => \@regions } );
 }
 

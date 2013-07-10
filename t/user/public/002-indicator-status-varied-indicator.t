@@ -281,7 +281,6 @@ eval {
                 },
                 '$has_data'
             );
-
             &_populate( $subvar[0]{id}, \@variacoes, $last_year . '-01-01', qw/4 4 1 5/ );
 
             $has_data = &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
@@ -379,7 +378,7 @@ eval {
                             id           => $indicator->{id},
                             without_data => 0,
                             has_current  => 1,
-                            has_data     => 0,
+                            has_data     => 1,
                         }
                     ]
                 },

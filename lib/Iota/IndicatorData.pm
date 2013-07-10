@@ -119,6 +119,7 @@ sub upsert {
     );
     my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
 
+
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
         values     => $period_values,
@@ -128,7 +129,6 @@ sub upsert {
         ind_variation_var   => $ind_variation_var
 
     );
-
     my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
     my $level3       = [];
     my $regions_meta = $self->get_regions_meta( $level3, keys %$results );
@@ -364,17 +364,20 @@ sub _get_indicator_values {
           ? sort { $a <=> $b } @{ $params{indicator_variables}{ $indicator->id } }
           : ();
 
-        foreach my $active_value ( keys %{ $params{values} } ) {
+        # todo esse IF serve para colocar as datas faltantes
+        # nos indicadores que nao tem variaveis "normais"
+        # ou entao eles nunca entrariam no loop
+        # entao aqui procursa-se por todos as datas dos valores das variacoes
+        if ( $indicator->indicator_type eq 'varied' ) {
+            next unless ref $params{variation_values} eq 'HASH';
 
-            foreach my $region_id ( keys %{ $params{values}{$active_value} } ) {
+            while (my ($active_value, $regions) = each %{$params{variation_values}}){
+                next unless ref $regions eq 'HASH';
 
-                foreach my $user_id ( keys %{ $params{values}{$active_value}{$region_id} } ) {
+                while (my ($region_id, $users) = each %$regions ){
+                    next unless ref $users eq 'HASH';
 
-                    # todo esse IF serve para colocar as datas faltantes
-                    # nos indicadores que nao tem variaveis "normais"
-                    # entao eles nunca entrariam no loop
-                    # entao aqui procursa-se por todos as datas dos valores das variacoes
-                    if ( $indicator->indicator_type eq 'varied' ) {
+                    foreach my $user_id (keys %$users){
                         my $var_values = $params{variation_values}{$active_value}{$region_id}{$user_id};
 
                         foreach my $var_variable_id ( keys %{ $params{ind_variation_var}{ $indicator->id } } ) {
@@ -390,6 +393,16 @@ sub _get_indicator_values {
                             }
                         }
                     }
+                }
+
+            }
+        }
+
+        foreach my $active_value ( keys %{ $params{values} } ) {
+
+            foreach my $region_id ( keys %{ $params{values}{$active_value} } ) {
+
+                foreach my $user_id ( keys %{ $params{values}{$active_value}{$region_id} } ) {
 
                     # percorre todos os periodos desse usuario
                     foreach my $date ( keys %{ $params{values}{$active_value}{$region_id}{$user_id} } ) {
