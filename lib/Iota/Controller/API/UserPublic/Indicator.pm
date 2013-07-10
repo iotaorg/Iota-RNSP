@@ -15,7 +15,7 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
     my ( $self, $c ) = @_;
 
     my @user_ids = ( $c->stash->{user_obj}->id );
-    my $country = eval { $c->stash->{user_obj}->city->country_id };
+    my $country  = eval { $c->stash->{user_obj}->city->country_id };
     my @networks = $c->stash->{user_obj}->networks->all;
     if (@networks) {
         my $rs = $c->model('DB::User')->search(
@@ -431,7 +431,7 @@ sub indicator_status_GET {
     my $ret;
     my $ultimos = {};
     eval {
-        my @indicator_ids = map {$_->{id}} $c->stash->{collection}->as_hashref->all;
+        my @indicator_ids = map { $_->{id} } $c->stash->{collection}->as_hashref->all;
         my $user_id = $c->stash->{user_obj}->id;
 
         # % em relacao a meta # WARNING non-sense for a while.
@@ -446,21 +446,18 @@ sub indicator_status_GET {
         while ( my $f = $rs_x->next ) {
             $ratios->{ delete $f->{id} } = $f;
         }
+
         # status
         my $rs = $c->model('DB')->resultset('ViewIndicatorStatus')->search_rs(
             undef,
             {
-                bind => [
-                    [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
-                    $user_id, $user_id, $user_id, $user_id
-                ],
+                bind => [ [ { sqlt_datatype => 'int[]' }, \@indicator_ids ], $user_id, $user_id, $user_id, $user_id ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
         );
 
         while ( my $f = $rs->next ) {
             my $id = $f->{id};
-
 
             $f->{ratio} = $ratios->{$id} if exists $ratios->{$id};
 

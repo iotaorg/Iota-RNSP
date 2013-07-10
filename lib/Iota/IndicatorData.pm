@@ -119,7 +119,6 @@ sub upsert {
     );
     my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
 
-
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
         values     => $period_values,
@@ -371,13 +370,13 @@ sub _get_indicator_values {
         if ( $indicator->indicator_type eq 'varied' ) {
             next unless ref $params{variation_values} eq 'HASH';
 
-            while (my ($active_value, $regions) = each %{$params{variation_values}}){
+            while ( my ( $active_value, $regions ) = each %{ $params{variation_values} } ) {
                 next unless ref $regions eq 'HASH';
 
-                while (my ($region_id, $users) = each %$regions ){
+                while ( my ( $region_id, $users ) = each %$regions ) {
                     next unless ref $users eq 'HASH';
 
-                    foreach my $user_id (keys %$users){
+                    foreach my $user_id ( keys %$users ) {
                         my $var_values = $params{variation_values}{$active_value}{$region_id}{$user_id};
 
                         foreach my $var_variable_id ( keys %{ $params{ind_variation_var}{ $indicator->id } } ) {
