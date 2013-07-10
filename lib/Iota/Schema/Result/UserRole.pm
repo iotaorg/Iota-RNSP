@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::UserRole;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<user_role>
 
@@ -61,17 +62,17 @@ __PACKAGE__->table("user_role");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "user_role_id_seq",
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "role_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "user_role_id_seq",
+    },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "role_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -97,10 +98,9 @@ Related object: L<Iota::Schema::Result::Role>
 =cut
 
 __PACKAGE__->belongs_to(
-  "role",
-  "Iota::Schema::Result::Role",
-  { id => "role_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+    "role", "Iota::Schema::Result::Role",
+    { id            => "role_id" },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 user
@@ -112,12 +112,10 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+    "user", "Iota::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 16:19:19
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3Aa9avb+dPz4Al/VKbtazQ

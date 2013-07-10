@@ -77,9 +77,8 @@ sub list_POST {
 
     # chega de validar!
 
-    my $db       = $c->model('DB');
+    my $db = $c->model('DB');
     my $data = Iota::IndicatorData->new( schema => $db->schema );
-
 
     my $all_ok       = 0;
     my $per_variable = {};
@@ -95,8 +94,8 @@ sub list_POST {
                     $per_variable->{$var_id} = $ok;
 
                     $data->upsert(
-                        indicators => [ $data->indicators_from_variables( variables => [ $var_id ] ) ],
-                        dates      => [ @dates ],
+                        indicators => [ $data->indicators_from_variables( variables => [$var_id] ) ],
+                        dates      => [@dates],
                         user_id    => $me->id
                     );
                 }

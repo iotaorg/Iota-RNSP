@@ -189,7 +189,7 @@ eval {
 
             &add_value( $reg1_uri, '666', '2011' );
             $tmp = &get_values( $reg1, 1 );
-            is( scalar @$tmp,       '1',   'tem 1 linha' );
+            is( scalar @$tmp,            '1',   'tem 1 linha' );
             is( $tmp->[0]{value},        '666', 'valor salvo!' );
             is( $tmp->[0]{active_value}, '0',   'valor nao ativo' );
 

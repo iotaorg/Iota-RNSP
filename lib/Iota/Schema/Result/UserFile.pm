@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::UserFile;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<user_file>
 
@@ -96,42 +97,42 @@ __PACKAGE__->table("user_file");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "user_file_id_seq",
-  },
-  "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "class_name",
-  { data_type => "text", default_value => "perfil", is_nullable => 0 },
-  "public_url",
-  { data_type => "text", is_nullable => 0 },
-  "private_path",
-  { data_type => "text", is_nullable => 0 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 0,
-    original      => { default_value => \"now()" },
-  },
-  "hide_listing",
-  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
-  "description",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "public_name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "user_file_id_seq",
+    },
+    "user_id",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "class_name",
+    { data_type => "text", default_value => "perfil", is_nullable => 0 },
+    "public_url",
+    { data_type => "text", is_nullable => 0 },
+    "private_path",
+    { data_type => "text", is_nullable => 0 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 0,
+        original      => { default_value => \"now()" },
+    },
+    "hide_listing",
+    { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+    "description",
+    {
+        data_type   => "text",
+        is_nullable => 1,
+        original    => { data_type => "varchar" },
+    },
+    "public_name",
+    {
+        data_type   => "text",
+        is_nullable => 1,
+        original    => { data_type => "varchar" },
+    },
 );
 
 =head1 PRIMARY KEY
@@ -157,12 +158,10 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+    "user", "Iota::Schema::Result::User",
+    { id            => "user_id" },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 17:50:16
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JSCpXXVvG6TOYemYr2iahA

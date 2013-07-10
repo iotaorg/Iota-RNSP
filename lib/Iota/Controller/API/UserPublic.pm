@@ -287,10 +287,14 @@ sub user_public_load {
     } if exists $c->req->params->{region_id};
 
     $ret->{usuario} = {
-        files =>
-          { map { $_->class_name => $_->public_url } $user->user_files->search( {
-            hide_listing => 1
-          }, { order_by => 'created_at' } ) },
+        files => {
+            map { $_->class_name => $_->public_url } $user->user_files->search(
+                {
+                    hide_listing => 1
+                },
+                { order_by => 'created_at' }
+            )
+        },
         city_summary => $user->city_summary
     };
 

@@ -11,20 +11,20 @@ ci = levels of continuation indentation; bk = 1 if in BLOCK, 0 if not.
 in:out indent c b  nesting   code + messages; (messages begin with >>>)
 lines  levels i k            (code begins with one '.' per indent level)
 ------  ----- - - --------   -------------------------------------------
-L50:39   i5:5 0 0 {({([      .....'user.create.network_id'       ....
-L61:61   i4:4 0 0 {({{       >>>operator in print statement not recommended
-L75:74   i3:3 0 0 {({        >>>operator in print statement not recommended
-L89:89   i3:3 0 0 {({        >>>operator in print statement not recommended
-L100:100 i3:3 0 1 {({        ...is( @{ $ret2->{vec} }, 2, 'tem 2 ....
-L119:119 i3:3 0 0 {({        >>>operator in print statement not recommended
-L149:149 i3:3 0 0 {({        >>>operator in print statement not recommended
-L150:149 i4:4 0 0 {({(       ....POST $user1_uri. '/kml',
-L162:162 i3:3 0 0 {({        >>>operator in print statement not recommended
-L175:175 i3:3 0 0 {({        >>>operator in print statement not recommended
-L198:198 i0:0 0 1            >>>Last line
+L51:51   i3:3 0 1 {({        ...&add_value( '2011', 20, $mov, 0  ....
+L101:100 i3:3 0 1 {({        ...is( $x2011->{number_of_clones},  ....
+L138:137 i0:0 0 1            sub add_value {
+L156:155 i0:0 0 1            sub list_status {
+L168:167 i0:0 0 1            sub post_2010 {
+L209:208 i0:0 0 1            sub post_2011 {
+L227:226 i0:0 0 1            sub is_same_value {
+L243:242 i0:0 0 1            sub value_not_exists {
+L267:266 i0:0 0 1            sub add_indicator {
+L296:294 i0:0 0 1            sub check_value {
+L308:306 i0:0 0 1 {          >>>Last line
 
 No indentation disagreement seen
 
 No lines exceeded 120 characters
-  Maximum output line length was 109 at line 107
+  Maximum output line length was 107 at line 160
 Converged.  Output for iteration 2 same as for iter 1.

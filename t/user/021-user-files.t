@@ -55,8 +55,8 @@ eval {
                 POST $url_user . '/file',
                 'Content-Type' => 'form-data',
                 Content        => [
-                    api_key   => 'test',
-                    'user.file.create.class_name' => 'a',
+                    api_key                        => 'test',
+                    'user.file.create.class_name'  => 'a',
                     'user.file.create.description' => 'b',
                     'user.file.create.public_name' => 'z',
 
@@ -68,31 +68,24 @@ eval {
 
             my $obj = eval { from_json( $res->content ) };
 
-            ( $res, $c ) = ctx_request(
-                GET $url_user . '/file/' . $obj->{id}
-            );
+            ( $res, $c ) = ctx_request( GET $url_user . '/file/' . $obj->{id} );
             $obj = eval { from_json( $res->content ) };
-            is($obj->{description}, 'b');
-            is($obj->{class_name}, 'a');
-            is($obj->{public_name}, 'z');
+            is( $obj->{description}, 'b' );
+            is( $obj->{class_name},  'a' );
+            is( $obj->{public_name}, 'z' );
 
-            ok(-e $obj->{private_path});
+            ok( -e $obj->{private_path} );
 
-            ( $res, $c ) = ctx_request(
-                GET $url_user . '/file/'
-            );
+            ( $res, $c ) = ctx_request( GET $url_user . '/file/' );
             ok( $res->is_success, 'list' );
             my $lst = eval { from_json( $res->content ) };
 
-            is_deeply($lst->{files}[0], $obj);
+            is_deeply( $lst->{files}[0], $obj );
 
-            ( $res, $c ) = ctx_request(
-                DELETE $url_user . '/file/' . $obj->{id}
-            );
+            ( $res, $c ) = ctx_request( DELETE $url_user . '/file/' . $obj->{id} );
             ok( $res->is_success, 'delete' );
 
-            ok(!-e $obj->{private_path});
-
+            ok( !-e $obj->{private_path} );
 
             die 'rollback';
         }

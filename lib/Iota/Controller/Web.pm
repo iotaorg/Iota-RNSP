@@ -66,10 +66,10 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     my @current_users = $c->model('DB::User')->search(
         {
-            active       => 1,
-            city_id      => undef,
-            institute_id => $c->stash->{institute}->id,
-            'user_files.hide_listing' => [1, undef]
+            active                    => 1,
+            city_id                   => undef,
+            institute_id              => $c->stash->{institute}->id,
+            'user_files.hide_listing' => [ 1, undef ]
         },
         { prefetch => 'user_files' }
     )->all;
@@ -201,10 +201,14 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
 
-    if ($c->model('DB::UserFile')->search( {
-        user_id      => $c->stash->{user}{id},
-        hide_listing => 0
-    })->count){
+    if (
+        $c->model('DB::UserFile')->search(
+            {
+                user_id      => $c->stash->{user}{id},
+                hide_listing => 0
+            }
+        )->count
+      ) {
         $c->stash->{files_link} = $c->uri_for( $self->action_for('user_file_list'),
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
@@ -437,17 +441,18 @@ sub best_pratice_list : Chained('network_cidade') PathPart('boas-praticas') Args
     );
 }
 
-
 sub load_files {
     my ( $self, $c ) = @_;
 
-    my $rs =
-      $c->model('DB::UserFile')->search( {
-        user_id      => $c->stash->{user}{id},
-        hide_listing => 0
-    }, {
-        order_by => ['class_name', 'public_name']
-    });
+    my $rs = $c->model('DB::UserFile')->search(
+        {
+            user_id      => $c->stash->{user}{id},
+            hide_listing => 0
+        },
+        {
+            order_by => [ 'class_name', 'public_name' ]
+        }
+    );
 
     my $out;
     while ( my $obj = $rs->next ) {

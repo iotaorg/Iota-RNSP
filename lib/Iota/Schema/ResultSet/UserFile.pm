@@ -22,13 +22,13 @@ sub verifiers_specs {
             profile => {
                 user_id => { required => 1, type => 'Int' },
 
-                class_name            => { required => 1, type => 'Str' },
-                public_url            => { required => 1, type => 'Str' },
-                private_path          => { required => 1, type => 'Str' },
+                class_name   => { required => 1, type => 'Str' },
+                public_url   => { required => 1, type => 'Str' },
+                private_path => { required => 1, type => 'Str' },
 
-                hide_listing          => { required => 1, type => 'Bool' },
-                description           => { required => 0, type => 'Str' },
-                public_name           => { required => 0, type => 'Str' },
+                hide_listing => { required => 1, type => 'Bool' },
+                description  => { required => 0, type => 'Str' },
+                public_name  => { required => 0, type => 'Str' },
             },
         ),
 
@@ -37,10 +37,10 @@ sub verifiers_specs {
             profile => {
                 id => { required => 1, type => 'Int' },
 
-                hide_listing          => { required => 0, type => 'Bool' },
-                description           => { required => 0, type => 'Str' },
-                public_name           => { required => 0, type => 'Str' },
-                class_name            => { required => 0, type => 'Str' },
+                hide_listing => { required => 0, type => 'Bool' },
+                description  => { required => 0, type => 'Str' },
+                public_name  => { required => 0, type => 'Str' },
+                class_name   => { required => 0, type => 'Str' },
             },
         ),
 

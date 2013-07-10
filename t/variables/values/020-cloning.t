@@ -34,7 +34,7 @@ eval {
     $schema->txn_do(
         sub {
 
-            $Iota::TestOnly::Mock::AuthUser::_id = 1;
+            $Iota::TestOnly::Mock::AuthUser::_id    = 1;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ superadmin /;
 
             &add_indicator();
@@ -79,7 +79,6 @@ eval {
             is( $x2010->{number_of_clones}, 2, '2 clones' );
 
             &check_value( '2010', $mov, 2 );
-
 
             # check if the value is the same
             # check if the values from the copy already exists
@@ -280,8 +279,8 @@ sub add_indicator {
             'indicator.create.goal_operator' => '>=',
             'indicator.create.tags'          => 'you,me,she',
 
-            'indicator.create.observations'        => 'lala',
-            'indicator.create.visibility_level'    => 'public',
+            'indicator.create.observations'     => 'lala',
+            'indicator.create.visibility_level' => 'public',
 
         ]
     );
@@ -292,14 +291,13 @@ sub add_indicator {
     $indicator = eval { from_json( $res->content ) };
 }
 
-
 sub check_value {
-    my ($ano, $user, $valor) = @_;
+    my ( $ano, $user, $valor ) = @_;
 
     my $row = $schema->resultset('IndicatorValue')->search(
         {
-            valid_from  => $ano . '-01-01',
-            user_id     => $user
+            valid_from => $ano . '-01-01',
+            user_id    => $user
         }
     )->next;
     ok( $row, 'IndicatorValue found in db' );

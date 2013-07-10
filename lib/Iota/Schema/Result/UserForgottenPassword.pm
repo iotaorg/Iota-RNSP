@@ -1,4 +1,5 @@
 use utf8;
+
 package Iota::Schema::Result::UserForgottenPassword;
 
 # Created by DBIx::Class::Schema::Loader
@@ -29,7 +30,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
 
 =head1 TABLE: C<user_forgotten_passwords>
 
@@ -79,32 +80,32 @@ __PACKAGE__->table("user_forgotten_passwords");
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "user_forgotten_passwords_id_seq",
-  },
-  "id_user",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "secret_key",
-  { data_type => "varchar", is_nullable => 0, size => 100 },
-  "created_at",
-  {
-    data_type     => "timestamp",
-    default_value => \"current_timestamp",
-    is_nullable   => 1,
-    original      => { default_value => \"now()" },
-  },
-  "valid_until",
-  {
-    data_type     => "timestamp",
-    default_value => \"(now() + '30 days'::interval)",
-    is_nullable   => 1,
-  },
-  "reseted_at",
-  { data_type => "timestamp", is_nullable => 1 },
+    "id",
+    {
+        data_type         => "integer",
+        is_auto_increment => 1,
+        is_nullable       => 0,
+        sequence          => "user_forgotten_passwords_id_seq",
+    },
+    "id_user",
+    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+    "secret_key",
+    { data_type => "varchar", is_nullable => 0, size => 100 },
+    "created_at",
+    {
+        data_type     => "timestamp",
+        default_value => \"current_timestamp",
+        is_nullable   => 1,
+        original      => { default_value => \"now()" },
+    },
+    "valid_until",
+    {
+        data_type     => "timestamp",
+        default_value => \"(now() + '30 days'::interval)",
+        is_nullable   => 1,
+    },
+    "reseted_at",
+    { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -131,7 +132,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint("user_forgotten_passwords_secret_key_key", ["secret_key"]);
+__PACKAGE__->add_unique_constraint( "user_forgotten_passwords_secret_key_key", ["secret_key"] );
 
 =head1 RELATIONS
 
@@ -144,12 +145,10 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-  "id_user",
-  "Iota::Schema::Result::User",
-  { id => "id_user" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+    "id_user", "Iota::Schema::Result::User",
+    { id            => "id_user" },
+    { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
-
 
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 16:19:19
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gns56R0pktpkAG3NfT0mOw

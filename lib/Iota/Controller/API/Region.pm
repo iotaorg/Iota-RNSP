@@ -16,11 +16,13 @@ sub base : Chained('/api/root') : PathPart('regions') : CaptureArgs(0) {
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(3) {
     my ( $self, $c, $pais, $estado, $cidade ) = @_;
-    $c->stash->{object} = $c->stash->{collection}->search_rs( {
-        pais     => lc $pais,
-        uf       => uc $estado,
-        name_uri => lc $cidade
-    } );
+    $c->stash->{object} = $c->stash->{collection}->search_rs(
+        {
+            pais     => lc $pais,
+            uf       => uc $estado,
+            name_uri => lc $cidade
+        }
+    );
 
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 
@@ -31,19 +33,22 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(3) {
 sub list : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
-
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @regions = $c->stash->{collection}->as_hashref->search(undef,{
-        select => [qw/name name_url id upper_region/]
-    })->all;
+    my @regions = $c->stash->{collection}->as_hashref->search(
+        undef,
+        {
+            select => [qw/name name_url id upper_region/]
+        }
+    )->all;
     my $out = {};
-    foreach my $reg ( @regions ) {
+    foreach my $reg (@regions) {
         my $x = $reg->{upper_region} || $reg->{id};
         push @{ $out->{$x} }, $reg;
     }
-use DDP; p $out;
+    use DDP;
+    p $out;
     undef @regions;
     foreach my $id ( keys %$out ) {
         my $pai;
@@ -56,12 +61,13 @@ use DDP; p $out;
                 push @subs, $r;
             }
         }
-        @subs = sort {$a->{name} cmp $b->{name}} @subs;
+        @subs = sort { $a->{name} cmp $b->{name} } @subs;
         $pai->{subregions} = \@subs;
         push @regions, $pai;
     }
-    @regions = sort {$a->{name} cmp $b->{name}} @regions;
-use DDP; p @regions;
+    @regions = sort { $a->{name} cmp $b->{name} } @regions;
+    use DDP;
+    p @regions;
     $self->status_ok( $c, entity => { regions => \@regions } );
 }
 
