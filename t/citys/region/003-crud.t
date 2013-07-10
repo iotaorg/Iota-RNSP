@@ -178,6 +178,12 @@ eval {
                 },
                 'updated ok'
             );
+            ( $res, $c ) = ctx_request( GET '/api/regions/br/SP/foo-bar' );
+            $obj = eval { from_json( $res->content ) };
+            is(@{$obj->{regions}[0]{subregions}}, 1, '1 subregion');
+            is($obj->{regions}[0]{subregions}[0]{id}, $reg2->{id});
+            is($obj->{regions}[0]{id}, $reg1->{id});
+
 
             ( $res, $c ) = ctx_request( DELETE $reg2_uri );
 
