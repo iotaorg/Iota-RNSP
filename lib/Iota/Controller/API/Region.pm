@@ -35,13 +35,15 @@ sub list : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @regions = $c->stash->{collection}->as_hashref->all;
+    my @regions = $c->stash->{collection}->as_hashref->search(undef,{
+        select => [qw/name name_url id upper_region/]
+    })->all;
     my $out = {};
     foreach my $reg ( @regions ) {
         my $x = $reg->{upper_region} || $reg->{id};
         push @{ $out->{$x} }, $reg;
     }
-
+use DDP; p $out;
     undef @regions;
     foreach my $id ( keys %$out ) {
         my $pai;
@@ -54,10 +56,12 @@ sub list_GET {
                 push @subs, $r;
             }
         }
+        @subs = sort {$a->{name} cmp $b->{name}} @subs;
         $pai->{subregions} = \@subs;
         push @regions, $pai;
     }
-
+    @regions = sort {$a->{name} cmp $b->{name}} @regions;
+use DDP; p @regions;
     $self->status_ok( $c, entity => { regions => \@regions } );
 }
 

@@ -9,12 +9,17 @@
 
             <label class="control-label">[%l('Cidades')%]</label>
 
-            <div class="controls">
+            <div class="controls controls-row">
                 <select name="cidade" class="span5">
                     <option value="" selected="selected">[%l('Todas')%]</option>
                     [%FOREACH c IN cities.sort('name') %]
                     <option value="br/[%c.uf%]/[%c.name_uri%]">[%c.name%], [%c.uf%]</option>
                     [%END%]
+                </select>
+
+                <select name="region" class="hide span5">
+                    <option value="" selected="selected">[%l('Nenhuma região, apenas a cidade')%]</option>
+
                 </select>
             </div>
 
@@ -27,7 +32,7 @@
                 <label class="control-label">[%l('Indicador')%]</label>
 
                 <div class="controls">
-                <select name="indicador" class="span8">
+                <select name="indicador" class="span10">
                     <option value="" selected="selected">[%l('Todos')%]</option>
                     [%FOREACH i IN indicators.sort('name') %]
                     <option value="[%i.name_url%]">[%i.name%]</option>
