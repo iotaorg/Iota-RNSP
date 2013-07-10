@@ -183,6 +183,7 @@ eval {
 
             my $zero_status =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $zero_status->{totals};
             is_deeply(
                 $zero_status,
                 {
@@ -214,6 +215,7 @@ eval {
 
             $zero_status =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $zero_status->{totals};
             is_deeply(
                 $zero_status,
                 {
@@ -247,6 +249,7 @@ eval {
 
             my $without_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $without_data->{totals};
             is_deeply(
                 $without_data,
                 {
@@ -267,6 +270,7 @@ eval {
 
             my $has_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_data->{totals};
             is_deeply(
                 $has_data,
                 {
@@ -284,6 +288,7 @@ eval {
             &_populate( $subvar[0]{id}, \@variacoes, $last_year . '-01-01', qw/4 4 1 5/ );
 
             $has_data = &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_data->{totals};
             is_deeply(
                 $has_data,
                 {
@@ -303,6 +308,7 @@ eval {
 
             my $has_current =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_current->{totals};
             is_deeply(
                 $has_current,
                 {
@@ -332,6 +338,7 @@ eval {
 
             $without_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $without_data->{totals};
             is_deeply(
                 $without_data,
                 {
@@ -351,6 +358,7 @@ eval {
 
             $without_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $without_data->{totals};
             is_deeply(
                 $without_data,
                 {
@@ -370,6 +378,7 @@ eval {
 
             $has_current =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_current->{totals};
             is_deeply(
                 $has_current,
                 {
@@ -389,6 +398,7 @@ eval {
             &_populate( $subvar[1]{id}, \@variacoes, '2010-01-01', 1 );
 
             $has_data = &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_data->{totals};
             is_deeply(
                 $has_data,
                 {

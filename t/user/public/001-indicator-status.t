@@ -120,6 +120,7 @@ eval {
               ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
             ok( $res->is_success, 'GET public info success' );
             my $obj = eval { from_json( $res->content ) };
+            delete $obj->{totals};
             is_deeply(
                 $obj,
                 {
@@ -143,6 +144,7 @@ eval {
               ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
+            delete $obj->{totals};
 
             is_deeply(
                 $obj,
@@ -167,6 +169,7 @@ eval {
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
             delete $obj->{status}[0]{ratio};
+            delete $obj->{totals};
 
             is_deeply(
                 $obj,
@@ -196,6 +199,7 @@ eval {
             $obj = eval { from_json( $res->content ) };
 
             delete $obj->{status}[0]{ratio};
+            delete $obj->{totals};
             is_deeply(
                 $obj,
                 {
@@ -222,6 +226,7 @@ eval {
             $obj = eval { from_json( $res->content ) };
 
             delete $obj->{status}[0]{ratio};
+            delete $obj->{totals};
             is_deeply(
                 $obj,
                 {

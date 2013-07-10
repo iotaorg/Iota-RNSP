@@ -478,13 +478,27 @@ sub indicator_status_GET {
             }
         );
 
+        my $total_nao_preenchido = 0;
+        my $total_algum_valor    = 0;
+        my $total_current        = 0;
         while ( my $f = $rs->next ) {
             my $id = $f->{id};
 
             $f->{ratio} = $ratios->{$id} if exists $ratios->{$id};
 
             push @{ $ret->{status} }, $f;
+            $total_nao_preenchido++ if $f->{without_data};
+            $total_algum_valor++ if $f->{has_data};
+            $total_current++ if $f->{has_current};
         }
+
+        my $total = @{$ret->{status}};
+        $ret->{totals} = {
+            has_data_perc => $total_algum_valor / $total,
+            without_data_perc => $total_nao_preenchido / $total,
+            has_current_perc => $total_current / $total,
+
+        } if $total > 0;
 
     };
 
