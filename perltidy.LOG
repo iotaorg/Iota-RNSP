@@ -14,25 +14,25 @@ lines  levels i k            (code begins with one '.' per indent level)
 L50:47   i5:5 0 0 {({([      .....api_key                        ....
 L101:101 i3:3 0 1 {({        ...push @variacoes,
 L151:149 i4:4 0 0 {({(       ....201,
-L201:201 i3:3 0 1 {({        ...my @subvals;
-L238:237 i5:4 0 0 {({(       >>>Start indentation disagreement: input=5; output=4
-L246:246 i3:3 0 1 {({        >>>End indentation disagreement from input line 238
-L251:250 i4:4 0 0 {({(       ....$without_data,
-L302:302 i3:3 0 1 {({        ...&_populate( $subvar[1]{id}, \@va ....
-L352:352 i3:3 0 1 {({        ...$without_data =
-L402:392 i5:5 1 0 {({({[     .....]
-L419:419 i0:0 0 1            sub new_var {
-L444:444 i0:0 0 1            sub _post {
-L455:455 i0:0 0 1            sub _get {
-L470:470 i0:0 0 1            sub _delete {
-L488:488 i0:0 0 1            sub add_value {
-L505:505 i0:0 0 1            sub _populate {
-L523:522 i0:0 0 1 {          >>>Last line
+L201:188 i3:3 1 1 {({(       ...);
+L242:243 i5:4 0 0 {({(       >>>Start indentation disagreement: input=5; output=4
+L250:252 i3:3 0 1 {({        >>>End indentation disagreement from input line 242
+L252:254 i3:3 0 1 {({        ...my $without_data =
+L302:301 i7:7 0 0 {({({[{    .......id           => $indicator-> ....
+L352:355 i5:5 0 0 {({({      .....status => [
+L402:399 i5:5 1 0 {({({[     .....]
+L441:450 i0:0 0 1            sub new_var {
+L466:475 i0:0 0 1            sub _post {
+L477:486 i0:0 0 1            sub _get {
+L492:501 i0:0 0 1            sub _delete {
+L510:519 i0:0 0 1            sub add_value {
+L527:536 i0:0 0 1            sub _populate {
+L545:553 i0:0 0 1 {          >>>Last line
 
-First indentation disagreement seen at input line 238
-Last indentation disagreement seen at input line 238
+First indentation disagreement seen at input line 242
+Last indentation disagreement seen at input line 242
 Note: Indentation disagreement detection is not accurate for outdenting and -lp.
 
 No lines exceeded 120 characters
-  Maximum output line length was 120 at line 233
+  Maximum output line length was 120 at line 239
 Converged.  Output for iteration 2 same as for iter 1.

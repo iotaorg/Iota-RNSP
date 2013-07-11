@@ -436,14 +436,12 @@ sub indicator_status_GET {
 
         my $region_tb = exists $c->req->params->{region_id} ? 'Region' : '';
         my $region_id = $c->req->params->{region_id};
+
         # % em relacao a meta # WARNING non-sense for a while.
-        my $rs_x = $c->model('DB')->resultset('ViewIndicatorGoalRatio' . $region_tb)->search_rs(
+        my $rs_x = $c->model('DB')->resultset( 'ViewIndicatorGoalRatio' . $region_tb )->search_rs(
             undef,
             {
-                'bind'       => [
-                    $user_id,
-                    ($c->req->params->{region_id})x!! $region_tb
-                ],
+                'bind' => [ $user_id, ( $c->req->params->{region_id} ) x !!$region_tb ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
         );
@@ -453,29 +451,24 @@ sub indicator_status_GET {
         }
 
         # status
-        my $rs = $c->model('DB')->resultset('ViewIndicatorStatus' . $region_tb)->search_rs(
+        my $rs = $c->model('DB')->resultset( 'ViewIndicatorStatus' . $region_tb )->search_rs(
             undef,
             {
-                 bind =>
-                    # com regiao
-                    $region_tb ? [
-                        [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
-                        $user_id,
-                        $region_id,
-                        $user_id,
-                        $user_id,
-                        $region_id,
-                        $user_id,
-                        $region_id,
-                        $user_id,
-                        $region_id
-                    ]
-                    : # sem regiao
-                    [
-                        [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
-                        $user_id, $user_id, $user_id, $user_id, $user_id
+                bind =>
 
-                    ],
+                  # com regiao
+                  $region_tb
+                ? [
+                    [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
+                    $user_id, $region_id, $user_id, $user_id, $region_id,
+                    $user_id, $region_id, $user_id, $region_id
+                  ]
+                :    # sem regiao
+                  [
+                    [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
+                    $user_id, $user_id, $user_id, $user_id, $user_id
+
+                  ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
         );
@@ -490,15 +483,15 @@ sub indicator_status_GET {
 
             push @{ $ret->{status} }, $f;
             $total_nao_preenchido++ if $f->{without_data};
-            $total_algum_valor++ if $f->{has_data};
-            $total_current++ if $f->{has_current};
+            $total_algum_valor++    if $f->{has_data};
+            $total_current++        if $f->{has_current};
         }
 
-        my $total = @{$ret->{status}};
+        my $total = @{ $ret->{status} };
         $ret->{totals} = {
-            has_data_perc => $total_algum_valor / $total,
+            has_data_perc     => $total_algum_valor / $total,
             without_data_perc => $total_nao_preenchido / $total,
-            has_current_perc => $total_current / $total,
+            has_current_perc  => $total_current / $total,
 
         } if $total > 0;
 

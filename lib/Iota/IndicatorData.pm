@@ -82,8 +82,8 @@ sub upsert {
                         # pois os calculados estao no ternario acima.
                         (
                             {
-                                'me.region_id'    => { 'in' => $region_by_lvl{2} },
-                                'me.generated_by_compute' => [undef,0]
+                                'me.region_id' => { 'in' => $region_by_lvl{2} },
+                                'me.generated_by_compute' => [ undef, 0 ]
                             }
                         ) x !!scalar $region_by_lvl{2},
                         (
@@ -129,6 +129,7 @@ sub upsert {
         ind_variation_var   => $ind_variation_var
 
     );
+
     #use DDP; p $indicator_variables; p $variation_values; p $results;
     my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
     my $level3       = [];

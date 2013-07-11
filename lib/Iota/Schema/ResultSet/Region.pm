@@ -89,19 +89,19 @@ sub action_specs {
 
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
 
-
             if ( exists $values{depth_level} && $values{depth_level} == 3 ) {
                 $values{name_url} = '+' . $values{name_url};
             }
 
-            if (exists $values{upper_region} && $values{upper_region}){
+            if ( exists $values{upper_region} && $values{upper_region} ) {
 
-                my $region = $self->result_source->schema->resultset('Region')
-                    ->find( { id => $values{upper_region} } );
-                if (!$region->subregions_valid_after){
-                    $region->update({
-                        subregions_valid_after => \'NOW()'
-                    });
+                my $region = $self->result_source->schema->resultset('Region')->find( { id => $values{upper_region} } );
+                if ( !$region->subregions_valid_after ) {
+                    $region->update(
+                        {
+                            subregions_valid_after => \'NOW()'
+                        }
+                    );
                 }
             }
 

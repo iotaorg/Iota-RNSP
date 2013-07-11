@@ -284,7 +284,10 @@ eval {
             is_deeply( scalar @{ $list->{variables} }, 1 );
 
             ( $res, $c ) =
-              ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status?region_id='. $reg1->{id});
+              ctx_request( GET '/api/public/user/'
+                  . $Iota::TestOnly::Mock::AuthUser::_id
+                  . '/indicator/status?region_id='
+                  . $reg1->{id} );
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
             delete $obj->{totals};
@@ -294,17 +297,16 @@ eval {
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
+                            id                  => $indicator->{id},
                             justification_count => undef,
-                            without_data => 0,
-                            has_current  => 0,
-                            has_data     => 1,
+                            without_data        => 0,
+                            has_current         => 0,
+                            has_data            => 1,
                         }
                     ]
                 },
                 'teste condicao 1.5'
             );
-
 
             die 'rollback';
         }
