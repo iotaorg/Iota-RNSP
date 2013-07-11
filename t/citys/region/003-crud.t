@@ -126,7 +126,7 @@ eval {
                     polygon_path   => undef,
                     name           => 'foobar',
                     automatic_fill => 0,
-                    name_url       => '-foobar',
+                    name_url       => '+foobar',
                     upper_region   => {
                         id       => $reg1->{id},
                         name     => 'a region',
@@ -169,7 +169,7 @@ eval {
                     description    => 'description',
                     name           => 'xxx',
                     automatic_fill => 0,
-                    name_url       => '-xxx',
+                    name_url       => '+xxx',
                     upper_region   => {
                         id       => $reg1->{id},
                         name     => 'a region',

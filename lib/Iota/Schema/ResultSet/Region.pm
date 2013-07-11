@@ -91,7 +91,7 @@ sub action_specs {
 
 
             if ( exists $values{depth_level} && $values{depth_level} == 3 ) {
-                $values{name_url} = '-' . $values{name_url};
+                $values{name_url} = '+' . $values{name_url};
             }
 
             if (exists $values{upper_region} && $values{upper_region}){
@@ -121,7 +121,7 @@ sub action_specs {
             my $var = $self->find( delete $values{id} );
             if ( exists $values{name}
                 && $var->depth_level == 3 ) {
-                $values{name_url} = '-' . $values{name_url};
+                $values{name_url} = '+' . $values{name_url};
             }
 
             return unless keys %values;
