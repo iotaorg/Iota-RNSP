@@ -431,7 +431,21 @@ sub indicator_status_GET {
     my $ret;
     my $ultimos = {};
     eval {
-        my @indicator_ids = map { $_->{id} } $c->stash->{collection}->as_hashref->all;
+
+        my @hide_indicator =
+          map { $_->indicator_id }
+          $c->stash->{user_obj}
+          ->user_indicator_configs
+          ->search( { hide_indicator => 1 } )
+          ->all;
+
+        my $rs = $c->stash->{collection}->search(
+            {
+                'me.id' => { '-not_in' => \@hide_indicator }
+            }
+        );
+
+        my @indicator_ids = map { $_->{id} } $rs->as_hashref->all;
         my $user_id = $c->stash->{user_obj}->id;
 
         my $region_tb = exists $c->req->params->{region_id} ? 'Region' : '';
