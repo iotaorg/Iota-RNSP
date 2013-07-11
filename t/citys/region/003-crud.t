@@ -85,6 +85,7 @@ eval {
                     depth_level    => 2,
                     automatic_fill => 0,
                     polygon_path   => 'str',
+                    subregions_valid_after => undef,
                     description    => 'with no description',
                     name           => 'a region',
                     name_url       => 'a-region',
@@ -125,6 +126,7 @@ eval {
                     description    => 'description',
                     polygon_path   => undef,
                     name           => 'foobar',
+                    subregions_valid_after => undef,
                     automatic_fill => 0,
                     name_url       => '+foobar',
                     upper_region   => {
@@ -167,6 +169,7 @@ eval {
                     depth_level    => 3,
                     polygon_path   => undef,
                     description    => 'description',
+                    subregions_valid_after => undef,
                     name           => 'xxx',
                     automatic_fill => 0,
                     name_url       => '+xxx',
@@ -183,6 +186,10 @@ eval {
             is( @{ $obj->{regions}[0]{subregions} }, 1, '1 subregion' );
             is( $obj->{regions}[0]{subregions}[0]{id}, $reg2->{id} );
             is( $obj->{regions}[0]{id},                $reg1->{id} );
+
+            ( $res, $c ) = ctx_request( GET $reg1_uri );
+            $obj = eval { from_json( $res->content ) };
+            ok($obj->{subregions_valid_after}, 'tem subregions_valid_after');
 
             ( $res, $c ) = ctx_request( DELETE $reg2_uri );
 
