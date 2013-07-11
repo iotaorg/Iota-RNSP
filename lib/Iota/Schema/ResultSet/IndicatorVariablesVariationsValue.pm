@@ -65,7 +65,13 @@ sub action_specs {
                 if ( exists $values{region_id} ) {
                     my $region = $schema->resultset('Region')->find( $values{region_id} );
                     if ( $region->depth_level == 2 ) {
-                        $values{active_value} = 0;
+                        if ($region->subregions_valid_after) {
+
+                            $values{active_value} = 0;
+                        }else{
+                            # se nao tem subregions, sempre eh o ativo!
+                            $values{active_value} = 1;
+                        }
                     }
                 }
 

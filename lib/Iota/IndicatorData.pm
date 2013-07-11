@@ -102,6 +102,7 @@ sub upsert {
             out => $period_values,
             rs  => $rr_values_rs
         );
+
     }
     else {
         $period_values = $self->_get_values_periods($values_rs);
@@ -128,6 +129,7 @@ sub upsert {
         ind_variation_var   => $ind_variation_var
 
     );
+    #use DDP; p $indicator_variables; p $variation_values; p $results;
     my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
     my $level3       = [];
     my $regions_meta = $self->get_regions_meta( $level3, keys %$results );

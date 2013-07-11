@@ -176,7 +176,7 @@ eval {
                     name                 => 'Foo Bar',
                     observations         => 'farinha',
                     region_id            => $reg1->{id},
-                    active_value         => 0,
+                    active_value         => 1,
                     generated_by_compute => undef,
                     source               => 'bazar',
                     type                 => 'int',
@@ -287,24 +287,24 @@ eval {
               ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status?region_id='. $reg1->{id});
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
+            delete $obj->{totals};
 
-            TODO: {
-                local $TODO = 'provavelmente vai mudar quando a regiao 2 nao tiver regiao 3';
-                is_deeply(
-                    $obj,
-                    {
-                        status => [
-                            {
-                                id           => $indicator->{id},
-                                without_data => 1,
-                                has_current  => 0,
-                                has_data     => 0,
-                            }
-                        ]
-                    },
-                    'teste condicao 1.5'
-                );
-            };
+            is_deeply(
+                $obj,
+                {
+                    status => [
+                        {
+                            id           => $indicator->{id},
+                            justification_count => undef,
+                            without_data => 0,
+                            has_current  => 0,
+                            has_data     => 1,
+                        }
+                    ]
+                },
+                'teste condicao 1.5'
+            );
+
 
             die 'rollback';
         }
