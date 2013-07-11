@@ -13,6 +13,7 @@ my $text2uri = Text2URI->new();    # tem lazy la, don't worry
 
 use Data::Verifier;
 use Iota::IndicatorFormula;
+use Iota::Types qw /DataStr/;
 
 sub _build_verifier_scope_name { 'city.region' }
 
@@ -65,6 +66,7 @@ sub verifiers_specs {
                         return defined $axis;
                       }
                 },
+                subregions_valid_after => { required => 0, type => DataStr },
 
                 automatic_fill => { required => 0, type => 'Bool' },
 
@@ -87,8 +89,20 @@ sub action_specs {
 
             $values{depth_level} = 3 if exists $values{upper_region} && $values{upper_region};
 
-            if ( !exists $values{depth_level} || $values{depth_level} == 2 ) {
-                $values{name_url} = 'subprefeitura:' . $values{name_url};
+
+            if ( exists $values{depth_level} && $values{depth_level} == 3 ) {
+                $values{name_url} = '-' . $values{name_url};
+            }
+
+            if (exists $values{upper_region} && $values{upper_region}){
+
+                my $region = $self->result_source->schema->resultset('Region')
+                    ->find( { id => $values{upper_region} } );
+                if (!$region->subregions_valid_after){
+                    $region->update({
+                        subregions_valid_after => \'NOW()'
+                    });
+                }
             }
 
             my $var = $self->create( \%values );
@@ -106,8 +120,8 @@ sub action_specs {
 
             my $var = $self->find( delete $values{id} );
             if ( exists $values{name}
-                && $var->depth_level == 2 ) {
-                $values{name_url} = 'subprefeitura:' . $values{name_url};
+                && $var->depth_level == 3 ) {
+                $values{name_url} = '-' . $values{name_url};
             }
 
             return unless keys %values;

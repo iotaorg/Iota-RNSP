@@ -87,7 +87,7 @@ eval {
                     polygon_path   => 'str',
                     description    => 'with no description',
                     name           => 'a region',
-                    name_url       => 'subprefeitura:a-region',
+                    name_url       => 'a-region',
                     upper_region   => undef
                 },
                 'created ok'
@@ -126,11 +126,11 @@ eval {
                     polygon_path   => undef,
                     name           => 'foobar',
                     automatic_fill => 0,
-                    name_url       => 'foobar',
+                    name_url       => '-foobar',
                     upper_region   => {
                         id       => $reg1->{id},
                         name     => 'a region',
-                        name_url => 'subprefeitura:a-region',
+                        name_url => 'a-region',
                     }
                 },
                 'created ok'
@@ -169,11 +169,11 @@ eval {
                     description    => 'description',
                     name           => 'xxx',
                     automatic_fill => 0,
-                    name_url       => 'xxx',
+                    name_url       => '-xxx',
                     upper_region   => {
                         id       => $reg1->{id},
                         name     => 'a region',
-                        name_url => 'subprefeitura:a-region',
+                        name_url => 'a-region',
                     }
                 },
                 'updated ok'
