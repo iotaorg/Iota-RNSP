@@ -465,7 +465,7 @@ sub indicator_status_GET {
         }
 
         # status
-        my $rs = $c->model('DB')->resultset( 'ViewIndicatorStatus' . $region_tb )->search_rs(
+        $rs = $c->model('DB')->resultset( 'ViewIndicatorStatus' . $region_tb )->search_rs(
             undef,
             {
                 bind =>
