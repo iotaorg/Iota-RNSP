@@ -151,18 +151,17 @@ eval {
                 $schema->txn_do(
                     sub {
                         my $ii;
-                        &update_region_valid_time($reg1, undef);
+                        &update_region_valid_time( $reg1, undef );
                         &add_value( $reg1_uri, '100', '2002' );
                         &add_value( $reg1_uri, '130', '2003' );
                         &add_value( $reg1_uri, '150', '2004' );
 
-                        &update_region_valid_time($reg1, '2005-01-01');
+                        &update_region_valid_time( $reg1, '2005-01-01' );
                         &add_value( $reg2_uri, '80', '2005' );
                         &add_value( $reg3_uri, '82', '2005' );
 
                         &add_value( $reg2_uri, '95', '2006' );
                         &add_value( $reg3_uri, '94', '2006' );
-
 
                         $ii = &get_indicator( $reg1, '2002' );
                         is_deeply( $ii, ['101'], 'valor de 2002 ativo' );
@@ -181,13 +180,13 @@ eval {
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2004' );
 
                         $ii = &get_indicator( $reg1, '2005' );
-                        is_deeply( $ii, [1+80+82], 'valor de 2005 ativo eh a soma' );
+                        is_deeply( $ii, [ 1 + 80 + 82 ], 'valor de 2005 ativo eh a soma' );
 
                         $ii = &get_indicator( $reg1, '2005', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2005' );
 
                         $ii = &get_indicator( $reg1, '2006' );
-                        is_deeply( $ii, [1+95+94], 'valor de 2006 ativo eh a soma' );
+                        is_deeply( $ii, [ 1 + 95 + 94 ], 'valor de 2006 ativo eh a soma' );
 
                         $ii = &get_indicator( $reg1, '2006', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2006' );
@@ -198,17 +197,18 @@ eval {
                 die $@ unless $@ =~ /undo-savepoint/;
             };
 
-            note 'segundo cenario: 2002..2004 regiao 2 inserida, 2005..2006 calculado, depois disso tentar inserir um dado em para subregioes deve dar erro.';
+            note
+'segundo cenario: 2002..2004 regiao 2 inserida, 2005..2006 calculado, depois disso tentar inserir um dado em para subregioes deve dar erro.';
             eval {
                 $schema->txn_do(
                     sub {
                         my $ii;
-                        &update_region_valid_time($reg1, undef);
+                        &update_region_valid_time( $reg1, undef );
                         &add_value( $reg1_uri, '100', '2002' );
                         &add_value( $reg1_uri, '130', '2003' );
                         &add_value( $reg1_uri, '150', '2004' );
 
-                        &update_region_valid_time($reg1, '2005-01-01');
+                        &update_region_valid_time( $reg1, '2005-01-01' );
                         &add_value( $reg2_uri, '80', '2005' );
                         &add_value( $reg3_uri, '82', '2005' );
 
@@ -226,7 +226,6 @@ eval {
                 die $@ unless $@ =~ /undo-savepoint/;
             };
 
-
             die 'rollback';
         }
     );
@@ -239,11 +238,15 @@ done_testing;
 
 sub update_region_valid_time {
 
-    $schema->resultset('Region')->find({
-        id => shift->{id}
-    })->update({
-        subregions_valid_after => shift
-    });
+    $schema->resultset('Region')->find(
+        {
+            id => shift->{id}
+        }
+      )->update(
+        {
+            subregions_valid_after => shift
+        }
+      );
 
 }
 
@@ -251,6 +254,7 @@ sub add_value {
     my ( $region, $value, $year, $expcode ) = @_;
 
     $expcode ||= 201;
+
     # PUT normal
     my $req = POST $region . '/value',
       [

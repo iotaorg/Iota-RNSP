@@ -20,7 +20,6 @@ use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'region.variable.value' }
 
-
 my $str2number = sub {
     my $str = shift;
     if ( $str =~ /[^\d]/ ) {
@@ -213,7 +212,7 @@ sub action_specs {
     my $self = shift;
     return {
         create => sub {
-            my %values = shift->valid_values;
+            my %values        = shift->valid_values;
             my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
             $values{value_of_date} = $value_of_date->datetime;
 
@@ -235,13 +234,14 @@ sub action_specs {
                     # se nao tem subregions, sempre eh o ativo!
                     $values{active_value} = 1;
                 }
-            }elsif ( $region->depth_level == 3 ){
+            }
+            elsif ( $region->depth_level == 3 ) {
                 my $upper = $region->upper_region;
 
-                die "upper region valid date cannot be null\n" unless ($upper->subregions_valid_after);
+                die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
 
                 die "cannot save subregion value before upper region tell subregions is valid\n"
-                    if (DateTime->compare($value_of_date, $upper->subregions_valid_after) < 0);
+                  if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
             }
 
@@ -343,12 +343,13 @@ sub _put {
             # se nao tem subregions, sempre eh o ativo!
             $values{active_value} = 1;
         }
-    }elsif ( $region->depth_level == 3 ){
+    }
+    elsif ( $region->depth_level == 3 ) {
         my $upper = $region->upper_region;
 
-        die "upper region valid date cannot be null\n" unless ($upper->subregions_valid_after);
+        die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
         die "cannot save subregion value before upper region tell subregions is valid\n"
-            if (DateTime->compare($value_of_date, $upper->subregions_valid_after) < 0);
+          if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
     }
 

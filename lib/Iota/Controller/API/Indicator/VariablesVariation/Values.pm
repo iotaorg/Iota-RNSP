@@ -89,19 +89,21 @@ sub values_POST {
 
     $param->{id} = $obj_rs->id;
 
-    my $dm = eval{$c->model('DataManager')};
-    if ($@ && $@ =~ /\n$/){
-        $self->status_bad_request( $c, message => $@ ), $c->detach
-    }elsif ($@){
+    my $dm = eval { $c->model('DataManager') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
         die $@;
     }
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $obj = eval{$dm->get_outcome_for('indicator.variation_value.update')};
-    if ($@ && $@ =~ /\n$/){
-        $self->status_bad_request( $c, message => $@ ), $c->detach
-    }elsif ($@){
+    my $obj = eval { $dm->get_outcome_for('indicator.variation_value.update') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
         die $@;
     }
     $self->status_accepted(
@@ -141,7 +143,7 @@ sub values_DELETE {
             dates   => [ $obj->valid_from->datetime ],
             user_id => $obj->user_id,
 
-            ( regions_id => [$obj->region_id] )x!! $obj->region_id
+            ( regions_id => [ $obj->region_id ] ) x !!$obj->region_id
         };
 
         $obj->delete;
@@ -238,20 +240,22 @@ sub list_POST {
 
     $param->{period} = $c->stash->{indicator}->period;
 
-    my $dm = eval{$c->model('DataManager')};
-    if ($@ && $@ =~ /\n$/){
-        $self->status_bad_request( $c, message => $@ ), $c->detach
-    }elsif ($@){
+    my $dm = eval { $c->model('DataManager') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
         die $@;
     }
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $obj = eval{$dm->get_outcome_for('indicator.variation_value.create')};
-    if ($@ && $@ =~ /\n$/){
-        $self->status_bad_request( $c, message => $@ ), $c->detach
-    }elsif ($@){
+    my $obj = eval { $dm->get_outcome_for('indicator.variation_value.create') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
         die $@;
     }
     $self->status_created(

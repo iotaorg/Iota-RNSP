@@ -16,26 +16,27 @@ L59:59   i3:3 0 0 {({        >>>operator in print statement not recommended
 L74:74   i3:3 0 0 {({        >>>operator in print statement not recommended
 L92:92   i3:3 0 0 {({        >>>operator in print statement not recommended
 L100:92  i3:3 1 1 {({(       ...);
-L150:150 i0:3 0 1 {({        ...subtest 'primeiro cenario' => su ....
-L150:150 i0:3 0 1 {({        >>>Start indentation disagreement: input=0; output=3
-L200:200 i3:7 0 1 {({{{({    .......$ii = &get_indicator( $reg1, ....
-L233:233 i0:6 1 0 {({{{({    >>>Added ';' here
-L244:245 i0:0 0 1            >>>End indentation disagreement from input line 150
-L248:249 i0:0 0 1            sub add_value {
-L251:252 i1:1 0 1 {          >>>operator in print statement not recommended
-L268:269 i0:0 0 1            sub get_values {
-L287:288 i0:0 0 1            sub get_indicator {
-L309:310 i0:0 0 1            sub get_the_key {
-L313:314 i0:0 0 1 {          >>>Last line
+L150:150 i3:3 0 1 {({        ...eval {
+L201:200 i3:3 0 1 {({        ...note 'segundo cenario: 2002..200 ....
+L201:200 i3:3 0 1 {({        >>>Line length exceeded by 21 characters
+L240:239 i0:0 0 1            sub update_region_valid_time {
+L243:241 i2:3 0 0 {({        >>>Start indentation disagreement: input=2; output=3
+L248:251 i0:0 0 1 {          >>>End indentation disagreement from input line 243
+L250:253 i0:0 0 1            sub add_value {
+L254:257 i1:1 0 1 {          >>>operator in print statement not recommended
+L271:275 i0:0 0 1            sub get_values {
+L290:294 i0:0 0 1            sub get_indicator {
+L312:316 i0:0 0 1            sub get_the_key {
+L316:320 i0:0 0 1 {          >>>Last line
 
-1 semicolon was added:
-   at input line 233
-  (Use -nasc to prevent semicolon addition)
-
-First indentation disagreement seen at input line 150
-Last indentation disagreement seen at input line 234
+First indentation disagreement seen at input line 243
+Last indentation disagreement seen at input line 246
 Note: Indentation disagreement detection is not accurate for outdenting and -lp.
 
-No lines exceeded 120 characters
-  Maximum output line length was 111 at line 192
+1 long lines were outdented:
+  First at output line 201
+  use -noll to prevent outdenting, -l=n to increase line length
+
+1 output line exceeded 120 characters:
+  at line 201 by 21 characters
 Converged.  Output for iteration 2 same as for iter 1.

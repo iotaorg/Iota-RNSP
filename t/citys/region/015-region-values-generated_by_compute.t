@@ -147,7 +147,7 @@ eval {
 
             $indicator = eval { from_json( $res->content ) };
 
-            &update_region_valid_time($reg1, '2010-01-01');
+            &update_region_valid_time( $reg1, '2010-01-01' );
 
             &add_value( $reg2_uri, '100', '2010' );
             my $tmp = &get_values($reg2);
@@ -240,11 +240,15 @@ done_testing;
 
 sub update_region_valid_time {
 
-    $schema->resultset('Region')->find({
-        id => shift->{id}
-    })->update({
-        subregions_valid_after => shift
-    });
+    $schema->resultset('Region')->find(
+        {
+            id => shift->{id}
+        }
+      )->update(
+        {
+            subregions_valid_after => shift
+        }
+      );
 
 }
 

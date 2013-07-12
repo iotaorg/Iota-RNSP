@@ -73,14 +73,15 @@ sub action_specs {
                             # se nao tem subregions, sempre eh o ativo!
                             $values{active_value} = 1;
                         }
-                    }elsif ( $region->depth_level == 3 ){
+                    }
+                    elsif ( $region->depth_level == 3 ) {
                         my $upper = $region->upper_region;
 
-                        die "upper region valid date cannot be null\n" unless ($upper->subregions_valid_after);
+                        die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
 
                         my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
                         die "cannot save subregion value before upper region tell subregions is valid\n"
-                            if (DateTime->compare($value_of_date, $upper->subregions_valid_after) < 0);
+                          if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
                     }
                 }

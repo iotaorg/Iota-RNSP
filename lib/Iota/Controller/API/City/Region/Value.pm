@@ -208,10 +208,11 @@ sub list_PUT {
     $c->req->params->{region}{variable}{value}{put}{region_id} = $c->stash->{region}->id;
     $c->req->params->{region}{variable}{value}{put}{user_id}   = $c->user->id;
 
-    my $dm = eval { $c->model('DataManager') } ;
-    if ($@ && $@ =~ /\n$/){
-        $self->status_bad_request( $c, message => $@ ), $c->detach
-    }elsif ($@){
+    my $dm = eval { $c->model('DataManager') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
         die $@;
     }
 
@@ -219,9 +220,10 @@ sub list_PUT {
       unless $dm->success;
 
     my $objectect = eval { $dm->get_outcome_for('region.variable.value.put') };
-    if ($@ && $@ =~ /\n$/){
-        $self->status_bad_request( $c, message => $@ ), $c->detach
-    }elsif ($@){
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
         die $@;
     }
 
