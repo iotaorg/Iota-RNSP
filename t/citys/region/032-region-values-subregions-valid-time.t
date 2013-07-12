@@ -146,85 +146,86 @@ eval {
             );
 
             $indicator = eval { from_json( $res->content ) };
+            note 'primeiro cenario: sem dados no banco, regiao a partir de 2005 começa a ter subregioes';
+            eval {
+                $schema->txn_do(
+                    sub {
+                        my $ii;
+                        &update_region_valid_time($reg1, undef);
+                        &add_value( $reg1_uri, '100', '2002' );
+                        &add_value( $reg1_uri, '130', '2003' );
+                        &add_value( $reg1_uri, '150', '2004' );
 
-            &add_value( $reg2_uri, '100', '2010' );
-            my $tmp = &get_values($reg2);
+                        &update_region_valid_time($reg1, '2005-01-01');
+                        &add_value( $reg2_uri, '80', '2005' );
+                        &add_value( $reg3_uri, '82', '2005' );
 
-            is( scalar @$tmp, '1', 'só tem 1 linha' );
-            my $ii = &get_indicator( $reg2, '2010' );
-            is_deeply( $ii, [101], 'valores salvos ok' );
+                        &add_value( $reg2_uri, '95', '2006' );
+                        &add_value( $reg3_uri, '94', '2006' );
 
-            &add_value( $reg2_uri, '200', '2011' );
-            $tmp = &get_values($reg2);
-            is( scalar @$tmp, '2', 'tem 2 linhas' );
-            $ii = &get_indicator( $reg2, '2011' );
-            is_deeply( $ii, [201], 'valores salvos ok' );
 
-            $tmp = &get_values($reg1);
-            is( scalar @$tmp, '2', 'tem 2 linhas tambem na regiao 1' );
+                        $ii = &get_indicator( $reg1, '2002' );
+                        is_deeply( $ii, ['101'], 'valor de 2002 ativo' );
+                        $ii = &get_indicator( $reg1, '2002', 1 );
 
-            $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
-            is( $tmp->[0]{value}, '100' );
-            is( $tmp->[1]{value}, '200' );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2002' );
 
-            $ii = &get_indicator( $reg1, '2010' );
-            is_deeply( $ii, [101], 'valores salvos ok' );
+                        $ii = &get_indicator( $reg1, '2003' );
+                        is_deeply( $ii, ['131'], 'valor de 2003 ativo' );
+                        $ii = &get_indicator( $reg1, '2003', 1 );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2003' );
 
-            $ii = &get_indicator( $reg1, '2011' );
-            is_deeply( $ii, [201], 'valores salvos ok' );
+                        $ii = &get_indicator( $reg1, '2004' );
+                        is_deeply( $ii, ['151'], 'valor de 2004 ativo' );
+                        $ii = &get_indicator( $reg1, '2004', 1 );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2004' );
 
-            &add_value( $reg3_uri, '150,6668', '2010' );
+                        $ii = &get_indicator( $reg1, '2005' );
+                        is_deeply( $ii, [1+80+82], 'valor de 2005 ativo eh a soma' );
 
-            $ii = &get_indicator( $reg1, '2010' );
-            is_deeply( $ii, ['251.6668'], 'valores salvos ok' );
+                        $ii = &get_indicator( $reg1, '2005', 1 );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2005' );
 
-            $tmp = &get_values($reg1);
+                        $ii = &get_indicator( $reg1, '2006' );
+                        is_deeply( $ii, [1+95+94], 'valor de 2006 ativo eh a soma' );
 
-            is( scalar @$tmp, '2', 'tem 2 linhas ainda, mas somados' );
-            $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
-            is( $tmp->[0]{value}, '250.6668' );
+                        $ii = &get_indicator( $reg1, '2006', 1 );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2006' );
 
-            $tmp = &get_values( $reg1, 1 );
-            is( scalar @$tmp, '0', 'tem 0 linhas ainda, pq nenhum user fez put nesses caras' );
+                        die 'undo-savepoint';
+                    }
+                );
+                die $@ unless $@ =~ /undo-savepoint/;
+            };
 
-            &add_value( $reg1_uri, '666', '2011' );
-            $tmp = &get_values( $reg1, 1 );
-            is( scalar @$tmp,            '1',   'tem 1 linha' );
-            is( $tmp->[0]{value},        '666', 'valor salvo!' );
-            is( $tmp->[0]{active_value}, '0',   'valor nao ativo' );
+            note 'segundo cenario: 2002..2004 regiao 2 inserida, 2005..2006 calculado, depois disso tentar inserir um dado em para subregioes deve dar erro.';
+            eval {
+                $schema->txn_do(
+                    sub {
+                        my $ii;
+                        &update_region_valid_time($reg1, undef);
+                        &add_value( $reg1_uri, '100', '2002' );
+                        &add_value( $reg1_uri, '130', '2003' );
+                        &add_value( $reg1_uri, '150', '2004' );
 
-            $ii = &get_indicator( $reg1, '2010' );
-            is_deeply( $ii, ['251.6668'], 'ainda existe esse valor!' );
+                        &update_region_valid_time($reg1, '2005-01-01');
+                        &add_value( $reg2_uri, '80', '2005' );
+                        &add_value( $reg3_uri, '82', '2005' );
 
-            $ii = &get_indicator( $reg1, '2011', 1 );
-            is_deeply( $ii, ['667'], 'e tem como pegar o valor nao computado' );
+                        &add_value( $reg2_uri, '95', '2006' );
+                        &add_value( $reg3_uri, '94', '2006' );
 
-            $tmp = &get_values($reg1);
-            is( scalar @$tmp, '2', 'tem 2 linhas ainda' );
-            $tmp = [ sort { $a->{valid_from} cmp $b->{valid_from} } @{$tmp} ];
-            is( $tmp->[0]{value},        '250.6668', 'valor ainda eh o mesmo!' );
-            is( $tmp->[0]{active_value}, '1',        'valor ativo' );
+                        # se tentar inserir pra qualquer ano antes do ativo, erro!
+                        &add_value( $reg2_uri, '50', '2002', 400 );
+                        &add_value( $reg2_uri, '50', '2000', 400 );
+                        &add_value( $reg3_uri, '50', '1999', 400 );
 
-            $ii = &get_indicator( $reg1, '2010' );
-            is_deeply( $ii, ['251.6668'], 'ainda existe esse valor!' );
+                        die 'undo-savepoint';
+                    }
+                );
+                die $@ unless $@ =~ /undo-savepoint/;
+            };
 
-            &add_value( $reg1_uri, '444', '2010' );
-
-            $ii = &get_indicator( $reg1, '2010', 1 );
-            is_deeply( $ii, ['445'], 'existe o do usuario pra 2010' );
-
-            &add_value( $reg2_uri, '22', '2010' );
-            $tmp = &get_values($reg2);
-
-            is( scalar @$tmp, '2', 'tem 2 linhas, uma de 2010 e outra de 2011' );
-            $ii = &get_indicator( $reg2, '2010' );
-            is_deeply( $ii, [23], 'valores atualizado' );
-
-            $ii = &get_indicator( $reg1, '2010' );
-            is_deeply( $ii, ['173.6668'], 'valores atualizado' );
-
-            $ii = &get_indicator( $reg1, '2010', 1 );
-            is_deeply( $ii, ['445'], 'ainda existe o do usuario' );
 
             die 'rollback';
         }
@@ -236,9 +237,20 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 
-sub add_value {
-    my ( $region, $value, $year ) = @_;
+sub update_region_valid_time {
 
+    $schema->resultset('Region')->find({
+        id => shift->{id}
+    })->update({
+        subregions_valid_after => shift
+    });
+
+}
+
+sub add_value {
+    my ( $region, $value, $year, $expcode ) = @_;
+
+    $expcode ||= 201;
     # PUT normal
     my $req = POST $region . '/value',
       [
@@ -249,8 +261,8 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
 
-    ok( $res->is_success, 'variable value created' );
-    is( $res->code, 201, 'value added -- 201 ' );
+    ok( $res->is_success, 'variable value created' ) if $expcode == 201;
+    is( $res->code, $expcode, 'response code is ' . $expcode );
     my $id = eval { from_json( $res->content ) };
 
     return $id;

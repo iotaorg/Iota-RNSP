@@ -104,6 +104,8 @@ eval {
             ok( $res->is_success, 'variable created!' );
             is( $res->code, 201, 'created!' );
 
+            &update_region_valid_time($reg0, '1931-01-01');
+
             my ( $var1, $uri1 ) = &new_var( 'int', 'yearly' );
 
             $indicator = &_post(
@@ -197,8 +199,8 @@ eval {
 
             # Pessoas
             &_populate( $reg1->{id}, $subvar[0]{id}, \@variacoes, '2010-01-01', qw/3 5/ );
-            &_populate( $reg1->{id}, $subvar[0]{id}, \@variacoes, '1992-01-01', qw/8 9/ );
 
+            &_populate( $reg1->{id}, $subvar[0]{id}, \@variacoes, '1992-01-01', qw/8 9/ );
             # fixo
             &_populate( $reg1->{id}, $subvar[1]{id}, \@variacoes, '2010-01-01', qw/1 1 / );
 
@@ -254,6 +256,17 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 use JSON qw(from_json);
+
+
+sub update_region_valid_time {
+
+    $schema->resultset('Region')->find({
+        id => shift->{id}
+    })->update({
+        subregions_valid_after => shift
+    });
+
+}
 
 sub new_var {
     my $type   = shift;

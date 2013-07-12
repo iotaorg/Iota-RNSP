@@ -11,28 +11,31 @@ ci = levels of continuation indentation; bk = 1 if in BLOCK, 0 if not.
 in:out indent c b  nesting   code + messages; (messages begin with >>>)
 lines  levels i k            (code begins with one '.' per indent level)
 ------  ----- - - --------   -------------------------------------------
-L50:47   i5:5 0 0 {({([      .....api_key                        ....
-L101:101 i3:3 0 1 {({        ...push @variacoes,
-L151:149 i4:4 0 0 {({(       ....201,
-L201:188 i3:3 1 1 {({(       ...);
-L242:243 i5:4 0 0 {({(       >>>Start indentation disagreement: input=5; output=4
-L250:252 i3:3 0 1 {({        >>>End indentation disagreement from input line 242
-L252:254 i3:3 0 1 {({        ...my $without_data =
-L302:301 i7:7 0 0 {({({[{    .......id           => $indicator-> ....
-L352:355 i5:5 0 0 {({({      .....status => [
-L402:399 i5:5 1 0 {({({[     .....]
-L441:450 i0:0 0 1            sub new_var {
-L466:475 i0:0 0 1            sub _post {
-L477:486 i0:0 0 1            sub _get {
-L492:501 i0:0 0 1            sub _delete {
-L510:519 i0:0 0 1            sub add_value {
-L527:536 i0:0 0 1            sub _populate {
-L545:553 i0:0 0 1 {          >>>Last line
+L50:45   i5:5 0 0 {({([      .....'city.create.state_id'  => 1,
+L59:59   i3:3 0 0 {({        >>>operator in print statement not recommended
+L74:74   i3:3 0 0 {({        >>>operator in print statement not recommended
+L92:92   i3:3 0 0 {({        >>>operator in print statement not recommended
+L100:92  i3:3 1 1 {({(       ...);
+L150:150 i0:3 0 1 {({        ...subtest 'primeiro cenario' => su ....
+L150:150 i0:3 0 1 {({        >>>Start indentation disagreement: input=0; output=3
+L200:200 i3:7 0 1 {({{{({    .......$ii = &get_indicator( $reg1, ....
+L233:233 i0:6 1 0 {({{{({    >>>Added ';' here
+L244:245 i0:0 0 1            >>>End indentation disagreement from input line 150
+L248:249 i0:0 0 1            sub add_value {
+L251:252 i1:1 0 1 {          >>>operator in print statement not recommended
+L268:269 i0:0 0 1            sub get_values {
+L287:288 i0:0 0 1            sub get_indicator {
+L309:310 i0:0 0 1            sub get_the_key {
+L313:314 i0:0 0 1 {          >>>Last line
 
-First indentation disagreement seen at input line 242
-Last indentation disagreement seen at input line 242
+1 semicolon was added:
+   at input line 233
+  (Use -nasc to prevent semicolon addition)
+
+First indentation disagreement seen at input line 150
+Last indentation disagreement seen at input line 234
 Note: Indentation disagreement detection is not accurate for outdenting and -lp.
 
 No lines exceeded 120 characters
-  Maximum output line length was 120 at line 239
+  Maximum output line length was 111 at line 192
 Converged.  Output for iteration 2 same as for iter 1.

@@ -89,12 +89,21 @@ sub values_POST {
 
     $param->{id} = $obj_rs->id;
 
-    my $dm = $c->model('DataManager');
-
+    my $dm = eval{$c->model('DataManager')};
+    if ($@ && $@ =~ /\n$/){
+        $self->status_bad_request( $c, message => $@ ), $c->detach
+    }elsif ($@){
+        die $@;
+    }
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $obj = $dm->get_outcome_for('indicator.variation_value.update');
+    my $obj = eval{$dm->get_outcome_for('indicator.variation_value.update')};
+    if ($@ && $@ =~ /\n$/){
+        $self->status_bad_request( $c, message => $@ ), $c->detach
+    }elsif ($@){
+        die $@;
+    }
     $self->status_accepted(
         $c,
         location => $c->uri_for( $self->action_for('values'),
@@ -131,6 +140,8 @@ sub values_DELETE {
               [ $data->indicators_from_variation_variables( variables => [ $obj->indicator_variables_variation_id ] ) ],
             dates   => [ $obj->valid_from->datetime ],
             user_id => $obj->user_id,
+
+            ( regions_id => [$obj->region_id] )x!! $obj->region_id
         };
 
         $obj->delete;
@@ -227,11 +238,22 @@ sub list_POST {
 
     $param->{period} = $c->stash->{indicator}->period;
 
-    my $dm = $c->model('DataManager');
+    my $dm = eval{$c->model('DataManager')};
+    if ($@ && $@ =~ /\n$/){
+        $self->status_bad_request( $c, message => $@ ), $c->detach
+    }elsif ($@){
+        die $@;
+    }
+
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $obj = $dm->get_outcome_for('indicator.variation_value.create');
+    my $obj = eval{$dm->get_outcome_for('indicator.variation_value.create')};
+    if ($@ && $@ =~ /\n$/){
+        $self->status_bad_request( $c, message => $@ ), $c->detach
+    }elsif ($@){
+        die $@;
+    }
     $self->status_created(
         $c,
         location => $c->uri_for( $self->action_for('values'),

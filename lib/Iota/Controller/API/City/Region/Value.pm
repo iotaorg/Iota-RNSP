@@ -208,12 +208,22 @@ sub list_PUT {
     $c->req->params->{region}{variable}{value}{put}{region_id} = $c->stash->{region}->id;
     $c->req->params->{region}{variable}{value}{put}{user_id}   = $c->user->id;
 
-    my $dm = $c->model('DataManager');
+    my $dm = eval { $c->model('DataManager') } ;
+    if ($@ && $@ =~ /\n$/){
+        $self->status_bad_request( $c, message => $@ ), $c->detach
+    }elsif ($@){
+        die $@;
+    }
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $objectect = $dm->get_outcome_for('region.variable.value.put');
+    my $objectect = eval { $dm->get_outcome_for('region.variable.value.put') };
+    if ($@ && $@ =~ /\n$/){
+        $self->status_bad_request( $c, message => $@ ), $c->detach
+    }elsif ($@){
+        die $@;
+    }
 
     $c->logx( 'Atualizou valor '
           . $objectect->value

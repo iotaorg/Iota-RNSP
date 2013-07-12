@@ -434,10 +434,7 @@ sub indicator_status_GET {
 
         my @hide_indicator =
           map { $_->indicator_id }
-          $c->stash->{user_obj}
-          ->user_indicator_configs
-          ->search( { hide_indicator => 1 } )
-          ->all;
+          $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
         my $rs = $c->stash->{collection}->search(
             {
