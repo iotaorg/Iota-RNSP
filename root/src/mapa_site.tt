@@ -2,6 +2,7 @@
 <div class="row">
 
     <div class="span3">
+    <div lockfixed>
         <h2>[%l('Cidades')%]</h2>
         <ul>
         [%FOREACH city IN cities.sort('name') %]
@@ -10,23 +11,28 @@
         [%city=undef%]
         </ul>
     </div>
+    </div>
 
     <div class="span6">
+
         <h2>[%l('Indicadores')%]</h2>
         <ul>
         [%FOREACH i IN indicators %]
             <li><a href="/[%i.name_url%]">[%i.name%]</a></li>
         [%END%]
         </ul>
+
     </div>
 
     <div class="span3">
+     <div lockfixed>
         <h2>[%l('Links')%]</h2>
         <ul>
             <li><a href="/">Lista de indicadores da [%network.name%]</a></li>
             <li><a href="/dados-abertos">Dados abertos - Download</a></li>
             <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
         </ul>
+    </div>
     </div>
 </div>
 

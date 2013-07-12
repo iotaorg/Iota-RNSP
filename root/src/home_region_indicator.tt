@@ -72,7 +72,7 @@
 
     <div class="row" id="indicador-dados">
         <div class="span4">
-            <div class="menu-left">
+            <div class="menu-left" lockfixed>
                 <div class="content-fill">
                     <div class="title">[%l('Indicadores')%]</div>
                     <div class="category" id="axis_list">
@@ -169,4 +169,7 @@
 
     var ref = 'region_indicator';
     [% PROCESS 'network_javascript.tt'%]
+
+
+
 </script>

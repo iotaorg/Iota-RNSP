@@ -32,6 +32,8 @@
 [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
 [%-CALL assets.include("js/libraries/RGraph.line.js")%]
 [%-CALL assets.include("js/bootstrap.min.js")-%]
+[%-CALL assets.include("js/jquery-lockfixed-dynamic.js")-%]
+
 
 [%-CALL assets.include("css/bootstrap.min.css")%]
 [%-CALL assets.include("css/bootstrap-responsive.min.css")%]
@@ -250,11 +252,17 @@
 
 
 <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
 [% assets.export("js") %]
 
 <script>
+
+$('[lockfixed]').each(function(x, rlm){
+    $.lockfixed(rlm,{offset: {top: 47, bottom: 10}});
+});
+
 [% IF institute.short_name == 'gov' %]
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

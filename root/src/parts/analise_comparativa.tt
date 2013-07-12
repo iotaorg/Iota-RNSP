@@ -31,6 +31,9 @@ load_map.push( {
         <div class="row">
     <div class="span5">
 
+<div lockfixed>
+
+
         <h5>Classificação visual</h5>
         [%IF existe_vetor %]
         <div class="map" id="gmap[%index%]">
@@ -79,6 +82,7 @@ load_map.push( {
         </table>
         <small>¹ [%l('Média com base na soma dos números')%] [%IF region.depth_level == 2%][%l('das subprefeituras')%][%ELSE%][%l('dos distritos')%][%END%]</small>
 
+</div>
 
     </div>
 
