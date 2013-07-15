@@ -67,7 +67,6 @@ sub _download {
             'Tipo',
             'Apelido',
             'Período de atualização',
-            'Fonte esperada',
             'É Básica?',
             'Unidade de medida',
             'Nome',
@@ -149,7 +148,7 @@ sub _download {
             : 'Valor',
             $data->{cognomen},
             $self->_period_pt( $data->{period} ),
-            $data->{exp_source},
+
             $data->{is_basic} ? 'sim' : 'não',
             $data->{measurement_unit_name},
             $data->{name},
