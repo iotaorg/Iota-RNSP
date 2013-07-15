@@ -122,7 +122,10 @@ sub list_GET {
                         source        => $_->{source},
                         observations  => $_->{observations},
                         valid_from    => $_->{valid_from},
-                        active_value  => $_->{active_value},
+
+                        (active_value  => $_->{active_value}) x!! exists $_->{active_value},
+                        (generated_by_compute => $_->{generated_by_compute}?1:0) x!! exists $_->{generated_by_compute},
+
                         valid_until   => $_->{valid_until},
                         id            => $_->{id},
 

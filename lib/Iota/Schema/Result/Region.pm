@@ -305,5 +305,13 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-11 14:39:05
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u/Rq+6cJa75XqRpkN+U81w
 
+__PACKAGE__->has_many(
+  "subregions",
+  "Iota::Schema::Result::Region",
+  { "foreign.upper_region" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

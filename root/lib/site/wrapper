@@ -52,7 +52,7 @@
     [%- CALL assets.include("js/parceiros.gov.js")-%]
 [%- END -%]
 [%-IF custom_css-%]
-    [%-CALLassets.include(custom_css)-%]
+    [%-CALL assets.include(custom_css)-%]
 [%-END-%]
 
 [%- assets.export("css") -%]
@@ -70,7 +70,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" target="_blank" href="http://github.com/W3CBrasil/Iota" title="Clique aqui para saber mais sobre o Iota">Iota</a>
+          <a class="brand" target="_blank" href="http://w3cbrasil.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota">Iota</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
 

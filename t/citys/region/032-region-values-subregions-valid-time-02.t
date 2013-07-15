@@ -12,6 +12,7 @@ use Catalyst::Test q(Iota);
 
 my $variable;
 my $indicator;
+my $city_uri;
 use HTTP::Request::Common qw(GET POST DELETE PUT);
 use Package::Stash;
 
@@ -55,7 +56,7 @@ eval {
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
 
-            my $city_uri = $res->header('Location');
+            $city_uri = $res->header('Location');
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
@@ -146,56 +147,7 @@ eval {
             );
 
             $indicator = eval { from_json( $res->content ) };
-            note 'primeiro cenario: sem dados no banco, regiao a partir de 2005 começa a ter subregioes';
-            eval {
-                $schema->txn_do(
-                    sub {
-                        my $ii;
-                        &update_region_valid_time( $reg1, undef );
-                        &add_value( $reg1_uri, '100', '2002' );
-                        &add_value( $reg1_uri, '130', '2003' );
-                        &add_value( $reg1_uri, '150', '2004' );
 
-                        &update_region_valid_time( $reg1, '2005-01-01' );
-                        &add_value( $reg2_uri, '80', '2005' );
-                        &add_value( $reg3_uri, '82', '2005' );
-
-                        &add_value( $reg2_uri, '95', '2006' );
-                        &add_value( $reg3_uri, '94', '2006' );
-
-                        $ii = &get_indicator( $reg1, '2002' );
-                        is_deeply( $ii, ['101'], 'valor de 2002 ativo' );
-                        $ii = &get_indicator( $reg1, '2002', 1 );
-
-                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2002' );
-
-                        $ii = &get_indicator( $reg1, '2003' );
-                        is_deeply( $ii, ['131'], 'valor de 2003 ativo' );
-                        $ii = &get_indicator( $reg1, '2003', 1 );
-                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2003' );
-
-                        $ii = &get_indicator( $reg1, '2004' );
-                        is_deeply( $ii, ['151'], 'valor de 2004 ativo' );
-                        $ii = &get_indicator( $reg1, '2004', 1 );
-                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2004' );
-
-                        $ii = &get_indicator( $reg1, '2005' );
-                        is_deeply( $ii, [ 1 + 80 + 82 ], 'valor de 2005 ativo eh a soma' );
-
-                        $ii = &get_indicator( $reg1, '2005', 1 );
-                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2005' );
-
-                        $ii = &get_indicator( $reg1, '2006' );
-                        is_deeply( $ii, [ 1 + 95 + 94 ], 'valor de 2006 ativo eh a soma' );
-
-                        $ii = &get_indicator( $reg1, '2006', 1 );
-                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2006' );
-
-                        die 'undo-savepoint';
-                    }
-                );
-                die $@ unless $@ =~ /undo-savepoint/;
-            };
 
             note
 'segundo cenario: 2002..2004 regiao 2 inserida, 2005..2006 calculado, depois disso tentar inserir um dado em para subregioes deve dar erro.';
@@ -223,8 +175,11 @@ eval {
                         die 'undo-savepoint';
                     }
                 );
+
+
                 die $@ unless $@ =~ /undo-savepoint/;
             };
+
 
             die 'rollback';
         }
@@ -250,11 +205,25 @@ sub update_region_valid_time {
 
 }
 
+sub update_region_valid_time_api {
+    my ($reg, $valid) = @_;
+    my ( $res, $c ) = ctx_request(
+        POST $city_uri . '/region/'.$reg->{id},
+        [
+            api_key                           => 'test',
+            'city.region.update.subregions_valid_after'  => $valid,
+        ]
+    );
+
+    ok( $res->is_success, 'region updated!' );
+}
+
 sub add_value {
     my ( $region, $value, $year, $expcode ) = @_;
 
     $expcode ||= 201;
 
+    note "POSTING $region/value\tyear $year, value $value";
     # PUT normal
     my $req = POST $region . '/value',
       [
@@ -287,7 +256,6 @@ sub get_values {
           . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
-
     return $list->{variables}[0]{values};
 }
 
