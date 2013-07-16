@@ -115,8 +115,7 @@ h4 {font-size: 17.5px;}
 
 .data-content .table{
 	margin-top: -1px;
-	border: 1px solid #e0e0e0;
-	padding: 5px;
+	border-top: 1px solid #e0e0e0;
 
 }
 
@@ -173,8 +172,7 @@ h4 {font-size: 17.5px;}
 .data-content .graph{
 	display: none;
 	margin-top: -1px;
-	border: 1px solid #e0e0e0;
-	padding: 5px;
+	border-top: 1px solid #e0e0e0;
 
 }
 
@@ -248,8 +246,8 @@ h4 {font-size: 17.5px;}
 .data-content .map{
 	display: none;
 	margin-top: -1px;
-	border: 1px solid #e0e0e0;
-	padding: 10px;
+	border-top: 1px solid #e0e0e0;
+
 
 }
 

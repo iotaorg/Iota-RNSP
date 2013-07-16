@@ -103,6 +103,7 @@
                             <div class="map">
                                 <div id="mapa-filtro"><div class="loading"><p>[%l('Carregando...')%]</p></div></div>
                                 <div id="mapa"><div class="loading"><p>[%l('Carregando...')%]</p></div></div>
+                                <p class="melhor_pior"></p>
                             </div>
 
                         </div>
