@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::User;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<user>
 
@@ -145,54 +144,54 @@ __PACKAGE__->table("user");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "user_id_seq",
-    },
-    "name",
-    { data_type => "text", is_nullable => 0 },
-    "email",
-    { data_type => "text", is_nullable => 0 },
-    "city_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "api_key",
-    { data_type => "text", is_nullable => 1 },
-    "nome_responsavel_cadastro",
-    { data_type => "text", is_nullable => 1 },
-    "estado",
-    { data_type => "text", is_nullable => 1 },
-    "telefone",
-    { data_type => "text", is_nullable => 1 },
-    "email_contato",
-    { data_type => "text", is_nullable => 1 },
-    "telefone_contato",
-    { data_type => "text", is_nullable => 1 },
-    "cidade",
-    { data_type => "text", is_nullable => 1 },
-    "bairro",
-    { data_type => "text", is_nullable => 1 },
-    "cep",
-    { data_type => "text", is_nullable => 1 },
-    "endereco",
-    { data_type => "text", is_nullable => 1 },
-    "city_summary",
-    { data_type => "text", is_nullable => 1 },
-    "active",
-    { data_type => "boolean", default_value => \"true", is_nullable => 0 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 0,
-        original      => { default_value => \"now()" },
-    },
-    "institute_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "password",
-    { data_type => "text", is_nullable => 0 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "user_id_seq",
+  },
+  "name",
+  { data_type => "text", is_nullable => 0 },
+  "email",
+  { data_type => "text", is_nullable => 0 },
+  "city_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "api_key",
+  { data_type => "text", is_nullable => 1 },
+  "nome_responsavel_cadastro",
+  { data_type => "text", is_nullable => 1 },
+  "estado",
+  { data_type => "text", is_nullable => 1 },
+  "telefone",
+  { data_type => "text", is_nullable => 1 },
+  "email_contato",
+  { data_type => "text", is_nullable => 1 },
+  "telefone_contato",
+  { data_type => "text", is_nullable => 1 },
+  "cidade",
+  { data_type => "text", is_nullable => 1 },
+  "bairro",
+  { data_type => "text", is_nullable => 1 },
+  "cep",
+  { data_type => "text", is_nullable => 1 },
+  "endereco",
+  { data_type => "text", is_nullable => 1 },
+  "city_summary",
+  { data_type => "text", is_nullable => 1 },
+  "active",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
+  "institute_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "password",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -219,7 +218,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "user_email_key", ["email"] );
+__PACKAGE__->add_unique_constraint("user_email_key", ["email"]);
 
 =head1 RELATIONS
 
@@ -232,10 +231,10 @@ Related object: L<Iota::Schema::Result::ActionsLog>
 =cut
 
 __PACKAGE__->has_many(
-    "actions_logs",
-    "Iota::Schema::Result::ActionsLog",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "actions_logs",
+  "Iota::Schema::Result::ActionsLog",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 city
@@ -247,15 +246,15 @@ Related object: L<Iota::Schema::Result::City>
 =cut
 
 __PACKAGE__->belongs_to(
-    "city",
-    "Iota::Schema::Result::City",
-    { id => "city_id" },
-    {
-        is_deferrable => 1,
-        join_type     => "LEFT",
-        on_delete     => "CASCADE",
-        on_update     => "CASCADE",
-    },
+  "city",
+  "Iota::Schema::Result::City",
+  { id => "city_id" },
+  {
+    is_deferrable => 1,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
 );
 
 =head2 indicator_user_visibilities_created_by
@@ -267,8 +266,10 @@ Related object: L<Iota::Schema::Result::IndicatorUserVisibility>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_user_visibilities_created_by", "Iota::Schema::Result::IndicatorUserVisibility",
-    { "foreign.created_by" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_user_visibilities_created_by",
+  "Iota::Schema::Result::IndicatorUserVisibility",
+  { "foreign.created_by" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_user_visibility_users
@@ -280,8 +281,10 @@ Related object: L<Iota::Schema::Result::IndicatorUserVisibility>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_user_visibility_users", "Iota::Schema::Result::IndicatorUserVisibility",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_user_visibility_users",
+  "Iota::Schema::Result::IndicatorUserVisibility",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_values
@@ -293,8 +296,10 @@ Related object: L<Iota::Schema::Result::IndicatorValue>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_values", "Iota::Schema::Result::IndicatorValue",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_variations
@@ -306,8 +311,10 @@ Related object: L<Iota::Schema::Result::IndicatorVariation>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_variations", "Iota::Schema::Result::IndicatorVariation",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_variations",
+  "Iota::Schema::Result::IndicatorVariation",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_visibility_users
@@ -319,8 +326,10 @@ Related object: L<Iota::Schema::Result::Indicator>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_visibility_users", "Iota::Schema::Result::Indicator",
-    { "foreign.visibility_user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_visibility_users",
+  "Iota::Schema::Result::Indicator",
+  { "foreign.visibility_user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicators
@@ -332,10 +341,10 @@ Related object: L<Iota::Schema::Result::Indicator>
 =cut
 
 __PACKAGE__->has_many(
-    "indicators",
-    "Iota::Schema::Result::Indicator",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "indicators",
+  "Iota::Schema::Result::Indicator",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 institute
@@ -347,15 +356,15 @@ Related object: L<Iota::Schema::Result::Institute>
 =cut
 
 __PACKAGE__->belongs_to(
-    "institute",
-    "Iota::Schema::Result::Institute",
-    { id => "institute_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "institute",
+  "Iota::Schema::Result::Institute",
+  { id => "institute_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 network_users
@@ -367,10 +376,10 @@ Related object: L<Iota::Schema::Result::NetworkUser>
 =cut
 
 __PACKAGE__->has_many(
-    "network_users",
-    "Iota::Schema::Result::NetworkUser",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "network_users",
+  "Iota::Schema::Result::NetworkUser",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 region_variable_values
@@ -382,8 +391,10 @@ Related object: L<Iota::Schema::Result::RegionVariableValue>
 =cut
 
 __PACKAGE__->has_many(
-    "region_variable_values", "Iota::Schema::Result::RegionVariableValue",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "region_variable_values",
+  "Iota::Schema::Result::RegionVariableValue",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 region_variable_values_cloned_from_user
@@ -395,8 +406,10 @@ Related object: L<Iota::Schema::Result::RegionVariableValue>
 =cut
 
 __PACKAGE__->has_many(
-    "region_variable_values_cloned_from_user", "Iota::Schema::Result::RegionVariableValue",
-    { "foreign.cloned_from_user" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "region_variable_values_cloned_from_user",
+  "Iota::Schema::Result::RegionVariableValue",
+  { "foreign.cloned_from_user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 regions
@@ -408,10 +421,10 @@ Related object: L<Iota::Schema::Result::Region>
 =cut
 
 __PACKAGE__->has_many(
-    "regions",
-    "Iota::Schema::Result::Region",
-    { "foreign.created_by" => "self.id" },
-    { cascade_copy         => 0, cascade_delete => 0 },
+  "regions",
+  "Iota::Schema::Result::Region",
+  { "foreign.created_by" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 sources
@@ -423,10 +436,10 @@ Related object: L<Iota::Schema::Result::Source>
 =cut
 
 __PACKAGE__->has_many(
-    "sources",
-    "Iota::Schema::Result::Source",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "sources",
+  "Iota::Schema::Result::Source",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_best_pratices
@@ -438,8 +451,10 @@ Related object: L<Iota::Schema::Result::UserBestPratice>
 =cut
 
 __PACKAGE__->has_many(
-    "user_best_pratices", "Iota::Schema::Result::UserBestPratice",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_best_pratices",
+  "Iota::Schema::Result::UserBestPratice",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_files
@@ -451,10 +466,10 @@ Related object: L<Iota::Schema::Result::UserFile>
 =cut
 
 __PACKAGE__->has_many(
-    "user_files",
-    "Iota::Schema::Result::UserFile",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "user_files",
+  "Iota::Schema::Result::UserFile",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_forgotten_passwords
@@ -466,8 +481,10 @@ Related object: L<Iota::Schema::Result::UserForgottenPassword>
 =cut
 
 __PACKAGE__->has_many(
-    "user_forgotten_passwords", "Iota::Schema::Result::UserForgottenPassword",
-    { "foreign.id_user" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_forgotten_passwords",
+  "Iota::Schema::Result::UserForgottenPassword",
+  { "foreign.id_user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_indicator_axes
@@ -479,8 +496,10 @@ Related object: L<Iota::Schema::Result::UserIndicatorAxis>
 =cut
 
 __PACKAGE__->has_many(
-    "user_indicator_axes", "Iota::Schema::Result::UserIndicatorAxis",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_indicator_axes",
+  "Iota::Schema::Result::UserIndicatorAxis",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_indicator_configs
@@ -492,8 +511,10 @@ Related object: L<Iota::Schema::Result::UserIndicatorConfig>
 =cut
 
 __PACKAGE__->has_many(
-    "user_indicator_configs", "Iota::Schema::Result::UserIndicatorConfig",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_indicator_configs",
+  "Iota::Schema::Result::UserIndicatorConfig",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_indicators
@@ -505,8 +526,10 @@ Related object: L<Iota::Schema::Result::UserIndicator>
 =cut
 
 __PACKAGE__->has_many(
-    "user_indicators", "Iota::Schema::Result::UserIndicator",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_indicators",
+  "Iota::Schema::Result::UserIndicator",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_menus
@@ -518,10 +541,10 @@ Related object: L<Iota::Schema::Result::UserMenu>
 =cut
 
 __PACKAGE__->has_many(
-    "user_menus",
-    "Iota::Schema::Result::UserMenu",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "user_menus",
+  "Iota::Schema::Result::UserMenu",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_pages
@@ -533,10 +556,25 @@ Related object: L<Iota::Schema::Result::UserPage>
 =cut
 
 __PACKAGE__->has_many(
-    "user_pages",
-    "Iota::Schema::Result::UserPage",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "user_pages",
+  "Iota::Schema::Result::UserPage",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_regions
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserRegion>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_regions",
+  "Iota::Schema::Result::UserRegion",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_roles
@@ -548,10 +586,10 @@ Related object: L<Iota::Schema::Result::UserRole>
 =cut
 
 __PACKAGE__->has_many(
-    "user_roles",
-    "Iota::Schema::Result::UserRole",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "user_roles",
+  "Iota::Schema::Result::UserRole",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_sessions
@@ -563,10 +601,10 @@ Related object: L<Iota::Schema::Result::UserSession>
 =cut
 
 __PACKAGE__->has_many(
-    "user_sessions",
-    "Iota::Schema::Result::UserSession",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "user_sessions",
+  "Iota::Schema::Result::UserSession",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_variable_configs
@@ -578,8 +616,10 @@ Related object: L<Iota::Schema::Result::UserVariableConfig>
 =cut
 
 __PACKAGE__->has_many(
-    "user_variable_configs", "Iota::Schema::Result::UserVariableConfig",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_variable_configs",
+  "Iota::Schema::Result::UserVariableConfig",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 user_variable_region_configs
@@ -591,8 +631,10 @@ Related object: L<Iota::Schema::Result::UserVariableRegionConfig>
 =cut
 
 __PACKAGE__->has_many(
-    "user_variable_region_configs", "Iota::Schema::Result::UserVariableRegionConfig",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "user_variable_region_configs",
+  "Iota::Schema::Result::UserVariableRegionConfig",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 variable_values
@@ -604,8 +646,10 @@ Related object: L<Iota::Schema::Result::VariableValue>
 =cut
 
 __PACKAGE__->has_many(
-    "variable_values", "Iota::Schema::Result::VariableValue",
-    { "foreign.user_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "variable_values",
+  "Iota::Schema::Result::VariableValue",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 variable_values_cloned_from_user
@@ -617,8 +661,10 @@ Related object: L<Iota::Schema::Result::VariableValue>
 =cut
 
 __PACKAGE__->has_many(
-    "variable_values_cloned_from_user", "Iota::Schema::Result::VariableValue",
-    { "foreign.cloned_from_user" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "variable_values_cloned_from_user",
+  "Iota::Schema::Result::VariableValue",
+  { "foreign.cloned_from_user" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 variables
@@ -630,10 +676,10 @@ Related object: L<Iota::Schema::Result::Variable>
 =cut
 
 __PACKAGE__->has_many(
-    "variables",
-    "Iota::Schema::Result::Variable",
-    { "foreign.user_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "variables",
+  "Iota::Schema::Result::Variable",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 networks
@@ -644,10 +690,11 @@ Composing rels: L</network_users> -> network
 
 =cut
 
-__PACKAGE__->many_to_many( "networks", "network_users", "network" );
+__PACKAGE__->many_to_many("networks", "network_users", "network");
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 16:19:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O9UzEWcwfEhy2sdjaD73Pg
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 15:53:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AjHt7gwm8VHhl6QKFfJDeA
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 

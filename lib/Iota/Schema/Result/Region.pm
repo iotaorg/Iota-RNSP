@@ -302,8 +302,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-11 14:39:05
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u/Rq+6cJa75XqRpkN+U81w
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 17:30:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dqP2R9VpHv65I84iVu3nEQ
 
 __PACKAGE__->has_many(
   "subregions",
