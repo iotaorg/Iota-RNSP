@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::VariableValue;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<variable_value>
 
@@ -79,7 +78,7 @@ __PACKAGE__->table("variable_value");
 =head2 valid_from
 
   data_type: 'date'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 valid_until
 
@@ -111,40 +110,40 @@ __PACKAGE__->table("variable_value");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "variable_value_id_seq",
-    },
-    "value",
-    { data_type => "text", is_nullable => 1 },
-    "variable_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-    "user_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 1,
-        original      => { default_value => \"now()" },
-    },
-    "value_of_date",
-    { data_type => "timestamp", is_nullable => 1 },
-    "valid_from",
-    { data_type => "date", is_nullable => 1 },
-    "valid_until",
-    { data_type => "date", is_nullable => 1 },
-    "observations",
-    { data_type => "text", is_nullable => 1 },
-    "source",
-    { data_type => "text", is_nullable => 1 },
-    "file_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "cloned_from_user",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "variable_value_id_seq",
+  },
+  "value",
+  { data_type => "text", is_nullable => 1 },
+  "variable_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 1,
+    original      => { default_value => \"now()" },
+  },
+  "value_of_date",
+  { data_type => "timestamp", is_nullable => 1 },
+  "valid_from",
+  { data_type => "date", is_nullable => 0 },
+  "valid_until",
+  { data_type => "date", is_nullable => 1 },
+  "observations",
+  { data_type => "text", is_nullable => 1 },
+  "source",
+  { data_type => "text", is_nullable => 1 },
+  "file_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "cloned_from_user",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -175,7 +174,10 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "user_value_period_key", [ "variable_id", "user_id", "valid_from" ], );
+__PACKAGE__->add_unique_constraint(
+  "user_value_period_key",
+  ["variable_id", "user_id", "valid_from"],
+);
 
 =head1 RELATIONS
 
@@ -188,15 +190,15 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-    "cloned_from_user",
-    "Iota::Schema::Result::User",
-    { id => "cloned_from_user" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "cloned_from_user",
+  "Iota::Schema::Result::User",
+  { id => "cloned_from_user" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 file
@@ -208,15 +210,15 @@ Related object: L<Iota::Schema::Result::File>
 =cut
 
 __PACKAGE__->belongs_to(
-    "file",
-    "Iota::Schema::Result::File",
-    { id => "file_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "file",
+  "Iota::Schema::Result::File",
+  { id => "file_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 user
@@ -228,9 +230,10 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-    "user", "Iota::Schema::Result::User",
-    { id            => "user_id" },
-    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  "user",
+  "Iota::Schema::Result::User",
+  { id => "user_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 variable
@@ -242,14 +245,15 @@ Related object: L<Iota::Schema::Result::Variable>
 =cut
 
 __PACKAGE__->belongs_to(
-    "variable",
-    "Iota::Schema::Result::Variable",
-    { id            => "variable_id" },
-    { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  "variable",
+  "Iota::Schema::Result::Variable",
+  { id => "variable_id" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07035 @ 2013-07-05 18:12:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q+DI6w+kp5f1VyxIyuvsMw
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 15:21:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dGp5IwKq8QuTo4Kog/SC8w
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",
