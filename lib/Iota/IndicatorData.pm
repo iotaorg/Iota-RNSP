@@ -116,6 +116,8 @@ sub upsert {
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
 
+        ( valid_from => $params{dates}) x!! exists $params{dates},
+
         ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
     );
     my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
@@ -152,6 +154,7 @@ sub upsert {
                 : ( 'me.region_id' => undef ),
 
             };
+
             $indval_rs->search($where)->delete;
 
             while ( my ( $region_id, $region_data ) = each %$results ) {
@@ -313,7 +316,12 @@ sub _get_values_variation {
     my $variations_rs = $self->schema->resultset('IndicatorVariation')->search(
         {
             indicator_id                                      => \@indicator_ids,
-            'indicator_variables_variations_values.region_id' => $params{region_id}
+            'indicator_variables_variations_values.region_id' => $params{region_id},
+
+            ('indicator_variables_variations_values.valid_from' => {
+                'in' => $params{valid_from}
+            }) x!! exists $params{valid_from},
+
         },
         { prefetch => 'indicator_variables_variations_values' }
     )->as_hashref;
