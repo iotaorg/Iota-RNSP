@@ -9,6 +9,51 @@ SELECT setval('country_id_seq', 10, true);
 SELECT setval('state_id_seq', 10, true);
 
 
+create unique index ix_indicator_value__value_unique ON indicator_value(indicator_id, valid_from,user_id,variation_name,active_value) where region_id is null;
+create unique index ix_indicator_value__value_unique_region ON indicator_value(indicator_id, valid_from,user_id,variation_name,active_value,region_id) where region_id is null;
+
+
+create unique index ix_indicator_variables_variations_value ON indicator_variables_variations_value(
+indicator_variation_id,
+indicator_variables_variation_id,
+valid_from,
+user_id,
+active_value
+) where region_id is null;
+
+
+create unique index ix_indicator_variables_variations_value_region ON indicator_variables_variations_value(
+indicator_variation_id,
+indicator_variables_variation_id,
+valid_from,
+user_id,
+active_value,
+region_id
+) where region_id is not null;
+
+create unique index ix_region_variable_value on region_variable_value (
+variable_id,
+user_id,
+valid_from,
+active_value
+) where region_id is null;
+
+create unique index ix_region_variable_value_region  on region_variable_value(
+variable_id,
+user_id,
+valid_from,
+active_value,
+region_id
+) where region_id is not null;
+
+create unique index ix_variable_value on variable_value(
+variable_id,
+user_id,
+valid_from
+);
+
+
+
 -- all passwords are 12345
 
 INSERT INTO "role"(id,name) VALUES (0,'superadmin'), (1,'admin'),(2,'user');
