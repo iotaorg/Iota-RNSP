@@ -63,6 +63,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{network} = $net;
 
     $c->stash->{institute} = $net->institute;
+    $c->stash->{c_req_path} = $c->req->path;
 
     my @current_users = $c->model('DB::User')->search(
         {

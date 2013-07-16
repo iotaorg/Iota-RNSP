@@ -74,20 +74,20 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
 
-            <li [% IF !city && c.req.path != 'mapa-do-site' %]class="active"[%END%]>
+            <li [% IF !city && c_req_path != 'mapa-do-site' %]class="active"[%END%]>
                 <a href="/">[%l('Indicadores')%]</a>
             </li>
             [% IF city %]
-                <li [% IF "${c.req.path}" == "${city.pais}/$city.uf/$city.name_uri" %]class="active"[%END%]><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
+                <li [% IF "${c_req_path}" == "${city.pais}/$city.uf/$city.name_uri" %]class="active"[%END%]><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
 
                 [%IF best_pratices_link%]
-                <li [% IF "/${c.req.path}" == best_pratices_link.path %]class="active"[%END%]>
+                <li [% IF "/${c_req_path}" == best_pratices_link.path %]class="active"[%END%]>
                     <a href="[%best_pratices_link%]">[%l('Boas Práticas')%]</a>
                 </li>
                 [%END%]
 
                 [%IF files_link%]
-                <li [% IF "/${c.req.path}" == files_link.path %]class="active"[%END%]>
+                <li [% IF "/${c_req_path}" == files_link.path %]class="active"[%END%]>
                     <a href="[%files_link%]">[%l('Arquivos')%]</a>
                 </li>
                 [%END%]
@@ -111,9 +111,14 @@
                     [% END %]
                 [% END %]
             [% END %]
-              <li [% IF c.req.path == 'mapa-do-site' %]class="active"[%END%]>
+              <li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
                 <a href="/mapa-do-site">[%l('Mapa do Site')%]</a>
               </li>
+
+              <li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
+                <a href="/dados-abertos">[%l('Dados abertos')%]</a>
+              </li>
+
               <li>
                 <a href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a>
               </li>
