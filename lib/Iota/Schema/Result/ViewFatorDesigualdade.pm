@@ -22,8 +22,8 @@ __PACKAGE__->result_source_instance->view_definition(
             region_id, valid_from, value::numeric, variation_name, r.name as rname
         FROM indicator_value a
         join region r on r.id= a.region_id
-        where region_id in (
-            select id from region where upper_region=?
+        where (r.city_id, r.depth_level) in (
+            select city_id, depth_level from region where id=?
         )
         and indicator_id = ?
         and user_id = ?

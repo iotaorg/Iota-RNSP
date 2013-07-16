@@ -235,9 +235,9 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
 
     $c->stash( template => 'home_region_indicator.tt' );
 
-    if ( $region->depth_level == 2 ) {
-        $self->stash_distritos($c);
-    }
+
+    $self->stash_distritos($c);
+
 
     $self->stash_comparacao_distritos($c);
 
