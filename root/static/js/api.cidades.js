@@ -241,7 +241,7 @@ $(document).ready(function(){
 					}else{
 						var tr_class = "folded";
 					}
-					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url' data-toggle='tooltip' title='$$explanation'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, explanation: item.explanation, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){
 
 						for (j = 0; j < item.valores.length; j++){
