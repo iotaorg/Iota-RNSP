@@ -251,8 +251,9 @@ $(document).ready(function(){
                                 if (item.variable_type == 'str'){
                                         table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j] ? 'OK' : '-' });
                                 }else{
+									var format_value = item.valores[j];
 									var format_string = "#,##0.##";
-									if (item.valores[j].toFixed(2) == 0){
+									if (format_value.toFixed(2) == 0){
 										format_string = "#,##0.###";
 									}
                                     table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:format_string, locale:"br"})});

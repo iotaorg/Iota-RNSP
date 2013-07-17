@@ -381,8 +381,13 @@ $(document).ready(function(){
                                     });
                                     preenchido++;
                                 }else{
+									var format_value = series[i];
+									var format_string = "#,##0.##";
+									if (format_value.toFixed(2) == 0){
+										format_string = "#,##0.###";
+									}
                                     row_content += "<td class='valor'>$$valor</td>".render({
-                                        valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
+                                        valor: $.formatNumberCustom(series[i], {format:format_string, locale:"br"})
                                     });
                                     preenchido++;
                                 }
