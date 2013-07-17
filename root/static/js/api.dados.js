@@ -396,7 +396,7 @@ $(document).ready(function(){
                         var $it = $(row_content);
                         $(".data-content .table .content-fill tbody").append($it);
                         if (preenchido == 0){
-                            $it.hide();
+                            //$it.hide();
                         }else{
                             total_visible++;
                         }
