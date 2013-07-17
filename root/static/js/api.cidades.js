@@ -251,7 +251,7 @@ $(document).ready(function(){
                                 if (item.variable_type == 'str'){
                                         table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j] ? 'OK' : '-' });
                                 }else{
-									var format_value = item.valores[j];
+									var format_value = parseFloat(item.valores[j]);
 									var format_string = "#,##0.##";
 									if (format_value.toFixed(2) == 0){
 										format_string = "#,##0.###";

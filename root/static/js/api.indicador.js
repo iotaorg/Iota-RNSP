@@ -327,7 +327,7 @@ $(document).ready(function () {
                             });
                         }
                         else {
-							var format_value = valor_linha;
+							var format_value = parseFloat(valor_linha);
 							var format_string = "#,##0.##";
 							if (format_value.toFixed(2) == 0){
 								format_string = "#,##0.###";
@@ -396,7 +396,7 @@ $(document).ready(function () {
                                 if (valoresxx == undefined || valoresxx[id] == undefined || valoresxx[id] == '' || valoresxx[id] == '-'){
                                     history_table += "<td class='formula_valor'>-</td>";
                                 }else{
-									var format_value = valoresxx[id];
+									var format_value = parseFloat(valoresxx[id]);
 									var format_string = "#,##0.##";
 									if (format_value.toFixed(2) == 0){
 										format_string = "#,##0.###";
@@ -412,7 +412,7 @@ $(document).ready(function () {
                             });
 
                         }
-						var format_value = valor;
+						var format_value = parseFloat(valor);
 						var format_string = "#,##0.##";
 						if (format_value.toFixed(2) == 0){
 							format_string = "#,##0.###";
@@ -427,7 +427,7 @@ $(document).ready(function () {
                     }else{
 
                         if (historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-") {
-							var format_value = historico_data.rows[index].formula_value;
+							var format_value = parseFloat(historico_data.rows[index].formula_value);
 							var format_string = "#,##0.##";
 							if (format_value.toFixed(2) == 0){
 								format_string = "#,##0.###";

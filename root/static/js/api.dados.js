@@ -381,7 +381,7 @@ $(document).ready(function(){
                                     });
                                     preenchido++;
                                 }else{
-									var format_value = series[i];
+									var format_value = parseFloat(series[i]);
 									var format_string = "#,##0.##";
 									if (format_value.toFixed(2) == 0){
 										format_string = "#,##0.###";
