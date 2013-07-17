@@ -164,13 +164,15 @@ $(document).ready(function(){
 			return a.localeCompare(b);
 		});
 		$.each(indicadores_list, function(i,item){
-			$(".indicators").append("<div class='item' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
+			$(".indicators").append("<div class='item' class='bs-tooltip' data-toggle='tooltip' data-placement='right' data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
 						id: item.id,
 						name: item.name,
 						axis_id: item.axis.id,
-						uri: item.name_url
+						uri: item.name_url,
+						explanation: item.explanation
 					}));
 		});
+		$("div.bs-tooltip").tooltip();
 		if (indicadorID == "" || indicadorID == undefined){
 			if (ref != "home"){
 				indicadorID = $(".indicators .item:first").attr("indicator-id");
