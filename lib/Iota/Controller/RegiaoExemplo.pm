@@ -33,7 +33,7 @@ sub _download {
     my $rs = $c->stash->{collation};
 
     my @lines =
-      ( [ 'ID da regiao', 'Subprefeitura', 'Distrito', 'ID da variavel', 'Data', 'Valor', 'fonte', 'observacao' ] );
+      ( [ 'ID da regiao', 'Região', 'Subregião', 'ID da variavel', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
         if ( $var->{depth_level} == 2 ) {

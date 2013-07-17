@@ -7,14 +7,14 @@
                     <div class="variaveis"><dl class="tabela">
 
 [%IF region.upper_region %]
-    <dt>[%l('Subprefeitura')%]</dt>
+    <dt>[%(region_classification_name.2)%]</dt>
     <dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>
 [%END%]
-<dt>[%region.depth_level == 2 ? 'Subprefeitura' : 'Distrito'%]: </dt>
+<dt>[% region_classification_name.${region.depth_level}%]: </dt>
 <dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
 
 [%IF subregions.size %]
-    <dt>[%l('Distritos')%]</dt>
+    <dt>[%region_classification_name.3%]:</dt>
     <dd><ul  style="margin-bottom:0">
     [%-FOR rr IN subregions -%]
         <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
