@@ -164,7 +164,7 @@ $(document).ready(function(){
 			return a.localeCompare(b);
 		});
 		$.each(indicadores_list, function(i,item){
-			$(".indicators").append("<div class='item' class='bs-tooltip' data-toggle='tooltip' data-placement='right' data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
+			$(".indicators").append("<div class='item bs-tooltip' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
 						id: item.id,
 						name: item.name,
 						axis_id: item.axis.id,
