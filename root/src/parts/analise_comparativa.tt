@@ -62,7 +62,7 @@ load_map.push( {
 
         <table class="table table-striped table-condensed">
             <thead>
-                <tr><td rowspan="2"></td><th style="padding-left:1.5em">[%IF region.depth_level == 2%]Subprefeituras[%ELSE%]Distrito[%END%]</th><th>[%l('Valor')%]</th></tr>
+                <tr><td rowspan="2"></td><th style="padding-left:1.5em">[% region_classification_name.${region.depth_level} %]</th><th>[%l('Valor')%]</th></tr>
             </thead>
             <tbody>
                 <tr><td rowspan="4" class="settinhas">&uarr;</td></tr>
@@ -80,7 +80,7 @@ load_map.push( {
                 [% END %]
             </tbody>
         </table>
-        <small>¹ [%l('Média com base na soma dos números')%] [%IF region.depth_level == 2%][%l('das subprefeituras')%][%ELSE%][%l('dos distritos')%][%END%]</small>
+        <small>¹ [%l('Média com base na soma dos números das')%] [%IF region.depth_level == 2%][%l('regiões')%][%ELSE%][%l('subregiões')%][%END%]</small>
 
 </div>
 
@@ -90,7 +90,7 @@ load_map.push( {
         <h5>[%l('Classificação')%]</h5>
         <table class="table table-striped table-condensed table-xonde">
             <thead>
-                <tr><th style="padding-left:1.5em">[%IF region.depth_level == 2%][%l('Subprefeituras')%][%ELSE%][%l('Distrito')%][%END%]</th><th>[%l('Valor')%]</th></tr>
+                <tr><th style="padding-left:1.5em">[%region_classification_name.${region.depth_level}%]</th><th>[%l('Valor')%]</th></tr>
             </thead>
             <tbody>
                 [%-FOR x IN ultima_analise.all -%]

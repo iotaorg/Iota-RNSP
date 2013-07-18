@@ -1,6 +1,6 @@
 Hello,
 
-The code lines of Iota lies in https://github.com/W3CBrasil/Iota,
+The code lines of Iota lies in https://github.com/AwareTI/Iota,
 
 technologies in use are all open source based and free to use,
 except for Google Maps, which is not open-source, but it's free until lot of access.
@@ -37,9 +37,9 @@ and each user can only belong to one institute, so each institute have it's data
 
 On http://indicadores.cidadessustentaveis.org.br/dados-abertos you can download all [or a part] the data of the application.
 
-The branch 'master' is running on travis (https://travis-ci.org/W3CBrasil/Iota) that tests the code each commit.
+The branch 'master' is running on travis (https://travis-ci.org/AwareTI/Iota) that tests the code each commit.
 It's falling since one project rename, i didn't realise this until now!
 
-There's a database deploy script, and the project deps are described in https://github.com/W3CBrasil/Iota/blob/master/.travis.yml
+There's a database deploy script, and the project deps are described in https://github.com/AwareTI/Iota/blob/master/.travis.yml
 
 

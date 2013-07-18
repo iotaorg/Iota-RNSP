@@ -164,13 +164,15 @@ $(document).ready(function(){
 			return a.localeCompare(b);
 		});
 		$.each(indicadores_list, function(i,item){
-			$(".indicators").append("<div class='item' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
+			$(".indicators").append("<div class='item bs-tooltip' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
 						id: item.id,
 						name: item.name,
 						axis_id: item.axis.id,
-						uri: item.name_url
+						uri: item.name_url,
+						explanation: item.explanation
 					}));
 		});
+		$("div.bs-tooltip").tooltip();
 		if (indicadorID == "" || indicadorID == undefined){
 			if (ref != "home"){
 				indicadorID = $(".indicators .item:first").attr("indicator-id");
@@ -379,8 +381,13 @@ $(document).ready(function(){
                                     });
                                     preenchido++;
                                 }else{
+									var format_value = parseFloat(series[i]);
+									var format_string = "#,##0.##";
+									if (format_value.toFixed(2) == 0){
+										format_string = "#,##0.###";
+									}
                                     row_content += "<td class='valor'>$$valor</td>".render({
-                                        valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
+                                        valor: $.formatNumberCustom(series[i], {format:format_string, locale:"br"})
                                     });
                                     preenchido++;
                                 }
@@ -396,7 +403,7 @@ $(document).ready(function(){
                         var $it = $(row_content);
                         $(".data-content .table .content-fill tbody").append($it);
                         if (preenchido == 0){
-                            $it.hide();
+                            //$it.hide();
                         }else{
                             total_visible++;
                         }

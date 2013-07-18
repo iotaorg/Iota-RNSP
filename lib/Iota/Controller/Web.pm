@@ -197,6 +197,8 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
 
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 
+    $self->load_region_names( $c );
+
     if ( $self->load_best_pratices( $c, only_count => 1 ) ) {
         $c->stash->{best_pratices_link} = $c->uri_for( $self->action_for('best_pratice_list'),
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
@@ -213,6 +215,22 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
         $c->stash->{files_link} = $c->uri_for( $self->action_for('user_file_list'),
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
+
+}
+
+sub load_region_names {
+    my ( $self, $c ) = @_;
+
+    my $rs = $c->model('DB::UserRegion')->search( {
+        user_id => $c->stash->{user}{id}
+    })->as_hashref;
+
+    while (my $row = $rs->next){
+        $c->stash->{region_classification_name}{$row->{depth_level}} = $row->{region_classification_name};
+    }
+
+    $c->stash->{region_classification_name}{2} ||= 'Região';
+    $c->stash->{region_classification_name}{3} ||= 'Subregião';
 
 }
 

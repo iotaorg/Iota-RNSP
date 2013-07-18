@@ -73,7 +73,7 @@
             </div>
         [% IF city.regions.size>0 %]
             <div class="span4" id="regioes">
-                <h5>[%l('Subprefeituras')%]</h5>
+                <h5>[%(region_classification_name.2)%]</h5>
                 <ul class="nav nav-list">
                     [%FOREACH r IN city.regions.sort('name') %]
                         <li class="nav-header">
