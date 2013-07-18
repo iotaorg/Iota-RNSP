@@ -1,13 +1,18 @@
-
-use lib './lib';
+use strict;
 use utf8;
-
-use Iota::Schema;
-
+use lib './lib';
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(Iota);
+package Iota;
+use Catalyst qw( ConfigLoader  );
+
+__PACKAGE__->setup();
+
+package main;
+
+use Iota::Schema;
+
 my $config = Iota->config;
 
 my $schema = Iota::Schema->connect(
@@ -16,16 +21,11 @@ my $schema = Iota::Schema->connect(
     $config->{'Model::DB'}{connect_info}{password}
 );
 
-$schema->storage->dbh_do(
-    sub {
-        my ( $storage, $dbh ) = @_;
-        $dbh->do("");
-    }
-);
-
 &run_sql( $schema, "$Bin/deploy/before_schema.sql" );
 $schema->deploy;
+
 &run_sql( $schema, "$Bin/deploy/after_schema.sql" );
+&run_sql( $schema, "$Bin/deploy/after_schema.lang.sql" );
 
 &run_sql( $schema, "$Bin/deploy/f_extract_period_edge.sql" );
 

@@ -182,8 +182,22 @@ __PACKAGE__->has_many(
     { cascade_copy           => 0, cascade_delete => 0 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-25 18:32:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pF7GJQ3ZmPh8a2/oXD2qQQ
+=head2 users
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::User>
+
+=cut
+
+__PACKAGE__->has_many(
+    "users", "Iota::Schema::Result::User",
+    { "foreign.institute_id" => "self.id" },
+    { cascade_copy           => 0, cascade_delete => 0 },
+);
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3hFRYekfIs5DcFg/GZfjag
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

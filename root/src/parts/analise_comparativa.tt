@@ -1,0 +1,115 @@
+<div data-part-onchange-location="analise_comparativa">
+[%IF analise_comparativa && analise_comparativa.size > 0%]
+
+    <ul class="nav nav-tabs">
+        [%-FOR x IN analise_comparativa -%]
+        <li [%IF loop.last%]class="active"[%END%]><a href="#tab[%loop.index%]" class="mapa" data-toggle="tab">[% date4period(x.key, indicator.period)%]</a></li>
+        [%END%]
+    </ul>
+  <div class="tab-content">
+
+[%-FOR xx IN analise_comparativa -%]
+    [% SET is_last = loop.last%]
+    [% SET index = loop.index%]
+
+    [%-FOR kvariacao IN xx.value -%]
+        [%-SET ultima_analise = kvariacao.value -%]
+<div class="tab-pane active [%IF NOT is_last%]hideme[%END%]" id="tab[%index%]">
+<script type="text/javascript">[%SET existe_vetor = 0%]
+load_map.push( {
+    map_elm: '#colmapa[%index%]',
+    opacity: 0.8,
+    polygons: [[%-FOR t IN ultima_analise.all -%]
+        [%IF t.polygon_path%][%SET existe_vetor=1%]
+        {p:'[% t.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]',color: '[% color_index.${t.i} %]' },
+        [%END%]
+    [%-END-%]]
+});
+
+</script>
+
+        <div class="row">
+    <div class="span5">
+
+<div lockfixed>
+
+
+        <h5>Classificação visual</h5>
+        [%IF existe_vetor %]
+        <div class="map" id="gmap[%index%]">
+            <div class="content-fill">
+                <div id="x-container">
+                    <div class="x-dummy"></div>
+                    <div class="x-element">
+                        <div class="mapa" id="colmapa[%index%]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        [%ELSE%]
+        <p>Sem mapa da região</p>
+        [%END%]
+
+        <ol class="unstyled">
+            <li style="border-left: 1.5em solid [%color_index.0%]; padding-left: 0.5em">[%l('Alta / Melhor')%]</li>
+            <li style="border-left: 1.5em solid [%color_index.1%]; padding-left: 0.5em">[%l('Acima da média')%]</li>
+            <li style="border-left: 1.5em solid [%color_index.2%]; padding-left: 0.5em">[%l('Média')%]</li>
+            <li style="border-left: 1.5em solid [%color_index.3%]; padding-left: 0.5em">[%l('Abaixo da média')%]</li>
+            <li style="border-left: 1.5em solid [%color_index.4%]; padding-left: 0.5em">[%l('Baixa / Pior')%]</li>
+        </ol>
+
+        <table class="table table-striped table-condensed">
+            <thead>
+                <tr><td rowspan="2"></td><th style="padding-left:1.5em">[% region_classification_name.${region.depth_level} %]</th><th>[%l('Valor')%]</th></tr>
+            </thead>
+            <tbody>
+                <tr><td rowspan="4" class="settinhas">&uarr;</td></tr>
+                [% FOR x IN ultima_analise.top3 %]
+                <tr><td style="border-left: 1.5em solid [%color_index.${x.i}%]; padding-left: 0.5em"><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td>[% value4human(x.num, indicator.variable_type) %]</td></tr>
+                [% END %]
+            </tbody>
+            <tbody>
+                <tr><th colspan="2">[%city.name%]</th><th>[%value4human(ultima_analise.mean, indicator.variable_type)%] ¹</th></tr>
+            </tbody>
+            <tbody>
+                <tr><td rowspan="4" class="settinhas down">&darr;</td></tr>
+                [% FOR x IN ultima_analise.lower3 %]
+                <tr><td style="border-left: 1.5em solid [%color_index.${x.i}%]; padding-left: 0.5em"><a  href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td>[% value4human(x.num, indicator.variable_type) %]</td></tr>
+                [% END %]
+            </tbody>
+        </table>
+        <small>¹ [%l('Média com base na soma dos números das')%] [%IF region.depth_level == 2%][%l('regiões')%][%ELSE%][%l('subregiões')%][%END%]</small>
+
+</div>
+
+    </div>
+
+    <div class="span3">
+        <h5>[%l('Classificação')%]</h5>
+        <table class="table table-striped table-condensed table-xonde">
+            <thead>
+                <tr><th style="padding-left:1.5em">[%region_classification_name.${region.depth_level}%]</th><th>[%l('Valor')%]</th></tr>
+            </thead>
+            <tbody>
+                [%-FOR x IN ultima_analise.all -%]
+                <tr [%IF x.name_url == region.name_url%]class="active"[%END%]><td class="[%IF x.name_url == region.name_url%]active[%END%] x" style="border-left: 1.5em solid [%color_index.${x.i}%]"><a  href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td>[% value4human(x.num, indicator.variable_type) %]</td></tr>
+                [% END %]
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+
+        </div>
+    [%END%]
+[%END%]
+</div>
+
+[%ELSE%]
+<p>Sem dados</p>
+[%END%]
+</div>

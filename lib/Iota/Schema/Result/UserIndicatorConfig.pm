@@ -71,6 +71,12 @@ __PACKAGE__->table("user_indicator_config");
   is_nullable: 1
   original: {default_value => \"now()"}
 
+=head2 hide_indicator
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -94,6 +100,8 @@ __PACKAGE__->add_columns(
         is_nullable   => 1,
         original      => { default_value => \"now()" },
     },
+    "hide_indicator",
+    { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -155,8 +163,8 @@ __PACKAGE__->belongs_to(
     { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LDrN2GuskBLZq5b8kFIyPw
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 19:05:39
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QVNYlA4Eq9uVBdakmUr2fA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

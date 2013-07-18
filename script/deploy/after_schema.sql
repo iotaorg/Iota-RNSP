@@ -9,6 +9,51 @@ SELECT setval('country_id_seq', 10, true);
 SELECT setval('state_id_seq', 10, true);
 
 
+create unique index ix_indicator_value__value_unique ON indicator_value(indicator_id, valid_from,user_id,variation_name,active_value) where region_id is null;
+create unique index ix_indicator_value__value_unique_region ON indicator_value(indicator_id, valid_from,user_id,variation_name,active_value,region_id) where region_id is null;
+
+
+create unique index ix_indicator_variables_variations_value ON indicator_variables_variations_value(
+indicator_variation_id,
+indicator_variables_variation_id,
+valid_from,
+user_id,
+active_value
+) where region_id is null;
+
+
+create unique index ix_indicator_variables_variations_value_region ON indicator_variables_variations_value(
+indicator_variation_id,
+indicator_variables_variation_id,
+valid_from,
+user_id,
+active_value,
+region_id
+) where region_id is not null;
+
+create unique index ix_region_variable_value on region_variable_value (
+variable_id,
+user_id,
+valid_from,
+active_value
+) where region_id is null;
+
+create unique index ix_region_variable_value_region  on region_variable_value(
+variable_id,
+user_id,
+valid_from,
+active_value,
+region_id
+) where region_id is not null;
+
+create unique index ix_variable_value on variable_value(
+variable_id,
+user_id,
+valid_from
+);
+
+
+
 -- all passwords are 12345
 
 INSERT INTO "role"(id,name) VALUES (0,'superadmin'), (1,'admin'),(2,'user');
@@ -58,16 +103,26 @@ values
 (2, 2, 'rnsp.org', 'RNSP', 'movim', 1),
 (3, 2, 'latino.org', 'Rede latino americana', 'latino', 1);
 
-INSERT INTO "user"(id, name, email, password, network_id, city_id) VALUES
+INSERT INTO "user"(id, name, email, password, institute_id, city_id) VALUES
 (2, 'adminpref','adminpref@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1, null),
-(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
-(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3, null),
 (4, 'prefeitura','prefeitura@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',1,1),
+
+(3, 'adminmov','adminmov@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
+(8, 'adminlat','adminlat@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2, null),
 (5, 'movimento','movimento@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,1),
 (6, 'movimento2','movimento2@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,2),
-(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',3,1);
+(7, 'latina','latina@email.com', '$2a$08$Hys9hzza605zZVKNJvdiBe9bHfdB4JKFnG8douGv53IW4e9M5cKrW',2,1);
 
 
+INSERT INTO network_user ( network_id, user_id )
+VALUES
+(1,2),
+(2,3),
+(1,4),
+(2,5),
+(2,6),
+(3,7),
+(3,8);
 
 -- role: superadmin                                     user:
 INSERT INTO "user_role" ( user_id, role_id) VALUES (1, 0); -- superadmin
@@ -136,7 +191,7 @@ drop table if exists download_data;
 drop table if exists download_variable;
 
 
-CREATE VIEW download_data AS
+CREATE OR REPLACE VIEW download_data AS
 SELECT m.city_id,
        c.name AS city_name,
        e.name AS axis_name,
@@ -197,10 +252,11 @@ from variable_value vv
 join variable v on v.id = vv.variable_id
 left join measurement_unit m on m.id = v.measurement_unit_id
 join "user" u on u.id = vv.user_id
-join network n on n.id = u.network_id
+join network_user nu on nu.user_id = u.id
+join network n on n.id = nu.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
-where value is not null and value != ''
+--where value is not null and value != ''
 union all
 SELECT
 
@@ -226,8 +282,163 @@ join indicator_variations vvv on vvv.id = indicator_variation_id
 join indicator_variables_variations v on v.id = vv.indicator_variables_variation_id
 join indicator ix on ix.id = vvv.indicator_id
 join "user" u on u.id = vv.user_id
-join network n on n.id = u.network_id
+join network_user nu on nu.user_id = u.id
+join network n on n.id = nu.network_id
 join institute i on i.id = n.institute_id
 join city c on c.id = u.city_id
-where value is not null and value != '';
+where --value is not null and value != ''
+active_value = TRUE
+;
 
+
+
+CREATE OR REPLACE FUNCTION compute_upper_regions(_ids integer[])
+  RETURNS integer[] AS
+$BODY$DECLARE
+v_ret int[];
+BEGIN
+    create temp table _x as
+    select
+     r.upper_region,
+     iv.valid_from,
+     iv.user_id,
+     iv.variable_id,
+
+     sum(iv.value::numeric) as total,
+     ARRAY(SELECT DISTINCT UNNEST( array_agg(iv.source) ) ORDER BY 1)  as sources
+
+    from region r
+    join region_variable_value iv on iv.region_id = r.id
+    join variable v on iv.variable_id = v.id
+
+    where r.upper_region in (
+        select upper_region from region x where x.id in (SELECT unnest($1)) and x.depth_level= 3
+    )
+    and active_value = true
+    and r.depth_level = 3
+
+    and v.type in ('int', 'num')
+    group by 1,2,3,4;
+
+    delete from region_variable_value where (region_id, user_id, valid_from, variable_id) IN (
+        SELECT upper_region, user_id, valid_from, variable_id from _x
+    ) AND generated_by_compute = TRUE;
+
+    insert into region_variable_value (
+        region_id,
+        variable_id,
+        valid_from,
+        user_id,
+        value_of_date,
+        value,
+        source,
+        generated_by_compute
+    )
+    select
+        x.upper_region,
+        x.variable_id,
+        x.valid_from,
+        x.user_id,
+        x.valid_from,
+
+        x.total::varchar,
+            x.sources,
+        true
+    from _x x;
+
+    select ARRAY(select upper_region from _x group by 1) into v_ret;
+    drop table _x;
+
+    create temp table _x as
+    select
+     r.upper_region,
+     iv.valid_from,
+     iv.user_id,
+     iv.indicator_variation_id,
+     iv.indicator_variables_variation_id,
+
+     sum(iv.value::numeric) as total
+
+    from region r
+    join indicator_variables_variations_value iv on iv.region_id = r.id
+    join indicator_variables_variations v on iv.indicator_variables_variation_id = v.id
+
+    where r.upper_region in (
+    select upper_region from region x where x.id in (SELECT unnest($1)) and x.depth_level= 3
+    )
+    and active_value = true
+    and r.depth_level= 3
+
+    and v.type in ('int', 'num')
+    group by 1,2,3,4,5;
+
+    delete from indicator_variables_variations_value where (region_id, user_id, valid_from, indicator_variation_id, indicator_variables_variation_id) IN (
+        SELECT upper_region, user_id, valid_from, indicator_variation_id, indicator_variables_variation_id from _x
+    ) AND generated_by_compute = TRUE;
+
+    insert into indicator_variables_variations_value (
+        region_id,
+        indicator_variation_id,
+        indicator_variables_variation_id,
+        valid_from,
+        user_id,
+        value_of_date,
+        value,
+        generated_by_compute
+    )
+    select
+        x.upper_region,
+        x.indicator_variation_id,
+        x.indicator_variables_variation_id,
+        x.valid_from,
+        x.user_id,
+        x.valid_from,
+
+        x.total::varchar,
+        true
+    from _x x;
+
+
+    drop table _x;
+    return v_ret;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION compute_upper_regions(integer[])
+  OWNER TO postgres;
+
+
+
+CREATE OR REPLACE FUNCTION clone_values(new_id integer, from_id integer, var_id integer, periods timestamp without time zone[])
+  RETURNS int AS
+$BODY$DECLARE integer_var int;
+BEGIN
+
+delete from variable_value
+where variable_id = var_id
+and   user_id = new_id
+and valid_from in (select x from unnest(periods::date[]) as x);
+
+insert into variable_value(
+"value", variable_id, user_id, created_at, value_of_date, valid_from,
+       valid_until, observations, source, file_id, cloned_from_user
+)
+SELECT
+
+"value", variable_id, new_id, now(), value_of_date, valid_from,
+       valid_until, observations, source, file_id, from_id
+
+From variable_value
+where variable_id = var_id
+and   user_id = from_id
+and valid_from in (select x from unnest(periods::date[]) as x);
+
+GET DIAGNOSTICS integer_var = ROW_COUNT;
+
+
+return integer_var;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;

@@ -4,7 +4,7 @@
       "Thiago Rondon"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.6302, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.131560",
    "license" : [
       "perl_5"
    ],
@@ -15,8 +15,8 @@
    "name" : "Iota",
    "no_index" : {
       "directory" : [
-         "t",
-         "inc"
+         "inc",
+         "t"
       ]
    },
    "prereqs" : {
@@ -29,7 +29,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "ExtUtils::MakeMaker" : "6.36"
          }
       },
       "runtime" : {
@@ -39,9 +39,11 @@
             "Catalyst::Component::InstancePerContext" : "0",
             "Catalyst::Controller::REST" : "0",
             "Catalyst::Model::DBIC::Schema" : "0",
+            "Catalyst::Plugin::Assets" : "0",
             "Catalyst::Plugin::Authentication" : "0",
             "Catalyst::Plugin::Authorization::Roles" : "0",
             "Catalyst::Plugin::ConfigLoader" : "0",
+            "Catalyst::Plugin::I18N::DBI" : "0",
             "Catalyst::Plugin::Params::Nested" : "0",
             "Catalyst::Plugin::Session" : "0",
             "Catalyst::Plugin::Session::State::Cookie" : "0",
@@ -61,13 +63,17 @@
             "Data::Printer" : "0",
             "DateTime::Duration" : "0",
             "DateTime::Format::Duration" : "0",
+            "DateTime::Format::Excel" : "0",
             "DateTime::Format::Pg" : "0",
             "DateTimeX::Easy" : "0",
+            "Digest::MD5" : "0",
             "Email::MIME" : "0",
             "Email::Sender" : "0",
             "Email::Sender::Simple" : "0",
             "Email::Sender::Transport::SMTP::TLS" : "0",
             "FindBin" : "0",
+            "Geo::Coder::Google" : "0",
+            "I18N::AcceptLanguage" : "0",
             "JSON" : "0",
             "JSON::XS" : "0",
             "List::MoreUtils" : "0",
@@ -75,10 +81,14 @@
             "Moose" : "0",
             "MooseX::Traits" : "0",
             "MooseX::Types::Email" : "0",
+            "Spreadsheet::ParseExcel::Stream" : "0",
+            "Spreadsheet::WriteExcel" : "0",
+            "Spreadsheet::XLSX" : "0",
+            "Statistics::Descriptive" : "0",
             "String::Random" : "0",
             "Template" : "0",
-            "Test::Deep" : "0",
-            "Test::More" : "0.88",
+            "Text2URI" : "0.3001",
+            "Text::CSV_XS" : "0",
             "Text::Iconv" : "0",
             "XML::Simple" : "0",
             "namespace::autoclean" : "0"
@@ -86,5 +96,10 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
    "version" : "0.01"
 }

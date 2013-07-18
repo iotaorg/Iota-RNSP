@@ -241,7 +241,7 @@ $(document).ready(function(){
 					}else{
 						var tr_class = "folded";
 					}
-					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' class='bs-tooltip'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, explanation: item.explanation, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
 					if (item.valores.length > 0){
 
 						for (j = 0; j < item.valores.length; j++){
@@ -251,8 +251,12 @@ $(document).ready(function(){
                                 if (item.variable_type == 'str'){
                                         table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j] ? 'OK' : '-' });
                                 }else{
-                                     table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:"#,##0.##", locale:"br"})});
-
+									var format_value = parseFloat(item.valores[j]);
+									var format_string = "#,##0.##";
+									if (format_value.toFixed(2) == 0){
+										format_string = "#,##0.###";
+									}
+                                    table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:format_string, locale:"br"})});
                                 }
 							}
 						}
@@ -276,6 +280,8 @@ $(document).ready(function(){
 		table_content += "</table>";
 
 		$("#cidades-indicadores .table").append(table_content);
+		
+		$(".bs-tooltip").tooltip();
 
 		$("#cidades-indicadores thead.eixos").click(function(){
 			$(this).toggleClass("collapsed");

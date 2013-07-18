@@ -7,14 +7,14 @@
                     <div class="variaveis"><dl class="tabela">
 
 [%IF region.upper_region %]
-    <dt>Subprefeitura</dt>
+    <dt>[%l('Subprefeitura')%]</dt>
     <dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>
 [%END%]
-<dt>[%region.depth_level == 2 ? 'Subprefeitura' : 'Distrito'%]: </dt>
+<dt>[% region_classification_name.${region.depth_level}%]: </dt>
 <dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
 
 [%IF subregions.size %]
-    <dt>Distritos</dt>
+    <dt>[%(region_classification_name.3)%]: </dt>
     <dd><ul  style="margin-bottom:0">
     [%-FOR rr IN subregions -%]
         <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
@@ -40,23 +40,31 @@
     </div>
 
 
-    <div class="span8 indicador-dados">
-        <h1 class="title">[%indicator.name%]</h1>
-        <p class="explanation">[%indicator.explanation%]</p>
+    <div class="span8">
+        <div class="indicador-dados">
+            <h1 class="title">[%indicator.name%]</h1>
+            <p class="explanation">[%indicator.explanation%]</p>
 
-        <div class="dados"><dl class="tabela dl-horizontal ">
-            <dt>Fórmula:</dt>
-            <dd>[%indicator.formula_human%]</dd>
-            [%IF indicator.goal_explanation%]
-                <dt>Referência de Meta:</dt>
-                <dd>[%indicator.goal_explanation%]
-                    [%IF indicator.goal_source%]<blockquote><small><cite title="Fonte da meta">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
-                </dd>
-            [%END%]
+            <div class="dados"><dl class="tabela dl-horizontal ">
+                <dt>Fórmula:</dt>
+                <dd>[%indicator.formula_human%]</dd>
+                [%IF indicator.goal_explanation%]
+                    <dt>Referência de Meta:</dt>
+                    <dd>[%indicator.goal_explanation%]
+                        [%IF indicator.goal_source%]<blockquote><small><cite title="Fonte da meta">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
+                    </dd>
+                [%END%]
 
-        </dl></div>
+            </dl></div>
+
+        </div>
+
+
 
     </div>
+
+
+
 </div>
 
 
@@ -64,9 +72,9 @@
 
     <div class="row" id="indicador-dados">
         <div class="span4">
-            <div class="menu-left">
+            <div class="menu-left" lockfixed>
                 <div class="content-fill">
-                    <div class="title">Indicadores</div>
+                    <div class="title">[%l('Indicadores')%]</div>
                     <div class="category" id="axis_list">
 
                     </div>
@@ -79,7 +87,7 @@
                         </div>
                     </div>
                     <div class="indicators">
-                        <div class="loading"><p>Carregando...</p></div>
+                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                     <p>
                     </p>
@@ -87,6 +95,21 @@
             </div>
         </div>
         <div class="span8">
+
+
+
+        <div>
+            <h2>[%l('Fator de desigualdade')%]</h2>
+            [% INCLUDE parts/fator_desigualdade.tt %]
+        </div>
+
+
+        <div>
+            <h2>Análise comparativa</h2>
+            [% INCLUDE parts/analise_comparativa.tt %]
+        </div>
+
+
             <div class="data-right">
                 <div class="content-fill">
                     <div id="indicador-historico">
@@ -95,7 +118,7 @@
 
                             <div class="table">
                                 <div class="content-fill">
-                                    <div class="loading"><p>Carregando...</p></div>
+                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                                 </div>
                             </div>
 
@@ -103,7 +126,7 @@
                     </div>
 
                     <div id="indicador-grafico">
-                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>comparar com outras cidades</a></div>
+                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a></div>
                         <div class="content-fill">
                             <div class="graph">
                                 <div class="content-fill">
@@ -115,7 +138,7 @@
                     </div>
 
                     <div id="dados-abertos">
-                        <div class="title">Dados abertos</div>
+                        <div class="title">[%l('Dados abertos')%]</div>
                         <div class="content-fill">
                             <div class="dados-botoes">
                                 <input type="button" value="Download" id="button-download" class="button-data"/>
@@ -146,4 +169,7 @@
 
     var ref = 'region_indicator';
     [% PROCESS 'network_javascript.tt'%]
+
+
+
 </script>

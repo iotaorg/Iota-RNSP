@@ -60,7 +60,7 @@ eval {
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
-            is( eval { $new_user->network->id }, 1, 'criado como prefeito' );
+            is( eval { $new_user->networks->next->id }, 1, 'criado como prefeito' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
@@ -120,15 +120,17 @@ eval {
               ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
             ok( $res->is_success, 'GET public info success' );
             my $obj = eval { from_json( $res->content ) };
+            delete $obj->{totals};
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -143,16 +145,18 @@ eval {
               ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
+            delete $obj->{totals};
 
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -166,16 +170,19 @@ eval {
               ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
+            delete $obj->{status}[0]{ratio};
+            delete $obj->{totals};
 
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 0,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 0,
+                            has_data            => 1,
                         }
                     ]
                 },
@@ -194,15 +201,19 @@ eval {
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
 
+            delete $obj->{status}[0]{ratio};
+            delete $obj->{totals};
+
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 0,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 0,
+                            has_data            => 1,
                         }
                     ]
                 },
@@ -219,15 +230,19 @@ eval {
             ok( $res->is_success, 'GET public info success' );
             $obj = eval { from_json( $res->content ) };
 
+            delete $obj->{status}[0]{ratio};
+            delete $obj->{totals};
+
             is_deeply(
                 $obj,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 1,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 1,
+                            has_data            => 1,
                         }
                     ]
                 },

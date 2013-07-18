@@ -61,7 +61,7 @@ eval {
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
-            is( eval { $new_user->network->id }, 1, 'criado como prefeito' );
+            is( eval { $new_user->networks->next->id }, 1, 'criado como prefeito' );
 
             $indicator = &_post(
                 201,
@@ -183,15 +183,18 @@ eval {
 
             my $zero_status =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $zero_status->{totals};
+
             is_deeply(
                 $zero_status,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -214,15 +217,18 @@ eval {
 
             $zero_status =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $zero_status->{totals};
+
             is_deeply(
                 $zero_status,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -247,15 +253,18 @@ eval {
 
             my $without_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $without_data->{totals};
+
             is_deeply(
                 $without_data,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -267,33 +276,38 @@ eval {
 
             my $has_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_data->{totals};
+
             is_deeply(
                 $has_data,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 0,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 0,
+                            has_data            => 1,
                         }
                     ]
                 },
                 '$has_data'
             );
-
             &_populate( $subvar[0]{id}, \@variacoes, $last_year . '-01-01', qw/4 4 1 5/ );
 
             $has_data = &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_data->{totals};
+
             is_deeply(
                 $has_data,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 0,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 0,
+                            has_data            => 1,
                         }
                     ]
                 },
@@ -304,15 +318,18 @@ eval {
 
             my $has_current =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_current->{totals};
+
             is_deeply(
                 $has_current,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 1,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 1,
+                            has_data            => 1,
                         }
                     ]
                 },
@@ -333,15 +350,18 @@ eval {
 
             $without_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $without_data->{totals};
+
             is_deeply(
                 $without_data,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -352,15 +372,18 @@ eval {
 
             $without_data =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $without_data->{totals};
+
             is_deeply(
                 $without_data,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 1,
-                            has_current  => 0,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 1,
+                            has_current         => 0,
+                            has_data            => 0,
                         }
                     ]
                 },
@@ -371,15 +394,18 @@ eval {
 
             $has_current =
               &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_current->{totals};
+
             is_deeply(
                 $has_current,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 1,
-                            has_data     => 0,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 1,
+                            has_data            => 1,
                         }
                     ]
                 },
@@ -390,15 +416,19 @@ eval {
             &_populate( $subvar[1]{id}, \@variacoes, '2010-01-01', 1 );
 
             $has_data = &_get( 200, '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator/status' );
+            delete $has_data->{totals};
+            delete $has_data->{justification_count};
+
             is_deeply(
                 $has_data,
                 {
                     status => [
                         {
-                            id           => $indicator->{id},
-                            without_data => 0,
-                            has_current  => 1,
-                            has_data     => 1,
+                            id                  => $indicator->{id},
+                            justification_count => undef,
+                            without_data        => 0,
+                            has_current         => 1,
+                            has_data            => 1,
                         }
                     ]
                 },

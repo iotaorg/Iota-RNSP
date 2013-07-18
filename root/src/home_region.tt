@@ -7,14 +7,14 @@
                     <div class="variaveis"><dl class="tabela">
 
 [%IF region.upper_region %]
-    <dt>Subprefeitura</dt>
+    <dt>[%(region_classification_name.2)%]</dt>
     <dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>
 [%END%]
-<dt>[%region.depth_level == 2 ? 'Subprefeitura' : 'Distrito'%]: </dt>
+<dt>[% region_classification_name.${region.depth_level}%]: </dt>
 <dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
 
 [%IF subregions.size %]
-    <dt>Distritos</dt>
+    <dt>[%region_classification_name.3%]:</dt>
     <dd><ul  style="margin-bottom:0">
     [%-FOR rr IN subregions -%]
         <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
@@ -33,11 +33,27 @@
     <dt>[%vv.variable.name%]: </dt>
     <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
 [% END %]
-                </dl></div>
-            </div>
+                    </dl></div>
+                </div><!-- content-fill -->
+            </div><!-- " " -->
+        </div><!-- span6 -->
 
+        <div class="offset2 span4">
+            [%IF region.polygon_path || region.depth_level == 2 %]
+            <div class="map" id="gmap">
+                <div class="content-fill">
+                    <div id="x-container">
+                        <div class="x-dummy"></div>
+                        <div class="x-element">
+                            <div id="mapa"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            [%ELSE%]
+            <p>Sem mapa da região</p>
+            [%END%]
         </div>
-    </div>
 
 </div>
 
@@ -46,9 +62,9 @@
     <div class="row" >
         <div class="span12">
             <div id="cidades-indicadores">
-                <h5>Indicadores separados por eixos</h5>
+                <h5>[%l('Indicadores separados por eixos')%]</h5>
                 <div class="table">
-                    <div class="loading"><p>Carregando...</p></div>
+                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
                 </div>
             </div>
         </div>
@@ -61,7 +77,21 @@
     var userID = [% user.id %];
     var cityID = [% city.id %];
     var regionID = [% region.id %];
-
+[%IF region.depth_level == 2-%]
+    var load_map = [{
+        map_elm: '#mapa',
+        polygons: [[%-FOR rr IN subregions -%]{p:'[% rr.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]',color:'#1E90FF'},[%-END-%]]
+    }];
+[%ELSE%]
+    [%IF region.polygon_path%]
+    var load_map = [{
+        map_elm: '#mapa',
+        polygons: [
+            { p : '[% region.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]', color: '#1E90FF' }
+        ]
+    }];
+    [%END%]
+[%END-%]
     var ref = 'region';
     [% PROCESS 'network_javascript.tt'%]
 </script>

@@ -324,8 +324,15 @@ sub list_GET {
             $country_id = $user_city ? $user_city->country_id : undef;
         }
 
-        if ( $user->network_id ) {
-            my $rs = $c->model('DB::User')->search( { network_id => $user->network_id, city_id => undef } );
+        my @networks = $user->networks->all;
+        if (@networks) {
+            my $rs = $c->model('DB::User')->search(
+                {
+                    'network_users.network_id' => [ map { $_->id } @networks ],
+                    city_id                    => undef
+                },
+                { join => 'network_users' }
+            );
             while ( my $u = $rs->next ) {
                 push @user_ids, $u->id;
             }
@@ -376,6 +383,21 @@ sub list_GET {
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
 
         };
+    }
+
+    if ( $c->req->params->{user_id} ) {
+        my $rs = $c->model('DB::UserIndicatorConfig')->search(
+            {
+                indicator_id => { 'in' => [ map { $_->{id} } @objs ] },
+                user_id      => $c->req->params->{user_id}
+            }
+        )->as_hashref;
+
+        my $out = {};
+        while ( my $r = $rs->next ) {
+            $out->{ delete $r->{indicator_id} } = $r;
+        }
+        $_->{user_indicator_config} = delete $out->{ $_->{id} } for (@objs);
     }
 
     $self->status_ok( $c, entity => { indicators => \@objs } );

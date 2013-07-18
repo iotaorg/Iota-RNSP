@@ -66,17 +66,23 @@ sub value4human {
         }
     }
     else {
-        $pre = $value;
+        $pre = int $value;
     }
 
     if ( length($pre) > 3 ) {
-        $pre = reverse $pre;    # reverse the number's digits
+        $pre = reverse $pre;         # reverse the number's digits
         $pre =~ s/(\d{3})/$1\./g;    # insert dot every 3 digits, from beginning
         $pre = reverse $pre;         # Reverse the result
         $pre =~ s/^\.//;             # remove leading dot, if any
     }
 
     return "$pre$mid$end";
+}
+
+sub l {
+    my ( $self, $c, $text, @args ) = @_;
+    return unless $text;
+    return $c->loc( $text, @args ) || $text;
 }
 
 1;

@@ -109,8 +109,34 @@ __PACKAGE__->has_many(
     { cascade_copy      => 0, cascade_delete => 0 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:J5iEAkfivT7QSaZWCEuj2g
+=head2 user_best_pratice_axes
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPraticeAxis>
+
+=cut
+
+__PACKAGE__->has_many(
+    "user_best_pratice_axes", "Iota::Schema::Result::UserBestPraticeAxis",
+    { "foreign.axis_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_best_pratices
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPratice>
+
+=cut
+
+__PACKAGE__->has_many(
+    "user_best_pratices", "Iota::Schema::Result::UserBestPratice",
+    { "foreign.axis_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+);
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:29:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9kFNNdVr/gBQC1S9n7P0Qw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

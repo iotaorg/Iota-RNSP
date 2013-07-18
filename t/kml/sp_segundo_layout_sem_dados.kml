@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+        <Folder id="Fusiontables">
+            <name>Fusiontables folder</name>
+            <Style id="BasicStyle">
+                <BalloonStyle>
+                    <text>$[description]</text>
+                </BalloonStyle>
+                <IconStyle>
+                    <color>FFFFFFFF</color>
+                    <scale>1.1</scale>
+                    <hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction" />
+                    <Icon>
+                        <href>http://maps.google.com/mapfiles/kml/paddle/red-blank_maps.png</href>
+                    </Icon>
+                </IconStyle>
+            </Style>
+            <Placemark>
+                <name><![CDATA[ÁGUA RASA]]></name>
+                <styleUrl>#BasicStyle</styleUrl>
+                <description><![CDATA[<div class="googft-info-window" style="font-family:sans-serif">
+<b>Distrito:</b> <a href="%C3%81GUA%20RASA" target="_blank">ÁGUA RASA</a><br>
+</div>]]></description>
+                <Polygon>
+                    <outerBoundaryIs>
+                        <LinearRing>
+                            <coordinates>-46.58166,-23.552155,0.0 -46.581659,-23.552154,0.0</coordinates>
+                        </LinearRing>
+                    </outerBoundaryIs>
+                </Polygon>
+                <ExtendedData>
+                    <Data name="ID">
+                        <value>4459</value>
+                    </Data>
+                    <Data name="CD_GEOCODD">
+                        <value>355030801</value>
+                    </Data>
+                </ExtendedData>
+            </Placemark>
+            <Placemark>
+                <name><![CDATA[ALTO DE PINHEIROS]]></name>
+                <styleUrl>#BasicStyle</styleUrl>
+                <description><![CDATA[<div class="googft-info-window" style="font-family:sans-serif">
+<b>Distrito:</b> <a href="ALTO%20DE%20PINHEIROS" target="_blank">ALTO DE PINHEIROS</a><br>
+</div>]]></description>
+                <Polygon>
+                    <outerBoundaryIs>
+                        <LinearRing>
+                            <coordinates>-46.714476,-23.535314,0.0 -46.714221,-23.535285,0.0</coordinates>
+                        </LinearRing>
+                    </outerBoundaryIs>
+                </Polygon>
+                <ExtendedData>
+                    <Data name="ID">
+                        <value>4460</value>
+                    </Data>
+                    <Data name="CD_GEOCODD">
+                        <value>355030802</value>
+                    </Data>
+                </ExtendedData>
+            </Placemark>
+        </Folder>
+    </Document>
+</kml>

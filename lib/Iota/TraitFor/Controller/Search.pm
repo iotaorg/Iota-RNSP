@@ -7,7 +7,9 @@ with 'Catalyst::TraitFor::Controller::DBIC::DoesPaging';
 has 'ignored_params' => (
     is      => 'rw',
     default => sub {
-        [qw(password api_key columns content-type _ limit start sort dir _dc rm xaction indicator_id network_id role)];
+        [
+            qw(password api_key columns content-type _ limit start sort dir _dc rm xaction indicator_id network_id role with_polygon_path user_id)
+        ];
     }
 );
 

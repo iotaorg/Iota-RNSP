@@ -18,12 +18,16 @@ sub verifiers_specs {
             filters => [qw(trim)],
             profile => {
                 technical_information => {
-                    required => 1,
+                    required => 0,
                     type     => 'Str'
                 },
                 user_id => {
                     required => 1,
                     type     => 'Int',
+                },
+                hide_indicator => {
+                    required => 0,
+                    type     => 'Bool'
                 },
 
                 indicator_id => {
@@ -59,8 +63,12 @@ sub verifiers_specs {
                       }
                 },
                 technical_information => {
-                    required => 1,
+                    required => 0,
                     type     => 'Str'
+                },
+                hide_indicator => {
+                    required => 0,
+                    type     => 'Bool'
                 }
             }
         ),
@@ -76,7 +84,6 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
-
             my $obj = $self->create( \%values );
             return $obj;
         },

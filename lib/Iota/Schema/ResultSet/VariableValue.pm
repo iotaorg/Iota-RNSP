@@ -234,7 +234,7 @@ sub action_specs {
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
+                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->variable_id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $varvalue->user_id
             );
@@ -267,7 +267,7 @@ sub action_specs {
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $var->id ] ) ],
+                indicators => [ $data->indicators_from_variables( variables => [ $var->variable_id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $var->user_id
             );
@@ -308,7 +308,6 @@ sub _put {
             valid_from  => $dates->{period_begin}
         }
     )->next;
-
 
     if ($row) {
         $values{observations} ||= undef;

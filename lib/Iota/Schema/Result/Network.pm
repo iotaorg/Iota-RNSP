@@ -178,35 +178,33 @@ __PACKAGE__->belongs_to(
     { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-=head2 users
+=head2 network_users
 
 Type: has_many
 
-Related object: L<Iota::Schema::Result::User>
+Related object: L<Iota::Schema::Result::NetworkUser>
 
 =cut
 
 __PACKAGE__->has_many(
-    "users", "Iota::Schema::Result::User",
+    "network_users",
+    "Iota::Schema::Result::NetworkUser",
     { "foreign.network_id" => "self.id" },
     { cascade_copy         => 0, cascade_delete => 0 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-19 15:15:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TzP4W760eOmwJuLPXMrJ3w
+=head2 users
 
-__PACKAGE__->might_have(
-    "current_user",
-    "Iota::Schema::Result::User",
-    sub {
-        my $args = shift;
+Type: many_to_many
 
-        return {
-            "$args->{foreign_alias}.network_id" => { -ident => "$args->{self_alias}.id" },
-            "$args->{foreign_alias}.active"     => 1,
-        };
-    }
-);
+Composing rels: L</network_users> -> user
+
+=cut
+
+__PACKAGE__->many_to_many( "users", "network_users", "user" );
+
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8EQK0tZGSXZF/LgiTBnIKw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

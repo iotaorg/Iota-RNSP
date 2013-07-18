@@ -14,11 +14,11 @@ use String::Random;
 use MooseX::Types::Email qw/EmailAddress/;
 
 use Iota::IndicatorData;
-
+use DateTime;
+use DateTimeX::Easy;
 use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'region.variable.value' }
-use DateTimeX::Easy;
 
 my $str2number = sub {
     my $str = shift;
@@ -81,13 +81,14 @@ sub verifiers_specs {
                         #return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
-                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id') } );
+                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id'), } );
                         my $date   = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
 
                         # f_extract_period_edge
                         return $self->search(
                             {
                                 user_id     => $r->get_value('user_id'),
+                                region_id   => $r->get_value('region_id'),
                                 variable_id => $r->get_value('variable_id'),
                                 valid_from  => $schema->f_extract_period_edge( $var ? $var->period : 'yearly', $date )
                                   ->{period_begin}
@@ -118,7 +119,8 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return $self->search( { id => $r->get_value('id') } )->count == 1;
+                        return $self->search( { id => $r->get_value('id'), generated_by_compute => undef } )->count ==
+                          1;
                       }
 
                 },
@@ -210,8 +212,9 @@ sub action_specs {
     my $self = shift;
     return {
         create => sub {
-            my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
+            my %values        = shift->valid_values;
+            my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
+            $values{value_of_date} = $value_of_date->datetime;
 
             my $schema = $self->result_source->schema;
             my $var    = $schema->resultset('Variable')->find( { id => $values{variable_id} } );
@@ -220,6 +223,27 @@ sub action_specs {
             my $dates = $schema->f_extract_period_edge( $var->period || 'yearly', $date );
             $values{valid_from}  = $dates->{period_begin};
             $values{valid_until} = $dates->{period_end};
+
+            my $region = $schema->resultset('Region')->find( $values{region_id} );
+
+            if ( $region->depth_level == 2 ) {
+                if ( $region->subregions_valid_after ) {
+                    $values{active_value} = 0;
+                }
+                else {
+                    # se nao tem subregions, sempre eh o ativo!
+                    $values{active_value} = 1;
+                }
+            }
+            elsif ( $region->depth_level == 3 ) {
+                my $upper = $region->upper_region;
+
+                die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
+
+                die "cannot save subregion value before upper region tell subregions is valid\n"
+                  if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
+
+            }
 
             my $varvalue = $self->create( \%values );
             $varvalue->discard_changes;
@@ -235,10 +259,10 @@ sub action_specs {
                 }
             }
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->id ] ) ],
+                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->variable_id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $varvalue->user_id,
-                regions_id => [ $varvalue->region_id ]
+                regions_id => [ $varvalue->region_id ],
             );
 
             return $varvalue;
@@ -269,10 +293,11 @@ sub action_specs {
             }
 
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $var->id ] ) ],
+                indicators => [ $data->indicators_from_variables( variables => [ $var->variable_id ] ) ],
                 dates      => [ $values{valid_from} ],
                 user_id    => $var->user_id,
                 regions_id => [ $var->region_id ],
+
             );
 
             return $var;
@@ -292,7 +317,8 @@ sub action_specs {
 
 sub _put {
     my ( $self, $period, %values ) = @_;
-    $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
+    my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
+    $values{value_of_date} = $value_of_date->datetime;
 
     my $schema = $self->result_source->schema;
 
@@ -309,15 +335,33 @@ sub _put {
     if ( $user->city_id && $region->city_id != $user->city_id ) {
         die 'Illegal region for user.';
     }
+    if ( $region->depth_level == 2 ) {
+        if ( $region->subregions_valid_after ) {
+            $values{active_value} = 0;
+        }
+        else {
+            # se nao tem subregions, sempre eh o ativo!
+            $values{active_value} = 1;
+        }
+    }
+    elsif ( $region->depth_level == 3 ) {
+        my $upper = $region->upper_region;
+
+        die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
+        die "cannot save subregion value before upper region tell subregions is valid\n"
+          if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
+
+    }
 
     # procura por uma variavel daquele usuario naquele periodo, se
     # existir, atualiza a data e o valor!
     my $row = $self->search(
         {
-            user_id     => $values{user_id},
-            region_id   => $values{region_id},
-            variable_id => $values{variable_id},
-            valid_from  => $dates->{period_begin}
+            user_id              => $values{user_id},
+            region_id            => $values{region_id},
+            variable_id          => $values{variable_id},
+            valid_from           => $dates->{period_begin},
+            generated_by_compute => undef
         }
     )->next;
 
@@ -359,7 +403,8 @@ sub _put {
         indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
         dates      => [ $dates->{period_begin} ],
         user_id    => $row->user_id,
-        regions_id => [ $row->region_id ]
+        regions_id => [ $row->region_id ],
+
     );
 
     return $row;

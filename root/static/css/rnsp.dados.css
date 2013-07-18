@@ -29,6 +29,10 @@ table{
 	background-color: #ccffff;
 }
 
+td.center{
+	text-align: center;
+}
+
 .indicators .item:hover,
 .indicators .item.selected:hover{
 	cursor: hand;
@@ -59,6 +63,10 @@ table{
 	color: #009999;
 	font-size: 14pt;
 }
+
+
+h5 {font-size: 14px;}
+h4 {font-size: 17.5px;}
 
 #indicadores-dados .data-title{
 	border: 1px solid #d5d5d5;
@@ -107,8 +115,7 @@ table{
 
 .data-content .table{
 	margin-top: -1px;
-	border: 1px solid #e0e0e0;
-	padding: 5px;
+	border-top: 1px solid #e0e0e0;
 
 }
 
@@ -165,8 +172,7 @@ table{
 .data-content .graph{
 	display: none;
 	margin-top: -1px;
-	border: 1px solid #e0e0e0;
-	padding: 5px;
+	border-top: 1px solid #e0e0e0;
 
 }
 
@@ -240,8 +246,8 @@ table{
 .data-content .map{
 	display: none;
 	margin-top: -1px;
-	border: 1px solid #e0e0e0;
-	padding: 10px;
+	border-top: 1px solid #e0e0e0;
+
 
 }
 
@@ -276,7 +282,7 @@ table{
 #mapa-do-site-header .title{
 	color: #009999;
 	font-size: 20pt;
-	font-weight: bolder;
+	font-weight: bold;
 }
 
 
@@ -289,7 +295,7 @@ table{
 	margin-top: 20px;
 }
 
-#cidades-dados #mapa{
+#cidades-dados #mapa, #x-container .mapa{
     min-height: 150px;
     max-height: 900px;
     height: 100%;
@@ -373,7 +379,7 @@ table{
 	border: 1px solid #e0e0e0;
 	padding: 2px 5px;
 	font-size: 12pt;
-	font-weight: bolder;
+	font-weight: bold;
 }
 
 #dados-abertos .title{
@@ -648,16 +654,26 @@ input.button-data:hover{
 	width: 450px;
 }
 
-.data-content #mapa{
+.data-content #mapa,.data-content #x-container .mapa{
 	margin: auto;
 	height: 420px;
 
 	border: 1px solid #e0e0e0;
 }
-#mapa img {
+#mapa img, #x-container .mapa img {
     max-width: none;
 }
-
+td.settinhas {
+    line-height: 100%;
+    vertical-align: middle;
+    font-size: 2em;
+    width: 1em;
+    color: green;
+    font-weight: bold;
+}
+td.settinhas.down {
+    color:red;
+}
 #date-ruler{
 	padding: 2px 10px 5px 10px;
 	text-align: right;
@@ -713,7 +729,7 @@ input.button-data:hover{
 	text-align: center;
 	line-height: 1.5em;
 	color: #009999;
-	font-weight: bolder;
+	font-weight: bold;
 	-moz-text-shadow:1px 1px 1px #f0f0f0; -webkit-text-shadow:1px 1px 1px #f0f0f0; text-shadow:1px 1px 1px #f0f0f0;
 }
 
@@ -726,15 +742,17 @@ input.button-data:hover{
 	border: 1px solid #ccc;
 }
 
-
-
-
-
-
-
-
-
-
+#filtro_mapa #filtro-mapa-uf,
+#filtro_mapa #filtro-mapa-cidade	{
+	display: inline-block
+}
+#filtro_mapa #filtro-mapa-cidade	{
+	display: none;
+	margin-left: 15px;
+}
+select#uf_filter{
+	width: 107px;
+}
 div.sociais>h5 {color: #666}
 a.social-icon {
     float: left;
@@ -818,7 +836,7 @@ footer .copyright .footer-copyright-content {
 footer h4 {
     color: #666;
     margin: 3px 0;
-    font-weight: bolder;
+    font-weight: bold;
     font-size: 1.2em;
     line-height: 1.5em;
 }
@@ -828,3 +846,52 @@ footer .thumbnails-unstyled li {
     margin-right: 10px;
 }
 
+
+.table-xonde .x {
+    padding-left: 0.5em;
+}
+.table-xonde .active {
+    background-color: #666!important;
+    color: white!important;
+}
+.table-xonde tr.active {
+    background-color: #555!important;
+    color: white!important;
+}
+.table-xonde tr.active td {
+    background-color: transparent!important;
+}
+.table-xonde .active a {
+    color: white!important;
+    font-weight: bold!important;
+}
+
+#result-cidades {
+	border: 1px solid #e0e0e0;
+	margin-top: 15px;
+	padding: 2px;
+}
+#result-cidades table.result-cidades{
+	border-collapse: collapse;
+	width: 100%;
+}
+#result-cidades thead tr{
+	background-color: #f0f0f0;
+}
+#result-cidades thead tr th{
+	color: #009999;
+}
+#result-cidades tbody tr td{
+	padding: 2px 5px
+}
+#result-cidades tbody tr.even{
+	background-color: #fbfbfb;
+}
+#result-cidades tbody tr.odd{
+	background-color: #fff;
+}
+#result-cidades tbody tr:hover{
+	cursor: hand;
+	cursor: pointer;
+	background-color: #e1ffff;
+}

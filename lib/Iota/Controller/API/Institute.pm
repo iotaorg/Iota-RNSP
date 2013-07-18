@@ -224,6 +224,23 @@ sub list_POST {
 
 }
 
+sub stats : Chained('object') : PathPart('stats') : Args(0) : ActionClass('REST') {
+}
+
+sub stats_GET {
+    my ( $self, $c ) = @_;
+
+    my @rows = $c->model('DB::ViewInstituteStats')->search(
+        undef,
+        {
+            bind         => [ $c->stash->{object}->next->id ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    )->all;
+
+    $self->status_ok( $c, entity => { stats => \@rows } );
+}
+
 with 'Iota::TraitFor::Controller::Search';
 1;
 

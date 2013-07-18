@@ -64,3 +64,9 @@ input.button-data:hover{
 .download-links a:hover{
 	color: #aa9fd2;
 }
+#result-cidades thead tr th{
+	color: #4b308f;
+}
+#result-cidades tbody tr:hover{
+	background-color: #e9e1ff;
+}
