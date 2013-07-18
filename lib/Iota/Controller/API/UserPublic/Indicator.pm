@@ -15,10 +15,16 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
     my ( $self, $c ) = @_;
 
     my @user_ids = ( $c->stash->{user_obj}->id );
-    my $country = eval { $c->stash->{user_obj}->city->country_id };
-
-    if ( $c->stash->{user_obj}->network_id ) {
-        my $rs = $c->model('DB::User')->search( { network_id => $c->stash->{user_obj}->network_id, city_id => undef } );
+    my $country  = eval { $c->stash->{user_obj}->city->country_id };
+    my @networks = $c->stash->{user_obj}->networks->all;
+    if (@networks) {
+        my $rs = $c->model('DB::User')->search(
+            {
+                'network_users.network_id' => [ map { $_->id } @networks ],
+                city_id                    => undef
+            },
+            { join => 'network_users' }
+        );
         while ( my $u = $rs->next ) {
             push @user_ids, $u->id;
         }
@@ -35,6 +41,7 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
         },
         { join => ['indicator_user_visibilities'] }
     );
+
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -75,7 +82,10 @@ sub indicator_GET {
     my $conf = $indicator->user_indicator_configs->search( { user_id => $c->stash->{user_id} } )->next;
 
     if ($conf) {
-        $c->stash->{rest}{user_indicator_config} = { technical_information => $conf->technical_information };
+        $c->stash->{rest}{user_indicator_config} = {
+            technical_information => $conf->technical_information,
+            hide_indicator        => $conf->hide_indicator
+        };
     }
 }
 
@@ -182,12 +192,20 @@ sub resumo_GET {
     my $from_date = $c->req->params->{from_date};
 
     eval {
+        my $user_id = $c->stash->{user_obj}->id;
+        my @hide_indicator =
+          map { $_->indicator_id }
+          $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
+
         my $rs = $c->stash->{collection}->search(
-            { 'indicator_network_configs_one.network_id' => [ undef, $c->stash->{network}->id ] },
+            {
+                'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
+                'me.id' => { '-not_in' => \@hide_indicator }
+            },
             { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs_one' ] }
         );
 
-        my $user_id = $c->stash->{user_obj}->id;
+        my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
         my $periods_begin = {};
         my $indicators    = {};
@@ -222,9 +240,14 @@ sub resumo_GET {
                 {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
-                    'me.valid_from'   => { '>'  => $from_this_date },
+                    'me.valid_from'   => {
+                        '>' => $from_this_date,
 
-                    ('me.region_id' => $c->req->params->{region_id})x!! exists $c->req->params->{region_id}
+                        ( '<=' => $from_date ) x !!$from_date
+                    },
+
+                    'me.region_id'    => $c->req->params->{region_id},
+                    'me.active_value' => $active_value
                 }
             )->as_hashref;
             my $indicator_values = {};
@@ -402,147 +425,87 @@ Retorna o status de prenchimento dos indicadores
 
 =cut
 
+# TODO: verificar isso
 sub indicator_status_GET {
     my ( $self, $c ) = @_;
     my $ret;
     my $ultimos = {};
     eval {
-        my $rs = $c->stash->{collection};
 
+        my @hide_indicator =
+          map { $_->indicator_id }
+          $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
+
+        my $rs = $c->stash->{collection}->search(
+            {
+                'me.id' => { '-not_in' => \@hide_indicator }
+            }
+        );
+
+        my @indicator_ids = map { $_->{id} } $rs->as_hashref->all;
         my $user_id = $c->stash->{user_obj}->id;
-        while ( my $indicator = $rs->next ) {
 
-            my $indicator_formula = Iota::IndicatorFormula->new(
-                formula => $indicator->formula,
-                schema  => $c->model('DB')->schema
-            );
-            my $rs =
-              $c->model('DB')->resultset('Variable')->search_rs( { 'me.id' => [ $indicator_formula->variables ], } );
+        my $region_tb = exists $c->req->params->{region_id} ? 'Region' : '';
+        my $region_id = $c->req->params->{region_id};
 
-            my $variaveis = 0;
-            my $ultima_data;
-
-            my $outros_periodos = {};
-            my $ultimo_periodo  = {};
-
-            while ( my $row = $rs->next ) {
-
-                # ultima data do periodo geral
-                unless ( exists $ultimos->{ $row->period } ) {
-                    my $ret = $c->model('DB')->schema->ultimo_periodo( $row->period );
-                    $ultimos->{ $row->period } = $ret->{ultimo_periodo};
-                }
-                $ultima_data = $ultimos->{ $row->period };
-
-                my $rsx = $row->values->search( { 'me.user_id' => $user_id } )->as_hashref;
-
-                while ( my $value = $rsx->next ) {
-                    if ( ( $value->{value} || $value->{value} eq '0' ) && $value->{valid_from} eq $ultima_data ) {
-                        $ultimo_periodo->{ $value->{valid_from} }++;
-                    }
-                    elsif ( $value->{value} || $value->{value} eq '0' ) {
-                        $outros_periodos->{ $value->{valid_from} }++;
-                    }
-
-                }
-                $variaveis++;
+        # % em relacao a meta # WARNING non-sense for a while.
+        my $rs_x = $c->model('DB')->resultset( 'ViewIndicatorGoalRatio' . $region_tb )->search_rs(
+            undef,
+            {
+                'bind' => [ $user_id, ( $c->req->params->{region_id} ) x !!$region_tb ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
-            while ( my ( $k, $v ) = each %$outros_periodos ) {
-                delete $outros_periodos->{$k} unless $outros_periodos->{$k} == $variaveis;
-            }
-
-            my $has_current =
-              (      $ultima_data
-                  && exists $ultimo_periodo->{$ultima_data}
-                  && $ultimo_periodo->{$ultima_data} == $variaveis ) ? 1 : 0;
-            if ( $variaveis && !$has_current && scalar( keys %$outros_periodos ) == 0 ) {
-                push @{ $ret->{status} },
-                  {
-                    id           => $indicator->id,
-                    without_data => 1,
-                    has_data     => 0,
-                    has_current  => 0
-                  };
-            }
-            else {
-                my @indicator_variations;
-                my @indicator_variables;
-                if ( $indicator->indicator_type eq 'varied' ) {
-                    @indicator_variables = $indicator->indicator_variables_variations->all;
-                    if ( $indicator->dynamic_variations ) {
-                        @indicator_variations =
-                          $indicator->indicator_variations->search( { user_id => [ $user_id, $indicator->user_id ] },
-                            { order_by => 'order' } )->all;
-                    }
-                    else {
-                        @indicator_variations =
-                          $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
-                    }
-                }
-
-                if ( $variaveis == 0 ) {
-                    my $ret = $c->model('DB')->schema->ultimo_periodo('yearly');
-                    $ultima_data = $ret->{ultimo_periodo};
-                }
-
-                if ( @indicator_variables && @indicator_variations ) {
-
-                    my @datas =
-                        $variaveis == 0
-                      ? $self->_get_values_dates( $user_id, \@indicator_variations )
-                      : ( ( $has_current ? ($ultima_data) : () ), keys %$outros_periodos );
-                    $outros_periodos = {};
-                    $has_current     = 0;
-
-                    foreach my $from (@datas) {
-                        my $vals = {};
-
-                        my $completa = 1;
-
-                        for my $variation (@indicator_variations) {
-
-                            my $rs = $variation->indicator_variables_variations_values->search(
-                                {
-                                    valid_from => $from,
-                                    user_id    => $user_id,
-                                    region_id  => undef
-                                }
-                            )->as_hashref;
-                            while ( my $r = $rs->next ) {
-                                next unless defined $r->{value};
-                                $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                                  $r->{value};
-                            }
-
-                            my $qtde_dados = keys %{ $vals->{ $variation->id } };
-
-                            if ( $qtde_dados != @indicator_variables ) {
-                                $completa = 0;
-                                last;
-                            }
-                        }
-
-                        if ($completa) {
-                            if ( $from eq $ultima_data ) {
-                                $has_current = 1;
-                            }
-                            else {
-                                $outros_periodos->{$from} = 1;
-                            }
-                        }
-                    }
-
-                }
-
-                push @{ $ret->{status} },
-                  {
-                    id           => $indicator->id,
-                    has_current  => $has_current,
-                    has_data     => ( keys %$outros_periodos > 0 ) ? 1 : 0,
-                    without_data => ( !$has_current && ( keys %$outros_periodos == 0 ) ) ? 1 : 0
-                  };
-            }
+        );
+        my $ratios = {};
+        while ( my $f = $rs_x->next ) {
+            $ratios->{ delete $f->{id} } = $f;
         }
+
+        # status
+        $rs = $c->model('DB')->resultset( 'ViewIndicatorStatus' . $region_tb )->search_rs(
+            undef,
+            {
+                bind =>
+
+                  # com regiao
+                  $region_tb
+                ? [
+                    [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
+                    $user_id, $region_id, $user_id, $user_id, $region_id,
+                    $user_id, $region_id, $user_id, $region_id
+                  ]
+                :    # sem regiao
+                  [
+                    [ { sqlt_datatype => 'int[]' }, \@indicator_ids ],
+                    $user_id, $user_id, $user_id, $user_id, $user_id
+
+                  ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            }
+        );
+
+        my $total_nao_preenchido = 0;
+        my $total_algum_valor    = 0;
+        my $total_current        = 0;
+        while ( my $f = $rs->next ) {
+            my $id = $f->{id};
+
+            $f->{ratio} = $ratios->{$id} if exists $ratios->{$id};
+
+            push @{ $ret->{status} }, $f;
+            $total_nao_preenchido++ if $f->{without_data};
+            $total_algum_valor++    if $f->{has_data};
+            $total_current++        if $f->{has_current};
+        }
+
+        my $total = @{ $ret->{status} };
+        $ret->{totals} = {
+            has_data_perc     => $total_algum_valor / $total,
+            without_data_perc => $total_nao_preenchido / $total,
+            has_current_perc  => $total_current / $total,
+
+        } if $total > 0;
+
     };
 
     if ($@) {

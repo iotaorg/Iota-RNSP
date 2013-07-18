@@ -1,3 +1,4 @@
+[%IF !without_wrapper%]
 <!DOCTYPE HTML>
 <html lang="pt-br">
 <head>
@@ -31,6 +32,8 @@
 [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
 [%-CALL assets.include("js/libraries/RGraph.line.js")%]
 [%-CALL assets.include("js/bootstrap.min.js")-%]
+[%-CALL assets.include("js/jquery-lockfixed-dynamic.js")-%]
+
 
 [%-CALL assets.include("css/bootstrap.min.css")%]
 [%-CALL assets.include("css/bootstrap-responsive.min.css")%]
@@ -49,7 +52,7 @@
     [%- CALL assets.include("js/parceiros.gov.js")-%]
 [%- END -%]
 [%-IF custom_css-%]
-    [%-CALLassets.include(custom_css)-%]
+    [%-CALL assets.include(custom_css)-%]
 [%-END-%]
 
 [%- assets.export("css") -%]
@@ -57,7 +60,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
-<body>
+<body><script>var load_map=[];</script>
 <div id="iota-app">
     <div class="navbar navbar-fixed-top navbar-inverse">
       <div class="navbar-inner">
@@ -67,15 +70,28 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" target="_blank" href="http://github.com/W3CBrasil/Iota" title="Clique aqui para saber mais sobre o Iota">Iota</a>
+          <a class="brand" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota">Iota</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
 
-            <li [% IF !city && c.req.path != 'mapa-do-site' %]class="active"[%END%]>
-                <a href="/">Indicadores</a>
+            <li [% IF !city && c_req_path != 'mapa-do-site' %]class="active"[%END%]>
+                <a href="/">[%l('Indicadores')%]</a>
             </li>
             [% IF city %]
-                <li class="active"><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
+                <li [% IF "${c_req_path}" == "${city.pais}/$city.uf/$city.name_uri" %]class="active"[%END%]><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
+
+                [%IF best_pratices_link%]
+                <li [% IF "/${c_req_path}" == best_pratices_link.path %]class="active"[%END%]>
+                    <a href="[%best_pratices_link%]">[%l('Boas Práticas')%]</a>
+                </li>
+                [%END%]
+
+                [%IF files_link%]
+                <li [% IF "/${c_req_path}" == files_link.path %]class="active"[%END%]>
+                    <a href="[%files_link%]">[%l('Arquivos')%]</a>
+                </li>
+                [%END%]
+
             [% END %]
             [% IF menu %]
                 [% FOREACH m IN menu %]
@@ -95,13 +111,28 @@
                     [% END %]
                 [% END %]
             [% END %]
-              <li [% IF c.req.path == 'mapa-do-site' %]class="active"[%END%]>
-                <a href="/mapa-do-site">Mapa do Site</a>
-              </li>
-              <li>
-                <a href="mailto:contato@cidadessustentaveis.org.br">Contato</a>
+              <li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
+                <a href="/mapa-do-site">[%l('Mapa do Site')%]</a>
               </li>
 
+              <li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
+                <a href="/dados-abertos">[%l('Dados abertos')%]</a>
+              </li>
+
+              <li>
+                <a href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a>
+              </li>
+
+            </ul>
+            <ul class="nav pull-right">
+                <li class="divider-vertical"></li>
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-globe icon-white"></i> Idioma <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/lang/pt-br">Português brasileiro</a></li>
+                    <li><a href="/lang/es">Español</a></li>
+                </ul>
+                </li>
             </ul>
           </div>
         </div>
@@ -169,7 +200,7 @@
                 <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
             </div>
             <small class="aware">
-                Desenvolvido por
+                [%l('Desenvolvido por')%]
                 <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
             </small>
         </div>
@@ -178,9 +209,9 @@
         <div class="span3">
             <h4>Links</h4>
             <ul class="unstyled">
-                <li><a href="/mapa-do-site">Mapa do site</a></li>
-                <li><a href="/dados-abertos">Dados abertos - Download</a></li>
-                <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">Contato</a></li>
+                <li><a href="/mapa-do-site">[%l('Mapa do Site')%]</a></li>
+                <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
+                <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
             </ul>
         </div>
 
@@ -195,7 +226,7 @@
         </div>
 
         <div class="span4">
-            <h4>Parceiros</h4>
+            <h4>[%l('Parceiros')%]</h4>
             <ul class="unstyled thumbnails-unstyled">
                 <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a></li>
                 <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
@@ -226,11 +257,17 @@
 
 
 <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
+
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry,visualization&key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 <!--[if lt IE 9]><script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script><![endif]-->
 [% assets.export("js") %]
 
 <script>
+
+$('[lockfixed]').each(function(x, rlm){
+    $.lockfixed(rlm,{offset: {top: 47, bottom: 10}});
+});
+
 [% IF institute.short_name == 'gov' %]
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -251,3 +288,4 @@
 </script>
 </body>
 </html>
+[%ELSE%][%content%][%END%]

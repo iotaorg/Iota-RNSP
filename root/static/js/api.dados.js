@@ -5,10 +5,11 @@ var indicadorID;
 var indicadorDATA;
 var dadosGrafico = {"dados": [], "labels": []};
 var dadosMapa = [];
-var markerCluster;
+var heatCluster;
 var carregouTabela = false;
 var carregaVariacoes = true;
 var ano_atual_dados;
+
 $(document).ready(function(){
 
 	zoom_padrao = 4;
@@ -21,7 +22,7 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'GET',
 			dataType: 'json',
-			url: api_path + '/api/public/network'.render(),
+			url: api_path + '/api/public/network?user_id=$$user_id'.render({user_id : userID}),
 			success: function(data, textStatus, jqXHR){
 				users_list = [];
 				indicadores_list = data.indicators;
@@ -163,13 +164,15 @@ $(document).ready(function(){
 			return a.localeCompare(b);
 		});
 		$.each(indicadores_list, function(i,item){
-			$(".indicators").append("<div class='item' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
+			$(".indicators").append("<div class='item bs-tooltip' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
 						id: item.id,
 						name: item.name,
 						axis_id: item.axis.id,
-						uri: item.name_url
+						uri: item.name_url,
+						explanation: item.explanation
 					}));
 		});
+		$("div.bs-tooltip").tooltip();
 		if (indicadorID == "" || indicadorID == undefined){
 			if (ref != "home"){
 				indicadorID = $(".indicators .item:first").attr("indicator-id");
@@ -378,8 +381,13 @@ $(document).ready(function(){
                                     });
                                     preenchido++;
                                 }else{
+									var format_value = parseFloat(series[i]);
+									var format_string = "#,##0.##";
+									if (format_value.toFixed(2) == 0){
+										format_string = "#,##0.###";
+									}
                                     row_content += "<td class='valor'>$$valor</td>".render({
-                                        valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
+                                        valor: $.formatNumberCustom(series[i], {format:format_string, locale:"br"})
                                     });
                                     preenchido++;
                                 }
@@ -817,6 +825,12 @@ $(document).ready(function(){
 				}));
 		});
 
+        if (indicadorDATA.sort_direction == "greater value"){
+            $(".melhor_pior").text("Mais quente é melhor.");
+        }else{
+            $(".melhor_pior").text("Mais quente é pior/ruim.");
+        }
+
 		$("#mapa-filtro select option:last").attr("selected",true);
 		marcaMapa($("#mapa-filtro select option:selected").val());
 
@@ -827,73 +841,32 @@ $(document).ready(function(){
 	}
 
 	function marcaMapa(label_index){
-
-		if (markerCluster) markerCluster.clearMarkers();
+		if (heatCluster) {
+            heatCluster.setMap(null)
+        }
 
         var markers = [];
 
-
-		var oldMin = "";
-		var oldMax = "";
-		var newMin = 10;
-
-		dadosMapa = [];
-
 		$.each(dadosGrafico.dados, function(index,item){
-			if (item.valores[label_index] != null){
 
-				var valor = parseInt(item.valores[label_index].replace(".",""));
+            if (item.valores[label_index] != null && item.longitude){
+                var valor = parseFloat(item.valores[label_index].replace(".",""));
+                if (valor){
+                    var latLng = new google.maps.LatLng(item.latitude, item.longitude);
+                    markers.push({location: latLng, weight: parseFloat(valor) });
+                }
+            }
 
-				if (oldMin == "") oldMin = valor;
-				if (oldMax == "") oldMax = valor;
-
-				if (valor < oldMin) oldMin = valor;
-				if (valor > oldMax) oldMax = valor;
-
-				dadosMapa.push({id: item.id, nome: item.nome, valor: item.valores[label_index], latitude: item.latitude, longitude: item.longitude, novo_valor: valor});
-
-			}
 		});
 
-		var newMax = 1000;
+        var pointArray = new google.maps.MVCArray(markers);
 
-		$.each(dadosMapa, function(index,item){
-			var novo_valor = parseInt(convertRangeValue(oldMin,oldMax,newMin,newMax,dadosMapa[index].novo_valor));
-			if (isNaN(novo_valor)){
-				dadosMapa[index].novo_valor = 1;
-			}else{
-				dadosMapa[index].novo_valor = novo_valor;
-			}
-		});
+		heatCluster = new google.maps.visualization.HeatmapLayer({
+            data: pointArray,
+            radius: 30
+        });
+        heatCluster.setMap(map);
 
-
-		$.each(dadosMapa, function(index,item){
-			for (var i = 0; i < item.novo_valor; i++) {
-				if (item.longitude){
-
-					var latLng = new google.maps.LatLng(item.latitude,
-						item.longitude);
-					var marker = new google.maps.Marker({
-						position: latLng,
-						map: map
-					});
-
-					marker.__userID = item.id;
-					marker.__position = latLng;
-					marker.__valor = item.valor;
-					marker.__nome = item.nome;
-
-					markers.push(marker);
-
-
-				}
-			}
-		});
-
-		markerCluster = new MarkerClusterer(map, markers, {gridSize: 40});
-		var numStyles = markerCluster.getStyles().length;
-
-		markerCluster.setCalculator(customClusterText);
 	}
 
 	function customClusterText(markers,numStyles){
@@ -1115,6 +1088,28 @@ $(document).ready(function(){
                 $.loadCidadeDataIndicador();
             }
 		}
+
+
+		$('[data-part-onchange-location]').each(function(a,b){
+            var $me = $(b);
+            var newURL = updateURLParameter(window.location.href, 'part', $me.attr('data-part-onchange-location'));
+            $.get(newURL, function(data) {
+                var $c = $(data);
+                $me.replaceWith($c);
+
+                initialize_maps();
+
+
+                var $it = $me.find('a[data-toggle="tab"]');
+                if ($it[0]){
+                    $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
+                }
+
+
+            });
+        });
+
+
     });
 
 });

@@ -187,19 +187,16 @@ __PACKAGE__->table("indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 period
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 variable_type
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -281,23 +278,11 @@ __PACKAGE__->add_columns(
     "visibility_country_id",
     { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
     "formula_human",
-    {
-        data_type   => "text",
-        is_nullable => 1,
-        original    => { data_type => "varchar" },
-    },
+    { data_type => "text", is_nullable => 1 },
     "period",
-    {
-        data_type   => "text",
-        is_nullable => 1,
-        original    => { data_type => "varchar" },
-    },
+    { data_type => "text", is_nullable => 1 },
     "variable_type",
-    {
-        data_type   => "text",
-        is_nullable => 1,
-        original    => { data_type => "varchar" },
-    },
+    { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -514,8 +499,8 @@ __PACKAGE__->belongs_to(
     },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-30 20:07:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Mh3vqY1wZBEmYtVvpYFUGQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-08 16:19:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DO/QL0n/hup79WViaf9xjA
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

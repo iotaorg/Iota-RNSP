@@ -62,6 +62,30 @@ sub action_specs {
             if ( my $period = delete $values{period} ) {
                 my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
+                if ( exists $values{region_id} ) {
+                    my $region = $schema->resultset('Region')->find( $values{region_id} );
+                    if ( $region->depth_level == 2 ) {
+                        if ( $region->subregions_valid_after ) {
+
+                            $values{active_value} = 0;
+                        }
+                        else {
+                            # se nao tem subregions, sempre eh o ativo!
+                            $values{active_value} = 1;
+                        }
+                    }
+                    elsif ( $region->depth_level == 3 ) {
+                        my $upper = $region->upper_region;
+
+                        die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
+
+                        my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
+                        die "cannot save subregion value before upper region tell subregions is valid\n"
+                          if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
+
+                    }
+                }
+
                 $values{valid_from}  = $dates->{period_begin};
                 $values{valid_until} = $dates->{period_end};
             }
@@ -84,7 +108,11 @@ sub action_specs {
                     )
                 ],
                 dates   => [ $var->valid_from->datetime ],
-                user_id => $var->user_id
+                user_id => $var->user_id,
+
+                (regions_id => [ $values{region_id} ]) x !! exists $values{region_id},
+
+
             );
 
             return $var;
@@ -108,7 +136,9 @@ sub action_specs {
                     )
                 ],
                 dates   => [ $var->valid_from->datetime ],
-                user_id => $var->user_id
+                user_id => $var->user_id,
+
+                (regions_id => [ $var->region_id ]) x !! $var->region_id,
             );
 
             return $var;

@@ -32,6 +32,8 @@ sub network_GET {
 
 =pod
 
+=encoding utf-8
+
 retorna
 {
     "users": [
@@ -83,6 +85,15 @@ sub stash_comparacao {
 
     my $network = $c->stash->{network};
 
+    my @hide_indicator;
+
+    if ( $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^[0-9]+$/ ) {
+        @hide_indicator =
+          map { $_->indicator_id }
+          $c->model('DB::User')->find( { id => $c->req->params->{user_id} } )
+          ->user_indicator_configs->search( { hide_indicator => 1 } )->all;
+    }
+
     my $ret = {
         network => {
             name => $network->name,
@@ -97,10 +108,11 @@ sub stash_comparacao {
     };
     my @users = $c->model('DB::User')->search(
         {
-            'me.network_id' => $network->id,
-            city_id         => { '!=' => undef }
+            'network_users.network_id' => $network->id,
+            active                     => 1,
+            city_id                    => { '!=' => undef }
         },
-        { prefetch => ['city'] }
+        { prefetch => ['city'], join => 'network_users' }
     )->as_hashref->all;
 
     for my $user (@users) {
@@ -109,6 +121,19 @@ sub stash_comparacao {
             ( map { $_ => $user->{$_} } qw/name id city_id/ ),
             city => { map { $_ => $user->{city}{$_} } qw/name id name_uri pais uf/, }
           };
+    }
+
+    my @users_admin = $c->model('DB::User')->search(
+        {
+            'network_users.network_id' => $network->id,
+            active                     => 1,
+            city_id                    => undef
+        },
+        { join => 'network_users' }
+    )->as_hashref->all;
+
+    for my $user (@users_admin) {
+        push @{ $ret->{admin_users} }, { ( map { $_ => $user->{$_} } qw/name id/ ) };
     }
 
     my @countries = @{ $c->stash->{network_data}{countries} };
@@ -121,7 +146,8 @@ sub stash_comparacao {
                 { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
                 { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
                 { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
-            ]
+            ],
+            'me.id' => { '-not_in' => \@hide_indicator }
         },
         { prefetch => ['axis'], join => 'indicator_user_visibilities' }
     )->as_hashref->all;
@@ -148,13 +174,10 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
     $c->detach('/error_404') unless defined $c->stash->{user_obj};
 
-    my $net = $c->model('DB::Network')->search( { id => $c->stash->{user_obj}->network_id } )->first;
-    $c->detach('/error_404') unless $net;
+    my @networks = $c->stash->{user_obj}->networks->all;
+    $c->detach('/error_404') unless @networks;
 
-    $c->stash->{network} = $net;
-    $c->stash->{rede}    = $net->name_url;
-
-    $c->detach('/error_404') unless defined $c->stash->{user_obj};
+    $c->stash->{networks} = \@networks;
 
     $c->stash->{user_id} = int $id;
 }
@@ -166,7 +189,6 @@ sub user : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 =pod
 
-=encoding utf-8
 
 Retorna as informações das ultimas versoes das variveis basicas, cidade, foto da capa,
 
@@ -251,9 +273,28 @@ sub user_public_load {
 
     };
 
+    do {
+        my $r = $c->model('DB::Region')->search_rs( { 'id' => $c->req->params->{region_id} } )->as_hashref->next;
+
+        if ($r) {
+
+            $ret->{region} = {
+                name     => $r->{name},
+                name_url => $r->{name_url}
+            };
+        }
+
+    } if exists $c->req->params->{region_id};
+
     $ret->{usuario} = {
-        files =>
-          { map { $_->class_name => $_->public_url } $user->user_files->search( undef, { order_by => 'created_at' } ) },
+        files => {
+            map { $_->class_name => $_->public_url } $user->user_files->search(
+                {
+                    hide_listing => 1
+                },
+                { order_by => 'created_at' }
+            )
+        },
         city_summary => $user->city_summary
     };
 

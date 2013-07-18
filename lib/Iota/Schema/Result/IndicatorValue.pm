@@ -86,14 +86,12 @@ __PACKAGE__->table("indicator_value");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 variation_name
 
   data_type: 'text'
   default_value: (empty string)
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 updated_at
 
@@ -142,18 +140,9 @@ __PACKAGE__->add_columns(
     "region_id",
     { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
     "value",
-    {
-        data_type   => "text",
-        is_nullable => 0,
-        original    => { data_type => "varchar" },
-    },
+    { data_type => "text", is_nullable => 0 },
     "variation_name",
-    {
-        data_type     => "text",
-        default_value => "",
-        is_nullable   => 0,
-        original      => { data_type => "varchar" },
-    },
+    { data_type => "text", default_value => "", is_nullable => 0 },
     "updated_at",
     {
         data_type     => "timestamp",
@@ -267,8 +256,8 @@ __PACKAGE__->belongs_to(
     { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-15 00:36:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FIg4ORJUPNqmJlVeIp4I/A
+# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-11 17:58:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:997biGdIthO4LFitGgliuw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

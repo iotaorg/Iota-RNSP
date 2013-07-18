@@ -181,8 +181,8 @@ $(document).ready(function () {
             }),
             success: function (data, textStatus, jqXHR) {
                 historico_data = data;
-                $("#indicador-historico span.cidade").html(cidade_data.cidade.name);
-                $("#indicador-grafico span.cidade").html(cidade_data.cidade.name);
+                $("#indicador-historico span.cidade").html(cidade_data.cidade.name + (cidade_data.region?  '/' + cidade_data.region.name : ''));
+                $("#indicador-grafico span.cidade").html(cidade_data.cidade.name + (cidade_data.region?  '/' + cidade_data.region.name : ''));
                 $("#indicador-grafico .title a.link").attr("href", "/" + indicador_data.name_url + "/?view=graph&graphs=" + userID);
 
                 $('#indicador-historico label').remove();
@@ -327,10 +327,14 @@ $(document).ready(function () {
                             });
                         }
                         else {
-
+							var format_value = parseFloat(valor_linha);
+							var format_string = "#,##0.##";
+							if (format_value.toFixed(2) == 0){
+								format_string = "#,##0.###";
+							}
                             history_table += "<td class='valor'>$$valor</td>".render({
                                 valor: $.formatNumberCustom(valor_linha.value, {
-                                    format: "#,##0.##",
+                                    format: format_string,
                                     locale: "br"
                                 }),
                                 data: convertDate(valor_linha.value_of_date, "T")
@@ -390,15 +394,16 @@ $(document).ready(function () {
                             $.each(hvariado, function (index, id) {
 
                                 if (valoresxx == undefined || valoresxx[id] == undefined || valoresxx[id] == '' || valoresxx[id] == '-'){
-
-
                                     history_table += "<td class='formula_valor'>-</td>";
-
                                 }else{
-
+									var format_value = parseFloat(valoresxx[id]);
+									var format_string = "#,##0.##";
+									if (format_value.toFixed(2) == 0){
+										format_string = "#,##0.###";
+									}
                                     history_table += "<td class='formula_valor'>$$valor</td>".render({
                                         valor: $.formatNumberCustom(valoresxx[id], {
-                                            format: "#,##0.##",
+                                            format: format_string,
                                             locale: "br"
                                         })
                                     });
@@ -407,9 +412,14 @@ $(document).ready(function () {
                             });
 
                         }
+						var format_value = parseFloat(valor);
+						var format_string = "#,##0.##";
+						if (format_value.toFixed(2) == 0){
+							format_string = "#,##0.###";
+						}
                         history_table += "<td class='formula_valor'>$$valor</td>".render({
                             valor: $.formatNumberCustom(valor, {
-                                format: "#,##0.##",
+                                format: format_string,
                                 locale: "br"
                             })
                         });
@@ -417,9 +427,14 @@ $(document).ready(function () {
                     }else{
 
                         if (historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-") {
+							var format_value = parseFloat(historico_data.rows[index].formula_value);
+							var format_string = "#,##0.##";
+							if (format_value.toFixed(2) == 0){
+								format_string = "#,##0.###";
+							}
                             history_table += "<td class='formula_valor'>$$formula_valor</td>".render({
                                 formula_valor: $.formatNumberCustom(historico_data.rows[index].formula_value, {
-                                    format: "#,##0.###",
+                                    format: format_string,
                                     locale: "br"
                                 })
                             });
@@ -472,10 +487,12 @@ $(document).ready(function () {
                 history_table += "</tbody></table>";
             }
 
-            if (grafico_variado == undefined){
+            if (typeof grafico_variado == "undefined"){
+                var nome_grafico = typeof regionID == "undefined" ? cidade_data.cidade.name : cidade_data.region.name;
+
                 dadosGrafico.dados.push({
                     id: userID,
-                    nome: cidade_data.cidade.name,
+                    nome: nome_grafico,
                     valores: valores,
                     show: true
                 });

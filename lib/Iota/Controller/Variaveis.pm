@@ -25,11 +25,14 @@ o Check SUM em md5 é disponivel na mesma URL, com o final '.checksum'
 
 package Iota::Controller::Variaveis;
 use Moose;
-BEGIN { extends 'Catalyst::Controller' }
+
+BEGIN { extends 'Catalyst::Controller::REST' }
+__PACKAGE__->config( default => 'application/json' );
 use utf8;
 use JSON::XS;
 use Iota::IndicatorFormula;
 use Text::CSV_XS;
+use File::Basename;
 use XML::Simple qw(:strict);
 use Digest::MD5;
 
@@ -42,6 +45,8 @@ sub _download {
     my $file = 'variaveis.' . $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
+    $file .= '_' . $c->stash->{region}->name_url
+      if exists $c->stash->{region} && $c->stash->{region};
     $file .= '_' . $c->stash->{indicator}{name_url}
       if $c->stash->{indicator};
     $file .= '.' . $c->stash->{type};
@@ -58,18 +63,32 @@ sub _download {
 
     my @lines = (
         [
-            'ID da cidade', 'Nome da cidade ',
-            'ID', 'Tipo', 'Apelido',
+            'ID da cidade',
+            'Nome da cidade ',
+            'ID',
+            'Tipo',
+            'Apelido',
             'Período de atualização',
-            'Fonte esperada',
-            'É Básica?', 'Unidade de medida',
-            'Nome', 'Data', 'Valor', 'Observações', 'Fonte preenchida',
+            'É Básica?',
+            'Unidade de medida',
+            'Nome',
+            'Data',
+            'Valor',
+            'Observações',
+            'Fonte preenchida',
+            'Nome Região'
         ]
     );
 
     my $data_rs =
-      $c->model('DB')->resultset('DownloadVariable')->search( { institute_id => $c->stash->{institute}->id },
-        { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
+      $c->model('DB')->resultset( $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )->search(
+        { institute_id => $c->stash->{institute}->id },
+        {
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+
+            ( bind => [ ( $c->stash->{region}->id ) x 2 ] ) x !!$c->stash->{region}
+        }
+      );
 
     if ( $c->stash->{cidade} ) {
 
@@ -86,9 +105,10 @@ sub _download {
 
         my $user = $c->model('DB::User')->as_hashref->search(
             {
-                city_id    => $id,
-                network_id => $network->id
-            }
+                city_id                    => $id,
+                'network_users.network_id' => $network->id
+            },
+            { join => 'network_users' }
         )->next;
 
         $data_rs = $data_rs->search( { user_id => $user ? $user->{id} : -9012345 } );
@@ -117,9 +137,7 @@ sub _download {
     }
 
     if ( exists $c->stash->{region} ) {
-
-        # TODO
-        #$data_rs = $data_rs->search({ region_id => $c->stash->{region}{id} });
+        $data_rs = $data_rs->search( { region_id => $c->stash->{region}->id } );
     }
 
     while ( my $data = $data_rs->next ) {
@@ -127,19 +145,20 @@ sub _download {
             $data->{city_id},
             $data->{city_name},
             $data->{variable_id},
-            $data->{type}   eq 'int' ? 'Inteiro'
+            $data->{type} eq 'int'   ? 'Inteiro'
             : $data->{type} eq 'str' ? 'Alfanumérico'
             : 'Valor',
             $data->{cognomen},
             $self->_period_pt( $data->{period} ),
-            $data->{exp_source},
+
             $data->{is_basic} ? 'sim' : 'não',
             $data->{measurement_unit_name},
             $data->{name},
             $self->ymd2dmy( $data->{valid_from} ),
             $data->{value},
             $data->{observations},
-            $data->{source}
+            $data->{source},
+            $data->{region_name},
         );
         push @lines, \@this_row;
     }
@@ -264,7 +283,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis.$1" );
+    $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
@@ -272,361 +291,134 @@ sub _download_and_detach {
     $c->detach;
 }
 
+sub download_variables : Chained('/institute_load') PathPart('download-variables') Args(0) ActionClass('REST') {
+
+}
+
+
+sub download_variables_GET {
+    my ( $self, $c ) = @_;
+    my $params = $c->req->params;
+    my @objs;
+
+    my $data_rs = $c->model( exists $params->{region_id} ? 'DB::ViewDownloadVariablesRegion' : 'DB::DownloadVariable')
+    ->search( { institute_id => $c->stash->{institute}->id },
+        { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
+
+    if (exists $params->{region_id}){
+        my @ids = split /,/, $params->{region_id};
+
+        $self->status_bad_request( $c, message => 'invalid region_id' ), $c->detach
+        unless Iota::Controller::Dados::int_validation( $self, @ids);
+
+        $data_rs = $data_rs->search({
+            region_id => {'in' => \@ids}
+        });
+    }
+
+    if (exists $params->{user_id}) {
+        my @ids = split /,/, $params->{user_id};
+
+        $self->status_bad_request( $c, message => 'invalid user_id' ), $c->detach
+        unless Iota::Controller::Dados::int_validation( $self, @ids );
+
+        $data_rs = $data_rs->search({
+            user_id => {'in' => \@ids}
+        });
+    }
+
+    if (exists $params->{city_id}){
+        my @ids = split /,/, $params->{city_id};
+
+        $self->status_bad_request( $c, message => 'invalid city_id' ), $c->detach
+        unless Iota::Controller::Dados::int_validation( $self, @ids );
+
+        $data_rs = $data_rs->search({
+            city_id => {'in' => \@ids}
+        });
+    }
+
+    if (exists $params->{variable_id}){
+        my @ids = split /,/, $params->{variable_id};
+
+        $self->status_bad_request( $c, message => 'invalid variable_id' ), $c->detach
+        unless Iota::Controller::Dados::int_validation( $self, @ids );
+
+        $data_rs = $data_rs->search({
+            variable_id => {'in' => \@ids}
+        });
+    }
+
+    if (exists $params->{valid_from}){
+        my @dates = split /,/, $params->{valid_from};
+
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        unless Iota::Controller::Dados::date_validation( $self, @dates );
+
+        $data_rs = $data_rs->search({
+            valid_from => {'in' => \@dates}
+        });
+    }
+
+    if (exists $params->{valid_from_begin}){
+
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_begin} );
+
+        $data_rs = $data_rs->search({
+            valid_from => {'>=' => $params->{valid_from_begin}}
+        });
+    }
+
+    if (exists $params->{valid_from_end}){
+
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_end} );
+
+        $data_rs = $data_rs->search({
+            '-and' => {
+                valid_from => {'<=' => $params->{valid_from_end}}
+            }
+        });
+    }
+
+
+    while(my $row = $data_rs->next) {
+        $row->{period}      = $self->_period_pt( $row->{period} );
+        $row->{valid_from}  = $self->ymd2dmy( $row->{valid_from} );
+        push @objs,$row;
+    }
+
+    $self->status_ok( $c, entity => { data => \@objs } );
+}
+
 ##################################################
-### be happy to read bellow this line!
 
-# network CSV
-sub pref_dados_csv : Chained('/institute_load') : PathPart('variaveis.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
+for my $chain (
+    qw/institute_load network_cidade cidade_regiao network_indicator network_indicador cidade_regiao_indicator/) {
+    for my $tipo (qw/csv json xls xml/) {
+        eval( "
+            sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('variaveis.$tipo') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo';
+            }
+
+            sub chain_${chain}_${tipo}_check : Chained('/$chain') : PathPart('variaveis.$tipo.checksum') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo.check';
+            }
+
+            sub render_${chain}_${tipo} : Chained('chain_${chain}_${tipo}') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = \@_;
+                \$self->_download(\$c);
+            }
+
+            sub render_${chain}_${tipo}_check : Chained('chain_${chain}_${tipo}_check') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = @_;
+                \$self->_download(\$c);
+            }
+        " );
+    }
 }
-
-sub pref_dados_csv_check : Chained('/institute_load') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_pref_dados_csv : Chained('pref_dados_csv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_csv_check : Chained('pref_dados_csv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network XLS
-sub pref_dados_xls : Chained('/institute_load') : PathPart('variaveis.xls') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls';
-}
-
-sub pref_dados_xls_check : Chained('/institute_load') : PathPart('variaveis.xls.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls.check';
-}
-
-sub down_pref_dados_xls : Chained('pref_dados_xls') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_xls_check : Chained('pref_dados_xls_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network XML
-sub pref_dados_xml : Chained('/institute_load') : PathPart('variaveis.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub pref_dados_xml_check : Chained('/institute_load') : PathPart('variaveis.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_pref_dados_xml : Chained('pref_dados_xml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_xml_check : Chained('pref_dados_xml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network JSON
-sub pref_dados_json : Chained('/institute_load') : PathPart('variaveis.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub pref_dados_json_check : Chained('/institute_load') : PathPart('variaveis.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_pref_dados_json : Chained('pref_dados_json') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_json_check : Chained('pref_dados_json_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-######## dados por cidades
-
-#################
-
-# network CSV
-sub pref_dados_cidade_csv : Chained('/network_cidade') : PathPart('variaveis.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub pref_dados_cidade_csv_check : Chained('/network_cidade') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_pref_dados_cidade_csv : Chained('pref_dados_cidade_csv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_csv_check : Chained('pref_dados_cidade_csv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network CSV
-sub pref_dados_cidade_xls : Chained('/network_cidade') : PathPart('variaveis.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub pref_dados_cidade_xls_check : Chained('/network_cidade') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_pref_dados_cidade_xls : Chained('pref_dados_cidade_xls') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_xls_check : Chained('pref_dados_cidade_xls_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network XML
-sub pref_dados_cidade_xml : Chained('/network_cidade') : PathPart('variaveis.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub pref_dados_cidade_xml_check : Chained('/network_cidade') : PathPart('variaveis.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_pref_dados_cidade_xml : Chained('pref_dados_cidade_xml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_xml_check : Chained('pref_dados_cidade_xml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network JSON
-sub pref_dados_cidade_json : Chained('/network_cidade') : PathPart('variaveis.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub pref_dados_cidade_json_check : Chained('/network_cidade') : PathPart('variaveis.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_pref_dados_cidade_json : Chained('pref_dados_cidade_json') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_json_check : Chained('pref_dados_cidade_json_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# dados por indicador
-
-# network CSV
-sub pref_dados_cidade_indicadorcsv : Chained('/network_indicator') : PathPart('variaveis.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub pref_dados_cidade_indicadorcsv_check : Chained('/network_indicator') : PathPart('variaveis.csv.checksum') :
-  CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_pref_dados_cidade_indicadorcsv : Chained('pref_dados_cidade_indicadorcsv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_indicadorcsv_check : Chained('pref_dados_cidade_indicadorcsv_check') : PathPart('') :
-  Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network XLS
-sub xls_pref_dados_cidade_indicadorcsv : Chained('/network_indicator') : PathPart('variaveis.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub xls_pref_dados_cidade_indicadorcsv_check : Chained('/network_indicator') : PathPart('variaveis.csv.checksum') :
-  CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub xls_down_pref_dados_cidade_indicadorcsv : Chained('xls_pref_dados_cidade_indicadorcsv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub xls_down_pref_dados_cidade_indicadorcsv_check : Chained('xls_pref_dados_cidade_indicadorcsv_check') : PathPart('')
-  : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network XML
-sub pref_dados_cidade_indicadorxml : Chained('/network_indicator') : PathPart('variaveis.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub pref_dados_cidade_indicadorxml_check : Chained('/network_indicator') : PathPart('variaveis.xml.checksum') :
-  CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_pref_dados_cidade_indicadorxml : Chained('pref_dados_cidade_indicadorxml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_indicadorxml_check : Chained('pref_dados_cidade_indicadorxml_check') : PathPart('') :
-  Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network JSON
-sub pref_dados_cidade_indicadorjson : Chained('/network_indicator') : PathPart('variaveis.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub pref_dados_cidade_indicadorjson_check : Chained('/network_indicator') : PathPart('variaveis.json.checksum') :
-  CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_pref_dados_cidade_indicadorjson : Chained('pref_dados_cidade_indicadorjson') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_dados_cidade_indicadorjson_check : Chained('pref_dados_cidade_indicadorjson_check') : PathPart('') :
-  Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-###################
-# download do indicador direto (todas as cidades)
-
-# network CSV
-sub pref_indicador_csv : Chained('/network_indicador') : PathPart('variaveis.csv') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv';
-}
-
-sub pref_indicador_csv_check : Chained('/network_indicador') : PathPart('variaveis.csv.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'csv.check';
-}
-
-sub down_pref_indicador_csv : Chained('pref_indicador_csv') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_indicador_csv_check : Chained('pref_indicador_csv_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network xls
-sub pref_indicador_xls : Chained('/network_indicador') : PathPart('variaveis.xls') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls';
-}
-
-sub pref_indicador_xls_check : Chained('/network_indicador') : PathPart('variaveis.xls.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xls.check';
-}
-
-sub down_pref_indicador_xls : Chained('pref_indicador_xls') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_indicador_xls_check : Chained('pref_indicador_xls_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network XML
-sub pref_indicador_xml : Chained('/network_indicador') : PathPart('variaveis.xml') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml';
-}
-
-sub pref_indicador_xml_check : Chained('/network_indicador') : PathPart('variaveis.xml.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'xml.check';
-}
-
-sub down_pref_indicador_xml : Chained('pref_indicador_xml') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_indicador_xml_check : Chained('pref_indicador_xml_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-# network JSON
-sub pref_indicador_json : Chained('/network_indicador') : PathPart('variaveis.json') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json';
-}
-
-sub pref_indicador_json_check : Chained('/network_indicador') : PathPart('variaveis.json.checksum') : CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{type} = 'json.check';
-}
-
-sub down_pref_indicador_json : Chained('pref_indicador_json') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
-sub down_pref_indicador_json_check : Chained('pref_indicador_json_check') : PathPart('') : Args(0) {
-    my ( $self, $c ) = @_;
-    $self->_download($c);
-}
-
 1;
 

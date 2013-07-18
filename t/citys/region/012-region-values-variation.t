@@ -192,7 +192,7 @@ eval {
             &add_value( $reg1_uri, $var1, '2010-01-01', 15 );
             @rows = $schema->resultset('IndicatorValue')->all;
 
-            is( scalar @rows,             2,        'udas linhas, pois agora temos os dados' );
+            is( scalar @rows,             2,        'dudas linhas, pois agora temos os dados' );
             is( $rows[0]->variation_name, 'faixa0', 'faixa ok' );
             is( $rows[0]->value,          '19',     'valor ok' );
 

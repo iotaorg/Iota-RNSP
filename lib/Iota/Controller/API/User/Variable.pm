@@ -85,6 +85,15 @@ sub list_GET {
 
     my @list = $rs->as_hashref->all;
     my @objs;
+    my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
+    my $vtable = $region_id ? 'region_variable_values' : 'values';
+
+    my $region =
+      exists $c->req->params->{region_id} ? $c->model('DB::Region')->find( $c->req->params->{region_id} ) : undef;
+
+    my $city_id = $c->stash->{user}->city_id || '1';    # test fix
+
+    my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
     foreach my $obj (@list) {
 
@@ -92,9 +101,16 @@ sub list_GET {
         $where->{valid_from}{'>='} = $c->req->params->{valid_from_begin} if exists $c->req->params->{valid_from_begin};
         $where->{valid_from}{'<='} = $c->req->params->{valid_from_end}   if exists $c->req->params->{valid_from_end};
 
-        my @values =
-          $rs->search( { id => $obj->{id} } )->next->values->search( { user_id => $c->stash->{user}->id, %$where } )
-          ->as_hashref->all;
+        my @values = $rs->search( { id => $obj->{id} } )->next->$vtable->search(
+            {
+                user_id => $c->stash->{user}->id,
+                ( ( region_id => $region_id ) x !!$region_id ),
+
+                ( defined $region && $region->depth_level == 2 ? ( active_value => $active_value ) : () ),
+                %$where,
+            }
+        )->as_hashref->all;
+
         push @objs, {
             ( map { $_ => $obj->{$_} } qw(name type cognomen explanation period measurement_unit) ),
             variable_id => $obj->{id},
@@ -106,10 +122,19 @@ sub list_GET {
                         source        => $_->{source},
                         observations  => $_->{observations},
                         valid_from    => $_->{valid_from},
+
+                        (active_value  => $_->{active_value}) x!! exists $_->{active_value},
+                        (generated_by_compute => $_->{generated_by_compute}?1:0) x!! exists $_->{generated_by_compute},
+
                         valid_until   => $_->{valid_until},
                         id            => $_->{id},
-                        url => $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'),
+
+                        url => $region_id
+                        ? $c->uri_for_action( $c->controller('API::City::Region::Value')->action_for('variable'),
+                            [ $city_id, $region_id, $_->{id} ] )->as_string
+                        : $c->uri_for_action( $c->controller('API::Variable::Value')->action_for('variable'),
                             [ $obj->{id}, $_->{id} ] )->as_string
+
                       }
                 } sort { $a->{valid_from} cmp $b->{valid_from} } @values
             ],

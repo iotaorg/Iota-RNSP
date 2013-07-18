@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="span8">
+        <h1>[%best_pratice.name%] - <small>[% city.name%] / [%city.uf %]</small></h1>
+
+
+        [%IF best_pratice.description%]
+        <h5>[%l('Descrição')%]</h5>
+        [%best_pratice.description%]
+        [%END%]
+
+        [%IF best_pratice.axis%]
+        <h5>[%l('Eixo')%]</h5>
+        [%best_pratice.axis.name%]
+        [%END%]
+
+
+        [%IF best_pratice.methodology%]
+        <h5>[%l('Metodologias')%]</h5>
+        [%best_pratice.methodology%]
+        [%END%]
+
+        [%IF best_pratice.goals%]
+        <h5>[%l('Objetivos')%]</h5>
+        [%best_pratice.goals%]
+        [%END%]
+
+        [%IF best_pratice.schedule%]
+        <h5>[%l('Cronograma')%]</h5>
+        [%best_pratice.schedule%]
+        [%END%]
+
+        [%IF best_pratice.results%]
+        <h5>[%l('Resultados')%]</h5>
+        [%best_pratice.results%]
+        [%END%]
+
+        [%IF best_pratice.institutions_involved%]
+        <h5>[%l('Instituições Envolvidas')%]</h5>
+        [%best_pratice.institutions_involved%]
+        [%END%]
+
+        [%IF best_pratice.contatcts%]
+        <h5>[%l('Contatos')%]</h5>
+        [%best_pratice.contatcts%]
+        [%END%]
+
+        [%IF best_pratice.sources%]
+        <h5>[%l('Fontes')%]</h5>
+        [%best_pratice.sources%]
+        [%END%]
+
+        [%IF best_pratice.user_best_pratice_axes.size%]
+        <h5>[%l('Eixos secundários')%]</h5>
+        <ul>
+            [%FOREACH m IN best_pratice.user_best_pratice_axes%]
+            <li>[%m.axis.name%]</li>
+            [%END%]
+        </ul>
+        [%END%]
+        [%IF best_pratice.tags%]
+        <h5>[%l('Tags')%]</h5>
+        [%best_pratice.tags%][%END%]
+
+
+    </div>
+    <div class="span4">
+        [% IF best_pratices %]
+        <h5>[%l('Boas práticas')%]</h5>
+        <ul class="nav nav-list">
+            [% FOREACH m IN best_pratices.keys.sort %]
+
+
+                    <li class="nav-header">[%m%]</li>
+                        [% FOREACH x IN best_pratices.$m %]
+                            <li [%IF c.req.uri == x.link %]class="active"[% END%]><a href="[%x.link%]">[%x.name%]</a></li>
+                        [% END %]
+                    </li>
+
+            [% END %]
+
+        </ul>
+        [% END %]
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    var userID = [% user.id %];
+    var ref = 'cidade_pagina';
+    [% PROCESS 'network_javascript.tt'%]
+</script>

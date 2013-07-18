@@ -19,7 +19,9 @@ requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
-requires 'Catalyst::Plugin::Authorization::Roles';
+requires 'Catalyst::Plugin::I18N::DBI';
+requires 'I18N::AcceptLanguage';
+
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Component::InstancePerContext';
 requires 'Catalyst::Plugin::Params::Nested';
@@ -62,9 +64,10 @@ requires 'Catalyst::Plugin::Assets';
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';
-requires 'Text2URI';
+requires 'Text2URI' => '0.3001';
 requires 'MooseX::Traits';
 requires 'DBD::Pg';
+requires 'Statistics::Descriptive';
 requires 'XML::Simple';
 
 requires 'Config::General'; # This should reflect the config file format you've chosen

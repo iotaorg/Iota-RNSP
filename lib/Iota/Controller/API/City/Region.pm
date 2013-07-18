@@ -44,7 +44,7 @@ sub region_GET {
             (
                 map { $_ => $object_ref->{$_} }
                   qw(
-                  name name_url description depth_level automatic_fill
+                  name name_url description depth_level automatic_fill polygon_path subregions_valid_after
                   )
             ),
             city => {
@@ -79,7 +79,7 @@ sub region_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin ));
+      unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $obj_rs = $c->stash->{object}->next;
 
@@ -116,7 +116,7 @@ sub region_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin ));
+      unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $obj = $c->stash->{object}->next;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -140,7 +140,7 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin ));
+      unless $c->check_any_user_role(qw(user admin superadmin ));
 
     my $param = $c->req->params->{city}{region}{create};
     $param->{city_id}    = $c->stash->{city}->id;
@@ -164,24 +164,43 @@ sub list_POST {
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->as_hashref->all;
+    my @list = $c->stash->{collection}->search( undef, { prefetch => 'upper_region' } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list) {
         push @objs, {
             (
-                map { $_ => $obj->{$_} }
-                  qw(
-                  id
-                  name
-                  name_url
-                  description
-                  city_id
-                  upper_region
-                  depth_level
-                  created_by
-                  created_at
-                  automatic_fill)
+                (
+                    map { $_ => $obj->{$_} }
+                      qw(
+                      id
+                      name
+                      name_url
+                      description
+                      city_id
+                      depth_level
+                      created_by
+                      subregions_valid_after
+                      created_at
+                      automatic_fill),
+                    ( 'polygon_path' => $obj->{polygon_path} ) x !!exists $c->req->params->{with_polygon_path}
+                ),
+
+                city => {
+                    (
+                        map { $_ => $c->stash->{city}->$_ }
+                          qw(
+                          name name_uri uf pais
+                          )
+                    ),
+                },
+                upper_region => $obj->{upper_region}
+                ? {
+                    id       => $obj->{upper_region}{id},
+                    name     => $obj->{upper_region}{name},
+                    name_url => $obj->{upper_region}{name_url},
+                  }
+                : undef
             ),
             url => $c->uri_for_action( $self->action_for('region'), [ $c->stash->{city}->id, $obj->{id} ] )->as_string,
 
@@ -190,6 +209,6 @@ sub list_GET {
 
     $self->status_ok( $c, entity => { regions => \@objs } );
 }
-
+with 'Iota::TraitFor::Controller::Search';
 1;
 

@@ -36,7 +36,10 @@ sub variable_GET {
         entity => {
             created_by => { map { $_ => $objectect_ref->{owner}{$_} } qw(name id) },
             ( map { $_ => $objectect_ref->{variable}{$_} } qw(name type cognomen) ),
-            ( map { $_ => $objectect_ref->{$_} } qw(value created_at value_of_date observations source region_id) )
+            (
+                map { $_ => $objectect_ref->{$_} }
+                  qw(value created_at value_of_date observations source region_id active_value generated_by_compute)
+            )
         }
     );
 }
@@ -205,12 +208,24 @@ sub list_PUT {
     $c->req->params->{region}{variable}{value}{put}{region_id} = $c->stash->{region}->id;
     $c->req->params->{region}{variable}{value}{put}{user_id}   = $c->user->id;
 
-    my $dm = $c->model('DataManager');
+    my $dm = eval { $c->model('DataManager') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
+        die $@;
+    }
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $objectect = $dm->get_outcome_for('region.variable.value.put');
+    my $objectect = eval { $dm->get_outcome_for('region.variable.value.put') };
+    if ( $@ && $@ =~ /\n$/ ) {
+        $self->status_bad_request( $c, message => $@ ), $c->detach;
+    }
+    elsif ($@) {
+        die $@;
+    }
 
     $c->logx( 'Atualizou valor '
           . $objectect->value

@@ -20,10 +20,21 @@ sub base : Chained('/api/base') : PathPart('user') : CaptureArgs(0) {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
+    my $url = $c->req->uri->path;
+    if (   ( $url =~ /variable_config$/ || $url =~ /variable_config\/\d+$/ )
+        && $c->user->id != $id
+        && $c->req->method eq 'GET' ) {
 
-    $c->stash->{object} = $c->stash->{collection}->search_rs( { id => $id } );
+        $self->status_forbidden( $c, message => "access denied for $id | log is " . $c->user->id ), $c->detach
+          unless $c->check_any_user_role(qw(user));
+
+    }
+    else {
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+          unless $c->user->id == $id || $c->check_any_user_role(qw(admin superadmin));
+    }
+
+    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 
 }
@@ -127,7 +138,8 @@ Retorna:
 sub user_GET {
     my ( $self, $c ) = @_;
 
-    my $user  = $c->stash->{object}->next;
+    my $user = $c->stash->{object}->search( undef, { prefetch => [ 'institute', 'user_files' ] } )->next;
+
     my %attrs = $user->get_inflated_columns;
     $self->status_ok(
         $c,
@@ -161,15 +173,15 @@ sub user_GET {
             created_at => $attrs{created_at}->datetime,
 
             (
-                $user->network && $user->network->institute
+                $user->institute && $user->institute
                 ? (
                     institute => {
-                        users_can_edit_value  => $user->network->institute->users_can_edit_value,
-                        users_can_edit_groups => $user->network->institute->users_can_edit_groups,
-                        can_use_custom_css    => $user->network->institute->can_use_custom_css,
-                        can_use_custom_pages  => $user->network->institute->can_use_custom_pages,
-                        name                  => $user->network->institute->name,
-                        id                    => $user->network->institute->id,
+                        users_can_edit_value  => $user->institute->users_can_edit_value,
+                        users_can_edit_groups => $user->institute->users_can_edit_groups,
+                        can_use_custom_css    => $user->institute->can_use_custom_css,
+                        can_use_custom_pages  => $user->institute->can_use_custom_pages,
+                        name                  => $user->institute->name,
+                        id                    => $user->institute->id,
                     }
                   )
                 : ( institute => undef )
@@ -182,24 +194,19 @@ sub user_GET {
                 : ()
             ),
 
-            (
-                $user->network
-                ? (
-                    network => {
+            networks => [
+                map {
+                    my $net = $_;
+                    +{
+                        ( map { $_ => $net->$_ } qw/name name_url id/ ),
                         url =>
-                          $c->uri_for( $c->controller('API::Network')->action_for('network'), [ $attrs{network_id} ] )
-                          ->as_string,
-                        id       => $attrs{network_id},
-                        name     => $user->network->name,
-                        name_url => $user->network->name_url
+                          $c->uri_for( $c->controller('API::Network')->action_for('network'), [ $net->id ] )->as_string,
                       }
+                } $user->networks
+            ],
 
-                  )
-                : ( network => undef )
-            ),
         }
     );
-
 }
 
 =pod
@@ -231,8 +238,13 @@ sub user_POST {
     my ( $self, $c ) = @_;
     $c->req->params->{user}{update}{id} = $c->stash->{object}->next->id;
 
-    my $dm = $c->model('DataManager');
+    $self->status_bad_request( $c, message => 'campo user.update.network_id' ), $c->detach
+      if exists $c->req->params->{user}{update}{network_id};
 
+    $c->req->params->{user}{update}{network_ids} = 'DO_NOT_UPDATE'
+      unless exists $c->req->params->{user}{update}{network_ids};
+
+    my $dm = $c->model('DataManager');
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
@@ -294,14 +306,19 @@ sub list_GET {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin));
 
-    my $rs = $c->stash->{collection}->search_rs( { 'me.active' => 1 },
-        { prefetch => [ 'city', { 'network' => 'institute' }, { user_roles => 'role' } ] } );
+    my $rs =
+      $c->stash->{collection}
+      ->search_rs( { 'me.active' => 1 }, { prefetch => [ 'city', 'institute', { user_roles => 'role' } ] } );
 
     if ( $c->req->params->{role} ) {
         $rs = $rs->search( { 'role.name' => $c->req->params->{role} } );
     }
 
-    $rs = $rs->search( { 'me.network_id' => $c->req->params->{network_id} } ) if ( $c->req->params->{network_id} );
+    if ( $c->req->params->{network_id} ) {
+
+        $rs =
+          $rs->search( { 'network_users.network_id' => $c->req->params->{network_id} }, { join => 'network_users' } );
+    }
 
     $self->status_ok(
         $c,
@@ -334,21 +351,11 @@ sub list_GET {
                           )
                         : ( city => undef ),
 
-                        $_->{network}
-                        ? (
-                            network => {
-                                name     => $_->{network}->{name},
-                                name_url => $_->{network}->{name_url},
-                                id       => $_->{network}->{id}
-                            }
-                          )
-                        : ( network => undef ),
-
                         $_->{user_roles}
                         ? ( roles => [ map { $_->{role}->{name} } @{ $_->{user_roles} } ] )
                         : ( roles => [] ),
 
-                        exists $_->{network}{institute}
+                        exists $_->{institute}
                         ? (
                             institute => {
                                 users_can_edit_value  => $_->{network}{institute}{users_can_edit_value},
@@ -422,6 +429,43 @@ sub list_POST {
             : (),
         }
     );
+
+}
+
+sub kml_file : Chained('object') : PathPart('kml') : Args(0) ActionClass('REST') {
+    my ( $self, $c ) = @_;
+}
+
+sub kml_file_POST {
+    my ( $self, $c ) = @_;
+
+    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+      unless $c->check_any_user_role(qw(admin superadmin user));
+    my $upload = $c->req->upload('arquivo');
+
+    eval {
+        if ($upload) {
+            my $user_id = $c->user->id;
+
+            $c->logx( 'Enviou KML ' . $upload->basename );
+
+            my $file = $c->model('KML')->process(
+                user_id => $user_id,
+                upload  => $upload,
+                schema  => $c->model('DB'),
+                app     => $c
+            );
+
+            $c->res->body( to_json($file) );
+
+        }
+        else {
+            die "no upload found\n";
+        }
+    };
+    $c->res->body( to_json( { error => "$@" } ) ) if $@;
+
+    $c->detach;
 
 }
 
