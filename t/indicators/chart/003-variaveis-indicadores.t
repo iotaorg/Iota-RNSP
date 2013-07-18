@@ -129,6 +129,186 @@ eval {
 
             is( @{ $obj->{rows} }, 3, 'count ok' );
 
+            ( $res, $c ) = ctx_request(
+                POST '/api/indicator',
+                [
+                    api_key                          => 'test',
+                    'indicator.create.name'          => 'Temperatura minima do mes: SP',
+                    'indicator.create.formula'       => '$' . $var->{id},
+                    'indicator.create.goal'          => '33',
+                    'indicator.create.axis_id'       => '2',
+                    'indicator.create.explanation'   => 'explanation',
+                    'indicator.create.source'        => 'me',
+                    'indicator.create.goal_source'   => '@fulano',
+                    'indicator.create.chart_name'    => 'pie',
+                    'indicator.create.goal_operator' => '<=',
+                    'indicator.create.tags'          => 'you,me,she',
+                    'indicator.create.visibility_level' => 'public',
+
+                ]
+            );
+            ok( $res->is_success, 'indicator created!' );
+            $indicator = eval { from_json( $res->content ) };
+
+            $schema->resultset('Network')->find({institute_id => 1})->update({
+                domain_name => 'localhost'
+            });
+            $schema->resultset('IndicatorValue')->update({
+                city_id => 1
+            });
+
+            ($res, $c) = ctx_request(GET '/download-indicators?user_id=2');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+            is( @{ $obj->{data} }, 1, "Download by user.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?user_id=1');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+            is( @{ $obj->{data} }, 0, "Inverse test Download by user.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?valid_from=2012-01-01');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 1, "Download by single date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?valid_from=2010-01-15');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 0, "Inverse test Download by single date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?valid_from_begin=2012-01-01');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 1, "Download by begining date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?valid_from_begin=2012-01-15');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 0, "Inverse test  Download by begining date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?valid_from_end=2012-01-01');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} } , 1, "Download by ending date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?valid_from_end=2010-01-15');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 0, "Inverse test  Download by ending date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?indicator_id='.$indicator->{id});
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 1, "Download by indicator.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?indicator_id=1');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 0, "Inverse test Download by indicator.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?user_id=2&valid_from=2012-01-01&indicator_id='.$indicator->{id});
+
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 1, "Download by all parameters combined and a single date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?user_id=1&valid_from=2012-01-15&indicator_id=1');
+
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 0, "Inverse test Download by all parameters combined and a single date.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?user_id=2&valid_from_begin=2012-01-01&valid_from_end=2014-01-01&indicator_id='.$indicator->{id});
+
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 1, "Download by all parameters combined in a date range.");
+
+            ($res, $c) = ctx_request(GET '/download-indicators?user_id=1&valid_from_begin=2012-01-15&valid_from_end=2014-01-15&indicator_id=1');
+
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            is( @{ $obj->{data} }, 0, "Inverse test Download by all parameters combined in a date range.");
+
+=pod
+            ($res, $c) = ctx_request(GET '/download-variables?user_idx=2');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+use DDP; p $obj;
+exit;
+            is( @{ $obj->{data} }, 1, "Download variables by user.");
+
+            ($res, $c) = ctx_request(GET '/download-variables?valid_from=2012-01-01');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+use DDP; p $obj;
+            ok( $obj, "Download variables by single date.");
+
+            ($res, $c) = ctx_request(GET '/download-variables?valid_from_begin=2012-01-01');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+use DDP; p $obj;
+            ok( @{ $obj->{data} } > 0, "Download variables by begining date.");
+
+            ($res, $c) = ctx_request(GET '/download-variables?valid_from_end=2012-01-01');
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+use DDP; p $obj;
+            ok( @{ $obj->{data} } > 0, "Download variables by ending date.");
+
+            ($res, $c) = ctx_request(GET '/download-variables?variable_id='.$var->{id});
+            use DDP; p $res;
+            ok( $res->is_success, 'get is ok' );
+
+            $obj = eval { from_json ( $res->content ) };
+
+            ok( @{ $obj->{data} } > 0, "Download variables by indicator.");
+            use DDP; p $obj;
+
+            ($res, $c) = ctx_request(GET '/download-variables?user_id=2&valid_from=2012-01-01&variable_id='.$var->{id});
+
+            $obj = eval { from_json ( $res->content ) };
+            use DDP; p $obj;
+
+            ok( @{ $obj->{data} } > 0, "Download variables by all parameters combined and a single date.");
+
+            ($res, $c) = ctx_request(GET '/download-variables?user_id=2&valid_from_begin=2012-01-01&valid_from_end=2014-01-01&variable_id='.$var->{id});
+
+            $obj = eval { from_json ( $res->content ) };
+
+            ok( @{ $obj->{data} } > 0, "Download variables by all parameters combined in a date range.");
+=cut
             die 'rollback';
         }
     );
