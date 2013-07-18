@@ -164,7 +164,7 @@ $(document).ready(function(){
 			return a.localeCompare(b);
 		});
 		$.each(indicadores_list, function(i,item){
-			$(".indicators").append("<div class='item' class='bs-tooltip' data-toggle='tooltip' data-placement='right' data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
+			$(".indicators").append("<div class='item bs-tooltip' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
 						id: item.id,
 						name: item.name,
 						axis_id: item.axis.id,
@@ -381,8 +381,13 @@ $(document).ready(function(){
                                     });
                                     preenchido++;
                                 }else{
+									var format_value = parseFloat(series[i]);
+									var format_string = "#,##0.##";
+									if (format_value.toFixed(2) == 0){
+										format_string = "#,##0.###";
+									}
                                     row_content += "<td class='valor'>$$valor</td>".render({
-                                        valor: $.formatNumberCustom(series[i], {format:"#,##0.##", locale:"br"})
+                                        valor: $.formatNumberCustom(series[i], {format:format_string, locale:"br"})
                                     });
                                     preenchido++;
                                 }
