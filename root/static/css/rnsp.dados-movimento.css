@@ -18,10 +18,18 @@
 .navbar-fixed-top .navbar-inner .nav li.active{
 	background: #333;
 }
+.navbar-fixed-top .navbar-inner .nav li.active a{
+	color: #fff;	
+}
 .navbar .divider-vertical {
   border-right: 1px solid #444444;
   border-left: 1px solid #222222;
 }
+
+.dropdown-menu{
+		background-color: #000;
+}
+
 
 .page-header{
 	background-image: none;

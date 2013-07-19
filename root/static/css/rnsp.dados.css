@@ -38,6 +38,14 @@ html {overflow-y: scroll;}
   border-left: 1px solid #009399;
 }
 
+.dropdown-menu{
+		background-color: #009399;
+}
+
+.navbar-inverse .nav .active>a{
+	background-color: #009399;
+}
+
 #indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
 	padding: 5px;
@@ -826,7 +834,12 @@ a.social-icon.googleplus {
 a.social-icon.youtube {
     background-position: -90px 0px;
 }
-
+a.social-icon:hover{
+	opacity:0.50;
+	-moz-opacity:.50;
+	filter:alpha(opacity=50);
+	background-color: #ffffff;
+}
 #gmap iframe, #gmap object, #gmap embed { width: 100%; }
 
 #x-container {
