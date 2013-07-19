@@ -198,8 +198,6 @@ eval {
                 die $@ unless $@ =~ /undo-savepoint/;
             };
 
-
-
             die 'rollback';
         }
     );
@@ -225,12 +223,12 @@ sub update_region_valid_time {
 }
 
 sub update_region_valid_time_api {
-    my ($reg, $valid) = @_;
-    my ( $res, $c ) = ctx_request(
-        POST $city_uri . '/region/'.$reg->{id},
+    my ( $reg, $valid ) = @_;
+    my ( $res, $c )     = ctx_request(
+        POST $city_uri . '/region/' . $reg->{id},
         [
-            api_key                           => 'test',
-            'city.region.update.subregions_valid_after'  => $valid,
+            api_key                                     => 'test',
+            'city.region.update.subregions_valid_after' => $valid,
         ]
     );
 
@@ -243,6 +241,7 @@ sub add_value {
     $expcode ||= 201;
 
     note "POSTING $region/value\tyear $year, value $value";
+
     # PUT normal
     my $req = POST $region . '/value',
       [

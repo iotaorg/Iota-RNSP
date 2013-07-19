@@ -55,8 +55,8 @@ eval {
                 POST $url_user . '/region',
                 'Content-Type' => 'form-data',
                 Content        => [
-                    api_key                        => 'test',
-                    'user.region.create.depth_level'  => '2',
+                    api_key                                         => 'test',
+                    'user.region.create.depth_level'                => '2',
                     'user.region.create.region_classification_name' => 'lala',
                 ]
             );

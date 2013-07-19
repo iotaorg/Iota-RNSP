@@ -22,18 +22,21 @@ sub verifiers_specs {
             profile => {
                 user_id => { required => 1, type => 'Int' },
 
-                depth_level   => { required => 1, type => 'Int', post_check => sub {
-                        my $r = shift;
-                        my $row =
-                            $self->result_source->schema->resultset('UserRegion')
-                            ->find( {
+                depth_level => {
+                    required   => 1,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r   = shift;
+                        my $row = $self->result_source->schema->resultset('UserRegion')->find(
+                            {
                                 depth_level => $r->get_value('depth_level'),
                                 user_id     => $r->get_value('user_id')
-                        } );
+                            }
+                        );
                         return !defined $row;
-                    }
+                      }
                 },
-                region_classification_name   => { required => 1, type => 'Str' },
+                region_classification_name => { required => 1, type => 'Str' },
             },
         ),
 

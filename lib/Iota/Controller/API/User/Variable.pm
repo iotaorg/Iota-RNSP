@@ -123,11 +123,12 @@ sub list_GET {
                         observations  => $_->{observations},
                         valid_from    => $_->{valid_from},
 
-                        (active_value  => $_->{active_value}) x!! exists $_->{active_value},
-                        (generated_by_compute => $_->{generated_by_compute}?1:0) x!! exists $_->{generated_by_compute},
+                        ( active_value => $_->{active_value} ) x !!exists $_->{active_value},
+                        ( generated_by_compute => $_->{generated_by_compute} ? 1 : 0 ) x !!
+                          exists $_->{generated_by_compute},
 
-                        valid_until   => $_->{valid_until},
-                        id            => $_->{id},
+                        valid_until => $_->{valid_until},
+                        id          => $_->{id},
 
                         url => $region_id
                         ? $c->uri_for_action( $c->controller('API::City::Region::Value')->action_for('variable'),

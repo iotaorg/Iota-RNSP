@@ -62,7 +62,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{network} = $net;
 
-    $c->stash->{institute} = $net->institute;
+    $c->stash->{institute}  = $net->institute;
     $c->stash->{c_req_path} = $c->req->path;
 
     my @current_users = $c->model('DB::User')->search(
@@ -197,7 +197,7 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
 
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 
-    $self->load_region_names( $c );
+    $self->load_region_names($c);
 
     if ( $self->load_best_pratices( $c, only_count => 1 ) ) {
         $c->stash->{best_pratices_link} = $c->uri_for( $self->action_for('best_pratice_list'),
@@ -221,12 +221,14 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
 sub load_region_names {
     my ( $self, $c ) = @_;
 
-    my $rs = $c->model('DB::UserRegion')->search( {
-        user_id => $c->stash->{user}{id}
-    })->as_hashref;
+    my $rs = $c->model('DB::UserRegion')->search(
+        {
+            user_id => $c->stash->{user}{id}
+        }
+    )->as_hashref;
 
-    while (my $row = $rs->next){
-        $c->stash->{region_classification_name}{$row->{depth_level}} = $row->{region_classification_name};
+    while ( my $row = $rs->next ) {
+        $c->stash->{region_classification_name}{ $row->{depth_level} } = $row->{region_classification_name};
     }
 
     $c->stash->{region_classification_name}{2} ||= 'Região';
@@ -253,9 +255,7 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
 
     $c->stash( template => 'home_region_indicator.tt' );
 
-
     $self->stash_distritos($c);
-
 
     $self->stash_comparacao_distritos($c);
 
