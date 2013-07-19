@@ -4,6 +4,34 @@ table{
 html {overflow-y: scroll;}
 @-ms-viewport { width: device-width; }
 
+.page-header{
+	background-image: url('/static/images/bg-top-gov.png') no-repeat 95% 100%;
+}
+
+.navbar-fixed-top .navbar-inner{
+	background: #20c1c1; /* Old browsers */
+	background: -moz-linear-gradient(top,  #20c1c1 1%, #20c1c1 36%, #009399 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#20c1c1), color-stop(36%,#20c1c1), color-stop(100%,#009399)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20c1c1', endColorstr='#009399',GradientType=0 ); /* IE6-9 */
+}
+.navbar-fixed-top .navbar-inner .nav li a,
+.navbar-fixed-top .navbar-inner .nav li a:visited{
+	color: #fff;
+	text-shadow: 0 1px 0 #116a6a;	
+}
+.navbar-fixed-top .navbar-inner .nav li a.active,
+.navbar-fixed-top .navbar-inner .nav li a:hover{
+	color: #ccffff;
+	text-shadow: 0 1px 0 #116a6a;	
+}
+.navbar-fixed-top .navbar-inner .nav li.active-trail{
+	background: #009399;
+}
+
 #indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
 	padding: 5px;
