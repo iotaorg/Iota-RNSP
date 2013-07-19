@@ -826,7 +826,7 @@ div.loading {
 
 div.footer {
     margin-top: 35px;
-    padding-top: 20px;
+    padding: 0 20px;
     border-top: 1px solid #E5E5E5;
     background-color: #f5f5f5;
 }
@@ -860,6 +860,7 @@ footer .aware{
 
 footer .iota-logo{
     margin-left: 10px;
+	max-width: 80px;
 }
 footer .opendata-logo{
     margin-left: 15px;
