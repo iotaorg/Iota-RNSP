@@ -841,11 +841,28 @@ footer .copyright .footer-copyright-content {
 }
 
 footer h4 {
-    color: #666;
+    color: #CCC;
     margin: 3px 0;
     font-weight: bold;
     font-size: 1.2em;
     line-height: 1.5em;
+}
+
+
+footer .parceiros a img{
+    border: none;
+	margin-right: 15px;
+}
+
+footer .aware{
+    margin-top: 10px;
+}
+
+footer .iota-logo{
+    margin-left: 10px;
+}
+footer .opendata-logo{
+    margin-left: 15px;
 }
 
 footer .thumbnails-unstyled li {

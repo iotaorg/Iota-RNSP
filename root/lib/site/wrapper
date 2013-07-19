@@ -231,11 +231,11 @@
 		<div class="row">
 			<div class="span3">
 				<div class="row">
-					<div class="span1">
-						<img src="/static/images/logo-96.png" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota" alt="Iota">
+					<div class="span1 iota-logo">
+						<a href="http://awareti.github.io/Iota/" target="_blank" title="Clique aqui para saber mais sobre o Iota"><img src="/static/images/logo-96.png" alt="Iota"></a>
 					</div>
-					<div class="span1">
-						<a href="http://www.opendefinition.org/okd/" target="_blank><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="OpenData"></a>
+					<div class="span1 opendata-logo">
+						<a href="http://www.opendefinition.org/okd/" target="_blank"><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="OpenData"></a>
 					</div>
 				</div>
 				<small class="aware">
@@ -244,7 +244,7 @@
 			</div>
 			<div class="span9">
 				<div class="row-fluid">
-					<div class="span9">
+					<div class="span9 parceiros">
 						<h4>[%l('Parceiros')%]</h4>
 						<a href="http://www.dualtec.com.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a>
 						<a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a>
