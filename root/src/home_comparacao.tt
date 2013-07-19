@@ -16,7 +16,7 @@
                         </div>
                     </div>
 
-                    <div class="indicators">
+                    <div class="indicators indicators-home">
                         <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                 </div>
