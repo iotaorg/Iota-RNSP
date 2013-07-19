@@ -11,7 +11,7 @@ has schema => (
 sub upsert {
     my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator');
-
+use DDP; p %params;
     # procura pelos indicadores enviados
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
@@ -115,6 +115,8 @@ sub upsert {
         exists $params{regions_id}
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
+
+        ( 'user_id' => $params{user_id} ) x!! exists $params{user_id},
 
         ( valid_from => $params{dates} ) x !!exists $params{dates},
 
@@ -323,6 +325,10 @@ sub _get_values_variation {
                     'in' => $params{valid_from}
                 }
               ) x !!exists $params{valid_from},
+
+            (
+                'indicator_variables_variations_values.user_id' => $params{user_id}
+              ) x !!exists $params{user_id},
 
         },
         { prefetch => 'indicator_variables_variations_values' }
