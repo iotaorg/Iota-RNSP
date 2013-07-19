@@ -592,7 +592,8 @@ sub stash_tela_cidade {
 
     foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
         if ( $file->class_name eq 'custom.css' ) {
-            $c->assets->include( $file->public_url, 9999 );
+            #$c->assets->include( $file->public_url, 9999 );
+            $c->stash->{custom_css} = $file->public_url;
             last;
         }
     }

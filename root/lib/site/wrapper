@@ -51,11 +51,11 @@
     [%- CALL assets.include("css/parceiros.gov.css")-%]
     [%- CALL assets.include("js/parceiros.gov.js")-%]
 [%- END -%]
-[%-IF custom_css-%]
-    [%-CALL assets.include(custom_css)-%]
-[%-END-%]
 
 [%- assets.export("css") -%]
+[%-IF custom_css-%]
+    <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
+[%-END-%]
 <!--<link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -179,7 +179,7 @@
 </div>
 </div>
 [% END %]
-
+[% IF institute.short_name == 'gov' %]
 <footer>
   <div class="footer">
     <div class="container">
@@ -254,7 +254,9 @@
   </div>
   </div>
 </footer>
-
+[%ELSE%]
+novo footer bla bla
+[% END %]
 
 
 </div>
