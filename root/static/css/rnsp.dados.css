@@ -41,8 +41,13 @@ html {overflow-y: scroll;}
 .dropdown-menu{
 		background-color: #009399;
 }
-
+.navbar-inverse .nav li.dropdown.open>.dropdown-toggle{
+	background-color: #009399;	
+}
 .navbar-inverse .nav .active>a{
+	background-color: #009399;
+}
+.navbar-inverse .nav .active>a:hover{
 	background-color: #009399;
 }
 

@@ -25,9 +25,19 @@
   border-right: 1px solid #444444;
   border-left: 1px solid #222222;
 }
+.navbar-inverse .nav li.dropdown.open>.dropdown-toggle{
+	background-color: #fff;	
+}
+.navbar-inverse .nav .active>a{
+	background-color: #111;
+}
+.navbar-inverse .nav .active>a:hover{
+	background-color: #000;
+}
+
 
 .dropdown-menu{
-		background-color: #000;
+	background-color: #000;
 }
 
 
