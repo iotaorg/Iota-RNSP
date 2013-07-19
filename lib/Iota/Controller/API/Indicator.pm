@@ -385,11 +385,11 @@ sub list_GET {
         };
     }
 
-    if ( $c->req->params->{user_id} ) {
+    if ( $c->req->params->{config_user_id} ) {
         my $rs = $c->model('DB::UserIndicatorConfig')->search(
             {
                 indicator_id => { 'in' => [ map { $_->{id} } @objs ] },
-                user_id      => $c->req->params->{user_id}
+                user_id      => $c->req->params->{config_user_id}
             }
         )->as_hashref;
 
