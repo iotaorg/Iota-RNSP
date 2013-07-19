@@ -385,10 +385,7 @@ sub list_GET {
         };
     }
 
-    my $xxx = {};
     if ( $c->req->params->{config_user_id} ) {
-
-    $xxx->{ids} = [ map { $_->{id} } @objs ];
         my $rs = $c->model('DB::UserIndicatorConfig')->search(
             {
                 indicator_id => { 'in' => [ map { $_->{id} } @objs ] },
@@ -398,15 +395,12 @@ sub list_GET {
 
         my $out = {};
         while ( my $r = $rs->next ) {
-            my $x = delete $r->{indicator_id};
-            $out->{ $x } = $r;
-            $xxx->{xx}{$x} = $r;
+            $out->{ delete $r->{indicator_id} } = $r;
         }
-
         $_->{user_indicator_config} = delete $out->{ $_->{id} } for (@objs);
     }
 
-    $self->status_ok( $c, entity => { indicators => \@objs, xx => $xxx } );
+    $self->status_ok( $c, entity => { indicators => \@objs } );
 }
 
 =pod
@@ -474,6 +468,6 @@ sub list_POST {
 
 }
 
-with 'Iota::TraitFor::Controller::Search';
+#with 'Iota::TraitFor::Controller::Search';
 1;
 
