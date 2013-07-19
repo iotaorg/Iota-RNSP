@@ -197,6 +197,33 @@
 							<li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
 						</ul>
 					</div>
+					<div class="span3">
+						<h4>Dados</h4>
+						<ul class="unstyled">
+							<li><a href="">Boas Práticas</a></li>
+							<li><a href="">Eixos</a></li>
+							<li><a href="">Cidades Participantes</a></li>
+							<li><a href="">Indicadores</a></li>
+						</ul>
+					</div>
+					<div class="span3">
+						<h4>Institucional</h4>
+						<ul class="unstyled">
+							<li><a href="">Apresentação</a></li>
+							<li><a href="">A Plataforma</a></li>
+							<li><a href="">Histórico</a></li>
+							<li><a href="">Realizadores</a></li>
+						</ul>
+					</div>
+					<div class="span3">
+						<h4>Mais</h4>
+						<ul class="unstyled">
+							<li><a href="">Material de Divulgação</a></li>
+							<li><a href="">Notícias</a></li>
+							<li><a href="">Prêmio PCS</a></li>
+							<li><a href="">Contato</a></li>
+						</ul>
+					</div>
 				</div>
 
 			</div>
@@ -205,24 +232,24 @@
 			<div class="span3">
 				<div class="row">
 					<div class="span1">
-						<img src="images/logo-iota.png" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota" alt="Iota">
+						<img src="/static/images/logo-96.png" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota" alt="Iota">
 					</div>
 					<div class="span1">
 						<a href="http://www.opendefinition.org/okd/" target="_blank><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="OpenData"></a>
 					</div>
 				</div>
 				<small class="aware">
-					[%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
+					[%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
 				</small>
 			</div>
 			<div class="span9">
 				<div class="row-fluid">
 					<div class="span9">
 						<h4>[%l('Parceiros')%]</h4>
-						<a href="http://www.dualtec.com.br/" target="_blank"><img src="images/logo-dualtec.png" alt="Dualtec"></a>
-						<a href="http://www.w3c.br/" target="_blank"><img src="images/logo-w3c.png" alt="W3C Brasil"></a>
-						<a href="http://www.nic.br/" target="_blank"><img src="images/logo-nicbr.png" alt="NIC.br"></a>
-						<a href="http://www.cgi.br/" target="_blank"><img src="images/logo-cgibr.png" alt="CGI.BR"></a>
+						<a href="http://www.dualtec.com.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a>
+						<a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a>
+						<a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a>
+						<a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.BR"></a>
 					</div>
 					<div class="span3">
 
@@ -272,33 +299,6 @@
 							<li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
 						</ul>
 					</div>
-					<div class="span3">
-						<h4>Dados</h4>
-						<ul class="unstyled">
-							<li><a href="">Boas Práticas</a></li>
-							<li><a href="">Eixos</a></li>
-							<li><a href="">Cidades Participantes</a></li>
-							<li><a href="">Indicadores</a></li>
-						</ul>
-					</div>
-					<div class="span3">
-						<h4>Institucional</h4>
-						<ul class="unstyled">
-							<li><a href="">Apresentação</a></li>
-							<li><a href="">A Plataforma</a></li>
-							<li><a href="">Histórico</a></li>
-							<li><a href="">Realizadores</a></li>
-						</ul>
-					</div>
-					<div class="span3">
-						<h4>Mais</h4>
-						<ul class="unstyled">
-							<li><a href="">Material de Divulgação</a></li>
-							<li><a href="">Notícias</a></li>
-							<li><a href="">Prêmio PCS</a></li>
-							<li><a href="">Contato</a></li>
-						</ul>
-					</div>
 				</div>
 
 			</div>
@@ -307,24 +307,24 @@
 			<div class="span3">
 				<div class="row">
 					<div class="span1">
-						<img src="images/logo-iota.png" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota" alt="Iota">
+						<img src="/static/images/logo-96.png" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota" alt="Iota">
 					</div>
 					<div class="span1">
 						<a href="http://www.opendefinition.org/okd/" target="_blank><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="OpenData"></a>
 					</div>
 				</div>
 				<small class="aware">
-					[%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
+					[%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
 				</small>
 			</div>
 			<div class="span9">
 				<div class="row-fluid">
 					<div class="span9">
 						<h4>[%l('Parceiros')%]</h4>
-						<a href="http://www.dualtec.com.br/" target="_blank"><img src="images/logo-dualtec.png" alt="Dualtec"></a>
-						<a href="http://www.w3c.br/" target="_blank"><img src="images/logo-w3c.png" alt="W3C Brasil"></a>
-						<a href="http://www.nic.br/" target="_blank"><img src="images/logo-nicbr.png" alt="NIC.br"></a>
-						<a href="http://www.cgi.br/" target="_blank"><img src="images/logo-cgibr.png" alt="CGI.BR"></a>
+						<a href="http://www.dualtec.com.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a>
+						<a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a>
+						<a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a>
+						<a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.BR"></a>
 					</div>
 					<div class="span3">
 
