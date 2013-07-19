@@ -81,7 +81,7 @@ sub _download {
     );
 
     my $data_rs =
-      $c->model('DB')->resultset( $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )->search(
+      $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )->search(
         { institute_id => $c->stash->{institute}->id },
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -136,7 +136,7 @@ sub _download {
         );
     }
 
-    if ( exists $c->stash->{region} ) {
+    if ( exists $c->stash->{region} && $c->stash->{region} ) {
         $data_rs = $data_rs->search( { region_id => $c->stash->{region}->id } );
     }
 
