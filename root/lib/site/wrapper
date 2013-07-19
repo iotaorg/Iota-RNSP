@@ -316,9 +316,9 @@
 					</div>
 				</div>
 				<div class="row">
-					<small class="aware">
+					<div class="aware">
 						[%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
-					</small>
+					</div>
 				</div>
 			</div>
 			<div class="span9">

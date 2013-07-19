@@ -855,6 +855,7 @@ footer .parceiros a img{
 }
 
 footer .aware{
+	font-size: 0.8em;
     margin-top: 10px;
 }
 
@@ -864,6 +865,7 @@ footer .iota-logo{
 }
 footer .opendata-logo{
     margin-left: 15px;
+	margin-top: 25px;
 }
 
 footer .thumbnails-unstyled li {
