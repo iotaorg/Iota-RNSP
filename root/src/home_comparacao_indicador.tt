@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="span8">
-            <div class="data-right">
+            <div class="data-right" lockfixed>
                 <div class="content-fill">
                     <div class="data-title">
                         <div class="content-fill">

@@ -24,6 +24,7 @@
             }
             var el =$(el).first();
 
+            var affected = false;
             if(el && el.offset()){
                 var
                 pai = el.parents('.row:first'),
@@ -34,8 +35,9 @@
                 el_position_top = el.css("top"),
                 el_margin_top = parseInt(el.css("marginTop"),10),
                 top = 0,
-                swtch = false,
+                disabled = false,
                 pos_not_fixed = false;
+
                 el_margin_top = el_margin_top ? el_margin_top : 0;
 
                 /* we prefer feature testing, too much hassle for the upside */
@@ -45,8 +47,26 @@
                     pos_not_fixed = true;
                 }
 
-
                 $(window).bind('scroll resize orientationchange load',el,function(e){
+                    if (e.type != 'scroll'){
+                        var restore_default = false;
+
+                        if (pai.width() < el_width || $(window).width() < 768){
+                            restore_default = true;
+                        }
+
+                        disabled = restore_default;
+                        if (restore_default && affected){
+                            el.css({'position': el_position,'top': el_position_top, 'width': 'auto', 'marginTop': el_margin_top +"px"});
+                        }
+
+                        if (e.type == 'resize'){
+                            el.css({'position': el_position,'top': el_position_top, 'width': 'auto', 'marginTop': el_margin_top +"px"});
+                            el_width = el.width();
+                        }
+                    }
+                    if (disabled) return;
+
                     var scroll_top = $(window).scrollTop(),
                                el_top = el.offset().top;
 
@@ -55,6 +75,7 @@
                         return;
                     }
 
+                    affected = true;
                     //if (scroll_top >= (el_top-el_margin_top -config.offset.top)){
                     if (scroll_top +config.offset.top > pai.offset().top) {
 

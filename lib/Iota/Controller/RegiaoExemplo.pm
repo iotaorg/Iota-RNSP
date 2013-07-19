@@ -19,7 +19,7 @@ use Text::CSV_XS;
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $file = 'variaveis_exemplo.csv';
+    my $file = 'variaveis_exemplo.'.$c->stash->{type};
 
     my $path = ( $c->config->{downloads}{tmp_dir} || '/tmp' ) . '/' . lc $file;
 
@@ -62,6 +62,7 @@ sub lines2file {
     my ( $self, $c, $path, $lines ) = @_;
 
     open my $fh, ">:encoding(utf8)", $path or die "$path: $!";
+
     if ( $path =~ /csv$/ ) {
         my $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
           or die "Cannot use CSV: " . Text::CSV_XS->error_diag();

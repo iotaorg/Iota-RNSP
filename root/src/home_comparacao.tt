@@ -16,7 +16,7 @@
                         </div>
                     </div>
 
-                    <div class="indicators">
+                    <div class="indicators indicators-home">
                         <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
                 </div>
@@ -30,6 +30,7 @@
                             Por Cidade
                         </div>
                         <div class="content-fill">
+<form class="form-inline">
 
                                 <div id="filtro_mapa">
 									<div id='filtro-mapa-uf'>
@@ -47,7 +48,7 @@
                                 <div id="mapa">
                                     <div class="loading"><p>[%l('Carregando...')%]</p></div>
                                 </div>
-
+</form>
                         </div>
                     </div>
 

@@ -1,7 +1,8 @@
 table{
 	border-collapse: collapse;
 }
-
+html {overflow-y: scroll;}
+@-ms-viewport { width: device-width; }
 
 #indicador-dados .menu-left .content-fill,
 #indicadores-dados .menu-left .content-fill{
@@ -12,11 +13,17 @@ table{
 #indicadores-dados .data-right .content-fill{
 	padding: 0px;
 }
-
-.indicators{
+.tooltip-inner {
+    min-width: 250px;
+    max-width: 400px;
+}
+.indicators {
 	margin-top: 5px;
 	overflow: auto;
-	max-height: 500px;
+    max-height: 800px;
+}
+.indicators-home {
+    max-height: 465px;
 }
 
 .indicators .item{
