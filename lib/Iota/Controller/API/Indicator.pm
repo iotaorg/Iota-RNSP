@@ -397,9 +397,7 @@ sub list_GET {
         while ( my $r = $rs->next ) {
             $out->{ delete $r->{indicator_id} } = $r;
         }
-        #for my $xe (@objs){
-        #    $xe->{user_indicator_config} = $out->{ $xe->{id} } if exists $out->{ $xe->{id} };
-        #}
+        $_->{user_indicator_config} = delete $out->{ $_->{id} } for (@objs);
     }
 
     $self->status_ok( $c, entity => { indicators => \@objs } );
