@@ -11,32 +11,20 @@ ci = levels of continuation indentation; bk = 1 if in BLOCK, 0 if not.
 in:out indent c b  nesting   code + messages; (messages begin with >>>)
 lines  levels i k            (code begins with one '.' per indent level)
 ------  ----- - - --------   -------------------------------------------
-L50:45   i5:5 0 0 {({([      .....'city.create.state_id'  => 1,
-L59:59   i3:3 0 0 {({        >>>operator in print statement not recommended
-L74:74   i3:3 0 0 {({        >>>operator in print statement not recommended
-L92:92   i3:3 0 0 {({        >>>operator in print statement not recommended
-L100:92  i3:3 1 1 {({(       ...);
-L150:150 i3:3 0 1 {({        ...eval {
-L201:200 i3:3 0 1 {({        ...note 'segundo cenario: 2002..200 ....
-L201:200 i3:3 0 1 {({        >>>Line length exceeded by 21 characters
-L240:239 i0:0 0 1            sub update_region_valid_time {
-L243:241 i2:3 0 0 {({        >>>Start indentation disagreement: input=2; output=3
-L248:251 i0:0 0 1 {          >>>End indentation disagreement from input line 243
-L250:253 i0:0 0 1            sub add_value {
-L254:257 i1:1 0 1 {          >>>operator in print statement not recommended
-L271:275 i0:0 0 1            sub get_values {
-L290:294 i0:0 0 1            sub get_indicator {
-L312:316 i0:0 0 1            sub get_the_key {
-L316:320 i0:0 0 1 {          >>>Last line
+L51:51   i3:3 0 1 {({        ...&add_value( '2011', 20, $mov, 0  ....
+L102:102 i3:3 0 1 {({        ...&value_not_exists( '2011', 19, $ ....
+L137:137 i0:0 0 1            sub add_value {
+L155:155 i0:0 0 1            sub list_status {
+L167:167 i0:0 0 1            sub post_2010 {
+L208:208 i0:0 0 1            sub post_2011 {
+L226:226 i0:0 0 1            sub is_same_value {
+L242:242 i0:0 0 1            sub value_not_exists {
+L266:266 i0:0 0 1            sub add_indicator {
+L294:294 i0:0 0 1            sub check_value {
+L306:306 i0:0 0 1 {          >>>Last line
 
-First indentation disagreement seen at input line 243
-Last indentation disagreement seen at input line 246
-Note: Indentation disagreement detection is not accurate for outdenting and -lp.
+No indentation disagreement seen
 
-1 long lines were outdented:
-  First at output line 201
-  use -noll to prevent outdenting, -l=n to increase line length
-
-1 output line exceeded 120 characters:
-  at line 201 by 21 characters
+No lines exceeded 120 characters
+  Maximum output line length was 107 at line 160
 Converged.  Output for iteration 2 same as for iter 1.

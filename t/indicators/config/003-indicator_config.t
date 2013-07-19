@@ -121,7 +121,7 @@ eval {
             my $config2 = eval { from_json( $res->content ) };
             is( $config2->{id}, $config_id->{id}, 'pesquisa funcionando' );
 
-            ( $res, $c ) = ctx_request( GET '/api/indicator?user_id=' . $Iota::TestOnly::Mock::AuthUser::_id );
+            ( $res, $c ) = ctx_request( GET '/api/indicator?config_user_id=' . $Iota::TestOnly::Mock::AuthUser::_id );
             my $test_info = eval { from_json( $res->content ) };
             is( $test_info->{indicators}[0]{user_indicator_config}{id}, $config_id->{id}, 'appear in search' );
 

@@ -51,11 +51,11 @@
     [%- CALL assets.include("css/parceiros.gov.css")-%]
     [%- CALL assets.include("js/parceiros.gov.js")-%]
 [%- END -%]
-[%-IF custom_css-%]
-    [%-CALL assets.include(custom_css)-%]
-[%-END-%]
 
 [%- assets.export("css") -%]
+[%-IF custom_css-%]
+    <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
+[%-END-%]
 <!--<link href='http://fonts.googleapis.com/css?family=Asap:400,700' rel='stylesheet' type='text/css' />-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -179,7 +179,7 @@
 </div>
 </div>
 [% END %]
-
+[% IF institute.short_name == 'gov' %]
 <footer>
   <div class="footer">
     <div class="container">
@@ -254,7 +254,82 @@
   </div>
   </div>
 </footer>
+[%ELSE%]
+<footer>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
 
+
+        <div class="span2">
+            <div class="logo">
+                 <a class="brand" target="_blank" href="http://awareti.github.io/Iota/" title="Clique aqui para saber mais sobre o Iota"><img src="/static/images/logo-96.png" alt="iota" /></a>
+            </div>
+            <small class="aware">
+
+            <ul class="unstyled row-fluid">
+                <li>[%l('Desenvolvido por')%]<a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a></li>
+                <li><a href="http://www.opendefinition.org/okd/" target="_blank"><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png"></a></li>
+            </ul>
+
+            </small>
+        </div>
+
+
+        <div class="span3">
+            <h4>Links</h4>
+            <ul class="unstyled">
+                <li><a href="/mapa-do-site">[%l('Mapa do Site')%]</a></li>
+                <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
+                <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
+            </ul>
+        </div>
+
+        <div class="span3">
+            <div class="logo">
+                <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
+            </div>
+        </div>
+        <div class="span4">
+
+            <div class="row"><div class="span4">
+                <h4>Conecte-se</h4>
+                <div class="icons">
+                    <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter">twitter</a>
+                    <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook">facebook</a>
+
+                    <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube">youtube</a>
+                </div>
+
+            </div></div>
+
+            <div class="row"><div class="span4">
+            <h4>[%l('Parceiros')%]</h4>
+            <ul class="unstyled thumbnails-unstyled">
+                <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a></li>
+                <li><a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a></li>
+                <li><a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a></li>
+                <li><a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.br"></a></li>
+            </ul>
+            </div></div>
+
+        </div>
+
+
+    </div>
+  </div>
+
+  <div class="copyright">
+        <div class="footer-copyright-content">
+              Todo o conteúdo do site é licenciado sob a
+              <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
+                <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
+              </a>
+        </div>
+  </div>
+  </div>
+</footer>
+[% END %]
 
 
 </div>

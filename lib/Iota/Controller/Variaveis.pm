@@ -63,25 +63,17 @@ sub _download {
 
     my @lines = (
         [
-            'ID da cidade',
-            'Nome da cidade ',
-            'ID',
-            'Tipo',
-            'Apelido',
-            'Período de atualização',
-            'É Básica?',
-            'Unidade de medida',
-            'Nome',
-            'Data',
-            'Valor',
-            'Observações',
-            'Fonte preenchida',
+            'ID da cidade', 'Nome da cidade ',
+            'ID', 'Tipo', 'Apelido', 'Período de atualização',
+            'É Básica?', 'Unidade de medida',
+            'Nome', 'Data', 'Valor', 'Observações', 'Fonte preenchida',
             'Nome Região'
         ]
     );
 
     my $data_rs =
-      $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )->search(
+      $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )
+      ->search(
         { institute_id => $c->stash->{institute}->id },
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -295,98 +287,111 @@ sub download_variables : Chained('/institute_load') PathPart('download-variables
 
 }
 
-
 sub download_variables_GET {
     my ( $self, $c ) = @_;
     my $params = $c->req->params;
     my @objs;
 
-    my $data_rs = $c->model( exists $params->{region_id} ? 'DB::ViewDownloadVariablesRegion' : 'DB::DownloadVariable')
-    ->search( { institute_id => $c->stash->{institute}->id },
+    my $data_rs =
+      $c->model( exists $params->{region_id} ? 'DB::ViewDownloadVariablesRegion' : 'DB::DownloadVariable' )
+      ->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
-    if (exists $params->{region_id}){
+    if ( exists $params->{region_id} ) {
         my @ids = split /,/, $params->{region_id};
 
         $self->status_bad_request( $c, message => 'invalid region_id' ), $c->detach
-        unless Iota::Controller::Dados::int_validation( $self, @ids);
+          unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search({
-            region_id => {'in' => \@ids}
-        });
+        $data_rs = $data_rs->search(
+            {
+                region_id => { 'in' => \@ids }
+            }
+        );
     }
 
-    if (exists $params->{user_id}) {
+    if ( exists $params->{user_id} ) {
         my @ids = split /,/, $params->{user_id};
 
         $self->status_bad_request( $c, message => 'invalid user_id' ), $c->detach
-        unless Iota::Controller::Dados::int_validation( $self, @ids );
+          unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search({
-            user_id => {'in' => \@ids}
-        });
+        $data_rs = $data_rs->search(
+            {
+                user_id => { 'in' => \@ids }
+            }
+        );
     }
 
-    if (exists $params->{city_id}){
+    if ( exists $params->{city_id} ) {
         my @ids = split /,/, $params->{city_id};
 
         $self->status_bad_request( $c, message => 'invalid city_id' ), $c->detach
-        unless Iota::Controller::Dados::int_validation( $self, @ids );
+          unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search({
-            city_id => {'in' => \@ids}
-        });
+        $data_rs = $data_rs->search(
+            {
+                city_id => { 'in' => \@ids }
+            }
+        );
     }
 
-    if (exists $params->{variable_id}){
+    if ( exists $params->{variable_id} ) {
         my @ids = split /,/, $params->{variable_id};
 
         $self->status_bad_request( $c, message => 'invalid variable_id' ), $c->detach
-        unless Iota::Controller::Dados::int_validation( $self, @ids );
+          unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search({
-            variable_id => {'in' => \@ids}
-        });
+        $data_rs = $data_rs->search(
+            {
+                variable_id => { 'in' => \@ids }
+            }
+        );
     }
 
-    if (exists $params->{valid_from}){
+    if ( exists $params->{valid_from} ) {
         my @dates = split /,/, $params->{valid_from};
 
         $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
-        unless Iota::Controller::Dados::date_validation( $self, @dates );
+          unless Iota::Controller::Dados::date_validation( $self, @dates );
 
-        $data_rs = $data_rs->search({
-            valid_from => {'in' => \@dates}
-        });
-    }
-
-    if (exists $params->{valid_from_begin}){
-
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
-        unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_begin} );
-
-        $data_rs = $data_rs->search({
-            valid_from => {'>=' => $params->{valid_from_begin}}
-        });
-    }
-
-    if (exists $params->{valid_from_end}){
-
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
-        unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_end} );
-
-        $data_rs = $data_rs->search({
-            '-and' => {
-                valid_from => {'<=' => $params->{valid_from_end}}
+        $data_rs = $data_rs->search(
+            {
+                valid_from => { 'in' => \@dates }
             }
-        });
+        );
     }
 
+    if ( exists $params->{valid_from_begin} ) {
 
-    while(my $row = $data_rs->next) {
-        $row->{period}      = $self->_period_pt( $row->{period} );
-        $row->{valid_from}  = $self->ymd2dmy( $row->{valid_from} );
-        push @objs,$row;
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+          unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_begin} );
+
+        $data_rs = $data_rs->search(
+            {
+                valid_from => { '>=' => $params->{valid_from_begin} }
+            }
+        );
+    }
+
+    if ( exists $params->{valid_from_end} ) {
+
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+          unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_end} );
+
+        $data_rs = $data_rs->search(
+            {
+                '-and' => {
+                    valid_from => { '<=' => $params->{valid_from_end} }
+                }
+            }
+        );
+    }
+
+    while ( my $row = $data_rs->next ) {
+        $row->{period}     = $self->_period_pt( $row->{period} );
+        $row->{valid_from} = $self->ymd2dmy( $row->{valid_from} );
+        push @objs, $row;
     }
 
     $self->status_ok( $c, entity => { data => \@objs } );

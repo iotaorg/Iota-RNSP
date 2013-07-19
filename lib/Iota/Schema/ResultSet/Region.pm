@@ -126,12 +126,8 @@ sub action_specs {
 
             return unless keys %values;
 
-
-
-
-            if (exists $values{subregions_valid_after}
-                && $var->subregions_valid_after
-            ){
+            if ( exists $values{subregions_valid_after}
+                && $var->subregions_valid_after ) {
                 my $new = DateTimeX::Easy->new( $values{subregions_valid_after} );
                 my $old = $var->subregions_valid_after;
 
@@ -139,49 +135,58 @@ sub action_specs {
 
                 my $cmp = DateTime->compare( $new, $old );
 
-                if ( $cmp == 1 ){
+                if ( $cmp == 1 ) {
+
                     # eh depois
                     # para todos levels = 3, apagar > $old & < $new
                     # para todos levels = 2, update active_value=true where generated_by_compute=null
 
-                    my @subs = map {$_->id} $var->subregions->all;
+                    my @subs = map { $_->id } $var->subregions->all;
 
-                    for my $tbname (@tables){
+                    for my $tbname (@tables) {
                         my $rs_pure = $self->result_source->schema->resultset($tbname);
 
-                        $rs_pure->search({
-                            region_id => {'in' => \@subs},
-                            valid_from => {'>=' => $old->datetime, '<' => $new->datetime}
-                        })->delete;
+                        $rs_pure->search(
+                            {
+                                region_id  => { 'in' => \@subs },
+                                valid_from => { '>=' => $old->datetime, '<' => $new->datetime }
+                            }
+                        )->delete;
 
-                        my $rs = $rs_pure->search({
-                            region_id => $var->id,
-                            valid_from => {'>=' => $old->datetime, '<' => $new->datetime}
-                        });
+                        my $rs = $rs_pure->search(
+                            {
+                                region_id  => $var->id,
+                                valid_from => { '>=' => $old->datetime, '<' => $new->datetime }
+                            }
+                        );
 
                         # apaga os ativos, **provavelmente** calculados
-                        $rs->search({generated_by_compute => 1})->delete;
+                        $rs->search( { generated_by_compute => 1 } )->delete;
 
                         # altera todos os nao computados para ativos
-                        $rs->search({generated_by_compute => undef})->update({ active_value => 1  });
+                        $rs->search( { generated_by_compute => undef } )->update( { active_value => 1 } );
                     }
 
-
                 }
-                elsif ( $cmp == -1 ){
+                elsif ( $cmp == -1 ) {
+
                     # eh antes
 
-                    for my $tbname (@tables){
+                    for my $tbname (@tables) {
                         my $rs_pure = $self->result_source->schema->resultset($tbname);
 
-                        my $rs = $rs_pure->search({
-                            region_id => $var->id,
-                            valid_from => {'>=' => $new->datetime}
-                        });
-                        $rs->search({active_value => 1, generated_by_compute => undef})->update({ active_value => 0  });
+                        my $rs = $rs_pure->search(
+                            {
+                                region_id  => $var->id,
+                                valid_from => { '>=' => $new->datetime }
+                            }
+                        );
+                        $rs->search( { active_value => 1, generated_by_compute => undef } )
+                          ->update( { active_value => 0 } );
                     }
 
                 }
+
                 # else: igual, entao nao precisa mudar nada
 
             }

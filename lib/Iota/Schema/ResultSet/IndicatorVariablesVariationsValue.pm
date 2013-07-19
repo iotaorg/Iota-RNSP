@@ -110,8 +110,7 @@ sub action_specs {
                 dates   => [ $var->valid_from->datetime ],
                 user_id => $var->user_id,
 
-                (regions_id => [ $values{region_id} ]) x !! exists $values{region_id},
-
+                ( regions_id => [ $values{region_id} ] ) x !!exists $values{region_id},
 
             );
 
@@ -138,7 +137,7 @@ sub action_specs {
                 dates   => [ $var->valid_from->datetime ],
                 user_id => $var->user_id,
 
-                (regions_id => [ $var->region_id ]) x !! $var->region_id,
+                ( regions_id => [ $var->region_id ] ) x !!$var->region_id,
             );
 
             return $var;

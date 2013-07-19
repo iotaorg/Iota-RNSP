@@ -8,10 +8,12 @@ has 'ignored_params' => (
     is      => 'rw',
     default => sub {
         [
-            qw(password api_key columns content-type _ limit start sort dir _dc rm xaction indicator_id network_id role with_polygon_path user_id)
+            qw(password api_key columns content-type _ limit start sort dir _dc rm xaction indicator_id network_id role with_polygon_path config_user_id user_id)
         ];
     }
 );
+
+my $ignored_params_cache;
 
 around list_GET => sub {
     my $orig = shift;
@@ -20,8 +22,20 @@ around list_GET => sub {
 
     my @columns = defined $c->req->params->{columns} ? split /,/, $c->req->params->{columns} : ();
 
+    my $qtde_param = 0;
+
+    if (!$ignored_params_cache){
+        foreach my $ig (@{$self->ignored_params}){
+            $ignored_params_cache->{$ig} = 1;
+        }
+    }
+
+    foreach my $k (keys %{ $c->request->params }){
+        $qtde_param++ unless $ignored_params_cache->{$k};
+    }
+
     # essa search aqui embaixo remove os parametros -.-'
-    if ( scalar keys %{ $c->request->params } > 1 && !@columns ) {    # other than ?api_key=foo
+    if ( $qtde_param > 0 && !@columns ) {
         $c->stash->{collection} = $self->search( $c, $c->stash->{collection} );
     }
 

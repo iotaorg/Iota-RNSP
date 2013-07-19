@@ -165,10 +165,9 @@ eval {
                         &add_value( $reg2_uri, '95', '2006' );
                         &add_value( $reg3_uri, '94', '2006' );
 
-
-                        &add_value( $reg1_uri, '166', '2008' ); # tem q sobreviver e ativo!
-                        &add_value( $reg2_uri, '95', '2008' );
-                        &add_value( $reg3_uri, '94', '2008' );
+                        &add_value( $reg1_uri, '166', '2008' );    # tem q sobreviver e ativo!
+                        &add_value( $reg2_uri, '95',  '2008' );
+                        &add_value( $reg3_uri, '94',  '2008' );
 
                         &add_value( $reg2_uri, '40', '2010' );
                         &add_value( $reg3_uri, '50', '2010' );
@@ -177,53 +176,52 @@ eval {
                         &add_value( $reg3_uri, '12', '2011' );
 
                         my $ret = &get_values($reg1);
-                        is(@$ret, 8, '8 records');
-                        for my $i (0..2){
-                            is($ret->[$i]{generated_by_compute}, 0, (2002+$i) . ' is not computed');
-                            is($ret->[$i]{active_value}, 1, (2002+$i) . ' active');
-                            is($ret->[$i]{valid_from}, (2002+$i).'-01-01',  'is expected date');
+                        is( @$ret, 8, '8 records' );
+                        for my $i ( 0 .. 2 ) {
+                            is( $ret->[$i]{generated_by_compute}, 0, ( 2002 + $i ) . ' is not computed' );
+                            is( $ret->[$i]{active_value},         1, ( 2002 + $i ) . ' active' );
+                            is( $ret->[$i]{valid_from}, ( 2002 + $i ) . '-01-01', 'is expected date' );
                         }
 
-                        for my $i (3..7){
-                            is($ret->[$i]{generated_by_compute}, 1, (2002+$i) . ' is computed');
-                            is($ret->[$i]{active_value}, 1, (2002+$i) . ' active');
+                        for my $i ( 3 .. 7 ) {
+                            is( $ret->[$i]{generated_by_compute}, 1, ( 2002 + $i ) . ' is computed' );
+                            is( $ret->[$i]{active_value},         1, ( 2002 + $i ) . ' active' );
                         }
-                        is($ret->[6]{valid_from}, '2010-01-01',  'is expected date');
-                        is($ret->[7]{valid_from}, '2011-01-01',  'is expected date');
+                        is( $ret->[6]{valid_from}, '2010-01-01', 'is expected date' );
+                        is( $ret->[7]{valid_from}, '2011-01-01', 'is expected date' );
 
-                        $ret = &get_values($reg1, 1);
-                        is(@$ret, 1, 'only 1 not active');
-                        is($ret->[0]{valid_from}, '2008-01-01', 'and it is 2008-01-01');
-                        is($ret->[0]{generated_by_compute}, 0, 'have generated_by_compute=0');
+                        $ret = &get_values( $reg1, 1 );
+                        is( @$ret,                           1,            'only 1 not active' );
+                        is( $ret->[0]{valid_from},           '2008-01-01', 'and it is 2008-01-01' );
+                        is( $ret->[0]{generated_by_compute}, 0,            'have generated_by_compute=0' );
 
                         # para todos levels = 3, apagar 2005 até 2009 inclusive
                         # para todos levels = 2, update active_value=true where generated_by_compute=false
                         &update_region_valid_time_api( $reg1, '2010-01-01' );
                         $ret = &get_values($reg1);
-                        is(@$ret, 6, '6 records');
-                        for my $i (0..2){
-                            is($ret->[$i]{generated_by_compute}, 0, (2002+$i) . ' is not computed');
-                            is($ret->[$i]{active_value}, 1, (2002+$i) . ' active');
-                            is($ret->[$i]{valid_from}, (2002+$i).'-01-01',  'is expected date');
+                        is( @$ret, 6, '6 records' );
+                        for my $i ( 0 .. 2 ) {
+                            is( $ret->[$i]{generated_by_compute}, 0, ( 2002 + $i ) . ' is not computed' );
+                            is( $ret->[$i]{active_value},         1, ( 2002 + $i ) . ' active' );
+                            is( $ret->[$i]{valid_from}, ( 2002 + $i ) . '-01-01', 'is expected date' );
                         }
-                        is($ret->[3]{generated_by_compute}, 0, '2008 is not computed');
-                        is($ret->[3]{active_value}, 1, '2008 active');
-                        is($ret->[3]{valid_from}, '2008-01-01',  'is expected date');
+                        is( $ret->[3]{generated_by_compute}, 0,            '2008 is not computed' );
+                        is( $ret->[3]{active_value},         1,            '2008 active' );
+                        is( $ret->[3]{valid_from},           '2008-01-01', 'is expected date' );
 
-                        for my $i (4..5){
-                            is($ret->[$i]{generated_by_compute}, 1, (2007+$i) . ' is computed');
-                            is($ret->[$i]{active_value}, 1, (2007+$i) . ' active');
+                        for my $i ( 4 .. 5 ) {
+                            is( $ret->[$i]{generated_by_compute}, 1, ( 2007 + $i ) . ' is computed' );
+                            is( $ret->[$i]{active_value},         1, ( 2007 + $i ) . ' active' );
                         }
 
-                        $ret = &get_values($reg1, 1);
-                        is(@$ret, 0, '0 records');
+                        $ret = &get_values( $reg1, 1 );
+                        is( @$ret, 0, '0 records' );
 
                         die 'undo-savepoint';
                     }
                 );
                 die $@ unless $@ =~ /undo-savepoint/;
             };
-
 
             die 'rollback';
         }
@@ -250,12 +248,12 @@ sub update_region_valid_time {
 }
 
 sub update_region_valid_time_api {
-    my ($reg, $valid) = @_;
-    my ( $res, $c ) = ctx_request(
-        POST $city_uri . '/region/'.$reg->{id},
+    my ( $reg, $valid ) = @_;
+    my ( $res, $c )     = ctx_request(
+        POST $city_uri . '/region/' . $reg->{id},
         [
-            api_key                           => 'test',
-            'city.region.update.subregions_valid_after'  => $valid,
+            api_key                                     => 'test',
+            'city.region.update.subregions_valid_after' => $valid,
         ]
     );
 
@@ -268,6 +266,7 @@ sub add_value {
     $expcode ||= 201;
 
     note "POSTING $region/value\tyear $year, value $value";
+
     # PUT normal
     my $req = POST $region . '/value',
       [

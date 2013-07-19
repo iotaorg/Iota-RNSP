@@ -280,7 +280,7 @@ $(document).ready(function(){
 		table_content += "</table>";
 
 		$("#cidades-indicadores .table").append(table_content);
-		
+
 		$(".bs-tooltip").tooltip();
 
 		$("#cidades-indicadores thead.eixos").click(function(){

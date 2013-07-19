@@ -116,7 +116,7 @@ sub upsert {
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
 
-        ( valid_from => $params{dates}) x!! exists $params{dates},
+        ( valid_from => $params{dates} ) x !!exists $params{dates},
 
         ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
     );
@@ -318,9 +318,11 @@ sub _get_values_variation {
             indicator_id                                      => \@indicator_ids,
             'indicator_variables_variations_values.region_id' => $params{region_id},
 
-            ('indicator_variables_variations_values.valid_from' => {
-                'in' => $params{valid_from}
-            }) x!! exists $params{valid_from},
+            (
+                'indicator_variables_variations_values.valid_from' => {
+                    'in' => $params{valid_from}
+                }
+              ) x !!exists $params{valid_from},
 
         },
         { prefetch => 'indicator_variables_variations_values' }

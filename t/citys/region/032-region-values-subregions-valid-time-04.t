@@ -162,62 +162,57 @@ eval {
                         &update_region_valid_time_api( $reg1, '2006-01-01' );
 
                         &add_value( $reg1_uri, '189', '2006' );
-                        &add_value( $reg2_uri, '95', '2006' );
-                        &add_value( $reg3_uri, '94', '2006' );
+                        &add_value( $reg2_uri, '95',  '2006' );
+                        &add_value( $reg3_uri, '94',  '2006' );
 
                         &add_value( $reg2_uri, '95', '2007' );
                         &add_value( $reg3_uri, '94', '2007' );
 
-
-
                         my $ret = &get_values($reg1);
 
-                        is(@$ret, 6, '6 records');
-                        for my $i (0..3){
-                            is($ret->[$i]{generated_by_compute}, 0, (2002+$i) . ' is not computed');
-                            is($ret->[$i]{active_value}, 1, (2002+$i) . ' active');
-                            is($ret->[$i]{valid_from}, (2002+$i).'-01-01',  'is expected date');
+                        is( @$ret, 6, '6 records' );
+                        for my $i ( 0 .. 3 ) {
+                            is( $ret->[$i]{generated_by_compute}, 0, ( 2002 + $i ) . ' is not computed' );
+                            is( $ret->[$i]{active_value},         1, ( 2002 + $i ) . ' active' );
+                            is( $ret->[$i]{valid_from}, ( 2002 + $i ) . '-01-01', 'is expected date' );
                         }
 
-                        $ret = &get_values($reg1, 1);
-                        is(@$ret, 1, 'no user value');
-                        is($ret->[0]{generated_by_compute}, 0, '2006 is not computed');
-                        is($ret->[0]{active_value}, 0, 'not active');
-                        is($ret->[0]{valid_from}, '2006-01-01',  'is expected date');
-
+                        $ret = &get_values( $reg1, 1 );
+                        is( @$ret,                           1,            'no user value' );
+                        is( $ret->[0]{generated_by_compute}, 0,            '2006 is not computed' );
+                        is( $ret->[0]{active_value},         0,            'not active' );
+                        is( $ret->[0]{valid_from},           '2006-01-01', 'is expected date' );
 
                         &update_region_valid_time_api( $reg1, '2005-01-01' );
 
                         $ret = &get_values($reg1);
 
-                        is(@$ret, 5, '5 records');
-                        for my $i (0..2){
-                            is($ret->[$i]{generated_by_compute}, 0, (2002+$i) . ' is not computed');
-                            is($ret->[$i]{active_value}, 1, (2002+$i) . ' active');
-                            is($ret->[$i]{valid_from}, (2002+$i).'-01-01',  'is expected date');
+                        is( @$ret, 5, '5 records' );
+                        for my $i ( 0 .. 2 ) {
+                            is( $ret->[$i]{generated_by_compute}, 0, ( 2002 + $i ) . ' is not computed' );
+                            is( $ret->[$i]{active_value},         1, ( 2002 + $i ) . ' active' );
+                            is( $ret->[$i]{valid_from}, ( 2002 + $i ) . '-01-01', 'is expected date' );
                         }
 
-                        is($ret->[3]{generated_by_compute}, 1, '2006 is not computed');
-                        is($ret->[3]{active_value}, 1, '2006 active');
-                        is($ret->[3]{valid_from}, '2006-01-01',  'is expected date');
+                        is( $ret->[3]{generated_by_compute}, 1,            '2006 is not computed' );
+                        is( $ret->[3]{active_value},         1,            '2006 active' );
+                        is( $ret->[3]{valid_from},           '2006-01-01', 'is expected date' );
 
-                        is($ret->[4]{generated_by_compute}, 1, '2007 is not computed');
-                        is($ret->[4]{active_value}, 1, '2007 active');
-                        is($ret->[4]{valid_from}, '2007-01-01',  'is expected date');
+                        is( $ret->[4]{generated_by_compute}, 1,            '2007 is not computed' );
+                        is( $ret->[4]{active_value},         1,            '2007 active' );
+                        is( $ret->[4]{valid_from},           '2007-01-01', 'is expected date' );
 
-
-                        $ret = &get_values($reg1, 1);
-                        is(@$ret, 2, 'two not active regs');
-                        for my $i (0..1){
-                            is($ret->[$i]{generated_by_compute}, 0, (2005+$i) . ' is not computed');
-                            is($ret->[$i]{active_value}, 0, (2005+$i) . 'is not active');
-                            is($ret->[$i]{valid_from}, (2005+$i).'-01-01',  'is expected date');
+                        $ret = &get_values( $reg1, 1 );
+                        is( @$ret, 2, 'two not active regs' );
+                        for my $i ( 0 .. 1 ) {
+                            is( $ret->[$i]{generated_by_compute}, 0, ( 2005 + $i ) . ' is not computed' );
+                            is( $ret->[$i]{active_value},         0, ( 2005 + $i ) . 'is not active' );
+                            is( $ret->[$i]{valid_from}, ( 2005 + $i ) . '-01-01', 'is expected date' );
                         }
 
                         die 'undo-savepoint';
                     }
                 );
-
 
                 die $@ unless $@ =~ /undo-savepoint/;
             };
@@ -247,12 +242,12 @@ sub update_region_valid_time {
 }
 
 sub update_region_valid_time_api {
-    my ($reg, $valid) = @_;
-    my ( $res, $c ) = ctx_request(
-        POST $city_uri . '/region/'.$reg->{id},
+    my ( $reg, $valid ) = @_;
+    my ( $res, $c )     = ctx_request(
+        POST $city_uri . '/region/' . $reg->{id},
         [
-            api_key                           => 'test',
-            'city.region.update.subregions_valid_after'  => $valid,
+            api_key                                     => 'test',
+            'city.region.update.subregions_valid_after' => $valid,
         ]
     );
 
@@ -265,6 +260,7 @@ sub add_value {
     $expcode ||= 201;
 
     note "POSTING $region/value\tyear $year, value $value";
+
     # PUT normal
     my $req = POST $region . '/value',
       [
