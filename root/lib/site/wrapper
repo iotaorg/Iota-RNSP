@@ -200,28 +200,27 @@
 					<div class="span3">
 						<h4>Dados</h4>
 						<ul class="unstyled">
-							<li><a href="">Boas Práticas</a></li>
-							<li><a href="">Eixos</a></li>
-							<li><a href="">Cidades Participantes</a></li>
-							<li><a href="">Indicadores</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/boas-praticas">Boas Práticas</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/eixos">Eixos</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/signatarios">Cidades Participantes</a></li>
 						</ul>
 					</div>
 					<div class="span3">
 						<h4>Institucional</h4>
 						<ul class="unstyled">
-							<li><a href="">Apresentação</a></li>
-							<li><a href="">A Plataforma</a></li>
-							<li><a href="">Histórico</a></li>
-							<li><a href="">Realizadores</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/apresentacao">Apresentação</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/a_plataforma">A Plataforma</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/historico">Histórico</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/realizadores">Realizadores</a></li>
 						</ul>
 					</div>
 					<div class="span3">
 						<h4>Mais</h4>
 						<ul class="unstyled">
-							<li><a href="">Material de Divulgação</a></li>
-							<li><a href="">Notícias</a></li>
-							<li><a href="">Prêmio PCS</a></li>
-							<li><a href="">Contato</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/material-divulgacao">Material de Divulgação</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/noticias">Notícias</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/premio">Prêmio PCS</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/contato">Contato</a></li>
 						</ul>
 					</div>
 				</div>
