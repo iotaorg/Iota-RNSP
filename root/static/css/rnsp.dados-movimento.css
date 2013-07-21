@@ -1,3 +1,50 @@
+.navbar-fixed-top{
+	border: none;
+}
+.navbar-fixed-top .navbar-inner {
+  background: #000000;
+  background-image: none;
+}
+.navbar-fixed-top .navbar-inner .nav li a,
+.navbar-fixed-top .navbar-inner .nav li a:visited{
+	color: #CCC;
+	text-shadow: 0 1px 0 #333;	
+}
+.navbar-fixed-top .navbar-inner .nav li a.active,
+.navbar-fixed-top .navbar-inner .nav li a:hover{
+	color: #fff;
+	text-shadow: 0 1px 0 #333;	
+}
+.navbar-fixed-top .navbar-inner .nav li.active{
+	background: #333;
+}
+.navbar-fixed-top .navbar-inner .nav li.active a{
+	color: #fff;	
+}
+.navbar .divider-vertical {
+  border-right: 1px solid #444444;
+  border-left: 1px solid #222222;
+}
+.navbar-inverse .nav li.dropdown.open>.dropdown-toggle{
+	background-color: #111;	
+}
+.navbar-inverse .nav .active>a{
+	background-color: #111;
+}
+.navbar-inverse .nav .active>a:hover{
+	background-color: #000;
+}
+
+
+.dropdown-menu{
+	background-color: #000;
+}
+
+
+.page-header{
+	background-image: none;
+}
+
 .indicators .item.selected{
 	color: #392268;
 	background-color: #d4ccff;
