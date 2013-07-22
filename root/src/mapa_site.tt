@@ -2,7 +2,7 @@
 <div class="row">
 
     <div class="span3">
-    <div lockfixed>
+    <div [%IF indicators.size > cities.size%]lockfixed[%END%]>
         <h2>[%l('Cidades')%]</h2>
         <ul>
         [%FOREACH city IN cities.sort('name') %]
@@ -14,6 +14,7 @@
     </div>
 
     <div class="span6">
+    <div [%IF indicators.size < cities.size%]lockfixed[%END%]>
 
         <h2>[%l('Indicadores')%]</h2>
         <ul>
@@ -21,6 +22,7 @@
             <li><a href="/[%i.name_url%]">[%i.name%]</a></li>
         [%END%]
         </ul>
+    </div>
 
     </div>
 
