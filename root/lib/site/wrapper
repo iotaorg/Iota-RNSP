@@ -257,7 +257,7 @@
 					</div>
 					<div class="span3">
 
-						<h4>Conecte-se</h4>
+						<h4>[%l('Conecte-se')%]</h4>
 						<div class="icons">
 							<a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter" title="Twitter">twitter</a>
 							<a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook" title="Facebook">facebook</a>
