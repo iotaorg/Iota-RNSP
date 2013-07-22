@@ -238,6 +238,7 @@ $(document).ready(function(){
                     indicator_id : indicadorID
                 }, title, url);
 
+
 			}else if (ref == "indicador" ){
                 var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
                 History.pushState({
@@ -249,6 +250,8 @@ $(document).ready(function(){
                     indicator_id : indicadorID
                 }, title, url);
             }
+
+            ga('send', 'pageview');
 		});
 
   	}

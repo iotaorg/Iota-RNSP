@@ -306,6 +306,8 @@ $.extend({
 			}
 		}
 		History.pushState(null, null, url);
+
+
 	}
 });
 
