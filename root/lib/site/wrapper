@@ -47,7 +47,6 @@
 
 
 [%- IF institute.short_name == 'org'-%]
-    [%- CALL assets.include("css/style-movimento.css")-%]
     [%- CALL assets.include("css/rnsp.dados-movimento.css")-%]
 [%- END -%]
 [% IF institute.short_name == 'gov' %]
