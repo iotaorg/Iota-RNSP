@@ -2,8 +2,8 @@
 <!DOCTYPE HTML>
 <html lang="pt-br">
 <head profile="http://www.w3.org/2005/10/profile">
-<link rel="icon" 
-      type="image/png" 
+<link rel="icon"
+      type="image/png"
       href="/static/images/favicon.png" />
 <meta charset="UTF-8">
 <meta name="description" content="" />
@@ -77,7 +77,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
 
-            <li [% IF !city && c_req_path != 'mapa-do-site' %]class="active"[%END%]>
+            <li [% IF c_req_path == '' %]class="active"[%END%]>
                 <a href="/">[%l('Indicadores')%]</a>
             </li>
             [% IF city %]
@@ -191,7 +191,7 @@
 				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png"" alt="logo [%institute.short_name%]">
 			</div>
 			<div class="span9">
-			
+
 				<div class="row-fluid">
 					<div class="span3">
 						<h4>Indicadores</h4>
@@ -265,7 +265,7 @@
 							<a href="https://plus.google.com/115196492426365904810/about" target="_blank&quot;&quot;" class="social-icon googleplus" title="Google+">google+</a>
 							<a href="/rss" class="social-icon rss" title="RSS">rss</a>
 						</div>
-					
+
 					</div>
 				</div>
 			</div>
@@ -277,7 +277,7 @@
 
   <div class="copyright">
         <div class="footer-copyright-content">
-              [%l('Todo o conteúdo do site é licenciado sob a')%] 
+              [%l('Todo o conteúdo do site é licenciado sob a')%]
               <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
                 <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
               </a>
@@ -294,7 +294,7 @@
 				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png"" alt="logo [%institute.short_name%]">
 			</div>
 			<div class="span9">
-			
+
 				<div class="row-fluid">
 					<div class="span3">
 						<h4>Indicadores</h4>
@@ -342,7 +342,7 @@
 							<a href="https://plus.google.com/115196492426365904810/about" target="_blank&quot;&quot;" class="social-icon googleplus" title="Google+">google+</a>
 							<a href="/rss" class="social-icon rss" title="RSS">rss</a>
 						</div>
-					
+
 					</div>
 				</div>
 			</div>
