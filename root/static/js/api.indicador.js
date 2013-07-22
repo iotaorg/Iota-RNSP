@@ -236,7 +236,7 @@ $(document).ready(function () {
                 }
 
                 if (!(indicador_data.variable_type == 'str')) {
-                    $('#indicador-grafico').show();
+
                     showGrafico();
                 }
                 else {
@@ -532,11 +532,11 @@ $(document).ready(function () {
     function showGrafico() {
         _resize_canvas();
         if (dadosGrafico.dados.length > 0) {
-            $("#indicador-grafico").fadeIn();
+            $("#indicador-grafico").show();
             $.carregaGrafico("main-graph");
         }
         else {
-            $("#indicador-grafico").fadeOut();
+            $("#indicador-grafico").hide();
 
         }
     }
