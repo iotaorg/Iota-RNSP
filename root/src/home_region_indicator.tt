@@ -51,7 +51,7 @@
                 [%IF indicator.goal_explanation%]
                     <dt>Referência de Meta:</dt>
                     <dd>[%indicator.goal_explanation%]
-                        [%IF indicator.goal_source%]<blockquote><small><cite title="Fonte da meta">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
+                        [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
                     </dd>
                 [%END%]
 
@@ -81,7 +81,7 @@
                     <div class="control-group">
                         <div class="controls">
                             <div class="input-append">
-                                <input name="indicador-busca" placeholder="Buscar por indicador" id="indicador-busca" type="text">
+                                <input name="indicador-busca" placeholder="[%l('Buscar por indicador')%]" id="indicador-busca" type="text">
                                 <span class="add-on"><i class="icon-search"></i></span>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
             <div class="data-right">
                 <div class="content-fill">
                     <div id="indicador-historico">
-                        <div class="title">Série Histórica de <span class="cidade"></span></div>
+                        <div class="title">[%l('Série Histórica de')%] <span class="cidade"></span></div>
                         <div class="content-fill">
 
                             <div class="table">
@@ -141,8 +141,8 @@
                         <div class="title">[%l('Dados abertos')%]</div>
                         <div class="content-fill">
                             <div class="dados-botoes">
-                                <input type="button" value="Download" id="button-download" class="button-data"/>
-                                <input type="button" value="Compartilhar" id="button-share" class="button-data"/>
+								<input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
+								<input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
                             </div>
                             <div class="download-links">
                             </div>

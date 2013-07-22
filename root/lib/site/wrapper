@@ -203,27 +203,27 @@
 					<div class="span3">
 						<h4>Dados</h4>
 						<ul class="unstyled">
-							<li><a href="http://www.cidadessustentaveis.org.br/boas-praticas">Boas Práticas</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/eixos">Eixos</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/signatarios">Cidades Participantes</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/boas-praticas">[%l('Boas Práticas')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/eixos">[%l('Eixos')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/signatarios">[%l('Cidades Participantes')%]</a></li>
 						</ul>
 					</div>
 					<div class="span3">
 						<h4>Institucional</h4>
 						<ul class="unstyled">
-							<li><a href="http://www.cidadessustentaveis.org.br/institucional/apresentacao">Apresentação</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/institucional/a_plataforma">A Plataforma</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/institucional/historico">Histórico</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/institucional/realizadores">Realizadores</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/apresentacao">[%l('Apresentação')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/a_plataforma">[%l('A Plataforma')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/historico">[%l('Histórico')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/realizadores">[%l('Realizadores')%]</a></li>
 						</ul>
 					</div>
 					<div class="span3">
 						<h4>Mais</h4>
 						<ul class="unstyled">
-							<li><a href="http://www.cidadessustentaveis.org.br/institucional/material-divulgacao">Material de Divulgação</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/noticias">Notícias</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/premio">Prêmio PCS</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/contato">Contato</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/institucional/material-divulgacao">[%l('Material de Divulgação')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/noticias">[%l('Notícias')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/premio">[%l('Prêmio PCS')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/contato">[%l('Contato')%]</a></li>
 						</ul>
 					</div>
 				</div>
@@ -257,7 +257,7 @@
 					</div>
 					<div class="span3">
 
-						<h4>Conecte-se</h4>
+						<h4>[%l('Conecte-se')%]</h4>
 						<div class="icons">
 							<a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter" title="Twitter">twitter</a>
 							<a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook" title="Facebook">facebook</a>
@@ -277,7 +277,7 @@
 
   <div class="copyright">
         <div class="footer-copyright-content">
-              Todo o conteúdo do site é licenciado sob a
+              [%l('Todo o conteúdo do site é licenciado sob a')%] 
               <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
                 <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
               </a>
@@ -311,7 +311,7 @@
 			<div class="span3">
 				<div class="row">
 					<div class="span1 iota-logo">
-						<a href="http://awareti.github.io/Iota/" target="_blank" title="Clique aqui para saber mais sobre o Iota"><img src="/static/images/logo-96.png" alt="Iota"></a>
+						<a href="http://awareti.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><img src="/static/images/logo-96.png" alt="Iota"></a>
 					</div>
 					<div class="span1 opendata-logo">
 						<a href="http://www.opendefinition.org/okd/" target="_blank"><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="OpenData"></a>
@@ -353,7 +353,7 @@
 
   <div class="copyright">
         <div class="footer-copyright-content">
-              Todo o conteúdo do site é licenciado sob a
+              [%l('Todo o conteúdo do site é licenciado sob a')%]
               <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
                 <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
               </a>
