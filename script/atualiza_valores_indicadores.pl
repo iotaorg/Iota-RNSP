@@ -19,13 +19,13 @@ use Iota::IndicatorData;
 my $data = Iota::IndicatorData->new( schema => $schema );
 
 $data->upsert(
-    #indicators => [
-                #    $data->indicators_from_variation_variables(
-                #        variables => [ 6,7 ]
-                #    )
-                #],
-                #dates   => [ '2012-01-01' ],
-                #user_id => 152,
 
+    #indicators => [
+    #    $data->indicators_from_variation_variables(
+    #        variables => [ 6,7 ]
+    #    )
+    #],
+    #dates   => [ '2012-01-01' ],
+    #user_id => 152,
 
 );

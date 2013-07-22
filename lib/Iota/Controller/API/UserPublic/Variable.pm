@@ -11,7 +11,9 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/userpublic/base') : PathPart('variable') : CaptureArgs(0) {
-    my ( $self, $c, $id ) = @_;
+    my ( $self, $c) = @_;
+
+
     $c->stash->{collection} = $c->model('DB::Variable');
 }
 

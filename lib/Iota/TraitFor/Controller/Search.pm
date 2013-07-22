@@ -24,13 +24,13 @@ around list_GET => sub {
 
     my $qtde_param = 0;
 
-    if (!$ignored_params_cache){
-        foreach my $ig (@{$self->ignored_params}){
+    if ( !$ignored_params_cache ) {
+        foreach my $ig ( @{ $self->ignored_params } ) {
             $ignored_params_cache->{$ig} = 1;
         }
     }
 
-    foreach my $k (keys %{ $c->request->params }){
+    foreach my $k ( keys %{ $c->request->params } ) {
         $qtde_param++ unless $ignored_params_cache->{$k};
     }
 

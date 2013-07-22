@@ -11,7 +11,7 @@ has schema => (
 sub upsert {
     my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator');
-use DDP; p %params;
+
     # procura pelos indicadores enviados
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
@@ -116,7 +116,7 @@ use DDP; p %params;
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
 
-        ( 'user_id' => $params{user_id} ) x!! exists $params{user_id},
+        ( 'user_id' => $params{user_id} ) x !!exists $params{user_id},
 
         ( valid_from => $params{dates} ) x !!exists $params{dates},
 

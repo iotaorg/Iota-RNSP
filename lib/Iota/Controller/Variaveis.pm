@@ -71,7 +71,6 @@ sub _download {
         ]
     );
 
-
     my $data_rs =
       $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )
       ->search(

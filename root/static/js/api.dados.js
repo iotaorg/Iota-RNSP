@@ -2,6 +2,7 @@ var indicadores_list;
 var eixos_list = {"dados": []};
 var users_list;
 var indicadorID;
+var StateDataDefault;
 var indicadorDATA;
 var dadosGrafico = {"dados": [], "labels": []};
 var dadosMapa = [];
@@ -180,6 +181,10 @@ $(document).ready(function(){
 		}else{
 			selectAxis(indicadorID);
 		}
+
+
+		StateDataDefault = { indicator_id: indicadorID};
+
 		$(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).addClass("selected");
 		$.each(indicadores_list, function(i,item){
 			if (item.id == indicadorID){
@@ -1042,6 +1047,10 @@ $(document).ready(function(){
     History.Adapter.bind(window,'statechange',function(){
         var State = History.getState();
 
+
+        if ((typeof State.data.indicator_id == "undefined")){
+            State.data = StateDataDefault;
+        }
 
         if (!(typeof State.data.indicator_id == "undefined")){
             indicadorID = State.data.indicator_id;

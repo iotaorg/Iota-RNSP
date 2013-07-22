@@ -16,6 +16,8 @@ sub base : Chained('/api/indicator/object') : PathPart('network_config') : Captu
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
+    $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
+      unless $id =~ /^[0-9]+$/;
 
     $c->stash->{object_id} = $id;
 }
