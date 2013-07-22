@@ -288,6 +288,7 @@ $(document).ready(function () {
                 });
             }
 
+
             if (!(indicador_data.variable_type == 'str')) {
                 history_table += "<th class='formula_valor'>Valor da Fórmula</th>";
             }
@@ -307,9 +308,6 @@ $(document).ready(function () {
 
             $.each(historico_data.rows, function (index, value) {
 
-                if (historico_data.rows[index].valores.length==0){
-                    return;
-                }
                 history_table += "<tr><td class='periodo'>$$periodo</td>".render({
                     periodo: convertDateToPeriod(historico_data.rows[index].valid_from, indicador_data.period)
                 });
