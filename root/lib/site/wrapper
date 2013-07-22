@@ -203,9 +203,9 @@
 					<div class="span3">
 						<h4>Dados</h4>
 						<ul class="unstyled">
-							<li><a href="http://www.cidadessustentaveis.org.br/boas-praticas">[%l('Boas Práticas%]</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/eixos">[%l('Eixos%]</a></li>
-							<li><a href="http://www.cidadessustentaveis.org.br/signatarios">[%l('Cidades Participantes%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/boas-praticas">[%l('Boas Práticas')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/eixos">[%l('Eixos')%]</a></li>
+							<li><a href="http://www.cidadessustentaveis.org.br/signatarios">[%l('Cidades Participantes')%]</a></li>
 						</ul>
 					</div>
 					<div class="span3">
