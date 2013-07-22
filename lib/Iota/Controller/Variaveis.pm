@@ -71,6 +71,7 @@ sub _download {
         ]
     );
 
+
     my $data_rs =
       $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )
       ->search(
@@ -78,7 +79,9 @@ sub _download {
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 
-            ( bind => [ ( $c->stash->{region}->id ) x 2 ] ) x !!$c->stash->{region}
+            exists $c->stash->{region}
+            ? ( bind => [ ( $c->stash->{region}->id ) x 2 ] )
+            : ()
         }
       );
 
