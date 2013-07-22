@@ -227,7 +227,9 @@ $(document).ready(function(){
 
             var title = $(".indicators .selected").html();
 
-			$('html,body').animate({scrollTop: 0},'slow');
+            if ($(window).scrollTop() > 130){
+                $('html,body').animate({scrollTop: 130},'slow');
+            }
 
 			if (ref == "comparacao"){
 				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
