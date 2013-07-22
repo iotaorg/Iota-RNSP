@@ -231,8 +231,9 @@ $(document).ready(function(){
                 $('html,body').animate({scrollTop: 130},'slow');
             }
 
+            var url;
 			if (ref == "comparacao"){
-				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
+				url = "/" + $(this).attr("name-uri") + $.getUrlParams();
 
 				History.pushState({
                     indicator_id : indicadorID
@@ -240,18 +241,18 @@ $(document).ready(function(){
 
 
 			}else if (ref == "indicador" ){
-                var url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
+                url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
                 History.pushState({
                     indicator_id : indicadorID
                 }, title, url);
             }else if (ref == "region_indicator"){
-                var url = "/"+cidade_uri + "/regiao/" +  region_name_url + "/" + $(this).attr("name-uri") + $.getUrlParams();
+                url = "/"+cidade_uri + "/regiao/" +  region_name_url + "/" + $(this).attr("name-uri") + $.getUrlParams();
                 History.pushState({
                     indicator_id : indicadorID
                 }, title, url);
             }
 
-            ga('send', 'pageview');
+            ga('send', 'pageview', url);
 		});
 
   	}
