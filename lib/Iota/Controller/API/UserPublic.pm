@@ -10,7 +10,7 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
-    my ( $self, $c) = @_;
+    my ( $self, $c ) = @_;
 
     $c->stash->{collection} = $c->model('DB::User');
 }
@@ -162,7 +162,7 @@ sub stash_comparacao {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-        $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
+    $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
       unless $id =~ /^[0-9]+$/;
 
     $c->detach( '/error_500', ['user.id invalid!'] ) unless $id =~ /^[0-9]+$/;

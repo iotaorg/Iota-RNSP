@@ -116,7 +116,7 @@ sub upsert {
         ? ( 'region_id' => $params{regions_id} )
         : ( 'region_id' => undef ),
 
-        ( 'user_id' => $params{user_id} ) x!! exists $params{user_id},
+        ( 'user_id' => $params{user_id} ) x !!exists $params{user_id},
 
         ( valid_from => $params{dates} ) x !!exists $params{dates},
 

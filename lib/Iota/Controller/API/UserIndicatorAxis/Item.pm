@@ -18,7 +18,7 @@ sub base : Chained('/api/userindicatoraxis/object') : PathPart('item') : Capture
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
-        $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
+    $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
       unless $id =~ /^[0-9]+$/;
 
     $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id, } );
