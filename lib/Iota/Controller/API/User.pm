@@ -19,6 +19,8 @@ sub base : Chained('/api/base') : PathPart('user') : CaptureArgs(0) {
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
+    $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
+      unless $id =~ /^[0-9]+$/;
 
     my $url = $c->req->uri->path;
     if (   ( $url =~ /variable_config$/ || $url =~ /variable_config\/\d+$/ )

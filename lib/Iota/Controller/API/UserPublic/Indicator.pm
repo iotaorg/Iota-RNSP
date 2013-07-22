@@ -46,6 +46,8 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
+    $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
+      unless $id =~ /^[0-9]+$/;
 
     $c->stash->{indicator} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
     $c->stash->{indicator_obj} = $c->stash->{indicator}->next;

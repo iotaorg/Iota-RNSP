@@ -169,7 +169,7 @@ $(document).ready(function(){
 						name: item.name,
 						axis_id: item.axis.id,
 						uri: item.name_url,
-						explanation: item.explanation
+						explanation: (item.explanation) ? item.explanation : ""
 					}));
 		});
 		$("div.bs-tooltip").tooltip();
@@ -189,7 +189,7 @@ $(document).ready(function(){
 
 		if (indicadorID){
 			$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
-			$(".data-right .data-title .description").html(indicadorDATA.explanation);
+			$(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
 
             montaDateRuler();
 		}
@@ -221,6 +221,8 @@ $(document).ready(function(){
             $(this).addClass("selected");
 
             var title = $(".indicators .selected").html();
+
+			$('html,body').animate({scrollTop: 0},'slow');
 
 			if (ref == "comparacao"){
 				var url = "/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -259,7 +261,7 @@ $(document).ready(function(){
         });
 
         $(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
-        $(".data-right .data-title .description").html(indicadorDATA.explanation);
+        $(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
 
         montaDateRuler();
 
@@ -973,6 +975,7 @@ $(document).ready(function(){
 
 	function setaDadosAbertos(){
 
+		$("#button-download").unbind();
 		$("#button-download").click(function(){
 			if ($(".share-link").is(":visible")){
 				$(".share-link").toggle();
@@ -983,6 +986,7 @@ $(document).ready(function(){
 		});
 
 
+		$("#button-share").unbind();
 		$("#button-share").click(function(){
 			if ($(".download-links").is(":visible")){
 				$(".download-links").toggle();
@@ -995,6 +999,7 @@ $(document).ready(function(){
 		$("#share-link").focus(function(){
 			$(this).select();
 		});
+		$("#share-link").unbind();
 		$("#share-link").click(function(){
 			$(this).select();
 		});
@@ -1053,7 +1058,7 @@ $(document).ready(function(){
 
             var title = $(".indicators .selected").html();
             $(".data-right .data-title .title").html(title);
-            $(".data-right .data-title .description").html(indicadorDATA.explanation);
+            $(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
 
             carregaVariacoes = true;
 

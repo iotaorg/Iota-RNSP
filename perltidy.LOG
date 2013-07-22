@@ -11,20 +11,15 @@ ci = levels of continuation indentation; bk = 1 if in BLOCK, 0 if not.
 in:out indent c b  nesting   code + messages; (messages begin with >>>)
 lines  levels i k            (code begins with one '.' per indent level)
 ------  ----- - - --------   -------------------------------------------
-L51:51   i3:3 0 1 {({        ...&add_value( '2011', 20, $mov, 0  ....
-L102:102 i3:3 0 1 {({        ...&value_not_exists( '2011', 19, $ ....
-L137:137 i0:0 0 1            sub add_value {
-L155:155 i0:0 0 1            sub list_status {
-L167:167 i0:0 0 1            sub post_2010 {
-L208:208 i0:0 0 1            sub post_2011 {
-L226:226 i0:0 0 1            sub is_same_value {
-L242:242 i0:0 0 1            sub value_not_exists {
-L266:266 i0:0 0 1            sub add_indicator {
-L294:294 i0:0 0 1            sub check_value {
-L306:306 i0:0 0 1 {          >>>Last line
+L50:50   i3:3 0 1 {({        ...ok( my $new_user = $schema->resu ....
+L54:54   i3:3 0 0 {({        >>>operator in print statement not recommended
+L66:66   i3:3 0 1 {({        >>>operator in print statement not recommended
+L70:70   i3:3 0 1 {({        >>>operator in print statement not recommended
+L76:76   i3:3 0 1 {({        >>>operator in print statement not recommended
+L89:89   i0:0 0 1            >>>Last line
 
 No indentation disagreement seen
 
 No lines exceeded 120 characters
-  Maximum output line length was 107 at line 160
+  Maximum output line length was 112 at line 50
 Converged.  Output for iteration 2 same as for iter 1.

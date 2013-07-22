@@ -12,6 +12,9 @@ __PACKAGE__->config( default => 'application/json' );
 
 sub base : Chained('/api/userpublic/base') : PathPart('variable') : CaptureArgs(0) {
     my ( $self, $c, $id ) = @_;
+    $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
+      unless $id =~ /^[0-9]+$/;
+
     $c->stash->{collection} = $c->model('DB::Variable');
 }
 
