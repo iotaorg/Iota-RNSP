@@ -10,6 +10,7 @@ html {overflow-y: scroll;}
 	background-position: 95% 100%;
 }
 
+
 .navbar-fixed-top .navbar-inner{
 	background: #20c1c1; /* Old browsers */
 	background-image: none;
@@ -23,12 +24,12 @@ html {overflow-y: scroll;}
 .navbar-fixed-top .navbar-inner .nav li a,
 .navbar-fixed-top .navbar-inner .nav li a:visited{
 	color: #fff;
-	text-shadow: 0 1px 0 #116a6a;	
+	text-shadow: 0 1px 0 #116a6a;
 }
 .navbar-fixed-top .navbar-inner .nav li a.active,
 .navbar-fixed-top .navbar-inner .nav li a:hover{
 	color: #ccffff;
-	text-shadow: 0 1px 0 #116a6a;	
+	text-shadow: 0 1px 0 #116a6a;
 }
 .navbar-fixed-top .navbar-inner .nav li.active{
 	background: #009399;
@@ -42,7 +43,7 @@ html {overflow-y: scroll;}
 		background-color: #009399;
 }
 .navbar-inverse .nav li.dropdown.open>.dropdown-toggle{
-	background-color: #009399;	
+	background-color: #009399;
 }
 .navbar-inverse .nav .active>a{
 	background-color: #009399;
@@ -672,8 +673,16 @@ input.button-data:hover{
 }
 
 .download-links .label{
-	display: inline-block;
-	margin-right: 3px;
+display: inline-block;
+margin-right: 3px;
+position: relative;
+top: -3px;
+text-shadow: none;
+color: #333;
+background-color: transparent;
+font-weight: 300;
+font-size: 1em;
+
 }
 
 .download-links select{
@@ -691,6 +700,9 @@ input.button-data:hover{
 	border: 1px solid #9fcdd2;
 	padding: 4px 20px;
 	margin: 5px;
+    position: relative;
+    top: -5px;
+
 }
 .download-links a:hover{
 	background-color: #f5f5f5;
