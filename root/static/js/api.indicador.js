@@ -25,7 +25,7 @@ $(document).ready(function () {
                 loadIndicadorData();
             },
             error: function (data) {
-                console.log("erro ao carregar informaObservaçõesções da cidade");
+                console.log("erro ao carregar informações da cidade");
             }
         });
     }
