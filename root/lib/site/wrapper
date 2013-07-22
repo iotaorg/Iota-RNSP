@@ -1,7 +1,10 @@
 [%IF !without_wrapper%]
 <!DOCTYPE HTML>
 <html lang="pt-br">
-<head>
+<head profile="http://www.w3.org/2005/10/profile">
+<link rel="icon" 
+      type="image/png" 
+      href="/static/images/favicon.png" />
 <meta charset="UTF-8">
 <meta name="description" content="" />
 <meta name="keywords" content="" />
