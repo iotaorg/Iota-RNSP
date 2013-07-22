@@ -11,7 +11,7 @@ has schema => (
 sub upsert {
     my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator');
-use DDP; p %params;
+
     # procura pelos indicadores enviados
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
