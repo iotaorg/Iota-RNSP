@@ -149,7 +149,13 @@
             <div class="row">
 
                 <div class="span4">
-                    <div class="logo"><img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="" /></div>
+                    <div class="logo">
+						[% IF institute.short_name == 'org' %]
+							<img src="/static/images/logo-movimento.png" alt="" />
+						[% ELSE %]
+							<a href="http://www.cidadessustentaveis.org.br"><img src="/static/images/logo.png" alt="Programa Cidades Sustentáveis" /></a>
+						[% END %]
+					</div>
                 </div>
 
                 [% IF institute.short_name == 'org' %]
