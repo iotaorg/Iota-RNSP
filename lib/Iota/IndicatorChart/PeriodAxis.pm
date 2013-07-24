@@ -247,7 +247,8 @@ sub read_values {
     my $indicator = $self->indicator;
     my $period    = $indicator->period;
 
-    my $user_id = $options{user_id};
+    my $user_id = ref $options{user_id} eq 'ARRAY' ? $options{user_id} : [$options{user_id}];
+
     # NOTE 2013-02-05
     # tirei o default de $period pois o JS só funciona com ano
     my $group_by = $options{group_by} ? $self->_valid_or_null( $options{group_by} ) : 'yearly';
@@ -259,7 +260,7 @@ sub read_values {
     if ( $indicator->indicator_type eq 'varied' ) {
         if ( $indicator->dynamic_variations ) {
             @indicator_variations =
-              $indicator->indicator_variations->search( { user_id => [ $user_id, $indicator->user_id ], },
+              $indicator->indicator_variations->search( { user_id => {'in' => [ @$user_id, $indicator->user_id ]} },
                 { order_by => 'order' } )->all;
         }
         else {
@@ -277,7 +278,7 @@ sub read_values {
         goal_operator    => $indicator->goal_operator,
         goal_explanation => $indicator->goal_explanation,
         goal_source      => $indicator->goal_source,
-        series           => [],
+
         period           => $period,
         group_by         => $group_by,
 
@@ -286,7 +287,7 @@ sub read_values {
     };
 
     my $user_rs = $self->schema->resultset('User')->search(
-        { 'me.id' => $user_id },
+        { 'me.id' => { 'in' => $user_id} },
         { prefetch => 'city' }
     );
 
@@ -307,10 +308,7 @@ sub read_values {
     }
 
     foreach my $row_user_id ( keys %{$series} ) {
-        my $local_data = {
-            min => 9999999999999999,
-            max => -9999999999999999,
-        };
+        my $local_data = {};
         my $total    = 0;
         my $total_ok = 0;
         my $totali   = 0;
@@ -402,7 +400,9 @@ sub read_values {
     }
 
     # retrocompatibilidade
-    if (ref $user_id eq ''){
+    if (ref $options{user_id} eq ''){
+
+        $user_id = $options{user_id};
 
         $data = {
             %$data,
@@ -433,7 +433,7 @@ sub _load_variables_values {
 
     my $rs = $self->schema->resultset('IndicatorValue')->search(
         {
-            user_id      => $options{user_id},
+            user_id      => { 'in' => $options{user_id} },
             indicator_id => $self->indicator->id,
             active_value => 1,
 
