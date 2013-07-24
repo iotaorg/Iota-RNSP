@@ -91,13 +91,13 @@ sub render_GET {
         traits    => [ $c->stash->{chart_type} ],
         schema    => $c->model('DB'),
         indicator => $c->stash->{indicator_obj} || $c->stash->{indicator},
-        user_id   => $c->stash->{user_id} || $c->user->id
     );
 
     my %options = (
         from     => $c->req->params->{from},
         to       => $c->req->params->{to},
         group_by => $c->req->params->{group_by},
+        user_id   => $c->stash->{user_id} || $c->user->id
     );
     my $ret = eval { $model->data(%options) };
     if ($@) {
