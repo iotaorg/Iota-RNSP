@@ -29,6 +29,31 @@ eval {
     $schema->txn_do(
         sub {
             my ( $res, $c );
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/indicator',
+                [
+                    api_key                          => 'test',
+                    'indicator.create.name'          => 'Foo Bar',
+                    'indicator.create.formula'       => '5 ' ,
+                    'indicator.create.axis_id'       => '2',
+                    'indicator.create.explanation'   => 'explanation',
+                    'indicator.create.source'        => 'me',
+                    'indicator.create.goal_source'   => '@fulano',
+                    'indicator.create.chart_name'    => 'pie',
+                    'indicator.create.goal_operator' => '>=',
+                    'indicator.create.tags'          => 'you,me,she',
+
+                    'indicator.create.observations'        => 'lala',
+                    'indicator.create.visibility_level'    => 'restrict',
+                    'indicator.create.visibility_users_id' => '1',
+
+                ]
+            );
+
+            ok( $res->is_success, 'indicator created!' );
+            is( $res->code, 201, 'created!' );
+
             ( $res, $c ) = ctx_request(
                 POST '/api/best_pratice',
                 [
