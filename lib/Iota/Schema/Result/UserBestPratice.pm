@@ -224,7 +224,6 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-07-01 11:29:49
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HJNvNnXIPGxCIwmJWOxxNA
 
-__PACKAGE__->has_one( "axis", "Iota::Schema::Result::Axis", { "foreign.id" => "self.axis_id" },{ cascade_copy => 0, cascade_delete => 0 } );
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
