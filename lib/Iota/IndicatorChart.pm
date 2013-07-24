@@ -18,12 +18,6 @@ has schema => (
     required => 1
 );
 
-has user_id => (
-    is       => 'rw',
-    isa      => 'Int',
-    required => 1
-);
-
 has _data => (
     is       => 'rw',
     isa      => 'HashRef',

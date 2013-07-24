@@ -105,6 +105,8 @@ sub best_pratice_DELETE {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       if $c->check_any_user_role(qw(user)) && $obj->user_id != $c->user->id;
 
+    $obj->user_best_pratice_axes->delete;
+
     $obj->delete;
 
     $self->status_no_content($c);

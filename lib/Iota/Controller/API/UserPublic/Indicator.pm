@@ -427,7 +427,6 @@ Retorna o status de prenchimento dos indicadores
 
 =cut
 
-# TODO: verificar isso
 sub indicator_status_GET {
     my ( $self, $c ) = @_;
     my $ret;
@@ -518,27 +517,7 @@ sub indicator_status_GET {
     }
 }
 
-sub _get_values_dates {
-    my ( $self, $user_id, $variations ) = @_;
 
-    my %dates;
-
-    foreach my $variation (@$variations) {
-
-        my @dates = $variation->indicator_variables_variations_values->search(
-            { user_id => $user_id, region_id => undef },
-            {
-                select   => [qw/valid_from/],
-                as       => [qw/valid_from/],
-                group_by => [qw/valid_from/]
-            }
-        )->as_hashref->all;
-        map { $dates{ $_->{valid_from} } = 1 } @dates;
-
-    }
-
-    return keys %dates;
-}
 
 1;
 

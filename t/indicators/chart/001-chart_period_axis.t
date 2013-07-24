@@ -122,11 +122,14 @@ eval {
                 schema    => $schema,
                 indicator => $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
                 traits    => ['PeriodAxis'],
-                user_id   => $Iota::TestOnly::Mock::AuthUser::_id,
 
             );
 
-            my $data = $chart->data( group_by => 'yearly' );
+
+            my $data = $chart->data(
+                group_by => 'yearly',
+                user_id   => $Iota::TestOnly::Mock::AuthUser::_id,
+            );
 
             ( $res, $c ) = ctx_request( GET $uri_chart->path_query . '?group_by=yearly' );
 

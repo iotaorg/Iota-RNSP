@@ -247,6 +247,8 @@ sub read_values {
     my $indicator = $self->indicator;
     my $period    = $indicator->period;
 
+    my $user_id = ref $options{user_id} eq 'ARRAY' ? $options{user_id} : [$options{user_id}];
+
     # NOTE 2013-02-05
     # tirei o default de $period pois o JS só funciona com ano
     my $group_by = $options{group_by} ? $self->_valid_or_null( $options{group_by} ) : 'yearly';
@@ -258,7 +260,7 @@ sub read_values {
     if ( $indicator->indicator_type eq 'varied' ) {
         if ( $indicator->dynamic_variations ) {
             @indicator_variations =
-              $indicator->indicator_variations->search( { user_id => [ $self->user_id, $indicator->user_id ], },
+              $indicator->indicator_variations->search( { user_id => {'in' => [ @$user_id, $indicator->user_id ]} },
                 { order_by => 'order' } )->all;
         }
         else {
@@ -276,7 +278,7 @@ sub read_values {
         goal_operator    => $indicator->goal_operator,
         goal_explanation => $indicator->goal_explanation,
         goal_source      => $indicator->goal_source,
-        series           => [],
+
         period           => $period,
         group_by         => $group_by,
 
@@ -284,101 +286,139 @@ sub read_values {
         max => -9999999999999999,
     };
 
-    my $user = $self->schema->resultset('User')->find( $self->user_id );
-    my $city = $user->city;
+    my $user_rs = $self->schema->resultset('User')->search(
+        { 'me.id' => { 'in' => $user_id} },
+        { prefetch => 'city' }
+    );
 
-    $data->{city} =
-      $city
-      ? {
-        name      => $city->name,
-        latitude  => $city->latitude,
-        longitude => $city->longitude,
-        id        => $city->id
-      }
-      : {};
-
-    my $total    = 0;
-    my $total_ok = 0;
-    my $totali   = 0;
-    foreach my $start ( sort { $a cmp $b } keys %{$series} ) {
-        my @data = ();
-        my $row  = {
-            begin => $start,
-            sum   => 0,
-            data  => \@data,
-            min   => 9999999999999999,
-            max   => -9999999999999999
+    while (my $user = $user_rs->next){
+        my $ux = {
+            name => $user->name
         };
-        my $sum    = 0;
-        my $sum_ok = 0;
-        my $total2 = 0;
+        if (my $city = $user->city){
+            $ux->{city} = {
+                name      => $city->name,
+                latitude  => $city->latitude,
+                longitude => $city->longitude,
+                id        => $city->id
+            }
+        }
 
-        foreach my $dt ( sort { $a cmp $b } keys %{ $series->{$start}{sets} } ) {
-            my $vals_user = $series->{$start}{sets}{$dt};
-            my $valor;
+        $data->{users}{$user->id} = $ux;
+    }
 
-            if ( $indicator->indicator_type eq 'varied' ) {
+    foreach my $row_user_id ( keys %{$series} ) {
+        my $local_data = {};
+        my $total    = 0;
+        my $total_ok = 0;
+        my $totali   = 0;
+        foreach my $start ( sort { $a cmp $b } keys %{$series->{$row_user_id}} ) {
+            my @data = ();
+            my $row  = {
+                begin => $start,
+                sum   => 0,
+                data  => \@data,
+                min   => 9999999999999999,
+                max   => -9999999999999999
+            };
+            my $sum    = 0;
+            my $sum_ok = 0;
+            my $total2 = 0;
 
-                my $sum = undef;
-                for my $variation (@indicator_variations) {
+            foreach my $dt ( sort { $a cmp $b } keys %{ $series->{$row_user_id}{$start}{sets} } ) {
+                my $vals_user = $series->{$row_user_id}{$start}{sets}{$dt};
+                my $valor;
 
-                    my $value = exists $vals_user->{ $variation->name }
-                      && defined $vals_user->{ $variation->name } ? $vals_user->{ $variation->name } : '-';
+                if ( $indicator->indicator_type eq 'varied' ) {
 
-                    push @{ $row->{variations} },
-                      {
-                        name  => $variation->name,
-                        value => $value
-                      };
+                    my $sum = undef;
+                    for my $variation (@indicator_variations) {
+                        next unless $variation->user_id == $indicator->user_id || $variation->user_id == $row_user_id;
 
-                    if ( $value ne '-' ) {
-                        $sum ||= 0;
-                        $sum += $value;
+                        my $value = exists $vals_user->{ $variation->name }
+                        && defined $vals_user->{ $variation->name } ? $vals_user->{ $variation->name } : '-';
+
+                        push @{ $row->{variations} },
+                        {
+                            name  => $variation->name,
+                            value => $value
+                        };
+
+                        if ( $value ne '-' ) {
+                            $sum ||= 0;
+                            $sum += $value;
+                        }
                     }
+
+                    $row->{formula_value} = $valor = $sum;
+
+                }
+                else {
+                    $valor = $vals_user->{''};
                 }
 
-                $row->{formula_value} = $valor = $sum;
+                if ( $valor ne '-' ) {
+                    $sum_ok = $total_ok = 1;
+                    $total += $valor;
+                    $sum   += $valor;
+                    $row->{max} = $valor if $valor > $row->{max};
+                    $row->{min} = $valor if $valor < $row->{min};
+                }
+                push @data, [ $dt, $valor ];
 
+                $total2++;
+                $totali++;
+            }
+
+
+            if ( $total2 && $sum_ok ) {
+                $row->{sum} = $sum;
+                $row->{avg} = $total2 ? $sum / $total2 : $total2;
+
+                $data->{max} = $sum if $sum > $data->{max};
+                $data->{min} = $sum if $sum < $data->{min};
             }
             else {
-                $valor = $vals_user->{''};
+                $row->{avg} = '-';
+                $row->{sum} = '-';
+                $row->{max} = '-';
+                $row->{min} = '-';
             }
 
-            if ( $valor ne '-' ) {
-                $sum_ok = $total_ok = 1;
-                $total += $valor;
-                $sum   += $valor;
-                $row->{max} = $valor if $valor > $row->{max};
-                $row->{min} = $valor if $valor < $row->{min};
-            }
-            push @data, [ $dt, $valor ];
+            $row->{label} = &get_label_of_period( $start, $group_by );
 
-            $total2++;
-            $totali++;
+            push @{ $local_data->{series} }, $row;
         }
-        if ( $total2 && $sum_ok ) {
-            $row->{sum} = $sum;
-            $row->{avg} = $total2 ? $sum / $total2 : $total2;
-
-            $data->{max} = $sum if $sum > $data->{max};
-            $data->{min} = $sum if $sum < $data->{min};
+        if ($total_ok) {
+            $local_data->{avg} = $totali ? $total / $totali : '-';
         }
         else {
-            $row->{avg} = '-';
-            $row->{sum} = '-';
-            $row->{max} = '-';
-            $row->{min} = '-';
+            $local_data->{avg} = '-';
         }
 
-        $row->{label} = &get_label_of_period( $start, $group_by );
+        $data->{users}{$row_user_id}{data} = $local_data;
+    }
 
-        push @{ $data->{series} }, $row;
-    }
-    if ($total_ok) {
-        $data->{avg} = $totali ? $total / $totali : '-';
-    }
-    else {
-        $data->{avg} = '-';
+    # retrocompatibilidade
+    if (ref $options{user_id} eq ''){
+
+        $user_id = $options{user_id};
+
+        $data = {
+            %$data,
+            city => $data->{users}{$user_id}{city},
+
+            exists $data->{users}{$user_id}{data}
+            ? %{$data->{users}{$user_id}{data}}
+            : (),
+        };
+
+        if (!exists $data->{users}{$user_id}{data}){
+            $data->{max} = '-';
+            $data->{min} = '-';
+        }
+        delete $data->{users};
+
     }
 
     $self->_data($data);
@@ -393,7 +433,7 @@ sub _load_variables_values {
 
     my $rs = $self->schema->resultset('IndicatorValue')->search(
         {
-            user_id      => $self->user_id,
+            user_id      => { 'in' => $options{user_id} },
             indicator_id => $self->indicator->id,
             active_value => 1,
 
@@ -417,7 +457,7 @@ sub _load_variables_values {
         next unless defined $row->value;
         next if $row->value eq '';
 
-        $values->{$gp}{sets}{ $row->valid_from }{ $row->variation_name } = $row->value;
+        $values->{$row->user_id}{$gp}{sets}{ $row->valid_from }{ $row->variation_name } = $row->value;
     }
 
     return $values;
