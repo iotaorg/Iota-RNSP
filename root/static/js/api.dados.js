@@ -339,7 +339,7 @@ $(document).ready(function(){
 
 						if (indicadorDATA.indicator_type == "varied"){
 							if ($("#variationFilter option").length <= 0){
-								if(data.series.length > 0){
+								if((data.series) && data.series.length > 0){
 									$.each(data.series[0].variations, function(index,item){
 										$("#variationFilter").append("<option value='$$index'>$$name".render({
 												index: index,
@@ -366,16 +366,18 @@ $(document).ready(function(){
 									indicador_uri: indicador_uri
 								});
 						var series = [];
-						for (j = 0; j < data.series.length; j++){
-                            if(indicadorDATA.variable_type == 'str'){
-                                series[data.series[j].label] = data.series[j].data[0][1] == '-' ? '-' : 'OK';
-                            }else{
-                                if (indicadorDATA.indicator_type == "varied"){
-                                    series[data.series[j].label] = data.series[j].variations[$("#variationFilter").val()].value;
-                                }else{
-                                    series[data.series[j].label] = data.series[j].sum;
-                                }
-                            }
+						if (data.series){
+							for (j = 0; j < data.series.length; j++){
+								if(indicadorDATA.variable_type == 'str'){
+									series[data.series[j].label] = data.series[j].data[0][1] == '-' ? '-' : 'OK';
+								}else{
+									if (indicadorDATA.indicator_type == "varied"){
+										series[data.series[j].label] = data.series[j].variations[$("#variationFilter").val()].value;
+									}else{
+										series[data.series[j].label] = data.series[j].sum;
+									}
+								}
+							}
 						}
 
 						var data_atual = new Date(ymd_atual[0], ymd_atual[1], ymd_atual[2]);
