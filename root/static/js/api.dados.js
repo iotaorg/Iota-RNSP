@@ -2,6 +2,7 @@ var indicadores_list;
 var eixos_list = {"dados": []};
 var users_list;
 var indicadorID;
+var indicadorID_origin = indicadorID;
 var StateDataDefault;
 var indicadorDATA;
 var dadosGrafico;
@@ -234,7 +235,7 @@ $(document).ready(function(){
 			}else if (ref == "indicador" ){
                 url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
                 History.pushState({
-                    indicator_id : indicadorID
+                    indicator_id: indicadorID
                 }, title, url);
             }else if (ref == "region_indicator"){
                 url = "/"+cidade_uri + "/regiao/" +  region_name_url + "/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -877,7 +878,11 @@ $(document).ready(function(){
 
         State.data = State.data == null ? {} : State.data;
 
+
 		if (ref == "home" || ref == "indicador" || ref == "comparacao" || ref == "region_indicator"){
+            if (!State.data.indicator_id) {
+                State.data.indicator_id = indicadorID_origin;
+            }
 
 			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
@@ -898,7 +903,11 @@ $(document).ready(function(){
                 var $me = $(b),
                     part = $me.attr('data-part-onchange-location');
                 var newURL = updateURLParameter(window.location.href, 'part', part);
-                $.get(newURL, function(data) {
+
+                $.ajax({
+                    url: newURL,
+                    cache: true
+                }).done(function(data) {
                     var $c = $(data);
 
                     $me.replaceWith($c);
@@ -918,6 +927,7 @@ $(document).ready(function(){
                         $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
                     }
                 });
+
             });
 
         }else{
