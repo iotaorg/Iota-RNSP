@@ -57,6 +57,14 @@ sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
 sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
+    # se veio ?part, guarda na stash e remove ele da req para nao atrapalhar novas geracoes de URLs
+    $c->stash->{current_part} = delete $c->req->params->{part};
+    if ($c->stash->{current_part}){
+        delete $c->req->{query_parameters}{part};
+        $c->req->uri ( $c->req->uri_with({part => undef }) );
+    }
+
+
     my $domain = $c->req->uri->host;
 
     my $net = $c->model('DB::Network')->search( { domain_name => $domain } )->first;
@@ -281,7 +289,7 @@ sub stash_distritos {
 
     $c->stash->{fator_desigualdade} = \@fatores;
 
-    if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'fator_desigualdade' ) {
+    if ( exists $c->stash->{current_part} && $c->stash->{current_part} eq 'fator_desigualdade' ) {
         $c->stash(
             template        => 'parts/fator_desigualdade.tt',
             without_wrapper => 1
@@ -370,7 +378,7 @@ sub stash_comparacao_distritos {
 
     $c->stash->{analise_comparativa} = $out;
 
-    if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa' ) {
+    if ( exists $c->stash->{current_part} && $c->stash->{current_part} eq 'analise_comparativa' ) {
         $c->stash(
             template        => 'parts/analise_comparativa.tt',
             without_wrapper => 1
@@ -517,6 +525,13 @@ sub network_indicador : Chained('institute_load') PathPart('') CaptureArgs(1) {
     $c->stash->{indicator}{created_at} = $c->stash->{indicator}{created_at}->datetime;
 
     $self->json_to_view( $c, indicator_json => $c->stash->{indicator});
+
+    if ( $c->stash->{current_part} && $c->stash->{current_part} =~ /^(comparacao_indicador_por_cidade)$/ ) {
+        $c->stash(
+            template        => "parts/$1.tt",
+            without_wrapper => 1
+        );
+    }
 }
 
 sub network_indicador_render : Chained('network_indicador') PathPart('') Args(0) {

@@ -158,29 +158,6 @@ var findInArray = function(obj,value){
 	return retorno;
 }
 
-var removeAccents = (function() {
-  var translate_re = /[öäüÖÄÜáàâãéèêúùûóòôõÁÀÂÉÈÊÚÙÛÓÒÔçÇ]/g;
-  var translate = {
-	  "ä": "a", "ö": "o", "ü": "u",
-	  "Ä": "A", "Ö": "O", "Ü": "U",
-	  "á": "a", "à": "a", "â": "a",
-	  "é": "e", "è": "e", "ê": "e",
-	  "ú": "u", "ù": "u", "û": "u",
-	  "ó": "o", "ò": "o", "ô": "o",
-	  "Á": "A", "À": "A", "Â": "A",
-	  "É": "E", "È": "E", "Ê": "E",
-	  "Ú": "U", "Ù": "U", "Û": "U",
-	  "Ó": "O", "Ò": "O", "Ô": "O",
-	  "ã": "a", "Ã": "A", "ç": "c",
-	  "Ç": "C"
-   // probably more to come
-  };
-  return function(s) {
-	return ( s.replace(translate_re, function(match) {
-	  return translate[match];
-	}) );
-  }
-})();
 
 var estados_sg = [];
 

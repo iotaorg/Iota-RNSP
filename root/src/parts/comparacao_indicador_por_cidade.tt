@@ -1,4 +1,5 @@
-<div class="content-fill">
+<div class="content-fill" data-part-onchange-location="comparacao_indicador_por_cidade">
+
     <div class="data-title">
         <div id="indicador-dados" data-json="[%indicator_json|html%]">
         <h1 class="title">[%indicator.name%]</h1>

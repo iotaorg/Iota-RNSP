@@ -383,37 +383,7 @@
 [% assets.export("js") %]
 
 <script>
-var date_from_string = function(str){
 
-
-    return str;
-}
-
-$('[stupidsort]').each(function(x, rlm){
-    var table = $(rlm).stupidtable({
-        myfloat: function(x,y){
-            if (x==y) return 0;
-            if (x == "") return -1;
-            if (y == "") return 1;
-
-            if ( parseFloat(x) > parseFloat(y)) return 1;
-            return -1;
-        }
-    });
-
-    table.bind('aftertablesort', function (event, data) {
-        var th = $(this).find("th");
-        th.find(".arrow").remove();
-        var arrow = data.direction === "asc" ? "↑" : "↓";
-        th.eq(data.column).append('<span class="arrow">' + arrow +'</span>');
-    });
-
-});
-
-
-$('[lockfixed]').each(function(x, rlm){
-    $.lockfixed(rlm,{offset: {top: 47, bottom: 10}});
-});
 
 [% IF institute.short_name == 'gov' %]
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
