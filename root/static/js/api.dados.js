@@ -882,7 +882,8 @@ $(document).ready(function(){
 			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
 
-            if (State.data.indicator_id && (ref == "region_indicator" || ref == "indicador")){
+            if (ref == "region_indicator" || ref == "indicador"){
+
                 activeMenuOfIndicator(State.data.indicator_id);
 
                 $.loadCidadeDataIndicador();
@@ -906,22 +907,16 @@ $(document).ready(function(){
 
                     if (part == 'comparacao_indicador_por_cidade'){
                         $(".indicators").removeClass("meloading");
-
-
-
                         reload_bind_content();
-
-
                         _after_recontent();
 
+                        activeMenuOfIndicator(indicadorDATA.id);
                     }
 
                     var $it = $me.find('a[data-toggle="tab"]');
                     if ($it[0]){
                         $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
                     }
-
-
                 });
             });
 
