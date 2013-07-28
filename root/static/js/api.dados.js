@@ -4,16 +4,17 @@ var users_list;
 var indicadorID;
 var StateDataDefault;
 var indicadorDATA;
-var dadosGrafico = {"dados": [], "labels": []};
-var dadosMapa = [];
+var dadosGrafico;
+
 var heatCluster;
 var carregouTabela = false;
 var carregaVariacoes = true;
 var ano_atual_dados;
 
+var dados_mapa;
 $(document).ready(function(){
 
-	zoom_padrao = 4;
+
 	$.ajaxSetup({ cache: false });
 
 	var graficos = [];
@@ -196,7 +197,6 @@ $(document).ready(function(){
 			$(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
 			$(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
 
-            montaDateRuler();
 		}
 
 		$(".indicators .item").click( function (){
@@ -265,16 +265,13 @@ $(document).ready(function(){
         $(".indicators .item").removeClass("selected");
         $(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).addClass("selected");
 
-        $.each(indicadores_list, function(i,item){
-            if (item.id == indicadorID){
-                indicadorDATA = indicadores_list[i];
-            }
-        });
+
+        indicadorDATA = $.parseJSON($('#indicador-dados').attr('data-json'));
+
 
         $(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
         $(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
 
-        montaDateRuler();
 
     }
 
@@ -287,16 +284,12 @@ $(document).ready(function(){
 			var indicador = indicadorID;
 			var indicador_uri = $(".indicators div.selected").attr("name-uri");
 
-			dadosGrafico = {"dados": [], "labels": []};
-
             var ymd_atual  = ano_atual_dados.split('-');
 
 			var data_atual = new Date(ymd_atual[0], ymd_atual[1], ymd_atual[2]);
 			var ano_anterior = data_atual.getFullYear() + 3;
 			var date_labels = [];
-			for (i = ano_anterior - 3; i <= ano_anterior; i++){
-				dadosGrafico.labels.push(String(i));
-			}
+
 
 			if (indicadorDATA.indicator_type == "varied"){
 				if (carregaVariacoes){
@@ -450,6 +443,7 @@ $(document).ready(function(){
 
 						//alimenta dados dos graficos
 						graficos[index] = valores;
+                        /*
 						dadosGrafico.dados.push({
                             id: item.id,
                             nome: item.nome,
@@ -459,14 +453,15 @@ $(document).ready(function(){
                             latitude: data.city.latitude,
                             longitude: data.city.longitude
                         });
+                */
 
 						//alimenta dados do mapa
 
 						users_ready++;
 
 						if (users_ready >= total_users){
-							geraGraficos();
-							setaGraficos();
+
+
 
                             if (!(typeof google == "undefined")){
                                 geraMapa();
@@ -479,7 +474,6 @@ $(document).ready(function(){
                             $(".indicators").removeClass("meloading");
 						}
 
-						setaTabs();
 
 					},
 					error: function(data){
@@ -500,68 +494,40 @@ $(document).ready(function(){
 		$(".data-content .variationFilter").remove();
 	}
 
-	function montaDateRuler(){
+	function add_binds(){
 
-		var data_atual = new Date();
-		var ano_anterior = data_atual.getFullYear() - 1;
+        dados_mapa   = $.parseJSON($('#map').attr('data-json'));
+        dadosGrafico = $.parseJSON($('#graph').attr('data-json'));
 
-		var grupos = 4;
-		var ano_i = ano_anterior - (grupos * 4) + 1;
+        $('#mapa-filtro-periodo').change( function () {
+            var $me = $(this).val(),
+             $dados = dados_mapa[$me];
 
-		$(".table .period").empty();
-		$(".table .period").append("<div id='date-ruler'></div><div id='date-arrow'></div>");
-		var cont = 0;
-		var periodo = '';
-		for (i = ano_i; i <= ano_anterior; i++){
-			if (cont == 0){
-				periodo += "<div class='item' data-begin='"+ i +"-01-01'>" + i;
-			}else if (cont == 3){
-				periodo += "-" + i + "</div>";
-				cont = -1;
-			}
-			cont++;
-		}
-		$("#date-ruler").append(periodo);
-		//setDateArrow();
+            if (typeof $dados == 'undefined') {
 
-		$("#date-ruler .item").click(function(){
-            var $self = $(this);
-            geraGraficos();
-            if (!$self.hasClass('active')){
-                $("#date-ruler").find(".item").removeClass("active");
-                $self.addClass("active");
-                ano_atual_dados = $self.attr('data-begin');
+                $('#mapa').html('Sem dados para o periodo selecionado.');
+            }else{
 
-                carregouTabela = false;
-                carregaDadosTabela();
-                setDateArrow();
+                geraMapa($dados);
+
             }
-		});
 
-		$("#date-ruler .item:last").click();
-	}
+        });
+        $('a[href="#map"]').on('shown', function (e) {
 
-	function setDateArrow(){
-		var item_pos = $("#date-ruler .item.active").offset();
+            if (!map){
+                $('#mapa-filtro-periodo').change();
+            }
+        });
 
-		var diff = ($("#date-ruler .item.active").innerWidth() - $("#date-arrow").outerWidth()) / 2;
+        $('a[href="#graph"]').on('shown', function (e) {
+            setaGraficos();
+        });
 
-		var new_pos = {top: item_pos.top+15, left: item_pos.left+diff};
 
-		$("#date-arrow").fadeOut("slow",function(){
-			$(this).show();
-			$(this).css("visibility","hidden");
-			$(this).offset({
-					top: new_pos.top,
-					left: new_pos.left
-				});
 
-			$(this).css("visibility","");
-			$(this).fadeIn(350);
-
-		});
-	}
-
+    }
+    add_binds();
 
 	$.carregaGrafico = function(canvasId){
         _resize_canvas();
@@ -668,11 +634,6 @@ $(document).ready(function(){
 		line.Draw();
 
 		montaLegenda({source: legendas, removable: true});
-
-		if (ref == "comparacao"){
-			setaTabs();
-		}
-
 	}
 
 	function setGraphLine(id,status){
@@ -691,7 +652,7 @@ $(document).ready(function(){
 
 	function montaLegenda(args){
 		var legendas = args.source;
-		$(".graph .legend").empty();
+		$("#graph .legend").empty();
 
 		var legenda = "";
 		for (i = 0; i < legendas.length; i++){
@@ -707,11 +668,11 @@ $(document).ready(function(){
 					id: legendas[i].id
 					});
 		}
-		$(".graph .legend").append(legenda);
+		$("#graph .legend").append(legenda);
 
 		if (args.removable){
 
-			$(".data-content .graph .legend .item").hover(function(){
+			$("#graph .legend .item").hover(function(){
 				if (!$(this).hasClass("meta")){
 					$(this).find(".icon").fadeIn();
 				}
@@ -721,7 +682,7 @@ $(document).ready(function(){
 				}
 			});
 
-			$(".data-content .graph .legend .icon").click(function(){
+			$("#graph .legend .icon").click(function(){
 				if ($(this).attr("item-id")){
 					if($.getUrlVar("graphs")){
 						var graphs = $.getUrlVar("graphs").split("-");
@@ -739,67 +700,9 @@ $(document).ready(function(){
 
 	}
 
-	function geraGraficos(){
-        _resize_canvas();
-		for (i = 0; i < graficos.length; i++){
-			var ymin = 0;
 
-			$.each(graficos[i], function(index, valor){
-				if (valor != null){
-					if (ymin == 0) ymin = valor;
-					if (valor < ymin) ymin = valor;
-				}
-			});
-            if (typeof $('#graph-'+i)[0] == "undefined"){
-                continue;
-            }
 
-			var line = new RGraph.Line('graph-'+i, graficos[i]);
- 			line.Set('chart.ylabels', false);
- 			line.Set('chart.noaxes', true);
- 			line.Set('chart.background.grid', false);
- 			line.Set('chart.hmargin', 0);
-			line.Set('chart.ymin', parseInt(ymin-1));
- 			line.Set('chart.gutter.left', 0);
- 			line.Set('chart.gutter.right', 0);
- 			line.Set('chart.gutter.top', 0);
- 			line.Set('chart.gutter.bottom', 0);
- 			line.Set('chart.colors', ['#b4b4b4']);
-            line.Draw();
-		}
-	}
 
-	function setaTabs(){
-		$(".data-content .tabs .item").removeClass("selected");
-		if ($.getUrlVar("view") == "table" || !($.getUrlVar("view"))){
-			$(".data-content .tabs #tab-tabela").addClass("selected");
-			$(".data-content .graph").hide();
-			$(".data-content .map").hide();
-			$(".data-content .table").show();
-		}else if ($.getUrlVar("view") == "graph"){
-			$(".data-content .tabs #tab-graficos").addClass("selected");
-			$(".data-content .table").hide();
-			$(".data-content .map").hide();
-			$(".data-content .graph").show();
-		}else if ($.getUrlVar("view") == "map"){
-			$(".data-content .tabs #tab-mapa").addClass("selected");
-			$(".data-content .table").hide();
-			$(".data-content .graph").hide();
-			$(".data-content .map").show();
-			if (typeof(map) != "undefined"){
-                if (!(typeof google == "undefined")){
-                    google.maps.event.trigger(map, 'resize');
-                    map.setZoom( map.getZoom() );
-                    if ($("#mapa").attr("lat")){
-                        var mapDefaultLocation = new google.maps.LatLng($("#mapa").attr("lat"), $("#mapa").attr("lng"));
-                        map.setCenter(mapDefaultLocation);
-                        $("#mapa").attr("lat","");
-                        $("#mapa").attr("lng","");
-                    }
-                }
-			}
-		}
-	}
 
 	function setaGraficos(){
 		if ($.getUrlVar("graphs")){
@@ -814,68 +717,35 @@ $(document).ready(function(){
 		$.carregaGrafico("main-graph");
 	}
 
-	function geraMapa(){
+	function geraMapa($dados){
 
-		var mapDefaultLocation = new google.maps.LatLng(-15.6778, -47.4384);
-		var mapOptions = {
-				center: mapDefaultLocation,
-				zoom: zoom_padrao,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
-			};
-
-        map = new google.maps.Map(document.getElementById('mapa'), mapOptions);
-
-		if (!$("#mapa").is(":visible")){
-			$("#mapa").attr("lat",-15.6778);
-			$("#mapa").attr("lng",-47.4384);
-		}
-
-		$("#mapa-filtro").empty();
-        $("#mapa-filtro").append("<form><label>Selecione um Período</label> <select id='mapa-filtro-periodo'></select></form>");
-		$.each(dadosGrafico.labels,function(index,value){
-			if (!value) return;
-			$("#mapa-filtro select").append("<option value='$$index'>$$periodo</option>".render({
-					index: index,
-					periodo: value
-				}));
-		});
-
-        if (indicadorDATA.sort_direction == "greater value"){
-            $(".melhor_pior").text("Mais quente é melhor.");
-        }else{
-            $(".melhor_pior").text("Mais quente é pior/ruim.");
+        if (!map){
+            map = new google.maps.Map(document.getElementById('mapa'), {
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
         }
 
-		$("#mapa-filtro select option:last").attr("selected",true);
-		marcaMapa($("#mapa-filtro select option:selected").val());
-
-		$("#mapa-filtro select").change(function(){
-			marcaMapa($(this).find("option:selected").val());
-		});
-
-	}
-
-	function marcaMapa(label_index){
 		if (heatCluster) {
             heatCluster.setMap(null)
         }
 
         var markers = [];
 
-		$.each(dadosGrafico.dados, function(index,item){
-
-            if (item.valores[label_index] != null && item.longitude){
-                var valor = parseFloat(item.valores[label_index].replace(".",""));
+        var bounds = new google.maps.LatLngBounds ();
+		$.each($dados, function(index,item){
+            if (item.lng){
+                var valor = parseFloat(item.val);
                 if (valor){
-                    var latLng = new google.maps.LatLng(item.latitude, item.longitude);
-                    markers.push({location: latLng, weight: parseFloat(valor) });
+                    var latLng = new google.maps.LatLng(item.lat, item.lng);
+                    markers.push({location: latLng, weight: valor });
+                    bounds.extend (latLng);
                 }
             }
-
 		});
 
-        var pointArray = new google.maps.MVCArray(markers);
+        map.fitBounds(bounds);
 
+        var pointArray = new google.maps.MVCArray(markers);
 		heatCluster = new google.maps.visualization.HeatmapLayer({
             data: pointArray,
             radius: 30
@@ -1055,61 +925,18 @@ $(document).ready(function(){
     History.Adapter.bind(window,'statechange',function(){
         var State = History.getState();
 
-
-        if ((typeof State.data.indicator_id == "undefined")){
-            State.data = StateDataDefault;
-        }
-
-        if (!(typeof State.data.indicator_id == "undefined")){
-            indicadorID = State.data.indicator_id;
-
-            $(indicadores_list).each(function(index,item){
-                if (item.id == indicadorID){
-                    indicadorDATA = item;
-                }
-            });
-
-            $(".indicators .item").removeClass("selected");
-            $(".indicators").addClass("meloading");
-            $('div.item[indicator-id="$$id"]'.render({id: indicadorID})).addClass("selected");
-
-            var title = $(".indicators .selected").html();
-            $(".data-right .data-title .title").html(title);
-            $(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
-
-            carregaVariacoes = true;
-
-        }
-
-		if (ref == "comparacao"){
-            if (!(typeof State.data.indicator_id == "undefined")){
-                dadosGrafico = {"dados": [], "labels": []};
-
-                if ($(".data-content .tabs .selected").attr("id") == "tab-tabela"){
-                    $(".data-content .table").show();
-                }
-
-                carregouTabela = false;
-                carregaDadosTabela();
-            }
-            setaTabs();
-            setaGraficos();
-		}
-
 		if (ref == "home" || ref == "indicador" || ref == "comparacao" || ref == "region_indicator"){
 
 			setaDadosAbertos();
 			$("#share-link").val(window.location.href);
 
-
-            geraGraficos();
-
-            if (ref == "region_indicator" || ref == "indicador"){
+            if (State.data.indicator_id && (ref == "region_indicator" || ref == "indicador")){
                 activeMenuOfIndicator(State.data.indicator_id);
 
                 $.loadCidadeDataIndicador();
             }
 		}
+		add_binds();
 
 
 		$('[data-part-onchange-location]').each(function(a,b){
@@ -1120,7 +947,6 @@ $(document).ready(function(){
                 $me.replaceWith($c);
 
                 initialize_maps();
-
 
                 var $it = $me.find('a[data-toggle="tab"]');
                 if ($it[0]){

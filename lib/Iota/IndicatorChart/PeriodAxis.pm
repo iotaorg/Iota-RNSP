@@ -298,6 +298,9 @@ sub read_values {
         if (my $city = $user->city){
             $ux->{city} = {
                 name      => $city->name,
+                name_url      => $city->name_uri,
+                uf   => $city->uf,
+                pais => $city->pais,
                 latitude  => $city->latitude,
                 longitude => $city->longitude,
                 id        => $city->id

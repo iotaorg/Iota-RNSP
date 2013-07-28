@@ -30,6 +30,8 @@
 [%-CALL assets.include("js/api.dados.js")%]
 [%-CALL assets.include("js/api.cidades.js")%]
 [%-CALL assets.include("js/api.indicador.js")%]
+[%-CALL assets.include("js/stupidtable.min.js")%]
+
 [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
@@ -296,7 +298,7 @@
     <div class="container">
 		<div class="row">
 			<div class="span3">
-				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png"" alt="logo [%institute.short_name%]">
+				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
 			</div>
 			<div class="span9">
 
@@ -380,6 +382,33 @@
 [% assets.export("js") %]
 
 <script>
+var date_from_string = function(str){
+
+
+    return str;
+}
+
+$('[stupidsort]').each(function(x, rlm){
+    var table = $(rlm).stupidtable({
+        myfloat: function(x,y){
+            if (x==y) return 0;
+            if (x == "") return -1;
+            if (y == "") return 1;
+
+            if ( parseFloat(x) > parseFloat(y)) return 1;
+            return -1;
+        }
+    });
+
+    table.bind('aftertablesort', function (event, data) {
+        var th = $(this).find("th");
+        th.find(".arrow").remove();
+        var arrow = data.direction === "asc" ? "↑" : "↓";
+        th.eq(data.column).append('<span class="arrow">' + arrow +'</span>');
+    });
+
+});
+
 
 $('[lockfixed]').each(function(x, rlm){
     $.lockfixed(rlm,{offset: {top: 47, bottom: 10}});
