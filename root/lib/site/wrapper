@@ -20,6 +20,7 @@
 [%END%]
 
 [%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
+[%-CALL assets.include("js/jquery.ba-bbq.min.js")%]
 [%-CALL assets.include("js/jquery.history.js")%]
 [%-CALL assets.include("js/jshashtable-2.1.js")%]
 [%-CALL assets.include("js/jquery.numberformatter-1.2.3.min.js")%]

@@ -21,9 +21,9 @@
         <div class="content-fill">
 
 <ul class="nav nav-tabs">
-    <li ><a href="#table" data-toggle="tab">Tabela</a></li>
-    <li class="active"><a href="#map" data-toggle="tab">Mapas</a></li>
-    <li><a href="#graph" data-toggle="tab">Gráficos</a></li>
+    <li [%IF current_tab == "table"%]class="active"[%END%]><a href="#table" data-toggle="tab">Tabela</a></li>
+    <li [%IF current_tab == "map"%]class="active"[%END%]><a href="#map" data-toggle="tab">Mapas</a></li>
+    <li [%IF current_tab == "graph"%]class="active"[%END%]><a href="#graph" data-toggle="tab">Gráficos</a></li>
 </ul>
 <div class="period">
     <div id="date-ruler">
@@ -36,7 +36,7 @@
 <div class="tab-content" style="overflow:visible">
 
 
-<div class="tab-pane" id="table">
+<div class="tab-pane [%IF current_tab == "table"%]active[%END%]" id="table">
 
 <table stupidsort class="table table-striped table-condensed">
 <col/>
@@ -124,7 +124,7 @@
 
 </div>
 
-<div class="tab-pane" data-json="[%dados_grafico_json|html%]" id="graph">
+<div class="tab-pane [%IF current_tab == "graph"%]active[%END%] graph" data-json="[%dados_grafico_json|html%]" id="graph">
     <canvas id="main-graph" width='600' height='250'></canvas>
     <div class="legend"></div>
 
@@ -156,7 +156,7 @@
 
 </div>
 
-<div data-json="[%dados_mapa_json|html%]" class="tab-pane active" id="map">
+<div data-json="[%dados_mapa_json|html%]" class="tab-pane [%IF current_tab == "map"%]active[%END%]" id="map">
     <div id="mapa-filtro">
 
         <form class="form-inline">

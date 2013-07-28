@@ -214,15 +214,10 @@ table .num{
 	padding: 5px;
 	text-align: center;
 }
-.data-content .graph{
-	display: none;
-	margin-top: -1px;
-	border-top: 1px solid #e0e0e0;
 
-}
-
-
-#graph .legend{
+.data-content .graph .legend,
+#graph .legend
+{
     clear: both;
     margin-left: 50px;
     margin-bottom: 20px;
@@ -233,6 +228,7 @@ table .num{
 	clear: both;
 	text-align: center;
 }
+.data-content .graph .legend .item,
 #graph .legend .item,
 #indicador-grafico .graph .legend .item{
 	float: left;
@@ -246,10 +242,12 @@ table .num{
 	display: inline-block;
 	float: none;
 }
+.data-content .graph .legend .item:hover,
 #graph .legend .item:hover{
 	border: 1px solid #ccc;
 }
 
+.data-content .graph .legend .item .quad,
 #graph .legend .item .quad,
 #indicador-grafico .graph .legend .item .quad{
 	float: left;
@@ -258,6 +256,7 @@ table .num{
 	margin-right: 5px;
 	margin-top: 3px;
 }
+.data-content .graph .legend .item .label,
 #graph .legend .item .label,
 #indicador-grafico .graph .legend .item .label{
 	float: left;
@@ -266,6 +265,7 @@ table .num{
     font-weight: normal;
 }
 
+.data-content .graph .legend .item .close,
 #graph .legend .item .close,
 #indicador-grafico .graph .legend .item .close{
 	margin-top: 1px;
@@ -275,6 +275,7 @@ table .num{
 	height: 14px;
 }
 
+.data-content .graph .legend .item .close .icon,
 #graph .legend .item .close .icon,
 #indicador-grafico .graph .legend .item .close .icon{
 	display: none;
@@ -284,6 +285,7 @@ table .num{
 	border: 1px solid #ccc;
 	color: #999;
 }
+.data-content .graph .legend .item .close .icon:hover
 #graph .legend .item .close .icon:hover{
 	color: #ff0000;
 }
@@ -739,6 +741,7 @@ padding: 0px 10px 0px 0px;
 text-align: right;
 border-bottom: 1px solid #e0e0e0;
 margin-bottom: 10px;
+
 }
 
 #date-ruler .item.active {

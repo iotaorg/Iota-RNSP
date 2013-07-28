@@ -584,9 +584,9 @@ sub stash_comparacao_cidades {
     $self->json_to_view( $c, dados_mapa_json => $dados_mapa);
 
 
-    my $dados_grafico = {};
-
-
+    my $dados_grafico = {
+        dados => []
+    };
     foreach my $period (@{$c->stash->{choosen_periods}[2]}){
         push @{$dados_grafico->{labels}}, Iota::IndicatorChart::PeriodAxis::get_label_of_period( $period, $c->stash->{indicator}->period );
     }
@@ -617,6 +617,10 @@ sub stash_comparacao_cidades {
     }
 
     $self->json_to_view( $c, dados_grafico_json => $dados_grafico);
+
+    $c->stash->{current_tab} = exists $c->req->params->{view}
+        ? $c->req->params->{view}
+        : 'table';
 }
 
 sub json_to_view {

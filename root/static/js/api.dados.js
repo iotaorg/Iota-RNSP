@@ -235,10 +235,7 @@ $(document).ready(function(){
 			if (ref == "comparacao"){
 				url = "/" + $(this).attr("name-uri") + $.getUrlParams();
 
-				History.pushState({
-                    indicator_id : indicadorID
-                }, title, url);
-
+				History.pushState(null, title, url);
 
 			}else if (ref == "indicador" ){
                 url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
@@ -266,7 +263,7 @@ $(document).ready(function(){
         $(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).addClass("selected");
 
 
-        indicadorDATA = $.parseJSON($('#indicador-dados').attr('data-json'));
+
 
 
         $(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
@@ -494,7 +491,7 @@ $(document).ready(function(){
 		$(".data-content .variationFilter").remove();
 	}
 
-	function add_binds(){
+	function reload_bind_content(){
 
         dados_mapa   = $.parseJSON($('#map').attr('data-json'));
         dadosGrafico = $.parseJSON($('#graph').attr('data-json'));
@@ -507,27 +504,33 @@ $(document).ready(function(){
 
                 $('#mapa').html('Sem dados para o periodo selecionado.');
             }else{
-
                 geraMapa($dados);
-
             }
-
         });
-        $('a[href="#map"]').on('shown', function (e) {
 
+        $('a[href="#table"]').on('shown', function (e) {
+            $.setUrl({view: "table"}, {recontent:false});
+        });
+
+        $('a[href="#map"]').on('shown', function (e) {
+            $.setUrl({view: "map"}, {recontent:false});
             if (!map){
                 $('#mapa-filtro-periodo').change();
             }
         });
 
         $('a[href="#graph"]').on('shown', function (e) {
+            $.setUrl({view: "graph"}, {recontent:false});
             setaGraficos();
         });
 
-
-
+        if (ref == 'comparacao'){
+            indicadorDATA = $.parseJSON($('#indicador-dados').attr('data-json'));
+        }
     }
-    add_binds();
+    reload_bind_content();
+
+
 
 	$.carregaGrafico = function(canvasId){
         _resize_canvas();
@@ -550,7 +553,7 @@ $(document).ready(function(){
 
 		if (indicadorDATA.goal){
 
-            var $maximo_linhas = 4;
+            var $maximo_linhas = dadosGrafico.labels.length;
 
             $.each(dadosGrafico.dados, function(i,item){
                 if (item.show){
@@ -652,7 +655,7 @@ $(document).ready(function(){
 
 	function montaLegenda(args){
 		var legendas = args.source;
-		$("#graph .legend").empty();
+		$(".graph .legend").empty();
 
 		var legenda = "";
 		for (i = 0; i < legendas.length; i++){
@@ -668,11 +671,12 @@ $(document).ready(function(){
 					id: legendas[i].id
 					});
 		}
-		$("#graph .legend").append(legenda);
+		$(".graph .legend").append(legenda);
+
 
 		if (args.removable){
 
-			$("#graph .legend .item").hover(function(){
+			$(".graph .legend .item").hover(function(){
 				if (!$(this).hasClass("meta")){
 					$(this).find(".icon").fadeIn();
 				}
@@ -682,7 +686,7 @@ $(document).ready(function(){
 				}
 			});
 
-			$("#graph .legend .icon").click(function(){
+			$(".graph .legend .icon").click(function(){
 				if ($(this).attr("item-id")){
 					if($.getUrlVar("graphs")){
 						var graphs = $.getUrlVar("graphs").split("-");
@@ -795,17 +799,6 @@ $(document).ready(function(){
 		return newValue;
 	}
 
-	$(".data-content .tabs .item").click( function (){
-		$(".data-content .tabs .item").removeClass("selected");
-		$(this).addClass("selected");
-		if ($(this).attr("id") == "tab-tabela"){
-			$.setUrl({view: "table"});
-		}else if ($(this).attr("id") == "tab-graficos"){
-			$.setUrl({view: "graph"});
-		}else{
-			$.setUrl({view: "map"});
-		}
-	});
 
 	$("#graph-search-user").autocomplete({
 		source: function( request, response ) {
@@ -925,6 +918,8 @@ $(document).ready(function(){
     History.Adapter.bind(window,'statechange',function(){
         var State = History.getState();
 
+        State.data = State.data == null ? {} : State.data;
+
 		if (ref == "home" || ref == "indicador" || ref == "comparacao" || ref == "region_indicator"){
 
 			setaDadosAbertos();
@@ -936,28 +931,47 @@ $(document).ready(function(){
                 $.loadCidadeDataIndicador();
             }
 		}
-		add_binds();
+console.log(State.data);
+        if ( !State.data.recontent == false ){
+            $('[data-part-onchange-location]').each(function(a,b){
+                var $me = $(b);
+                var newURL = updateURLParameter(window.location.href, 'part', $me.attr('data-part-onchange-location'));
+                $.get(newURL, function(data) {
+                    var $c = $(data);
+                    $me.replaceWith($c);
+
+                    initialize_maps();
+
+                    reload_bind_content();
+
+                    var $it = $me.find('a[data-toggle="tab"]');
+                    if ($it[0]){
+                        $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
+                    }
 
 
-		$('[data-part-onchange-location]').each(function(a,b){
-            var $me = $(b);
-            var newURL = updateURLParameter(window.location.href, 'part', $me.attr('data-part-onchange-location'));
-            $.get(newURL, function(data) {
-                var $c = $(data);
-                $me.replaceWith($c);
-
-                initialize_maps();
-
-                var $it = $me.find('a[data-toggle="tab"]');
-                if ($it[0]){
-                    $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
-                }
-
-
+                });
             });
-        });
 
+        }else{
 
+            if (ref == "comparacao"){
+                var view = $.getUrlVar('view');
+                if (view){
+                    $('a[href="#' + view +'"]').tab('show');
+                }else{
+                    $('a[href="#table"]').tab('show');
+                }
+            }
+
+        }
     });
+
+
+    // on page load
+    var view = $.getUrlVar('view');
+    if (view){
+        $('a[href="#' + view +'"]').trigger('shown');
+    }
 
 });

@@ -520,7 +520,9 @@ $(document).ready(function () {
 
         else {
             var history_table = "<table class='history'><thead><tr><th>nenhum registro encontrado</th></tr></thead></table>";
-            dadosGrafico.dados = [];
+            dadosGrafico = {
+                dados: []
+            };
         }
         $("#indicador-historico .table .content-fill").html(history_table);
 
