@@ -39,7 +39,22 @@
 
 <div class="tab-pane [%IF current_tab == "table"%]active[%END%]" id="table">
 
-<table stupidsort class="table table-striped table-condensed">
+[%IF all_variations%]
+<form class="clearfix" id="variation_checks">
+<p>[%indicator.variety_name%], marque abaixo para exibir:</p>
+    [%FOREACH v IN all_variations%]
+    <label class="span2 checkbox">
+        <input value="[%v%]" type="checkbox"> [%v%]
+    </label>
+    [%END%]
+</form>
+
+<div class="alert hidden" id="alert_variation_missorder">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>[%l('Aviso')%]!</strong> [%l('As linhas das variações foram misturadas com as da cidade.')%]
+</div>
+[%END%]
+<table stupidsort id="table_cmp_user" class="table [%IF !all_variations%]table-striped[%END%] table-condensed">
 <col/>
 <col/>
 <col/>
@@ -61,18 +76,14 @@
  [%FOREACH user IN users_series%]
 
     [%SET city_i = "/${user.city.pais}/${user.city.uf}/${user.city.name_url}/${indicator.name_url}"%]
-
     <tr data-user-id="[%user.user_id%]">
         <td><a href="[%city_i%]">[%user.city.name%]</a></td>
 
         [%FOREACH period IN choosen_periods.2%]
-
         [%SET val=user.by_period.${period}.avg%]
         <td class="num" title="[%val.replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
-
         [%END%]
         <td class="opcoes">
-
             <div class="btn-group">
                 <button class="btn btn-mini compare">Comparar</button>
                 <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -81,11 +92,28 @@
                 </ul>
               </div>
         </td>
-
-
     </tr>
- [%END%]
 
+    [% FOREACH v IN user.variations%]
+    <tr data-user-id="[%user.user_id%]" class="varied" data-variation="[%v%]">
+        <td class="variation" title="[%v%] - [%user.city.name%]">[%v%]</td>
+
+        [%FOREACH period IN choosen_periods.2%]
+        [%SET val=user.by_period.${period}.by_variation.${v}.value%]
+        <td class="num" title="[%val.replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
+        [%END%]
+        <td class="opcoes">
+            <div class="btn-group">
+                <button class="btn btn-mini compare">Comparar</button>
+                <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="[%city_i%]" target="_blank">Abrir cidade</a></li>
+                </ul>
+              </div>
+        </td>
+    </tr>
+    [%END%]
+ [%END%]
 
 </tbody>
 
@@ -103,7 +131,7 @@
             </div>
             <div class="download-links">
             </div>
-[%IF 0%]
+
             <div class="share-link">
                 <input type="text" id="share-link" value="url" />
                 <!-- AddThis Button BEGIN -->
@@ -119,7 +147,7 @@
                 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ed285338e6b8b3"></script>
                 <!-- AddThis Button END -->
             </div>
-[%END%]
+
         </div>
     </div>
 

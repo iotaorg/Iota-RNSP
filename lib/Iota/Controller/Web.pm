@@ -518,6 +518,7 @@ sub network_indicador : Chained('institute_load') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
 
     $self->stash_indicator( $c, $nome );
+
     $self->stash_comparacao_cidades( $c );
 
     $c->stash->{indicator} = { $c->stash->{indicator}->get_inflated_columns };
@@ -561,7 +562,9 @@ sub stash_comparacao_cidades {
     $controller->typify( $c, 'period_axis' );
 
     $c->stash->{user_id} = $c->stash->{network_data}{users_ids};
+
     $controller->render_GET($c);
+
 
     my $users = $c->stash->{rest}{users};
     foreach my $user_id (keys %$users){
@@ -580,11 +583,34 @@ sub stash_comparacao_cidades {
         }
     }
 
-    $c->stash->{users_series} = [map {$users->{$_}} sort {$users->{$a}{city}{name} cmp $users->{$b}{city}{name}} keys %$users];
+    $users = [map {$users->{$_}} sort {$users->{$a}{city}{name} cmp $users->{$b}{city}{name}} keys %$users];
+    $c->stash->{users_series} = $users;
+
+    if ($c->stash->{indicator}->indicator_type eq 'varied'){
+        my %all_variations;
+        foreach my $user (@$users){
+            next unless exists $user->{by_period};
+
+            # a ordem e nome das variacoes de qualquer "series" são sempre
+            # as mesmas.
+            $user->{variations} = [map {$_->{name}} @{$user->{data}{series}[0]{variations}}];
+
+            # agora precisa correr todas as variacoes e colocar chave=>valor
+            # pra ficar mais simples de acessar pela view.
+            foreach my $cur_serie (@{$user->{data}{series}}){
+                do {
+                    $all_variations{$_->{name}} = 1;
+                    $cur_serie->{by_variation}{$_->{name}} = $_
+                }for (@{$cur_serie->{variations}});
+            }
+        }
+
+        $c->stash->{all_variations} = [sort keys %all_variations];
+    }
 
     my $dados_mapa = {};
 
-    foreach my $user (@{$c->stash->{users_series}}){
+    foreach my $user (@$users){
         next unless exists $user->{by_period};
 
         foreach my $valid ( keys %{$user->{by_period}} ){
@@ -597,7 +623,6 @@ sub stash_comparacao_cidades {
     }
 
     $self->json_to_view( $c, dados_mapa_json => $dados_mapa);
-
 
     my $dados_grafico = {
         dados => []

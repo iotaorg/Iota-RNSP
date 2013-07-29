@@ -963,6 +963,9 @@ $(document).ready(function(){
                 th.find(".arrow").remove();
                 var arrow = data.direction === "asc" ? "↑" : "↓";
                 th.eq(data.column).append('<span class="arrow">' + arrow +'</span>');
+
+                $('#alert_variation_missorder').removeClass('hidden');
+
             });
 
         });
@@ -996,6 +999,10 @@ $(document).ready(function(){
             },
         });
 
+        $('#variation_checks input').on('change', function(){
+            var $me = $(this);
+            $('#table_cmp_user tr.varied[data-variation="'+$me.val()+'"]')[$me.is(':checked') ? 'addClass' : 'removeClass']('active');
+        });
         $("#button-search-user").click(function(){
 
             if($.getUrlVar("graphs")){
