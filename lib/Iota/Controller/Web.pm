@@ -7,6 +7,8 @@ use utf8;
 use JSON::XS;
 use Iota::Statistics::Frequency;
 use I18N::AcceptLanguage;
+use DateTime;
+
 
 #
 # Sets the actions in this controller to be registered with no prefix
@@ -55,6 +57,14 @@ sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
 sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
+    # se veio ?part, guarda na stash e remove ele da req para nao atrapalhar novas geracoes de URLs
+    $c->stash->{current_part} = delete $c->req->params->{part};
+    if ($c->stash->{current_part}){
+        delete $c->req->{query_parameters}{part};
+        $c->req->uri ( $c->req->uri_with({part => undef }) );
+    }
+
+
     my $domain = $c->req->uri->host;
 
     my $net = $c->model('DB::Network')->search( { domain_name => $domain } )->first;
@@ -92,7 +102,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     my @cities =
       $c->model('DB::City')
-      ->search( { id => [ map { $_->city_id } @users ] }, { order_by => [ 'pais', 'uf', 'name' ] } )->as_hashref->all;
+      ->search( { id => {'in' => [ map { $_->city_id } @users ] } }, { order_by => [ 'pais', 'uf', 'name' ] } )->as_hashref->all;
 
     $c->stash->{network_data} = {
         countries => [
@@ -279,7 +289,7 @@ sub stash_distritos {
 
     $c->stash->{fator_desigualdade} = \@fatores;
 
-    if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'fator_desigualdade' ) {
+    if ( exists $c->stash->{current_part} && $c->stash->{current_part} eq 'fator_desigualdade' ) {
         $c->stash(
             template        => 'parts/fator_desigualdade.tt',
             without_wrapper => 1
@@ -368,7 +378,7 @@ sub stash_comparacao_distritos {
 
     $c->stash->{analise_comparativa} = $out;
 
-    if ( exists $c->req->params->{part} && $c->req->params->{part} eq 'analise_comparativa' ) {
+    if ( exists $c->stash->{current_part} && $c->stash->{current_part} eq 'analise_comparativa' ) {
         $c->stash(
             template        => 'parts/analise_comparativa.tt',
             without_wrapper => 1
@@ -506,7 +516,23 @@ sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0)
 
 sub network_indicador : Chained('institute_load') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
+
     $self->stash_indicator( $c, $nome );
+
+    $self->stash_comparacao_cidades( $c );
+
+    $c->stash->{indicator} = { $c->stash->{indicator}->get_inflated_columns };
+
+    $c->stash->{indicator}{created_at} = $c->stash->{indicator}{created_at}->datetime;
+
+    $self->json_to_view( $c, indicator_json => $c->stash->{indicator});
+
+    if ( $c->stash->{current_part} && $c->stash->{current_part} =~ /^(comparacao_indicador_por_cidade)$/ ) {
+        $c->stash(
+            template        => "parts/$1.tt",
+            without_wrapper => 1
+        );
+    }
 }
 
 sub network_indicador_render : Chained('network_indicador') PathPart('') Args(0) {
@@ -515,15 +541,193 @@ sub network_indicador_render : Chained('network_indicador') PathPart('') Args(0)
 sub stash_indicator {
     my ( $self, $c, $nome ) = @_;
 
-    my $indicator = $c->model('DB::Indicator')->search( { name_url => $nome } )->as_hashref->next;
+    my $indicator = $c->model('DB::Indicator')->search( { name_url => $nome } )->next;
 
     $c->detach('/error_404') unless $indicator;
     $c->stash->{indicator} = $indicator;
 
     $c->stash(
         template => 'home_comparacao_indicador.tt',
-        title    => 'Dados do indicador ' . $indicator->{name}
+        title    => 'Dados do indicador ' . $indicator->name
     );
+}
+
+sub stash_comparacao_cidades {
+    my ( $self, $c) = @_;
+
+
+    $self->_add_default_periods($c);
+
+    my $controller = $c->controller('API::Indicator::Chart');
+    $controller->typify( $c, 'period_axis' );
+
+    $c->stash->{user_id} = $c->stash->{network_data}{users_ids};
+
+    $controller->render_GET($c);
+
+
+    my $users = $c->stash->{rest}{users};
+    foreach my $user_id (keys %$users){
+
+        $users->{$user_id}{user_id} = $user_id;
+        if (!exists $users->{$user_id}{city}) {
+            delete $users->{$user_id};
+            next;
+        }
+
+        next unless (exists $users->{$user_id}{data}{series});
+
+        my $series = $users->{$user_id}{data}{series};
+        foreach my $serie (@$series){
+            $users->{$user_id}{by_period}{$serie->{begin}} = $serie;
+        }
+    }
+
+    $users = [map {$users->{$_}} sort {$users->{$a}{city}{name} cmp $users->{$b}{city}{name}} keys %$users];
+    $c->stash->{users_series} = $users;
+
+    if ($c->stash->{indicator}->indicator_type eq 'varied'){
+        my %all_variations;
+        foreach my $user (@$users){
+            next unless exists $user->{by_period};
+
+            # a ordem e nome das variacoes de qualquer "series" são sempre
+            # as mesmas.
+            $user->{variations} = [map {$_->{name}} @{$user->{data}{series}[0]{variations}}];
+
+            # agora precisa correr todas as variacoes e colocar chave=>valor
+            # pra ficar mais simples de acessar pela view.
+            foreach my $cur_serie (@{$user->{data}{series}}){
+                do {
+                    $all_variations{$_->{name}} = 1;
+                    $cur_serie->{by_variation}{$_->{name}} = $_
+                }for (@{$cur_serie->{variations}});
+            }
+        }
+
+        $c->stash->{all_variations} = [sort keys %all_variations];
+    }
+
+    my $dados_mapa = {};
+
+    foreach my $user (@$users){
+        next unless exists $user->{by_period};
+
+        foreach my $valid ( keys %{$user->{by_period}} ){
+            push @{$dados_mapa->{$valid}}, {
+                val => $user->{by_period}{$valid}{avg},
+                lat => $user->{city}{latitude},
+                lng => $user->{city}{longitude},
+            };
+        }
+    }
+
+    $self->json_to_view( $c, dados_mapa_json => $dados_mapa);
+
+    my $dados_grafico = {
+        dados => []
+    };
+    foreach my $period (@{$c->stash->{choosen_periods}[2]}){
+        push @{$dados_grafico->{labels}}, Iota::IndicatorChart::PeriodAxis::get_label_of_period( $period, $c->stash->{indicator}->period );
+    }
+
+    my %shown = exists $c->req->params->{graphs} ? map { $_ => 1 } split '-', $c->req->params->{graphs} : ();
+
+    foreach my $user (@{$c->stash->{users_series}}){
+        next unless exists $user->{by_period};
+
+        my $user_id = $user->{user_id};
+
+        my $reg_user = {
+            show => exists $shown{$user_id} ? 1 : 0,
+            id => $user_id,
+            nome => $user->{city}{name},
+            valores => []
+        };
+
+        my $idx = 0;
+        foreach my $period (@{$c->stash->{choosen_periods}[2]}){
+
+            if (exists $user->{by_period}{$period}){
+                $reg_user->{valores}[$idx] = $user->{by_period}{$period}{avg};
+            }
+            $idx++;
+        }
+        push @{$dados_grafico->{dados}}, $reg_user;
+    }
+
+    $self->json_to_view( $c, dados_grafico_json => $dados_grafico);
+
+    $c->stash->{current_tab} = exists $c->req->params->{view}
+        ? $c->req->params->{view}
+        : 'table';
+}
+
+sub json_to_view {
+    my ($self, $c, $st, $obj) =@_;
+
+    $c->stash->{$st} = JSON::XS->new->utf8(0)->encode($obj);
+}
+
+sub _add_default_periods {
+    my ( $self, $c) = @_;
+
+    my $data_atual = DateTime->now;
+    my $ano_anterior = $data_atual->year() - 1;
+
+    my $grupos = 4;
+    my $step   = 4;
+    my $ano_inicial = $ano_anterior - ($grupos * $step) + 1;
+
+    my @periods;
+
+    my $cont = 0;
+    my $ant;
+    my @loop;
+    for my $i ( $ano_inicial .. $ano_anterior){
+        push @loop, "$i-01-01";
+        if ($cont == 0){
+            $ant = "$i-01-01";
+        }elsif ($cont == $step-1){
+            push @periods, [$ant, "$i-01-01", [@loop], $c->req->uri_with( { valid_from => $ant } )->as_string ];
+            undef @loop;
+            $cont = -1;
+        }
+
+        $cont++;
+    }
+    $c->stash->{data_periods} = \@periods;
+
+
+    $c->req->params->{valid_from} = exists $c->req->params->{valid_from}
+        ? $c->req->params->{valid_from}
+        : $periods[-1][0];
+
+    my $ativo = undef;
+
+    my $i = 0;
+    PROCURA: foreach my $grupo (@periods){
+
+        foreach my $periodo (@{$grupo->[2]}){
+            if ($periodo eq $c->req->params->{valid_from}){
+                $ativo = $i;
+                last PROCURA;
+            }
+        }
+        $i++;
+    }
+
+    if (defined $ativo){
+        $c->req->params->{from} = $periods[$ativo][0];
+        $c->req->params->{to}   = $periods[$ativo][1];
+        $c->stash->{choosen_periods} = $periods[$ativo];
+    }else{
+        $c->req->params->{from} = $periods[-1][0];
+        $c->req->params->{to}   = $periods[-1][1];
+        $c->stash->{choosen_periods} = $periods[-1];
+    }
+
+
 }
 
 sub stash_tela_indicator {

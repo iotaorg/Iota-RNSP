@@ -25,7 +25,7 @@ sub typify : Chained('base') : PathPart('') : CaptureArgs(1) {
 sub render : Chained('typify') : PathPart('') : Args(0 ) : ActionClass('REST') {
     my ( $self, $c ) = @_;
 
-    $c->detach('/error_404'), $c->detach unless $c->stash->{indicator}->indicator_type eq 'normal';
+    #$c->detach('/error_404'), $c->detach unless $c->stash->{indicator}->indicator_type eq 'normal';
 
 }
 

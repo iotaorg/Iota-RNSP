@@ -33,7 +33,6 @@ sub variation : Chained('object') : PathPart('') : Args(0) : ActionClass('REST')
 =encoding utf-8
 
 
-
 =cut
 
 sub variation_GET {

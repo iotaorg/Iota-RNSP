@@ -158,29 +158,6 @@ var findInArray = function(obj,value){
 	return retorno;
 }
 
-var removeAccents = (function() {
-  var translate_re = /[öäüÖÄÜáàâãéèêúùûóòôõÁÀÂÉÈÊÚÙÛÓÒÔçÇ]/g;
-  var translate = {
-	  "ä": "a", "ö": "o", "ü": "u",
-	  "Ä": "A", "Ö": "O", "Ü": "U",
-	  "á": "a", "à": "a", "â": "a",
-	  "é": "e", "è": "e", "ê": "e",
-	  "ú": "u", "ù": "u", "û": "u",
-	  "ó": "o", "ò": "o", "ô": "o",
-	  "Á": "A", "À": "A", "Â": "A",
-	  "É": "E", "È": "E", "Ê": "E",
-	  "Ú": "U", "Ù": "U", "Û": "U",
-	  "Ó": "O", "Ò": "O", "Ô": "O",
-	  "ã": "a", "Ã": "A", "ç": "c",
-	  "Ç": "C"
-   // probably more to come
-  };
-  return function(s) {
-	return ( s.replace(translate_re, function(match) {
-	  return translate[match];
-	}) );
-  }
-})();
 
 var estados_sg = [];
 
@@ -283,31 +260,13 @@ $.extend({
 		});
 		return obj;
 	},
-	setUrl: function(args){
-		var url = "";
-		if (args.view){
-			url += "?view=" + args.view;
-		}else if ($.getUrlVar("view")){
-			url += "?view=" + $.getUrlVar("view");
-		}
-		if (args.graphs != undefined){
-			if (args.graphs != ""){
-				if (url == ""){
-					url += "?graphs=" + args.graphs;
-				}else{
-					url += "&graphs=" + args.graphs;
-				}
-			}
-		}else if ($.getUrlVar("graphs")){
-			if (url == ""){
-				url += "?graphs=" + $.getUrlVar("graphs");
-			}else{
-				url += "&graphs=" + $.getUrlVar("graphs");
-			}
-		}
-		History.pushState(null, null, url);
+	setUrl: function(args, data){
+		var url = window.location.href;
 
-
+        url = jQuery.param.querystring(url, args);
+        if ((url == window.location.href) == false){
+            History.pushState(data, null, url);
+        }
 	}
 });
 
@@ -316,26 +275,12 @@ $(document).ready(function(){
 	$.ajaxSetup({ cache: false });
 
 });
+
 function updateURLParameter(url, param, paramVal){
-            var newAdditionalURL = "";
-            var tempArray = url.split("?");
-            var baseURL = tempArray[0];
-            var additionalURL = tempArray[1];
-            var temp = "";
-            if (additionalURL) {
-                tempArray = additionalURL.split("&");
-                for (i=0; i<tempArray.length; i++){
-                    if(tempArray[i].split('=')[0] != param){
-                        newAdditionalURL += temp + tempArray[i];
-                        temp = "&";
-                    }
-                }
-            }
-
-            var rows_txt = temp + "" + param + "=" + paramVal;
-            return baseURL + "?" + newAdditionalURL + rows_txt;
-        }
-
+    var xx = {};
+    xx[param] = paramVal;
+    return jQuery.param.querystring(url, xx);
+}
 
 function _resize_canvas () {
     var $g = $('#main-graph'), w=$g.parent().width();

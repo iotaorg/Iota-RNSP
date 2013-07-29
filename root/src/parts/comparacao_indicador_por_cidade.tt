@@ -1,0 +1,216 @@
+<div class="content-fill" data-part-onchange-location="comparacao_indicador_por_cidade">
+
+    <div class="data-title">
+        <div id="indicador-dados" data-json="[%indicator_json|html%]">
+        <h1 class="title">[%indicator.name%]</h1>
+        <p class="explanation">[%indicator.explanation%]</p>
+
+        <div class="dados"><dl class="tabela dl-horizontal ">
+            <dt>Fórmula:</dt>
+            <dd>[%indicator.formula_human%]</dd>
+            [%IF indicator.goal_explanation%]
+                <dt>Referência de Meta:</dt>
+                <dd>[%indicator.goal_explanation%]
+                    [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
+                </dd>
+            [%END%]
+
+        </dl></div>
+    </div>
+    </div>
+    <div class="data-content">
+        <div class="content-fill">
+
+<ul class="nav nav-tabs">
+    <li [%IF current_tab == "table"%]class="active"[%END%]><a href="#table" data-toggle="tab">Tabela</a></li>
+    <li [%IF current_tab == "map"%]class="active"[%END%]><a href="#map" data-toggle="tab">Mapas</a></li>
+    <li [%IF current_tab == "graph"%]class="active"[%END%]><a href="#graph" data-toggle="tab">Gráficos</a></li>
+</ul>
+<div class="period">
+    <div id="date-ruler">
+        [%FOREACH d IN data_periods%]
+        <a href="[%d.3%]" class="item [%IF d.0 == choosen_periods.0%]active[%END%] ">[% date4period(d.0, indicator.period)%]-[%date4period(d.1, indicator.period)%]</a>
+        [%END%]
+    </div>
+</div>
+
+<div class="tab-content" style="overflow:visible">
+
+
+<div class="tab-pane [%IF current_tab == "table"%]active[%END%]" id="table">
+
+[%IF all_variations%]
+<form class="clearfix" id="variation_checks">
+<p>[%indicator.variety_name%], marque abaixo para exibir:</p>
+    [%FOREACH v IN all_variations%]
+    <label class="span2 checkbox">
+        <input value="[%v%]" type="checkbox"> [%v%]
+    </label>
+    [%END%]
+</form>
+
+<div class="alert hidden" id="alert_variation_missorder">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>[%l('Aviso')%]!</strong> [%l('As linhas das variações foram misturadas com as da cidade.')%]
+</div>
+[%END%]
+<table stupidsort id="table_cmp_user" class="table [%IF !all_variations%]table-striped[%END%] table-condensed">
+<col/>
+<col/>
+<col/>
+<col/>
+<col/>
+<col style="width:82px"/>
+
+<thead>
+<tr>
+    <th data-sort="string">Cidade</th>
+    [%FOREACH period IN choosen_periods.2%]
+        <th data-sort="myfloat">[%date4period(period, indicator.period) %]</th>
+    [%END%]
+    <th>Opções</th>
+</tr>
+</thead>
+<tbody>
+
+ [%FOREACH user IN users_series%]
+
+    [%SET city_i = "/${user.city.pais}/${user.city.uf}/${user.city.name_url}/${indicator.name_url}"%]
+    <tr data-user-id="[%user.user_id%]">
+        <td><a href="[%city_i%]">[%user.city.name%]</a></td>
+
+        [%FOREACH period IN choosen_periods.2%]
+        [%SET val=user.by_period.${period}.avg%]
+        <td class="num" title="[%val.replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
+        [%END%]
+        <td class="opcoes">
+            <div class="btn-group">
+                <button class="btn btn-mini compare">Comparar</button>
+                <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="[%city_i%]" target="_blank">Abrir cidade</a></li>
+                </ul>
+              </div>
+        </td>
+    </tr>
+
+    [% FOREACH v IN user.variations%]
+    <tr data-user-id="[%user.user_id%]" class="varied" data-variation="[%v%]">
+        <td class="variation" title="[%v%] - [%user.city.name%]">[%v%]</td>
+
+        [%FOREACH period IN choosen_periods.2%]
+        [%SET val=user.by_period.${period}.by_variation.${v}.value%]
+        <td class="num" title="[%val.replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
+        [%END%]
+        <td class="opcoes">
+            <div class="btn-group">
+                <button class="btn btn-mini compare">Comparar</button>
+                <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="[%city_i%]" target="_blank">Abrir cidade</a></li>
+                </ul>
+              </div>
+        </td>
+    </tr>
+    [%END%]
+ [%END%]
+
+</tbody>
+
+</table>
+
+
+
+    <div id="dados-abertos">
+        <div class="title">[%l('Dados abertos')%]</div>
+
+        <div class="content-fillx">
+            <div class="dados-botoes">
+                <input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
+                <input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
+            </div>
+            <div class="download-links">
+            </div>
+
+            <div class="share-link">
+                <input type="text" id="share-link" value="url" />
+                <!-- AddThis Button BEGIN -->
+                <div class="addthis_toolbox addthis_default_style ">
+                <a class="addthis_button_preferred_1"></a>
+                <a class="addthis_button_preferred_2"></a>
+                <a class="addthis_button_preferred_3"></a>
+                <a class="addthis_button_preferred_4"></a>
+                <a class="addthis_button_compact"></a>
+                <a class="addthis_counter addthis_bubble_style"></a>
+                </div>
+                <script type="text/javascript">var addthis_config = {"data_track_addressbar":false, "data_track_clickback":false};</script>
+                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ed285338e6b8b3"></script>
+                <!-- AddThis Button END -->
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="tab-pane [%IF current_tab == "graph"%]active[%END%] graph" data-json="[%dados_grafico_json|html%]" id="graph">
+    <canvas id="main-graph" width='600' height='250'></canvas>
+    <div class="legend"></div>
+
+    <div class="clearfix">
+    <form class="form-horizontal">
+    <fieldset>
+            <label class="control-label" for="graph-search-user">[%l('Cidade')%]</label>
+            <div class='input'>
+                <div class="control-group">
+                    <div class="controls">
+                        <div class="input-append">
+                            <input type="text" id="graph-search-user" />
+                            <span class="add-on"><i class="icon-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <div class='button'>
+                        <input type="button" value="adicionar" class="btn" disabled="disabled" id="button-search-user"/>
+                        <input type="hidden" name="graph-user-selected" id="graph-user-selected" />
+                    </div>
+                </div>
+            </div>
+    </fieldset>
+    </form>
+    </div>
+
+</div>
+
+<div data-json="[%dados_mapa_json|html%]" class="tab-pane [%IF current_tab == "map"%]active[%END%]" id="map">
+    <div id="mapa-filtro">
+
+        <form class="form-inline">
+            <label for="mapa-filtro-periodo">Selecione um período: </label>
+            <select id="mapa-filtro-periodo">
+
+            [%FOREACH period IN choosen_periods.2%]
+                <option value="[%period%]" [% period.last ? "selected" : "" %]>[%date4period(period, indicator.period) %]</option>
+            [%END%]
+
+            </select>
+        </form>
+
+    </div>
+    <div id="mapa"></div>
+
+    [%IF indicator.sort_direction == "greater value" %]
+        Quanto mais vermelho, melhor em relação aos outros.
+    [%ELSE%]
+        Quanto mais vermelho, pior ou ruim em relação aos outros.
+    [%END%]
+
+</div>
+
+</div>
+        </div>
+    </div>
+</div>

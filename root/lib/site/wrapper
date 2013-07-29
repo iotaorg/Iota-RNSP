@@ -20,6 +20,7 @@
 [%END%]
 
 [%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
+[%-CALL assets.include("js/jquery.ba-bbq.min.js")%]
 [%-CALL assets.include("js/jquery.history.js")%]
 [%-CALL assets.include("js/jshashtable-2.1.js")%]
 [%-CALL assets.include("js/jquery.numberformatter-1.2.3.min.js")%]
@@ -30,6 +31,8 @@
 [%-CALL assets.include("js/api.dados.js")%]
 [%-CALL assets.include("js/api.cidades.js")%]
 [%-CALL assets.include("js/api.indicador.js")%]
+[%-CALL assets.include("js/stupidtable.min.js")%]
+
 [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
@@ -296,7 +299,7 @@
     <div class="container">
 		<div class="row">
 			<div class="span3">
-				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png"" alt="logo [%institute.short_name%]">
+				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
 			</div>
 			<div class="span9">
 
@@ -381,9 +384,6 @@
 
 <script>
 
-$('[lockfixed]').each(function(x, rlm){
-    $.lockfixed(rlm,{offset: {top: 47, bottom: 10}});
-});
 
 [% IF institute.short_name == 'gov' %]
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
