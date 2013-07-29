@@ -520,6 +520,9 @@ $(document).ready(function(){
 
                 e.preventDefault();
                 $.setUrl({graphs: graphs.join("-"), view: "graph"}, {recontent:false});
+                if ($(window).scrollTop() > 554){
+                    $('html,body').animate({scrollTop: 554},'fast');
+                }
 
             });
         }
@@ -899,6 +902,7 @@ $(document).ready(function(){
             State.data.recontent = true;
 
         if ( State.data.recontent ){
+            $(".indicators").addClass("meloading");
             $('[data-part-onchange-location]').each(function(a,b){
                 var $me = $(b),
                     part = $me.attr('data-part-onchange-location');
@@ -925,6 +929,7 @@ $(document).ready(function(){
                     var $it = $me.find('a[data-toggle="tab"]');
                     if ($it[0]){
                         $('html').find('a[data-toggle="tab"]').on('shown', _on_func);
+                        $(".indicators").removeClass("meloading");
                     }
                 });
 
