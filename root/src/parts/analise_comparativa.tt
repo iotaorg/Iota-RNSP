@@ -95,7 +95,7 @@ load_map.push( {
             </thead>
             <tbody>
                 [%-FOR x IN ultima_analise.all -%]
-                <tr [%IF x.name_url == region.name_url%]class="active"[%END%]><td class="[%IF x.name_url == region.name_url%]active[%END%] x" style="border-left: 1.5em solid [%color_index.${x.i}%]"><a  href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td>[% value4human(x.num, 'num') %]</td></tr>
+                <tr [%IF x.name_url == region.name_url%]class="active"[%END%]><td class="[%IF x.name_url == region.name_url%]active[%END%] x" style="border-left: 1.5em solid [%color_index.${x.i}%]"><a  href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td title="[%x.num%]">[% value4human(x.num, 'num') %]</td></tr>
                 [% END %]
             </tbody>
 
