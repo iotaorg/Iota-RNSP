@@ -331,26 +331,34 @@ if (!(typeof google == "undefined")) {
 
                 $.each(xmap.polygons, function(a, elm){
 
-                    var zoo = {
-                        coords: google.maps.geometry.encoding.decodePath(elm.p)
-                    };
 
-                    zoo.polygon = new google.maps.Polygon({
-                        paths: zoo.coords,
-                        strokeColor: '#333',
-                        strokeOpacity: 0.6,
-                        strokeWeight: 2,
-                        fillColor: elm.color,
-                        fillOpacity: Math.min(opacity, 1)
+                    $.each(elm.p, function(aa, elm2){
+
+                        if (elm2 == null) return true;
+
+
+                        var zoo = {
+                            coords: google.maps.geometry.encoding.decodePath(elm2)
+                        };
+
+                        zoo.polygon = new google.maps.Polygon({
+                            paths: zoo.coords,
+                            strokeColor: '#333',
+                            strokeOpacity: 0.6,
+                            strokeWeight: 2,
+                            fillColor: elm.color,
+                            fillOpacity: Math.min(opacity, 1)
+                        });
+
+                        zoo.polygon.setMap(map);
+
+                        if (typeof map_used_things[xmap.map_elm] == "undefined")
+                            map_used_things[xmap.map_elm] = [];
+
+                        map_used_things[xmap.map_elm].push(zoo);
+
                     });
 
-
-                    zoo.polygon.setMap(map);
-
-                    if (typeof map_used_things[xmap.map_elm] == "undefined")
-                        map_used_things[xmap.map_elm] = [];
-
-                    map_used_things[xmap.map_elm].push(zoo);
 
                 });
 
