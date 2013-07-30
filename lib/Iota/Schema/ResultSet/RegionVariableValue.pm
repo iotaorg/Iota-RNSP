@@ -240,7 +240,7 @@ sub action_specs {
 
                 die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
 
-                die "cannot save subregion value before upper region tell subregions is valid\n"
+                die "cannot save subregion value before upper region tell subregions is valid [$value_of_date, ${\$upper->subregions_valid_after}, ${\$region->id}]\n"
                   if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
             }
@@ -348,7 +348,7 @@ sub _put {
         my $upper = $region->upper_region;
 
         die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
-        die "cannot save subregion value before upper region tell subregions is valid\n"
+        die "cannot save subregion value before upper region tell subregions is valid [$value_of_date, ${\$upper->subregions_valid_after}, ${\$region->id}]\n"
           if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
     }
