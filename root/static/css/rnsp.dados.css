@@ -247,7 +247,7 @@ table .num{
 	display: inline-block;
 	float: none;
 }
-..table-xonde tr {
+.table-xonde tr {
     font-size: 0.9em;
 }
 .data-content .graph .legend .item:hover,
