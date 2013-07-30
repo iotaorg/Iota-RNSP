@@ -8,7 +8,7 @@ use DateTime::Format::Pg;
 use Spreadsheet::XLSX;
 use DateTime::Format::Excel;
 
-use Text::Iconv;
+use Encode;
 
 sub parse {
     my ( $self, $file ) = @_;
