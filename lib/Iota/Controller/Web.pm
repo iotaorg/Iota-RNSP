@@ -289,7 +289,7 @@ sub stash_distritos {
 
     $c->stash->{fator_desigualdade} = \@fatores;
 
-    if ( exists $c->stash->{current_part} && $c->stash->{current_part} eq 'fator_desigualdade' ) {
+    if ( $c->stash->{current_part} && $c->stash->{current_part} eq 'fator_desigualdade' ) {
         $c->stash(
             template        => 'parts/fator_desigualdade.tt',
             without_wrapper => 1
@@ -307,6 +307,18 @@ sub stash_comparacao_distritos {
 
     $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
 
+    my $poly_reg3 = {};
+    foreach my $reg (@{$c->stash->{city}{regions}}){
+        next unless $reg->{subregions};
+
+        foreach my $sub (@{$reg->{subregions}}){
+            next unless $sub->{polygon_path};
+
+            push @{$poly_reg3->{$reg->{id}}}, $sub->{polygon_path};
+        }
+
+    }
+
     my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
         {},
         {
@@ -318,6 +330,10 @@ sub stash_comparacao_distritos {
     my $por_ano = {};
 
     while ( my $r = $valor_rs->next ) {
+        $r->{variation_name} ||= '';
+
+        $r->{polygon_path} = $r->{polygon_path} ? [$r->{polygon_path}] : $poly_reg3->{$r->{id}};
+
         push @{ $por_ano->{ delete $r->{valid_from} }{ delete $r->{variation_name} } }, $r;
     }
 
@@ -378,7 +394,7 @@ sub stash_comparacao_distritos {
 
     $c->stash->{analise_comparativa} = $out;
 
-    if ( exists $c->stash->{current_part} && $c->stash->{current_part} eq 'analise_comparativa' ) {
+    if ( $c->stash->{current_part} && $c->stash->{current_part} eq 'analise_comparativa' ) {
         $c->stash(
             template        => 'parts/analise_comparativa.tt',
             without_wrapper => 1

@@ -20,8 +20,9 @@ load_map.push( {
     map_elm: '#colmapa[%index%]',
     opacity: 0.8,
     polygons: [[%-FOR t IN ultima_analise.all -%]
-        [%IF t.polygon_path%][%SET existe_vetor=1%]
-        {p:'[% t.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]',color: '[% color_index.${t.i} %]' },
+        [%IF t.polygon_path && t.polygon_path.size > 0%][%SET existe_vetor=1%]
+
+        {p:[[%FOREACH p IN t.polygon_path%]'[% p.replace("'", "\\'").replace('\\\\', '\\\\') %]',[%END%]null],color: '[% color_index.${t.i} %]' },
         [%END%]
     [%-END-%]]
 });
