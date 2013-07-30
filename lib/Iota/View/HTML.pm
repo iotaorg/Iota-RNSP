@@ -59,6 +59,9 @@ sub value4human {
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );
+            if ($end eq '00' && $2){
+                $end = substr( $2, 0, 3 );
+            }
             $mid = ',';
         }
         else {

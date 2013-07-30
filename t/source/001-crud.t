@@ -3,7 +3,8 @@ use strict;
 use warnings;
 
 use Test::More;
-
+use utf8;
+use Encode;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
@@ -33,7 +34,7 @@ eval {
                 POST '/api/source',
                 [
                     api_key              => 'test',
-                    'source.create.name' => 'FooBar',
+                    'source.create.name' => 'Atenção',
                 ]
             );
 
@@ -48,7 +49,9 @@ eval {
             ok( $res->is_success, 'source exists' );
             is( $res->code, 200, 'source exists -- 200 Success' );
 
-            like( $res->content, qr|FooBar|, 'FooBar ok' );
+            my $test = $res->content;
+            $test = decode('utf8', $test);
+            like($test , qr|Atenção|, 'Atenção ok' );
 
             my $obj_uri = $uri->path_query;
             ( $res, $c ) = ctx_request( POST $obj_uri, [ 'source.update.name' => 'BarFoo' ] );

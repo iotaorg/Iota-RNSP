@@ -8,7 +8,7 @@ use DateTime::Format::Pg;
 use Spreadsheet::ParseExcel::Stream;
 use DateTime::Format::Excel;
 
-use Text::Iconv;
+use Encode;
 
 sub parse {
     my ( $self, $file ) = @_;
@@ -70,6 +70,8 @@ sub parse {
                     next if !defined $value || $value =~ /^\s*$/;
                     $value =~ s/^\s+//;
                     $value =~ s/\s+$//;
+
+                    $value = decode('iso-8859-15', $value);
                     $registro->{$header_name} = $value;
                 }
 
@@ -83,6 +85,7 @@ sub parse {
 
                     die 'invalid variable id' unless $registro->{id} =~ /^\d+$/;
                     die 'invalid region id' if $registro->{region_id} && $registro->{region_id} !~ /^\d+$/;
+
                     push @rows, $registro;
 
                 }

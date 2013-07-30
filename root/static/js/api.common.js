@@ -330,6 +330,7 @@ if (!(typeof google == "undefined")) {
             map_references[map_index] = map;
             map.__index = map_index;
             $elm.attr('map_index', map_index);
+            map_index++;
 
 
             if (!infowindow){
@@ -398,7 +399,7 @@ if (!(typeof google == "undefined")) {
                 $(xmap.map_elm).parents('div.hideme:first').removeClass('active');
             });
 
-            map_index++;
+
         });
     }
 
