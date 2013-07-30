@@ -15,8 +15,8 @@
             [%FOREACH v IN fator_desigualdade %]
             <tr>
                 <td>[%date4period(v.valid_from, indicator.period)%]</td>
-                <td>[%value4human(v.max_valor, indicator.variable_type)%] <small>([%v.max_nomes%])</small></td>
-                <td>[%value4human(v.min_valor, indicator.variable_type)%] <small>([%v.min_nomes%])</small></td>
+                <td>[%value4human(v.max_valor, 'num')%] <small>([%v.max_nomes%])</small></td>
+                <td>[%value4human(v.min_valor, 'num')%] <small>([%v.min_nomes%])</small></td>
                 <td>[%value4human(v.fator, 'num')%] </td>
             </tr>
             [%END%]
