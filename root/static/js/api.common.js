@@ -1,4 +1,11 @@
 var api_path = "";
+var infowindow;
+var _show_info_name = function(event){
+    infowindow.setContent(this._data.name);
+    infowindow.setPosition(event.latLng);
+
+    infowindow.open(this._data.map);
+};
 //var api_path = "http://rnsp.aware.com.br";
 var _last_width=0;
 
@@ -325,6 +332,10 @@ if (!(typeof google == "undefined")) {
             $elm.attr('map_index', map_index);
 
 
+            if (!infowindow){
+                infowindow = new google.maps.InfoWindow();
+            }
+
             var opacity = xmap.opacity ? xmap.opacity : 0.5;
 
             google.maps.event.addListenerOnce(map, 'idle', function(){
@@ -350,7 +361,12 @@ if (!(typeof google == "undefined")) {
                             fillOpacity: Math.min(opacity, 1)
                         });
 
+                        zoo.polygon._data = elm;
+                        zoo.polygon._data.map = map;
+
                         zoo.polygon.setMap(map);
+
+                        google.maps.event.addListener(zoo.polygon, 'click',_show_info_name);
 
                         if (typeof map_used_things[xmap.map_elm] == "undefined")
                             map_used_things[xmap.map_elm] = [];
