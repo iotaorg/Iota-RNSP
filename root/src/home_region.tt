@@ -80,14 +80,15 @@
 [%IF region.depth_level == 2-%]
     var load_map = [{
         map_elm: '#mapa',
-        polygons: [[%-FOR rr IN subregions -%]{p:['[% rr.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]'],color:'#1E90FF'},[%-END-%]]
+
+        polygons: [[%-FOR rr IN subregions -%]{name: '[%rr.name%]',p:['[% rr.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]'],color:'#1E90FF'},[%-END-%]]
     }];
 [%ELSE%]
     [%IF region.polygon_path%]
     var load_map = [{
         map_elm: '#mapa',
         polygons: [
-            { p : ['[% region.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]'], color: '#1E90FF' }
+            { name: '[%region.name%]', p : ['[% region.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]'], color: '#1E90FF' }
         ]
     }];
     [%END%]
