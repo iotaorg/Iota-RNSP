@@ -1,9 +1,9 @@
 
 use strict;
 use warnings;
-
+use utf8;
 use Test::More;
-
+use JSON::XS;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
@@ -44,7 +44,7 @@ eval {
                 POST '/api/indicator',
                 [
                     api_key                          => 'test',
-                    'indicator.create.name'          => 'Foo Bar',
+                    'indicator.create.name'          => 'Divisão Modal',
                     'indicator.create.formula'       => '5 + $' . $var1,
                     'indicator.create.axis_id'       => '1',
                     'indicator.create.explanation'   => 'explanation',
@@ -63,12 +63,14 @@ eval {
 
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
-            use JSON qw(from_json);
+
+
             my $indicator = eval { from_json( $res->content ) };
 
             ok( my $save_test = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
                 'indicator in DB' );
-            is( $save_test->name,          'Foo Bar',     'name ok' );
+            is( $save_test->name,          'Divisão Modal',     'name ok' );
+            is( $save_test->name_url,      'divisao-modal',     'name ok' );
             is( $save_test->explanation,   'explanation', 'explanation ok' );
             is( $save_test->source,        'me',          'source ok' );
             is( $save_test->observations,  'lala',        'observations ok' );
@@ -86,11 +88,11 @@ eval {
 
             like( $res->content, qr/weekly/, 'periodo de alguma variavel' );
 
-            my $indicator_res = eval { from_json( $res->content ) };
+            my $indicator_res = eval { decode_json( $res->content ) };
             is( $indicator_res->{visibility_level}, 'restrict', 'visibility_level ok' );
 
             is_deeply( $indicator_res->{restrict_to_users}, [1], 'restrict_to_users ok' );
-            is( $indicator_res->{name}, 'Foo Bar', 'name ok' );
+            is( $indicator_res->{name}, 'Divisão Modal', 'name ok' );
 
             is( $indicator_res->{formula_human}, '5 + Foo Bar0', 'formula_human ok' );
 
