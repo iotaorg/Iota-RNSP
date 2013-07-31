@@ -79,7 +79,7 @@ sub parse {
                 if ( exists $registro->{id} && exists $registro->{date} && exists $registro->{value} ) {
 
                     $registro->{date} =
-                        $registro->{date} =~ /^20[123][0-9]$/
+                        $registro->{date} =~ /^20[0123][0-9]$/
                       ? $registro->{date} . '-01-01'
                       : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
 
