@@ -362,7 +362,7 @@
   <div class="copyright">
         <div class="footer-copyright-content">
               [%l('Todo o conteúdo do site é licenciado sob a')%]
-              <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
+              <a href="http://creativecommons.org/licenses/by/3.0/br/" target="_blank">Creative Commons Attribution
                 <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
               </a>
         </div>
