@@ -253,7 +253,7 @@ sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
     $c->stash->{template} = 'home_cidade_region.tt';
 }
 
-sub cidade_regioes : Chained('network_cidade') PathPart('indicadores') Args(0) {
+sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(0) {
     my ( $self, $c) = @_;
 
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf} . ' - '. $c->loc('Indicadores');
