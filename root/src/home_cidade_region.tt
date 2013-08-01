@@ -1,6 +1,6 @@
 [%IF institute.id == 1%] [%SET city.regions = []%] [%END%]
     <div id="content" class="content">
-        <div class="row" id="cidades-dados">
+	  <div class="row" id="cidades-dados">
             <div class="span4">
                 <div class="profile">
                     <div class="content-fill">
