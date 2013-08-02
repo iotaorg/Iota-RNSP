@@ -1,9 +1,9 @@
-<div id="content" class="content row">
+<div id="content" class="content row-fluid">
 
 	<div class="span4" id="cidades-nav-left">
 
-		<div class="row" id="cidades-regioes">
-			<div class="span4" id="regioes">
+		<div id="cidades-regioes">
+			<div id="regioes">
 				<div class="menu-left" lockfixed>
 					<h5>[%(region_classification_name.2)%]</h5>
 					<ul class="regions">
