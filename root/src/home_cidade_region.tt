@@ -75,7 +75,7 @@
 			</div>
 			
 			<div class="row">
-				<div class="summary">
+				<div class="summary region">
 					<div class="content-fill">[%public.usuario.city_summary%]</div>
 				</div>
 			</div>
