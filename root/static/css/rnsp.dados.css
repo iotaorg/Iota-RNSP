@@ -90,9 +90,6 @@ html {overflow-y: scroll;}
 .clear{
 	clear: both;
 }
-.gap{
-	height: 20px;
-}
 
 .indicators .item:hover,
 .indicators .item.selected:hover{
@@ -1045,4 +1042,8 @@ a.link-axis{
 }
 a.link-region{
 	background: url('/static/images/globe_icon.png') no-repeat 5% center;
+}
+
+.botoes-regioes{
+	margin-top: 50px;
 }
