@@ -87,6 +87,12 @@ html {overflow-y: scroll;}
 .center{
 	text-align: center;
 }
+.clear{
+	clear: both;
+}
+.gap{
+	height: 20px;
+}
 
 .indicators .item:hover,
 .indicators .item.selected:hover{
@@ -1022,8 +1028,8 @@ footer .thumbnails-unstyled li {
 a.link-axis,
 a.link-region{
 	margin: 5px;
-	padding: 10px 20px;
-	padding-left: 100px;
+	padding: 40px;
+	padding-left: 120px;
 	border: 1px solid #e0e0e0;
 	background-color: #fff;
 	font-size: 1.5em;
@@ -1035,8 +1041,8 @@ a.link-region:hover{
 	border: 1px solid #ccc;
 }
 a.link-axis{
-	background: url('/static/images/pcs_icon.png') no-repeat left center;
+	background: url('/static/images/pcs_icon.png') no-repeat 5% center;
 }
 a.link-region{
-	background: url('/static/images/globe_icon.png') no-repeat left center;
+	background: url('/static/images/globe_icon.png') no-repeat 5% center;
 }
