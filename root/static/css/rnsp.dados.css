@@ -974,3 +974,25 @@ footer .thumbnails-unstyled li {
 	cursor: pointer;
 	background-color: #e1ffff;
 }
+
+#regioes ul.regions{
+	border: 1px solid #e0e0e0;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+#regioes ul.regions div.header:hover,
+#regioes ul.regions .subregions li:hover{
+	background-color: #f0f0f0;
+	cursor: hand;
+	cursor: pointer;
+}
+#regioes ul.regions div.header.selected{
+	background-color: #ccffff;
+}
+#regioes ul.regions ul.subregions{
+	display: none;
+}
+#regioes ul.regions li .header a{
+	display: inline;
+}

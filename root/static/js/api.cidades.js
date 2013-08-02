@@ -309,11 +309,22 @@ $(document).ready(function(){
 			line.Draw();
 		}
 	}
+	function formataMenuRegioes(){
+		$("#regioes ul.regions li.header").each(function(index,item){
+			if ($(this).find("ul.subregions li.selected").length > 0){
+				$(this).find("ul.subregions").fadeIn("fast");
+			}
+		});
+        $("#regioes ul.regions div.header").bind("click", function(e){
+			$(this).parent().find("ul.subregions").toggle("fast");
+		});
+	}
 
     if (ref == "cidade"){
         loadCidadeData();
     }
     if (ref == "region"){
+        formataMenuRegioes();
         loadIndicadoresData();
     }
 
