@@ -1028,7 +1028,7 @@ a.link-region{
 	padding: 40px;
 	padding-left: 120px;
 	border: 1px solid #e0e0e0;
-	background-color: #fff;
+	background-color: #ffffff;
 	font-size: 1.5em;
 }
 a.link-axis:hover,
@@ -1045,5 +1045,7 @@ a.link-region{
 }
 
 .botoes-regioes{
-	margin-top: 50px;
+    margin-top: 60px;
+    margin-bottom: 30px;
+}
 }
