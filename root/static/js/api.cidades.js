@@ -310,13 +310,13 @@ $(document).ready(function(){
 		}
 	}
 	function formataMenuRegioes(){
-		$("#regioes ul li.regions").each(function(index,item){
+		$("#regioes ul.regions li.header").each(function(index,item){
 			if ($(this).find("ul.subregions li.selected").length > 0){
 				$(this).find("ul.subregions").fadeIn("fast");
 			}
 		});
-        $("#regioes ul li.regions li.header").bind("click", function(e){
-			$(this).find("ul.subregions").toggle("fast");
+        $("#regioes ul.regions div.header").bind("click", function(e){
+			$(this).parent().find("ul.subregions").toggle("fast");
 		});
 	}
 
