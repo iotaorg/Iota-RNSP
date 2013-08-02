@@ -321,6 +321,7 @@ $(document).ready(function(){
 	}
 
     if (ref == "cidade"){
+        formataMenuRegioes();
         loadCidadeData();
     }
     if (ref == "region"){
