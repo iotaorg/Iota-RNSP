@@ -975,19 +975,19 @@ footer .thumbnails-unstyled li {
 	background-color: #e1ffff;
 }
 
-#regioes ul li.regions{
+#regioes ul.regions{
 	border: 1px solid #e0e0e0;
 }
-#regioes ul li.regions div.header:hover,
-#regioes ul li.regions .subregions li:hover{
+#regioes ul.regions div.header:hover,
+#regioes ul.regions .subregions li:hover{
 	background-color: #f0f0f0;
 	cursor: hand;
 	cursor: pointer;
 }
-#regioes ul li.regions div.header.selected{
+#regioes ul.regions div.header.selected{
 	background-color: #ccffff;
 }
-#regioes ul li.regions ul.subregions{
+#regioes ul.regions ul.subregions{
 	display: none;
 }
 #regioes ul.regions li .header a{
