@@ -3,7 +3,7 @@
 	<div class="span4" id="cidades-nav-left">
 
 		<div class="row" id="cidades-regioes">
-			<div class="span4" id="regioes">
+			<div class="span4" id="regioes" lockfixed>
 				<h5>[%(region_classification_name.2)%]</h5>
 				<ul class="regions">
 					[%FOREACH r IN city.regions.sort('name') %]

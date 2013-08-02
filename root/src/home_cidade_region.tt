@@ -1,7 +1,7 @@
 [%IF institute.id == 1%] [%SET city.regions = []%] [%END%]
     <div id="content" class="content">
 	  <div class="row" id="cidades-dados">
-			<div class="span4" id="regioes">
+			<div class="span4" id="regioes" lockfixed>
 				<h5>[%(region_classification_name.2)%]</h5>
 				<ul class="regions">
 					[%FOREACH r IN city.regions.sort('name') %]
