@@ -81,29 +81,6 @@
             </div>
         </div>
 
-        <div class="row" >
-
-            <div class="span4" id="regioes">
-                <h5>[%(region_classification_name.2)%]</h5>
-                <ul class="nav nav-list">
-                    [%FOREACH r IN city.regions.sort('name') %]
-                        <li class="nav-header">
-                            <a href="[%r.url%]">[%r.name%]</a>
-                            [%IF r.subregions.size > 0 %]
-                                <ul class="nav nav-list">
-                                [%FOREACH rr IN r.subregions.sort('name')%]
-                                    <li><a href="[%rr.url%]">[%rr.name%]</a></li>
-                                [%END%]
-                                </ul>
-                            [%END%]
-                        </li>
-                    [%END%]
-
-                </ul>
-            </div>
-        </div>
-
-
     </div>
 
 

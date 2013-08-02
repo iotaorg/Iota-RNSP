@@ -62,34 +62,30 @@
             </div>
         </div>
 
-        <div class="row" >
-            <div class="[% IF city.regions.size > 0 %]span8[%ELSE%]span12[%END%]">
-                <div id="cidades-indicadores">
-                    <h5>[%l('Indicadores separados por eixos')%]</h5>
-                    <div class="table">
-                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
-                    </div>
-                </div>
-            </div>
         [% IF city.regions.size>0 %]
-            <div class="span4" id="regioes">
-                <h5>[%(region_classification_name.2)%]</h5>
-                <ul class="nav nav-list">
-                    [%FOREACH r IN city.regions.sort('name') %]
-                        <li class="nav-header">
-                            <a href="[%r.url%]">[%r.name%]</a>
-                            [%IF r.subregions.size > 0 %]
-                                <ul class="nav nav-list">
-                                [%FOREACH rr IN r.subregions.sort('name')%]
-                                    <li><a href="[%rr.url%]">[%rr.name%]</a></li>
-                                [%END%]
-                                </ul>
-                            [%END%]
-                        </li>
-                    [%END%]
-
-                </ul>
-            </div>
+			<div class="row">
+				<div class="span6 center">
+					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores" class="link-axis">
+						%l('Indicadores separados por eixos')%]
+					</a>
+				</div>
+				<div class="span6 center">
+					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao" class="link-region">
+						%l('Indicadores separados por região')%]
+					</a>
+				</div>
+			</div>
+        [% ELSE %]
+			<div class="row" >
+				<div class="span12">
+					<div id="cidades-indicadores">
+						<h5>[%l('Indicadores separados por eixos')%]</h5>
+						<div class="table">
+							<div class="loading"><p>[%l('Carregando...')%]</p></div>
+						</div>
+					</div>
+				</div>
+			</div>                    
         [%END%]
         </div>
 
