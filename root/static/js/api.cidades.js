@@ -311,7 +311,7 @@ $(document).ready(function(){
 	}
 	function formataMenuRegioes(){
         $("#regioes ul li.nav-header").bind("click", function(e){
-			$(this).find("li.nav-list").toggle("slow");
+			$(this).find("ul.nav-list").toggle("slow");
 		});
 	}
 

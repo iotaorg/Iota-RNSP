@@ -7,12 +7,12 @@
 				<h5>[%(region_classification_name.2)%]</h5>
 				<ul class="nav nav-list">
 					[%FOREACH r IN city.regions.sort('name') %]
-						<li class="nav-header">
+						<li class="nav-header[%IF r.id == region.id %] selected[%END%]">
 							<a href="[%r.url%]">[%r.name%]</a>
 							[%IF r.subregions.size > 0 %]
 								<ul class="nav nav-list">
 								[%FOREACH rr IN r.subregions.sort('name')%]
-									<li><a href="[%rr.url%]">[%rr.name%]</a></li>
+									<li [%IF rr.id == region.id %] class="selected"[%END%]><a href="[%rr.url%]">[%rr.name%]</a></li>
 								[%END%]
 								</ul>
 							[%END%]

@@ -983,12 +983,15 @@ footer .thumbnails-unstyled li {
 	cursor: hand;
 	cursor: pointer;
 }
+#regioes ul li.nav-header.selected{
+	background-color: #ccffff;
+}
 #regioes ul li.nav-header ul.nav-list{
 	display: none;
 }
 #regioes ul li a{
 	display: inline;
 }
-#regioes ul li a:hover{
+#regioes ul li a:focus{
 	background-color: none;
 }
