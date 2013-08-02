@@ -84,7 +84,7 @@ html {overflow-y: scroll;}
 	background-color: #ccffff;
 }
 
-td.center{
+.center{
 	text-align: center;
 }
 
@@ -1027,6 +1027,12 @@ a.link-region{
 	border: 1px solid #e0e0e0;
 	background-color: #fff;
 	font-size: 1.5em;
+}
+a.link-axis:hover,
+a.link-region:hover{
+	text-decoration: none;
+	background-color: #fcfcfc;
+	border: 1px solid #ccc;
 }
 a.link-axis{
 	background: url('/static/images/pcs_icon.png') no-repeat left center;
