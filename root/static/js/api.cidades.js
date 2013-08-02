@@ -310,8 +310,13 @@ $(document).ready(function(){
 		}
 	}
 	function formataMenuRegioes(){
-        $("#regioes ul li.nav-header").bind("click", function(e){
-			$(this).find("ul.nav-list").toggle("slow");
+		$("#regioes ul li.regions").each(function(index,item){
+			if ($(this).find("ul.subregions li.selected").length > 0){
+				$(this).find("ul.subregions").fadeIn("fast");
+			}
+		});
+        $("#regioes ul li.regions li.header").bind("click", function(e){
+			$(this).find("ul.subregions").toggle("fast");
 		});
 	}
 

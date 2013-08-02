@@ -5,12 +5,12 @@
 		<div class="row" id="cidades-regioes">
 			<div class="span4" id="regioes">
 				<h5>[%(region_classification_name.2)%]</h5>
-				<ul class="nav nav-list">
+				<ul class="regions">
 					[%FOREACH r IN city.regions.sort('name') %]
-						<li class="nav-header[%IF r.id == region.id %] selected[%END%]">
-							<a href="[%r.url%]">[%r.name%]</a>
+						<li class="header">
+							<div class='header[%IF r.id == region.id %] selected[%END%]'><a href="[%r.url%]">[%r.name%]</a></div>
 							[%IF r.subregions.size > 0 %]
-								<ul class="nav nav-list">
+								<ul class="subregions">
 								[%FOREACH rr IN r.subregions.sort('name')%]
 									<li [%IF rr.id == region.id %] class="selected"[%END%]><a href="[%rr.url%]">[%rr.name%]</a></li>
 								[%END%]

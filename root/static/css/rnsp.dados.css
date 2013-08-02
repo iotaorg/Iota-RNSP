@@ -975,23 +975,21 @@ footer .thumbnails-unstyled li {
 	background-color: #e1ffff;
 }
 
-#regioes ul li.nav-header{
+#regioes ul li.regions{
 	border: 1px solid #e0e0e0;
 }
-#regioes ul li.nav-header:hover{
-	border: 1px solid #cccccc;
+#regioes ul li.regions div.header:hover,
+#regioes ul li.regions .subregions li:hover{
+	background-color: #f0f0f0;
 	cursor: hand;
 	cursor: pointer;
 }
-#regioes ul li.nav-header.selected{
+#regioes ul li.regions div.header.selected{
 	background-color: #ccffff;
 }
-#regioes ul li.nav-header ul.nav-list{
+#regioes ul li.regions ul.subregions{
 	display: none;
 }
-#regioes ul li a{
+#regioes ul.regions li .header a{
 	display: inline;
-}
-#regioes ul li a:focus{
-	background-color: none;
 }
