@@ -975,10 +975,22 @@ footer .thumbnails-unstyled li {
 	background-color: #e1ffff;
 }
 
-#regioes ul.regions{
+#regioes ul.regions,
+#regioes ul.subregions{
+	padding: 0;
+	margin: 0;
+}
+#regioes ul.regions li.header{
+	padding: 5px 10px;
 	border: 1px solid #e0e0e0;
 	list-style: none;
 	padding: 0;
+	margin: 0;
+}
+
+#regioes ul.regions .subregions li{
+	list-style: none;
+	padding: 5px 10px 5px 20px;
 	margin: 0;
 }
 #regioes ul.regions div.header:hover,
