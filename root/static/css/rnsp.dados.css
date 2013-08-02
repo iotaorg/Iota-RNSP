@@ -974,3 +974,21 @@ footer .thumbnails-unstyled li {
 	cursor: pointer;
 	background-color: #e1ffff;
 }
+
+#regioes ul li.nav-header{
+	border: 1px solid #e0e0e0;
+}
+#regioes ul li.nav-header:hover{
+	border: 1px solid #cccccc;
+	cursor: hand;
+	cursor: pointer;
+}
+#regioes ul li.nav-header ul.nav-list{
+	display: none;
+}
+#regioes ul li a{
+	display: inline;
+}
+#regioes ul li a:hover{
+	background-color: none;
+}

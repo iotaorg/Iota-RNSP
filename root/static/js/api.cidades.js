@@ -309,11 +309,17 @@ $(document).ready(function(){
 			line.Draw();
 		}
 	}
+	function formataMenuRegioes(){
+        $("#regioes ul li.nav-header").bind("click", function(e){
+			$(this).find("li.nav-list").toggle("slow");
+		});
+	}
 
     if (ref == "cidade"){
         loadCidadeData();
     }
     if (ref == "region"){
+        formataMenuRegioes();
         loadIndicadoresData();
     }
 
