@@ -1033,6 +1033,9 @@ a.link-region{
 	padding: 30px 20px;
 	padding-left: 120px;
 	border: 1px solid #e0e0e0;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
 	background-color: #ffffff;
 	font-size: 1.4em;
 }
