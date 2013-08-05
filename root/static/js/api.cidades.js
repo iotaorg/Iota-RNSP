@@ -241,7 +241,7 @@ $(document).ready(function(){
 					}else{
 						var tr_class = "folded";
 					}
-					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' class='bs-tooltip'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, explanation: item.explanation, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' class='bs-tooltip'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, explanation: item.explanation, url:  base_url + "/" + item.name_url});
 					if (item.valores.length > 0){
 
 						for (j = 0; j < item.valores.length; j++){
@@ -260,7 +260,7 @@ $(document).ready(function(){
                                 }
 							}
 						}
-						table_content += "<td class='grafico'><a href='$$url'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({id: cont, url:  (window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url});
+						table_content += "<td class='grafico'><a href='$$url'><canvas id='graph-$$id' width='40' height='20'></canvas></a></td>".render({id: cont, url: base_url + "/" + item.name_url});
 
 						for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
