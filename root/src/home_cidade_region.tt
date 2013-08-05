@@ -73,7 +73,7 @@
 				</div>
 
 			</div>
-			
+
 			<div class="row">
 				<div class="summary region">
 					<div class="content-fill">[%public.usuario.city_summary%]</div>
@@ -91,4 +91,5 @@
 
     var ref = 'cidade';
     [% PROCESS 'network_javascript.tt'%]
+    var base_url = '';
 </script>
