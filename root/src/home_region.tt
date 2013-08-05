@@ -116,5 +116,6 @@
     [%END%]
 [%END-%]
     var ref = 'region';
+    var base_url = '';
     [% PROCESS 'network_javascript.tt'%]
 </script>
