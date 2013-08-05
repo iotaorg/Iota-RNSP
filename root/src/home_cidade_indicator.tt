@@ -65,7 +65,7 @@
         <div class="row" >
             <div class="span12">
                 <div id="cidades-indicadores">
-                    <h5>[%l('Indicadores separados por eixos')%] [% IF city.regions.size>0 %]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao">visualizar indicadores por região</a></small>[% END %]</h5>
+                    <h5>[%l('Indicadores separados por eixos')%] [% IF city.regions.size>0 %]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao">[%l('visualizar indicadores por região')%]</a></small>[% END %]</h5>
                     <div class="table">
                         <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
