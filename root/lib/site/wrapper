@@ -124,6 +124,9 @@
                 <a href="/dados-abertos">[%l('Dados abertos')%]</a>
               </li>
 
+              [%- IF institute.short_name == 'gov' -%]
+                <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e Gerais</a></li>
+              [%-END-%]
               <li>
                 <a href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a>
               </li>
