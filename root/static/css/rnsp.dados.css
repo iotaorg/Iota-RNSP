@@ -84,8 +84,11 @@ html {overflow-y: scroll;}
 	background-color: #ccffff;
 }
 
-td.center{
+.center{
 	text-align: center;
+}
+.clear{
+	clear: both;
 }
 
 .indicators .item:hover,
@@ -357,13 +360,16 @@ table .num{
 
 }
 
-
 #cidades-dados .summary .content-fill,
 #cidades-dados .profile .content-fill,
 #indicador-dados .profile .content-fill,
 #mapa-do-site .content-fill{
 	padding: 10px;
 	clear: both;
+}
+
+#cidades-dados .summary.region .content-fill{
+	padding: 10px 40px;
 }
 
 #cidades-dados .variaveis .tabela,
@@ -975,11 +981,29 @@ footer .thumbnails-unstyled li {
 	background-color: #e1ffff;
 }
 
-#regioes ul.regions{
+#regioes ul.regions,
+#regioes ul.subregions{
+	padding: 0;
+	margin: 0;
+}
+#regioes ul.regions li.header{
 	border: 1px solid #e0e0e0;
 	list-style: none;
 	padding: 0;
+	margin: 2px 0px;
+}
+#regioes ul.regions li.header div.header{
+	padding: 2px 10px;
+	font-size: 0.9em;
+}
+
+#regioes ul.regions .subregions li{
+	list-style: none;
+	padding: 2px 10px 2px 20px;
 	margin: 0;
+	border-top: 1px solid #f0f0f0;
+	background-color: #fcfcfc;
+	font-size: 0.9em;
 }
 #regioes ul.regions div.header:hover,
 #regioes ul.regions .subregions li:hover{
@@ -987,12 +1011,46 @@ footer .thumbnails-unstyled li {
 	cursor: hand;
 	cursor: pointer;
 }
-#regioes ul.regions div.header.selected{
+#regioes ul.regions div.header.selected,
+#regioes ul.regions ul.subregions li.selected{
 	background-color: #ccffff;
 }
 #regioes ul.regions ul.subregions{
 	display: none;
 }
-#regioes ul.regions li .header a{
+#regioes ul.regions li.selected ul.subregions{
+	display: block;
+}
+#regioes ul.regions li.header a{
 	display: inline;
+}
+#regioes ul.regions ul.subregions li a{
+	display: block;
+}
+a.link-axis,
+a.link-region{
+	margin: 5px;
+	padding: 40px;
+	padding-left: 120px;
+	border: 1px solid #e0e0e0;
+	background-color: #ffffff;
+	font-size: 1.5em;
+}
+a.link-axis:hover,
+a.link-region:hover{
+	text-decoration: none;
+	background-color: #fcfcfc;
+	border: 1px solid #ccc;
+}
+a.link-axis{
+	background: url('/static/images/pcs_icon.png') no-repeat 5% center;
+}
+a.link-region{
+	background: url('/static/images/globe_icon.png') no-repeat 5% center;
+}
+
+.botoes-regioes{
+    margin-top: 60px;
+    margin-bottom: 30px;
+}
 }
