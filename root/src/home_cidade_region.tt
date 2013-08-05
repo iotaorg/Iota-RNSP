@@ -1,0 +1,94 @@
+[%IF institute.id == 1%] [%SET city.regions = []%] [%END%]
+    <div id="content" class="content">
+	  <div class="row" id="cidades-dados">
+		<div class="span4" id="regioes">
+			<div class="menu-left" lockfixed>
+				<h5>[%(region_classification_name.2)%]</h5>
+				<ul class="regions">
+					[%FOREACH r IN city.regions.sort('name') %]
+						<li class="header">
+							<div class='header[%IF r.id == region.id %] selected[%END%]'><a href="[%r.url%]">[%r.name%]</a></div>
+							[%IF r.subregions.size > 0 %]
+								<ul class="subregions">
+								[%FOREACH rr IN r.subregions.sort('name')%]
+									<li [%IF rr.id == region.id %] class="selected"[%END%]><a href="[%rr.url%]">[%rr.name%]</a></li>
+								[%END%]
+								</ul>
+							[%END%]
+						</li>
+					[%END%]
+
+				</ul>
+			</div>
+		</div>
+
+		<div class="span8">
+
+			<div class="row">
+				<div class="span8">
+					<div class="image thumbnail">
+						[%IF public.usuario.files.imagem_cidade%]
+						<img src="[%public.usuario.files.imagem_cidade%]">
+						[%END%]
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="span4">
+					<div class="profile">
+						<div class="content-fill">
+							<h1 class="title">[% city.name %], [%city.uf%]</h1>
+							<div class="variaveis"><dl class="tabela">
+								<dt>Cidade: </dt>
+								<dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
+								<dt>Estado: </dt>
+								<dd>[%city.uf%]</dd>
+
+								<dt>País: </dt>
+								<dd>[%l('Brasil')%]</dd>
+
+								[% FOREACH vv IN user_basic_variables %]
+								<dt>[%vv.variable.name%]: </dt>
+								<dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
+								[% END %]
+
+							</dl></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="span4">
+					<div class="map" id="gmap">
+						<div class="content-fill">
+							<div id="x-container">
+								<div class="x-dummy"></div>
+								<div class="x-element">
+									<div id="mapa"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+			<div class="row">
+				<div class="summary region">
+					<div class="content-fill">[%public.usuario.city_summary%]</div>
+				</div>
+			</div>
+
+		</div>
+      </div>
+    </div>
+
+
+
+<script type="text/javascript">
+    var userID = [% user.id %];
+
+    var ref = 'cidade';
+    [% PROCESS 'network_javascript.tt'%]
+</script>

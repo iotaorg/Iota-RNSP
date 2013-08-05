@@ -246,6 +246,21 @@ sub load_region_names {
 
 }
 
+sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
+    my ( $self, $c) = @_;
+
+    $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf} . ' - '. $c->loc('Regiões');
+    $c->stash->{template} = 'home_cidade_region.tt';
+}
+
+sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(0) {
+    my ( $self, $c) = @_;
+
+    $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf} . ' - '. $c->loc('Indicadores');
+    $c->stash->{template} = 'home_cidade_indicator.tt';
+}
+
+
 sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
     my ( $self, $c, $regiao ) = @_;
     $c->stash->{regiao_url} = $regiao;

@@ -117,3 +117,7 @@ input.button-data:hover{
 #result-cidades tbody tr:hover{
 	background-color: #e9e1ff;
 }
+#regioes ul.regions div.header.selected,
+#regioes ul.regions ul.subregions li.selected{
+	background-color: #d4ccff;
+}

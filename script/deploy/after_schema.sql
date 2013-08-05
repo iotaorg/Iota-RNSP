@@ -342,7 +342,7 @@ BEGIN
         x.valid_from,
 
         x.total::varchar,
-            x.sources,
+        x.sources[1],
         true
     from _x x;
 
