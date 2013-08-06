@@ -61,6 +61,7 @@ requires 'DateTime::Format::Excel';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
 requires 'Catalyst::Plugin::Assets';
+requires 'Statistics::Basic';
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';
