@@ -36,13 +36,11 @@ sub upsert {
     my $values_rs = $self->schema->resultset('VariableValue');
     $values_rs = $values_rs->search( { valid_from => $params{dates} } ) if exists $params{dates};
 
-    my $x = {
+    $values_rs = $values_rs->search(
+        {
             ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
             'me.variable_id' => { 'in' => [ keys %$variable_ids ] }
-        };
-        use DDP; p $x;
-    $values_rs = $values_rs->search(
-        $x
+        }
     );
     my $period_values = {};
 
