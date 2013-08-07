@@ -14,9 +14,8 @@ Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira p
 
 [Você pode consultar a wiki para saber mais detalhes](https://github.com/AwareTI/Iota/wiki)
 
-> [01 Iota Uma plataforma para gerenciamento de indicadores](https://github.com/AwareTI/Iota/wiki/01---Iota---Uma-plataforma-para-gerenciamento-de-indicadores)
 
-> [02 Iota Como instalar uma cópia no linux](https://github.com/AwareTI/Iota/wiki/02---Iota---Como-instalar-uma-c%C3%B3pia-no-linux)
+> [02 Iota Como instalar uma cópia no linux](https://github.com/AwareTI/Iota/wiki/Iota---Como-instalar-uma-cópia-no-linux)
 
 
 [Também existe um grupo para desenvolvedores no Google Groups](https://groups.google.com/forum/embed/?place=forum/iota-br&showsearch=true&showpopout=true&showtabs=false#!forum/iota-br)
