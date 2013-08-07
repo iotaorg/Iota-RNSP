@@ -24,8 +24,6 @@ sub upsert {
     my @used_variables =
       $self->schema->resultset('IndicatorVariable')->search( { indicator_id => \@indicators_ids } )->all;
 
-    return unless scalar @used_variables;
-
     my $variable_ids;
     my $indicator_variables;
     foreach my $var (@used_variables) {
@@ -33,15 +31,18 @@ sub upsert {
         push @{ $indicator_variables->{ $var->indicator_id } }, $var->variable_id;
     }
 
+
     # procura pelos valores salvos
     my $values_rs = $self->schema->resultset('VariableValue');
     $values_rs = $values_rs->search( { valid_from => $params{dates} } ) if exists $params{dates};
 
-    $values_rs = $values_rs->search(
-        {
+    my $x = {
             ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id},
             'me.variable_id' => { 'in' => [ keys %$variable_ids ] }
-        }
+        };
+        use DDP; p $x;
+    $values_rs = $values_rs->search(
+        $x
     );
     my $period_values = {};
 
