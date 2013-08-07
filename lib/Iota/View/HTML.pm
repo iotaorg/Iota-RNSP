@@ -56,6 +56,8 @@ sub value4human {
     my $mid = '';
     my $end = '';
     if ( $variable_type eq 'num' ) {
+        return 0 if $value < 0.0001;
+
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );

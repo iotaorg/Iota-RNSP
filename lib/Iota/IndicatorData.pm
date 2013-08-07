@@ -24,6 +24,8 @@ sub upsert {
     my @used_variables =
       $self->schema->resultset('IndicatorVariable')->search( { indicator_id => \@indicators_ids } )->all;
 
+    return unless scalar @used_variables;
+
     my $variable_ids;
     my $indicator_variables;
     foreach my $var (@used_variables) {
