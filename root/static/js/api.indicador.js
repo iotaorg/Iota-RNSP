@@ -203,7 +203,7 @@ $(document).ready(function () {
 
 
 
-                if ((goal_values) && goal_values.trim() != "") {
+                if ((goal_values) && $.trim(goal_values) != "") {
                     if (goal_values.toLowerCase().indexOf("fonte:") > 0) {
                         goal_values = goal_values.replace("fonte:", "Fonte:");
                         goal_values = goal_values.replace("Fonte:", '<blockquote><small><cite title="Fonte da meta">') + "</cite></small></blockquote>";
@@ -223,7 +223,7 @@ $(document).ready(function () {
                         dado: source_values_unique.join("</li><li>")
                     }));
                 }
-                if ((observations_values) && observations_values.trim() != "") {
+                if ((observations_values) && $.trim(observations_values) != "") {
                     $(".tabela", $dados).append("<dt>Observações:</dt><dd>$$dado</dd>".render({
                         dado: observations_values
                     }));
