@@ -658,10 +658,10 @@ $(document).ready(function(){
 			}else{
 				var sClass = "item";
 			}
-			legenda += "<div class='$$class'><div class='quad' style='background-color: $$color'></div><div class='label' style='color: $$color'>$$label</div><div class='close'><div class='icon' item-id='$$id' title='Remover' alt='Remover'>x</div></div></div>".render({
+			legenda += "<div class='$$sclass'><div class='quad' style='background-color: $$color'></div><div class='label' style='color: $$color'>$$label</div><div class='close'><div class='icon' item-id='$$id' title='Remover' alt='Remover'>x</div></div></div>".render({
 					label:legendas[i].name,
 					color: legendas[i].color,
-					class: sClass,
+					sclass: sClass,
 					id: legendas[i].id
 					});
 		}
