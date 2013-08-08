@@ -289,6 +289,8 @@ sub action_specs {
 
 sub _put {
     my ( $self, $period, %values ) = @_;
+    my $dont_calc = delete $values{do_not_calc};
+    delete $values{cache_ref};
     $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
     my $schema = $self->result_source->schema;
@@ -306,7 +308,8 @@ sub _put {
             user_id     => $values{user_id},
             variable_id => $values{variable_id},
             valid_from  => $dates->{period_begin}
-        }
+        },
+        { select => ['id'], as => ['id']}
     )->next;
 
     if ($row) {
@@ -344,13 +347,15 @@ sub _put {
         }
     }
 
-    my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
+    if (!$dont_calc){
+        my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
-    $data->upsert(
-        indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
-        dates      => [ $dates->{period_begin} ],
-        user_id    => $row->user_id
-    );
+        $data->upsert(
+            indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
+            dates      => [ $dates->{period_begin} ],
+            user_id    => $values{user_id}
+        );
+    }
 
     return $row;
 }

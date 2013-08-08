@@ -3,9 +3,10 @@ use strict;
 use warnings;
 use utf8;
 use Test::More;
-use JSON::XS;
+use JSON;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
+
 
 use Catalyst::Test q(Iota);
 
@@ -131,7 +132,6 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 
-use JSON qw(from_json);
 
 sub new_var {
     my $type   = shift;

@@ -153,7 +153,7 @@ sub upsert {
 
                 # se nao foi informado a regiao, nao tem calculo dela.
                 exists $params{regions_id}
-                ? ( 'me.region_id' => $params{regions_id}, )
+                ? ( 'me.region_id' => {'in'=>$params{regions_id}}, )
                 : ( 'me.region_id' => undef ),
 
             };

@@ -317,6 +317,10 @@ sub action_specs {
 
 sub _put {
     my ( $self, $period, %values ) = @_;
+
+    my $dont_calc = delete $values{do_not_calc};
+    my $cache_ref = delete $values{cache_ref};
+
     my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
     $values{value_of_date} = $value_of_date->datetime;
 
@@ -329,8 +333,23 @@ sub _put {
     my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
     # confere se a regiao eh mesmo da cidade desse usuario
-    my $region = $schema->resultset('Region')->find( $values{region_id} );
-    my $user   = $schema->resultset('User')->find( $values{user_id} );
+    my $region = $cache_ref && exists $cache_ref->{reg}{$values{region_id}}
+        ? $cache_ref->{reg}{$values{region_id}}
+        : $schema->resultset('Region')->search(
+        { 'me.id' => $values{region_id}},
+        {
+            prefetch => 'upper_region'
+        }
+    )->next;
+    $cache_ref->{reg}{$values{region_id}} = $region if $cache_ref;
+
+    my $user   = $cache_ref && exists $cache_ref->{usr}{$values{user_id}}
+        ? $cache_ref->{usr}{$values{user_id}}
+        : $schema->resultset('User')->search(
+            { id => $values{user_id} },
+            { select => ['city_id'], as => ['city_id'] }
+        )->next;
+    $cache_ref->{usr}{$values{user_id}} = $user if $cache_ref;
 
     if ( $user->city_id && $region->city_id != $user->city_id ) {
         die 'Illegal region for user.';
@@ -362,7 +381,8 @@ sub _put {
             variable_id          => $values{variable_id},
             valid_from           => $dates->{period_begin},
             generated_by_compute => undef
-        }
+        },
+        { select => ['id'], as => ['id']}
     )->next;
 
     if ($row) {
@@ -397,15 +417,17 @@ sub _put {
         }
     }
 
-    my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
+    if (!$dont_calc){
+        my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
-    $data->upsert(
-        indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
-        dates      => [ $dates->{period_begin} ],
-        user_id    => $row->user_id,
-        regions_id => [ $row->region_id ],
+        $data->upsert(
+            indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
+            dates      => [ $dates->{period_begin} ],
+            user_id    => $values{user_id},
+            regions_id => [ $values{region_id} ],
 
-    );
+        );
+    }
 
     return $row;
 }
