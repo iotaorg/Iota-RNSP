@@ -1,4 +1,4 @@
-use JSON qw(from_json);
+use JSON::XS;
 use strict;
 use warnings;
 use URI;
@@ -6,8 +6,8 @@ use URI;
 use Test::More;
 
 use utf8;
-use Encode;
-my $governanca = encode( "utf8", 'Governança' );
+
+my $governanca = 'Governança';
 
 use FindBin qw($Bin);
 use lib "$Bin/../../../lib";
@@ -106,6 +106,38 @@ eval {
                     'indicator.variation.create.order' => '5',
                 ]
               );
+
+              &_post(
+                202,
+                '/api/indicator/' . $indicator->{id} . '/variation/' . $variacoes[-1]{id},
+                [
+                    api_key                            => 'test',
+                    'indicator.variation.update.name'  => 'outros',
+                    'indicator.variation.update.order' => '5',
+                ]
+              );
+
+              &_post(
+                400,
+                '/api/indicator/' . $indicator->{id} . '/variation/' . $variacoes[-1]{id},
+                [
+                    api_key                            => 'test',
+                    'indicator.variation.update.name'  => 'Mais de 1 a 2 salários mínimos',
+                    'indicator.variation.update.order' => '5',
+                ]
+              );
+
+              # nome repetido nao pode
+              &_post(
+                400,
+                '/api/indicator/' . $indicator->{id} . '/variation',
+                [
+                    api_key                            => 'test',
+                    'indicator.variation.create.name'  => 'outros',
+                    'indicator.variation.create.order' => '5',
+                ]
+              );
+
             for my $var (@variacoes) {
                 my $info = &_get( 200, '/api/indicator/' . $indicator->{id} . '/variation/' . $var->{id} );
 
@@ -278,7 +310,7 @@ eval {
                                 },
 
                                 'name' =>
-"At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+"Até 1/2 salário mínimo."
                             },
                             {
 
@@ -288,7 +320,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-                                  "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                  "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -298,7 +330,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-                                  "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                  "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -332,7 +364,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-"At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+"Até 1/2 salário mínimo."
                             },
                             {
 
@@ -342,7 +374,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-                                  "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                  "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -352,7 +384,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-                                  "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                  "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -386,7 +418,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-"At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+"Até 1/2 salário mínimo."
                             },
                             {
 
@@ -396,7 +428,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-                                  "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                  "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -406,7 +438,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
                                 'name' =>
-                                  "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                  "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -441,7 +473,7 @@ eval {
                                 },
 
                                 'name' =>
-"At\x{c3}\x{83}\x{c2}\x{a9} 1/2 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+"Até 1/2 salário mínimo."
                             },
                             {
 
@@ -452,7 +484,7 @@ eval {
                                 },
 
                                 'name' =>
-                                  "Mais de 1/2 a 1 sal\x{c3}\x{83}\x{c2}\x{a1}rio m\x{c3}\x{83}\x{c2}\x{ad}nimo."
+                                  "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -464,7 +496,7 @@ eval {
                                 },
 
                                 'name' =>
-                                  "Mais de 1 a 2 sal\x{c3}\x{83}\x{c2}\x{a1}rios m\x{c3}\x{83}\x{c2}\x{ad}nimos."
+                                  "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -497,7 +529,7 @@ eval {
                   . '/indicator/'
                   . $indicator->{id}
                   . '/chart/period_axis?group_by=yearly' );
-            my $obj_public = eval { from_json( $res->content ) };
+            my $obj_public = eval { decode_json( $res->content ) };
             ok( $res->is_success, 'GET chart public success' );
 
             is( $obj_public->{series}[0]{formula_value},        88, 'soma ok' );
@@ -508,7 +540,7 @@ eval {
 
             ($res) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator' );
 
-            my $obj_public_indicator = eval { from_json( $res->content ) };
+            my $obj_public_indicator = eval { decode_json( $res->content ) };
             is( $obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{variacoes}[0][0]{value},
                 '19', 'valor da primeira variacao ok' );
             is( $obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[0],
@@ -555,7 +587,7 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 
-use JSON qw(from_json);
+use JSON qw(decode_json);
 
 sub new_var {
     my $type   = shift;
@@ -573,7 +605,7 @@ sub new_var {
         ]
     );
     if ( $res->code == 201 ) {
-        my $xx = eval { from_json( $res->content ) };
+        my $xx = eval { decode_json( $res->content ) };
 
         return ( $xx->{id}, URI->new( $res->header('Location') )->as_string );
     }
@@ -587,9 +619,11 @@ sub _post {
     my ( $res, $c ) = eval { ctx_request( POST $url, $arr ) };
     fail("POST $url => $@") if $@;
     is( $res->code, $code, 'POST ' . $url . ' code is ' . $code );
-    my $obj = eval { from_json( $res->content ) };
+    my $obj = eval { decode_json( $res->content ) };
     fail("JSON $url => $@") if $@;
-    ok( $obj->{id}, 'POST ' . $url . ' has id - ID=' . ( $obj->{id} || '' ) );
+
+    ok( $obj->{id}, 'POST ' . $url . ' has id - ID=' . ( $obj->{id} || '' ) ) if $code == 201;
+
     return $obj;
 }
 
@@ -599,12 +633,12 @@ sub _get {
     fail("POST $url => $@") if $@;
 
     if ( $code == 0 || is( $res->code, $code, 'GET ' . $url . ' code is ' . $code ) ) {
-        my $obj = eval { from_json( $res->content ) };
+        my $obj = eval { decode_json( $res->content ) };
         fail("JSON $url => $@") if $@;
         return $obj;
     }
-    use DDP;
-    p $res;
+    eval ('use DDP;
+    p $res;');
     return undef;
 }
 
@@ -618,7 +652,7 @@ sub _delete {
             is( $res->content, '', 'empty body' );
         }
         else {
-            my $obj = eval { from_json( $res->content ) };
+            my $obj = eval { decode_json( $res->content ) };
             fail("JSON $url => $@") if $@;
             return $obj;
         }
@@ -638,7 +672,7 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value . ' on ' . $date . ' created!' );
-    my $variable = eval { from_json( $res->content ) };
+    my $variable = eval { decode_json( $res->content ) };
     return $variable;
 }
 
