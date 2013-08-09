@@ -62,7 +62,6 @@ __PACKAGE__->table("user_region");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -86,11 +85,7 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "region_classification_name",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -130,8 +125,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 17:30:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YahZS6h6PNBR5FwTiBgT3A
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-08 17:59:55
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RBLYgXti+K9tDCcoYjHZug
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

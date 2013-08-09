@@ -110,13 +110,15 @@ sub _download {
             'Observações do indicador',
             'Período do indicador',
             'Faixa',
+            'Ordem da faixa',
             'Data',
             'Valor',
             'Meta do valor',
             'Justificativa do valor não preenchido',
             'Informações Tecnicas',
             'Nome da região',
-            'Fontes'
+            'Fontes',
+            'Formula pura'
         ]
     );
 
@@ -137,13 +139,15 @@ sub _download {
             $data->{observations},
             $self->_period_pt( $data->{period} ),
             $data->{variation_name},
+            $data->{variation_order},
             $self->ymd2dmy( $data->{valid_from} ),
             $data->{value},
             $data->{user_goal},
             $data->{justification_of_missing_field},
             $data->{technical_information},
             $data->{region_name},
-            ref $data->{sources} eq 'ARRAY' ? ( join "\n", @{ $data->{sources} } ) : ''
+            ref $data->{sources} eq 'ARRAY' ? ( join "\n", @{ $data->{sources} } ) : '',
+            $data->{formula},
         );
         push @lines, \@this_row;
     }
