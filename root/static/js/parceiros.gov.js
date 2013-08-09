@@ -2,7 +2,7 @@
     $(document).ready(function() {
         $("[class^='menu-footer-']").addClass("span2");
         $(".page-resume:first").appendTo($("h1.page-header:first"));
-        if ($(".region-navigation ul.menu li.last a").text() == "Mapa do Site"){
+        if ($(".region-navigation ul.menu li.last a").text() == "Mapa do site"){
             $(".region-navigation ul.menu li.last a").removeClass("active");
             $(".region-navigation ul.menu li.last a").attr("href","#mapa_site");
         }

@@ -1,4 +1,4 @@
-<h1>[%l('Mapa do Site')%]</h1>
+<h1>[%l('Mapa do site')%]</h1>
 <div class="row">
 
     <div class="span3">

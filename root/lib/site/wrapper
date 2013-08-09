@@ -118,7 +118,7 @@
                 [% END %]
             [% END %]
               <li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
-                <a href="/mapa-do-site">[%l('Mapa do Site')%]</a>
+                <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
               </li>
 
               <li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
@@ -126,7 +126,7 @@
               </li>
 
               [%- IF institute.short_name == 'gov' -%]
-                <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e Gerais</a></li>
+                <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
               [%-END-%]
               <li>
                 <a href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a>
@@ -208,7 +208,7 @@
 					<div class="span3">
 						<h4>Indicadores</h4>
 						<ul class="unstyled">
-							<li><a href="/mapa-do-site">[%l('Mapa do Site')%]</a></li>
+							<li><a href="/mapa-do-site">[%l('Mapa do site')%]</a></li>
 							<li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
 						</ul>
 					</div>
@@ -311,7 +311,7 @@
 					<div class="span3">
 						<h4>Indicadores</h4>
 						<ul class="unstyled">
-							<li><a href="/mapa-do-site">[%l('Mapa do Site')%]</a></li>
+							<li><a href="/mapa-do-site">[%l('Mapa do site')%]</a></li>
 							<li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
 						</ul>
 					</div>
