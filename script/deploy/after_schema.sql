@@ -218,7 +218,8 @@ SELECT m.city_id,
        m.user_id,
        m.region_id,
        m.sources,
-       r.name AS region_name
+       r.name AS region_name,
+       m.updated_at
 FROM indicator_value m
 JOIN city AS c ON m.city_id = c.id
 JOIN indicator AS i ON i.id = m.indicator_id
