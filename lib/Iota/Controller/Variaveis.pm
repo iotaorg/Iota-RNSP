@@ -202,10 +202,12 @@ sub lines2file {
     }
     elsif ( $path =~ /json$/ ) {
 
+        binmode($fh);
         print $fh encode_json($lines);
 
     }
     elsif ( $path =~ /xml$/ ) {
+        binmode($fh);
         print $fh XMLout( $lines, KeyAttr => { server => 'linhas' } );
 
     }
