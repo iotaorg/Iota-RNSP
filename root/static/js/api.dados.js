@@ -944,6 +944,7 @@ $(document).ready(function(){
                 }else{
                     $('a[href="#table"]').tab('show');
                 }
+                setaGraficos();
             }
 
         }
