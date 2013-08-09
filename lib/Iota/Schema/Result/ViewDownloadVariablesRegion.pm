@@ -43,7 +43,8 @@ __PACKAGE__->result_source_instance->view_definition(
         vv.user_id,
         i.id as institute_id,
         r.name as region_name,
-        r.id as region_id
+        r.id as region_id,
+        vv.created_at as updated_at
 
     from region_variable_value vv
     join region r on vv.region_id = r.id
@@ -76,7 +77,8 @@ __PACKAGE__->result_source_instance->view_definition(
         vv.user_id,
         i.id as institute_id,
         r.name as region_name,
-        r.id as region_id
+        r.id as region_id,
+        vv.created_at as updated_at
 
     from indicator_variables_variations_value vv
     join region r on vv.region_id = r.id

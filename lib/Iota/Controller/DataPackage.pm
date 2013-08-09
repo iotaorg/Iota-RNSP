@@ -28,6 +28,20 @@ sub _download {
     my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
+    my $data_rs_region =
+      $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )
+      ->search(
+        { institute_id => $c->stash->{institute}->id },
+        {
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+
+            exists $c->stash->{region}
+            ? ( bind => [ ( $c->stash->{region}->id ) x 2 ] )
+            : ()
+        }
+      );
+
+
     my $network = $c->stash->{network};
 
     $description .= $network->name;
@@ -80,25 +94,75 @@ sub _download {
         )->next;
 
         my $id = $cities ? $cities->{id} : -9012345;    # download vazio
-        $data_rs = $data_rs->search( { city_id => $id } );
+        $data_rs        = $data_rs->search( { city_id => $id } );
+
+         my $user = $c->model('DB::User')->as_hashref->search(
+            {
+                city_id                    => $id,
+                'network_users.network_id' => $network->id
+            },
+            { join => 'network_users' }
+        )->next;
+
+        $data_rs_region = $data_rs_region->search( { user_id => $user ? $user->{id} : -9012345 } );
+
     }
 
     if ( exists $c->stash->{indicator} ) {
         $data_rs = $data_rs->search( { indicator_id => $c->stash->{indicator}{id} } );
+
+
+        $data_rs_region = $data_rs_region->search(
+            {
+                variable_id => {
+                    'in' => [
+                        (
+                            map { $_->variable_id }
+                              $c->model('DB::IndicatorVariable')
+                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
+                        ),
+
+                        (
+                            map { -( $_->id ) }
+                              $c->model('DB::IndicatorVariation')
+                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
+                        )
+                    ]
+                }
+            }
+        );
+
     }
 
     if ( exists $c->stash->{region} ) {
         $data_rs = $data_rs->search( { region_id => $c->stash->{region}->id } );
+
+        $data_rs_region = $data_rs_region->search( { region_id => $c->stash->{region}->id } );
     }
     else {
         $data_rs = $data_rs->search( { region_id => undef } );
     }
 
 
-    my $data_last_updated = $data_rs->get_column('updated_at')->max();
+    my $last1 = $data_rs->get_column('updated_at')->max();
+    my $last2 = $data_rs_region->get_column('updated_at')->max();
 
-    $data_last_updated = DateTime::Format::Pg->parse_datetime($data_last_updated)->datetime
-        if $data_last_updated;
+    $last1 = DateTime::Format::Pg->parse_datetime($last1)
+        if $last1;
+
+    $last2 = DateTime::Format::Pg->parse_datetime($last2)
+        if $last2;
+
+    my $last_updated =
+        ref $last1 eq 'DateTime' &&
+        ref $last2 eq 'DateTime'
+        ?
+            DateTime->compare( $last1, $last2 ) == 1
+            ? $last1->datetime
+            : $last2->datetime
+        :
+            $last1 ? $last1->datetime :
+            $last2 ? $last2->datetime : undef;
 
     my $base_url = 'http://' . $network->domain_name . $c->req->uri->path;
     $base_url =~ s/\/datapackage.json$//;
@@ -120,7 +184,7 @@ sub _download {
         ],
         keywords     =>  [ @keywords ],
         version      =>  "iota-v$Iota::VERSION",
-        last_updated =>  $data_last_updated,
+        last_updated =>  $last_updated,
         image        =>  "http://indicadores.cidadessustentaveis.org.br/static/images/logo.png",
         resources =>  [
             {

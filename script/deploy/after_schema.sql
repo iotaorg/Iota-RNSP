@@ -250,7 +250,8 @@ SELECT
     vv.observations,
     vv.source,
     vv.user_id,
-    i.id as institute_id
+    i.id as institute_id,
+vv.created_at as updated_at
 
 from variable_value vv
 join variable v on v.id = vv.variable_id
@@ -279,7 +280,8 @@ SELECT
     null as observations,
     null as source,
     vv.user_id,
-    i.id as institute_id
+    i.id as institute_id,
+    vv.created_at as updated_at
 
 from indicator_variables_variations_value vv
 join indicator_variations vvv on vvv.id = indicator_variation_id
