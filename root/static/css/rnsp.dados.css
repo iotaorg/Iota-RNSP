@@ -366,6 +366,8 @@ table .num{
 #mapa-do-site .content-fill{
 	padding: 10px;
 	clear: both;
+    max-height: 25em;
+    overflow: auto;
 }
 
 #cidades-dados .summary.region .content-fill{
