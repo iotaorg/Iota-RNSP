@@ -13,7 +13,10 @@ $(document).ready(function(){
 
 	function loadCidadeData(){
 
-        loadIndicadoresData();
+
+        if ($('#cidades-indicadores')[0]){
+            loadIndicadoresData();
+        }
         if (!(typeof google == "undefined")){
             loadMap();
         }
@@ -295,6 +298,7 @@ $(document).ready(function(){
 	}
 
 	function geraGraficos(){
+
 		for (i = 0; i < graficos.length; i++){
 			var line = new RGraph.Line('graph-'+i, graficos[i]);
 			line.Set('chart.ylabels', false);
