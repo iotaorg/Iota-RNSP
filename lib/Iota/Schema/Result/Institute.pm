@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::Institute;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<institute>
 
@@ -93,37 +92,113 @@ __PACKAGE__->table("institute");
   default_value: false
   is_nullable: 0
 
+=head2 bypass_indicator_axis_if_custom
+
+  data_type: 'boolean'
+  default_value: true
+  is_nullable: 0
+
+=head2 hide_empty_indicators
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+=head2 license
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 license_url
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 image_url
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 datapackage_autor
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
+=head2 datapackage_autor_email
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "institute_id_seq",
-    },
-    "name",
-    { data_type => "text", is_nullable => 0 },
-    "short_name",
-    { data_type => "text", is_nullable => 0 },
-    "description",
-    { data_type => "text", is_nullable => 1 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 0,
-        original      => { default_value => \"now()" },
-    },
-    "users_can_edit_value",
-    { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-    "users_can_edit_groups",
-    { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-    "can_use_custom_css",
-    { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-    "can_use_custom_pages",
-    { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "institute_id_seq",
+  },
+  "name",
+  { data_type => "text", is_nullable => 0 },
+  "short_name",
+  { data_type => "text", is_nullable => 0 },
+  "description",
+  { data_type => "text", is_nullable => 1 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
+  "users_can_edit_value",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "users_can_edit_groups",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_use_custom_css",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_use_custom_pages",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "bypass_indicator_axis_if_custom",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "hide_empty_indicators",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "license",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "license_url",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "image_url",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "datapackage_autor",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "datapackage_autor_email",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -150,7 +225,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "institute_short_name_key", ["short_name"] );
+__PACKAGE__->add_unique_constraint("institute_short_name_key", ["short_name"]);
 
 =head1 RELATIONS
 
@@ -163,8 +238,10 @@ Related object: L<Iota::Schema::Result::IndicatorValue>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_values", "Iota::Schema::Result::IndicatorValue",
-    { "foreign.institute_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.institute_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 networks
@@ -176,10 +253,10 @@ Related object: L<Iota::Schema::Result::Network>
 =cut
 
 __PACKAGE__->has_many(
-    "networks",
-    "Iota::Schema::Result::Network",
-    { "foreign.institute_id" => "self.id" },
-    { cascade_copy           => 0, cascade_delete => 0 },
+  "networks",
+  "Iota::Schema::Result::Network",
+  { "foreign.institute_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 users
@@ -191,13 +268,15 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->has_many(
-    "users", "Iota::Schema::Result::User",
-    { "foreign.institute_id" => "self.id" },
-    { cascade_copy           => 0, cascade_delete => 0 },
+  "users",
+  "Iota::Schema::Result::User",
+  { "foreign.institute_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-19 16:03:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3hFRYekfIs5DcFg/GZfjag
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-12 15:08:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LE1KUIz9/koFMwfs5SxP2g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

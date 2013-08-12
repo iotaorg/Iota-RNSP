@@ -174,6 +174,11 @@ __PACKAGE__->table("download_data");
   data_type: 'text'
   is_nullable: 1
 
+=head2 updated_at
+
+  data_type: 'timestamp'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -231,11 +236,13 @@ __PACKAGE__->add_columns(
   { data_type => "character varying[]", is_nullable => 1 },
   "region_name",
   { data_type => "text", is_nullable => 1 },
+  "updated_at",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-08 17:59:55
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lqz96nirHI2DRJn6/uKscw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-12 15:08:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NZPslV9eYRyGjKBoHt3UGQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

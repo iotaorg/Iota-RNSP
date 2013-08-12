@@ -186,23 +186,29 @@ sub _download {
     $name_arq = 'dados' if ( exists $c->stash->{indicator} );
 
 
+    my $institute = $c->stash->{institute};
+
     $ret = {
         %$ret,
         name        =>  $name,
         title       =>  $title,
-        autor       => "nobody",
-        autor_email => 'nobody@email.com',
+        (autor => $institute->datapackage_autor) x!!$institute->datapackage_autor,
+        (autor_email => $institute->datapackage_autor_email) x!!$institute->datapackage_autor_email,
+
         description =>  $description,
         licenses =>  [
-            {
-                id =>  "1",
-                url =>  "fake-but-free"
-            }
+            ({
+                id  => $institute->license,
+                url => $institute->license_url
+            }) x!! $institute->license
         ],
         keywords     =>  [ @keywords ],
         version      =>  "iota-v$Iota::VERSION",
         last_updated =>  $last_updated,
-        image        =>  "http://indicadores.cidadessustentaveis.org.br/static/images/logo.png",
+
+
+        (image => $institute->image_url) x!!$institute->image_url,
+
         resources =>  [
             {
                 name => ('Valores por variável'),
