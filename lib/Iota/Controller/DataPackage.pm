@@ -213,15 +213,15 @@ sub _download {
             {
                 name => ('Valores por variável'),
                 path => "$base_url/variaveis.csv",
-                content_type => 'text/csv',
-                type => 'CSV'
+                mediatype => 'text/csv',
+                format    => 'csv'
 
             },
             {
                 name => ('Valores por indicador'),
                 path => "$base_url/$name_arq.csv",
-                content_type => 'text/csv',
-                type => 'CSV'
+                mediatype => 'text/csv',
+                format    => 'csv'
             }
         ]
     };
