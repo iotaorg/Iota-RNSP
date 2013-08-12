@@ -1,4 +1,5 @@
 var api_path = "";
+var institute_info;
 var infowindow;
 var _show_info_name = function(event){
     infowindow.setContent(this._data.name);

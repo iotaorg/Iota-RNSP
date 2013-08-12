@@ -10,6 +10,7 @@ var graficos = [];
 
 var functions = {};
 $(document).ready(function(){
+    institute_info = $.parseJSON($('body').attr('data-institute'));
 
 	function loadCidadeData(){
 
@@ -194,6 +195,10 @@ $(document).ready(function(){
 	}
 	functions['loadIndicadoresData'] = loadIndicadoresData;
 
+    function replaceAll(find, replace, str) {
+    return str.replace(new RegExp(find, 'g'), replace);
+    }
+
 	function showIndicadoresData(){
         var table_content = '<table class="table table-striped table-hover">';
 		$("#cidades-indicadores .table").empty();
@@ -213,11 +218,12 @@ $(document).ready(function(){
 		$.each(eixos_ordem, function(ix, eixo_index){
             var eixo = indicadores_data.resumos[eixo_index];
 
-			table_content += "<thead class='eixos collapsed'><tr><th colspan='20'>$$eixo</th></thead>".render({eixo: eixo_index});
+			table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='6'>$$eixo</th></thead>".render({eixo: eixo_index});
 
 			var periods = eixo;
 			$.each(periods, function(period_index, period){
 				var datas = periods[period_index].datas;
+                var has_any_data = institute_info.hide_empty_indicators ? 0 : 1;
 
 				if (datas.length > 0){
 					table_content += "<thead class='datas'><tr><th></th>";
@@ -225,11 +231,14 @@ $(document).ready(function(){
 						table_content += "<th>$$data</th>".render({data: (datas[index].nome) ? datas[index].nome : "Sem dados"});
 					});
 					table_content += "<th></th></tr></thead>";
+                    has_any_data++;
 				}else{
-                    table_content += '<thead class="datas"><tr><th><th>Nenhum ano preenchido<th></th><th></th></tr></thead>';
+                    table_content += '<thead class="datas ::nodata::"><tr><th><th>Nenhum ano preenchido<th></th><th></th><th></th></tr></thead>';
                 }
 
-				table_content += "<tbody>";
+
+
+				table_content += "<tbody class='::nodata::'>";
 
 				var indicadores = periods[period_index].indicadores;
 				indicadores.sort(function (a, b) {
@@ -244,22 +253,27 @@ $(document).ready(function(){
 					}else{
 						var tr_class = "folded";
 					}
-					table_content += "<tr class='$$tr_class'><td class='nome'><a href='$$url' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' class='bs-tooltip'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, explanation: item.explanation, url: (base_url) ? (base_url + "/" + item.name_url) : ((window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url)});
+					table_content += "<tr class='$$tr_class ::onehave::'><td class='nome'><a href='$$url' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' class='bs-tooltip'>$$nome</a></td>".render({tr_class: tr_class, nome: item.name, explanation: item.explanation, url: (base_url) ? (base_url + "/" + item.name_url) : ((window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url)});
 					if (item.valores.length > 0){
 
-						for (j = 0; j < item.valores.length; j++){
+                        var have_data = institute_info.hide_empty_indicators ? 0 : 1 ;
+                        for (j = 0; j < item.valores.length; j++){
 							if (item.valores[j] == "-"){
 								table_content += "<td class='valor'>-</td>";
 							}else{
                                 if (item.variable_type == 'str'){
-                                        table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j] ? 'OK' : '-' });
+                                   table_content += "<td class='valor'>$$valor</td>".render({valor: item.valores[j] ? 'OK' : '-' });
+                                   if (item.valores[j]){
+                                        have_data++;
+                                   }
                                 }else{
 									var format_value = parseFloat(item.valores[j]);
 									var format_string = "#,##0.##";
 									if (format_value.toFixed(2) == 0){
 										format_string = "#,##0.###";
 									}
-                                    table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:format_string, locale:"br"})});
+									have_data++;
+                                   table_content += "<td class='valor'>$$valor</td>".render({valor: $.formatNumberCustom(item.valores[j], {format:format_string, locale:"br"})});
                                 }
 							}
 						}
@@ -272,10 +286,15 @@ $(document).ready(function(){
 						}
 						graficos[cont] = item.valores;
 						cont++;
+                       table_content = replaceAll('::onehave::', have_data ? '' : 'no-have', table_content);
 					}else{
-						table_content += "<td class='valor' colspan='20'>-</td>";
+                        table_content = replaceAll('::onehave::', institute_info.hide_empty_indicators ? 'no-have' : '', table_content);
+                        table_content += "<td class='valor' colspan='5'>-</td>";
 					}
 				});
+
+                table_content = replaceAll('::nodata::', has_any_data ? '' : 'no-data', table_content);
+
 				table_content += "</tbody>";
 			});
 		});
@@ -296,6 +315,23 @@ $(document).ready(function(){
 
 		geraGraficos();
 	}
+
+    $('#indicadores-hide-toggle').click(function(){
+
+
+        if (this.checked){
+            $('#cidades-indicadores .no-data').removeClass('no-data').addClass('no-data-show');
+            $('#cidades-indicadores .no-have').removeClass('no-have').addClass('no-have-show');
+        }else{
+
+            $('#cidades-indicadores .no-data-show').removeClass('no-data-show').addClass('no-data');
+            $('#cidades-indicadores .no-have-show').removeClass('no-have-show').addClass('no-have');
+        }
+        $('html,body').animate({scrollTop: 180}, 'fast');
+
+
+
+    });
 
 	function geraGraficos(){
 

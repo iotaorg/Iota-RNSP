@@ -258,6 +258,7 @@ table .num{
 	border: 1px solid #ccc;
 }
 
+
 .data-content .graph .legend .item .quad,
 #graph .legend .item .quad,
 #indicador-grafico .graph .legend .item .quad{
@@ -1061,4 +1062,6 @@ a.link-region{
     margin-top: 60px;
     margin-bottom: 30px;
 }
-}
+
+.no-data, .no-have {display: none!important}
+

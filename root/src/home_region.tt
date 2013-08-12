@@ -87,6 +87,11 @@
 						<div class="loading"><p>[%l('Carregando...')%]</p></div>
 					</div>
 				</div>
+				[%IF institute.hide_empty_indicators%]
+                    <label class="checkbox">
+                        <input id="indicadores-hide-toggle" type="checkbox"> [%l('Exibir indicadores sem dados')%]
+                    </label>
+                    [%END%]
 			</div>
 		</div>
 
