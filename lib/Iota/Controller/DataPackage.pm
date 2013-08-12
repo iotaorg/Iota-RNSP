@@ -11,10 +11,14 @@ http://data.okfn.org/standards/data-package
 package Iota::Controller::DataPackage;
 use Moose;
 use DateTime::Format::Pg;
+use utf8;
+
 
 BEGIN { extends 'Catalyst::Controller::REST' }
-__PACKAGE__->config( default => 'application/json' );
-use utf8;
+__PACKAGE__->config( default => 'application/json',
+    content_type_stash_key => 'output_as'
+);
+
 
 sub _download {
     my ( $self, $c ) = @_;
@@ -24,6 +28,7 @@ sub _download {
     my $title       = '';
     my $name        = '';
     my @keywords;
+    $c->stash->{output_as} = 'application/json';
 
     my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
@@ -46,37 +51,47 @@ sub _download {
 
     $description .= $network->name;
     if ($c->stash->{cidade}){
+
         my $city = $c->stash->{city};
-        $description .= ', ' . $c->loc('País') . ': ' . $c->stash->{pais} . ', ';
-        $description .= $c->loc('Estado') . ': ' . $c->stash->{estado} . ', ';
-        $description .= $c->loc('Cidade') . ': ' . $city->{name};
+        my $city_db = $c->model('DB::City')->search(
+            { 'me.id' => $city->{id} },
+            { prefetch => ['country', 'state'] }
+        )->next;
 
-        $ret->{$_} = $city->{$_} for qw/country_id latitude longitude/;
-        $ret->{city_id} = $city->{id};
 
-        $title .= $c->stash->{pais} . ',';
-        $title .= $city->{name} . '/';
-        $title .= $c->stash->{estado};
+        $description .= ', ' . ('País') . ': ' . $city_db->country->name . ', ';
+        $description .= ('Estado') . ': ' . $city_db->state->name . ', ';
+        $description .= ('Cidade') . ': ' . $city->{name};
+
+
+        $ret->{city}{$_} = $city_db->$_ for qw/id name country_id latitude longitude/;
+        $ret->{city}{country} = $city_db->country->name;
+        $ret->{city}{state} = $city_db->state->name;
+
+        $title .= $ret->{city}{country} . ', ';
+        $title .= $city->{name} . ' / ';
+        $title .= $city->{uf};
 
         $name .= join '.', $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade};
-
-
+        push @keywords, $city_db->country->name, $city_db->state->name, $city_db->name;
 
     }
 
     if ($c->stash->{region}){
-        $description .= $c->loc( $c->stash->{region_classification_name}{ $c->stash->{region}->depth_level } ) . ': ' . $c->stash->{region}->name;
+        $description .= ( $c->stash->{region_classification_name}{ $c->stash->{region}->depth_level } ) . ': ' . $c->stash->{region}->name;
         $title .= ' - ' . $c->stash->{region}->name;
 
         $name .= '_' . $c->stash->{region}->name_url;
+        push @keywords, $c->stash->{region}->name;
     }
 
 
     if ($c->stash->{indicator}){
-        $description .= $c->loc('Indicador') . ': ' . $c->stash->{indicator}{name};
+        $description .= ('Indicador') . ': ' . $c->stash->{indicator}{name};
 
         $title .= ': ' . $c->stash->{indicator}{name};
         $name .= '_' . $c->stash->{indicator}{name_url};
+        push @keywords, $name;
     }
 
     $name = $network->name_url unless $name;
@@ -173,8 +188,10 @@ sub _download {
 
     $ret = {
         %$ret,
-        name =>  $name,
-        title =>  $title,
+        name        =>  $name,
+        title       =>  $title,
+        autor       => "nobody",
+        autor_email => 'nobody@email.com',
         description =>  $description,
         licenses =>  [
             {
@@ -188,10 +205,17 @@ sub _download {
         image        =>  "http://indicadores.cidadessustentaveis.org.br/static/images/logo.png",
         resources =>  [
             {
-                path => "$base_url/variaveis.csv"
+                name => ('Valores por variável'),
+                path => "$base_url/variaveis.csv",
+                content_type => 'text/csv',
+                type => 'CSV'
+
             },
             {
-                path => "$base_url/$name_arq.csv"
+                name => ('Valores por indicador'),
+                path => "$base_url/$name_arq.csv",
+                content_type => 'text/csv',
+                type => 'CSV'
             }
         ]
     };
