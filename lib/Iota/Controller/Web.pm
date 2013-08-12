@@ -133,6 +133,22 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
     }
 
+    $self->json_to_view( $c, institute_json => {
+        (map {$_ => $c->stash->{institute}->$_} qw/
+            name
+            short_name
+            description
+            bypass_indicator_axis_if_custom
+            hide_empty_indicators
+            license
+            license_url
+            image_url
+            datapackage_autor
+            datapackage_autor_email
+        /)
+    });
+
+
     $c->languages( [$cur_lang] );
 
     $c->response->cookies->{'lang'} = {
