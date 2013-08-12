@@ -195,6 +195,8 @@ sub resumo_GET {
 
     eval {
         my $user_id = $c->stash->{user_obj}->id;
+        my $institute = $c->stash->{user_obj}->institute;
+
         my @hide_indicator =
           map { $_->indicator_id }
           $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
@@ -298,9 +300,15 @@ sub resumo_GET {
 
                 }
 
-                my @axis_list = ( $indicator->axis->name );
-                push @axis_list, @{ $custom_axis->{$indicator_id} }
-                  if exists $custom_axis->{$indicator_id};
+                my @axis_list = ();
+                if (exists $custom_axis->{$indicator_id}){
+                    push @axis_list, $indicator->axis->name
+                        unless $institute->bypass_indicator_axis_if_custom;
+
+                    push @axis_list, @{ $custom_axis->{$indicator_id} };
+                }else{
+                    push @axis_list, $indicator->axis->name
+                }
 
                 foreach my $axis (@axis_list) {
                     my $config = $indicator->indicator_network_configs_one;
