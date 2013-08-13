@@ -21,12 +21,13 @@ use Catalyst qw/
   ConfigLoader
   Static::Simple
   Params::Nested
-  I18N::DBI
+
 
   Authentication
   Authorization::Roles
 
   +CatalystX::Plugin::Logx
+  +CatalystX::Plugin::Lexicon
 
   Assets
 

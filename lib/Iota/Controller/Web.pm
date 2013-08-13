@@ -149,7 +149,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     });
 
 
-    $c->languages( [$cur_lang] );
+    $c->set_lang( $cur_lang );
 
     $c->response->cookies->{'lang'} = {
         value   => $cur_lang,

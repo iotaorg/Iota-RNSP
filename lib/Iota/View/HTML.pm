@@ -87,6 +87,7 @@ sub value4human {
 sub l {
     my ( $self, $c, $text, @args ) = @_;
     return unless $text;
+
     return $c->loc( $text, @args ) || $text;
 }
 
