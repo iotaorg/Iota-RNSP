@@ -19,7 +19,7 @@ requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
-requires 'Catalyst::Plugin::I18N::DBI';
+requires 'Geo::Google::PolylineEncoder';
 requires 'I18N::AcceptLanguage';
 
 requires 'Catalyst::Authentication::Store::DBIx::Class';

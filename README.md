@@ -18,7 +18,10 @@ Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira p
 > [02 Iota Como instalar uma cópia no linux](https://github.com/AwareTI/Iota/wiki/Iota---Como-instalar-uma-cópia-no-linux)
 
 
-[Também existe um grupo para desenvolvedores no Google Groups](https://groups.google.com/forum/embed/?place=forum/iota-br&showsearch=true&showpopout=true&showtabs=false#!forum/iota-br)
+[Existe um grupo para desenvolvedores no Google Groups](https://groups.google.com/forum/embed/?place=forum/iota-devs&showsearch=true&showpopout=true&showtabs=false#!forum/iota-devs)
+
+[E um grupo para os usuários](https://groups.google.com/forum/embed/?place=forum/iota-users&showsearch=true&showpopout=true&showtabs=false#!forum/iota-users)
+
 
 
 ## Programa Cidades Sustentaveis
