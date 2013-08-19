@@ -23,6 +23,7 @@ __PACKAGE__->config( default => 'application/json',
 sub _download {
     my ( $self, $c ) = @_;
 
+    my @related     = ();
     my $ret         = {};
     my $description = '';
     my $title       = '';
@@ -48,6 +49,7 @@ sub _download {
 
 
     my $network = $c->stash->{network};
+    my $current_updated = $network->created_at;
 
     $description .= $network->name;
     if ($c->stash->{cidade}){
@@ -75,6 +77,7 @@ sub _download {
         $name .= join '.', $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade};
         push @keywords, $city_db->country->name, $city_db->state->name, $city_db->name;
 
+        $current_updated = $city_db->created_at;
     }
 
     if ($c->stash->{region}){
@@ -159,6 +162,38 @@ sub _download {
     }
 
 
+    if (
+        # sem indicador, mas com cidade
+        # related = todos os indicadores
+        !exists $c->stash->{indicator} &&
+         exists $c->stash->{cidade}
+    ){
+        my @hide_indicator =
+        map { $_->indicator_id }
+            $c->model('DB::User')->find($c->stash->{user}{id})->
+            user_indicator_configs->search( { hide_indicator => 1 } )->all;
+
+        my $rs = $c->model('DB::Indicator')->search(
+            {
+                'me.id' => { '-not_in' => \@hide_indicator }
+            },
+            {
+                select => [qw/name_url/],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            }
+        );
+
+        my $base_rel = join '/', 'http:/', $network->domain_name, $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade};
+
+        if ($c->stash->{region}){
+            $base_rel .= '/' . $c->stash->{region}->name_url;
+        }
+
+        while ( my $indicator = $rs->next ) {
+            push @related, "$base_rel/$indicator->{name_url}";
+        }
+    }
+
     my $last1 = $data_rs->get_column('updated_at')->max();
     my $last2 = $data_rs_region->get_column('updated_at')->max();
 
@@ -204,12 +239,15 @@ sub _download {
         ],
         keywords     =>  [ @keywords ],
         version      =>  "iota-v$Iota::VERSION",
-        last_updated =>  $last_updated,
+        last_updated =>  ($last_updated ? $last_updated : $current_updated->ymd . ' ' . $current_updated->hms ),
 
+
+        related => \@related,
 
         (image => $institute->image_url) x!!$institute->image_url,
 
-        resources =>  [
+        resources => ($last_updated ? [
+
             {
                 name => ('Valores por variável'),
                 path => "$base_url/variaveis.csv",
@@ -223,7 +261,7 @@ sub _download {
                 mediatype => 'text/csv',
                 format    => 'csv'
             }
-        ]
+        ] : [] )
     };
 
 
