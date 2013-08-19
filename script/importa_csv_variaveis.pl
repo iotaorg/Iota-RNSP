@@ -40,7 +40,7 @@ sub {
     my %expected_header = (
 
 
-        name => qr/nome/,
+        name => qr/\bnome\b/,
         explanation => qr/explanation/,
         cognomen => qr/cognomen/,
         type => qr/type/,
