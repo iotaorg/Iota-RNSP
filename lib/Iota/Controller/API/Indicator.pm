@@ -257,6 +257,14 @@ sub indicator_DELETE {
       ->search( { indicator_variables_variation_id => [ map { $_->id } $obj->indicator_variables_variations->all ] } )
       ->delete;
 
+    $obj->user_indicator_configs->delete;
+
+    $obj->visibility_country->delete;
+    $obj->visibility_user->delete;
+    $obj->indicator_user_visibilities->delete;
+    $obj->indicator_network_configs->delete;
+
+
     $obj->indicator_values->delete;
 
     $obj->indicator_variables->delete;
