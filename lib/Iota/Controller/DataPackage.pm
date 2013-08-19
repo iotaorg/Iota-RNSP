@@ -192,8 +192,8 @@ sub _download {
         %$ret,
         name        =>  $name,
         title       =>  $title,
-        (autor => $institute->datapackage_autor) x!!$institute->datapackage_autor,
-        (autor_email => $institute->datapackage_autor_email) x!!$institute->datapackage_autor_email,
+        (author => $institute->datapackage_autor) x!!$institute->datapackage_autor,
+        (author_email => $institute->datapackage_autor_email) x!!$institute->datapackage_autor_email,
 
         description =>  $description,
         licenses =>  [
