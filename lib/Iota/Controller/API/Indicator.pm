@@ -248,7 +248,7 @@ sub indicator_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
+    unless $c->check_any_user_role(qw(admin superadmin));
 
     my $obj = $c->stash->{object}->next;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
@@ -259,8 +259,6 @@ sub indicator_DELETE {
 
     $obj->user_indicator_configs->delete;
 
-    $obj->visibility_country->delete;
-    $obj->visibility_user->delete;
     $obj->indicator_user_visibilities->delete;
     $obj->indicator_network_configs->delete;
 
