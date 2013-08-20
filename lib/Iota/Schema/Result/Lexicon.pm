@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::Lexicon;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<lexicon>
 
@@ -76,36 +75,43 @@ __PACKAGE__->table("lexicon");
   data_type: 'text'
   is_nullable: 1
 
+=head2 user_id
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "lexicon_id_seq",
-    },
-    "lang",
-    {
-        data_type     => "varchar",
-        default_value => \"null",
-        is_nullable   => 1,
-        size          => 15,
-    },
-    "lex",
-    {
-        data_type     => "varchar",
-        default_value => \"null",
-        is_nullable   => 1,
-        size          => 255,
-    },
-    "lex_key",
-    { data_type => "text", is_nullable => 1 },
-    "lex_value",
-    { data_type => "text", is_nullable => 1 },
-    "notes",
-    { data_type => "text", is_nullable => 1 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "lexicon_id_seq",
+  },
+  "lang",
+  {
+    data_type => "varchar",
+    default_value => \"null",
+    is_nullable => 1,
+    size => 15,
+  },
+  "lex",
+  {
+    data_type => "varchar",
+    default_value => \"null",
+    is_nullable => 1,
+    size => 255,
+  },
+  "lex_key",
+  { data_type => "text", is_nullable => 1 },
+  "lex_value",
+  { data_type => "text", is_nullable => 1 },
+  "notes",
+  { data_type => "text", is_nullable => 1 },
+  "user_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -120,8 +126,9 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-21 09:55:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eV+bfLjybyhEu2fTrgtcxQ
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-19 14:41:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bK3yy9stKY8Aba5FsUrwnw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

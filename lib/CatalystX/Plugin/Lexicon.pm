@@ -18,7 +18,8 @@ my $resultset;
 my $cache;
 my $current_lang;
 
-my $cache_lang_file = "/tmp/cache.lang.$$";
+my $cache_lang_prefix = '/tmp/cache.lang.';
+my $cache_lang_file = "$cache_lang_prefix$$";
 
 
 sub setup {
@@ -31,6 +32,8 @@ sub setup {
 
 sub initialize_after_setup {
     my ( $self, $c ) = @_;
+
+
     $c->setup_lexicon_plugin($c);
 }
 
@@ -40,10 +43,20 @@ sub setup_lexicon_plugin {
     my $db = $c->model('DB');
     $resultset = $db->resultset('Lexicon');
 
-    $c->lexicon_reload;
+    $c->config->{default_lang} ||= 'pt-br';
+    $c->config->{forced_langs} ||= 'pt-br';
+    $c->config->{admin_langs_id} ||= 1;
+
+    $c->lexicon_reload_self;
 }
 
-sub lexicon_reload {
+
+sub lexicon_reload_all {
+    my @files = glob("$cache_lang_prefix*");
+    unlink $_ for @files;
+}
+
+sub lexicon_reload_self {
 
     my @load = $resultset->search(
         undef,
@@ -62,25 +75,36 @@ sub lexicon_reload {
 
 sub loc {
     my ( $c, $text, @conf ) = @_;
+    my $default = $c->config->{default_lang};
+
 
     unless (-e $cache_lang_file){
-        &lexicon_reload;
+        &lexicon_reload_self;
     }
 
     if (exists $cache->{$current_lang}{$text}){
         return $cache->{$current_lang}{$text};
     }else {
-        my $str = $current_lang eq 'pt-br' ? $text : "? $text";
-        $cache->{$current_lang}{$text} = $str;
 
-        $resultset->find_or_create({
-            lang     => $current_lang,
-            lex      => '*',
-            lex_key  => $text,
-            lex_value => $str
-        });
+        my $user_id = $c->user ? $c->user->id : $c->config->{admin_langs_id};
+        my @add_langs = split /,/, $c->config->{forced_langs};
 
-        return $str;
+        foreach my $lang (@add_langs){
+
+            my $str = $lang eq $default ? $text : "? $text";
+            $cache->{$lang}{$text} = $str;
+
+            $resultset->find_or_create({
+                lang      => $lang,
+                lex       => '*',
+                lex_key   => $text,
+                lex_value => $str,
+                user_id   => $user_id
+            });
+
+        }
+
+        return $current_lang eq $default ? $text : "? $text";
     }
 
 }
