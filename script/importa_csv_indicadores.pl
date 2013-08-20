@@ -101,6 +101,7 @@ sub {
             ) {
 
                 $registro->{formula} =~ s/\s+/ /g;
+                $registro->{formula} =~ s/\$\s+(\d)/\$$1/g;
 
                     my ($res, $c ) = ctx_request(
                     POST '/api/indicator',
