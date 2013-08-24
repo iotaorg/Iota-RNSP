@@ -345,7 +345,7 @@ if (!(typeof google == "undefined")) {
             $elm.html('');
             var map = new google.maps.Map($(xmap.map_elm)[0], {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoomControl: true,
+                zoomControl: true
             });
             map_references[map_index] = map;
             map.__index = map_index;

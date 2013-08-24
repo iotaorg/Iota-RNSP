@@ -1002,7 +1002,7 @@ $(document).ready(function(){
             select: function(event, ui){
                 $("#graph-user-selected").val(ui.item.id);
                 $("#button-search-user").attr("disabled",false);
-            },
+            }
         });
 
         $('#variation_checks input').on('change', function(){

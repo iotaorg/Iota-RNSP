@@ -321,7 +321,7 @@ $(document).ready(function () {
                     if (valor_linha != null) {
                         if (indicador_data.variable_type == 'str') {
                             history_table += "<td class='valor'>$$valor</td>".render({
-                                valor: valor_linha.value,
+                                valor: valor_linha.value
                             });
                         }
                         else {
