@@ -1,5 +1,4 @@
-[%IF !without_wrapper%]
-<!DOCTYPE HTML>
+[%IF !without_wrapper%][%IF custom_wrapper%][%PROCESS "$custom_wrapper"%][%ELSE%]<!DOCTYPE HTML>
 <html lang="pt-br">
 <head profile="http://www.w3.org/2005/10/profile">
 <link rel="icon"
@@ -407,5 +406,5 @@
 [% END %]
 </script>
 </body>
-</html>
+</html>[%END%]
 [%ELSE%][%content%][%END%]

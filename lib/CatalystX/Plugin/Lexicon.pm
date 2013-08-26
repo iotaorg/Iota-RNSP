@@ -47,6 +47,8 @@ sub setup_lexicon_plugin {
     $c->config->{forced_langs} ||= 'pt-br';
     $c->config->{admin_langs_id} ||= 1;
 
+    $current_lang = $c->config->{default_lang};
+
     $c->lexicon_reload_self;
 }
 

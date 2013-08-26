@@ -1,0 +1,52 @@
+<h2>Networks</h2>
+<table class="table table-condensed table-bordered">
+<thead>
+<tr>
+<th>ID</th>
+<th>name</th>
+<th>institute id, name</th>
+<th>domain</th>
+</tr>
+</thead>
+<tbody>
+[% FOREACH net IN networks %]
+<tr>
+   <td>[%net.id%]</td>
+   <td>[%net.name%]</td>
+   <td>[%net.institute.id%], [%net.institute.name%]</td>
+   <td><a href="http://[%net.domain_name%]" rel="nofollow" target="_blank">[%net.domain_name%]<a/></td>
+</tr>
+[%END%]
+</tbody>
+</table>
+
+<h2>Institutes</h2>
+<table class="table table-condensed table-bordered">
+<thead>
+<tr>
+<th>id, name</th>
+<th>short_name</th>
+<th>license</th>
+<th>datapackage_autor</th>
+<th>datapackage_autor_email</th>
+</tr>
+<tr>
+<th colspan="5">description</th>
+</tr>
+</thead>
+<tbody>
+[% FOREACH i IN institutes %]
+<tr class="success">
+   <td>[%i.id%], [%i.name%]</td>
+   <td>[%i.short_name%]</td>
+   <td><a href="[%i.license_url%]">[%i.license%]</a></td>
+   <td>[%i.datapackage_autor%]</td>
+   <td>[%i.datapackage_autor_email%]</td>
+</tr>
+<tr>
+<td colspan="5">[%i.description%]</td>
+</tr>
+[%END%]
+</tbody>
+</table>
+

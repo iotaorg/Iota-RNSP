@@ -1,0 +1,40 @@
+[%IF !without_wrapper%]<!DOCTYPE HTML>
+<html lang="pt-br">
+<head profile="http://www.w3.org/2005/10/profile">
+<link rel="icon"
+      type="image/png"
+      href="/static/images/favicon.png" />
+<meta charset="UTF-8">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<title>[% template.title or site.title or title %]</title>
+
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/static/js/html5shiv.js"></script>
+<![endif]-->
+
+
+
+[%-CALL assets.include("js/bootstrap.min.js")-%]
+
+
+[%-CALL assets.include("css/bootstrap.min.css")%]
+[%-CALL assets.include("css/bootstrap-responsive.min.css")%]
+
+[%- assets.export("css") -%]
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div id="iota-app">
+    <div class="page-content">
+        <div class="container">
+            [% content %]
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+[% assets.export("js") %]
+</body>
+</html>
+[%ELSE%][%content%][%END%]
