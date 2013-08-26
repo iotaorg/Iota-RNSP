@@ -121,7 +121,7 @@
               </li>
 
               <li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
-                <a href="/dados-abertos">[%l('Dados abertos')%]</a>
+                <a href="/dados-abertos">[%l('Dados abertos doido')%]</a>
               </li>
 
               [%- IF institute.short_name == 'gov' -%]
