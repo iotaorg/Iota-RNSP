@@ -106,7 +106,7 @@ sub loc {
 
         }
 
-        return $current_lang eq $default ? $text : "! $text";
+        return $current_lang eq $default ? $text : "! $current_lang/$default: $text";
     }
 
 }
