@@ -91,10 +91,7 @@ sub loc {
         my $user_id = $c->user ? $c->user->id : $c->config->{admin_langs_id};
         my @add_langs = split /,/, $c->config->{forced_langs};
 
-        my $enfu = '@@';
         foreach my $lang (@add_langs){
-
-        $enfu.="$lang+";
             my $str = $lang eq $default ? $text : "? $text";
             $cache->{$lang}{$text} = $str;
 
@@ -105,10 +102,8 @@ sub loc {
                 lex_value => $str,
                 user_id   => $user_id
             });
-
         }
-
-        return $current_lang eq $default ? "$enfu$text" : "! $current_lang/$default: $enfu$text";
+        return $current_lang eq $default ? $text : "? $text";
     }
 
 }
