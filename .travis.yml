@@ -3,7 +3,7 @@ perl:
   - "5.16"
   - "5.10"
 env:
-  - PERL_CPANM_OPT="-v --mirror http://cpan.mirrors.travis-ci.org --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --cascade-search --notest --force --skip-satisfied --no-interactive"
+  - PERL_CPANM_OPT="-v --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --mirror http://cpan.mirrors.travis-ci.org --cascade-search --notest --force --skip-satisfied --no-interactive"
 before_install:
   - cpanm -n Module::Install Catalyst::Devel Text::CSV JSON::Any MooseX::Types::JSON
   - cpanm -n DBIx::Class
