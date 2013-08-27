@@ -146,8 +146,12 @@ sub lexicons : Chained('root') PathPart('lexicons') Args(0) {
     $ref = [$ref] unless ref $ref eq 'ARRAY';
 
     $c->set_lang($c->config->{default_lang});
-    foreach my $word (@$ref){
-        $c->loc($word);
+    foreach my $v (@$ref){
+        next if
+            $v =~ /^\s*$/ ||
+            $v !~ /[a-z]/i ||
+            $v =~ /^\s*[0-9]+\s*$/;
+        $c->loc($v);
     }
 
     $self->status_ok( $c, entity => { saved => 1 });
