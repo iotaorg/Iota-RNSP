@@ -118,7 +118,7 @@ sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
 
 }
 
-sub lexicons : Chained('root') PathPart('lexicons') Args(0) {
+sub public_lexicons : Chained('root') PathPart('public/lexicons') Args(0) {
     my ($self, $c) = @_;
 
     my $rs = $c->model('DB::Lexicon')->search(undef, {
@@ -136,6 +136,21 @@ sub lexicons : Chained('root') PathPart('lexicons') Args(0) {
         default => $c->config->{default_lang}
     });
 
+}
+
+
+sub lexicons : Chained('root') PathPart('lexicons') Args(0) {
+    my ($self, $c) = @_;
+
+    my $ref = $c->req->params->{lex};
+    $ref = [$ref] unless ref $ref eq 'ARRAY';
+
+    $c->set_lang($c->config->{default_lang});
+    foreach my $word (@$ref){
+        $c->loc($word);
+    }
+
+    $self->status_ok( $c, entity => { saved => 1 });
 }
 
 
