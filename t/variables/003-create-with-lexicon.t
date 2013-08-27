@@ -81,7 +81,7 @@ eval {
                 'es' => []
             };
             foreach (@all) {
-                push $out->{$_->lang}, $_->lex_value;
+                push @{$out->{$_->lang}}, $_->lex_value;
             }
             $out->{$_} = [sort {$a cmp $b} @{$out->{$_}}] for qw/pt-br es/;
 
