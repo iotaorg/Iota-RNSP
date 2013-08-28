@@ -96,16 +96,6 @@
 
 
 
-        <div>
-            <h2>[%l('Fator de desigualdade')%]</h2>
-            [% INCLUDE parts/fator_desigualdade.tt %]
-        </div>
-
-
-        <div>
-            <h2>Análise comparativa</h2>
-            [% INCLUDE parts/analise_comparativa.tt %]
-        </div>
 
 
             <div class="data-right">
@@ -164,6 +154,19 @@
 
                 </div>
             </div>
+
+        <div>
+            <h2>[%l('Fator de desigualdade')%]</h2>
+            [% INCLUDE parts/fator_desigualdade.tt %]
+        </div>
+
+
+        <div>
+            <h2>Análise comparativa</h2>
+            [% INCLUDE parts/analise_comparativa.tt %]
+        </div>
+
+
         </div>
     </div>
 
