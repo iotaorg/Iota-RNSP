@@ -114,7 +114,7 @@ sub public_lexicons : Chained('root') PathPart('public/lexicons') Args(0) {
 }
 
 
-sub lexicons : Chained('root') PathPart('lexicons') Args(0) {
+sub lexicons : Chained('base') PathPart('lexicons') Args(0) {
     my ($self, $c) = @_;
 
     my $ref = $c->req->params->{lex};
@@ -202,11 +202,13 @@ sub base : Chained('logged_in') : PathPart('') : CaptureArgs(0) {
                 $k =~ /email/ ||
                 $k =~ /formula/ ||
                 $k eq 'api_key' ||
-                $k eq 'arquivo'
+                $k eq 'arquivo' ||
+                $k eq 'lex'
             ;
 
             my $v = $inp->{$k};
             next if ref $v ne '';
+            next if length $v > 800;
 
             next if
                 $v =~ /^\s*$/ ||
