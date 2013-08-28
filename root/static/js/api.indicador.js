@@ -224,8 +224,13 @@ $(document).ready(function () {
                     }));
                 }
                 if ((observations_values) && $.trim(observations_values) != "") {
-                    $(".tabela", $dados).append("<dt>Observações:</dt><dd>$$dado</dd>".render({
-                        dado: observations_values
+                    var observations_values_unique = [];
+                    $.each(observations_values, function (i, el) {
+                        if ($.inArray(el, observations_values_unique) === -1) observations_values_unique.push(el);
+                    });
+
+                    $(".tabela", $dados).append("<dt>Observações:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
+                        dado: observations_values_unique.join("</li><li>")
                     }));
                 }
 
@@ -301,7 +306,7 @@ $(document).ready(function () {
             };
 
 
-
+            observations_values=[];
             source_values = [];
             var valores = [];
             var grafico_variado;
@@ -345,7 +350,7 @@ $(document).ready(function () {
                         }
 
                         if (valor_linha.observations) {
-                            observations_values = valor_linha.observations;
+                            observations_values.push(valor_linha.observations);
                         }
 
                     }
