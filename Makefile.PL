@@ -21,6 +21,7 @@ requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Geo::Google::PolylineEncoder';
 requires 'I18N::AcceptLanguage';
+requires 'HTML::Scrubber';
 
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Component::InstancePerContext';

@@ -89,32 +89,7 @@ sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->response->headers->header( 'charset' => 'utf-8' );
 
-    my $inp = $c->req->params;
-    if ($c->req->method =~ /PUT|POST/ && ref $inp eq 'HASH' && !exists $ENV{HARNESS_ACTIVE}){
 
-        $c->set_lang( $c->config->{default_lang} );
-
-        foreach my $k ( keys %{$inp} ){
-            next if
-                $k =~ /password/ ||
-                $k =~ /email/ ||
-                $k =~ /formula/ ||
-                $k eq 'api_key' ||
-                $k eq 'arquivo'
-            ;
-
-            my $v = $inp->{$k};
-            next if ref $v ne '';
-
-            next if
-                $v =~ /^\s*$/ ||
-                $v !~ /[a-z]/i ||
-                $v =~ /^\s*[0-9]+\s*$/
-            ;
-
-            $c->loc($v);
-        }
-    }
 
 }
 
@@ -211,6 +186,37 @@ sub logged_in : Chained('root') : PathPart('') : CaptureArgs(0) {
 }
 
 sub base : Chained('logged_in') : PathPart('') : CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+
+    my $inp = $c->req->params;
+    if (!exists $c->stash->{rest}{error} &&
+        $c->req->method =~ /PUT|POST/ &&
+        ref $inp eq 'HASH' &&
+        !exists $ENV{HARNESS_ACTIVE}){
+
+        $c->set_lang( $c->config->{default_lang} );
+
+        foreach my $k ( keys %{$inp} ){
+            next if
+                $k =~ /password/ ||
+                $k =~ /email/ ||
+                $k =~ /formula/ ||
+                $k eq 'api_key' ||
+                $k eq 'arquivo'
+            ;
+
+            my $v = $inp->{$k};
+            next if ref $v ne '';
+
+            next if
+                $v =~ /^\s*$/ ||
+                $v !~ /[a-z]/i ||
+                $v =~ /^\s*[0-9]+\s*$/
+            ;
+
+            $c->loc($v);
+        }
+    }
 }
 
 1;

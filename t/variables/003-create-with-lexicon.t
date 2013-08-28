@@ -18,7 +18,7 @@ my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::TestOnly::Mock::AuthUser::_id    = 1;
+$Iota::TestOnly::Mock::AuthUser::_id    = 2;
 @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
