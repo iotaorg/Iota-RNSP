@@ -1,0 +1,48 @@
+<h1>Há textos pedentes de tradução</h1>
+[%FOREACH lang IN lexicons.keys %]
+
+<h2>[%lang_name.$lang%]</h2>
+<dl>
+    <dt>textos curtas: </dt>
+    <dd>[%lexicons.${lang}.word.size%]</dd>
+    <dt>textos longas:</dt>
+    <dd>[%lexicons.${lang}.text.size%]</dd>
+</dl>
+[%END%]
+<form method="post">
+
+[%FOREACH lang IN lexicons.keys %]
+
+<table style="word-break: break-word" class="table table-hover">
+<legend>Palavras curtas para traduzir para [%lang_name.$lang%]</legend>
+    <tr>
+        <th>Português</th>
+        <th>[%lang_name.$lang%]</th>
+    </tr>
+    [%FOREACH lex IN lexicons.${lang}.word%]
+    <tr>
+        <th class="span4">[%lex.lex_key%]</th>
+        <td class="span8"><input class="span8" type="text" name="lex_[%lex.id%]">
+        </td>
+    </tr>
+    [%END%]
+</table>
+<table class="table table-hover">
+<legend>Palavras longas para traduzir para [%lang_name.$lang%]</legend>
+    <tr>
+        <th>Português</th>
+        <th>[%lang_name.$lang%]</th>
+    </tr>
+[%FOREACH lex IN lexicons.${lang}.text%]
+    <tr>
+        <th class="span4">[%lex.lex_key%]</th>
+        <td class="span8"><textarea name="lex_[%lex.id%]" class="span8"></textarea>
+        </td>
+    </tr>
+    [%END%]
+</table>
+[%END%]
+<div class="form-actions">
+  <button type="submit" class="btn btn-primary">Salvar</button>
+</div>
+</form>
