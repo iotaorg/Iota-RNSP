@@ -60,6 +60,7 @@ sub save_lexicons {
     my $rs = $c->model('DB::Lexicon')->search({
         user_id   => $c->user->id
     });
+    my $i = 0;
     while (my ($name, $value) = each %{$c->req->params}) {
         next unless $value;
         next unless $name =~ /^lex_(\d+)/;
@@ -68,8 +69,10 @@ sub save_lexicons {
         my $it = $rs->search( { id => $id } );
         $it->update( { lex_value => $value } );
 
+        $i++;
     }
 
+    $c->stash->{message} = "$i textos traduzidos";
 }
 
 

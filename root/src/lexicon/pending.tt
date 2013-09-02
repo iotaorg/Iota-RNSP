@@ -9,6 +9,7 @@
     <dd>[%lexicons.${lang}.text.size%]</dd>
 </dl>
 [%END%]
+[%IF message %]<div class="alert"><p>[%message%]</p></div>[%END%]
 <form method="post">
 
 [%FOREACH lang IN lexicons.keys %]
