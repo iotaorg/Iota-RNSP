@@ -363,7 +363,7 @@ sub resumo_GET {
                     last if $i <= 0;
                     $datas_ar[ --$i ] = {
                         data => $data || '',
-                        nome => $datas->{$data}{nome}
+                        nome => Iota::IndicatorChart::PeriodAxis::get_label_of_period( $data, $periodo )
                     };
                 }
 
