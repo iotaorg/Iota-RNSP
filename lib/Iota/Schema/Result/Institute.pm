@@ -108,31 +108,26 @@ __PACKAGE__->table("institute");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 license_url
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 image_url
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 datapackage_autor
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 datapackage_autor_email
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -170,35 +165,15 @@ __PACKAGE__->add_columns(
   "hide_empty_indicators",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "license",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "license_url",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "image_url",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "datapackage_autor",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "datapackage_autor_email",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -275,8 +250,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-12 15:08:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LE1KUIz9/koFMwfs5SxP2g
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 16:16:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DJcfGSfBtnLEbXVumQQm3A
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

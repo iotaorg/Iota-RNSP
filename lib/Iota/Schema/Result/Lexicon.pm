@@ -80,6 +80,13 @@ __PACKAGE__->table("lexicon");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 created_at
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
+  is_nullable: 0
+  original: {default_value => \"now()"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -112,6 +119,13 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "user_id",
   { data_type => "integer", is_nullable => 1 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -127,8 +141,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-19 14:41:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bK3yy9stKY8Aba5FsUrwnw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 16:16:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h5E/c14Ci0YjAtX9jN/ypQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
