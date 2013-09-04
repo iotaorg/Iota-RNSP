@@ -411,7 +411,13 @@ sub list_POST {
 
     $c->req->params->{user}{create}{role} ||= 'user';
     if ( $c->req->params->{user}{create}{role} eq 'user' ) {
-        $c->req->params->{user}{create}{network_id} ||= $c->user->network_id;
+        my @foo = $c->user->networks ? $c->user->networks->all : ();
+        if (@foo){
+            $c->req->params->{user}{create}{network_id} ||= join ',', map { $_->id } @foo;
+        }else{
+            # tests...
+            $c->req->params->{user}{create}{network_id} ||= $c->user->network_id;
+        }
     }
 
     my $dm = $c->model('DataManager');
