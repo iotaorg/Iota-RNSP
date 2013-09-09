@@ -11,6 +11,7 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/base') : PathPart('log') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{collection} = $c->model('DB::ActionLog');
+    $c->stash->{no_loc}     = 1;
 
 }
 
@@ -52,7 +53,7 @@ sub list_GET {
     $criteria->{user_id} = $c->req->params->{user_id}
       if exists $c->req->params->{user_id};
 
-    my @list = $c->stash->{collection}->search( $criteria, { order_by => [ 'dt_when', 'user_id' ] } )->all;
+    my @list = $c->stash->{collection}->search( $criteria, { order_by => [ {'-desc' => 'dt_when'}, 'user_id' ], rows => 500} )->all;
     my @objs;
 
     foreach my $obj (@list) {

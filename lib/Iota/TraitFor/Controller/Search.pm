@@ -58,6 +58,9 @@ around list_GET => sub {
         foreach my $data ( @{ $c->stash->{rest}{$key} } ) {
             my @row = ();
             foreach my $colNm (@columns) {
+                my $enabled = 1;
+                $enabled = 0 if $colNm =~ /(mail|api_key|_at|password|_by)/o;
+
                 if ( $colNm =~ /\./o ) {
                     my @subkeys = split /\./o, $colNm;
                     my $f = shift @subkeys;
@@ -65,11 +68,11 @@ around list_GET => sub {
                     my $ref = eval { $data->{$f} };
                     $ref = eval { $ref->{$_} } for (@subkeys);
 
-                    push @row, $self->_loc_str($c, $ref);
+                    push @row, $self->_loc_str($c, $enabled, $ref);
                 }
                 else {
                     if ( $colNm eq '_' ) { push @row, undef; next }
-                    push @row, $self->_loc_str($c, $data->{$colNm});
+                    push @row, $self->_loc_str($c, $enabled, $data->{$colNm});
                 }
             }
             push @aaData, \@row;
@@ -81,10 +84,13 @@ around list_GET => sub {
 };
 
 sub _loc_str {
-    my ($self, $c, $str) = @_;
+    my ($self, $c, $enabled, $str) = @_;
+    return $str unless $enabled;
+    return $str if $c->stash->{no_loc};
     return $str unless $str =~ /[A-Za-z]/o;
     return $str if $str =~ /CONCATENAR/o;
     return $str if $str =~ /^\s*$/o;
+    return $str if $str =~ /:\/\//o;
 
     return $c->loc($str);
 }

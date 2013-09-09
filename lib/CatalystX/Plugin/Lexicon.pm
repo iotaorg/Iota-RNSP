@@ -90,7 +90,7 @@ sub loc {
         &lexicon_reload_self;
     }
 
-    if (0 && exists $cache->{$current_lang}{$text}){
+    if (exists $cache->{$current_lang}{$text}){
         return $cache->{$current_lang}{$text};
     }else {
 
