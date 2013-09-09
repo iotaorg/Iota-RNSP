@@ -76,9 +76,15 @@ sub lexicon_reload_self {
 }
 
 sub loc {
-    my ( $c, $text, @conf ) = @_;
+    my ( $c, $text, $origin_lang, @conf ) = @_;
     my $default = $c->config->{default_lang};
 
+    $origin_lang =
+        $origin_lang
+        ? $origin_lang
+        : $c->user
+            ? $c->user->cur_lang
+            : $default;
 
     unless (-e $cache_lang_file){
         &lexicon_reload_self;
@@ -92,18 +98,27 @@ sub loc {
         my @add_langs = split /,/, $c->config->{forced_langs};
 
         foreach my $lang (@add_langs){
-            my $str = $lang eq $default ? $text : "? $text";
+            my $str = $lang eq $origin_lang ? $text : "? $text";
             $cache->{$lang}{$text} = $str;
 
-            $resultset->find_or_create({
-                lang      => $lang,
+            my $exists = $resultset->search({
                 lex       => '*',
+                lang      => $lang,
                 lex_key   => $text,
-                lex_value => $str,
-                user_id   => $user_id
-            });
+            })->count;
+
+            if ($exists == 0){
+                $resultset->create({
+                    lex         => '*',
+                    lang        => $lang,
+                    lex_key     => $text,
+                    lex_value   => $str,
+                    user_id     => $user_id,
+                    origin_lang => $origin_lang
+                });
+            }
         }
-        return $current_lang eq $default ? $text : "? $text";
+        return $current_lang eq $origin_lang ? $text : "? $text";
     }
 
 }

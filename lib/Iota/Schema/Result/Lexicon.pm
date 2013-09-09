@@ -87,6 +87,13 @@ __PACKAGE__->table("lexicon");
   is_nullable: 0
   original: {default_value => \"now()"}
 
+=head2 origin_lang
+
+  data_type: 'text'
+  default_value: 'pt-br'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -126,6 +133,13 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
+  "origin_lang",
+  {
+    data_type     => "text",
+    default_value => "pt-br",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -141,8 +155,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 16:16:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h5E/c14Ci0YjAtX9jN/ypQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-09 15:46:04
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cM5iDxpgY9GrFzhCVvZloA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

@@ -8,11 +8,15 @@ use List::MoreUtils qw(any);
 our $_id;
 our $_network_id;
 our @_roles;
+our $cur_lang = 'pt-br';
 
 sub roles { return @_roles; }
 
 sub id {
     return $_id;
+}
+sub cur_lang {
+    return $cur_lang;
 }
 
 sub network_id {
