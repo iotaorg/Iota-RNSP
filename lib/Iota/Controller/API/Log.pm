@@ -53,7 +53,11 @@ sub list_GET {
     $criteria->{user_id} = $c->req->params->{user_id}
       if exists $c->req->params->{user_id};
 
-    my @list = $c->stash->{collection}->search( $criteria, { order_by => [ {'-desc' => 'dt_when'}, 'user_id' ], rows => 500} )->all;
+    my @list = $c->stash->{collection}->search( $criteria, {
+        order_by => [ {'-asc' => 'dt_when'}, 'user_id' ],
+        rows => 1500,
+        prefetch => ['user']
+        } )->all;
     my @objs;
 
     foreach my $obj (@list) {
