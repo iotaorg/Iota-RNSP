@@ -209,7 +209,6 @@ sub base : Chained('logged_in') : PathPart('') : CaptureArgs(0) {
 
             my $v = $inp->{$k};
             next if ref $v ne '';
-            next if length $v > 800;
 
             next if
                 $v =~ /^\s*$/ ||

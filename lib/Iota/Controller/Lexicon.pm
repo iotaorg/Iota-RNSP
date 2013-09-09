@@ -72,7 +72,9 @@ sub save_lexicons {
         $i++;
     }
 
-    $c->stash->{message} = "$i textos traduzidos";
+    $c->lexicon_reload_all();
+
+    $c->stash->{message} = "$i " . $c->loc('textos traduzidos');
 }
 
 
