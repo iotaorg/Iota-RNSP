@@ -126,6 +126,7 @@ sub lexicons : Chained('base') PathPart('lexicons') Args(0) {
             $v =~ /^\s*$/ ||
             $v !~ /[a-z]/i ||
             $v =~ /^\s*[0-9]+\s*$/;
+
         $c->loc($v, 'pt-br');
     }
 
