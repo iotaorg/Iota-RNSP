@@ -7,6 +7,29 @@ var _show_info_name = function(event){
 
     infowindow.open(this._data.map);
 };
+
+var _change_colors = function(event){
+
+    $.each(this._data.list, function(a, b){
+        b.setOptions({
+            strokeColor: '#15d400',
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+        });
+    });
+};
+var _restore_change_colors = function(event){
+
+    $.each(this._data.list, function(a, b){
+        b.setOptions({
+            strokeColor: '#333',
+            strokeOpacity: 0.6,
+            strokeWeight: 2,
+        });
+    });
+};
+
+
 //var api_path = "http://rnsp.aware.com.br";
 var _last_width=0;
 
@@ -363,6 +386,7 @@ if (!(typeof google == "undefined")) {
 
                 $.each(xmap.polygons, function(a, elm){
 
+                    elm.list = Array();
 
                     $.each(elm.p, function(aa, elm2){
 
@@ -381,6 +405,7 @@ if (!(typeof google == "undefined")) {
                             fillColor: elm.color,
                             fillOpacity: Math.min(opacity, 1)
                         });
+                        elm.list.push(zoo.polygon);
 
                         zoo.polygon._data = elm;
                         zoo.polygon._data.map = map;
@@ -388,6 +413,8 @@ if (!(typeof google == "undefined")) {
                         zoo.polygon.setMap(map);
 
                         google.maps.event.addListener(zoo.polygon, 'click',_show_info_name);
+                        google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
+                        google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
 
                         if (typeof map_used_things[xmap.map_elm] == "undefined")
                             map_used_things[xmap.map_elm] = [];
