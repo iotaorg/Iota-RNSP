@@ -22,7 +22,8 @@ sub base : Chained('/') PathPart(':lexicon') CaptureArgs(0) {
     die $@ if $@;
 
     $c->stash->{lang_name} = {
-        'es' => 'Espanhol'
+        'es' => 'Espanhol',
+        'pt-br' => 'Português'
     };
 }
 
@@ -48,10 +49,8 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
         my $group = 'word';
         $group = 'text' if (length $lex->{lex_key} > 30 && $lex->{lex_key} =~ / /) || $lex->{lex_key} =~ /\n/o || $lex->{lex_key} =~ /</o;
 
-        push @{$c->stash->{lexicons}{$lex->{lang}}{$group} }, $lex;
+        push @{$c->stash->{lexicons}{$lex->{origin_lang}}{$lex->{lang}}{$group} }, $lex;
     }
-
-
 }
 
 sub save_lexicons {

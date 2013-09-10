@@ -54,8 +54,8 @@ sub list_GET {
       if exists $c->req->params->{user_id};
 
     my @list = $c->stash->{collection}->search( $criteria, {
-        order_by => [ {'-asc' => 'dt_when'}, 'user_id' ],
-        rows => 1500,
+        order_by => [ {'-desc' => 'dt_when'} ],
+        rows => 100,
         prefetch => ['user']
         } )->all;
     my @objs;
