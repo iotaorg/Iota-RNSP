@@ -32,15 +32,13 @@ sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 
     my $cur_lang = $c->stash->{lang};
-    my %langs = map { $_ => 1 } @{ $c->config->{'I18N::DBI'}{languages} };
-
+    my %langs = map { $_ => 1 } split /,/, $c->config->{available_langs};
     $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
     my $host = $c->req->uri->host;
 
     $c->response->cookies->{'lang'} = {
         value   => $cur_lang,
         path    => '/',
-        domain  => '.' . $host,
         expires => '+3600h',
     };
 
@@ -124,12 +122,12 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     if ( !defined $cur_lang ) {
         my $al = $c->req->headers->header('Accept-language');
-        my $language = $self->lang_acceptor->accepts( $al, $c->config->{'I18N::DBI'}{languages} );
+        my $language = $self->lang_acceptor->accepts( $al, split /,/, $c->config->{available_langs} );
 
         $cur_lang = $language;
     }
     else {
-        my %langs = map { $_ => 1 } @{ $c->config->{'I18N::DBI'}{languages} };
+        my %langs = map { $_ => 1 } split /,/, $c->config->{available_langs};
         $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
     }
 
@@ -154,9 +152,8 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->response->cookies->{'lang'} = {
         value   => $cur_lang,
         path    => '/',
-        domain  => '.' . $domain,
         expires => '+3600h',
-    };
+    } if $c->req->cookies->{lang} ne $cur_lang;
 
 }
 

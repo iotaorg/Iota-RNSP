@@ -1,10 +1,10 @@
 [%IF lexicons.keys.size %]
-<h1>Há textos pedentes de tradução</h1>
+<h1><small>[%l('Há textos pedentes de tradução')%]</small></h1>
 <hr/>
 [%FOREACH origin_lang IN lexicons.keys %]
     [%FOREACH lang IN lexicons.${origin_lang}.keys %]
 
-    <h2>De [%lang_name.${origin_lang}%] para [%lang_name.$lang%]</h2>
+    <h2><small>[%l('De')%] [%lang_name.${origin_lang}%] [%l('para')%] [%lang_name.$lang%]</small></h2>
     <dl>
         <dt>textos curtos: </dt>
         <dd>[%lexicons.${origin_lang}.${lang}.word.size%]</dd>
@@ -22,7 +22,7 @@
 
         [%IF lexicons.${origin_lang}.${lang}.word%]
             <table style="word-break: break-word" class="table table-hover">
-            <legend>Palavras curtas para traduzir para [%lang_name.$lang%]</legend>
+            <legend>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</legend>
                 <tr>
                     <th>[%lang_name.${origin_lang}%]</th>
                     <th>[%lang_name.$lang%]</th>
@@ -39,7 +39,7 @@
 
         [%IF lexicons.${origin_lang}.${lang}.text%]
             <table class="table table-hover">
-            <legend>Palavras longas para traduzir para [%lang_name.$lang%]</legend>
+            <legend>[%l('Textos longos para traduzir para')%] [%lang_name.$lang%]</legend>
                 <tr>
                     <th>[%lang_name.${origin_lang}%]</th>
                     <th>[%lang_name.$lang%]</th>
@@ -57,10 +57,10 @@
     [%END%]
 <hr/>
 <div class="form-actions">
-  <button type="submit" class="btn btn-primary">Salvar</button>
+  <button type="submit" class="btn btn-primary">[%l('Salvar')%]</button>
 </div>
 </form>
 [%END%]
 [%ELSE%]
-<h1>Não há textos pedentes de tradução</h1>
+<h1>[%l('Não há mais textos pedentes de tradução')%]!</h1>
 [%END%]

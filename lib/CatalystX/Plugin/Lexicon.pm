@@ -21,7 +21,6 @@ my $current_lang;
 my $cache_lang_prefix = '/tmp/cache.lang.';
 my $cache_lang_file = "$cache_lang_prefix$$";
 
-
 sub setup {
     my $c = shift;
 

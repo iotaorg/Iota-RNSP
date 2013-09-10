@@ -25,6 +25,13 @@ sub base : Chained('/') PathPart(':lexicon') CaptureArgs(0) {
         'es' => 'Espanhol',
         'pt-br' => 'Português'
     };
+
+
+    my $cur_lang = exists $c->req->cookies->{lang} ? $c->req->cookies->{lang}->value : 'pt-br';
+
+    my %langs = map { $_ => 1 } split /,/, $c->config->{available_langs};
+    $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
+    $c->set_lang( $cur_lang );
 }
 
 
@@ -44,6 +51,8 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
         result_class => 'DBIx::Class::ResultClass::HashRefInflator',
         order_by     => ['lang', 'lex_key']
     })->all;
+
+    $c->stash->{count} = scalar @lexs;
 
     for my $lex (@lexs){
         my $group = 'word';
@@ -73,12 +82,24 @@ sub save_lexicons {
 
     $c->lexicon_reload_all();
 
+    $c->response->cookies->{'reload_lex'} = {
+        value   => 1,
+        path    => '/',
+        expires => '+3600h',
+    };
+
     $c->stash->{message} = "$i " . $c->loc('textos traduzidos');
 }
 
 
 sub pending : Chained('load_pending') PathPart('') Args(0) {
 
+}
+
+sub pending_count : Chained('load_pending') PathPart('count') Args(0) {
+    my ($self, $c) = @_;
+
+    $c->res->body(qq|{"count":${\$c->stash->{count}}}|);
 }
 
 
