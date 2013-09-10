@@ -27,7 +27,7 @@ sub base : Chained('/') PathPart(':lexicon') CaptureArgs(0) {
     };
 
 
-    my $cur_lang = exists $c->req->cookies->{lang} ? $c->req->cookies->{lang}->value : 'pt-br';
+    my $cur_lang = exists $c->req->cookies->{cur_lang} ? $c->req->cookies->{cur_lang}->value : 'pt-br';
 
     my %langs = map { $_ => 1 } split /,/, $c->config->{available_langs};
     $cur_lang = 'pt-br' unless exists $langs{$cur_lang};

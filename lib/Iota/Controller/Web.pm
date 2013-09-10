@@ -36,7 +36,7 @@ sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
     $cur_lang = 'pt-br' unless exists $langs{$cur_lang};
     my $host = $c->req->uri->host;
 
-    $c->response->cookies->{'lang'} = {
+    $c->response->cookies->{'cur_lang'} = {
         value   => $cur_lang,
         path    => '/',
         expires => '+3600h',
@@ -118,7 +118,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         cities => \@cities
     };
 
-    my $cur_lang = exists $c->req->cookies->{lang} ? $c->req->cookies->{lang}->value : undef;
+    my $cur_lang = exists $c->req->cookies->{cur_lang} ? $c->req->cookies->{cur_lang}->value : undef;
 
     if ( !defined $cur_lang ) {
         my $al = $c->req->headers->header('Accept-language');
@@ -149,11 +149,11 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->set_lang( $cur_lang );
 
-    $c->response->cookies->{'lang'} = {
+    $c->response->cookies->{'cur_lang'} = {
         value   => $cur_lang,
         path    => '/',
         expires => '+3600h',
-    } if $c->req->cookies->{lang} ne $cur_lang;
+    } if $c->req->cookies->{cur_lang} ne $cur_lang;
 
 }
 
