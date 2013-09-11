@@ -91,6 +91,7 @@ sub action_specs {
             my %values = shift->valid_values;
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
+            $values{technical_information} = undef if $values{technical_information} eq "\x0";
             return unless keys %values;
 
             my $obj = $self->find( delete $values{id} )->update( \%values );

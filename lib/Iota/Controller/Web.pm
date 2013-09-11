@@ -153,7 +153,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         value   => $cur_lang,
         path    => '/',
         expires => '+3600h',
-    } if $c->req->cookies->{cur_lang} ne $cur_lang;
+    } if !exists $c->req->cookies->{cur_lang} || $c->req->cookies->{cur_lang} ne $cur_lang;
 
 }
 

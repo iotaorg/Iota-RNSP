@@ -80,6 +80,8 @@ sub indicator_config_POST {
     my $param = $c->req->params->{user}{indicator_config}{update};
     $param->{id} = $obj_rs->id;
 
+    $param->{technical_information} = "\x0" if exists $param->{technical_information} && $param->{technical_information} eq '';
+
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
