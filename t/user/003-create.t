@@ -174,7 +174,9 @@ eval {
                     'name'                      => 'Foo Bar',
                     'active'                    => 1,
                     'estado'                    => undef,
+                    'cur_lang'                  => 'pt-br',
                     'telefone'                  => undef,
+                    'cur_lang'                  => 'pt-br',
                     'email'                     => 'foo@email.com',
                     'city'                      => {
                         'name' => 'Pederneiras',

@@ -170,6 +170,7 @@ sub user_GET {
                   endereco
                   city_summary
                   active
+                  cur_lang
                   )
             ),
             created_at => $attrs{created_at}->datetime,
@@ -343,6 +344,7 @@ sub list_GET {
                         bairro                    => $_->{bairro},
                         cep                       => $_->{cep},
                         endereco                  => $_->{endereco},
+                        cur_lang                  => $_->{cur_lang},
 
                         $_->{city}
                         ? (
