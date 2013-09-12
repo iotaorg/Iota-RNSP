@@ -448,6 +448,7 @@ $(document).ready(function () {
                     }
                 }
                 history_table += "</tr>";
+                goal_values = '';
                 if (historico_data.rows[index].goal) {
                     goal_values = historico_data.rows[index].goal;
                 }
