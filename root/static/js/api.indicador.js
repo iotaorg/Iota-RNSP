@@ -308,8 +308,10 @@ $(document).ready(function () {
 
             observations_values=[];
             source_values = [];
+            goal_values = '';
             var valores = [];
             var grafico_variado;
+
 
             $.each(historico_data.rows, function (index, value) {
 
@@ -448,7 +450,6 @@ $(document).ready(function () {
                     }
                 }
                 history_table += "</tr>";
-                goal_values = '';
                 if (historico_data.rows[index].goal) {
                     goal_values = historico_data.rows[index].goal;
                 }
