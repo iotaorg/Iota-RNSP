@@ -6,10 +6,10 @@
 
         <ul class="nav nav-list">
             [% FOREACH m IN files.keys.sort %]
-                    <li><h2>[%m%]</h2></li>
+                    <li><h2>[%l(m)%]</h2></li>
                         [% FOREACH x IN files.$m %]
-                            <li><a href="[%x.public_url%]"> <i class="icon-download-alt"></i> [%x.public_name%] <small style="float:right">[%x.created_at.dmy('/')%]</small></a>
-                                [%IF x.description %]<p>[%x.description%]</p>[%END%]
+                            <li><a href="[%x.public_url%]"> <i class="icon-download-alt"></i> [%l(x.public_name)%] <small style="float:right">[%x.created_at.dmy('/')%]</small></a>
+                                [%IF x.description %]<p>[%l(x.description)%]</p>[%END%]
                             </li>
                         [% END %]
                     </li>

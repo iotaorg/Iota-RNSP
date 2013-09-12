@@ -41,7 +41,7 @@
 
 [%IF all_variations%]
 <form class="clearfix" id="variation_checks">
-<p>[%indicator.variety_name%], marque abaixo para exibir:</p>
+<p>[%l(indicator.variety_name)%], [%l('marque abaixo para exibir')%]:</p>
     [%FOREACH v IN all_variations%]
     <label class="span2 checkbox">
         <input value="[%v%]" type="checkbox"> [%v%]
@@ -64,7 +64,7 @@
 
 <thead>
 <tr>
-    <th data-sort="string">Cidade</th>
+    <th data-sort="string">[%l('Cidade')%]</th>
     [%FOREACH period IN choosen_periods.2%]
         <th data-sort="myfloat">[%date4period(period, indicator.period) %]</th>
     [%END%]
@@ -88,7 +88,7 @@
                 <button class="btn btn-mini compare">Comparar</button>
                 <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                  <li><a href="[%city_i%]" target="_blank">Abrir cidade</a></li>
+                  <li><a href="[%city_i%]" target="_blank">[%l('Abrir cidade')%]</a></li>
                 </ul>
               </div>
         </td>
@@ -104,10 +104,10 @@
         [%END%]
         <td class="opcoes">
             <div class="btn-group">
-                <button class="btn btn-mini compare">Comparar</button>
+                <button class="btn btn-mini compare">[%l('Comparar')%]</button>
                 <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                  <li><a href="[%city_i%]" target="_blank">Abrir cidade</a></li>
+                  <li><a href="[%city_i%]" target="_blank">[%l('Abrir cidade')%]</a></li>
                 </ul>
               </div>
         </td>
@@ -189,7 +189,7 @@
     <div id="mapa-filtro">
 
         <form class="form-inline">
-            <label for="mapa-filtro-periodo">Selecione um período: </label>
+            <label for="mapa-filtro-periodo">[%l('Selecione um período')%]: </label>
             <select id="mapa-filtro-periodo">
 
             [%FOREACH period IN choosen_periods.2%]
@@ -203,9 +203,9 @@
     <div id="mapa"></div>
 
     [%IF indicator.sort_direction == "greater value" %]
-        Quanto mais vermelho, melhor em relação aos outros.
+        [%l('Quanto mais vermelho, melhor em relação aos outros')%].
     [%ELSE%]
-        Quanto mais vermelho, pior ou ruim em relação aos outros.
+        [%l('Quanto mais vermelho, pior ou ruim em relação aos outros')%].
     [%END%]
 
 </div>

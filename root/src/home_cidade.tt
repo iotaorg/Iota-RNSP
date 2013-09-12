@@ -6,12 +6,12 @@
                     <div class="content-fill">
                         <h1 class="title">[% city.name %], [%city.uf%]</h1>
                         <div class="variaveis"><dl class="tabela">
-                            <dt>Cidade: </dt>
+                            <dt>[%l('Cidade')%]: </dt>
                             <dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
-                            <dt>Estado: </dt>
+                            <dt>[%l('Estado')%]: </dt>
                             <dd>[%city.uf%]</dd>
 
-                            <dt>País: </dt>
+                            <dt>[%l('País')%]: </dt>
                             <dd>[%l('Brasil')%]</dd>
 
                             [% FOREACH vv IN user_basic_variables %]
@@ -40,7 +40,7 @@
 
                     <div class="span4">
                         <div class="summary">
-                            <div class="content-fill">[%public.usuario.city_summary%]</div>
+                            <div class="content-fill">[%l(public.usuario.city_summary)%]</div>
                         </div>
                     </div>
 

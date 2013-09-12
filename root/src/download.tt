@@ -35,7 +35,7 @@
                 <select name="indicador" class="span5">
                     <option value="" selected="selected">[%l('Todos')%]</option>
                     [%FOREACH i IN indicators.sort('name') %]
-                    <option value="[%i.name_url%]">[%i.name%]</option>
+                    <option value="[%i.name_url%]">[%l(i.name)%]</option>
                     [%END%]
                 </select>
                 </div>
