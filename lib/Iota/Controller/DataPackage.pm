@@ -183,6 +183,20 @@ sub _download {
             }
         );
 
+        my @countries = @{ $c->stash->{network_data}{countries} };
+        my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+        $rs = $rs->search(
+            {
+                '-or' => [
+                    { visibility_level => 'public' },
+                    { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
+                    { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
+                ]
+            },
+            { join => 'indicator_user_visibilities', order_by => 'me.name' }
+        );
+
         my $base_rel = join '/', 'http:/', $network->domain_name, $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade};
 
         if ($c->stash->{region}){
