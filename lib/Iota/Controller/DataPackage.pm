@@ -173,20 +173,13 @@ sub _download {
             $c->model('DB::User')->find($c->stash->{user}{id})->
             user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
-        my $rs = $c->model('DB::Indicator')->search(
-            {
-                'me.id' => { '-not_in' => \@hide_indicator }
-            },
-            {
-                select => [qw/name_url/],
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            }
-        );
 
         my @countries = @{ $c->stash->{network_data}{countries} };
         my @users_ids = @{ $c->stash->{network_data}{users_ids} };
-        $rs = $rs->search(
+
+        my $rs = $c->model('DB::Indicator')->search(
             {
+                'me.id' => { '-not_in' => \@hide_indicator },
                 '-or' => [
                     { visibility_level => 'public' },
                     { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
@@ -194,7 +187,12 @@ sub _download {
                     { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
                 ]
             },
-            { join => 'indicator_user_visibilities', order_by => 'me.name' }
+            {
+                join => 'indicator_user_visibilities',
+                order_by => 'me.name',
+                select => [qw/name_url/],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            }
         );
 
         my $base_rel = join '/', 'http:/', $network->domain_name, $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade};
