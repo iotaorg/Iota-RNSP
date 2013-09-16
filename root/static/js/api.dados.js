@@ -473,9 +473,9 @@ $(document).ready(function(){
         }
         map = undefined;
 
-        dados_mapa   = $.parseJSON($('#map').attr('data-json'));
-        dadosGrafico = $.parseJSON($('#graph').attr('data-json'));
 
+        dados_mapa   = $('#map').attr('data-json') ? $.parseJSON($('#map').attr('data-json')) : {};
+        dadosGrafico = $('#graph').attr('data-json') ? $.parseJSON($('#graph').attr('data-json')) : {};
         $('#mapa-filtro-periodo').change( function () {
             var $me = $(this).val(),
              $dados = dados_mapa[$me];

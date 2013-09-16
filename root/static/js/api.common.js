@@ -284,15 +284,40 @@ $.extend({
         }
     },
 	getUrlVars: function(){
-		var vars = [], hash;
-		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-		for(var i = 0; i < hashes.length; i++){
-			hash = hashes[i].split('=');
-			vars.push(hash[0]);
-			vars[hash[0]] = hash[1];
-		}
-		return vars;
-	},
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++){
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getUrlVars_url: function(url){
+        var vars = {}, hash;
+
+        if (url.indexOf('?')== -1){
+            return {};
+        }
+
+        var hashes = url.slice(url.indexOf('?') + 1).split('&');
+
+        for(var i = 0; i < hashes.length; i++){
+            hash = hashes[i].split('=');
+            //vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    },
+    getPureUrl_url: function(url){
+        var vars = {}, hash;
+
+        if (url.indexOf('?')== -1){
+            return url;
+        }
+
+        return url.substr(0, url.indexOf('?'));
+    },
 	getUrlVar: function(name){
 		return $.getUrlVars()[name];
 	},
@@ -313,23 +338,33 @@ $.extend({
 	setUrl: function(args, data){
 		var url = window.location.href;
 
-        url = jQuery.param.querystring(url, args);
+        url = $.update_url_params(url, args);
+
         if ((url == window.location.href) == false){
             History.pushState(data, null, url);
         }
-	}
+	},
+    update_url_params: function(url, params){
+
+        var aaa = $.getUrlVars_url(url);
+        $.each(params, function (a, b){
+            aaa[a] = b;
+        });
+
+        var encoded = $.param(aaa);
+        return $.getPureUrl_url(url) + '?' + encoded;
+
+    }
 });
 
 $(document).ready(function(){
-
 	$.ajaxSetup({ cache: false });
-
 });
 
 function updateURLParameter(url, param, paramVal){
-    var xx = {};
-    xx[param] = paramVal;
-    return jQuery.param.querystring(url, xx);
+    var aaa = {};
+    aaa[param] = paramVal;
+    return $.update_url_params(url, aaa);
 }
 
 function _resize_canvas () {
