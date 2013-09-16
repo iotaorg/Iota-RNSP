@@ -143,7 +143,6 @@ sub action_specs {
             my %values = shift->valid_values;
 
             $values{justification_of_missing_field} ||= '';
-            $values{justification_of_missing_field} ||= '';
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
