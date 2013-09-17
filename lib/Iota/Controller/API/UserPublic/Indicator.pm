@@ -203,10 +203,10 @@ sub resumo_GET {
 
         my $rs = $c->stash->{collection}->search(
             {
-                'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
+                #'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
                 'me.id' => { '-not_in' => \@hide_indicator }
             },
-            { prefetch => [ 'indicator_variations', 'axis', 'indicator_network_configs_one' ] }
+            { prefetch => [ 'indicator_variations', 'axis' ] }
         );
 
         my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
@@ -311,7 +311,7 @@ sub resumo_GET {
                 }
 
                 foreach my $axis (@axis_list) {
-                    my $config = $indicator->indicator_network_configs_one;
+                    my $config = undef; # $indicator->indicator_network_configs_one;
 
                     push(
                         @{ $ret->{resumos}{$axis}{$periodo}{indicadores} },
