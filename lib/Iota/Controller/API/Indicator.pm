@@ -157,6 +157,8 @@ sub indicator_GET {
               visibility_user_id
               visibility_country_id
 
+              featured_in_home
+
               period
               variable_type
 
@@ -386,6 +388,8 @@ sub list_GET {
                   visibility_level
                   visibility_user_id
                   visibility_country_id
+
+                  featured_in_home
 
                   created_at)
             ),

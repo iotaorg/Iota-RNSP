@@ -208,7 +208,7 @@
     <div class="container">
 		<div class="row">
 			<div class="span3">
-				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png"" alt="logo [%institute.short_name%]">
+				<img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
 			</div>
 			<div class="span9">
 
@@ -303,8 +303,8 @@
               </a>
         </div>
   </div>
-  </div>
 </footer>
+
 [%ELSE%]
 <footer>
   <div class="footer">
@@ -379,10 +379,8 @@
               </a>
         </div>
   </div>
-  </div>
 </footer>
 [% END %]
-
 
 </div>
 
@@ -390,7 +388,7 @@
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
 
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry,visualization&key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry,visualization&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 [% assets.export("js") %]
 
 <script>

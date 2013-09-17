@@ -136,17 +136,16 @@ __PACKAGE__->table("user");
   is_foreign_key: 1
   is_nullable: 1
 
-=head2 password
-
-  data_type: 'text'
-  is_nullable: 0
-
 =head2 cur_lang
 
   data_type: 'text'
   default_value: 'pt-br'
   is_nullable: 0
-  original: {data_type => "varchar"}
+
+=head2 password
+
+  data_type: 'text'
+  is_nullable: 0
 
 =cut
 
@@ -197,15 +196,10 @@ __PACKAGE__->add_columns(
   },
   "institute_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "cur_lang",
+  { data_type => "text", default_value => "pt-br", is_nullable => 0 },
   "password",
   { data_type => "text", is_nullable => 0 },
-  "cur_lang",
-  {
-    data_type     => "text",
-    default_value => "pt-br",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
 );
 
 =head1 PRIMARY KEY
@@ -707,8 +701,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-09 15:46:04
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gp+NTDkAU6QK+Wqsf2IH+Q
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-17 14:21:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y9Gl55ZMYtYH94CY1GijBw
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 
