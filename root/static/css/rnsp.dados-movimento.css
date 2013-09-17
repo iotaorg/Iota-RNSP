@@ -2,31 +2,42 @@
 	border: none;
 }
 .navbar-fixed-top .navbar-inner {
-  background: #000000;
-  background-image: none;
+background-color: #1b1b1b;
+background-image: -moz-linear-gradient(top, #222222, #111111);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));
+background-image: -webkit-linear-gradient(top, #222222, #111111);
+background-image: -o-linear-gradient(top, #222222, #111111);
+background-image: linear-gradient(to bottom, #222222, #111111);
+background-repeat: repeat-x;
+border-color: #252525;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
 }
+
 .navbar-fixed-top .navbar-inner .nav li a,
 .navbar-fixed-top .navbar-inner .nav li a:visited{
 	color: #CCC;
-	text-shadow: 0 1px 0 #333;	
+	text-shadow: 0 1px 0 #333;
 }
+
+
+
 .navbar-fixed-top .navbar-inner .nav li a.active,
 .navbar-fixed-top .navbar-inner .nav li a:hover{
 	color: #fff;
-	text-shadow: 0 1px 0 #333;	
+	text-shadow: 0 1px 0 #333;
 }
 .navbar-fixed-top .navbar-inner .nav li.active{
 	background: #333;
 }
 .navbar-fixed-top .navbar-inner .nav li.active a{
-	color: #fff;	
+	color: #fff;
 }
 .navbar .divider-vertical {
   border-right: 1px solid #444444;
   border-left: 1px solid #222222;
 }
 .navbar-inverse .nav li.dropdown.open>.dropdown-toggle{
-	background-color: #111;	
+	background-color: #111;
 }
 .navbar-inverse .nav .active>a{
 	background-color: #111;
@@ -121,3 +132,4 @@ input.button-data:hover{
 #regioes ul.regions ul.subregions li.selected{
 	background-color: #d4ccff;
 }
+
