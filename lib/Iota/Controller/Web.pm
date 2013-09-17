@@ -157,6 +157,30 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
 }
 
+sub featured_indicators_load :Private {
+    my ( $self, $c ) = @_;
+
+    my @countries = @{ $c->stash->{network_data}{countries} };
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my @indicators = $c->model('DB::Indicator')->search(
+        {
+            featured_in_home => 1,
+            '-or' => [
+                { visibility_level => 'public' },
+                { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
+                { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
+            ]
+        },
+        { join => 'indicator_user_visibilities', order_by => 'me.name' }
+    )->as_hashref->all;
+
+    $c->stash(
+        featured_indicators => \@indicators,
+    );
+}
+
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c ) = @_;
 

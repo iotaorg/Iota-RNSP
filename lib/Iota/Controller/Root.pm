@@ -33,6 +33,8 @@ sub index : Path : Args(0) {
 
     $c->forward('root');
     $c->forward('institute_load');
+
+    $c->forward('featured_indicators_load');
     $c->stash( template => 'home_comparacao.tt' );
 
 }

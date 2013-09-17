@@ -79,6 +79,16 @@
                         </div>
                     </div>
 
+                    [%IF featured_indicators%]
+                    <h2>Indicadores em destaque</h2>
+
+                    <ul>
+                    [%FOREACH i IN featured_indicators%]
+                        <li><a href="/[%i.name_url%]">[%i.name%]</a></li>
+                    [%END%]
+                    </ul>
+                    [%END%]
+
                 </div>
             </div>
         </div>
