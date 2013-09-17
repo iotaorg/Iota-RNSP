@@ -179,8 +179,9 @@ if (!(typeof google == "undefined")){
 
 		var ib = new InfoBox(myOptions);
 
-		map.controls[google.maps.ControlPosition.TOP_CENTER].push($('#bubble-intro')[0]);
 		$('#bubble-intro').show();
+		map.controls[google.maps.ControlPosition.TOP_CENTER].push($('#bubble-intro').clone()[0]);
+        $('#bubble-intro').remove();
 		$.carregaComboEstados();
 		$.setaMapaHome();
 	}

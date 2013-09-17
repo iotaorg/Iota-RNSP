@@ -92,7 +92,7 @@
         var ref = 'home';
         var userID = "";
 </script>
-<div id="bubble-intro">
+<div id="bubble-intro" style="display:none">
     <p>[%l('Selecione um estado acima e clique sobre os pontos do mapa ou nas cidades listadas abaixo, para visualizar os indicadores')%]</p>
 </div>
 
