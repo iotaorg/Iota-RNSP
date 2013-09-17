@@ -33,6 +33,7 @@ my $indicator;
 eval {
     $schema->txn_do(
         sub {
+
             my ( $var1, $uri1 ) = &new_var( 'int', 'yearly' );
 
             $indicator = &_post(

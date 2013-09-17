@@ -162,12 +162,6 @@ eval {
             ok( $res->is_success, 'indicator created!' );
             $indicator = eval { from_json( $res->content ) };
 
-            $schema->resultset('Network')->find( { institute_id => 1 } )->update(
-                {
-                    domain_name => 'localhost'
-                }
-            );
-
 
             $Iota::TestOnly::Mock::AuthUser::_id    = 4;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;

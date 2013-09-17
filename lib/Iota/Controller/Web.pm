@@ -64,8 +64,12 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
 
     my $domain = $c->req->uri->host;
-
     my $net = $c->model('DB::Network')->search( { domain_name => $domain } )->first;
+
+    if (exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE}){
+        $net = $c->model('DB::Network')->search( { institute_id => 1 } )->first;
+    }
+
     $c->detach( '/error_404', [ 'Nenhuma rede para o dominio ' . $domain . '!' ] ) unless $net;
 
     $c->stash->{network} = $net;
@@ -106,7 +110,7 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         countries => [
             do {
                 my %seen;
-                grep { !$seen{$_}++ } map { $_->{country_id} } @cities;
+                grep { !$seen{$_}++ } grep {defined} map { $_->{country_id} } @cities;
               }
         ],
         users_ids => [

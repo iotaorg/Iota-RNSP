@@ -193,6 +193,7 @@ sub resumo_GET {
     my $max_periodos = $c->req->params->{number_of_periods} || 4;
     my $from_date = $c->req->params->{from_date};
 
+    $c->forward('/institute_load');
     eval {
         my $user_id = $c->stash->{user_obj}->id;
         my $institute = $c->stash->{user_obj}->institute;
@@ -208,6 +209,21 @@ sub resumo_GET {
             },
             { prefetch => [ 'indicator_variations', 'axis' ] }
         );
+
+        my $rs_confs = $c->model('DB::IndicatorNetworkConfig')->search(
+            {
+                'me.indicator_id' => { '-not_in' => \@hide_indicator },
+                'me.network_id' => $c->stash->{network}->id
+            },
+            {
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            }
+        );
+        my $indicator_conf = {};
+        while (my $r = $rs_confs->next){
+            $indicator_conf->{$r->{indicator_id}} = $r;
+        }
+
 
         my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
@@ -311,7 +327,7 @@ sub resumo_GET {
                 }
 
                 foreach my $axis (@axis_list) {
-                    my $config = undef; # $indicator->indicator_network_configs_one;
+                    my $config = $indicator_conf->{$indicator->id};
 
                     push(
                         @{ $ret->{resumos}{$axis}{$periodo}{indicadores} },
@@ -324,8 +340,8 @@ sub resumo_GET {
                             variable_type  => $indicator->variable_type,
                             network_config => $config
                             ? {
-                                unfolded_in_home => $config->unfolded_in_home,
-                                network_id       => $config->network_id
+                                unfolded_in_home => $config->{unfolded_in_home},
+                                network_id       => $config->{network_id}
                               }
                             : { unfolded_in_home => 0 },
                             id => $indicator_id,

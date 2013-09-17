@@ -20,7 +20,7 @@ my $schema = Iota->model('DB');
 my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
-$Iota::TestOnly::Mock::AuthUser::_id    = 1;
+$Iota::TestOnly::Mock::AuthUser::_id    = 2;
 @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin user /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
@@ -230,13 +230,13 @@ eval {
             &add_value( '/api/variable/' . $basic_id . '/value', '1195-03-25', 7 );
 
             ( $res, $c ) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator' );
+
             my $obj = eval { from_json( $res->content ) };
             is_deeply(
                 $obj->{resumos}{grupo1},
                 $obj->{resumos}{grupo2},
                 'grupo 1 e 2 sao o mesmo indicador em grupos diferentes'
             );
-
             is( join( ',', @{ $obj->{resumos}{grupo1}{yearly}{indicadores}[0]{valores} } ),
                 '-,28.6,25.8,23.5', 'valores ok' );
 
