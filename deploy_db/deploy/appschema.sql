@@ -11,16 +11,16 @@ period_end date);
 -- Created by SQL::Translator::Producer::PostgreSQL
 -- Created on Wed Sep 18 13:38:54 2013
 --
-DROP TYPE IF EXISTS tp_visibility_level CASCADE;
+
 CREATE TYPE tp_visibility_level AS ENUM ('public', 'private', 'country', 'restrict');
 
-DROP TYPE IF EXISTS variable_type_enum CASCADE;
+
 CREATE TYPE variable_type_enum AS ENUM ('str', 'int', 'num');
 
-DROP TYPE IF EXISTS period_enum CASCADE;
+
 CREATE TYPE period_enum AS ENUM ('daily', 'weekly', 'monthly', 'bimonthly', 'quarterly', 'semi-annual', 'yearly', 'decade');
 
-DROP TYPE IF EXISTS sort_direction_enum CASCADE;
+
 CREATE TYPE sort_direction_enum AS ENUM ('greater value', 'greater rating', 'lowest value', 'lowest rating');
 
 --
