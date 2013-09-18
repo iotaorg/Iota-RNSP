@@ -7,11 +7,12 @@ env:
 before_install:
   - cpanm -n Module::Install Catalyst::Devel Text::CSV JSON::Any MooseX::Types::JSON
   - cpanm -n DBIx::Class
+  - cpanm -n App::Sqitch
   - cpanm -n DBIx::Class::Optional::Dependencies
   - cpanm -n Catalyst::Plugin::Assets
 before_script:
   - psql -c 'create database iota_production' -U postgres
-  - perl script/deploy.pl
+  - sqitch -d iota_production deploy
 notifications:
   irc:
     channels:
