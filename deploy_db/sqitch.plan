@@ -1,0 +1,5 @@
+%syntax-version=1.0.0-b2
+%project=iota
+%uri=https://github.com/AwareTI/Iota
+
+appschema 2013-09-18T16:45:46Z cron <renato.cron@gmail.com> # schema tables, types and views
