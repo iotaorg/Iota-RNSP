@@ -154,11 +154,17 @@ $.xhrPool.abortAll = function() {
 $.ajaxSetup({
     beforeSend: function(jqXHR) {
         $.xhrPool.push(jqXHR);
+        NProgress.start();
     },
     complete: function(jqXHR) {
         var index = $.xhrPool.indexOf(jqXHR);
         if (index > -1) {
             $.xhrPool.splice(index, 1);
+        }
+        if ($.xhrPool.length == 0){
+
+            NProgress.done();
+
         }
     }
 });
