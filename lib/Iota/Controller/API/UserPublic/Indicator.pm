@@ -316,17 +316,17 @@ sub resumo_GET {
 
                 }
 
-                my @axis_list = ();
+                my @group_list = ();
                 if (exists $custom_axis->{$indicator_id}){
-                    push @axis_list, $indicator->axis->name
+                    push @group_list, $indicator->axis->name
                         unless $institute->bypass_indicator_axis_if_custom;
 
-                    push @axis_list, @{ $custom_axis->{$indicator_id} };
+                    push @group_list, @{ $custom_axis->{$indicator_id} };
                 }else{
-                    push @axis_list, $indicator->axis->name
+                    push @group_list, $indicator->axis->name
                 }
 
-                foreach my $axis (@axis_list) {
+                foreach my $axis (@group_list) {
                     my $config = $indicator_conf->{$indicator->id};
 
                     push(

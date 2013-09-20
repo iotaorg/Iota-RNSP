@@ -1,0 +1,55 @@
+<div class="row"> <div class="span4">
+
+<div class="menu-left">
+
+<div class="category" id="group_list">
+    <div class="select" data-select-title="[%l('Selecione um group para filtrar')%]">
+        [%-l('Todos os indicadores')-%]
+    </div>
+    <div class="options" style="display: none;">
+        <div class="option" group-id="0">
+        [%-l('Todos os indicadores')-%]
+        </div>
+        <div class="option" group-id="f">
+        [%-l('Indicadores em destaque')-%]
+        </div>
+        [%FOREACH a IN groups.keys.sort() %]
+        <div class="option" group-id="[%groups.$a.group_id%]">
+            [%-l(a)-%]
+        </div>
+        [%END%]
+    </div>
+</div>
+
+<div id="indicators_container">
+    <div class="control-group">
+        <div class="controls">
+            <div class="input-append">
+                <input name="indicator-search" placeholder="[%l('Pesquisar indicadores')%]" id="indicator-search" type="text">
+                <span class="add-on"><i class="icon-search"></i></span>
+            </div>
+        </div>
+    </div>
+    <span class="label label-info hideimp" id="search_status" data-text="[%l('Mais __NUM__ indicadores em outros grupos encontrados')%]"></span>
+
+    <div id="indicators_list" class="indicators indicators-home">
+    [%-FOREACH i IN indicators.sort('name')-%]
+    <a class="item bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="/[%i.name_url%]">
+    [%-i.name-%]
+    </a>
+    [%-END-%]
+    </div>
+
+</div>
+
+
+</div>
+
+</div> </div>
+
+
+
+
+<script type="text/javascript">
+var ref = 'list_indicator';
+</script>

@@ -210,6 +210,51 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     );
 }
 
+sub list_indicators : Chained('institute_load') PathPart(':indicators') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my @countries = @{ $c->stash->{network_data}{countries} };
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my @indicators = $c->model('DB::Indicator')->search(
+        {
+            '-or' => [
+                { visibility_level => 'public' },
+                { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
+                { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
+            ]
+        },
+        {
+            join => 'indicator_user_visibilities',
+            prefetch => 'axis',
+            order_by => 'me.name'
+        }
+    )->as_hashref->all;
+
+    my $groups = {};
+    my $group_id = 0;
+    for my $i (@indicators){
+
+        if (!exists $groups->{$i->{axis}{name}} ){
+            $group_id++;
+
+            $groups->{$i->{axis}{name}} = {
+                group_id => $group_id
+            };
+        }
+
+        push @{$i->{groups}}, $groups->{$i->{axis}{name}}{group_id};
+    }
+
+    $c->stash(
+        groups => $groups,
+        indicators => \@indicators,
+
+        template   => 'list_indicators.tt'
+    );
+}
+
 sub download_redir : Chained('root') PathPart('download') Args(0) {
     my ( $self, $c ) = @_;
     $c->res->redirect( '/dados-abertos', 301 );

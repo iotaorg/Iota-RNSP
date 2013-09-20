@@ -35,6 +35,8 @@
 [%-CALL assets.include("js/api.dados.js")%]
 [%-CALL assets.include("js/api.cidades.js")%]
 [%-CALL assets.include("js/api.indicador.js")%]
+[%-CALL assets.include("js/indicatos-menu.js")%]
+
 [%-CALL assets.include("js/stupidtable.min.js")%]
 
 [%-CALL assets.include("js/nprogress.js")%]

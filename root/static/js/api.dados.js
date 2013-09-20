@@ -58,7 +58,7 @@ $(document).ready(function(){
 
 	function carregaIndicadores(){
 
-		$("#axis_list").empty();
+		$("#group_list").empty();
 
 		eixos_list.dados.sort(function (a, b) {
 			a = a.name,
@@ -69,32 +69,32 @@ $(document).ready(function(){
 
 		$(eixos_list.dados).each(function(index,value){
 			if (index == 0){
-				$("#axis_list").append("<div class='select' axis-id='0'><div class='content-fill'>Categoria</div></div>");
-				$("#axis_list").append("<div class='options'><div class='option' axis-id='0'>Categoria</div></div>");
+				$("#group_list").append("<div class='select' axis-id='0'><div class='content-fill'>Categoria</div></div>");
+				$("#group_list").append("<div class='options'><div class='option' axis-id='0'>Categoria</div></div>");
 			}
-			$("#axis_list .options").append("<div class='option' axis-id='$$id'>$$nome</div>".render({
+			$("#group_list .options").append("<div class='option' axis-id='$$id'>$$nome</div>".render({
 							id: value.id,
 							nome: value.name
 				}));
 		});
 
-		$("#axis_list .select").click(function(){
-			$("#axis_list .options").toggle();
+		$("#group_list .select").click(function(){
+			$("#group_list .options").toggle();
 		});
-		$("#axis_list .option").click(function(){
-			$("#axis_list .select").attr("axis-id",$(this).attr("axis-id"));
-			$("#axis_list .select .content-fill").html($(this).html());
-			$("#axis_list .options").hide();
+		$("#group_list .option").click(function(){
+			$("#group_list .select").attr("axis-id",$(this).attr("axis-id"));
+			$("#group_list .select .content-fill").html($(this).html());
+			$("#group_list .options").hide();
 			if ($(this).attr("axis-id") != 0){
 				$(".menu-left div.indicators .item").hide();
 				$(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $(this).attr("axis-id")})).show();
 			}else{
 				$(".menu-left div.indicators .item").show();
 			}
-			$("#indicador-busca").val("");
+			$("#indicator-search").val("");
 
 		});
-		$("#axis_list .options").hover(function(){
+		$("#group_list .options").hover(function(){
 			if (typeof(t_categorias) != "undefined"){
 				if (t_categorias){
 					clearTimeout(t_categorias);
@@ -102,11 +102,11 @@ $(document).ready(function(){
 			}
 		},function(){
 			t_categorias = setTimeout(function(){
-				$("#axis_list .options").hide();
+				$("#group_list .options").hide();
 			},2000)	;
 		});
 
-		$("#indicador-busca").keyup(function(){
+		$("#indicator-search").keyup(function(){
 			if ($(this).val() != ""){
 				$(".indicators .item").hide();
 				var termo = $(this).val();
@@ -118,9 +118,9 @@ $(document).ready(function(){
 
 					return re.test( normalize($(this).text()) );
 				});
-				if ($("#axis_list .select").attr("axis-id") != 0 && $("#axis_list .select").attr("axis-id") != ""){
+				if ($("#group_list .select").attr("axis-id") != 0 && $("#group_list .select").attr("axis-id") != ""){
 					$(matches).each(function(index,element){
-						if ($(this).attr("axis-id") == $("#axis_list .select").attr("axis-id")){
+						if ($(this).attr("axis-id") == $("#group_list .select").attr("axis-id")){
 							$(this).fadeIn();
 						}
 					});
@@ -133,16 +133,16 @@ $(document).ready(function(){
 		});
 
 		function refreshIndicadores(){
-			$("#axis_list .options").hide();
-			if ($("#axis_list .select").attr("axis-id") != 0){
+			$("#group_list .options").hide();
+			if ($("#group_list .select").attr("axis-id") != 0){
 				$(".menu-left div.indicators .item").hide();
-				$(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $("#axis_list .select").attr("axis-id")})).show();
+				$(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $("#group_list .select").attr("axis-id")})).show();
 			}else{
 				$(".menu-left div.indicators .item").show();
 			}
-			if ($("#indicador-busca").val() != ""){
+			if ($("#indicator-search").val() != ""){
 				$(".indicators .item").hide();
-				var termo = $("#indicador-busca").val();
+				var termo = $("#indicator-search").val();
 				var matches = $('.indicators .item').filter(function() {
 					var match = normalize(termo);
 
@@ -151,8 +151,8 @@ $(document).ready(function(){
 
 					return re.test( normalize($(this).text()) );
 				});
-				if ($("#axis_list .select").attr("axis-id") != 0 && $("#axis_list .select").attr("axis-id") != ""){
-					$(matches).find("[axis-id='$$axis_id']".render({axis_id: $("#axis_list .select").attr("axis-id")})).fadeIn();
+				if ($("#group_list .select").attr("axis-id") != 0 && $("#group_list .select").attr("axis-id") != ""){
+					$(matches).find("[axis-id='$$axis_id']".render({axis_id: $("#group_list .select").attr("axis-id")})).fadeIn();
 				}else{
 					$(matches).fadeIn();
 				}
@@ -797,10 +797,10 @@ $(document).ready(function(){
 	function selectAxis(id){
 		var indicador = $(".indicators .item[indicator-id='$$id']".render({id: id}));
 
-		var eixo = $("#axis_list .option[axis-id='$$id']".render({id: $(indicador).attr("axis-id")}));
-		$("#axis_list .select").attr("axis-id",$(eixo).attr("axis-id"));
-		$("#axis_list .select .content-fill").html($(eixo).html());
-		$("#axis_list .options").hide();
+		var eixo = $("#group_list .option[axis-id='$$id']".render({id: $(indicador).attr("axis-id")}));
+		$("#group_list .select").attr("axis-id",$(eixo).attr("axis-id"));
+		$("#group_list .select .content-fill").html($(eixo).html());
+		$("#group_list .options").hide();
 		if ($(eixo).attr("axis-id") != 0){
 			$(".menu-left div.indicators .item").hide();
 			$(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $(eixo).attr("axis-id")})).show();
