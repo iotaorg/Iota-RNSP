@@ -16,4 +16,4 @@ before_script:
 notifications:
   irc:
     channels:
-      - "irc.aware.com.br#aware"
+      - "chat.freenode.net#iota"
