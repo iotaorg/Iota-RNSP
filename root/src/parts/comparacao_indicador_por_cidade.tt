@@ -6,7 +6,7 @@
         <p class="explanation">[%indicator.explanation%]</p>
 
         <div class="dados"><dl class="tabela dl-horizontal ">
-            <dt>Fórmula:</dt>
+            <dt>[%l('Fórmula')%]:</dt>
             <dd>[%indicator.formula_human%]</dd>
             [%IF indicator.goal_explanation%]
                 <dt>Referência de Meta:</dt>

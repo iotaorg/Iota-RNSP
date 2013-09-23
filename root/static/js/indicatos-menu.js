@@ -55,14 +55,10 @@
             _do_search = function () {
                 var val = $search.val().trim();
 
-                if (__old_search_val2 == val) {
+                if (__old_search_val2 == val || val === '') {
                     return false;
                 }
                 __old_search_val2 = val;
-
-                if (val === '') {
-                    return false;
-                }
 
                 var match = normalize(val),
                     _count = 0;
