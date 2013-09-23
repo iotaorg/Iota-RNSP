@@ -210,8 +210,8 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     );
 }
 
-sub list_indicators : Chained('institute_load') PathPart(':indicators') Args(0) {
-    my ( $self, $c ) = @_;
+sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Args(0) {
+    my ( $self, $c, $no_template ) = @_;
 
     my @countries = @{ $c->stash->{network_data}{countries} };
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
@@ -232,27 +232,134 @@ sub list_indicators : Chained('institute_load') PathPart(':indicators') Args(0) 
         }
     )->as_hashref->all;
 
-    my $groups = {};
+    my $city     = $c->stash->{city};
+
+    my $user_id = $city && $c->stash->{user} ? $c->stash->{user}{id} : undef;
+
+    my $id_vs_group_name = {};
+    my $groups   = {};
     my $group_id = 0;
+
+    my @custom_axis = $user_id ? $c->model('DB::UserIndicatorAxis')->search(
+        {
+            user_id => $user_id
+        },
+        {
+            prefetch => 'user_indicator_axis_items'
+        }
+    )->as_hashref->all : ();
+
+    if (@custom_axis){
+        my $ind_vs_group = {};
+
+        foreach my $g (@custom_axis) {
+
+            foreach ( @{$g->{user_indicator_axis_items}} ){
+                push @{ $ind_vs_group->{$_->{indicator_id}}}, $g->{name};
+            }
+        }
+
+        for my $i (@indicators){
+            next if !exists $ind_vs_group->{$i->{id}};
+
+            foreach my $group_name (@{$ind_vs_group->{$i->{id}}}){
+                if (!exists $groups->{ $group_name } ){
+                    $group_id++;
+
+                    $groups->{$group_name} = $group_id;
+                    $id_vs_group_name->{$group_id} = $group_name;
+                }
+
+                push @{$i->{groups}}, $groups->{$group_name};
+            }
+        }
+    }
+
+
+    my $region             = $c->stash->{region} ? { $c->stash->{region}->get_inflated_columns } : $c->stash->{region};
+
+    my $selected_indicator = $c->stash->{indicator};
+
+    my $active_group = {
+        name => 'Todos os indicadores',
+        id   => 0
+    };
+
+    my $institute = $c->stash->{institute};
+
+    my $count_used_groups = {};
+
     for my $i (@indicators){
 
         if (!exists $groups->{$i->{axis}{name}} ){
             $group_id++;
 
-            $groups->{$i->{axis}{name}} = {
-                group_id => $group_id
+            $id_vs_group_name->{$group_id} = $i->{axis}{name};
+            $groups->{$i->{axis}{name}} = $group_id;
+        }
+
+        my $group_id = $groups->{$i->{axis}{name}};
+
+        # se ja tem algum grupo, entao nao verifica se precisa inserir
+        if ($i->{groups} && @{$i->{groups}} > 0){
+            if (!$institute->bypass_indicator_axis_if_custom){
+                push @{$i->{groups}}, $group_id;
+                $count_used_groups->{$group_id}++;
+            }else{
+                $count_used_groups->{$group_id} = 0 if !exists $count_used_groups->{$group_id};
+            }
+        }else{
+            push @{$i->{groups}}, $group_id;
+
+            $count_used_groups->{$group_id}++;
+        }
+
+        if ($selected_indicator && $selected_indicator->{id} == $i->{id}){
+            $i->{selected} = 1;
+
+            $active_group = {
+                name => $id_vs_group_name->{$i->{groups}[0]},
+                id   => $i->{groups}[0]
             };
         }
 
-        push @{$i->{groups}}, $groups->{$i->{axis}{name}}{group_id};
+        if ($region) {
+
+            $i->{href} = join '/', '', $city->{pais}, $city->{uf}, $city->{name_uri}, 'regiao', $region->{name_url}, $i->{name_url};
+
+        } elsif ($city) {
+
+            $i->{href} = join '/', '', $city->{pais}, $city->{uf}, $city->{name_uri}, $i->{name_url};
+
+        }else{
+            $i->{href} = '/' . $i->{name_url};
+        }
+    }
+
+    # todos os $count_used_groups = 0 sao eixos (nao grupos), que nao
+    # foram usados em nenhum indicador.
+    while (my ($group_id, $count) = each %$count_used_groups){
+        next unless $count == 0;
+
+        delete $groups->{ $id_vs_group_name->{$group_id} };
+        delete $id_vs_group_name->{$group_id};
+    }
+
+
+    if ($active_group->{id}) {
+        for my $i (@indicators){
+            $i->{visible} = (grep {/^$active_group->{id}$/} @{$i->{groups}}) ? 1 : 0;
+        }
     }
 
     $c->stash(
         groups => $groups,
+        active_group => $active_group,
         indicators => \@indicators,
 
-        template   => 'list_indicators.tt'
     );
+
+    $c->stash(template => 'list_indicators.tt') if !$no_template;
 }
 
 sub download_redir : Chained('root') PathPart('download') Args(0) {
@@ -370,6 +477,7 @@ sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('') CaptureArgs(
 
     $self->stash_comparacao_distritos($c);
 
+    $c->forward('build_indicators_menu', [1]);
 }
 
 sub stash_distritos {
@@ -625,6 +733,8 @@ sub network_indicator : Chained('network_cidade') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $indicator ) = @_;
     $c->stash->{indicator} = $indicator;
     $self->stash_tela_indicator($c);
+
+    $c->forward('build_indicators_menu', [1]);
 }
 
 sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0) {
@@ -632,7 +742,7 @@ sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0)
     $c->stash( template => 'home_indicador.tt' );
 }
 
-sub network_indicador : Chained('institute_load') PathPart('') CaptureArgs(1) {
+sub home_network_indicator : Chained('institute_load') PathPart('') CaptureArgs(1) {
     my ( $self, $c, $nome ) = @_;
 
     $self->stash_indicator( $c, $nome );
@@ -651,9 +761,11 @@ sub network_indicador : Chained('institute_load') PathPart('') CaptureArgs(1) {
             without_wrapper => 1
         );
     }
+
+    $c->forward('build_indicators_menu', [1]);
 }
 
-sub network_indicador_render : Chained('network_indicador') PathPart('') Args(0) {
+sub home_network_indicator_render : Chained('home_network_indicator') PathPart('') Args(0) {
 }
 
 sub stash_indicator {

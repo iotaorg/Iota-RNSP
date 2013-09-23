@@ -478,7 +478,7 @@ for my $chain (qw/institute_load network_cidade cidade_regiao/) {
 
 #################
 
-for my $chain (qw/network_indicator network_indicador cidade_regiao_indicator/) {
+for my $chain (qw/network_indicator home_network_indicator cidade_regiao_indicator/) {
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('dados.$tipo') : CaptureArgs(0) {

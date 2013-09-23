@@ -3,7 +3,7 @@ table{
 }
 html {overflow-y: scroll;}
 @-ms-viewport { width: device-width; }
-
+#top img {max-height: 86px}
 .page-header{
 	background-image: url('/static/images/bg-top-gov.png');
 	background-repeat: no-repeat;
@@ -67,11 +67,11 @@ html {overflow-y: scroll;}
 }
 .indicators {
 	margin-top: 5px;
-	overflow: auto;
     max-height: 800px;
 }
 #indicators_list {
     height: 465px;
+    overflow: hidden;
 }
 
 .indicators .item{

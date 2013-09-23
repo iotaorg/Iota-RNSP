@@ -57,7 +57,7 @@ $(document).ready(function(){
 	}
 
 	function carregaIndicadores(){
-
+/*
 		$("#group_list").empty();
 
 		eixos_list.dados.sort(function (a, b) {
@@ -246,11 +246,12 @@ $(document).ready(function(){
 
             ga('send', 'pageview', url);
 		});
+*/
 
   	}
 
   	function activeMenuOfIndicator(id){
-
+/*
         indicadorID = id;
         selectAxis(id);
 
@@ -259,6 +260,7 @@ $(document).ready(function(){
 
         $(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
         $(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
+*/
     }
 
 	function carregaDadosTabela(){
@@ -795,18 +797,19 @@ $(document).ready(function(){
 
 
 	function selectAxis(id){
-		var indicador = $(".indicators .item[indicator-id='$$id']".render({id: id}));
+		/*var indicador = $(".indicators .item[indicator-id='$$id']".render({id: id}));
 
 		var eixo = $("#group_list .option[axis-id='$$id']".render({id: $(indicador).attr("axis-id")}));
 		$("#group_list .select").attr("axis-id",$(eixo).attr("axis-id"));
 		$("#group_list .select .content-fill").html($(eixo).html());
 		$("#group_list .options").hide();
+
 		if ($(eixo).attr("axis-id") != 0){
 			$(".menu-left div.indicators .item").hide();
 			$(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $(eixo).attr("axis-id")})).show();
 		}else{
 			$(".menu-left div.indicators .item").show();
-		}
+		}*/
 
 	}
 

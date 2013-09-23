@@ -1,29 +1,12 @@
 <div id="content" class="content">
     <div class="row" id="indicadores-dados">
         <div class="span4">
-            <div class="menu-left" lockfixed>
-                <div class="content-fill">
-                    <div class="title">[%l('Indicadores')%]</div>
-                    <div class="category" id="group_list">
-
-                    </div>
-                    <div class="control-group">
-                        <div class="controls">
-                            <div class="input-append">
-                                <input name="indicator-search" placeholder="[%l('Buscar por indicador')%]" id="indicator-search" type="text">
-                                <span class="add-on"><i class="icon-search"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="indicators">
-                        <div class="loading"><p>[%l('Carregando...')%]</p></div>
-                    </div>
-                </div>
+            <div lockfixed>
+            [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
         </div>
         <div class="span8">
             <div class="data-right" lockfixed>
-
                 [%INCLUDE 'parts/comparacao_indicador_por_cidade.tt'%]
             </div>
         </div>
