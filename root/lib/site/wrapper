@@ -4,7 +4,7 @@
 <link rel="icon"
       type="image/png"
       href="/static/images/favicon.png" />
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <title>[% template.title or site.title or title %]</title>
