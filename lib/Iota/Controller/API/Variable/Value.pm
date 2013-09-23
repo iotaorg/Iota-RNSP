@@ -142,7 +142,7 @@ sub variable_DELETE {
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $object;
 
     if ( $c->user->id == $object->owner->id || $c->check_any_user_role(qw(admin superadmin)) ) {
-        my $data = Iota::IndicatorData->new( schema => $c->model('DB') );
+        my $data = Iota::IndicatorData->new( schema => $c->model('DB')->schema );
 
         my $conf = {
             indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],

@@ -138,7 +138,7 @@ sub values_DELETE {
     if ( $c->user->id == $obj->user_id || $c->check_any_user_role(qw(admin superadmin)) ) {
         $c->logx( 'Apagou informação de indicator_valuess ' . $obj->id );
 
-        my $data = Iota::IndicatorData->new( schema => $c->model('DB') );
+        my $data = Iota::IndicatorData->new( schema => $c->model('DB')->schema );
 
         my $conf = {
             indicators =>
