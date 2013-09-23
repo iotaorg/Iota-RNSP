@@ -7,7 +7,7 @@
             $search = $('#indicator-search'),
             $status = $('#search_status'),
             _select_caption = '',
-            _current_group = '0',
+            _current_group = $groups.find('.select').attr('selected-id'),
             $select = $groups.find('.select:first'),
 
             _on_menu_click = function (event) {
@@ -20,7 +20,7 @@
                     _current_group = $me.attr('group-id');
 
                     // todo mundo
-                    if (_current_group === 0) {
+                    if (_current_group === '0') {
                         $list.find('.item').removeClass('hideimp');
                     } else {
                         $list.find('.item').addClass('hideimp');

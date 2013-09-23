@@ -1,88 +1,88 @@
 var api_path = "";
 var institute_info;
 var infowindow;
-var _show_info_name = function(event){
+var _show_info_name = function (event) {
     infowindow.setContent(this._data.name);
     infowindow.setPosition(event.latLng);
 
     infowindow.open(this._data.map);
 };
 
-var _change_colors = function(event){
+var _change_colors = function (event) {
 
-    $.each(this._data.list, function(a, b){
+    $.each(this._data.list, function (a, b) {
         b.setOptions({
             strokeColor: '#15d400',
             strokeOpacity: 0.8,
-            strokeWeight: 4,
+            strokeWeight: 4
         });
     });
 };
-var _restore_change_colors = function(event){
+var _restore_change_colors = function (event) {
 
-    $.each(this._data.list, function(a, b){
+    $.each(this._data.list, function (a, b) {
         b.setOptions({
             strokeColor: '#333',
             strokeOpacity: 0.6,
-            strokeWeight: 2,
+            strokeWeight: 2
         });
     });
 };
+
 function debounce(fn, delay) {
-  var timer = null;
-  return function () {
-    var context = this, args = arguments;
-    clearTimeout(timer);
-    timer = setTimeout(function () {
-      fn.apply(context, args);
-    }, delay);
-  };
+    var timer = null;
+    return function () {
+        var context = this,
+            args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            fn.apply(context, args);
+        }, delay);
+    };
 }
-(function($){
-    $.fn.disableSelection = function() {
-        return this
-                 .attr('unselectable', 'on')
-                 .css('user-select', 'none')
-                 .on('selectstart', false);
+(function ($) {
+    $.fn.disableSelection = function () {
+        return this.attr('unselectable', 'on')
+            .css('user-select', 'none')
+            .on('selectstart', false);
     };
 })(jQuery);
 
 //var api_path = "http://rnsp.aware.com.br";
-var _last_width=0;
+var _last_width = 0;
 
 if (!String.prototype.render) {
-	String.prototype.render = function(args) {
-		var copy = this + '';
-		for (var i in args) {
-			copy = copy.replace(RegExp('\\$\\$' + i, 'g'), args[i]);
-		}
-		return copy;
-	};
+    String.prototype.render = function (args) {
+        var copy = this + '';
+        for (var i in args) {
+            copy = copy.replace(RegExp('\\$\\$' + i, 'g'), args[i]);
+        }
+        return copy;
+    };
 }
 
-if (!Array.prototype.indexOf){
-  Array.prototype.indexOf = function(elt /*, from*/){
-    var len = this.length >>> 0;
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function (elt /*, from*/ ) {
+        var len = this.length >>> 0;
 
-    var from = Number(arguments[1]) || 0;
-    from = (from < 0)
-         ? Math.ceil(from)
-         : Math.floor(from);
-    if (from < 0)
-      from += len;
-
-    for (; from < len; from++){
-      if (from in this &&
-          this[from] === elt)
-        return from;
-    }
-    return -1;
-  };
+        var from = Number(arguments[1]) || 0;
+        from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+        if (from < 0) {
+            from += len;
+        }
+        for (; from < len; from++) {
+            if (from in this &&
+                this[from] === elt) {
+                return from;
+            }
+        }
+        return -1;
+    };
 }
 
 var _on_func = function (e) {
     var $elm = $(e.target);
-    if ($elm.hasClass('mapa')){
+    if ($elm.hasClass('mapa')) {
 
         var $place = $($elm.attr('href'));
         var idx = $place.find('[map_index]:first').attr('map_index');
@@ -91,14 +91,14 @@ var _on_func = function (e) {
         map.fitBounds(map_references_bound[idx]);
     }
 };
-$('a[data-toggle="tab"]').on('shown',_on_func);
+$('a[data-toggle="tab"]').on('shown', _on_func);
 
 if ('a,,b'.split(',').length < 3) {
     var nativeSplit = nativeSplit || String.prototype.split;
-    String.prototype.split = function (s /* separator */, limit) {
+    String.prototype.split = function (s /* separator */ , limit) {
         // If separator is not a regex, use the native split method
         if (!(s instanceof RegExp)) {
-                return nativeSplit.apply(this, arguments);
+            return nativeSplit.apply(this, arguments);
         }
 
         /* Behavior for limit: If it's...
@@ -140,7 +140,9 @@ if ('a,,b'.split(',').length < 3) {
                 if (match.length > 1) {
                     match[0].replace(s2, function () {
                         for (var j = 1; j < arguments.length - 2; j++) {
-                            if (arguments[j] === undefined) { match[j] = undefined; }
+                            if (arguments[j] === undefined) {
+                                match[j] = undefined;
+                            }
                         }
                     });
                 }
@@ -156,29 +158,29 @@ if ('a,,b'.split(',').length < 3) {
 
         return (lastLastIndex === this.length) ?
             (s.test("") ? output : output.concat("")) :
-            (limit      ? output : output.concat(this.slice(lastLastIndex)));
+            (limit ? output : output.concat(this.slice(lastLastIndex)));
     };
 }
 
 $.xhrPool = [];
-$.xhrPool.abortAll = function() {
-    $(this).each(function(idx, jqXHR) {
+$.xhrPool.abortAll = function () {
+    $(this).each(function (idx, jqXHR) {
         jqXHR.abort();
     });
-    $.xhrPool.length = 0
+    $.xhrPool.length = 0;
 };
 
 $.ajaxSetup({
-    beforeSend: function(jqXHR) {
+    beforeSend: function (jqXHR) {
         $.xhrPool.push(jqXHR);
         NProgress.start();
     },
-    complete: function(jqXHR) {
+    complete: function (jqXHR) {
         var index = $.xhrPool.indexOf(jqXHR);
         if (index > -1) {
             $.xhrPool.splice(index, 1);
         }
-        if ($.xhrPool.length == 0){
+        if ($.xhrPool.length === 0) {
 
             NProgress.done();
 
@@ -186,176 +188,184 @@ $.ajaxSetup({
     }
 });
 
-var findInJson = function(obj,key,value){
-	var found = false;
-	var key_found = "";
-	$.each(obj, function(key1,value1){
-		$.each(obj[key1], function(key2,value2){
-			if (key2 == key){
-				if (value2 == value){
-					found = true;
-					key_found = key1;
-					return false;
-				}
-			}
-		});
-	});
-	var retorno = {"found": found, "key": key_found}
-	return retorno;
-}
+var findInJson = function (obj, key, value) {
+    var found = false;
+    var key_found = "";
+    $.each(obj, function (key1, value1) {
+        $.each(obj[key1], function (key2, value2) {
+            if (key2 == key) {
+                if (value2 == value) {
+                    found = true;
+                    key_found = key1;
+                    return false;
+                }
+            }
+        });
+    });
+    var retorno = {
+        "found": found,
+        "key": key_found
+    };
+    return retorno;
+};
 
-var	convertDate = function(date,splitter){
-	var date_tmp = date.split(splitter);
-	var date = date_tmp[0];
-	var time = date_tmp[1];
+var convertDate = function (date, splitter) {
+    var date_tmp = date.split(splitter);
+    date = date_tmp[0];
+    var time = date_tmp[1];
 
-	var date_split = date.split("-");
+    var date_split = date.split("-");
 
-	return date_split[2] + "/" + date_split[1] + "/" + date_split[0];
-}
+    return date_split[2] + "/" + date_split[1] + "/" + date_split[0];
+};
 
-var convertDateToPeriod = function(date,period){
-	if (period == "yearly"){
-		return date.split("-")[0];
-	}else if (period == "monthly"){
-		return date.split("-")[1] + "/" + date.split("-")[0];
-	}
-}
+var convertDateToPeriod = function (date, period) {
+    if (period == "yearly") {
+        return date.split("-")[0];
+    } else if (period == "monthly") {
+        return date.split("-")[1] + "/" + date.split("-")[0];
+    }
+};
 
-var findInArray = function(obj,value){
-	if (value == "") return true;
-	var retorno = false;
-	for (a = 0; a < obj.length; a++){
-		if (obj[a] == value) retorno = true;
-	}
-	return retorno;
-}
+var findInArray = function (obj, value) {
+    if (value === "") {
+        return true;
+    }
+    var retorno = false;
+    for (a = 0; a < obj.length; a++) {
+        if (obj[a] == value) {
+            retorno = true;
+        }
+    }
+    return retorno;
+};
 
 
 var estados_sg = [];
 
-estados_sg.push(["Acre","AC"]);
-estados_sg.push(["Alagoas","AL"]);
-estados_sg.push(["Amapá","AP"]);
-estados_sg.push(["Amazonas","AM"]);
-estados_sg.push(["Bahia","BA"]);
-estados_sg.push(["Ceará","CE"]);
-estados_sg.push(["Distrito Federal","DF"]);
-estados_sg.push(["Espírito Santo","ES"]);
-estados_sg.push(["Goiás","GO"]);
-estados_sg.push(["Maranhão","MA"]);
-estados_sg.push(["Mato Grosso","MT"]);
-estados_sg.push(["Mato Grosso do Sul","MS"]);
-estados_sg.push(["Minas Gerais","MG"]);
-estados_sg.push(["Pará","PA"]);
-estados_sg.push(["Paraíba","PB"]);
-estados_sg.push(["Paraná","PR"]);
-estados_sg.push(["Pernambuco","PE"]);
-estados_sg.push(["Piauí","PI"]);
-estados_sg.push(["Rio de Janeiro","RJ"]);
-estados_sg.push(["Rio Grande do Norte","RN"]);
-estados_sg.push(["Rio Grande do Sul","RS"]);
-estados_sg.push(["Rondônia","RO"]);
-estados_sg.push(["Roraima","RR"]);
-estados_sg.push(["Santa Catarina","SC"]);
-estados_sg.push(["São Paulo","SP"]);
-estados_sg.push(["Sergipe","SE"]);
-estados_sg.push(["Tocantins","TO"]);
+estados_sg.push(["Acre", "AC"]);
+estados_sg.push(["Alagoas", "AL"]);
+estados_sg.push(["Amapá", "AP"]);
+estados_sg.push(["Amazonas", "AM"]);
+estados_sg.push(["Bahia", "BA"]);
+estados_sg.push(["Ceará", "CE"]);
+estados_sg.push(["Distrito Federal", "DF"]);
+estados_sg.push(["Espírito Santo", "ES"]);
+estados_sg.push(["Goiás", "GO"]);
+estados_sg.push(["Maranhão", "MA"]);
+estados_sg.push(["Mato Grosso", "MT"]);
+estados_sg.push(["Mato Grosso do Sul", "MS"]);
+estados_sg.push(["Minas Gerais", "MG"]);
+estados_sg.push(["Pará", "PA"]);
+estados_sg.push(["Paraíba", "PB"]);
+estados_sg.push(["Paraná", "PR"]);
+estados_sg.push(["Pernambuco", "PE"]);
+estados_sg.push(["Piauí", "PI"]);
+estados_sg.push(["Rio de Janeiro", "RJ"]);
+estados_sg.push(["Rio Grande do Norte", "RN"]);
+estados_sg.push(["Rio Grande do Sul", "RS"]);
+estados_sg.push(["Rondônia", "RO"]);
+estados_sg.push(["Roraima", "RR"]);
+estados_sg.push(["Santa Catarina", "SC"]);
+estados_sg.push(["São Paulo", "SP"]);
+estados_sg.push(["Sergipe", "SE"]);
+estados_sg.push(["Tocantins", "TO"]);
 
 var paises = [];
 
 paises["br"] = "Brasil";
 
 
-var normalize = function( term ) {
-	return term.latinize().toLowerCase();
+var normalize = function (term) {
+    return term.latinize().toLowerCase();
 };
 
 $.extend({
-    isNumber: function(o) {
-        return ! isNaN(o-0) && o !== null && o !== "" && o !== false;
+    isNumber: function (o) {
+        return !isNaN(o - 0) && o !== null && o !== "" && o !== false;
     },
-    formatNumberCustom: function(number, mask ){
+    formatNumberCustom: function (number, mask) {
 
-        if (number == null){
+        if (number === null) {
             return '-';
-        }else if ($.isNumber(number)){
+        } else if ($.isNumber(number)) {
             return $.formatNumber(number, mask);
-        }else{
-            if (number == '-'){
+        } else {
+            if (number == '-') {
                 return '-';
-            }else{
+            } else {
                 return '<abbr title="$$err">N/D</abbr>'.render({
                     err: number
                 });
             }
         }
     },
-	getUrlVars: function(){
-        var vars = [], hash;
+    getUrlVars: function () {
+        var vars = [],
+            hash;
         var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for(var i = 0; i < hashes.length; i++){
+        for (var i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
             vars.push(hash[0]);
             vars[hash[0]] = hash[1];
         }
         return vars;
     },
-    getUrlVars_url: function(url){
+    getUrlVars_url: function (url) {
         var vars = {}, hash;
 
-        if (url.indexOf('?')== -1){
+        if (url.indexOf('?') == -1) {
             return {};
         }
 
         var hashes = url.slice(url.indexOf('?') + 1).split('&');
 
-        for(var i = 0; i < hashes.length; i++){
+        for (var i = 0; i < hashes.length; i++) {
             hash = hashes[i].split('=');
             //vars.push(hash[0]);
             vars[hash[0]] = hash[1];
         }
         return vars;
     },
-    getPureUrl_url: function(url){
+    getPureUrl_url: function (url) {
         var vars = {}, hash;
 
-        if (url.indexOf('?')== -1){
+        if (url.indexOf('?') == -1) {
             return url;
         }
 
         return url.substr(0, url.indexOf('?'));
     },
-	getUrlVar: function(name){
-		return $.getUrlVars()[name];
-	},
-	getUrlParams: function(){
-		var params = window.location.href.split("?");
-		if (params.length > 1){
-			return "?" + params[1];
-		}else{
-			return "";
-		}
-	},
-	removeItemInArray: function(obj,removeItem){
-		obj = $.grep(obj, function(value) {
-		  return value != removeItem;
-		});
-		return obj;
-	},
-	setUrl: function(args, data){
-		var url = window.location.href;
+    getUrlVar: function (name) {
+        return $.getUrlVars()[name];
+    },
+    getUrlParams: function () {
+        var params = window.location.href.split("?");
+        if (params.length > 1) {
+            return "?" + params[1];
+        } else {
+            return "";
+        }
+    },
+    removeItemInArray: function (obj, removeItem) {
+        obj = $.grep(obj, function (value) {
+            return value != removeItem;
+        });
+        return obj;
+    },
+    setUrl: function (args, data) {
+        var url = window.location.href;
 
         url = $.update_url_params(url, args);
 
-        if ((url == window.location.href) == false){
+        if ((url == window.location.href) === false) {
             History.pushState(data, null, url);
         }
-	},
-    update_url_params: function(url, params){
+    },
+    update_url_params: function (url, params) {
 
         var aaa = $.getUrlVars_url(url);
-        $.each(params, function (a, b){
+        $.each(params, function (a, b) {
             aaa[a] = b;
         });
 
@@ -365,26 +375,29 @@ $.extend({
     }
 });
 
-$(document).ready(function(){
-	$.ajaxSetup({ cache: false });
+$(document).ready(function () {
+    $.ajaxSetup({
+        cache: false
+    });
 });
 
-function updateURLParameter(url, param, paramVal){
+function updateURLParameter(url, param, paramVal) {
     var aaa = {};
     aaa[param] = paramVal;
     return $.update_url_params(url, aaa);
 }
 
-function _resize_canvas () {
-    var $g = $('#main-graph'), w=$g.parent().width();
-    if (w != _last_width){
+function _resize_canvas() {
+    var $g = $('#main-graph'),
+        w = $g.parent().width();
+    if (w != _last_width) {
         $g.attr('width', w);
         $g.attr('height', w * 0.46);
         RGraph.Redraw();
     }
 }
 
-$(window).resize(function() {
+$(window).resize(function () {
     _resize_canvas();
 });
 var map_references = [];
@@ -395,16 +408,20 @@ var map_index = 0;
 if (!(typeof google == "undefined")) {
 
     var map_used_things = {};
+
     function initialize_maps() {
-        if (typeof load_map == "undefined")
+        if (typeof load_map == "undefined") {
             return false;
-        $.grep(load_map, function(xmap){
+        }
+        $.grep(load_map, function (xmap) {
 
-            if (xmap.polygons.length == 0)
+            if (xmap.polygons.length === 0) {
                 return true;
+            }
 
-            if (!$(xmap.map_elm)[0])
+            if (!$(xmap.map_elm)[0]) {
                 return true;
+            }
 
             var $elm = $(xmap.map_elm);
             $elm.parents('div.hideme:first').addClass('active');
@@ -419,21 +436,23 @@ if (!(typeof google == "undefined")) {
             map_index++;
 
 
-            if (!infowindow){
+            if (!infowindow) {
                 infowindow = new google.maps.InfoWindow();
             }
 
             var opacity = xmap.opacity ? xmap.opacity : 0.5;
 
-            google.maps.event.addListenerOnce(map, 'idle', function(){
+            google.maps.event.addListenerOnce(map, 'idle', function () {
 
-                $.each(xmap.polygons, function(a, elm){
+                $.each(xmap.polygons, function (a, elm) {
 
                     elm.list = Array();
 
-                    $.each(elm.p, function(aa, elm2){
+                    $.each(elm.p, function (aa, elm2) {
 
-                        if (elm2 == null) return true;
+                        if (elm2 === null) {
+                            return true;
+                        }
 
 
                         var zoo = {
@@ -455,15 +474,17 @@ if (!(typeof google == "undefined")) {
 
                         zoo.polygon.setMap(map);
 
-                        google.maps.event.addListener(zoo.polygon, 'click',_show_info_name);
+                        google.maps.event.addListener(zoo.polygon, 'click', _show_info_name);
                         google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
                         google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
 
-                        if (typeof map_used_things[xmap.map_elm] == "undefined")
+                        if (typeof map_used_things[xmap.map_elm] == "undefined") {
                             map_used_things[xmap.map_elm] = [];
+                        }
 
                         map_used_things[xmap.map_elm].push(zoo);
 
+                        return true;
                     });
 
 
@@ -471,30 +492,36 @@ if (!(typeof google == "undefined")) {
 
 
                 var super_bound = null;
-                $.each(map_used_things[xmap.map_elm], function(a, elm){
+                $.each(map_used_things[xmap.map_elm], function (a, elm) {
 
-                    if (super_bound == null){
+                    if (super_bound === null) {
                         super_bound = elm.polygon.getBounds();
                         return true;
                     }
 
-                    super_bound = super_bound.union( elm.polygon.getBounds() );
+                    super_bound = super_bound.union(elm.polygon.getBounds());
+                    return true;
                 });
 
-                if (!(super_bound == null)){
+                if (!(super_bound === null)) {
                     map.fitBounds(super_bound);
                     map_references_bound[map.__index] = super_bound;
                 }
 
                 $(xmap.map_elm).parents('div.hideme:first').removeClass('active');
+
+                return true;
             });
 
 
+            return true;
         });
+
+        return true;
     }
 
     if (!google.maps.Polygon.prototype.getBounds) {
-        google.maps.Polygon.prototype.getBounds = function(latLng) {
+        google.maps.Polygon.prototype.getBounds = function (latLng) {
 
             var bounds = new google.maps.LatLngBounds();
             var paths = this.getPaths();
@@ -508,7 +535,7 @@ if (!(typeof google == "undefined")) {
             }
 
             return bounds;
-        }
+        };
     }
     google.maps.event.addDomListener(window, 'load', initialize_maps);
 }
@@ -833,7 +860,6 @@ Latinise.latin_map = {
     "Ẋ": "X",
     "Ý": "Y",
     "Ŷ": "Y",
-    "Ÿ": "Y",
     "Ẏ": "Y",
     "Ỵ": "Y",
     "Ỳ": "Y",
@@ -1293,10 +1319,8 @@ Latinise.latin_map = {
     "ẘ": "w",
     "ẍ": "x",
     "ẋ": "x",
-    "ᶍ": "x",
     "ý": "y",
     "ŷ": "y",
-    "ÿ": "y",
     "ẏ": "y",
     "ỵ": "y",
     "ỳ": "y",
