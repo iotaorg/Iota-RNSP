@@ -385,12 +385,6 @@ sub resumo_GET {
 
                 # pronto, agora @datas ja tem a lista correta e na ordem!
                 foreach my $in (@$indicadores) {
-
-                if ($in->{id} == 111){
-                    use DDP; p $in;
-
-                }
-
                     my @valores;
                     foreach my $data (@datas_ar) {
                         unless ( exists $data->{data} ) {
