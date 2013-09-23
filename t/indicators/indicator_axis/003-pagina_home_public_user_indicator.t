@@ -238,7 +238,7 @@ eval {
                 'grupo 1 e 2 sao o mesmo indicador em grupos diferentes'
             );
             is( join( ',', @{ $obj->{resumos}{grupo1}{yearly}{indicadores}[0]{valores} } ),
-                '28.6,25.8,23.5', 'valores ok' );
+                '26.8,28.6,25.8,23.5', 'valores ok' );
 
             is( $obj->{resumos}{'Bens Naturais Comuns'}{weekly}{datas}[0]{data},
                 '2012-01-08', 'data da primeira semana ok' );
