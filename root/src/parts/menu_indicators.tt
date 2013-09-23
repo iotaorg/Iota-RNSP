@@ -1,7 +1,7 @@
 <div class="menu-left">
 
 <div class="category" id="group_list">
-    <div class="select" selected-id="[%active_group.id%]" data-select-title="[%l('Selecione um group para filtrar')%]">
+    <div class="select" selected-id="[%active_group.id%]" data-select-title="[%l('Selecione um grupo para filtrar')%]">
         [%-l( active_group.name )-%]
     </div>
     <div class="options" style="display: none;">
