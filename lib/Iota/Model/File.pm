@@ -39,14 +39,13 @@ sub process {
 
     my @vars_db =
       $schema->resultset('Variable')
-      ->search( { id => {in=>[ keys %varids ]} }, { select => [qw/id period/], as => [qw/id period/] } )->as_hashref->all;
+      ->search( { id => { in => [ keys %varids ] } }, { select => [qw/id period/], as => [qw/id period/] } )
+      ->as_hashref->all;
 
-
-    my %regsids = map { $_->{region_id} => 1} grep {$_->{region_id}} @{ $parse->{rows} };
+    my %regsids = map { $_->{region_id} => 1 } grep { $_->{region_id} } @{ $parse->{rows} };
     my @regs_db =
       $schema->resultset('Region')
-      ->search( { id => {in=>[ keys %regsids ]} }, { select => [qw/id/], as => [qw/id/] } )->as_hashref->all;
-
+      ->search( { id => { in => [ keys %regsids ] } }, { select => [qw/id/], as => [qw/id/] } )->as_hashref->all;
 
     # se tem menos variaveis no banco do que as enviadas
     if ( @vars_db < keys %varids ) {
@@ -58,7 +57,8 @@ sub process {
               unless $exists;
         }
         $status .= 'Arrume o arquivo e envie novamente.';
-    }elsif ( scalar keys %regsids != scalar @regs_db ) {
+    }
+    elsif ( scalar keys %regsids != scalar @regs_db ) {
         $status = '';
         foreach my $id ( keys %regsids ) {
             my $exists = grep { $_->{id} eq $id } @regs_db;
@@ -72,7 +72,7 @@ sub process {
         my %periods = map { $_->{id} => $_->{period} } @vars_db;
 
         my $user_id = $param{user_id};
-        my $file = $schema->resultset('File')->create(
+        my $file    = $schema->resultset('File')->create(
             {
                 name        => $upload->filename,
                 status_text => $status,
@@ -86,9 +86,10 @@ sub process {
 
         $schema->txn_do(
             sub {
-                my $with_region = {};
+                my $with_region    = {};
                 my $without_region = {};
-                my $cache_ref = {};
+                my $cache_ref      = {};
+
                 # percorre as linhas e insere no banco
                 # usando o modelo certo.
 
@@ -96,7 +97,7 @@ sub process {
 
                     my $ref = {
                         do_not_calc => 1,
-                        cache_ref => $cache_ref
+                        cache_ref   => $cache_ref
                     };
                     $ref->{variable_id}   = $r->{id};
                     $ref->{user_id}       = $user_id;
@@ -110,15 +111,15 @@ sub process {
                     if ( exists $r->{region_id} && $r->{region_id} ) {
                         $ref->{region_id} = $r->{region_id};
 
-                        $with_region->{variables}{$r->{id}} = 1;
-                        $with_region->{dates}{$r->{date}} = 1;
-                        $with_region->{regions}{$r->{region_id}} = 1;
+                        $with_region->{variables}{ $r->{id} }      = 1;
+                        $with_region->{dates}{ $r->{date} }        = 1;
+                        $with_region->{regions}{ $r->{region_id} } = 1;
 
                         eval { $rvv_rs->_put( $periods{ $r->{id} }, %$ref ); };
                     }
                     else {
-                        $without_region->{variables}{$r->{id}} = 1;
-                        $without_region->{dates}{$r->{date}} = 1;
+                        $without_region->{variables}{ $r->{id} } = 1;
+                        $without_region->{dates}{ $r->{date} }   = 1;
 
                         eval { $vv_rs->_put( $periods{ $r->{id} }, %$ref ); };
                     }
@@ -126,32 +127,24 @@ sub process {
                     die $@ if $@;
                 }
 
-
                 my $data = Iota::IndicatorData->new( schema => $schema->schema );
-                if (exists $with_region->{dates}){
+                if ( exists $with_region->{dates} ) {
                     $data->upsert(
-                        indicators => [ $data->indicators_from_variables( variables => [
-                            keys %{$with_region->{variables}}
-                        ] ) ],
-                        dates      => [
-                            keys %{$with_region->{dates}}
-                        ],
-                        regions_id      => [
-                            keys %{$with_region->{regions}}
-                        ],
+                        indicators =>
+                          [ $data->indicators_from_variables( variables => [ keys %{ $with_region->{variables} } ] ) ],
+                        dates      => [ keys %{ $with_region->{dates} } ],
+                        regions_id => [ keys %{ $with_region->{regions} } ],
                         user_id    => $user_id
                     );
                 }
 
-                if (exists $without_region->{dates}){
+                if ( exists $without_region->{dates} ) {
                     $data->upsert(
-                        indicators => [ $data->indicators_from_variables( variables => [
-                            keys %{$without_region->{variables}}
-                        ] ) ],
-                        dates      => [
-                            keys %{$without_region->{dates}}
+                        indicators => [
+                            $data->indicators_from_variables( variables => [ keys %{ $without_region->{variables} } ] )
                         ],
-                        user_id    => $user_id
+                        dates   => [ keys %{ $without_region->{dates} } ],
+                        user_id => $user_id
                     );
                 }
 

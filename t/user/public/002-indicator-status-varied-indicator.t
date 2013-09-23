@@ -493,8 +493,10 @@ sub _get {
         fail("JSON $url => $@") if $@;
         return $obj;
     }
-    eval('use DDP;
-    p $res;');
+    eval(
+        'use DDP;
+    p $res;'
+    );
     return undef;
 }
 

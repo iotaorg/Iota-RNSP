@@ -89,50 +89,52 @@ sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->response->headers->header( 'charset' => 'utf-8' );
 
-
-
 }
 
 sub public_lexicons : Chained('root') PathPart('public/lexicons') Args(0) {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
-    my $rs = $c->model('DB::Lexicon')->search(undef, {
-        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-    });
+    my $rs = $c->model('DB::Lexicon')->search(
+        undef,
+        {
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    );
 
     my $out = {};
-    while (my $r = $rs->next){
-        $out->{$r->{lang}}{$r->{lex_key}} = $r->{lex_value};
+    while ( my $r = $rs->next ) {
+        $out->{ $r->{lang} }{ $r->{lex_key} } = $r->{lex_value};
     }
 
-    $self->status_ok( $c, entity => {
-        lex   => $out,
-        langs   => [split /,/, $c->config->{forced_langs}],
-        default => $c->config->{default_lang}
-    });
+    $self->status_ok(
+        $c,
+        entity => {
+            lex     => $out,
+            langs   => [ split /,/, $c->config->{forced_langs} ],
+            default => $c->config->{default_lang}
+        }
+    );
 
 }
 
-
 sub lexicons : Chained('base') PathPart('lexicons') Args(0) {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
     my $ref = $c->req->params->{lex};
     $ref = [$ref] unless ref $ref eq 'ARRAY';
 
-    $c->set_lang($c->config->{default_lang});
-    foreach my $v (@$ref){
-        next if
-            $v =~ /^\s*$/ ||
-            $v !~ /[a-z]/i ||
-            $v =~ /^\s*[0-9]+\s*$/;
+    $c->set_lang( $c->config->{default_lang} );
+    foreach my $v (@$ref) {
+        next
+          if $v =~ /^\s*$/
+          || $v !~ /[a-z]/i
+          || $v =~ /^\s*[0-9]+\s*$/;
 
-        $c->loc($v, 'pt-br');
+        $c->loc( $v, 'pt-br' );
     }
 
-    $self->status_ok( $c, entity => { saved => 1 });
+    $self->status_ok( $c, entity => { saved => 1 } );
 }
-
 
 sub login : Chained('root') : PathPart('login') : Args(0) : ActionClass('REST') {
 }
@@ -190,31 +192,29 @@ sub base : Chained('logged_in') : PathPart('') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     my $inp = $c->req->params;
-    if (!exists $c->stash->{rest}{error} &&
-        $c->req->method =~ /PUT|POST/ &&
-        ref $inp eq 'HASH' &&
-        !exists $ENV{HARNESS_ACTIVE}){
+    if (   !exists $c->stash->{rest}{error}
+        && $c->req->method =~ /PUT|POST/
+        && ref $inp eq 'HASH'
+        && !exists $ENV{HARNESS_ACTIVE} ) {
 
         $c->set_lang( $c->config->{default_lang} );
 
-        foreach my $k ( keys %{$inp} ){
-            next if
-                $k =~ /password/ ||
-                $k =~ /email/ ||
-                $k =~ /formula/ ||
-                $k eq 'api_key' ||
-                $k eq 'arquivo' ||
-                $k eq 'lex'
-            ;
+        foreach my $k ( keys %{$inp} ) {
+            next
+              if $k =~ /password/
+              || $k =~ /email/
+              || $k =~ /formula/
+              || $k eq 'api_key'
+              || $k eq 'arquivo'
+              || $k eq 'lex';
 
             my $v = $inp->{$k};
             next if ref $v ne '';
 
-            next if
-                $v =~ /^\s*$/ ||
-                $v !~ /[a-z]/i ||
-                $v =~ /^\s*[0-9]+\s*$/
-            ;
+            next
+              if $v =~ /^\s*$/
+              || $v !~ /[a-z]/i
+              || $v =~ /^\s*[0-9]+\s*$/;
 
             $c->loc($v);
         }

@@ -246,8 +246,8 @@ sub list_PUT {
       unless $dm->success;
 
     my $objectect = $dm->get_outcome_for('variable.value.put');
-    $c->logx( ($objectect->value ? 'Atualizou valor ' . $objectect->value : 'Removeu o valor ')
-          . ' para '
+    $c->logx( ( $objectect->value ? 'Atualizou valor ' . $objectect->value : 'Removeu o valor ' )
+        . ' para '
           . $objectect->valid_from
           . ' na variavel '
           . $objectect->variable_id . ' ID '

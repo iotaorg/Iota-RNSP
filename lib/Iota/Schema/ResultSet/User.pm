@@ -358,7 +358,7 @@ sub action_specs {
         create => sub {
             my %values = shift->valid_values;
             delete $values{password_confirm};
-            delete $values{cur_lang}  unless $values{cur_lang};
+            delete $values{cur_lang} unless $values{cur_lang};
 
             my $role = delete $values{role};
 
@@ -382,7 +382,7 @@ sub action_specs {
             delete $values{password_confirm};
             delete $values{password} unless $values{password};
             delete $values{city_id}  unless $values{city_id};
-            delete $values{cur_lang}  unless $values{cur_lang};
+            delete $values{cur_lang} unless $values{cur_lang};
 
             delete $values{active} unless $values{active};
 

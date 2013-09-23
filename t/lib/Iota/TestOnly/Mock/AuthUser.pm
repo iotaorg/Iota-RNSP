@@ -15,6 +15,7 @@ sub roles { return @_roles; }
 sub id {
     return $_id;
 }
+
 sub cur_lang {
     return $cur_lang;
 }

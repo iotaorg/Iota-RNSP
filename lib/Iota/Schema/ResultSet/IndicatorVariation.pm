@@ -19,18 +19,16 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                name         => {
-                    required => 1,
-                    type => 'Str',
+                name => {
+                    required   => 1,
+                    type       => 'Str',
                     post_check => sub {
                         my $r = shift;
 
-                        my $schema    = $self->result_source->schema;
+                        my $schema = $self->result_source->schema;
 
-                        my $indicator = $schema->resultset('Indicator')->search(
-                            { id => $r->get_value('indicator_id') },
-                            { columns => ['user_id'] }
-                        )->next;
+                        my $indicator = $schema->resultset('Indicator')
+                          ->search( { id => $r->get_value('indicator_id') }, { columns => ['user_id'] } )->next;
 
                         return $self->search(
                             {
@@ -39,7 +37,7 @@ sub verifiers_specs {
                                 name         => $r->get_value('name'),
                             }
                         )->count == 0;
-                    }
+                      }
                 },
                 indicator_id => { required => 1, type => 'Int' },
                 order        => { required => 1, type => 'Int' },
@@ -50,20 +48,20 @@ sub verifiers_specs {
         update => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                id    => { required => 1, type => 'Int' },
-                name  => { required => 1, type => 'Str',
+                id   => { required => 1, type => 'Int' },
+                name => {
+                    required   => 1,
+                    type       => 'Str',
                     post_check => sub {
                         my $r = shift;
 
-                        my $schema    = $self->result_source->schema;
-                        my $me        = $self->find( $r->get_value('id') );
+                        my $schema = $self->result_source->schema;
+                        my $me     = $self->find( $r->get_value('id') );
 
                         return 1 if $me->name eq $r->get_value('name');
 
-                        my $indicator = $schema->resultset('Indicator')->search(
-                            { id => $me->indicator_id },
-                            { columns => ['user_id'] }
-                        )->next;
+                        my $indicator = $schema->resultset('Indicator')
+                          ->search( { id => $me->indicator_id }, { columns => ['user_id'] } )->next;
 
                         return $self->search(
                             {
@@ -72,7 +70,7 @@ sub verifiers_specs {
                                 name         => $r->get_value('name'),
                             }
                         )->count == 0;
-                    }
+                      }
                 },
                 order => { required => 0, type => 'Int' },
             },

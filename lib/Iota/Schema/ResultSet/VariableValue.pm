@@ -309,7 +309,7 @@ sub _put {
             variable_id => $values{variable_id},
             valid_from  => $dates->{period_begin}
         },
-        { select => ['id'], as => ['id']}
+        { select => ['id'], as => ['id'] }
     )->next;
 
     if ($row) {
@@ -347,7 +347,7 @@ sub _put {
         }
     }
 
-    if (!$dont_calc){
+    if ( !$dont_calc ) {
         my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
         $data->upsert(

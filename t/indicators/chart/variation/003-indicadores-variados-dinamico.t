@@ -107,7 +107,7 @@ eval {
                 ]
               );
 
-              &_post(
+            &_post(
                 202,
                 '/api/indicator/' . $indicator->{id} . '/variation/' . $variacoes[-1]{id},
                 [
@@ -115,9 +115,9 @@ eval {
                     'indicator.variation.update.name'  => 'outros',
                     'indicator.variation.update.order' => '5',
                 ]
-              );
+            );
 
-              &_post(
+            &_post(
                 400,
                 '/api/indicator/' . $indicator->{id} . '/variation/' . $variacoes[-1]{id},
                 [
@@ -125,10 +125,10 @@ eval {
                     'indicator.variation.update.name'  => 'Mais de 1 a 2 salários mínimos',
                     'indicator.variation.update.order' => '5',
                 ]
-              );
+            );
 
-              # nome repetido nao pode
-              &_post(
+            # nome repetido nao pode
+            &_post(
                 400,
                 '/api/indicator/' . $indicator->{id} . '/variation',
                 [
@@ -136,7 +136,7 @@ eval {
                     'indicator.variation.create.name'  => 'outros',
                     'indicator.variation.create.order' => '5',
                 ]
-              );
+            );
 
             for my $var (@variacoes) {
                 my $info = &_get( 200, '/api/indicator/' . $indicator->{id} . '/variation/' . $var->{id} );
@@ -309,8 +309,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
 
-                                'name' =>
-"Até 1/2 salário mínimo."
+                                'name' => "Até 1/2 salário mínimo."
                             },
                             {
 
@@ -319,8 +318,7 @@ eval {
                                     $subvar[0]{id} => 5,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-                                  "Mais de 1/2 a 1 salário mínimo."
+                                'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -329,8 +327,7 @@ eval {
                                     $subvar[0]{id} => 6,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-                                  "Mais de 1 a 2 salários mínimos."
+                                'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -363,8 +360,7 @@ eval {
                                     $subvar[0]{id} => 4,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-"Até 1/2 salário mínimo."
+                                'name' => "Até 1/2 salário mínimo."
                             },
                             {
 
@@ -373,8 +369,7 @@ eval {
                                     $subvar[0]{id} => 4,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-                                  "Mais de 1/2 a 1 salário mínimo."
+                                'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -383,8 +378,7 @@ eval {
                                     $subvar[0]{id} => 1,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-                                  "Mais de 1 a 2 salários mínimos."
+                                'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -417,8 +411,7 @@ eval {
                                     $subvar[0]{id} => 5,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-"Até 1/2 salário mínimo."
+                                'name' => "Até 1/2 salário mínimo."
                             },
                             {
 
@@ -427,8 +420,7 @@ eval {
                                     $subvar[0]{id} => 4,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-                                  "Mais de 1/2 a 1 salário mínimo."
+                                'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -437,8 +429,7 @@ eval {
                                     $subvar[0]{id} => 6,
                                     $subvar[1]{id} => 1,
                                 },
-                                'name' =>
-                                  "Mais de 1 a 2 salários mínimos."
+                                'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -472,8 +463,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
 
-                                'name' =>
-"Até 1/2 salário mínimo."
+                                'name' => "Até 1/2 salário mínimo."
                             },
                             {
 
@@ -483,8 +473,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
 
-                                'name' =>
-                                  "Mais de 1/2 a 1 salário mínimo."
+                                'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
@@ -495,8 +484,7 @@ eval {
                                     $subvar[1]{id} => 1,
                                 },
 
-                                'name' =>
-                                  "Mais de 1 a 2 salários mínimos."
+                                'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
@@ -637,8 +625,10 @@ sub _get {
         fail("JSON $url => $@") if $@;
         return $obj;
     }
-    eval ('use DDP;
-    p $res;');
+    eval(
+        'use DDP;
+    p $res;'
+    );
     return undef;
 }
 

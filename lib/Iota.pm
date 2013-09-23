@@ -22,7 +22,6 @@ use Catalyst qw/
   Static::Simple
   Params::Nested
 
-
   Authentication
   Authorization::Roles
 

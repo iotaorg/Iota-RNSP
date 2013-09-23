@@ -76,7 +76,7 @@ sub verifiers_specs {
                 goal_explanation => { required => 0, type => 'Str' },
                 sort_direction   => { required => 0, type => 'Str' },
 
-                variety_name   => { required => 0, type => 'Str' },
+                variety_name => { required => 0, type => 'Str' },
 
                 featured_in_home => { required => 0, type => 'Bool' },
 

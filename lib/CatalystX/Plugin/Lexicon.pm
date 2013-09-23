@@ -19,7 +19,7 @@ my $cache;
 my $current_lang;
 
 my $cache_lang_prefix = '/tmp/cache.lang.';
-my $cache_lang_file = "$cache_lang_prefix$$";
+my $cache_lang_file   = "$cache_lang_prefix$$";
 
 sub setup {
     my $c = shift;
@@ -32,7 +32,6 @@ sub setup {
 sub initialize_after_setup {
     my ( $self, $c ) = @_;
 
-
     $c->setup_lexicon_plugin($c);
 }
 
@@ -42,15 +41,14 @@ sub setup_lexicon_plugin {
     my $db = $c->model('DB');
     $resultset = $db->resultset('Lexicon');
 
-    $c->config->{default_lang} ||= 'pt-br';
-    $c->config->{forced_langs} ||= 'pt-br';
+    $c->config->{default_lang}   ||= 'pt-br';
+    $c->config->{forced_langs}   ||= 'pt-br';
     $c->config->{admin_langs_id} ||= 1;
 
     $current_lang = $c->config->{default_lang};
 
     $c->lexicon_reload_self;
 }
-
 
 sub lexicon_reload_all {
     my @files = glob("$cache_lang_prefix*");
@@ -59,14 +57,11 @@ sub lexicon_reload_all {
 
 sub lexicon_reload_self {
 
-    my @load = $resultset->search(
-        undef,
-        { result_class => 'DBIx::Class::ResultClass::HashRefInflator' }
-    )->all;
+    my @load = $resultset->search( undef, { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->all;
 
     $cache = {};
-    foreach my $r(@load){
-        $cache->{$r->{lang}}{$r->{lex_key}} = $r->{lex_value};
+    foreach my $r (@load) {
+        $cache->{ $r->{lang} }{ $r->{lex_key} } = $r->{lex_value};
     }
 
     open my $FG, '>', $cache_lang_file;
@@ -79,42 +74,45 @@ sub loc {
     my $default = $c->config->{default_lang};
 
     $origin_lang =
-        $origin_lang
-        ? $origin_lang
-        : $c->user
-            ? $c->user->cur_lang
-            : $default;
+        $origin_lang ? $origin_lang
+      : $c->user     ? $c->user->cur_lang
+      :                $default;
 
-    unless (-e $cache_lang_file){
+    unless ( -e $cache_lang_file ) {
         &lexicon_reload_self;
     }
 
-    if (exists $cache->{$current_lang}{$text}){
+    if ( exists $cache->{$current_lang}{$text} ) {
         return $cache->{$current_lang}{$text};
-    }else {
+    }
+    else {
 
         my $user_id = $c->user ? $c->user->id : $c->config->{admin_langs_id};
         my @add_langs = split /,/, $c->config->{forced_langs};
 
-        foreach my $lang (@add_langs){
+        foreach my $lang (@add_langs) {
             my $str = $lang eq $origin_lang ? $text : "? $text";
             $cache->{$lang}{$text} = $str;
 
-            my $exists = $resultset->search({
-                lex       => '*',
-                lang      => $lang,
-                lex_key   => $text,
-            })->count;
+            my $exists = $resultset->search(
+                {
+                    lex     => '*',
+                    lang    => $lang,
+                    lex_key => $text,
+                }
+            )->count;
 
-            if ($exists == 0){
-                $resultset->create({
-                    lex         => '*',
-                    lang        => $lang,
-                    lex_key     => $text,
-                    lex_value   => $str,
-                    user_id     => $user_id,
-                    origin_lang => $origin_lang
-                });
+            if ( $exists == 0 ) {
+                $resultset->create(
+                    {
+                        lex         => '*',
+                        lang        => $lang,
+                        lex_key     => $text,
+                        lex_value   => $str,
+                        user_id     => $user_id,
+                        origin_lang => $origin_lang
+                    }
+                );
             }
         }
         return $current_lang eq $origin_lang ? $text : "? $text";
@@ -123,7 +121,7 @@ sub loc {
 }
 
 sub set_lang {
-    my (  $c, $lang) = @_;
+    my ( $c, $lang ) = @_;
     $current_lang = $lang;
 }
 

@@ -782,7 +782,7 @@ $(document).ready(function () {
         }
 
         if (heatCluster) {
-            heatCluster.setMap(null)
+            heatCluster.setMap(null);
         }
 
         var markers = [];

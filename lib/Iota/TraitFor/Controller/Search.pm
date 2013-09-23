@@ -46,7 +46,7 @@ around list_GET => sub {
     if ( @columns && !$c->stash->{rest}{error} ) {
 
         my $lang = $c->req->params->{lang};
-        $c->set_lang( $lang ) if $lang;
+        $c->set_lang($lang) if $lang;
 
         # start: pra nao precisar alterar os controllers hj,
         # vamos pegar a primeira chave (porque geralmente só tem uma, e
@@ -68,11 +68,11 @@ around list_GET => sub {
                     my $ref = eval { $data->{$f} };
                     $ref = eval { $ref->{$_} } for (@subkeys);
 
-                    push @row, $enabled ? $self->_loc_str($c, $ref) : $ref;
+                    push @row, $enabled ? $self->_loc_str( $c, $ref ) : $ref;
                 }
                 else {
                     if ( $colNm eq '_' ) { push @row, undef; next }
-                    push @row, $enabled ? $self->_loc_str($c, $data->{$colNm}) : $data->{$colNm};
+                    push @row, $enabled ? $self->_loc_str( $c, $data->{$colNm} ) : $data->{$colNm};
                 }
             }
             push @aaData, \@row;
@@ -84,7 +84,7 @@ around list_GET => sub {
 };
 
 sub _loc_str {
-    my ($self, $c, $str) = @_;
+    my ( $self, $c, $str ) = @_;
 
     return $str unless $str =~ /[A-Za-z]/o;
     return $str if $str =~ /CONCATENAR/o;

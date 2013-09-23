@@ -195,7 +195,7 @@ sub resumo_GET {
 
     $c->forward('/institute_load');
     eval {
-        my $user_id = $c->stash->{user_obj}->id;
+        my $user_id   = $c->stash->{user_obj}->id;
         my $institute = $c->stash->{user_obj}->institute;
 
         my @hide_indicator =
@@ -213,17 +213,16 @@ sub resumo_GET {
         my $rs_confs = $c->model('DB::IndicatorNetworkConfig')->search(
             {
                 'me.indicator_id' => { '-not_in' => \@hide_indicator },
-                'me.network_id' => $c->stash->{network}->id
+                'me.network_id'   => $c->stash->{network}->id
             },
             {
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
             }
         );
         my $indicator_conf = {};
-        while (my $r = $rs_confs->next){
-            $indicator_conf->{$r->{indicator_id}} = $r;
+        while ( my $r = $rs_confs->next ) {
+            $indicator_conf->{ $r->{indicator_id} } = $r;
         }
-
 
         my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
@@ -317,17 +316,18 @@ sub resumo_GET {
                 }
 
                 my @group_list = ();
-                if (exists $custom_axis->{$indicator_id}){
+                if ( exists $custom_axis->{$indicator_id} ) {
                     push @group_list, $indicator->axis->name
-                        unless $institute->bypass_indicator_axis_if_custom;
+                      unless $institute->bypass_indicator_axis_if_custom;
 
                     push @group_list, @{ $custom_axis->{$indicator_id} };
-                }else{
-                    push @group_list, $indicator->axis->name
+                }
+                else {
+                    push @group_list, $indicator->axis->name;
                 }
 
                 foreach my $axis (@group_list) {
-                    my $config = $indicator_conf->{$indicator->id};
+                    my $config = $indicator_conf->{ $indicator->id };
 
                     push(
                         @{ $ret->{resumos}{$axis}{$periodo}{indicadores} },
@@ -540,8 +540,6 @@ sub indicator_status_GET {
         $self->status_ok( $c, entity => $ret );
     }
 }
-
-
 
 1;
 

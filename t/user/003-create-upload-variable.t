@@ -103,26 +103,31 @@ eval {
             is( $values[0]->valid_from->ymd, '2012-01-01', 'valid from ok' );
             is( $values[1]->valid_from->ymd, '2013-01-01', 'valid from ok' );
 
-            is( $values[0]->value, '0', 'value ok' );
-            is( $values[1]->value, '1', 'value ok' );
+            is( $values[0]->value,  '0',          'value ok' );
+            is( $values[1]->value,  '1',          'value ok' );
             is( $values[1]->source, 'outração', 'source ok' );
 
             is( $values[0]->observations, undef, 'observations ok' );
             is( $values[0]->source, 'isso eh uma fonte', 'source ok' );
 
-            my @sources = $schema->resultset('Source')->search(undef, {
-                order_by => 'id'
-            })->all;
+            my @sources = $schema->resultset('Source')->search(
+                undef,
+                {
+                    order_by => 'id'
+                }
+            )->all;
             is( scalar @sources, '5', 'tem as cinco fontes!' );
-            is_deeply([
-                map {$_->name} @sources
-            ], [
-                'isso eh uma fonte',# xlsx
-                'puntuação',# xlsx
-                'segunda fonte', # xlsx
-                'atenção', # xls
-                'outração' # csv
-            ], 'fontes ok');
+            is_deeply(
+                [ map { $_->name } @sources ],
+                [
+                    'isso eh uma fonte',    # xlsx
+                    'puntuação',          # xlsx
+                    'segunda fonte',        # xlsx
+                    'atenção',            # xls
+                    'outração'            # csv
+                ],
+                'fontes ok'
+            );
 
             die 'rollback';
         }

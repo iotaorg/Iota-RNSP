@@ -49,7 +49,7 @@ eval {
             is( $res->code, 201, 'created!' );
 
             my $now2 = $rs->count;
-            is ($now2, $now, 'ok, not inserted');
+            is( $now2, $now, 'ok, not inserted' );
 
             delete $ENV{HARNESS_ACTIVE};
             ( $res, $c ) = ctx_request(
@@ -70,25 +70,31 @@ eval {
             is( $res->code, 201, 'created!' );
 
             my $now3 = $rs->count;
-            is ($now3, $now+10, 'inserted 10 rows 5+5');
+            is( $now3, $now + 10, 'inserted 10 rows 5+5' );
 
-            my @all = $rs->search({
-                user_id => $Iota::TestOnly::Mock::AuthUser::_id
-            })->all;
+            my @all = $rs->search(
+                {
+                    user_id => $Iota::TestOnly::Mock::AuthUser::_id
+                }
+            )->all;
 
             my $out = {
                 'pt-br' => [],
-                'es' => []
+                'es'    => []
             };
             foreach (@all) {
-                push @{$out->{$_->lang}}, $_->lex_value;
+                push @{ $out->{ $_->lang } }, $_->lex_value;
             }
-            $out->{$_} = [sort {$a cmp $b} @{$out->{$_}}] for qw/pt-br es/;
+            $out->{$_} = [ sort { $a cmp $b } @{ $out->{$_} } ] for qw/pt-br es/;
 
-            is_deeply($out, {
-                'pt-br' => ['int', 'isso_daqui2', 'testando', 'todos', 'yearly'],
-                'es' => ['? int', '? isso_daqui2', '? testando', '? todos', '? yearly']
-            }, 'ok');
+            is_deeply(
+                $out,
+                {
+                    'pt-br' => [ 'int',   'isso_daqui2',   'testando',   'todos',   'yearly' ],
+                    'es'    => [ '? int', '? isso_daqui2', '? testando', '? todos', '? yearly' ]
+                },
+                'ok'
+            );
             die 'rollback';
         }
     );

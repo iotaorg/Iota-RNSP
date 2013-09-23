@@ -31,7 +31,6 @@ sub upsert {
         push @{ $indicator_variables->{ $var->indicator_id } }, $var->variable_id;
     }
 
-
     # procura pelos valores salvos
     my $values_rs = $self->schema->resultset('VariableValue');
     $values_rs = $values_rs->search( { valid_from => $params{dates} } ) if exists $params{dates};
@@ -153,7 +152,7 @@ sub upsert {
 
                 # se nao foi informado a regiao, nao tem calculo dela.
                 exists $params{regions_id}
-                ? ( 'me.region_id' => {'in'=>$params{regions_id}}, )
+                ? ( 'me.region_id' => { 'in' => $params{regions_id} }, )
                 : ( 'me.region_id' => undef ),
 
             };

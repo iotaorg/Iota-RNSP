@@ -7,7 +7,6 @@ use JSON;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-
 use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common;
@@ -65,19 +64,18 @@ eval {
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
 
-
             my $indicator = eval { from_json( $res->content ) };
 
             ok( my $save_test = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
                 'indicator in DB' );
-            is( $save_test->name,          'Divisão Modal',     'name ok' );
-            is( $save_test->name_url,      'divisao-modal',     'name ok' );
-            is( $save_test->explanation,   'explanation', 'explanation ok' );
-            is( $save_test->source,        'me',          'source ok' );
-            is( $save_test->observations,  'lala',        'observations ok' );
-            is( $save_test->chart_name,    'pie',         'chart_name ok' );
-            is( $save_test->period,        'weekly',      'period ok' );
-            is( $save_test->variable_type, 'int',         'variable_type ok' );
+            is( $save_test->name,          'Divisão Modal', 'name ok' );
+            is( $save_test->name_url,      'divisao-modal',  'name ok' );
+            is( $save_test->explanation,   'explanation',    'explanation ok' );
+            is( $save_test->source,        'me',             'source ok' );
+            is( $save_test->observations,  'lala',           'observations ok' );
+            is( $save_test->chart_name,    'pie',            'chart_name ok' );
+            is( $save_test->period,        'weekly',         'period ok' );
+            is( $save_test->variable_type, 'int',            'variable_type ok' );
 
             use URI;
             my $uri = URI->new( $res->header('Location') );
@@ -131,7 +129,6 @@ eval {
 die $@ unless $@ =~ /rollback/;
 
 done_testing;
-
 
 sub new_var {
     my $type   = shift;

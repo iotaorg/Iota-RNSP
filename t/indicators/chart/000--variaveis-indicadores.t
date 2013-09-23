@@ -75,8 +75,6 @@ eval {
             );
             ok( $res->is_success, 'variable created!' );
 
-
-
             my $uri2 = URI->new( $res->header('Location') . '/value' );
             my $var2 = eval { from_json( $res->content ) };
 
@@ -101,11 +99,8 @@ eval {
             ok( $res->is_success, 'indicator created!' );
             my $indicator = eval { from_json( $res->content ) };
 
-
-
             $Iota::TestOnly::Mock::AuthUser::_id    = 4;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
-
 
             my $variable_url = $uri->path_query;
 
@@ -162,11 +157,8 @@ eval {
             ok( $res->is_success, 'indicator created!' );
             $indicator = eval { from_json( $res->content ) };
 
-
             $Iota::TestOnly::Mock::AuthUser::_id    = 4;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
-
-
 
             ( $res, $c ) = ctx_request( GET '/download-indicators?user_id=4' );
             ok( $res->is_success, 'get is ok' );
@@ -274,52 +266,54 @@ eval {
 
             is( @{ $obj->{data} }, 0, "Inverse test Download by all parameters combined in a date range." );
 
-             ($res, $c) = ctx_request(GET '/download-variables?user_id=4');
+            ( $res, $c ) = ctx_request( GET '/download-variables?user_id=4' );
             ok( $res->is_success, 'get is ok' );
 
-            $obj = eval { from_json ( $res->content ) };
-            is( @{ $obj->{data} }, 2, "Download variables by user.");
+            $obj = eval { from_json( $res->content ) };
+            is( @{ $obj->{data} }, 2, "Download variables by user." );
 
-            ($res, $c) = ctx_request(GET '/download-variables?valid_from=2012-01-01');
+            ( $res, $c ) = ctx_request( GET '/download-variables?valid_from=2012-01-01' );
             ok( $res->is_success, 'get is ok' );
 
-            $obj = eval { from_json ( $res->content ) };
+            $obj = eval { from_json( $res->content ) };
 
-            is( @{ $obj->{data} }, 2, "Download variables by single date.");
+            is( @{ $obj->{data} }, 2, "Download variables by single date." );
 
-            ($res, $c) = ctx_request(GET '/download-variables?valid_from_begin=2012-01-01');
+            ( $res, $c ) = ctx_request( GET '/download-variables?valid_from_begin=2012-01-01' );
             ok( $res->is_success, 'get is ok' );
 
-            $obj = eval { from_json ( $res->content ) };
+            $obj = eval { from_json( $res->content ) };
 
-            is( @{ $obj->{data} }, 2, "Download variables by begining date.");
+            is( @{ $obj->{data} }, 2, "Download variables by begining date." );
 
-            ($res, $c) = ctx_request(GET '/download-variables?valid_from_end=2012-01-01');
+            ( $res, $c ) = ctx_request( GET '/download-variables?valid_from_end=2012-01-01' );
             ok( $res->is_success, 'get is ok' );
 
-            $obj = eval { from_json ( $res->content ) };
-            is( @{ $obj->{data} }, 2, "Download variables by ending date.");
+            $obj = eval { from_json( $res->content ) };
+            is( @{ $obj->{data} }, 2, "Download variables by ending date." );
 
-            ($res, $c) = ctx_request(GET '/download-variables?variable_id='.$var->{id});
+            ( $res, $c ) = ctx_request( GET '/download-variables?variable_id=' . $var->{id} );
             ok( $res->is_success, 'get is ok' );
 
-            $obj = eval { from_json ( $res->content ) };
+            $obj = eval { from_json( $res->content ) };
 
-            is( @{ $obj->{data} }, 1, "Download variables by indicator.");
+            is( @{ $obj->{data} }, 1, "Download variables by indicator." );
 
+            ( $res, $c ) =
+              ctx_request( GET '/download-variables?user_id=4&valid_from=2012-01-01&variable_id=' . $var->{id} );
 
-            ($res, $c) = ctx_request(GET '/download-variables?user_id=4&valid_from=2012-01-01&variable_id='.$var->{id});
+            $obj = eval { from_json( $res->content ) };
 
-            $obj = eval { from_json ( $res->content ) };
+            is( @{ $obj->{data} }, 1, "Download variables by all parameters combined and a single date." );
 
-            is( @{ $obj->{data} }, 1, "Download variables by all parameters combined and a single date.");
+            ( $res, $c ) = ctx_request(
+                GET '/download-variables?user_id=4&valid_from_begin=2012-01-01&valid_from_end=2014-01-01&variable_id='
+                  . $var->{id} . ','
+                  . $var2->{id} );
 
-            ($res, $c) = ctx_request(GET '/download-variables?user_id=4&valid_from_begin=2012-01-01&valid_from_end=2014-01-01&variable_id='.$var->{id}.','.$var2->{id});
+            $obj = eval { from_json( $res->content ) };
 
-            $obj = eval { from_json ( $res->content ) };
-
-            is( @{ $obj->{data} }, 2, "Download variables by all parameters combined in a date range.");
-
+            is( @{ $obj->{data} }, 2, "Download variables by all parameters combined in a date range." );
 
             die 'rollback';
         }
@@ -334,7 +328,6 @@ done_testing;
 sub add_value {
     my ( $variable_url, $date, $value ) = @_;
 
-
     my $req = POST $variable_url,
       [
         'variable.value.put.value'         => $value,
@@ -344,8 +337,6 @@ sub add_value {
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value . ' on ' . $date . ' created!' );
     my $variable = eval { from_json( $res->content ) };
-
-
 
     return $variable;
 

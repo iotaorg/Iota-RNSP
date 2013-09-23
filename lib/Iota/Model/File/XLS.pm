@@ -71,14 +71,14 @@ sub parse {
                     $value =~ s/^\s+//;
                     $value =~ s/\s+$//;
 
-                    $value = decode('iso-8859-15', $value);
+                    $value = decode( 'iso-8859-15', $value );
                     $registro->{$header_name} = $value;
                 }
 
                 if ( exists $registro->{id} && exists $registro->{date} && exists $registro->{value} ) {
 
                     $registro->{date} =
-                        $registro->{date} =~ /^20[0123][0-9]$/        ? $registro->{date} . '-01-01'
+                        $registro->{date} =~ /^20[0123][0-9]$/       ? $registro->{date} . '-01-01'
                       : $registro->{date} =~ /^\d{4}\-\d{2}\-\d{2}$/ ? $registro->{date}
                       :   DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
                     $ok++;

@@ -267,8 +267,10 @@ sub add_value {
     my ( $res, $c ) = ctx_request($req);
     ok( $res->is_success, 'value ' . $value . ' on ' . $date . ' created!' );
     if ( !$res->is_success ) {
-        eval('use DDP;
-        p $res;');
+        eval(
+            'use DDP;
+        p $res;'
+        );
     }
     my $variable = eval { from_json( $res->content ) };
     return $variable;

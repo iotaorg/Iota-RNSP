@@ -35,7 +35,7 @@ eval {
                 [
                     api_key                          => 'test',
                     'indicator.create.name'          => 'Foo Bar',
-                    'indicator.create.formula'       => '5 ' ,
+                    'indicator.create.formula'       => '5 ',
                     'indicator.create.axis_id'       => '2',
                     'indicator.create.explanation'   => 'explanation',
                     'indicator.create.source'        => 'me',

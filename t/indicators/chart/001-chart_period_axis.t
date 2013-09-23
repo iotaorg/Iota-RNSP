@@ -125,10 +125,9 @@ eval {
 
             );
 
-
             my $data = $chart->data(
                 group_by => 'yearly',
-                user_id   => $Iota::TestOnly::Mock::AuthUser::_id,
+                user_id  => $Iota::TestOnly::Mock::AuthUser::_id,
             );
 
             ( $res, $c ) = ctx_request( GET $uri_chart->path_query . '?group_by=yearly' );

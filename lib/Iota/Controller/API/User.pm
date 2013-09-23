@@ -414,9 +414,10 @@ sub list_POST {
     $c->req->params->{user}{create}{role} ||= 'user';
     if ( $c->req->params->{user}{create}{role} eq 'user' ) {
         my @foo = $c->user->networks ? $c->user->networks->all : ();
-        if (@foo){
+        if (@foo) {
             $c->req->params->{user}{create}{network_id} ||= join ',', map { $_->id } @foo;
-        }else{
+        }
+        else {
             # tests...
             $c->req->params->{user}{create}{network_id} ||= $c->user->network_id;
         }

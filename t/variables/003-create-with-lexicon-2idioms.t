@@ -49,7 +49,7 @@ eval {
             is( $res->code, 201, 'created!' );
 
             my $now2 = $rs->count;
-            is ($now2, $now, 'ok, not inserted');
+            is( $now2, $now, 'ok, not inserted' );
 
             $Iota::TestOnly::Mock::AuthUser::cur_lang = 'es';
             delete $ENV{HARNESS_ACTIVE};
@@ -71,32 +71,38 @@ eval {
             is( $res->code, 201, 'created!' );
 
             my $now3 = $rs->count;
-            is ($now3, $now+10, 'inserted 10 rows 5+5');
+            is( $now3, $now + 10, 'inserted 10 rows 5+5' );
 
-            my @all = $rs->search({
-                user_id => $Iota::TestOnly::Mock::AuthUser::_id
-            })->all;
+            my @all = $rs->search(
+                {
+                    user_id => $Iota::TestOnly::Mock::AuthUser::_id
+                }
+            )->all;
 
             my $out = {
                 'pt-br' => [],
-                'es' => []
+                'es'    => []
             };
             foreach (@all) {
-                push @{$out->{$_->lang}}, $_->lex_value;
+                push @{ $out->{ $_->lang } }, $_->lex_value;
             }
-            $out->{$_} = [sort {$a cmp $b} @{$out->{$_}}] for qw/pt-br es/;
+            $out->{$_} = [ sort { $a cmp $b } @{ $out->{$_} } ] for qw/pt-br es/;
 
-            is_deeply($out, {
-                'pt-br' => ['? decir', '? desarrollando', '? espanhol', '? int', '? yearly'],
-                'es' => ['decir', 'desarrollando', 'espanhol', 'int', 'yearly']
-            }, 'ok');
+            is_deeply(
+                $out,
+                {
+                    'pt-br' => [ '? decir', '? desarrollando', '? espanhol', '? int', '? yearly' ],
+                    'es'    => [ 'decir',   'desarrollando',   'espanhol',   'int',   'yearly' ]
+                },
+                'ok'
+            );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/lexicons',
                 [
-                    api_key    => 'test',
-                    'lex'      => 'desarrollando',
-                    'lex'      => 'decir',
+                    api_key => 'test',
+                    'lex'   => 'desarrollando',
+                    'lex'   => 'decir',
                 ]
             );
             ok( $res->is_success, 'ok!' );

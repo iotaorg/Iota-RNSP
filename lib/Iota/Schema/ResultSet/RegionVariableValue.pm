@@ -240,7 +240,8 @@ sub action_specs {
 
                 die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
 
-                die "cannot save subregion value before upper region tell subregions is valid [$value_of_date, ${\$upper->subregions_valid_after}, ${\$region->id}]\n"
+                die
+"cannot save subregion value before upper region tell subregions is valid [$value_of_date, ${\$upper->subregions_valid_after}, ${\$region->id}]\n"
                   if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
             }
@@ -333,23 +334,23 @@ sub _put {
     my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
     # confere se a regiao eh mesmo da cidade desse usuario
-    my $region = $cache_ref && exists $cache_ref->{reg}{$values{region_id}}
-        ? $cache_ref->{reg}{$values{region_id}}
-        : $schema->resultset('Region')->search(
-        { 'me.id' => $values{region_id}},
+    my $region =
+        $cache_ref && exists $cache_ref->{reg}{ $values{region_id} }
+      ? $cache_ref->{reg}{ $values{region_id} }
+      : $schema->resultset('Region')->search(
+        { 'me.id' => $values{region_id} },
         {
             prefetch => 'upper_region'
         }
-    )->next;
-    $cache_ref->{reg}{$values{region_id}} = $region if $cache_ref;
+      )->next;
+    $cache_ref->{reg}{ $values{region_id} } = $region if $cache_ref;
 
-    my $user   = $cache_ref && exists $cache_ref->{usr}{$values{user_id}}
-        ? $cache_ref->{usr}{$values{user_id}}
-        : $schema->resultset('User')->search(
-            { id => $values{user_id} },
-            { select => ['city_id'], as => ['city_id'] }
-        )->next;
-    $cache_ref->{usr}{$values{user_id}} = $user if $cache_ref;
+    my $user =
+        $cache_ref && exists $cache_ref->{usr}{ $values{user_id} }
+      ? $cache_ref->{usr}{ $values{user_id} }
+      : $schema->resultset('User')->search( { id => $values{user_id} }, { select => ['city_id'], as => ['city_id'] } )
+      ->next;
+    $cache_ref->{usr}{ $values{user_id} } = $user if $cache_ref;
 
     if ( $user->city_id && $region->city_id != $user->city_id ) {
         die 'Illegal region for user.';
@@ -367,7 +368,8 @@ sub _put {
         my $upper = $region->upper_region;
 
         die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
-        die "cannot save subregion value before upper region tell subregions is valid [$value_of_date, ${\$upper->subregions_valid_after}, ${\$region->id}]\n"
+        die
+"cannot save subregion value before upper region tell subregions is valid [$value_of_date, ${\$upper->subregions_valid_after}, ${\$region->id}]\n"
           if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
     }
@@ -382,7 +384,7 @@ sub _put {
             valid_from           => $dates->{period_begin},
             generated_by_compute => undef
         },
-        { select => ['id'], as => ['id']}
+        { select => ['id'], as => ['id'] }
     )->next;
 
     if ($row) {
@@ -417,7 +419,7 @@ sub _put {
         }
     }
 
-    if (!$dont_calc){
+    if ( !$dont_calc ) {
         my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
         $data->upsert(

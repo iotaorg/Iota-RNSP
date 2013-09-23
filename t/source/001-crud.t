@@ -50,8 +50,8 @@ eval {
             is( $res->code, 200, 'source exists -- 200 Success' );
 
             my $test = $res->content;
-            $test = decode('utf8', $test);
-            like($test , qr|Atenção|, 'Atenção ok' );
+            $test = decode( 'utf8', $test );
+            like( $test, qr|Atenção|, 'Atenção ok' );
 
             my $obj_uri = $uri->path_query;
             ( $res, $c ) = ctx_request( POST $obj_uri, [ 'source.update.name' => 'BarFoo' ] );

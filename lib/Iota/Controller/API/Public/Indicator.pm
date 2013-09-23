@@ -55,9 +55,7 @@ sub indicator_GET {
     my $controller = $c->controller('API::Indicator');
     $controller->indicator_GET($c);
 
-
 }
-
 
 1;
 

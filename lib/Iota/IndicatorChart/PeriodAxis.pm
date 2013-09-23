@@ -247,7 +247,7 @@ sub read_values {
     my $indicator = $self->indicator;
     my $period    = $indicator->period;
 
-    my $user_id = ref $options{user_id} eq 'ARRAY' ? $options{user_id} : [$options{user_id}];
+    my $user_id = ref $options{user_id} eq 'ARRAY' ? $options{user_id} : [ $options{user_id} ];
 
     # NOTE 2013-02-05
     # tirei o default de $period pois o JS só funciona com ano
@@ -260,7 +260,7 @@ sub read_values {
     if ( $indicator->indicator_type eq 'varied' ) {
         if ( $indicator->dynamic_variations ) {
             @indicator_variations =
-              $indicator->indicator_variations->search( { user_id => {'in' => [ @$user_id, $indicator->user_id ]} },
+              $indicator->indicator_variations->search( { user_id => { 'in' => [ @$user_id, $indicator->user_id ] } },
                 { order_by => 'order' } )->all;
         }
         else {
@@ -279,43 +279,39 @@ sub read_values {
         goal_explanation => $indicator->goal_explanation,
         goal_source      => $indicator->goal_source,
 
-        period           => $period,
-        group_by         => $group_by,
+        period   => $period,
+        group_by => $group_by,
 
         min => 9999999999999999,
         max => -9999999999999999,
     };
 
-    my $user_rs = $self->schema->resultset('User')->search(
-        { 'me.id' => { 'in' => $user_id} },
-        { prefetch => 'city' }
-    );
+    my $user_rs =
+      $self->schema->resultset('User')->search( { 'me.id' => { 'in' => $user_id } }, { prefetch => 'city' } );
 
-    while (my $user = $user_rs->next){
-        my $ux = {
-            name => $user->name
-        };
-        if (my $city = $user->city){
+    while ( my $user = $user_rs->next ) {
+        my $ux = { name => $user->name };
+        if ( my $city = $user->city ) {
             $ux->{city} = {
                 name      => $city->name,
-                name_url      => $city->name_uri,
-                uf   => $city->uf,
-                pais => $city->pais,
+                name_url  => $city->name_uri,
+                uf        => $city->uf,
+                pais      => $city->pais,
                 latitude  => $city->latitude,
                 longitude => $city->longitude,
                 id        => $city->id
-            }
+            };
         }
 
-        $data->{users}{$user->id} = $ux;
+        $data->{users}{ $user->id } = $ux;
     }
 
     foreach my $row_user_id ( keys %{$series} ) {
         my $local_data = {};
-        my $total    = 0;
-        my $total_ok = 0;
-        my $totali   = 0;
-        foreach my $start ( sort { $a cmp $b } keys %{$series->{$row_user_id}} ) {
+        my $total      = 0;
+        my $total_ok   = 0;
+        my $totali     = 0;
+        foreach my $start ( sort { $a cmp $b } keys %{ $series->{$row_user_id} } ) {
             my @data = ();
             my $row  = {
                 begin => $start,
@@ -339,13 +335,13 @@ sub read_values {
                         next unless $variation->user_id == $indicator->user_id || $variation->user_id == $row_user_id;
 
                         my $value = exists $vals_user->{ $variation->name }
-                        && defined $vals_user->{ $variation->name } ? $vals_user->{ $variation->name } : '-';
+                          && defined $vals_user->{ $variation->name } ? $vals_user->{ $variation->name } : '-';
 
                         push @{ $row->{variations} },
-                        {
+                          {
                             name  => $variation->name,
                             value => $value
-                        };
+                          };
 
                         if ( $value ne '-' ) {
                             $sum ||= 0;
@@ -372,7 +368,6 @@ sub read_values {
                 $total2++;
                 $totali++;
             }
-
 
             if ( $total2 && $sum_ok ) {
                 $row->{sum} = $sum;
@@ -403,7 +398,7 @@ sub read_values {
     }
 
     # retrocompatibilidade
-    if (ref $options{user_id} eq ''){
+    if ( ref $options{user_id} eq '' ) {
 
         $user_id = $options{user_id};
 
@@ -412,11 +407,11 @@ sub read_values {
             city => $data->{users}{$user_id}{city},
 
             exists $data->{users}{$user_id}{data}
-            ? %{$data->{users}{$user_id}{data}}
+            ? %{ $data->{users}{$user_id}{data} }
             : (),
         };
 
-        if (!exists $data->{users}{$user_id}{data}){
+        if ( !exists $data->{users}{$user_id}{data} ) {
             $data->{max} = '-';
             $data->{min} = '-';
         }
@@ -460,7 +455,7 @@ sub _load_variables_values {
         next unless defined $row->value;
         next if $row->value eq '';
 
-        $values->{$row->user_id}{$gp}{sets}{ $row->valid_from }{ $row->variation_name } = $row->value;
+        $values->{ $row->user_id }{$gp}{sets}{ $row->valid_from }{ $row->variation_name } = $row->value;
     }
 
     return $values;

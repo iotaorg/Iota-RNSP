@@ -11,15 +11,17 @@ ci = levels of continuation indentation; bk = 1 if in BLOCK, 0 if not.
 in:out indent c b  nesting   code + messages; (messages begin with >>>)
 lines  levels i k            (code begins with one '.' per indent level)
 ------  ----- - - --------   -------------------------------------------
-L50:50   i3:3 0 1 {({        ...ok( my $new_user = $schema->resu ....
-L54:54   i3:3 0 0 {({        >>>operator in print statement not recommended
-L66:66   i3:3 0 1 {({        >>>operator in print statement not recommended
-L70:70   i3:3 0 1 {({        >>>operator in print statement not recommended
-L76:76   i3:3 0 1 {({        >>>operator in print statement not recommended
-L89:89   i0:0 0 1            >>>Last line
+L51:51   i3:3 0 1 {({        ...my $now2 = $rs->count;
+L76:75   i4:5 0 0 {({({      >>>Start indentation disagreement: input=4; output=5
+L79:81   i3:3 0 1 {({        >>>End indentation disagreement from input line 76
+L89:90   i4:5 0 0 {({({      >>>Start indentation disagreement: input=4; output=5
+L92:98   i3:3 0 1 {({        >>>End indentation disagreement from input line 89
+L100:106 i0:0 0 1            >>>Last line
 
-No indentation disagreement seen
+First indentation disagreement seen at input line 76
+Last indentation disagreement seen at input line 91
+Note: Indentation disagreement detection is not accurate for outdenting and -lp.
 
 No lines exceeded 120 characters
-  Maximum output line length was 112 at line 50
+  Maximum output line length was 96 at line 94
 Converged.  Output for iteration 2 same as for iter 1.
