@@ -260,7 +260,7 @@ sub resumo_GET {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
                     'me.valid_from'   => {
-                        '>' => $from_this_date,
+                        '>=' => $from_this_date,
 
                         ( '<=' => $from_date ) x !!$from_date
                     },
@@ -385,6 +385,12 @@ sub resumo_GET {
 
                 # pronto, agora @datas ja tem a lista correta e na ordem!
                 foreach my $in (@$indicadores) {
+
+                if ($in->{id} == 111){
+                    use DDP; p $in;
+
+                }
+
                     my @valores;
                     foreach my $data (@datas_ar) {
                         unless ( exists $data->{data} ) {
