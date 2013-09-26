@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::City;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<city>
 
@@ -54,9 +53,9 @@ __PACKAGE__->table("city");
 
 =head2 uf
 
-  data_type: 'char'
+  data_type: 'text'
   is_nullable: 0
-  size: 2
+  original: {data_type => "varchar"}
 
 =head2 pais
 
@@ -142,52 +141,56 @@ __PACKAGE__->table("city");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "city_id_seq",
-    },
-    "name",
-    { data_type => "text", is_nullable => 0 },
-    "uf",
-    { data_type => "char", is_nullable => 0, size => 2 },
-    "pais",
-    { data_type => "text", default_value => "br", is_nullable => 1 },
-    "latitude",
-    { data_type => "double precision", is_nullable => 1 },
-    "longitude",
-    { data_type => "double precision", is_nullable => 1 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 0,
-        original      => { default_value => \"now()" },
-    },
-    "name_uri",
-    { data_type => "text", is_nullable => 1 },
-    "telefone_prefeitura",
-    { data_type => "text", is_nullable => 1 },
-    "endereco_prefeitura",
-    { data_type => "text", is_nullable => 1 },
-    "bairro_prefeitura",
-    { data_type => "text", is_nullable => 1 },
-    "cep_prefeitura",
-    { data_type => "text", is_nullable => 1 },
-    "email_prefeitura",
-    { data_type => "text", is_nullable => 1 },
-    "nome_responsavel_prefeitura",
-    { data_type => "text", is_nullable => 1 },
-    "summary",
-    { data_type => "text", is_nullable => 1 },
-    "state_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "country_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "automatic_fill",
-    { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "city_id_seq",
+  },
+  "name",
+  { data_type => "text", is_nullable => 0 },
+  "uf",
+  {
+    data_type   => "text",
+    is_nullable => 0,
+    original    => { data_type => "varchar" },
+  },
+  "pais",
+  { data_type => "text", default_value => "br", is_nullable => 1 },
+  "latitude",
+  { data_type => "double precision", is_nullable => 1 },
+  "longitude",
+  { data_type => "double precision", is_nullable => 1 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
+  "name_uri",
+  { data_type => "text", is_nullable => 1 },
+  "telefone_prefeitura",
+  { data_type => "text", is_nullable => 1 },
+  "endereco_prefeitura",
+  { data_type => "text", is_nullable => 1 },
+  "bairro_prefeitura",
+  { data_type => "text", is_nullable => 1 },
+  "cep_prefeitura",
+  { data_type => "text", is_nullable => 1 },
+  "email_prefeitura",
+  { data_type => "text", is_nullable => 1 },
+  "nome_responsavel_prefeitura",
+  { data_type => "text", is_nullable => 1 },
+  "summary",
+  { data_type => "text", is_nullable => 1 },
+  "state_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "country_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "automatic_fill",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -218,7 +221,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "city_pais_uf_name_uri_key", [ "pais", "uf", "name_uri" ] );
+__PACKAGE__->add_unique_constraint("city_pais_uf_name_uri_key", ["pais", "uf", "name_uri"]);
 
 =head1 RELATIONS
 
@@ -231,15 +234,15 @@ Related object: L<Iota::Schema::Result::Country>
 =cut
 
 __PACKAGE__->belongs_to(
-    "country",
-    "Iota::Schema::Result::Country",
-    { id => "country_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "country",
+  "Iota::Schema::Result::Country",
+  { id => "country_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 indicator_values
@@ -251,8 +254,10 @@ Related object: L<Iota::Schema::Result::IndicatorValue>
 =cut
 
 __PACKAGE__->has_many(
-    "indicator_values", "Iota::Schema::Result::IndicatorValue",
-    { "foreign.city_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.city_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 regions
@@ -264,10 +269,10 @@ Related object: L<Iota::Schema::Result::Region>
 =cut
 
 __PACKAGE__->has_many(
-    "regions",
-    "Iota::Schema::Result::Region",
-    { "foreign.city_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "regions",
+  "Iota::Schema::Result::Region",
+  { "foreign.city_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 state
@@ -279,15 +284,15 @@ Related object: L<Iota::Schema::Result::State>
 =cut
 
 __PACKAGE__->belongs_to(
-    "state",
-    "Iota::Schema::Result::State",
-    { id => "state_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "state",
+  "Iota::Schema::Result::State",
+  { id => "state_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 users
@@ -299,13 +304,15 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->has_many(
-    "users", "Iota::Schema::Result::User",
-    { "foreign.city_id" => "self.id" },
-    { cascade_copy      => 0, cascade_delete => 0 },
+  "users",
+  "Iota::Schema::Result::User",
+  { "foreign.city_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-05-10 11:44:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wSVAR4hOQjFzCUbjwgDPoQ
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-26 14:10:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h3C6Zt2aU2Af3GvvEjKAmg
 
 __PACKAGE__->has_many( "current_users", "Iota::Schema::Result::CityCurrentUser", { "foreign.city_id" => "self.id" }, );
 
