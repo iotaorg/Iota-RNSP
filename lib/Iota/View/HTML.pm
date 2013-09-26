@@ -49,8 +49,7 @@ sub date4period {
 
 sub value4human {
     my ( $self, $c, $value, $variable_type, $measurement_unit ) = @_;
-
-    return $value if ( $variable_type eq 'str' );
+    return $value if $variable_type eq 'str' || $value =~ /[a-z]/;
 
     my $pre = '';
     my $mid = '';
