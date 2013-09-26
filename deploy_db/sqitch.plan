@@ -3,3 +3,4 @@
 %uri=https://github.com/AwareTI/Iota
 
 appschema 2013-09-18T16:45:46Z cron <renato.cron@gmail.com> # schema tables, types and views
+remove_limit_uf [appschema] 2013-09-26T17:07:08Z cron <renato.cron@gmail.com> # remove char(2) from city table
