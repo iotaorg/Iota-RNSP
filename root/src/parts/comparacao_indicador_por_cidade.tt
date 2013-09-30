@@ -2,16 +2,16 @@
 
     <div class="data-title">
         <div id="indicador-dados" data-json="[%indicator_json|html%]">
-        <h1 class="title">[%indicator.name%]</h1>
-        <p class="explanation">[%indicator.explanation%]</p>
+        <h1 class="title">[%l(indicator.name)%]</h1>
+        <p class="explanation">[%l(indicator.explanation)%]</p>
 
         <div class="dados"><dl class="tabela dl-horizontal ">
             <dt>[%l('Fórmula')%]:</dt>
-            <dd>[%indicator.formula_human%]</dd>
+            <dd>[%l(indicator.formula_human)%]</dd>
             [%IF indicator.goal_explanation%]
-                <dt>Referência de Meta:</dt>
-                <dd>[%indicator.goal_explanation%]
-                    [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
+                <dt>[%l('Referência de Meta')%]:</dt>
+                <dd>[%l(indicator.goal_explanation)%]
+                    [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%l(indicator.goal_source)%]</cite></small></blockquote>[%END%]
                 </dd>
             [%END%]
 
@@ -22,9 +22,9 @@
         <div class="content-fill">
 
 <ul class="nav nav-tabs">
-    <li [%IF current_tab == "table"%]class="active"[%END%]><a href="#table" data-toggle="tab">Tabela</a></li>
-    <li [%IF current_tab == "map"%]class="active"[%END%]><a href="#map" data-toggle="tab">Mapas</a></li>
-    <li [%IF current_tab == "graph"%]class="active"[%END%]><a href="#graph" data-toggle="tab">Gráficos</a></li>
+    <li [%IF current_tab == "table"%]class="active"[%END%]><a href="#table" data-toggle="tab">[%l('Tabela')%]</a></li>
+    <li [%IF current_tab == "map"%]class="active"[%END%]><a href="#map" data-toggle="tab">[%l('Mapas')%]</a></li>
+    <li [%IF current_tab == "graph"%]class="active"[%END%]><a href="#graph" data-toggle="tab">[%l('Gráficos')%]</a></li>
 </ul>
 <div class="period">
     <div id="date-ruler">
@@ -85,7 +85,7 @@
         [%END%]
         <td class="opcoes">
             <div class="btn-group">
-                <button class="btn btn-mini compare">Comparar</button>
+                <button class="btn btn-mini compare">[%l('Comparar')%]</button>
                 <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                 <ul class="dropdown-menu">
                   <li><a href="[%city_i%]" target="_blank">[%l('Abrir cidade')%]</a></li>

@@ -33,7 +33,7 @@
     <div id="indicators_list" class="indicators indicators-home">
     [%-FOREACH i IN indicators.sort('name')-%]
     <a class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="right" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="[%i.href%]">
-    [%-i.name-%]
+    [%-l(i.name)-%]
     </a>
     [%-END-%]
     </div>

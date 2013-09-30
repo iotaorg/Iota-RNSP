@@ -61,6 +61,9 @@ requires 'Spreadsheet::ParseExcel::Stream';
 requires 'DateTime::Format::Excel';
 requires 'Math::Expression::Evaluator';
 requires 'Template';
+requires 'CSS::Minifier::XS';
+requires 'JavaScript::Minifier::XS';
+
 requires 'Catalyst::Plugin::Assets';
 requires 'Statistics::Basic';
 

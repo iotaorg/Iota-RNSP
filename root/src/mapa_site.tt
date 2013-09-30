@@ -19,7 +19,7 @@
         <h2>[%l('Indicadores')%]</h2>
         <ul>
         [%FOREACH i IN indicators %]
-            <li><a href="/[%i.name_url%]">[%i.name%]</a></li>
+            <li><a href="/[%i.name_url%]">[%l(i.name)%]</a></li>
         [%END%]
         </ul>
     </div>
@@ -30,8 +30,8 @@
      <div lockfixed>
         <h2>[%l('Links')%]</h2>
         <ul>
-            <li><a href="/">Lista de indicadores da [%network.name%]</a></li>
-            <li><a href="/dados-abertos">Dados abertos - Download</a></li>
+            <li><a href="/">[%l('Lista de indicadores da')%] [%network.name%]</a></li>
+            <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
             <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
         </ul>
     </div>

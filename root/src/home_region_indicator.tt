@@ -14,7 +14,7 @@
 <dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
 
 [%IF subregions.size %]
-    <dt>[%(region_classification_name.3)%]: </dt>
+    <dt>[% l(region_classification_name.3)%]: </dt>
     <dd><ul  style="margin-bottom:0">
     [%-FOR rr IN subregions -%]
         <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
@@ -24,14 +24,14 @@
     </dd>
 [%END%]
 
-<dt>Cidade: </dt>
+<dt>[%l('Cidade')%]: </dt>
 <dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
-<dt>Estado: </dt>
+<dt>[%l('Estado')%]: </dt>
 <dd>[%city.uf%]</dd>
 
 [% FOREACH vv IN basic_variables %]
-    <dt>[%vv.variable.name%]: </dt>
-    <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
+    <dt>[% l(vv.variable.name)%]: </dt>
+    <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [% l(vv.variable.measurement_unit.short_name) %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
 [% END %]
                 </dl></div>
             </div>
@@ -42,16 +42,16 @@
 
     <div class="span8">
         <div class="indicador-dados">
-            <h1 class="title">[%indicator.name%]</h1>
-            <p class="explanation">[%indicator.explanation%]</p>
+            <h1 class="title">[%l(indicator.name)%]</h1>
+            <p class="explanation">[%l(indicator.explanation)%]</p>
 
             <div class="dados"><dl class="tabela dl-horizontal ">
                 <dt>[%l('Fórmula')%]:</dt>
-                <dd>[%indicator.formula_human%]</dd>
+                <dd>[% l(indicator.formula_human)%]</dd>
                 [%IF indicator.goal_explanation%]
-                    <dt>Referência de Meta:</dt>
-                    <dd>[%indicator.goal_explanation%]
-                        [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%indicator.goal_source%]</cite></small></blockquote>[%END%]
+                    <dt>[%l('Referência de Meta')%]:</dt>
+                    <dd>[%l(indicator.goal_explanation)%]
+                        [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%l(indicator.goal_source)%]</cite></small></blockquote>[%END%]
                     </dd>
                 [%END%]
 
