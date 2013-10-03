@@ -91,10 +91,12 @@ create temp table _saida as
 select
 
 c.name as nome_cidade,
+c.uf as nome_uf,
 u.name as nome_usuario,
 a.name as nome_eixo,
 func_status_indicadores_by_user(u.id, a.id) as qtde_indicadores_preenchido,
 func_status_indicadores_by_user_justificado(u.id, a.id) as qtde_indicadores_preenchido_ou_justificado,
+(select count(1) from indicator x WHERE x.axis_id = a.id) as total_indicadores_eixo,
 c.id as city_id,
 a.id as axis_id,
 u.id as user_id
@@ -106,4 +108,4 @@ where u.institute_id = 1
 and u.city_id is not null;
 
 
-copy _saida to '/tmp/status.indicadores.csv' CSV;
+copy _saida to '/tmp/status.indicadores.csv' CSV HEADER;
