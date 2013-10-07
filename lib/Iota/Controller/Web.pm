@@ -409,7 +409,7 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
 
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 
-    $self->load_region_names($c);
+    $self->load_region_names($c) if $c->stash->{user}{regions_enabled};
 
     if ( $self->load_best_pratices( $c, only_count => 1 ) ) {
         $c->stash->{best_pratices_link} = $c->uri_for( $self->action_for('best_pratice_list'),
@@ -453,6 +453,9 @@ sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
 
     $c->stash->{title}    = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf} . ' - ' . $c->loc('Regiões');
     $c->stash->{template} = 'home_cidade_region.tt';
+
+
+    $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] ) if !$c->stash->{user}{regions_enabled};
 }
 
 sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(0) {
@@ -465,6 +468,8 @@ sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(
 sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
     my ( $self, $c, $regiao ) = @_;
     $c->stash->{regiao_url} = $regiao;
+
+    $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] ) if !$c->stash->{user}{regions_enabled};
 
     $self->stash_tela_regiao($c);
 
@@ -1009,13 +1014,10 @@ sub stash_tela_cidade {
             pais     => lc $c->stash->{pais},
             uf       => uc $c->stash->{estado},
             name_uri => lc $c->stash->{cidade}
-        },
-        { prefetch => 'regions' }
+        }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $city;
-
-    $self->_setup_regions_level( $c, $city ) if ( $city->{regions} && @{ $city->{regions} } > 0 );
 
     my $user = $c->model('DB::User')->search(
         {
@@ -1025,6 +1027,14 @@ sub stash_tela_cidade {
         },
         { join => 'network_users' }
     )->next;
+
+    if ($user->regions_enabled){
+        $city->{regions} = [$c->model('DB::Region')->search({
+            city_id => $city->{id}
+        })->as_hashref->all];
+    }
+
+    $self->_setup_regions_level( $c, $city ) if ( $city->{regions} && @{ $city->{regions} } > 0 );
 
     $c->detach('/error_404') unless $user;
 
