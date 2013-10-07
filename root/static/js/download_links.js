@@ -81,11 +81,10 @@ var md = function () {
                     $region.append($(options));
                     if (options == '')
                         $region.addClass('hide');
+                    $region.removeAttr("disabled");
                 },
                 error: function (data) {
                     alert("erro ao carregar regioes");
-                },
-                complete: function (data) {
                     $region.removeAttr("disabled");
                 }
             });

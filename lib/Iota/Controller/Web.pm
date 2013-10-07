@@ -51,7 +51,7 @@ sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
     $c->detach;
 }
 
-sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
+sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     # se veio ?part, guarda na stash e remove ele da req para nao atrapalhar novas geracoes de URLs
@@ -74,6 +74,14 @@ sub institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{institute}  = $net->institute;
     $c->stash->{c_req_path} = $c->req->path;
+}
+
+sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+
+    # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
+    # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
+    $self->light_institute_load($c) if !exists $c->stash->{c_req_path};
 
     my @current_users = $c->model('DB::User')->search(
         {
