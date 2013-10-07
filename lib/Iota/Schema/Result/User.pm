@@ -147,6 +147,12 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 0
 
+=head2 regions_enabled
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -200,6 +206,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", default_value => "pt-br", is_nullable => 0 },
   "password",
   { data_type => "text", is_nullable => 0 },
+  "regions_enabled",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -701,8 +709,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-17 14:21:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y9Gl55ZMYtYH94CY1GijBw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-07 17:12:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SUD96BS3clUbQnF7iVZfAQ
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 

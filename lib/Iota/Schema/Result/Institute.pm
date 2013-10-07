@@ -129,6 +129,12 @@ __PACKAGE__->table("institute");
   data_type: 'text'
   is_nullable: 1
 
+=head2 can_use_regions
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -174,6 +180,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "datapackage_autor_email",
   { data_type => "text", is_nullable => 1 },
+  "can_use_regions",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -250,8 +258,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-03 16:16:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DJcfGSfBtnLEbXVumQQm3A
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-07 17:12:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qM6vN19dfkqnnJLd7v+2yQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

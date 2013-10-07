@@ -63,6 +63,7 @@ sub institute_GET {
                   users_can_edit_groups
                   can_use_custom_css
                   can_use_custom_pages
+                  can_use_regions
 
                   created_at
                   created_by
@@ -172,6 +173,7 @@ sub list_GET {
                   users_can_edit_groups
                   can_use_custom_css
                   can_use_custom_pages
+                  can_use_regions
 
                   created_at
                   created_by

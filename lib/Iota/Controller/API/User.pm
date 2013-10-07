@@ -171,6 +171,7 @@ sub user_GET {
                   city_summary
                   active
                   cur_lang
+                  regions_enabled
                   )
             ),
             created_at => $attrs{created_at}->datetime,
