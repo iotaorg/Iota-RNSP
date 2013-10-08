@@ -29,6 +29,8 @@ sub verifiers_specs {
                 can_use_custom_pages  => { required => 0, type => 'Bool' },
 
                 can_use_regions       => { required => 0, type => 'Bool' },
+                can_create_indicators   => { required => 0, type => 'Bool' },
+                fixed_indicator_axis_id => { required => 0, type => 'Int' },
             },
         ),
 
@@ -45,6 +47,9 @@ sub verifiers_specs {
                 can_use_custom_css    => { required => 0, type => 'Bool' },
                 can_use_custom_pages  => { required => 0, type => 'Bool' },
                 can_use_regions       => { required => 0, type => 'Bool' },
+
+                can_create_indicators   => { required => 0, type => 'Bool' },
+                fixed_indicator_axis_id => { required => 0, type => 'Int' },
             },
         ),
 

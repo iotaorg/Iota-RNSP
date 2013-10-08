@@ -137,6 +137,17 @@ Retorna:
 
 =cut
 
+sub _get_user_type {
+    my ( $self, $user ) = @_;
+    my %roles = map {$_->name => 1} $user->roles;
+
+    return 'superadmin' if exists $roles{superadmin};
+    return 'admin'      if exists $roles{admin};
+    return 'user'       if exists $roles{user};
+
+    return 'none';
+}
+
 sub user_GET {
     my ( $self, $c ) = @_;
 
@@ -147,6 +158,7 @@ sub user_GET {
         $c,
         entity => {
             roles => [ map { $_->name } $user->roles ],
+            user_type => $self->_get_user_type($user),
             files => {
                 map { $_->class_name => $_->public_url }
                   $user->user_files->search( undef, { order_by => 'created_at' } )
@@ -172,6 +184,7 @@ sub user_GET {
                   active
                   cur_lang
                   regions_enabled
+                  can_create_indicators
                   )
             ),
             created_at => $attrs{created_at}->datetime,

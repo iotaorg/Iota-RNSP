@@ -56,7 +56,7 @@ sub institute_GET {
         entity => {
             (
                 map { $_ => $object_ref->{$_} }
-                  qw(
+                  qw/
                   id name short_name description
 
                   users_can_edit_value
@@ -64,12 +64,15 @@ sub institute_GET {
                   can_use_custom_css
                   can_use_custom_pages
                   can_use_regions
+                  can_create_indicators
+
+                  fixed_indicator_axis_id
 
                   created_at
                   created_by
 
                   institute_id domain_name
-                  )
+                  /
             )
         }
     );

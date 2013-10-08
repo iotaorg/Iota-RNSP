@@ -109,6 +109,9 @@ sub verifiers_specs {
                 cep                       => { required => 0, type => 'Str' },
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
+
+                can_create_indicators    => { required => 0, type => 'Bool' },
+                regions_enabled          => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -262,6 +265,9 @@ sub verifiers_specs {
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
                 active                    => { required => 0, type => 'Bool' },
+
+                can_create_indicators    => { required => 0, type => 'Bool' },
+                regions_enabled          => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -337,13 +343,7 @@ sub verifiers_specs {
             profile => {
                 email => {
                     required   => 1,
-                    type       => 'Str',
-                    post_check => sub {
-                        my $r    = shift;
-                        my $user = $self;
-                        my $qtde = $user->search( { email => $r->get_value('email') } )->count;
-                        return $qtde >= 1;
-                      }
+                    type       => EmailAddress
                 },
             },
         ),
@@ -359,6 +359,10 @@ sub action_specs {
             my %values = shift->valid_values;
             delete $values{password_confirm};
             delete $values{cur_lang} unless $values{cur_lang};
+
+            do { delete $values{$_} unless defined $values{$_} }
+              for qw/can_create_indicators regions_enabled/;
+
 
             my $role = delete $values{role};
 
@@ -429,6 +433,7 @@ sub action_specs {
             my %values = shift->valid_values;
 
             my $user = $self->search( { email => $values{email} } )->first;
+            return 1 if !$user;
             my %user_attrs = $user->get_inflated_columns;
             delete $user_attrs{password};
 
