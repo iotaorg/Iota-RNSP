@@ -86,6 +86,7 @@ around list_GET => sub {
 sub _loc_str {
     my ( $self, $c, $str ) = @_;
 
+    return $str if !defined $str || $str eq '';
     return $str unless $str =~ /[A-Za-z]/o;
     return $str if $str =~ /CONCATENAR/o;
     return $str if $str =~ /^\s*$/o;
