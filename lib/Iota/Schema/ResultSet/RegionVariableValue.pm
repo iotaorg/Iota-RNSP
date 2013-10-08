@@ -295,7 +295,7 @@ sub action_specs {
 
             $data->upsert(
                 indicators => [ $data->indicators_from_variables( variables => [ $var->variable_id ] ) ],
-                dates      => [ $values{valid_from} ],
+                dates      => [ $var->valid_from ],
                 user_id    => $var->user_id,
                 regions_id => [ $var->region_id ],
 
