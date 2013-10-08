@@ -36,7 +36,7 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(3) {
         },
         { join => 'network_users' }
     )->next;
-    if (!$user->regions_enabled){
+    if ($user && !$user->regions_enabled){
         $c->stash->{collection} = $c->model('DB::Region')->search({
             id => -1
         });
