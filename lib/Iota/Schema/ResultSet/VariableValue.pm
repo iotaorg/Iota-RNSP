@@ -265,10 +265,9 @@ sub action_specs {
             }
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
-
             $data->upsert(
                 indicators => [ $data->indicators_from_variables( variables => [ $var->variable_id ] ) ],
-                dates      => [ $values{valid_from} ],
+                dates      => [ $var->valid_from->ymd ],
                 user_id    => $var->user_id
             );
 
