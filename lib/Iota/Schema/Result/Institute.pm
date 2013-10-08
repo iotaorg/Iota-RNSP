@@ -135,6 +135,17 @@ __PACKAGE__->table("institute");
   default_value: false
   is_nullable: 0
 
+=head2 can_create_indicators
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+=head2 fixed_indicator_axis_id
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -182,6 +193,10 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "can_use_regions",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_create_indicators",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "fixed_indicator_axis_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -258,8 +273,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-07 17:12:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qM6vN19dfkqnnJLd7v+2yQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-08 15:46:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2kadUJz4FxgJwv3wiNs64g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

@@ -153,6 +153,12 @@ __PACKAGE__->table("user");
   default_value: false
   is_nullable: 0
 
+=head2 can_create_indicators
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -207,6 +213,8 @@ __PACKAGE__->add_columns(
   "password",
   { data_type => "text", is_nullable => 0 },
   "regions_enabled",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "can_create_indicators",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
@@ -709,8 +717,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-07 17:12:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SUD96BS3clUbQnF7iVZfAQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-08 15:46:45
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x8hWAdZqvVT8XIoQek7ZPw
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 
