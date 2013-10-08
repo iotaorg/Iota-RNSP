@@ -191,10 +191,7 @@ sub list_GET {
 
                 city => {
                     (
-                        map { $_ => $c->stash->{city}->$_ }
-                          qw(
-                          name name_uri uf pais
-                          )
+                        map { $_ => $c->stash->{city}->$_ } qw/name name_uri uf pais/
                     ),
                 },
                 upper_region => $obj->{upper_region}
