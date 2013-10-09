@@ -193,10 +193,17 @@ sub user_GET {
                 $user->institute && $user->institute
                 ? (
                     institute => {
-                        users_can_edit_value  => $user->institute->users_can_edit_value,
-                        users_can_edit_groups => $user->institute->users_can_edit_groups,
-                        can_use_custom_css    => $user->institute->can_use_custom_css,
-                        can_use_custom_pages  => $user->institute->can_use_custom_pages,
+                        (map {$_ => $user->institute->$_} qw /
+                        users_can_edit_value
+                        users_can_edit_groups
+                        can_use_custom_css
+                        can_use_custom_pages
+                        bypass_indicator_axis_if_custom
+                        hide_empty_indicators
+                        fixed_indicator_axis_id
+                        can_create_indicators
+                        can_use_regions/),
+
                         name                  => $user->institute->name,
                         id                    => $user->institute->id,
                     }

@@ -165,14 +165,14 @@ Retorna:
 sub list_POST {
     my ( $self, $c ) = @_;
 
-    if ( $c->stash->{indicator}->dynamic_variations ) {
+#    if ( $c->stash->{indicator}->dynamic_variations ) {
+#        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+#          unless $c->check_any_user_role(qw(admin user));
+#    }
+#    else {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-          unless $c->check_any_user_role(qw(admin user));
-    }
-    else {
-        $self->status_forbidden( $c, message => "access denied", ), $c->detach
-          unless $c->check_any_user_role(qw(admin));
-    }
+          unless $c->check_any_user_role(qw(admin user superadmin));
+#    }
 
     $c->req->params->{indicator}{variation}{create}{indicator_id} = $c->stash->{indicator}->id;
     $c->req->params->{indicator}{variation}{create}{user_id}      = $c->user->id;
