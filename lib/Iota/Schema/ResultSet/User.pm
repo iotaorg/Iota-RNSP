@@ -110,6 +110,7 @@ sub verifiers_specs {
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
 
+
                 can_create_indicators    => { required => 0, type => 'Bool' },
                 regions_enabled          => { required => 0, type => 'Bool' },
             },

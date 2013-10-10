@@ -69,9 +69,11 @@ Retorna:
 sub measurement_unit_POST {
     my ( $self, $c ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
-
+    my $user = $c->stash->{logged_user};
+    unless ($c->check_any_user_role('user') && $user->can_create_indicators){
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin superadmin));
+    }
     $c->req->params->{measurement_unit}{update}{id} = $c->stash->{object}->next->id;
 
     my $dm = $c->model('DataManager');
@@ -171,8 +173,11 @@ Retorna:
 sub list_POST {
     my ( $self, $c ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
+    my $user = $c->stash->{logged_user};
+    unless ($c->check_any_user_role('user') && $user->can_create_indicators){
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin superadmin));
+    }
 
     $c->req->params->{measurement_unit}{create}{user_id} = $c->user->id;
 

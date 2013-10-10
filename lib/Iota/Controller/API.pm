@@ -81,8 +81,14 @@ sub api_key_check : Private {
           $c->detach
           unless defined $api_key && $user;
 
+        $c->stash->{logged_user} = $user;
+
         $c->set_authenticated($user);
+    }else{
+        my $user = $c->find_user( { id => $c->user->id } );
+        $c->stash->{logged_user} = $user;
     }
+
 }
 
 sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {

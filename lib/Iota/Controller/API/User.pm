@@ -139,7 +139,7 @@ Retorna:
 
 sub _get_user_type {
     my ( $self, $user ) = @_;
-    my %roles = map {$_->name => 1} $user->roles;
+    my %roles = map { (ref $_ eq '' ? $_ : $_->name) => 1} $user->roles;
 
     return 'superadmin' if exists $roles{superadmin};
     return 'admin'      if exists $roles{admin};

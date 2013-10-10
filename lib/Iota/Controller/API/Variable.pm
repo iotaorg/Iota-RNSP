@@ -104,8 +104,12 @@ Retorna:
 sub variable_POST {
     my ( $self, $c ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
+    my $user = $c->stash->{logged_user};
+
+    unless ($c->check_any_user_role('user') && $user->can_create_indicators){
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin superadmin));
+    }
 
     $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
 
@@ -139,13 +143,24 @@ Retorna: No-content ou Gone
 sub variable_DELETE {
     my ( $self, $c ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
-
+    my $user = $c->stash->{logged_user};
     my $obj = $c->stash->{variable};
+
+    if ($c->check_any_user_role('user') && $user->can_create_indicators){
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            if $obj->user_id != $user->id;
+    }else{
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin superadmin));
+    }
+
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-    $obj->delete;
+    eval { $obj->delete };
+
+    if ($@){
+        $self->status_bad_request( $c, message => "You can't delete this variable. Delete values first." ), $c->detach;
+    }
 
     $self->status_no_content($c);
 }
@@ -188,8 +203,17 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list =
-      $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
+    my $rs = $c->stash->{collection};
+
+    $c->req->params->{use} ||= 'list';
+
+    if ($c->req->params->{use} eq 'edit' && $c->check_any_user_role('user')){
+        $rs = $rs->search({
+            'me.user_id' => $c->user->id
+        });
+    }
+
+    my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list) {
@@ -235,10 +259,14 @@ Retorna:
 sub list_POST {
     my ( $self, $c ) = @_;
 
-    $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
+    my $user = $c->stash->{logged_user};
+    unless ($c->check_any_user_role('user') && $user->can_create_indicators){
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
+            unless $c->check_any_user_role(qw(admin superadmin));
+    }
 
-    $c->req->params->{variable}{create}{user_id} = $c->user->id;
+    $c->req->params->{variable}{create}{user_id}   = $c->user->id;
+    $c->req->params->{variable}{create}{user_type} = Iota::Controller::API::User::_get_user_type(undef, $user);
 
     my $dm = $c->model('DataManager');
 
