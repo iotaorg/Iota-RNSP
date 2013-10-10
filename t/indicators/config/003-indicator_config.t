@@ -20,7 +20,7 @@ my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
 $Iota::TestOnly::Mock::AuthUser::_id = 1;
 use JSON qw(from_json);
-@Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin user/;
+@Iota::TestOnly::Mock::AuthUser::_roles = qw/admin/;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );

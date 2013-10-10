@@ -21,7 +21,7 @@ my $stash  = Package::Stash->new('Catalyst::Plugin::Authentication');
 my $user   = Iota::TestOnly::Mock::AuthUser->new;
 
 $Iota::TestOnly::Mock::AuthUser::_id    = 2;
-@Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin user /;
+@Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin  /;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
@@ -202,6 +202,7 @@ eval {
             &add_value( $variable_url, '2009-01-15', '11.246,8' );
             &add_value( $variable_url, '2008-01-26', '258' );
 
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
             for my $x ( 1 .. 2 ) {
                 ( $res, $c ) = ctx_request(
                     POST '/api/user_indicator_axis',
@@ -220,6 +221,7 @@ eval {
                     [ 'user_indicator_axis_item.create.indicator_id' => $indicator3->{id}, ] );
                 ok( $res->is_success, 'user_indicator_axis created!' );
             }
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin  /;
 
             # variavel basicas
             my $basic_id = $schema->resultset('Variable')->search( { is_basic => 1 } )->next->id;
