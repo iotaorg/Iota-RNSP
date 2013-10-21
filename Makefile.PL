@@ -32,6 +32,8 @@ requires 'DBIx::Class::PassphraseColumn';
 requires 'DBIx::Class::TimeStamp';
 requires 'Moose';
 requires 'namespace::autoclean';
+requires 'Graphics::Color::RGB';
+requires 'Color::Scheme';
 requires 'MooseX::Types::Email';
 requires 'Data::Diver';
 requires 'Data::Printer';
