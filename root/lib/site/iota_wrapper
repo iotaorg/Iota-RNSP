@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html><!--<![endif]-->
+<head>
+<link rel="icon"
+      type="image/png"
+      href="/static/images/favicon.png" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[% template.title or site.title or title %]</title>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script>
+    <script src="/static/js/html5shiv.js"></script>
+    <script src="/static/js/respond.min.js"></script>
+<![endif]-->
+[% IF institute.short_name == 'gov' %]
+<meta name="google-site-verification" content="W0scFeWasYZRtz6MYIohgpNuTzhWwAftmcFEUCk5jFM" />
+[%END%]
+
+[%-CALL assets.include("v2/css/bootstrap.min.css")%]
+[%-CALL assets.include("v2/css/bootstrap-theme.min.css")%]
+
+[%-CALL assets.include("v2/css/site.css")%]
+
+
+[%-CALL assets.include("v2/js/bootstrap.min.js")%]
+
+[%-CALL assets.include("v2/js/latinise.js")%]
+[%-CALL assets.include("v2/js/utils.js")%]
+[%-CALL assets.include("v2/js/events.js")%]
+
+[%-CALL assets.include("js/indicatos-menu.js")%]
+
+[%-CALL assets.include("js/stupidtable.min.js")%]
+[%-CALL assets.include("v2/js/google_visualization.js")%]
+
+[%-CALL assets.include("v2/js/load-google-maps.js")%]
+
+[%- assets.export("css") -%]
+
+[%-IF custom_css-%]
+    <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
+[%-END-%]
+</head>
+<body><div id="fb-root"></div>
+[%INCLUDE 'site/ie_message.tt'%]
+<div id="iota-app">
+    [% INCLUDE site/nav_bar.tt%]
+    [% INCLUDE site/page_header.tt%]
+
+    <div class="container">
+        [% content%]
+    </div>
+
+    [% INCLUDE site/fotter.tt%]
+</div>
+
+
+
+<script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+
+[% assets.export("js") %]
+
+[% INCLUDE site/ga.tt%]
+</body>
+</html>

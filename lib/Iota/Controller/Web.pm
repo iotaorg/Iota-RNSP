@@ -113,11 +113,19 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
       ->search( { id => { 'in' => [ map { $_->city_id } @users ] } }, { order_by => [ 'pais', 'uf', 'name' ] } )
       ->as_hashref->all;
 
+    push @{$c->stash->{web}{cities_by_state}{$_->{country_id}}{$_->{state_id}}}, $_ for @cities;
+
     $c->stash->{network_data} = {
         countries => [
             do {
                 my %seen;
                 grep { !$seen{$_}++ } grep { defined } map { $_->{country_id} } @cities;
+              }
+        ],
+        states => [
+            do {
+                my %seen;
+                grep { !$seen{$_}++ } grep { defined } map { $_->{state_id} } @cities;
               }
         ],
         users_ids => [
@@ -174,27 +182,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
 }
 
-sub featured_indicators_load : Private {
-    my ( $self, $c ) = @_;
 
-    my @countries = @{ $c->stash->{network_data}{countries} };
-    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
-
-    my @indicators = $c->model('DB::Indicator')->search(
-        {
-            featured_in_home => 1,
-            '-or'            => [
-                { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
-                { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
-            ]
-        },
-        { join => 'indicator_user_visibilities', order_by => 'me.name' }
-    )->as_hashref->all;
-
-    $c->stash( featured_indicators => \@indicators, );
-}
 
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c ) = @_;
@@ -802,6 +790,40 @@ sub stash_indicator {
         template => 'home_comparacao_indicador.tt',
         title    => 'Dados do indicador ' . $indicator->name
     );
+}
+
+use Graphics::Color::RGB;
+use Chart::Clicker::Drawing::ColorAllocator;
+
+sub web_load_country: Private {
+    my ( $self, $c ) = @_;
+
+    my @countries = $c->model('DB::Country')->search(
+        {
+            'me.id' => {'in' => $c->stash->{network_data}{countries} },
+            'states.id' => {'in' => $c->stash->{network_data}{states} }
+        }, {
+            order_by => ['me.name'],
+            prefetch => 'states'
+        }
+    )->all;
+
+    my $ca = Chart::Clicker::Drawing::ColorAllocator->new;
+
+    foreach my $country (@countries){
+
+
+        push @{$c->stash->{web}{countries}}, {
+            ( map { $_ => $country->$_ } qw/id name name_url/),
+
+            states => [
+                map { { id => $_->id, name => $_->name, uf => $_->uf } } $country->states
+            ],
+
+            color => $ca->next->as_hex_string
+        }
+    }
+
 }
 
 sub stash_comparacao_cidades {

@@ -1,93 +1,101 @@
-<div id="content" class="content">
-    <div class="row" id="indicadores-dados">
-        <div class="span4">
+<div id="content">
 
+    <div class="row" id="indicadores-dados">
+        <div class="col-md-4">
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
-
         </div>
-        <div class="span8">
-            <div class="data-right">
-                <div class="content-fill">
-                    <div class="data-content">
-                        <div class="title">
-                            [%l('Por Cidade')%]
-                        </div>
-                        <div class="content-fill">
-<form class="form-inline">
+        <div class="col-md-8">
+            <h2>Países participantes</h2>
+            <div class="row text-center" id="country-container" >
+            [%FOREACH ct IN web.countries%]
+                <div class="col-sm-4">
+                    <a style="text-decoration: none" href="#country[%ct.id%]"><div class="block-list country-item" style="background-color: #[%ct.color%];">[%ct.name%]</div></a>
+                </div>
+            [%END%]
+            </div>
 
-                                <div id="filtro_mapa">
-									<div id='filtro-mapa-uf'>
-										Estado: <select id="uf_filter">
-												<option value="">Selecione
-											</select>
-									</div>
-									<div id='filtro-mapa-cidade'>
-										Cidade: <select id="cidade_filter">
-												<option value="">Selecione
-											</select>
-									</div>
-                                </div>
 
-                                <div id="mapa">
-                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
-                                </div>
-</form>
-                        </div>
-                    </div>
+            [%IF 0%]
+            <div class="fb-like" data-send="false" data-width="280"></div>
+            <a class="twitter-share-button" data-count="horizontal">Tweet</a>
+            <div class="g-plusone" data-size="medium"></div>
+            [%END%]
 
-                    <div id="dados-abertos">
-                        <div class="title">[%l('Dados abertos')%]</div>
-                        <div class="content-fill">
-                            <div class="dados-botoes">
-								<input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
-								<input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
-                            </div>
-                            <div class="download-links">
-                            </div>
-                            <div class="share-link">
-                                <input type="text" id="share-link" value="url" />
-								<!-- AddThis Button BEGIN -->
-								<div class="addthis_toolbox addthis_default_style ">
-								<a class="addthis_button_preferred_1"></a>
-								<a class="addthis_button_preferred_2"></a>
-								<a class="addthis_button_preferred_3"></a>
-								<a class="addthis_button_preferred_4"></a>
-								<a class="addthis_button_compact"></a>
-								<a class="addthis_counter addthis_bubble_style"></a>
-								</div>
-								<script type="text/javascript">var addthis_config = {"data_track_addressbar":false, "data_track_clickback":false};</script>
-								<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ed285338e6b8b3"></script>
-								<!-- AddThis Button END -->
-                            </div>
-                        </div>
-                    </div>
 
-                    [%IF featured_indicators%]
-                    <h2>[%l('Indicadores em destaque')%]</h2>
-
-                    <ul>
-                    [%FOREACH i IN featured_indicators%]
-                        <li><a href="/[%i.name_url%]">[%l(i.name)%]</a></li>
-                    [%END%]
-                    </ul>
-                    [%END%]
-
+            <div class="wrapper_ratio">
+                <div class="main_ratio">
+                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
+                    <div class="visualization visualization-countries"></div>
                 </div>
             </div>
+
+
+            <div id="dados-abertos">
+                <div class="title">[%l('Dados abertos')%]</div>
+
+                <div class="content-fill">
+                    <div class="dados-botoes">
+                        <input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
+                        <input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
+                    </div>
+                    <div class="download-links">
+                    </div>
+                    <div class="share-link">
+                        <input type="text" id="share-link" value="url" />
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 
+
+
+    <h2>Estados participantes</h2>
+    <div class="row list-countries">
+    [%FOREACH ct IN web.countries%]
+        <div class="col-sm-12 col-lg-6">
+            <span class="anchor" id="country[%ct.id%]"></span>
+            <h2 style="background-color: #[%ct.color%];">[%ct.name%]</h2>
+
+            <div class="row">
+            [%FOREACH st IN ct.states%]
+                <div class="col-sm-4 col-lg-6">
+                    <a href="#state[%st.id%]"><div style="border-left-color: #[%ct.color%];box-shadow: 0px 0px 1px #[%ct.color%]" class="list-state">[%st.name%]</div></a>
+                </div>
+
+            [%END%]
+
+            </div>
+        </div>
+
+
+    [%END%]
+    </div>
+
+    <hr/>
+    <h2>Cidades participantes</h2>
+    <div class="row list-cities">
+    [%FOREACH ct IN web.countries%]
+        [%FOREACH st IN ct.states%]
+        <div class="col-sm-12 col-lg-6">
+            <span class="anchor" id="state[%st.id%]"></span>
+            <h3 style="background-color: #[%ct.color%];">[%st.name%] <a href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
+
+            <div class="row">
+            [%FOREACH oct IN web.cities_by_state.${ct.id}.${st.id}%]
+                <div class="col-sm-4 col-lg-6">
+                    <a href="/[%oct.pais%]/[%oct.uf%]/[%oct.name_uri%]" target="_blank"><div style="border-left-color: #[%ct.color%];box-shadow: 0px 0px 1px #[%ct.color%]" class="list-state"><span class="glyphicon glyphicon-link"></span> [%oct.name%]</div></a>
+                </div>
+            [%END%]
+
+            </div>
+        </div>
+
+        [%END%]
+    [%END%]
+    </div>
 </div>
-
-<script type="text/javascript">
-    [% PROCESS 'network_javascript.tt'%]
-
-        var ref = 'home';
-        var userID = "";
-</script>
-<div id="bubble-intro" style="display:none">
-    <p>[%l('Selecione um estado acima e clique sobre os pontos do mapa ou nas cidades listadas abaixo, para visualizar os indicadores')%]</p>
-</div>
-

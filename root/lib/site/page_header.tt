@@ -1,0 +1,33 @@
+<div class="page-header">
+    <div class="container">
+        [%IF !v2%]<p class="logo">Iota</p>[%END%]
+
+        <div class="row">
+
+            <div class="span4">
+                <div class="logo">
+                    [% IF institute.short_name == 'org' %]
+                        [% IF network.id == 3 %]
+                            <img src="/static/images/logo-latino.png" alt="" />
+                        [%ELSE%]
+                            <img src="/static/images/logo-movimento.png" alt="" />
+                        [%END%]
+                    [% ELSE %]
+                        <a href="http://www.cidadessustentaveis.org.br"><img src="/static/images/logo.png" alt="Programa Cidades Sustentáveis" /></a>
+                    [% END %]
+                </div>
+            </div>
+
+            [% IF institute.short_name == 'org' %]
+            <div id="top" class="span2 offset6 text-right">
+                <div class="content">
+                [% IF public.usuario.files.logo_movimento %]
+                    <img src="[% public.usuario.files.logo_movimento%]" alt="">
+                [%END%]
+                </div>
+            </div>
+            [%END%]
+        </div>
+
+    </div>
+</div>
