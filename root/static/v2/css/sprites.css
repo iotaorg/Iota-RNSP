@@ -1,0 +1,149 @@
+.spt-cc, .spt-facebook-icon_25x25, .spt-forward_disabled, .spt-forward_enabled_hover, .spt-globe_icon, .spt-google-page-logo-25x25, .spt-icone_aware, .spt-indicator_icon, .spt-logo-96, .spt-logo-cgibr, .spt-logo-dualtec, .spt-logo-nicbr, .spt-logo-w3c, .spt-od_80x15_blue, .spt-separator-arrow, .spt-seta, .spt-seta_up, .spt-sort_asc, .spt-sort_asc_disabled, .spt-sort_both, .spt-sort_desc, .spt-sort_desc_disabled, .spt-twitter-icon-25x25, .spt-forward_enabled{
+	background: url(/static/v2/img/sprites.png) no-repeat;
+display: inline-block;
+}
+
+.spt-cc{
+	background-position: 0 -4px ;
+	width: 17px;
+	height: 17px;
+}
+
+.spt-facebook-icon_25x25{
+	background-position: -9px -179px ;
+	width: 25px;
+	height: 25px;
+}
+
+.spt-forward_disabled{
+	background-position: -122px -108px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-forward_enabled_hover{
+	background-position: -249px -160px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-globe_icon{
+	background-position: -341px -47px ;
+	width: 72px;
+	height: 72px;
+}
+
+.spt-google-page-logo-25x25{
+	background-position: -11px -145px ;
+	width: 25px;
+	height: 25px;
+}
+
+.spt-icone_aware{
+	background-position: -73px -127px ;
+	width: 15px;
+	height: 15px;
+}
+
+.spt-indicator_icon{
+	background-position: -417px -2px ;
+	width: 72px;
+	height: 72px;
+}
+
+.spt-logo-96{
+	background-position: -72px 0;
+	width: 158px;
+	height: 96px;
+}
+
+.spt-logo-cgibr{
+	background-position: -66px -151px ;
+	width: 57px;
+	height: 64px;
+}
+
+.spt-logo-dualtec{
+	background-position: -258px -52px ;
+	width: 65px;
+	height: 64px;
+}
+
+.spt-logo-nicbr{
+	background-position: -3px -30px ;
+	width: 64px;
+	height: 64px;
+}
+
+.spt-logo-w3c{
+	background-position: -431px -74px ;
+	width: 52px;
+	height: 64px;
+}
+
+.spt-od_80x15_blue{
+	background-position: -286px -22px ;
+	width: 80px;
+	height: 15px;
+}
+
+.spt-separator-arrow{
+	background-position: -283px -141px ;
+	width: 8px;
+	height: 8px;
+}
+
+.spt-seta{
+	background-position: -155px -169px ;
+	width: 14px;
+	height: 7px;
+}
+
+.spt-seta_up{
+	background-position: -276px -169px ;
+	width: 14px;
+	height: 7px;
+}
+
+.spt-sort_asc{
+	background-position: -151px -125px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-sort_asc_disabled{
+	background-position: -231px -142px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-sort_both{
+	background-position: -179px -160px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-sort_desc{
+	background-position: -190px -130px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-sort_desc_disabled{
+	background-position: -215px -158px ;
+	width: 19px;
+	height: 19px;
+}
+
+.spt-twitter-icon-25x25{
+	background-position: -8px -116px ;
+	width: 25px;
+	height: 25px;
+}
+
+.spt-forward_enabled{
+	background-position: -26px 0;
+	width: 19px;
+	height: 19px;
+}
+

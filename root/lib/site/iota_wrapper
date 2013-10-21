@@ -22,6 +22,7 @@
 [%-CALL assets.include("v2/css/bootstrap-theme.min.css")%]
 
 [%-CALL assets.include("v2/css/site.css")%]
+[%-CALL assets.include("v2/css/sprites.css")%]
 
 
 [%-CALL assets.include("v2/js/bootstrap.min.js")%]

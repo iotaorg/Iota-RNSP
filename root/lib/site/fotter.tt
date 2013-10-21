@@ -1,4 +1,3 @@
-
 [% IF institute.short_name == 'gov' %]
 <hr>
 <div class="container">
@@ -9,7 +8,6 @@
 </div>
 </div>
 [% END %]
-[% IF institute.short_name == 'gov' %]
 <footer>
   <div class="footer">
     <div class="container">
@@ -27,6 +25,7 @@
                             <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
                         </ul>
                     </div>
+                    [% IF institute.short_name == 'gov' %]
                     <div class="span3">
                         <h4>Dados</h4>
                         <ul class="unstyled">
@@ -53,36 +52,36 @@
                             <li><a href="http://www.cidadessustentaveis.org.br/contato">[%l('Contato')%]</a></li>
                         </ul>
                     </div>
+
+                    [%END%]
                 </div>
 
             </div>
         </div>
-
         <div class="row">
             <div class="span3">
                 <div class="row">
                     <div class="span1 iota-logo">
-                        <a href="http://awareti.github.io/Iota/" target="_blank" title="Clique aqui para saber mais sobre o Iota"><img src="/static/images/logo-96.png" alt="Iota"></a>
+                        <a href="http://awareti.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><span class="spt-logo-96" title="Iota"></span></a>
                     </div>
                     <div class="span1 opendata-logo">
-                        <a href="http://www.opendefinition.org/okd/" target="_blank"><img width="80" height="15" src="/static/img/od_80x15_blue.png" alt="OpenData"></a>
+                        <a href="http://www.opendefinition.org/okd/" target="_blank"><span class="spt-od_80x15_blue" title="OpenData"></span></a>
                     </div>
                 </div>
                 <div class="row">
-                    <small class="aware">
-                        [%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
-                    </small>
+                    <div class="aware">
+                        [%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <span class="spt-icone_aware" width="15" height="15" alt="Logo Aware"></a>
+                    </div>
                 </div>
             </div>
-
             <div class="span9">
                 <div class="row-fluid">
                     <div class="span9 parceiros">
                         <h4>[%l('Parceiros')%]</h4>
-                        <a href="http://www.dualtec.com.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a>
-                        <a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a>
-                        <a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a>
-                        <a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.BR"></a>
+                        <a href="http://www.dualtec.com.br/" target="_blank"><span class="spt-logo-dualtec" title="Dualtec"></span></a>
+                        <a href="http://www.w3c.br/" target="_blank"><span class="spt-logo-w3c" title="W3C Brasil"></span></a>
+                        <a href="http://www.nic.br/" target="_blank"><span class="spt-logo-nicbr" title="NIC.br"></span></a>
+                        <a href="http://www.cgi.br/" target="_blank"><span class="spt-logo-cgibr" title="CGI.BR"></span></a>
                     </div>
                     <div class="span3">
 
@@ -100,7 +99,6 @@
             </div>
         </div>
 
-
     </div>
   </div>
 
@@ -108,87 +106,8 @@
         <div class="footer-copyright-content">
               [%l('Todo o conteúdo do site é licenciado sob a')%]
               <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/br/" target="_blank">Creative Commons Attribution
-                <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
-              </a>
-        </div>
-  </div>
-
-</footer>
-
-[%ELSE%]
-<footer>
-  <div class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="span3">
-                <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
-            </div>
-            <div class="span9">
-
-                <div class="row-fluid">
-                    <div class="span3">
-                        <h4>Indicadores</h4>
-                        <ul class="unstyled">
-                            <li><a href="/mapa-do-site">[%l('Mapa do site')%]</a></li>
-                            <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="span3">
-                <div class="row">
-                    <div class="span1 iota-logo">
-                        <a href="http://awareti.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><img src="/static/images/logo-96.png" alt="Iota"></a>
-                    </div>
-                    <div class="span1 opendata-logo">
-                        <a href="http://www.opendefinition.org/okd/" target="_blank"><img width="80" height="15" src="/static/img/od_80x15_blue.png" alt="OpenData"></a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="aware">
-                        [%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <img src="/static/images/icone_aware.gif" width="15" height="15" alt="Logo Aware"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="span9">
-                <div class="row-fluid">
-                    <div class="span9 parceiros">
-                        <h4>[%l('Parceiros')%]</h4>
-                        <a href="http://www.dualtec.com.br/" target="_blank"><img src="/static/images/logo-dualtec.png" alt="Dualtec"></a>
-                        <a href="http://www.w3c.br/" target="_blank"><img src="/static/images/logo-w3c.png" alt="W3C Brasil"></a>
-                        <a href="http://www.nic.br/" target="_blank"><img src="/static/images/logo-nicbr.png" alt="NIC.br"></a>
-                        <a href="http://www.cgi.br/" target="_blank"><img src="/static/images/logo-cgibr.png" alt="CGI.BR"></a>
-                    </div>
-                    <div class="span3">
-
-                        <h4>Conecte-se</h4>
-                        <div class="icons">
-                            <a href="http://twitter.com/cidsustentaveis" target="_blank" class="social-icon twitter" title="Twitter">twitter</a>
-                            <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook" title="Facebook">facebook</a>
-                            <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube" title="Youtube">youtube</a>
-                            <a href="https://plus.google.com/115196492426365904810/about" target="_blank&quot;&quot;" class="social-icon googleplus" title="Google+">google+</a>
-                            <a href="/rss" class="social-icon rss" title="RSS">rss</a>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-  </div>
-
-  <div class="copyright">
-        <div class="footer-copyright-content">
-              [%l('Todo o conteúdo do site é licenciado sob a')%]
-              <a href="http://creativecommons.org/licenses/by/3.0/br/" target="_blank">Creative Commons Attribution
-                <img alt="Creative Commons Attribution" height="17" width="17" src="/static/images/cc.png">
+                <span class="cc.png"></span>
               </a>
         </div>
   </div>
 </footer>
-[% END %]
