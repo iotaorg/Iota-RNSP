@@ -33,24 +33,17 @@
             </div>
 
 
-            <div id="dados-abertos">
-                <div class="title">[%l('Dados abertos')%]</div>
 
-                <div class="content-fill">
-                    <div class="dados-botoes">
-                        <input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
-                        <input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
-                    </div>
-                    <div class="download-links">
-                    </div>
-                    <div class="share-link">
-                        <input type="text" id="share-link" value="url" />
-                    </div>
-                </div>
-            </div>
 
 
         </div>
+    </div>
+
+    <div id="dados-abertos">
+        <h2>[%l('Dados abertos')%]</h2>
+
+        <a href="/dados-abertos">[%l('Todos os dados deste site estão disponiveis em formato aberto.')%]</a>
+
     </div>
 
     <hr/>
