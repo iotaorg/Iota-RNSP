@@ -6,12 +6,19 @@ div.footer {
     background-color: #f5f5f5;
 }
 footer .copyright {
-    background-color: #efefef;
+    background-color: #424242;
+    color: white;
     border-top: 1px solid #e0e0e0;
     text-align: center;
 }
+
+footer .copyright a {
+    color: white;
+    text-decoration: underline;
+}
+
 footer .copyright .footer-copyright-content {
-    padding: 7px;
+    padding: 9px;
     font-size: 0.8em;
 }
 
@@ -44,4 +51,34 @@ footer .opendata-logo{
 footer .thumbnails-unstyled li {
     float: left;
     margin-right: 10px;
+}
+
+/* desligar o gradiente */
+
+.navbar-inverse {
+    background-image: none;
+    background-color: #424242;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    color: white;
+}
+
+.navbar-inverse .nav .active>a,
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus,
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus
+{
+    background-color: #323232;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus{
+    color: #eee;
+    background-color: #525252;
+}
+
+/* drop box azul = feio */
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+    background-image: none;
+    background-color: #323232;
+
 }

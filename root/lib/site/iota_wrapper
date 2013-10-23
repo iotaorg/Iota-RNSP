@@ -43,6 +43,8 @@
 [% IF institute.short_name == 'gov' %]
     [%- CALL assets.include("css/parceiros.gov.css")-%]
     [%- CALL assets.include("js/parceiros.gov.js")-%]
+
+    [%- CALL assets.include("v2/css/temp.parceiro.gov.css")-%]
 [%- END -%]
 
 [%- assets.export("css") -%]
