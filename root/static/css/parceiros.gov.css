@@ -1,11 +1,13 @@
 .logo-item{
-	display: none;	
+	display: none;
 }
+
 footer .partners{
 	margin-top: 35px;
 	border-top: 1px solid #f0f0f0;
 	padding-top: 20px;
 }
+
 .region-partners h2{
 	margin: 0 0 5px 0;
 	padding: 0;
@@ -13,19 +15,24 @@ footer .partners{
 	line-height: 1em;
 	text-align: center;
 	color: #777;
+    font-weight: bold;
 }
+
 .region-partners section{
 	margin-bottom: 10px;
 }
+
 #block-views-slide-realizacao-block,
 #block-views-slide-apoio-midia-block,
 #block-views-slide-patrocinadores-block{
 	margin-left: 0;
 }
+
 .slide-parceiros view-content{
 	margin-left: 10px;
-	margin-right: 10px;		
+	margin-right: 10px;
 }
+
 .makeMeScrollable{
     width:100%;
     height: 60px;

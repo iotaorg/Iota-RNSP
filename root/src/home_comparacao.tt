@@ -2,12 +2,13 @@
 
     <div class="row" id="indicadores-dados">
         <div class="col-md-4">
+            <h2>[%l('Indicadores')%]</h2>
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
         </div>
         <div class="col-md-8">
-            <h2>Países participantes</h2>
+            <h2>[%l('Países participantes')%]</h2>
             <div class="row text-center" id="country-container" >
             [%FOREACH ct IN web.countries%]
                 <div class="[%IF loop.size == 1%]col-xs-12[%ELSE%]col-sm-4[%END%]">
@@ -52,9 +53,8 @@
         </div>
     </div>
 
-
-
-    <h2>Estados participantes</h2>
+    <hr/>
+    <h2>[%l('Estados participantes')%]</h2>
     <div class="row list-countries" id="states-container">
     [%FOREACH ct IN web.countries%]
         <div class="col-xs-12 col-sm-6">
@@ -70,13 +70,11 @@
 
             </div>
         </div>
-
-
     [%END%]
     </div>
 
     <hr/>
-    <h2>Cidades participantes</h2>
+    <h2>[%l('Cidades participantes')%]</h2>
     <div class="row list-cities">
     [%FOREACH ct IN web.countries%]
         [%FOREACH st IN ct.states%]

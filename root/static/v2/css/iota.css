@@ -1,0 +1,47 @@
+
+div.footer {
+    margin-top: 35px;
+    padding: 20px 0;
+    border-top: 1px solid #E5E5E5;
+    background-color: #f5f5f5;
+}
+footer .copyright {
+    background-color: #efefef;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+}
+footer .copyright .footer-copyright-content {
+    padding: 7px;
+    font-size: 0.8em;
+}
+
+footer h4 {
+    color: #CCC;
+    margin: 3px 0;
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1.5em;
+}
+
+
+footer .parceiros a img{
+    border: none;
+    margin-right: 15px;
+}
+
+footer .aware{
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+footer .iota-logo{
+    max-width: 80px;
+}
+footer .opendata-logo{
+    margin-top: 10px;
+}
+
+footer .thumbnails-unstyled li {
+    float: left;
+    margin-right: 10px;
+}

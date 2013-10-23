@@ -22,6 +22,7 @@
 [%-CALL assets.include("v2/css/bootstrap-theme.min.css")%]
 
 [%-CALL assets.include("v2/css/site.css")%]
+[%-CALL assets.include("v2/css/iota.css")%]
 [%-CALL assets.include("v2/css/sprites.css")%]
 
 
@@ -37,6 +38,12 @@
 [%-CALL assets.include("v2/js/google_visualization.js")%]
 
 [%-CALL assets.include("v2/js/load-google-maps.js")%]
+
+
+[% IF institute.short_name == 'gov' %]
+    [%- CALL assets.include("css/parceiros.gov.css")-%]
+    [%- CALL assets.include("js/parceiros.gov.js")-%]
+[%- END -%]
 
 [%- assets.export("css") -%]
 

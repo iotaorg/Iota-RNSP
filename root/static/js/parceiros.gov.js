@@ -7,12 +7,12 @@
             $(".region-navigation ul.menu li.last a").attr("href","#mapa_site");
         }
 
-        $("#block-views-slide-realizacao-block").addClass("span6");
-        $("#block-views-slide-apoio-block").addClass("span6");
-        $("#block-views-slide-apoio-midia-block").addClass("span4");
-        $("#block-views-slide-parceiros-block").addClass("span4");
-        $("#block-views-d01ac43290f06ee830fff0017a534c6d").addClass("span4");
-        $("#block-views-slide-patrocinadores-block").addClass("span12");
+        $("#block-views-slide-realizacao-block").addClass("span6 col-md-6");
+        $("#block-views-slide-apoio-block").addClass("span6 col-md-6");
+        $("#block-views-slide-apoio-midia-block").addClass("span4 col-md-4");
+        $("#block-views-slide-parceiros-block").addClass("span4 col-md-4");
+        $("#block-views-d01ac43290f06ee830fff0017a534c6d").addClass("span4 col-md-4");
+        $("#block-views-slide-patrocinadores-block").addClass("span12 col-md-12");
 
         if ($(".region-partners section").length > 0){
 
