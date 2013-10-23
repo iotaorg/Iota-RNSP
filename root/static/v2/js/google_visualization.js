@@ -25,18 +25,35 @@ var $google_visualization_countries = function (){
             role: 'tooltip'
         });
         var ivalue = new Array(), colors = new Array(),
-        ixindex = new Array();
+        ixindex = new Array(),
+        region = 'world';
 
-        $('#country-container .country-item').each(function(i, e){
-            var $e = $(e);
-            ixindex.push($e);
-            colors.push($e.css('backgroundColor'));
-            ivalue.push([
-                $e.text(),
-                i,
-                $e.text()
-            ]);
-        });
+
+        if ($('#country-container .country-item').length == 1) {
+            region = 'BR';
+            $('#states-container .list-state').each(function(i, e){
+                var $e = $(e);
+                ixindex.push($e);
+                //colors.push($e.css('borderLeftColor'));
+                ivalue.push([
+                    $e.text(),
+                    i,
+                    $e.text()
+                ]);
+            });
+
+        }else{
+            $('#country-container .country-item').each(function(i, e){
+                var $e = $(e);
+                ixindex.push($e);
+                colors.push($e.css('backgroundColor'));
+                ivalue.push([
+                    $e.text(),
+                    i,
+                    $e.text()
+                ]);
+            });
+        }
 
         data.addRows(ivalue);
 
@@ -44,8 +61,8 @@ var $google_visualization_countries = function (){
         stateHeatMap.draw(data, {
             width: $elm.width(),
             height: $elm.width() / 1.57,
-            /*region: 'world',*/
-            resolution: 'world',
+            region: region,
+            resolution: region === 'world' ? 'world' : 'provinces',
 
             datalessRegionColor: '#EEE',
             backgroundColor: '#d9edff',

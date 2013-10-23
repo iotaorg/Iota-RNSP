@@ -10,7 +10,7 @@
             <h2>Países participantes</h2>
             <div class="row text-center" id="country-container" >
             [%FOREACH ct IN web.countries%]
-                <div class="col-sm-4">
+                <div class="[%IF loop.size == 1%]col-xs-12[%ELSE%]col-sm-4[%END%]">
                     <a style="text-decoration: none" href="#country[%ct.id%]"><div class="block-list country-item" style="background-color: #[%ct.color%];">[%ct.name%]</div></a>
                 </div>
             [%END%]
@@ -55,7 +55,7 @@
 
 
     <h2>Estados participantes</h2>
-    <div class="row list-countries">
+    <div class="row list-countries" id="states-container">
     [%FOREACH ct IN web.countries%]
         <div class="col-xs-12 col-sm-6">
             <span class="anchor" id="country[%ct.id%]"></span>
@@ -66,7 +66,6 @@
                 <div class="col-sm-6 col-xs-6 col-lg-6">
                     <a href="#state[%st.id%]"><div style="border-left-color: #[%ct.color%];box-shadow: 0px 0px 1px #[%ct.color%]" class="list-state">[%st.name%]</div></a>
                 </div>
-
             [%END%]
 
             </div>

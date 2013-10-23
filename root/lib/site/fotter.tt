@@ -12,13 +12,13 @@
   <div class="footer">
     <div class="container">
         <div class="row">
-            <div class="span3 col-md-3">
+            <div class="span3 col-sm-3">
                 <img src="/static/images/logo[% IF institute.short_name == 'org' %]-movimento[% END %].png" alt="logo [%institute.short_name%]">
             </div>
-            <div class="span9 col-md-9">
+            <div class="span9 col-sm-9">
 
                 <div class="row-fluid">
-                    <div class="span3 col-md-3">
+                    <div class="span3 col-sm-3">
                         <h4>Indicadores</h4>
                         <ul class="unstyled">
                             <li><a href="/mapa-do-site">[%l('Mapa do site')%]</a></li>
@@ -26,7 +26,7 @@
                         </ul>
                     </div>
                     [% IF institute.short_name == 'gov' %]
-                    <div class="span3 col-md-3">
+                    <div class="span3 col-sm-3">
                         <h4>Dados</h4>
                         <ul class="unstyled">
                             <li><a href="http://www.cidadessustentaveis.org.br/boas-praticas">[%l('Boas Práticas')%]</a></li>
@@ -34,7 +34,7 @@
                             <li><a href="http://www.cidadessustentaveis.org.br/signatarios">[%l('Cidades Participantes')%]</a></li>
                         </ul>
                     </div>
-                    <div class="span3 col-md-3">
+                    <div class="span3 col-sm-3">
                         <h4>Institucional</h4>
                         <ul class="unstyled">
                             <li><a href="http://www.cidadessustentaveis.org.br/institucional/apresentacao">[%l('Apresentação')%]</a></li>
@@ -43,7 +43,7 @@
                             <li><a href="http://www.cidadessustentaveis.org.br/institucional/realizadores">[%l('Realizadores')%]</a></li>
                         </ul>
                     </div>
-                    <div class="span3 col-md-3">
+                    <div class="span3 col-sm-3">
                         <h4>Mais</h4>
                         <ul class="unstyled">
                             <li><a href="http://www.cidadessustentaveis.org.br/institucional/material-divulgacao">[%l('Material de Divulgação')%]</a></li>
@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="span3 col-md-3">
+            <div class="span3 col-sm-3">
                 <div class="row">
                     <div class="span1 iota-logo">
                         <a href="http://awareti.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><span class="spt-logo-96" title="Iota"></span></a>
@@ -74,16 +74,16 @@
                     </div>
                 </div>
             </div>
-            <div class="span9 col-md-9">
+            <div class="span9 col-sm-9">
                 <div class="row-fluid">
-                    <div class="span9 col-md-9 parceiros">
+                    <div class="span9 col-sm-9 parceiros">
                         <h4>[%l('Parceiros')%]</h4>
                         <a href="http://www.dualtec.com.br/" target="_blank"><span class="spt-logo-dualtec" title="Dualtec"></span></a>
                         <a href="http://www.w3c.br/" target="_blank"><span class="spt-logo-w3c" title="W3C Brasil"></span></a>
                         <a href="http://www.nic.br/" target="_blank"><span class="spt-logo-nicbr" title="NIC.br"></span></a>
                         <a href="http://www.cgi.br/" target="_blank"><span class="spt-logo-cgibr" title="CGI.BR"></span></a>
                     </div>
-                    <div class="span3 col-md-3">
+                    <div class="span3 col-sm-3">
 
                         <h4>[%l('Conecte-se')%]</h4>
                         <div class="icons">
