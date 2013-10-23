@@ -64,7 +64,7 @@
             <div class="row">
             [%FOREACH st IN ct.states%]
                 <div class="[%IF web.countries.size == 1%]col-sm-3[%ELSE%]col-sm-6[%END%]">
-                    <a href="#state[%st.id%]"><div style="border-left-color: #[%ct.color%];box-shadow: 0px 0px 1px #[%ct.color%]" class="list-state">[%st.name%]</div></a>
+                    <a href="#state[%st.id%]"><div style="border-left-color: #[%ct.color%];box-shadow: inset 0px 0px 1px 0px #[%ct.color%]" class="list-state">[%st.name%]</div></a>
                 </div>
             [%END%]
 
@@ -85,7 +85,7 @@
             <div class="row">
             [%FOREACH oct IN web.cities_by_state.${ct.id}.${st.id}%]
                 <div class="col-sm-6">
-                    <a href="/[%oct.pais%]/[%oct.uf%]/[%oct.name_uri%]" target="_blank"><div style="border-left-color: #[%ct.color%];box-shadow: 0px 0px 1px #[%ct.color%]" class="list-state"><span class="glyphicon glyphicon-link"></span> [%oct.name%]</div></a>
+                    <a href="/[%oct.pais%]/[%oct.uf%]/[%oct.name_uri%]" target="_blank"><div style="border-left-color: #[%ct.color%];box-shadow: inset 0px 0px 1px 0px #[%ct.color%]" class="list-state"><span class="glyphicon glyphicon-link"></span> [%oct.name%]</div></a>
                 </div>
             [%END%]
 
