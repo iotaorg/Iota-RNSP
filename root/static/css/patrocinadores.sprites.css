@@ -1,0 +1,538 @@
+.spt-aalborg, .spt-abema, .spt-abril, .spt-afrobras, .spt-akatu, .spt-alcoa, .spt-anamma, .spt-arapyau, .spt-associacao-brasileira-dos-municipios-abm, .spt-a-tarde, .spt-atletas-pela-cidadania, .spt-avina, .spt-bradesco, .spt-brf, .spt-caixa, .spt-cbcs, .spt-cbn, .spt-cenpec, .spt-cinco-elementos, .spt-cleardot, .spt-conama, .spt-cpfl-energia, .spt-cyrela, .spt-dac-danish-architecture-centre, .spt-democracia-e-sustentabilidade, .spt-dieese, .spt-dpz, .spt-dualtec, .spt-eco-city-builders, .spt-ecodes, .spt-editora-globo, .spt-embraer, .spt-escola-de-governo, .spt-ethos_0, .spt-famurs, .spt-ford-foundation, .spt-forum-amazonia-sustentavel, .spt-frente-nacional-de-prefeitos, .spt-gife, .spt-greenpeace, .spt-ibm, .spt-itaipu-binacional, .spt-itau, .spt-la-ciudad-verde, .spt-logo-aware, .spt-logo_rede_paraguaia, .spt-logosmall, .spt-meio-norte, .spt-mobilize, .spt-movimento-de-combate-a-corrupcao-eleitoral-mcce, .spt-natura, .spt-nestle, .spt-new-cities-foundation, .spt-nucleo-de-estudos-do-futuro, .spt-oab, .spt-onu-habitat, .spt-pnuma, .spt-porto-seguro, .spt-promon, .spt-radio-globo, .spt-red-argentina-de-municipios-frente-al-cambio-climatico, .spt-rede-de-acao-politica-pela-sustentabilidade-raps_0, .spt-rede-globo, .spt-red_uruguaya, .spt-revista-piaui, .spt-rnsp_0, .spt-roland-berger, .spt-rsb_sustentaveis, .spt-safra, .spt-santander, .spt-saude-e-sustentabilidade, .spt-semeia, .spt-sesc, .spt-socioambiental, .spt-sos-mata-atlantica, .spt-sustainable-cities, .spt-thisbigcity_logo_black_on_transparent_1_0, .spt-todos-pela-educacao, .spt-transition-brasil, .spt-translate-32, .spt-trata-brasil, .spt-uniao-dos-vereadores-do-brasil, .spt-unicef, .spt-vale, .spt-vitae-civilis, .spt-votorantim, .spt-vr, .spt-walmart, .spt-wwf{
+    background: url(/static/img/sprites.patrocinadores.png) no-repeat;
+    display: inline-block;
+}
+
+.spt-aalborg{
+    background-position: 0 0;
+    width: 106px;
+    height: 55px;
+}
+
+.spt-abema{
+    background-position: -2848px 0;
+    width: 92px;
+    height: 55px;
+}
+
+.spt-abril{
+    background-position: -4289px 0;
+    width: 75px;
+    height: 55px;
+}
+
+.spt-afrobras{
+    background-position: -5439px 0;
+    width: 67px;
+    height: 55px;
+}
+
+.spt-akatu{
+    background-position: -4517px 0;
+    width: 74px;
+    height: 55px;
+}
+
+.spt-alcoa{
+    background-position: -5972px 0;
+    width: 64px;
+    height: 55px;
+}
+
+.spt-anamma{
+    background-position: -5303px 0;
+    width: 67px;
+    height: 55px;
+}
+
+.spt-arapyau{
+    background-position: -4592px 0;
+    width: 73px;
+    height: 55px;
+}
+
+.spt-associacao-brasileira-dos-municipios-abm{
+    background-position: -5642px 0;
+    width: 66px;
+    height: 55px;
+}
+
+.spt-a-tarde{
+    background-position: -1544px 0;
+    width: 109px;
+    height: 55px;
+}
+
+.spt-atletas-pela-cidadania{
+    background-position: -4666px 0;
+    width: 72px;
+    height: 55px;
+}
+
+.spt-avina{
+    background-position: -3897px 0;
+    width: 80px;
+    height: 55px;
+}
+
+.spt-bradesco{
+    background-position: -5575px 0;
+    width: 66px;
+    height: 55px;
+}
+
+.spt-brf{
+    background-position: -4884px 0;
+    width: 70px;
+    height: 55px;
+}
+
+.spt-caixa{
+    background-position: -281px 0;
+    width: 167px;
+    height: 55px;
+}
+
+.spt-cbcs{
+    background-position: -6450px 0;
+    width: 54px;
+    height: 55px;
+}
+
+.spt-cbn{
+    background-position: -6100px 0;
+    width: 62px;
+    height: 55px;
+}
+
+.spt-cenpec{
+    background-position: -6775px 0;
+    width: 51px;
+    height: 55px;
+}
+
+.spt-cinco-elementos{
+    background-position: -1972px 0;
+    width: 100px;
+    height: 55px;
+}
+
+.spt-cleardot{
+    background-position: -7071px -49px ;
+    width: 1px;
+    height: 1px;
+}
+
+.spt-conama{
+    background-position: -5026px 0;
+    width: 69px;
+    height: 55px;
+}
+
+.spt-cpfl-energia{
+    background-position: -5709px 0;
+    width: 65px;
+    height: 55px;
+}
+
+.spt-cyrela{
+    background-position: -4136px 0;
+    width: 76px;
+    height: 55px;
+}
+
+.spt-dac-danish-architecture-centre{
+    background-position: -3303px 0;
+    width: 88px;
+    height: 55px;
+}
+
+.spt-democracia-e-sustentabilidade{
+    background-position: -2755px 0;
+    width: 92px;
+    height: 55px;
+}
+
+.spt-dieese{
+    background-position: -2275px 0;
+    width: 98px;
+    height: 55px;
+}
+
+.spt-dpz{
+    background-position: -6560px 0;
+    width: 54px;
+    height: 55px;
+}
+
+.spt-dualtec{
+    background-position: -3978px 0;
+    width: 80px;
+    height: 55px;
+}
+
+.spt-eco-city-builders{
+    background-position: -5166px 0;
+    width: 68px;
+    height: 55px;
+}
+
+.spt-ecodes{
+    background-position: -4213px 0;
+    width: 75px;
+    height: 55px;
+}
+
+.spt-editora-globo{
+    background-position: -6615px 0;
+    width: 53px;
+    height: 55px;
+}
+
+.spt-embraer{
+    background-position: -1434px 0;
+    width: 109px;
+    height: 55px;
+}
+
+.spt-escola-de-governo{
+    background-position: -3033px 0;
+    width: 89px;
+    height: 55px;
+}
+
+.spt-ethos_0{
+    background-position: -3481px 0;
+    width: 84px;
+    height: 55px;
+}
+
+.spt-famurs{
+    background-position: -6339px 0;
+    width: 55px;
+    height: 55px;
+}
+
+.spt-ford-foundation{
+    background-position: -449px 0;
+    width: 133px;
+    height: 55px;
+}
+
+.spt-forum-amazonia-sustentavel{
+    background-position: -4365px 0;
+    width: 75px;
+    height: 55px;
+}
+
+.spt-frente-nacional-de-prefeitos{
+    background-position: -1204px 0;
+    width: 116px;
+    height: 55px;
+}
+
+.spt-gife{
+    background-position: -6980px 0;
+    width: 45px;
+    height: 55px;
+}
+
+.spt-greenpeace{
+    background-position: -1654px 0;
+    width: 106px;
+    height: 55px;
+}
+
+.spt-ibm{
+    background-position: -4059px 0;
+    width: 76px;
+    height: 55px;
+}
+
+.spt-itaipu-binacional{
+    background-position: -1761px 0;
+    width: 106px;
+    height: 55px;
+}
+
+.spt-itau{
+    background-position: -6669px 0;
+    width: 52px;
+    height: 55px;
+}
+
+.spt-la-ciudad-verde{
+    background-position: -6163px 0;
+    width: 60px;
+    height: 55px;
+}
+
+.spt-logo-aware{
+    background-position: -7071px -33px ;
+    width: 15px;
+    height: 15px;
+}
+
+.spt-logo_rede_paraguaia{
+    background-position: -583px 0;
+    width: 128px;
+    height: 55px;
+}
+
+.spt-logosmall{
+    background-position: -6722px 0;
+    width: 52px;
+    height: 55px;
+}
+
+.spt-meio-norte{
+    background-position: -4812px 0;
+    width: 71px;
+    height: 55px;
+}
+
+.spt-mobilize{
+    background-position: -3213px 0;
+    width: 89px;
+    height: 55px;
+}
+
+.spt-movimento-de-combate-a-corrupcao-eleitoral-mcce{
+    background-position: -3651px 0;
+    width: 82px;
+    height: 55px;
+}
+
+.spt-natura{
+    background-position: -6224px 0;
+    width: 57px;
+    height: 55px;
+}
+
+.spt-nestle{
+    background-position: -6879px 0;
+    width: 50px;
+    height: 55px;
+}
+
+.spt-new-cities-foundation{
+    background-position: -3734px 0;
+    width: 81px;
+    height: 55px;
+}
+
+.spt-nucleo-de-estudos-do-futuro{
+    background-position: -2941px 0;
+    width: 91px;
+    height: 55px;
+}
+
+.spt-oab{
+    background-position: -5841px 0;
+    width: 65px;
+    height: 55px;
+}
+
+.spt-onu-habitat{
+    background-position: -966px 0;
+    width: 118px;
+    height: 55px;
+}
+
+.spt-pnuma{
+    background-position: -6505px 0;
+    width: 54px;
+    height: 55px;
+}
+
+.spt-porto-seguro{
+    background-position: -6930px 0;
+    width: 49px;
+    height: 55px;
+}
+
+.spt-promon{
+    background-position: -2174px 0;
+    width: 100px;
+    height: 55px;
+}
+
+.spt-radio-globo{
+    background-position: -2374px 0;
+    width: 97px;
+    height: 55px;
+}
+
+.spt-red-argentina-de-municipios-frente-al-cambio-climatico{
+    background-position: -2073px 0;
+    width: 100px;
+    height: 55px;
+}
+
+.spt-rede-de-acao-politica-pela-sustentabilidade-raps_0{
+    background-position: -4955px 0;
+    width: 70px;
+    height: 55px;
+}
+
+.spt-rede-globo{
+    background-position: -5507px 0;
+    width: 67px;
+    height: 55px;
+}
+
+.spt-red_uruguaya{
+    background-position: -1085px 0;
+    width: 118px;
+    height: 55px;
+}
+
+.spt-revista-piaui{
+    background-position: -5096px 0;
+    width: 69px;
+    height: 55px;
+}
+
+.spt-rnsp_0{
+    background-position: -3816px 0;
+    width: 80px;
+    height: 55px;
+}
+
+.spt-roland-berger{
+    background-position: -2472px 0;
+    width: 94px;
+    height: 55px;
+}
+
+.spt-rsb_sustentaveis{
+    background-position: -712px 0;
+    width: 126px;
+    height: 55px;
+}
+
+.spt-safra{
+    background-position: -5907px 0;
+    width: 64px;
+    height: 55px;
+}
+
+.spt-santander{
+    background-position: -3123px 0;
+    width: 89px;
+    height: 55px;
+}
+
+.spt-saude-e-sustentabilidade{
+    background-position: -2567px 0;
+    width: 93px;
+    height: 55px;
+}
+
+.spt-semeia{
+    background-position: -5235px 0;
+    width: 67px;
+    height: 55px;
+}
+
+.spt-sesc{
+    background-position: -5775px 0;
+    width: 65px;
+    height: 55px;
+}
+
+.spt-socioambiental{
+    background-position: -6827px 0;
+    width: 51px;
+    height: 55px;
+}
+
+.spt-sos-mata-atlantica{
+    background-position: -6282px 0;
+    width: 56px;
+    height: 55px;
+}
+
+.spt-sustainable-cities{
+    background-position: -3392px 0;
+    width: 88px;
+    height: 55px;
+}
+
+.spt-thisbigcity_logo_black_on_transparent_1_0{
+    background-position: -107px 0;
+    width: 173px;
+    height: 55px;
+}
+
+.spt-todos-pela-educacao{
+    background-position: -4739px 0;
+    width: 72px;
+    height: 55px;
+}
+
+.spt-transition-brasil{
+    background-position: -5371px 0;
+    width: 67px;
+    height: 55px;
+}
+
+.spt-translate-32{
+    background-position: -7071px 0;
+    width: 32px;
+    height: 32px;
+}
+
+.spt-trata-brasil{
+    background-position: -6037px 0;
+    width: 62px;
+    height: 55px;
+}
+
+.spt-uniao-dos-vereadores-do-brasil{
+    background-position: -4441px 0;
+    width: 75px;
+    height: 55px;
+}
+
+.spt-unicef{
+    background-position: -1868px 0;
+    width: 103px;
+    height: 55px;
+}
+
+.spt-vale{
+    background-position: -3566px 0;
+    width: 84px;
+    height: 55px;
+}
+
+.spt-vitae-civilis{
+    background-position: -1321px 0;
+    width: 112px;
+    height: 55px;
+}
+
+.spt-votorantim{
+    background-position: -839px 0;
+    width: 126px;
+    height: 55px;
+}
+
+.spt-vr{
+    background-position: -6395px 0;
+    width: 54px;
+    height: 55px;
+}
+
+.spt-walmart{
+    background-position: -2661px 0;
+    width: 93px;
+    height: 55px;
+}
+
+.spt-wwf{
+    background-position: -7026px 0;
+    width: 44px;
+    height: 55px;
+}

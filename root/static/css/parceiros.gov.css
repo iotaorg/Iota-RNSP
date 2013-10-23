@@ -51,8 +51,8 @@ div.scrollableArea a {
 	text-align: center;
 	margin-bottoM: 15px;
 }
-#scroll-patrocinadores img,
-#scroll-realizacao img,
-#scroll-apoio img{
+#scroll-patrocinadores span,
+#scroll-realizacao span,
+#scroll-apoio span{
 	margin: 0 15px;
 }

@@ -24,6 +24,8 @@
 [%-CALL assets.include("v2/css/site.css")%]
 [%-CALL assets.include("v2/css/iota.css")%]
 [%-CALL assets.include("v2/css/sprites.css")%]
+[%-CALL assets.include("css/patrocinadores.sprites.css")%]
+
 
 
 [%-CALL assets.include("v2/js/bootstrap.min.js")%]
