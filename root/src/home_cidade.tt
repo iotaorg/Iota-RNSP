@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        [% IF city.regions.size>0 %]
+        [% IF city.regions.size && city.regions.size>0 %]
 			<div class="row botoes-regioes">
 				<div class="span6 center">
 					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores" class="link-axis">

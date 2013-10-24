@@ -8,7 +8,10 @@
             </div>
         </div>
         <div class="col-md-8">
+
+            <div class="[%IF web.countries.size == 1%]hide[%END%]">
             <h2>[%l('Países participantes')%]</h2>
+            </div>
             <div class="row text-center" id="country-container" >
             [%FOREACH ct IN web.countries%]
                 <div class="[%IF loop.size == 1%]col-xs-12[%ELSE%]col-sm-4[%END%]">
@@ -16,6 +19,7 @@
                 </div>
             [%END%]
             </div>
+
 
 
             [%IF 0%]
@@ -71,7 +75,7 @@
     <div class="row list-cities">
     [%FOREACH ct IN web.countries%]
         [%FOREACH st IN ct.states%]
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <span class="anchor" id="state[%st.id%]"></span>
             <h3 style="background-color: #[%ct.color%];">[%st.name%] <a href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
 
