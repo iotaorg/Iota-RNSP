@@ -803,21 +803,20 @@ sub web_load_country: Private {
             'me.id' => {'in' => $c->stash->{network_data}{countries} },
             'states.id' => {'in' => $c->stash->{network_data}{states} }
         }, {
-            order_by => ['me.name'],
             prefetch => 'states'
         }
     )->all;
 
     my $ca = Chart::Clicker::Drawing::ColorAllocator->new;
 
-    foreach my $country (@countries){
+    foreach my $country (sort { $a->name cmp $b->name } @countries){
 
 
         push @{$c->stash->{web}{countries}}, {
             ( map { $_ => $country->$_ } qw/id name name_url/),
 
             states => [
-                map { { id => $_->id, name => $_->name, uf => $_->uf } } $country->states
+                map { { id => $_->id, name => $_->name, uf => $_->uf } } sort { $a->name cmp $b->name } $country->states
             ],
 
             color => $ca->next->as_hex_string

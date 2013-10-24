@@ -72,23 +72,22 @@
 
     <hr/>
     <h2>[%l('Cidades participantes')%]</h2>
-    <div class="row list-cities">
+    <div class="row list-cities column_count2">
     [%FOREACH ct IN web.countries%]
         [%FOREACH st IN ct.states%]
-        <div class="col-sm-12">
+        <div style="display: inline-block" class="col-xs-12">
             <span class="anchor" id="state[%st.id%]"></span>
             <h3 style="background-color: #[%ct.color%];">[%st.name%] <a href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
 
             <div class="row">
             [%FOREACH oct IN web.cities_by_state.${ct.id}.${st.id}%]
-                <div class="col-sm-6">
+                <div class="col-xs-12 col-sm-6">
                     <a href="/[%oct.pais%]/[%oct.uf%]/[%oct.name_uri%]" target="_blank"><div style="border-left-color: #[%ct.color%];box-shadow: inset 0px 0px 1px 0px #[%ct.color%]" class="list-state"><span class="glyphicon glyphicon-link"></span> [%oct.name%]</div></a>
                 </div>
             [%END%]
 
             </div>
         </div>
-
         [%END%]
     [%END%]
     </div>
