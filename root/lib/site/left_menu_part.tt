@@ -39,7 +39,7 @@
 <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
 </li>
 
-<li [% !menu && IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
+<li [% IF !menu && c_req_path == 'dados-abertos' %]class="active"[%END%]>
 <a href="/dados-abertos">[%l('Dados abertos')%]</a>
 </li>
 
