@@ -11,7 +11,8 @@ before_install:
   - cpanm -n DBIx::Class::Optional::Dependencies
   - cpanm -n Catalyst::Plugin::Assets
 before_script:
-  - psql -c 'create database iota_production' -U postgres
+  - psql -c 'create database iota_production;' -U postgres
+  - psql -d iota_production -c "create schema 'sqitch';" -U postgres
   - sqitch -d iota_production deploy
 notifications:
   irc:
