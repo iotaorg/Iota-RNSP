@@ -114,14 +114,15 @@ body {
     z-index: 4;
     width: 14px;
     height: 7px;
-    background-image: url(/static/v2/img/sprites.png);
-    background-position: -276px -169px;
+    background-image: url(/static/v2/img/sprites-v2.png);
+    /* .spt-seta */
+    background-position: -365px -73px ;
     right: 10px;
     top: 11px;
 }
 
 #group_list .select.open:after {
-    background-position: -155px -169px ;
+    background-position: -365px -65px ;
 }
 
 

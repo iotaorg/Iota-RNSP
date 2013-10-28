@@ -39,13 +39,10 @@
 <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
 </li>
 
-<li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
+<li [% !menu && IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
 <a href="/dados-abertos">[%l('Dados abertos')%]</a>
 </li>
 
 [%- IF institute.short_name == 'gov' -%]
 <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
 [%-END-%]
-<li>
-<a href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a>
-</li>
