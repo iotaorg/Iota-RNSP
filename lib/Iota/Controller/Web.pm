@@ -1137,13 +1137,12 @@ sub _load_variables {
 
     my @admins_ids = map { $_->id } $c->stash->{network}->users->search(
         {
-            city_id => undef    # admins
+            city_id => undef # admins
         }
     )->all;
     my $mid = $user->id;
 
     my $var_confrs = $c->model('DB::UserVariableConfig')->search( { user_id => [ @admins_ids, $mid ] } );
-
     my $aux = {};
     while ( my $conf = $var_confrs->next ) {
         push @{ $aux->{ $conf->variable_id } }, [ $conf->display_in_home, $conf->user_id, $conf->position ];
@@ -1162,13 +1161,16 @@ sub _load_variables {
 
         foreach my $conf (@$wants) {
             if ( $conf->[1] == $mid && $conf->[0] ) {
-
+                $order->{$vid} = $conf->[2];
+                $show->{$vid}++ and last;
+            }elsif ($conf->[0] && !exists $order->{$vid}){
                 $order->{$vid} = $conf->[2];
                 $show->{$vid}++ and last;
             }
         }
 
     }
+
 
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },
