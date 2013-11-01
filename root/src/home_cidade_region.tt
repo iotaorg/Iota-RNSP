@@ -46,7 +46,7 @@
 								<dd>[%city.uf%]</dd>
 
 								<dt>País: </dt>
-								<dd>[%l('Brasil')%]</dd>
+								<dd>[% IF city.pais == 'br'%][%l('Brasil')%][%ELSE%][%city.pais%][%END%]</dd>
 
 								[% FOREACH vv IN user_basic_variables %]
 								<dt>[%vv.variable.name%]: </dt>
