@@ -435,6 +435,8 @@ sub _load_variables_values {
             indicator_id => $self->indicator->id,
             active_value => 1,
 
+            region_id => undef, ## TODO arrumar isso pra pegar a regiao la de cima!!
+
             ( valid_from => $valid_from ) x !!$valid_from,
         },
         {
