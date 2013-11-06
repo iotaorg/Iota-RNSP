@@ -55,8 +55,8 @@
     <div class="row list-countries" id="states-container">
     [%FOREACH ct IN web.countries%]
         <div class="[%IF loop.size == 1%]col-xs-12[%ELSE%]col-sm-6[%END%]">
-            <span class="anchor" style="top:-60px" id="country[%ct.id%]"></span>
-            <h2 style="background-color: #[%ct.color%];">[%ct.name%]</h2>
+
+            <h2 style="background-color: #[%ct.color%];">[%ct.name%]<span class="anchor" style="top:-60px" id="country[%ct.id%]"></span></h2>
 
             <div class="row">
             [%FOREACH st IN ct.states%]
@@ -76,8 +76,8 @@
     [%FOREACH ct IN web.countries%]
         [%FOREACH st IN ct.states%]
         <div style="display: inline-block" class="col-xs-12">
-            <span class="anchor" id="state[%st.id%]"></span>
-            <h3 style="background-color: #[%ct.color%];">[%st.name%] <a href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
+            <h3 style="background-color: #[%ct.color%];">[%st.name%] <a href="#country[%ct.id%]"><small>[%ct.name%]</small></a><span class="anchor" id="state[%st.id%]"></span></h3>
+
 
             <div class="row">
             [%FOREACH oct IN web.cities_by_state.${ct.id}.${st.id}%]
