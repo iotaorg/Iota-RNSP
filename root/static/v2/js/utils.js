@@ -30,7 +30,7 @@ $('html').on('click', 'a[data-animated-anchor]', function(){
     return false;
 });
 
-$(window).load(function(){
+$(function(){
     var hash = window.location.hash, who = hash ? $('a[href="'+hash+'"]:first') : null;
     if (who){
         who.click();
