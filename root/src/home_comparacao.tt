@@ -56,7 +56,7 @@
     [%FOREACH ct IN web.countries%]
         <div style="display: inline-block" class="col-xs-12">
 
-            <h2 id="country[%ct.id%]" data-animated-anchor-offset="-60" style="background-color: #[%ct.color%];">[%ct.name%]</h2>
+            <h2 id="id_country[%ct.id%]" data-animated-anchor-offset="-60" style="background-color: #[%ct.color%];">[%ct.name%]</h2>
 
             <div class="row">
             [%FOREACH st IN ct.states%]
@@ -76,7 +76,7 @@
     [%FOREACH ct IN web.countries%]
         [%FOREACH st IN ct.states%]
         <div style="display: inline-block" class="col-xs-12">
-            <h3 style="background-color: #[%ct.color%];" id="state[%st.id%]" data-animated-anchor-offset="-60">[%st.name%] <a data-animated-anchor href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
+            <h3 style="background-color: #[%ct.color%];" id="id_state[%st.id%]" data-animated-anchor-offset="-60">[%st.name%] <a data-animated-anchor href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
 
 
             <div class="row">
