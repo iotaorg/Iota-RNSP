@@ -15,7 +15,7 @@
             <div class="row text-center" id="country-container" >
             [%FOREACH ct IN web.countries%]
                 <div class="[%IF loop.size == 1%]col-xs-12[%ELSE%]col-sm-4[%END%]">
-                    <a style="text-decoration: none" href="#country[%ct.id%]"><div class="block-list country-item" style="background-color: #[%ct.color%];">[%ct.name%]</div></a>
+                    <a style="text-decoration: none" data-animated-anchor href="#country[%ct.id%]"><div class="block-list country-item" style="background-color: #[%ct.color%];">[%ct.name%]</div></a>
                 </div>
             [%END%]
             </div>
@@ -52,16 +52,16 @@
 
     <hr/>
     <h2>[%l('Estados participantes')%]</h2>
-    <div class="row list-countries" id="states-container">
+    <div class="row list-countries column_count2" id="states-container">
     [%FOREACH ct IN web.countries%]
-        <div class="[%IF loop.size == 1%]col-xs-12[%ELSE%]col-sm-6[%END%]">
+        <div style="display: inline-block" class="col-xs-12">
 
-            <h2 style="background-color: #[%ct.color%];">[%ct.name%]<span class="anchor" style="top:-60px" id="country[%ct.id%]"></span></h2>
+            <h2 id="country[%ct.id%]" data-animated-anchor-offset="-60" style="background-color: #[%ct.color%];">[%ct.name%]</h2>
 
             <div class="row">
             [%FOREACH st IN ct.states%]
-                <div class="[%IF web.countries.size == 1%]col-sm-3[%ELSE%]col-sm-6[%END%]">
-                    <a href="#state[%st.id%]"><div style="border-left-color: #[%ct.color%];box-shadow: inset 0px 0px 1px 0px #[%ct.color%]" class="list-state">[%st.name%]</div></a>
+                <div class="col-xs-12 col-sm-6">
+                    <a data-animated-anchor href="#state[%st.id%]"><div style="border-left-color: #[%ct.color%];box-shadow: inset 0px 0px 1px 0px #[%ct.color%]" class="list-state">[%st.name%]</div></a>
                 </div>
             [%END%]
 
@@ -76,7 +76,7 @@
     [%FOREACH ct IN web.countries%]
         [%FOREACH st IN ct.states%]
         <div style="display: inline-block" class="col-xs-12">
-            <h3 style="background-color: #[%ct.color%];">[%st.name%] <a href="#country[%ct.id%]"><small>[%ct.name%]</small></a><span class="anchor" id="state[%st.id%]"></span></h3>
+            <h3 style="background-color: #[%ct.color%];" id="state[%st.id%]" data-animated-anchor-offset="-60">[%st.name%] <a data-animated-anchor href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
 
 
             <div class="row">

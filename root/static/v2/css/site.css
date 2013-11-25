@@ -7,11 +7,6 @@ body {
 }
 
 
-.anchor{
-    position:absolute;
-    top:-50px;
-}
-
 .tooltip.right {
     min-width: 300px;
 }
