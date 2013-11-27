@@ -185,6 +185,7 @@ sub list_GET {
     $self->status_ok( $c, entity => $out );
 
 }
+with 'Iota::TraitFor::Controller::Search';
 
 1;
 
