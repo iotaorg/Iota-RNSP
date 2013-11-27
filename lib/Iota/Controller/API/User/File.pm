@@ -153,7 +153,7 @@ sub list_POST {
 
     my $object = $dm->get_outcome_for('user.file.create');
 
-    $c->res->body( encode_json( {  id => $object->id });
+    $c->res->body( encode_json( {  id => $object->id } ) );
     $c->detach;
 }
 
