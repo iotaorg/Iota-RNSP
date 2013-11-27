@@ -12,6 +12,12 @@ sub base : Chained('/api/user/object') : PathPart('file') : CaptureArgs(0) {
     $c->stash->{user}       = $c->stash->{object}->next;
     $c->stash->{collection} = $c->stash->{user}->user_files;
 
+    $c->stash->{collection} = $c->stash->{collection}->search({
+        hide_listing => $c->req->params->{hide_listing} ? 1 : 0
+    }) if exists $c->req->params->{hide_listing} ;
+
+
+
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -164,9 +170,6 @@ sub list_GET {
 
     my $query = $c->stash->{collection}->as_hashref;
 
-    $c->stash->{collection} = $c->stash->{collection}->search({
-        hide_listing => $c->req->params->{hide_listing} ? 1 : 0
-    }) if exists $c->req->params->{hide_listing} ;
 
     my $out = {};
     while ( my $r = $query->next ) {
