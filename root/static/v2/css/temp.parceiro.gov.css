@@ -21,3 +21,9 @@
 h1,h2,h3,h4,h5,caption,legend {
     color: #009999;
 }
+
+.page-header {
+    background-image: url('/static/images/bg-top-gov.png');
+    background-repeat: no-repeat;
+    background-position: 95% 100%;
+}
