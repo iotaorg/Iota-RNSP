@@ -8,7 +8,7 @@ has 'ignored_params' => (
     is      => 'rw',
     default => sub {
         [
-            qw(password api_key columns content-type _ limit start sort dir _dc rm xaction lang indicator_id network_id role with_polygon_path config_user_id user_id)
+            qw(password api_key columns content-type _ limit start sort dir _dc rm xaction lang indicator_id network_id role with_polygon_path config_user_id user_id hide_listing)
         ];
     }
 );

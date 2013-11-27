@@ -165,8 +165,8 @@ sub list_GET {
     my $query = $c->stash->{collection}->as_hashref;
 
     $c->stash->{collection} = $c->stash->{collection}->search({
-        hide_listing => 0
-    }) if exists $c->req->params->{hide_listing} && !$c->req->params->{hide_listing};
+        hide_listing => $c->req->params->{hide_listing} ? 1 : 0
+    }) if exists $c->req->params->{hide_listing} ;
 
     my $out = {};
     while ( my $r = $query->next ) {
