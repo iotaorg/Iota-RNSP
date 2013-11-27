@@ -153,12 +153,8 @@ sub list_POST {
 
     my $object = $dm->get_outcome_for('user.file.create');
 
-    $self->status_created(
-        $c,
-        location => $c->uri_for( $self->action_for('file'), [ $c->stash->{user}->id, $object->id ] )->as_string,
-        entity => { id => $object->id }
-    );
-
+    $c->res->body( encode_json( {  id => $object->id });
+    $c->detach;
 }
 
 sub list_GET {
