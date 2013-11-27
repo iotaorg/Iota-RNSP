@@ -67,7 +67,7 @@ sub file_POST {
     my $obj_rs = $c->stash->{object}->next;
 
     if ( $c->user->id != $obj_rs->user_id && !$c->check_any_user_role(qw(admin superadmin)) ) {
-        $self->status_forbidden( $c, message => "access denied", ), $c->detach;
+        $c->res->body( to_json( { message => "access denied" } ) ), $c->detach;
     }
 
     my $param = $c->req->params->{user}{file}{update};
@@ -75,18 +75,14 @@ sub file_POST {
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    $c->res->body( to_json( { message => encode_json( $dm->errors  ) } ) ), $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('user.file.update');
 
-    $self->status_accepted(
-        $c,
-        location => $c->uri_for( $self->action_for('file'), [ $c->stash->{user}->id, $obj->id ] )->as_string,
-        entity => { id => $obj->id }
-      ),
+    $c->res->body( to_json( { id => $obj->id } ) );
 
-      $c->detach;
+    $c->detach;
 }
 
 sub file_DELETE {
