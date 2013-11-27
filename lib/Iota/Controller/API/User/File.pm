@@ -65,9 +65,8 @@ sub file_POST {
       unless $c->check_any_user_role(qw(admin superadmin user));
 
     my $obj_rs = $c->stash->{object}->next;
-
     if ( $c->user->id != $obj_rs->user_id && !$c->check_any_user_role(qw(admin superadmin)) ) {
-        $c->res->body( to_json( { message => "access denied" } ) ), $c->detach;
+        $c->res->body( encode_json( { message => "access denied" } ) ), $c->detach;
     }
 
     my $param = $c->req->params->{user}{file}{update};
@@ -75,12 +74,12 @@ sub file_POST {
 
     my $dm = $c->model('DataManager');
 
-    $c->res->body( to_json( { message => encode_json( $dm->errors  ) } ) ), $c->detach
+    $c->res->body( encode_json( { message => encode_json( $dm->errors  ) } ) ), $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('user.file.update');
 
-    $c->res->body( to_json( { id => $obj->id } ) );
+    $c->res->body( encode_json( { id => $obj->id } ) );
 
     $c->detach;
 }
@@ -120,6 +119,7 @@ sub list_POST {
 
     my $upload = $c->req->upload('arquivo');
     if ($upload) {
+
         my $user_id = $c->stash->{user}->id;
         my $t       = new Text2URI();
         my $filename =
@@ -144,11 +144,11 @@ sub list_POST {
 
     }
     else {
-        $self->status_bad_request( $c, message => 'no upload found' ), $c->detach;
+        $c->res->body( encode_json( { message => 'no upload found' } ) ), $c->detach;
     }
 
     my $dm = $c->model('DataManager');
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    $c->res->body( encode_json( { message => encode_json( $dm->errors ) } ) ) , $c->detach
       unless $dm->success;
 
     my $object = $dm->get_outcome_for('user.file.create');
