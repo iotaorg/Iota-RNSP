@@ -28,7 +28,7 @@ sub network : Chained('network_indicators') : PathPart('') : Args(0) : ActionCla
 
 sub network_GET {
     my ( $self, $c ) = @_;
-    $self->stash_comparacao($c);
+    $self->stash_indicators_and_users($c);
 }
 
 =pod
@@ -81,7 +81,7 @@ retorna
 
 =cut
 
-sub stash_comparacao {
+sub stash_indicators_and_users:Private {
     my ( $self, $c ) = @_;
 
     my $network = $c->stash->{network};
@@ -119,7 +119,8 @@ sub stash_comparacao {
     for my $user (@users) {
         push @{ $ret->{users} },
           {
-            ( map { $_ => $user->{$_} } qw/name id city_id/ ),
+            ( map { $_ => $user->{$_} } qw/name id city_summary regions_enabled city_id/ ),
+            language => $user->{cur_lang},
             city => { map { $_ => $user->{city}{$_} } qw/name id name_uri pais uf/, }
           };
     }

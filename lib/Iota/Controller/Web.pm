@@ -378,9 +378,12 @@ sub download : Chained('institute_load') PathPart('dados-abertos') Args(0) {
     $self->mapa_site($c);
 
     $c->stash(
+        title    => 'Dados abertos',
         template => 'download.tt',
-        title    => 'Dados abertos'
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
     );
+
 }
 
 sub network_page : Chained('institute_load') PathPart('') CaptureArgs(0) {

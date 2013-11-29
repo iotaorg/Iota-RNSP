@@ -27,10 +27,10 @@ var md = function () {
 
             if ($(this).attr('name') == 'cidade') {
                 if ((cidade == '') == true) {
-                    $region.addClass("hide");
+                    $region.parents('.regiao:first').addClass("hide");
                     $region.find('option').not('[value=""]').remove();
                 } else {
-                    $region.removeClass("hide");
+                    $region.parents('.regiao:first').removeClass("hide");
                     $region.attr("disabled", "disabled");
                     _load_regions(cidade);
                 }
@@ -80,7 +80,7 @@ var md = function () {
                     $region.find('option').not('[value=""]').remove();
                     $region.append($(options));
                     if (options == '')
-                        $region.addClass('hide');
+                        $region.parents('.regiao:first').addClass('hide');
                     $region.removeAttr("disabled");
                 },
                 error: function (data) {
