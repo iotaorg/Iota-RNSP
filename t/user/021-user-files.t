@@ -64,7 +64,7 @@ eval {
                 ]
             );
             ok( $res->is_success, 'OK' );
-            is( $res->code, 201, 'file created!' );
+            is( $res->code, 200, 'file created!' );
 
             my $obj = eval { from_json( $res->content ) };
 
