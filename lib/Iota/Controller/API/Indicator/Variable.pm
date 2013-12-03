@@ -546,7 +546,7 @@ sub values_GET {
                     id            => $_->{value_id},
                     observations  => $_->{observations},
                     source        => $_->{source},
-                    value         => $_->{value}
+                    value         => $_->{value} || ''
                 };
             }
 
