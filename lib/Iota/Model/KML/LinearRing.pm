@@ -12,7 +12,6 @@ sub parse {
       && ref $kml->{Document} eq 'ARRAY'
       && exists $kml->{Document}[0]{Placemark}
       && ref $kml->{Document}[0]{Placemark} eq 'ARRAY';
-
     foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
 
         return undef

@@ -6,6 +6,13 @@ use Moose;
 sub parse {
     my ( $self, $kml ) = @_;
 
+    # nao remover, pois quebra o parser o polygon dependendo do caso
+    $kml = {
+        Document => [$kml->{Document}[0]{Folder}[0]]
+    } if ref $kml eq 'HASH'
+          && exists $kml->{Document}[0]{Folder}[0]
+          && ref $kml->{Document}[0]{Folder} eq 'ARRAY';
+
     return undef
       unless ref $kml eq 'HASH'
       && exists $kml->{Document}
@@ -15,10 +22,14 @@ sub parse {
 
     foreach my $place ( @{ $kml->{Document}[0]{Placemark} } ) {
 
+        my $may_name = $place->{name} if exists $place->{name};
+
         $place = $place->{MultiGeometry}[0]
           if ref $place eq 'HASH'
           && exists $place->{MultiGeometry}
           && ref $place->{MultiGeometry} eq 'ARRAY';
+
+        $place->{name} = $may_name if defined $may_name;
 
         return undef
           unless ref $place eq 'HASH'

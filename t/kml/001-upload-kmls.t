@@ -72,6 +72,8 @@ eval {
                 is( $res->content, '{"error":"Unssuported KML\n"}',
                     'nao suportado formato/invalido ' . $invalido_nome );
             }
+
+
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
@@ -82,9 +84,26 @@ eval {
             );
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
+
             my $ret1 = eval { from_json( $res->content ) };
             is( @{ $ret1->{vec} }, 22, 'tem 22 vetores' );
             undef $ret1;
+
+            ( $res, $c ) = ctx_request(
+                POST $user1_uri. '/kml',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [ $Bin . '/ilhabela_municipios.kml' ],
+                ]
+            );
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+            $ret1 = eval { from_json( $res->content ) };
+
+            is( @{ $ret1->{vec} }, 2, 'tem 2 vetores' );
+            undef $ret1;
+
 
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',

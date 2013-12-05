@@ -97,8 +97,7 @@ a.name as nome_eixo,
 func_status_indicadores_by_user(u.id, a.id) as qtde_indicadores_preenchido,
 func_status_indicadores_by_user_justificado(u.id, a.id) as qtde_indicadores_preenchido_ou_justificado,
 (select count(1) from indicator x WHERE x.axis_id = a.id and (x.visibility_level='public' OR x.visibility_user_id
-= (select id from "user" where institute_id = 1 and city_Id is null and active)
-
+IN (select id from "user" where institute_id = 1 and city_Id is null and active and id != 767)
 )) as total_indicadores_eixo,
 c.id as city_id,
 a.id as axis_id,
