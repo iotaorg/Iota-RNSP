@@ -40,9 +40,18 @@ sub parse {
         my $str = $place->{Polygon}[0]{outerBoundaryIs}[0]{LinearRing}[0]{coordinates}[0];
         $str =~ s/^\s+//;
         $str =~ s/\s+$//;
-        $str .= ' ';
 
-        my $xok = $str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+,\d+(\.\d+)?\s*)+$/o;
+        my $xok = 1;
+        my @itens = split / /, $str;
+
+        foreach my $istr (@itens){
+
+            if ($istr !~ /^(?:-?\d+(?:\.\d+)?\,\s?-?\d+(?:\.\d+)?,\d+(?:\.\d+)?)$/o){
+                $xok = 0;
+                last;
+            }
+        }
+
         return undef unless $xok;
     }
 
@@ -54,7 +63,7 @@ sub parse {
 
         my @pos;
         foreach my $lnt (@latlng) {
-            $lnt =~ /\s*(.+)\,(.+)\,\d+(\.\d+)?/o;
+            $lnt =~ /\s*(.+)\,(.+)\,\d+(?:\.\d+)?/o;
             push @pos, [ $1, $2 ];
         }
 
