@@ -13,11 +13,11 @@ sub base : Chained('/api/user/object') : PathPart('file') : CaptureArgs(0) {
     $c->stash->{user}       = $c->stash->{object}->next;
     $c->stash->{collection} = $c->stash->{user}->user_files;
 
-    $c->stash->{collection} = $c->stash->{collection}->search({
-        hide_listing => $c->req->params->{hide_listing} ? 1 : 0
-    }) if exists $c->req->params->{hide_listing} ;
-
-
+    $c->stash->{collection} = $c->stash->{collection}->search(
+        {
+            hide_listing => $c->req->params->{hide_listing} ? 1 : 0
+        }
+    ) if exists $c->req->params->{hide_listing};
 
 }
 
@@ -75,7 +75,7 @@ sub file_POST {
 
     my $dm = $c->model('DataManager');
 
-    $c->res->body( encode_json( { message => encode_json( $dm->errors  ) } ) ), $c->detach
+    $c->res->body( encode_json( { message => encode_json( $dm->errors ) } ) ), $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('user.file.update');
@@ -126,7 +126,8 @@ sub list_POST {
         my $user_id = $c->stash->{user}->id;
         my $t       = new Text2URI();
         my $filename =
-          sprintf( 'user_%i_%s_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename ), 0, 200 ) ), $foo->randpattern('....');
+          sprintf( 'user_%i_%s_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename ), 0, 200 ) ),
+          $foo->randpattern('....');
 
         my $private_path =
           $c->config->{private_path} =~ /^\//o
@@ -151,12 +152,12 @@ sub list_POST {
     }
 
     my $dm = $c->model('DataManager');
-    $c->res->body( encode_json( { message => encode_json( $dm->errors ) } ) ) , $c->detach
+    $c->res->body( encode_json( { message => encode_json( $dm->errors ) } ) ), $c->detach
       unless $dm->success;
 
     my $object = $dm->get_outcome_for('user.file.create');
 
-    $c->res->body( encode_json( {  id => $object->id } ) );
+    $c->res->body( encode_json( { id => $object->id } ) );
     $c->detach;
 }
 
@@ -164,7 +165,6 @@ sub list_GET {
     my ( $self, $c ) = @_;
 
     my $query = $c->stash->{collection}->as_hashref;
-
 
     my $out = {};
     while ( my $r = $query->next ) {

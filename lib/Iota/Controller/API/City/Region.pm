@@ -189,11 +189,7 @@ sub list_GET {
                     ( 'polygon_path' => $obj->{polygon_path} ) x !!exists $c->req->params->{with_polygon_path}
                 ),
 
-                city => {
-                    (
-                        map { $_ => $c->stash->{city}->$_ } qw/name name_uri uf pais/
-                    ),
-                },
+                city => { ( map { $_ => $c->stash->{city}->$_ } qw/name name_uri uf pais/ ), },
                 upper_region => $obj->{upper_region}
                 ? {
                     id       => $obj->{upper_region}{id},

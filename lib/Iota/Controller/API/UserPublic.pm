@@ -81,7 +81,7 @@ retorna
 
 =cut
 
-sub stash_indicators_and_users:Private {
+sub stash_indicators_and_users : Private {
     my ( $self, $c ) = @_;
 
     my $network = $c->stash->{network};
@@ -121,7 +121,7 @@ sub stash_indicators_and_users:Private {
           {
             ( map { $_ => $user->{$_} } qw/name id city_summary regions_enabled city_id/ ),
             language => $user->{cur_lang},
-            city => { map { $_ => $user->{city}{$_} } qw/name id name_uri pais uf/, }
+            city     => { map { $_ => $user->{city}{$_} } qw/name id name_uri pais uf/, }
           };
     }
 

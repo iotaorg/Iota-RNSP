@@ -217,7 +217,6 @@ sub indicator_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       if exists $roles{user} && $xx->user_id != $c->user->id;
 
-
     if (   ( $c->req->params->{indicator}{update}{visibility_level} || '' ) eq 'private'
         && ( $c->req->params->{indicator}{update}{visibility_user_id} || '' ) eq ''
         && $c->check_any_user_role(qw(admin superadmin)) ) {
@@ -225,7 +224,7 @@ sub indicator_POST {
     }
 
     delete $c->req->params->{indicator}{update}{visibility_level}
-        if exists $roles{user};
+      if exists $roles{user};
 
     my $dm = $c->model('DataManager');
 
@@ -373,13 +372,15 @@ sub list_GET {
         );
     }
 
-    if ($c->req->params->{use} eq 'edit'){
+    if ( $c->req->params->{use} eq 'edit' ) {
+
         # se o uso dessa lista for para editar, entao temos que verificar algumas coisas a mais!
 
-
-        $rs = $rs->search({
-            'me.user_id' => $c->user->id
-        }) if exists $roles{user};
+        $rs = $rs->search(
+            {
+                'me.user_id' => $c->user->id
+            }
+        ) if exists $roles{user};
     }
 
     my @list = $rs->as_hashref->all;
@@ -476,14 +477,16 @@ sub list_POST {
     my %roles = map { $_ => 1 } $c->user->roles;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      if exists $roles{user} && ($c->req->params->{indicator}{create}{visibility_level} || '' ) ne 'private';
+      if exists $roles{user} && ( $c->req->params->{indicator}{create}{visibility_level} || '' ) ne 'private';
 
-    if ( (   ( $c->req->params->{indicator}{create}{visibility_level} || '' ) eq 'private'
-          && ( $c->req->params->{indicator}{create}{visibility_user_id} || '' ) eq ''
-          && $c->check_any_user_role(qw(admin superadmin))
-         )
-          || exists $roles{user}
-        ) {
+    if (
+        (
+               ( $c->req->params->{indicator}{create}{visibility_level} || '' ) eq 'private'
+            && ( $c->req->params->{indicator}{create}{visibility_user_id} || '' ) eq ''
+            && $c->check_any_user_role(qw(admin superadmin))
+        )
+        || exists $roles{user}
+      ) {
         $c->req->params->{indicator}{create}{visibility_user_id} = $c->user->id;
     }
 

@@ -73,7 +73,6 @@ eval {
                     'nao suportado formato/invalido ' . $invalido_nome );
             }
 
-
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
@@ -103,7 +102,6 @@ eval {
 
             is( @{ $ret1->{vec} }, 2, 'tem 2 vetores' );
             undef $ret1;
-
 
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',

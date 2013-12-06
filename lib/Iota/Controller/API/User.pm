@@ -139,7 +139,7 @@ Retorna:
 
 sub _get_user_type {
     my ( $self, $user ) = @_;
-    my %roles = map { (ref $_ eq '' ? $_ : $_->name) => 1} $user->roles;
+    my %roles = map { ( ref $_ eq '' ? $_ : $_->name ) => 1 } $user->roles;
 
     return 'superadmin' if exists $roles{superadmin};
     return 'admin'      if exists $roles{admin};
@@ -157,9 +157,9 @@ sub user_GET {
     $self->status_ok(
         $c,
         entity => {
-            roles => [ map { $_->name } $user->roles ],
+            roles     => [ map { $_->name } $user->roles ],
             user_type => $self->_get_user_type($user),
-            files => {
+            files     => {
                 map { $_->class_name => $_->public_url }
                   $user->user_files->search( undef, { order_by => 'created_at' } )
             },
@@ -193,19 +193,22 @@ sub user_GET {
                 $user->institute && $user->institute
                 ? (
                     institute => {
-                        (map {$_ => $user->institute->$_} qw /
-                        users_can_edit_value
-                        users_can_edit_groups
-                        can_use_custom_css
-                        can_use_custom_pages
-                        bypass_indicator_axis_if_custom
-                        hide_empty_indicators
-                        fixed_indicator_axis_id
-                        can_create_indicators
-                        can_use_regions/),
+                        (
+                            map { $_ => $user->institute->$_ }
+                              qw /
+                              users_can_edit_value
+                              users_can_edit_groups
+                              can_use_custom_css
+                              can_use_custom_pages
+                              bypass_indicator_axis_if_custom
+                              hide_empty_indicators
+                              fixed_indicator_axis_id
+                              can_create_indicators
+                              can_use_regions/
+                        ),
 
-                        name                  => $user->institute->name,
-                        id                    => $user->institute->id,
+                        name => $user->institute->name,
+                        id   => $user->institute->id,
                     }
                   )
                 : ( institute => undef )

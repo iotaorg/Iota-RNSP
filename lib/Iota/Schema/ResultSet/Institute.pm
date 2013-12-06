@@ -28,7 +28,7 @@ sub verifiers_specs {
                 can_use_custom_css    => { required => 0, type => 'Bool' },
                 can_use_custom_pages  => { required => 0, type => 'Bool' },
 
-                can_use_regions       => { required => 0, type => 'Bool' },
+                can_use_regions         => { required => 0, type => 'Bool' },
                 can_create_indicators   => { required => 0, type => 'Bool' },
                 fixed_indicator_axis_id => { required => 0, type => 'Int' },
             },
@@ -78,12 +78,11 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
 
-            if (exists $values{can_use_regions} && $values{can_use_regions} == 0){
-               $var->users->update({regions_enabled => 0});
+            if ( exists $values{can_use_regions} && $values{can_use_regions} == 0 ) {
+                $var->users->update( { regions_enabled => 0 } );
             }
 
             return $var;

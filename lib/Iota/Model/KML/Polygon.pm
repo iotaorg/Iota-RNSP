@@ -6,7 +6,6 @@ use Moose;
 sub parse {
     my ( $self, $kml ) = @_;
 
-
     return undef
       unless ref $kml eq 'HASH'
       && exists $kml->{Document}
@@ -16,7 +15,6 @@ sub parse {
       && @{ $kml->{Document}[0]{Folder} } == 1
       && exists $kml->{Document}[0]{Folder}[0]{Placemark}
       && ref $kml->{Document}[0]{Folder}[0]{Placemark} eq 'ARRAY';
-
 
     foreach my $place ( @{ $kml->{Document}[0]{Folder}[0]{Placemark} } ) {
         my $may_name = $place->{name} if exists $place->{name};

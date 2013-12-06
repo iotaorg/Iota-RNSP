@@ -106,9 +106,9 @@ sub variable_POST {
 
     my $user = $c->stash->{logged_user};
 
-    unless ($c->check_any_user_role('user') && $user->can_create_indicators){
+    unless ( $c->check_any_user_role('user') && $user->can_create_indicators ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            unless $c->check_any_user_role(qw(admin superadmin));
+          unless $c->check_any_user_role(qw(admin superadmin));
     }
 
     $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
@@ -144,21 +144,22 @@ sub variable_DELETE {
     my ( $self, $c ) = @_;
 
     my $user = $c->stash->{logged_user};
-    my $obj = $c->stash->{variable};
+    my $obj  = $c->stash->{variable};
 
-    if ($c->check_any_user_role('user') && $user->can_create_indicators){
+    if ( $c->check_any_user_role('user') && $user->can_create_indicators ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            if $obj->user_id != $user->id;
-    }else{
+          if $obj->user_id != $user->id;
+    }
+    else {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            unless $c->check_any_user_role(qw(admin superadmin));
+          unless $c->check_any_user_role(qw(admin superadmin));
     }
 
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
     eval { $obj->delete };
 
-    if ($@){
+    if ($@) {
         $self->status_bad_request( $c, message => "You can't delete this variable. Delete values first." ), $c->detach;
     }
 
@@ -207,10 +208,12 @@ sub list_GET {
 
     $c->req->params->{use} ||= 'list';
 
-    if ($c->req->params->{use} eq 'edit' && $c->check_any_user_role('user')){
-        $rs = $rs->search({
-            'me.user_id' => $c->user->id
-        });
+    if ( $c->req->params->{use} eq 'edit' && $c->check_any_user_role('user') ) {
+        $rs = $rs->search(
+            {
+                'me.user_id' => $c->user->id
+            }
+        );
     }
 
     my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
@@ -260,13 +263,13 @@ sub list_POST {
     my ( $self, $c ) = @_;
 
     my $user = $c->stash->{logged_user};
-    unless ($c->check_any_user_role('user') && $user->can_create_indicators){
+    unless ( $c->check_any_user_role('user') && $user->can_create_indicators ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
-            unless $c->check_any_user_role(qw(admin superadmin));
+          unless $c->check_any_user_role(qw(admin superadmin));
     }
 
-    $c->req->params->{variable}{create}{user_id}   = $c->user->id;
-    $c->req->params->{variable}{create}{user_type} = Iota::Controller::API::User::_get_user_type(undef, $user);
+    $c->req->params->{variable}{create}{user_id} = $c->user->id;
+    $c->req->params->{variable}{create}{user_type} = Iota::Controller::API::User::_get_user_type( undef, $user );
 
     my $dm = $c->model('DataManager');
 

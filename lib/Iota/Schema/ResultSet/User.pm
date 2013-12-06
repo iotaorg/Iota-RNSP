@@ -110,9 +110,8 @@ sub verifiers_specs {
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
 
-
-                can_create_indicators    => { required => 0, type => 'Bool' },
-                regions_enabled          => { required => 0, type => 'Bool' },
+                can_create_indicators => { required => 0, type => 'Bool' },
+                regions_enabled       => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -267,8 +266,8 @@ sub verifiers_specs {
                 city_summary              => { required => 0, type => 'Str' },
                 active                    => { required => 0, type => 'Bool' },
 
-                can_create_indicators    => { required => 0, type => 'Bool' },
-                regions_enabled          => { required => 0, type => 'Bool' },
+                can_create_indicators => { required => 0, type => 'Bool' },
+                regions_enabled       => { required => 0, type => 'Bool' },
             },
         ),
 
@@ -343,8 +342,8 @@ sub verifiers_specs {
             filters => [qw(trim)],
             profile => {
                 email => {
-                    required   => 1,
-                    type       => EmailAddress
+                    required => 1,
+                    type     => EmailAddress
                 },
             },
         ),
@@ -363,7 +362,6 @@ sub action_specs {
 
             do { delete $values{$_} unless defined $values{$_} }
               for qw/can_create_indicators regions_enabled/;
-
 
             my $role = delete $values{role};
 

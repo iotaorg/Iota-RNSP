@@ -37,7 +37,7 @@ sub index : Path : Args(0) {
     $c->forward('web_load_country');
 
     $c->stash(
-        template => 'home_comparacao.tt',
+        template       => 'home_comparacao.tt',
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         web_open_axis  => 1

@@ -113,7 +113,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
       ->search( { id => { 'in' => [ map { $_->city_id } @users ] } }, { order_by => [ 'pais', 'uf', 'name' ] } )
       ->as_hashref->all;
 
-    push @{$c->stash->{web}{cities_by_state}{$_->{country_id}}{$_->{state_id}}}, $_ for @cities;
+    push @{ $c->stash->{web}{cities_by_state}{ $_->{country_id} }{ $_->{state_id} } }, $_ for @cities;
 
     $c->stash->{network_data} = {
         countries => [
@@ -181,8 +181,6 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
       if !exists $c->req->cookies->{cur_lang} || $c->req->cookies->{cur_lang} ne $cur_lang;
 
 }
-
-
 
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c ) = @_;
@@ -378,8 +376,8 @@ sub download : Chained('institute_load') PathPart('dados-abertos') Args(0) {
     $self->mapa_site($c);
 
     $c->stash(
-        title    => 'Dados abertos',
-        template => 'download.tt',
+        title          => 'Dados abertos',
+        template       => 'download.tt',
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
     );
@@ -452,7 +450,6 @@ sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
 
     $c->stash->{title}    = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf} . ' - ' . $c->loc('Regiões');
     $c->stash->{template} = 'home_cidade_region.tt';
-
 
     $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] ) if !$c->stash->{user}{regions_enabled};
 }
@@ -798,32 +795,33 @@ sub stash_indicator {
 use Graphics::Color::RGB;
 use Chart::Clicker::Drawing::ColorAllocator;
 
-sub web_load_country: Private {
+sub web_load_country : Private {
     my ( $self, $c ) = @_;
 
     my @countries = $c->model('DB::Country')->search(
         {
-            'me.id' => {'in' => $c->stash->{network_data}{countries} },
-            'states.id' => {'in' => $c->stash->{network_data}{states} }
-        }, {
+            'me.id'     => { 'in' => $c->stash->{network_data}{countries} },
+            'states.id' => { 'in' => $c->stash->{network_data}{states} }
+        },
+        {
             prefetch => 'states'
         }
     )->all;
 
     my $ca = Chart::Clicker::Drawing::ColorAllocator->new;
 
-    foreach my $country (sort { $a->name cmp $b->name } @countries){
+    foreach my $country ( sort { $a->name cmp $b->name } @countries ) {
 
-
-        push @{$c->stash->{web}{countries}}, {
-            ( map { $_ => $country->$_ } qw/id name name_url/),
+        push @{ $c->stash->{web}{countries} }, {
+            ( map { $_ => $country->$_ } qw/id name name_url/ ),
 
             states => [
-                map { { id => $_->id, name => $_->name, uf => $_->uf } } sort { $a->name cmp $b->name } $country->states
+                map { { id => $_->id, name => $_->name, uf => $_->uf } }
+                sort { $a->name cmp $b->name } $country->states
             ],
 
             color => $ca->next->as_hex_string
-        }
+        };
     }
 
 }
@@ -1060,10 +1058,14 @@ sub stash_tela_cidade {
         { join => 'network_users' }
     )->next;
 
-    if ($user->regions_enabled){
-        $city->{regions} = [$c->model('DB::Region')->search({
-            city_id => $city->{id}
-        })->as_hashref->all];
+    if ( $user->regions_enabled ) {
+        $city->{regions} = [
+            $c->model('DB::Region')->search(
+                {
+                    city_id => $city->{id}
+                }
+            )->as_hashref->all
+        ];
     }
 
     $self->_setup_regions_level( $c, $city ) if ( $city->{regions} && @{ $city->{regions} } > 0 );
@@ -1140,7 +1142,7 @@ sub _load_variables {
 
     my @admins_ids = map { $_->id } $c->stash->{network}->users->search(
         {
-            city_id => undef # admins
+            city_id => undef    # admins
         }
     )->all;
     my $mid = $user->id;
@@ -1166,14 +1168,14 @@ sub _load_variables {
             if ( $conf->[1] == $mid && $conf->[0] ) {
                 $order->{$vid} = $conf->[2];
                 $show->{$vid}++ and last;
-            }elsif ($conf->[0] && !exists $order->{$vid}){
+            }
+            elsif ( $conf->[0] && !exists $order->{$vid} ) {
                 $order->{$vid} = $conf->[2];
                 $show->{$vid}++ and last;
             }
         }
 
     }
-
 
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },

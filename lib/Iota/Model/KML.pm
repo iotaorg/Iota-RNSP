@@ -49,24 +49,25 @@ sub process {
 }
 
 sub remove_xsi {
-    my ($self, $file) = @_;
+    my ( $self, $file ) = @_;
 
     # trata o erro Undeclared prefix: xsi
-    my $str = q{xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd"};
+    my $str =
+q{xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd"};
     $str = quotemeta($str);
 
-    open(my $fh, '<:utf8', $file) or die $!;
+    open( my $fh, '<:utf8', $file ) or die $!;
 
     my $start_xml = '';
-    $start_xml .= <$fh> for (1..4);
+    $start_xml .= <$fh> for ( 1 .. 4 );
 
+    if ( $start_xml =~ /$str/ ) {
 
-    if ($start_xml =~ /$str/){
         # ok, read all and return the content
 
         $start_xml =~ s/\s+$str//g;
 
-        while (my $l = <$fh>){
+        while ( my $l = <$fh> ) {
             $start_xml .= $l;
         }
 
@@ -75,7 +76,7 @@ sub remove_xsi {
     }
 
     close $fh;
-    return $file; # return the filename
+    return $file;    # return the filename
 }
 
 1;

@@ -12,15 +12,10 @@ in:out indent c b  nesting   code + messages; (messages begin with >>>)
 lines  levels i k            (code begins with one '.' per indent level)
 ------  ----- - - --------   -------------------------------------------
 L51:51   i3:3 0 1 {({        ...my $now2 = $rs->count;
-L76:75   i4:5 0 0 {({({      >>>Start indentation disagreement: input=4; output=5
-L79:81   i3:3 0 1 {({        >>>End indentation disagreement from input line 76
-L89:90   i4:5 0 0 {({({      >>>Start indentation disagreement: input=4; output=5
-L92:98   i3:3 0 1 {({        >>>End indentation disagreement from input line 89
-L100:106 i0:0 0 1            >>>Last line
+L102:102 i0:0 1 1 {          };
+L106:106 i0:0 0 1            >>>Last line
 
-First indentation disagreement seen at input line 76
-Last indentation disagreement seen at input line 91
-Note: Indentation disagreement detection is not accurate for outdenting and -lp.
+No indentation disagreement seen
 
 No lines exceeded 120 characters
   Maximum output line length was 96 at line 94

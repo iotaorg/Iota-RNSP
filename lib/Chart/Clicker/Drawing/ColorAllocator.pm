@@ -1,6 +1,6 @@
 package Chart::Clicker::Drawing::ColorAllocator;
 {
-  $Chart::Clicker::Drawing::ColorAllocator::VERSION = '2.86';
+    $Chart::Clicker::Drawing::ColorAllocator::VERSION = '2.86';
 }
 use Moose;
 
@@ -9,75 +9,67 @@ use Moose;
 use Graphics::Color::RGB;
 use Color::Scheme;
 
-
-
 has 'colors' => (
-    traits => [ 'Array' ],
-    is => 'rw',
-    isa => 'ArrayRef',
+    traits  => ['Array'],
+    is      => 'rw',
+    isa     => 'ArrayRef',
     default => sub { [] },
     handles => {
         'add_to_colors' => 'push',
-        'clear_colors' => 'clear',
-        'color_count' => 'count',
-        'get_color' => 'get'
+        'clear_colors'  => 'clear',
+        'color_count'   => 'count',
+        'get_color'     => 'get'
     }
 );
 
-
 has 'position' => ( is => 'rw', isa => 'Int', default => -1 );
 
-
 has 'color_scheme' => (
-    is => 'rw',
-    isa => 'Color::Scheme',
+    is         => 'rw',
+    isa        => 'Color::Scheme',
     lazy_build => 1,
 );
 
-
 has 'seed_hue' => (
-    is => 'rw',
-    isa => 'Int',
+    is       => 'rw',
+    isa      => 'Int',
     required => 1,
-    default => sub { 270 },
+    default  => sub { 270 },
 );
 
-
 has hues => (
-    is => 'rw',
-    isa => 'ArrayRef',
+    is       => 'rw',
+    isa      => 'ArrayRef',
     required => 1,
-    lazy => 1,
-    default => sub {
-      my $seed = shift->seed_hue;
-      [ map { ($seed + $_) % 360 } (0, 45, 75, 15, 60, 30) ]
+    lazy     => 1,
+    default  => sub {
+        my $seed = shift->seed_hue;
+        [ map { ( $seed + $_ ) % 360 } ( 0, 45, 75, 15, 60, 30 ) ];
     },
 );
 
-
 has shade_order => (
-    is => 'rw',
-    isa => 'ArrayRef',
+    is       => 'rw',
+    isa      => 'ArrayRef',
     required => 1,
-    default => sub { [1, 3, 0, 2] },
+    default  => sub { [ 1, 3, 0, 2 ] },
 );
 
 sub _build_color_scheme {
-  my $self = shift;
-  my $scheme = Color::Scheme->new;
-  $scheme->scheme('tetrade');
-  $scheme->web_safe(1);
-  $scheme->distance(1);
-  return $scheme;
+    my $self   = shift;
+    my $scheme = Color::Scheme->new;
+    $scheme->scheme('tetrade');
+    $scheme->web_safe(1);
+    $scheme->distance(1);
+    return $scheme;
 }
-
 
 sub next {
     my $self = shift;
 
-    $self->position($self->position + 1);
+    $self->position( $self->position + 1 );
 
-    return $self->colors->[$self->position];
+    return $self->colors->[ $self->position ];
 }
 
 # Before we attempt to get the next color, we'll instantiate it if we need it
@@ -86,36 +78,34 @@ before 'next' => sub {
     my $self = shift;
 
     my $pos = $self->position;
-    if(!defined($self->colors->[$pos + 1])) {
-        $self->add_to_colors($self->allocate_color);
+    if ( !defined( $self->colors->[ $pos + 1 ] ) ) {
+        $self->add_to_colors( $self->allocate_color );
     }
 };
 
-
 sub allocate_color {
-  my $self = shift;
+    my $self = shift;
 
-  my $pos = $self->position + 1;
-  my $scheme = $self->color_scheme;
+    my $pos    = $self->position + 1;
+    my $scheme = $self->color_scheme;
 
-  my $hue_cnt = @{ $self->hues };
-  my $hue_pos = int($pos / 4) % $hue_cnt;
-  $scheme->from_hue($self->hues->[$hue_pos]);
+    my $hue_cnt = @{ $self->hues };
+    my $hue_pos = int( $pos / 4 ) % $hue_cnt;
+    $scheme->from_hue( $self->hues->[$hue_pos] );
 
-  my $shade_pos = int($pos / ( $hue_cnt * 4)) % 4;
-  my $shade_idx = $self->shade_order->[$shade_pos];
-  my $color_idx = $pos % 4;
+    my $shade_pos = int( $pos / ( $hue_cnt * 4 ) ) % 4;
+    my $shade_idx = $self->shade_order->[$shade_pos];
+    my $color_idx = $pos % 4;
 
-  my $color_hex = $scheme->colorset->[$color_idx]->[$shade_idx];
-  my ($r,$g,$b) = ( map{ hex } ($color_hex =~ /(..)(..)(..)/));
-  my $color = Graphics::Color::RGB->new(
-    red     => $r / 255,
-    green   => $g / 255,
-    blue    => $b / 255,
-    alpha   => 1,
-  )
+    my $color_hex = $scheme->colorset->[$color_idx]->[$shade_idx];
+    my ( $r, $g, $b ) = ( map { hex } ( $color_hex =~ /(..)(..)(..)/ ) );
+    my $color = Graphics::Color::RGB->new(
+        red   => $r / 255,
+        green => $g / 255,
+        blue  => $b / 255,
+        alpha => 1,
+    );
 }
-
 
 sub reset {
     my $self = shift;

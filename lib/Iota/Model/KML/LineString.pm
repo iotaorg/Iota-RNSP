@@ -7,11 +7,10 @@ sub parse {
     my ( $self, $kml ) = @_;
 
     # nao remover, pois quebra o parser o polygon dependendo do caso
-    $kml = {
-        Document => [$kml->{Document}[0]{Folder}[0]]
-    } if ref $kml eq 'HASH'
-          && exists $kml->{Document}[0]{Folder}[0]
-          && ref $kml->{Document}[0]{Folder} eq 'ARRAY';
+    $kml = { Document => [ $kml->{Document}[0]{Folder}[0] ] }
+      if ref $kml eq 'HASH'
+      && exists $kml->{Document}[0]{Folder}[0]
+      && ref $kml->{Document}[0]{Folder} eq 'ARRAY';
 
     return undef
       unless ref $kml eq 'HASH'

@@ -72,7 +72,7 @@ sub lexicon_reload_self {
 sub loc {
     my ( $c, $text, $origin_lang, @conf ) = @_;
 
-    return $text if (!defined $text || $text eq '');
+    return $text if ( !defined $text || $text eq '' );
 
     my $default = $c->config->{default_lang};
 

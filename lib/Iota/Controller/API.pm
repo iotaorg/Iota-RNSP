@@ -84,7 +84,8 @@ sub api_key_check : Private {
         $c->stash->{logged_user} = $user;
 
         $c->set_authenticated($user);
-    }else{
+    }
+    else {
         my $user = $c->find_user( { id => $c->user->id } );
         $c->stash->{logged_user} = $user;
     }

@@ -36,7 +36,7 @@ sub verifiers_specs {
                 type                => { required => 1, type => VariableType },
                 user_id             => { required => 1, type => 'Int' },
                 source              => { required => 0, type => 'Str' },
-                user_type                 => { required => 0, type => 'Str' },
+                user_type           => { required => 0, type => 'Str' },
                 period              => { required => 0, type => 'Str' },
                 measurement_unit_id => {
                     required   => 0,
