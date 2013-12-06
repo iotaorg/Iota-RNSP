@@ -44,9 +44,9 @@ sub parse {
         my $xok = 1;
         my @itens = split / /, $str;
 
-        foreach my $istr (@itens){
+        foreach my $istr (@itens) {
 
-            if ($istr !~ /^(?:-?\d+(?:\.\d+)?\,\s?-?\d+(?:\.\d+)?,\d+(?:\.\d+)?)$/o){
+            if ( $istr !~ /^(?:-?\d+(?:\.\d+)?\,\s?-?\d+(?:\.\d+)?,\d+(?:\.\d+)?)$/o ) {
                 $xok = 0;
                 last;
             }

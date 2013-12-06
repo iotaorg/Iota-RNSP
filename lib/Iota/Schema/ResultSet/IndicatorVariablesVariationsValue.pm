@@ -35,14 +35,16 @@ sub verifiers_specs {
                 indicator_variables_variation_id => { required => 1, type => 'Int' },
                 period                           => { required => 0, type => 'Str' },
                 value                            => { required => 0, type => 'Str' },
+                summarization_method             => { required => 0, type => 'Str' },
             },
         ),
 
         update => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                id    => { required => 1, type => 'Int' },
-                value => { required => 0, type => 'Str' },
+                id                   => { required => 1, type => 'Int' },
+                value                => { required => 0, type => 'Str' },
+                summarization_method => { required => 0, type => 'Str' },
             },
         ),
 

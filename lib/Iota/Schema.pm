@@ -54,5 +54,18 @@ sub get_weeks_of_year {
     return $res;
 }
 
+sub f_compute_all_upper_regions {
+    my ($self) = @_;
+    my $res = eval {
+        $self->storage->dbh->selectall_arrayref(
+            "SELECT compute_upper_regions( ARRAY(select id from region where depth_level = 3 )::int[] );
+        ", { Slice => {} }
+        );
+    };
+    do { die $@; return undef } if $@;
+
+    return $res;
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

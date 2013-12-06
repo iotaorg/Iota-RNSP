@@ -110,6 +110,13 @@ __PACKAGE__->table("variable");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 summarization_method
+
+  data_type: 'text'
+  default_value: 'sum'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -174,6 +181,13 @@ __PACKAGE__->add_columns(
     data_type   => "text",
     is_nullable => 1,
     original    => { data_type => "varchar" },
+  },
+  "summarization_method",
+  {
+    data_type     => "text",
+    default_value => "sum",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
   },
 );
 
@@ -316,8 +330,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-10 11:35:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4c4V9nTR4HtU2+grnokXhQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-12-06 15:13:12
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8urXrw5fRnV+/lYrqUZn3A
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

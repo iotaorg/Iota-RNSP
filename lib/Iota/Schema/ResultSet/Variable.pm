@@ -48,7 +48,8 @@ sub verifiers_specs {
                           ->find( { id => $r->get_value('measurement_unit_id') } );
                       }
                 },
-                is_basic => { required => 0, type => 'Bool' },
+                is_basic             => { required => 0, type => 'Bool' },
+                summarization_method => { required => 0, type => 'Str' },
             },
         ),
 
@@ -79,7 +80,8 @@ sub verifiers_specs {
                           ->find( { id => $r->get_value('measurement_unit_id') } );
                       }
                 },
-                is_basic => { required => 0, type => 'Bool' },
+                is_basic             => { required => 0, type => 'Bool' },
+                summarization_method => { required => 0, type => 'Str' },
 
             },
         ),
@@ -110,7 +112,13 @@ sub action_specs {
 
             # TODO atualizar o nomes la no indicador, se mudou.
 
-            my $var = $self->find( delete $values{id} )->update( \%values );
+            my $var = $self->find( delete $values{id} );
+
+            if ( exists $values{summarization_method} && $var->summarization_method ne $values{summarization_method} ) {
+                $self->result_source->schema->f_compute_all_upper_regions();
+            }
+
+            $var->update( \%values );
             $var->discard_changes;
             return $var;
         },

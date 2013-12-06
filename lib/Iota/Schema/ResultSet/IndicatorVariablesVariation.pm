@@ -59,7 +59,13 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            my $var = $self->find( delete $values{id} )->update( \%values );
+            my $var = $self->find( delete $values{id} );
+
+            if ( exists $values{summarization_method} && $var->summarization_method ne $values{summarization_method} ) {
+                $self->result_source->schema->f_compute_all_upper_regions();
+            }
+
+            $var->update( \%values );
             $var->discard_changes;
             return $var;
         },

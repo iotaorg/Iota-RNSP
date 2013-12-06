@@ -123,11 +123,14 @@ sub list_POST {
 
         my $foo = String::Random->new;
 
-        my $user_id = $c->stash->{user}->id;
-        my $t       = new Text2URI();
-        my $filename =
-          sprintf( 'user_%i_%s_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename ), 0, 200 ) ),
-          $foo->randpattern('....');
+        my $user_id  = $c->stash->{user}->id;
+        my $t        = new Text2URI();
+        my $filename = sprintf(
+            'user_%i_%s_%s_%s',
+            $user_id, $classe,
+            substr( $t->translate( $upload->basename ), 0, 200 ),
+            $foo->randpattern('....')
+        );
 
         my $private_path =
           $c->config->{private_path} =~ /^\//o

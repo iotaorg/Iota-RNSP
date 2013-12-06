@@ -113,7 +113,10 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
       ->search( { id => { 'in' => [ map { $_->city_id } @users ] } }, { order_by => [ 'pais', 'uf', 'name' ] } )
       ->as_hashref->all;
 
-    push @{ $c->stash->{web}{cities_by_state}{ $_->{country_id} }{ $_->{state_id} } }, $_ for @cities;
+    for (@cities) {
+        next unless defined $_->{country_id} && defined $_->{state_id};
+        push @{ $c->stash->{web}{cities_by_state}{ $_->{country_id} }{ $_->{state_id} } }, $_;
+    }
 
     $c->stash->{network_data} = {
         countries => [
