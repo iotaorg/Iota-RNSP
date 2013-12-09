@@ -45,7 +45,7 @@
 [%-CALL assets.include("v2/js/load-google-maps.js")%]
 
 
-[% IF institute.short_name == 'gov' %]
+[%- IF network.id == 1  -%]
     [%- CALL assets.include("css/parceiros.gov.css")-%]
     [%- CALL assets.include("js/parceiros.gov.js")-%]
 

@@ -1,7 +1,7 @@
-#top .content .link a:hover{
+page-header-right .content .link a:hover{
 	color: #563599;
 }
-#top .content .link a span.clique{
+page-header-right .content .link a span.clique{
 	color: #563599;
 }
 

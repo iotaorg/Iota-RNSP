@@ -4,7 +4,7 @@
 
         <div class="row">
 
-            <div class="span4 col-md-4">
+            <div id="page-header-left" class="span4 col-md-4">
                 <div class="logo">
                     [% IF institute.short_name == 'org' %]
                         [% IF network.id == 3 %]
@@ -18,7 +18,7 @@
                 </div>
             </div>
 
-            <div id="top" class="col-md-2 col-md-offset-6 span2 offset6 text-right">
+            <div id="page-header-right" class="col-md-2 col-md-offset-6 span2 offset6 text-right">
                 <div class="content right-logo">
                 [% IF public.usuario.files.logo_movimento %]
                     <img src="[% public.usuario.files.logo_movimento%]" alt="">

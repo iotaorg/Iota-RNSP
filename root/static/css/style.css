@@ -18,20 +18,20 @@ a{
 	text-decoration: none;
 }
 
-#top{
+#page-header-right{
 	margin: 0 auto;
 	padding: 0;
 	text-align: center;
 }
 
-#top .content{
+#page-header-right .content{
 	margin: auto;
 	padding: 10px 0;
 	text-align: left;
 	width: 900px;
 }
 
-#top .content .sociais{
+#page-header-right .content .sociais{
 	width: 370px;
 	position: absolute;
 	text-align: right;
@@ -39,31 +39,31 @@ a{
 }
 
 
-#top .content .logo{
+#page-header-right .content .logo{
 	float: left;
 	clear: left;
 }
-#top .content .logo-movimento{
+#page-header-right .content .logo-movimento{
 	float: right;
 	clear: right;
 }
-#top .content .link{
+#page-header-right .content .link{
 	margin: 60px 0 0 20px;
 	float: left;
 	font-size: 10pt;
 }
-#top .content .facebook{
+#page-header-right .content .facebook{
 	margin: 58px 0 -3px 148px;
 	float: left;
 }
-#top .content .link a{
+#page-header-right .content .link a{
 	color: #999;
 	text-decoration: none;
 }
-#top .content .link a:hover{
+#page-header-right .content .link a:hover{
 	color: #20c1c1;
 }
-#top .content .link a span.clique{
+#page-header-right .content .link a span.clique{
 	color: #20c1c1;
 }
 

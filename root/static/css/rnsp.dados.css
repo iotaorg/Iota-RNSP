@@ -3,7 +3,7 @@ table{
 }
 html {overflow-y: scroll;}
 @-ms-viewport { width: device-width; }
-#top img {max-height: 86px}
+page-header-right img {max-height: 86px}
 .page-header{
 	background-image: url('/static/images/bg-top-gov.png');
 	background-repeat: no-repeat;

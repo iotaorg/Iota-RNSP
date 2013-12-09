@@ -43,6 +43,6 @@
 <a href="/dados-abertos">[%l('Dados abertos')%]</a>
 </li>
 
-[%- IF network.domain_name == 'indicadores.cidadessustentaveis.org.br'  -%]
+[%- IF network.id == 1  -%]
 <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
 [%-END-%]

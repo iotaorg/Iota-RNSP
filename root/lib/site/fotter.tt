@@ -1,4 +1,4 @@
-[% IF institute.short_name == 'gov' %]
+[% IF network.id == 1 %]
 <hr>
 <div class="container">
 <div class="row">
