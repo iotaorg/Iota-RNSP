@@ -88,19 +88,24 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
             active                    => 1,
             city_id                   => undef,
             institute_id              => $c->stash->{institute}->id,
-            'user_files.hide_listing' => [ 1, undef ]
+            'network_users.network_id'     => $c->stash->{network}->id,
         },
-        { prefetch => 'user_files' }
+        { join => 'network_users' }
     )->all;
 
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] ) unless @current_users;
 
     foreach my $current_user (@current_users) {
+
         my @files = $current_user->user_files;
 
         foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
             if ( $file->class_name eq 'custom.css' ) {
-                $c->stash->{custom_css} = $file->public_url;
+                my $path = $file->private_path;
+                my $path_root = $c->path_to('root');
+                $path =~ s/$path_root//;
+                $c->assets->include($path, 99999);
+
                 last;
             }
         }
@@ -1084,8 +1089,11 @@ sub stash_tela_cidade {
     foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
         if ( $file->class_name eq 'custom.css' ) {
 
-            #$c->assets->include( $file->public_url, 9999 );
-            $c->stash->{custom_css} = $file->public_url;
+            my $path = $file->private_path;
+            my $path_root = $c->path_to('root');
+            $path =~ s/$path_root//;
+            $c->assets->include($path, 99999);
+
             last;
         }
     }
