@@ -4,7 +4,7 @@
 
         <div class="row">
 
-            <div class="span4">
+            <div class="span4 col-md-4">
                 <div class="logo">
                     [% IF institute.short_name == 'org' %]
                         [% IF network.id == 3 %]
@@ -12,21 +12,19 @@
                         [%ELSE%]
                             <img src="/static/images/logo-movimento.png" alt="" />
                         [%END%]
-                    [% ELSE %]
+                    [% ELSIF network.id == 1 %]
                         <a href="http://www.cidadessustentaveis.org.br"><img src="/static/images/logo.png" alt="Programa Cidades Sustentáveis" /></a>
                     [% END %]
                 </div>
             </div>
 
-            [% IF institute.short_name == 'org' %]
-            <div id="top" class="span2 offset6 text-right">
-                <div class="content">
+            <div id="top" class="col-md-2 col-md-offset-6 span2 offset6 text-right">
+                <div class="content right-logo">
                 [% IF public.usuario.files.logo_movimento %]
                     <img src="[% public.usuario.files.logo_movimento%]" alt="">
                 [%END%]
                 </div>
             </div>
-            [%END%]
         </div>
 
     </div>

@@ -112,3 +112,7 @@ ul.list-param li {
     padding-left: 4px;
     margin-top: 2px;
 }
+
+.page-header {
+    min-height: 95px;
+}

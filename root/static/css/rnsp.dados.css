@@ -8,6 +8,7 @@ html {overflow-y: scroll;}
 	background-image: url('/static/images/bg-top-gov.png');
 	background-repeat: no-repeat;
 	background-position: 95% 100%;
+    min-height: 95px;
 }
 
 
