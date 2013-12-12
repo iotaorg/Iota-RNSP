@@ -70,7 +70,7 @@
             [% FOREACH m IN best_pratices.keys.sort %]
                     <li class="nav-header">[%m%]</li>
                         [% FOREACH x IN best_pratices.$m %]
-                            <li [%IF c.req.uri == x.link %]class="active"[% END%]><a href="[%x.link%]">[%l(x.name)https://www.facebook.com/events/243927402422290/?notif_t=plan_user_invited%]</a></li>
+                            <li [%IF c.req.uri == x.link %]class="active"[% END%]><a href="[%x.link%]">[%l(x.name)%]</a></li>
                         [% END %]
                     </li>
 
