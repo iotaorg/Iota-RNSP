@@ -154,7 +154,7 @@
             <input type="text" onclick="this.focus();this.select()" name="url2" readonly="readonly" class="form-control"  style="background-color: #d6e9c6"/>
         </div>
         <div class="col-md-3 col-sm-5">
-            <a target="_blank" id="id_link2" class="btn form-control btn-success"  href="">[%l('Efetuar download dos indicadores')%] <span class="glyphicon glyphicon-download"></span></a>
+            <a target="_blank" id="id_link2" class="btn form-control btn-success"  href="">[%l('Efetuar download das variáveis')%] <span class="glyphicon glyphicon-download"></span></a>
         </div>
     </div>
     </p>
