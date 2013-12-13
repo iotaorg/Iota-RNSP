@@ -37,7 +37,7 @@
 [%-CALL assets.include("js/api.indicador.js")%]
 [%-CALL assets.include("js/indicatos-menu.js")%]
 [%-CALL assets.include("v2/css/sprites.css")%]
-
+[%-CALL assets.include("css/patrocinadores.sprites.css")%]
 [%-CALL assets.include("js/stupidtable.min.js")%]
 
 [%-CALL assets.include("js/nprogress.js")%]
