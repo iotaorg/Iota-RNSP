@@ -26,6 +26,8 @@
 [%-CALL assets.include("v2/css/sprites.css")%]
 [%-CALL assets.include("css/patrocinadores.sprites.css")%]
 [%-CALL assets.include("v2/css/prism-javascript.css")%]
+[%-CALL assets.include("v2/css/isotope.css")%]
+
 
 
 
@@ -36,6 +38,7 @@
 [%-CALL assets.include("v2/js/events.js")%]
 
 [%-CALL assets.include("v2/js/prism-javascript.js")%]
+[%-CALL assets.include("v2/js/jquery.isotope.min.js")%]
 
 [%-CALL assets.include("js/indicatos-menu.js")%]
 
@@ -43,6 +46,7 @@
 [%-CALL assets.include("v2/js/google_visualization.js")%]
 
 [%-CALL assets.include("v2/js/load-google-maps.js")%]
+[%-CALL assets.include("v2/js/load-isotope.js")%]
 
 
 [%- IF network.id == 1  -%]

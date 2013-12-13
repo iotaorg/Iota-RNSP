@@ -825,7 +825,9 @@ sub web_load_country : Private {
 
             states => [
                 map { { id => $_->id, name => $_->name, uf => $_->uf } }
-                sort { $a->name cmp $b->name } $country->states
+                #sort { $a->name cmp $b->name } $country->states
+                sort { @{$c->stash->{web}{cities_by_state}{$country->id}{$b->id}}
+                    <=> @{$c->stash->{web}{cities_by_state}{$country->id}{$a->id}}} $country->states
             ],
 
             color => $ca->next->as_hex_string

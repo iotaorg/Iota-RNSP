@@ -41,6 +41,7 @@ var $google_visualization_countries = function (){
                     $e.text()
                 ]);
             });
+console.log(ivalue);
 
         }else{
             $('#country-container .country-item').each(function(i, e){
@@ -54,7 +55,6 @@ var $google_visualization_countries = function (){
                 ]);
             });
         }
-
         data.addRows(ivalue);
 
         var stateHeatMap = new google.visualization.GeoChart($elm[0]);

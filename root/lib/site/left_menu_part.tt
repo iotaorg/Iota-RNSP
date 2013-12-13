@@ -35,7 +35,7 @@
     [% END %]
 [% END %]
 [% END %]
-<li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
+<li [% IF c_req_path == 'mapa-do-site' %]class="active"[%ELSE%]class="hidden-sm"[%END%]>
 <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
 </li>
 

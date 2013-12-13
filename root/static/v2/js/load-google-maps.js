@@ -20,4 +20,20 @@ $(document).ready(function() {
 
         });
     }
+
+    var $container = $('#container2');
+
+      $container.isotope({
+            itemSelector: '.element',
+            resizable: false,
+      });
+
+});
+
+$(window).smartresize(function(){
+    var $container = $('#container2');
+  $container.isotope({
+    // update columnWidth to a percentage of container width
+    masonry: { columnWidth: $container.width() / 2 }
+  });
 });
