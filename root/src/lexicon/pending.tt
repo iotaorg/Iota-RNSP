@@ -24,7 +24,7 @@
             <table style="word-break: break-word" class="table table-hover">
             <legend>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</legend>
                 <tr>
-                    <th>[%lang_name.${origin_lang}%]</th>
+                    <th>[%lang_name.${origin_lang}| html%]</th>
                     <th>[%lang_name.$lang%]</th>
                 </tr>
                 [%FOREACH lex IN lexicons.${origin_lang}.${lang}.word%]
@@ -41,7 +41,7 @@
             <table class="table table-hover">
             <legend>[%l('Textos longos para traduzir para')%] [%lang_name.$lang%]</legend>
                 <tr>
-                    <th>[%lang_name.${origin_lang}%]</th>
+                    <th>[%lang_name.${origin_lang} | html%]</th>
                     <th>[%lang_name.$lang%]</th>
                 </tr>
                 [%FOREACH lex IN lexicons.${origin_lang}.${lang}.text%]
