@@ -1,4 +1,4 @@
-$(window).smartresize(function(){
+var $recalc_isotope = function(){
 
     $('.isotope-container2').each(function(i, o){
         var $container = $(o);
@@ -12,13 +12,15 @@ $(window).smartresize(function(){
             masonry: { columnWidth: $container.width() / 4 }
         });
     });
+};
 
-});
 $(document).ready(function() {
 
     $('.isotope-container2,.isotope-container4').isotope({
         itemSelector: '.element',
         resizable: false,
     });
-    $(window).smartresize();
+    $recalc_isotope();
 });
+
+$(window).smartresize($recalc_isotope);

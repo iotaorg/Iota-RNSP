@@ -218,13 +218,3 @@ div.loading {
 div.sociais>h5 {
     color: #666
 }
-
-.column_count2 {
-    column-count:2;
-    -moz-column-count:2; /* Firefox */
-    -webkit-column-count:2; /* Safari and Chrome */
-}
-
-.column_count2>div {
-    display: inline-block;
-}

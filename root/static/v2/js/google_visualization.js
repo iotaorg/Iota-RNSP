@@ -41,7 +41,6 @@ var $google_visualization_countries = function (){
                     $e.text()
                 ]);
             });
-console.log(ivalue);
 
         }else{
             $('#country-container .country-item').each(function(i, e){
@@ -58,16 +57,21 @@ console.log(ivalue);
         data.addRows(ivalue);
 
         var stateHeatMap = new google.visualization.GeoChart($elm[0]);
-        stateHeatMap.draw(data, {
-            width: $elm.width(),
-            height: $elm.width() / 1.57,
-            region: region,
-            resolution: region === 'world' ? 'world' : 'provinces',
+        var _on_res_call = function(){
+            stateHeatMap.draw(data, {
+                width: $elm.width(),
+                height: $elm.width() / 1.57,
+                region: region,
+                resolution: region === 'world' ? 'world' : 'provinces',
 
-            datalessRegionColor: '#EEE',
-            backgroundColor: '#d9edff',
-            colorAxis: { colors: colors}
-        });
+                datalessRegionColor: '#EEE',
+                backgroundColor: '#d9edff',
+                colorAxis: { colors: colors}
+            });
+        };
+        _on_res_call();
+        $(window).smartresize(_on_res_call);
+
 
         $elm.hide();
         google.visualization.events.addListener(stateHeatMap, 'ready', function(){
