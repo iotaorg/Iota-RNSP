@@ -286,21 +286,23 @@ $.extend({
     },
     formatNumberCustom: function (number, mask) {
 
+        var ret = 'ERR';
         if (number == null) {
-            return '-';
+            ret = '-';
         } else if (number == "null") {
-            return '-';
+            ret = '-';
         } else if ($.isNumber(number)) {
-            return $.formatNumber(number, mask);
+            ret = $.formatNumber(number, mask);
         } else {
             if (number == '-') {
-                return '-';
+                ret = '-';
             } else {
-                return '<abbr title="$$err">N/D</abbr>'.render({
+                ret = '<abbr title="$$err">N/D</abbr>'.render({
                     err: number
                 });
             }
         }
+        return ret == 'null' ? '-' : ret;
     },
     getUrlVars: function () {
         var vars = [],
