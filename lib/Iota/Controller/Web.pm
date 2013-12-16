@@ -902,6 +902,7 @@ sub stash_comparacao_cidades {
                 val => $user->{by_period}{$valid}{avg},
                 lat => $user->{city}{latitude},
                 lng => $user->{city}{longitude},
+                nm => $user->{city}{name},
               };
         }
     }

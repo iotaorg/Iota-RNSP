@@ -200,13 +200,8 @@
         </form>
 
     </div>
-    <div id="mapa"></div>
+    <div id="mapa" data-colors="[%IF indicator.sort_direction == "greater value" %]white,green[%ELSE%]white,red[%END%]" ></div>
 
-    [%IF indicator.sort_direction == "greater value" %]
-        [%l('Quanto mais vermelho, melhor em relação aos outros')%].
-    [%ELSE%]
-        [%l('Quanto mais vermelho, pior ou ruim em relação aos outros')%].
-    [%END%]
 
 </div>
 

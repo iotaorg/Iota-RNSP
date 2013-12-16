@@ -568,8 +568,9 @@ $(document).ready(function () {
             });
         }
     }
-    reload_bind_content();
 
+
+    reload_bind_content();
 
 
     $.carregaGrafico = function (canvasId) {
@@ -773,43 +774,67 @@ $(document).ready(function () {
         $.carregaGrafico("main-graph");
     }
 
+
+
+    function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
+
     function geraMapa($dados) {
 
-        if (!map) {
-            map = new google.maps.Map(document.getElementById('mapa'), {
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
+        if (typeof google.visualization == 'undefined'){
+            google.load(
+                'visualization', '1.1', {
+                    packages: ['geochart'],
+                    callback: function(){
+                        geraMapa($dados);
+                    }
+                }
+            );
+            return false;
         }
 
-        if (heatCluster) {
-            heatCluster.setMap(null);
-        }
 
         var markers = [];
 
-        var bounds = new google.maps.LatLngBounds();
         $.each($dados, function (index, item) {
             if (item.lng) {
+
                 var valor = parseFloat(item.val);
                 if (valor) {
-                    var latLng = new google.maps.LatLng(item.lat, item.lng);
-                    markers.push({
-                        location: latLng,
-                        weight: valor
-                    });
-                    bounds.extend(latLng);
+
+                    markers.push([
+                        parseFloat(item.lat),
+                        parseFloat(item.lng),
+                        item.nm,
+                        valor
+                    ]);
+
                 }
             }
         });
 
-        map.fitBounds(bounds);
 
-        var pointArray = new google.maps.MVCArray(markers);
-        heatCluster = new google.maps.visualization.HeatmapLayer({
-            data: pointArray,
-            radius: 30
-        });
-        heatCluster.setMap(map);
+        var data = new google.visualization.DataTable();
+
+        data.addColumn('number', 'lat');
+        data.addColumn('number', 'lng');
+        data.addColumn('string', 'Cidade');
+        data.addColumn('number', 'Valor');
+
+        data.addRows(markers);
+
+        var $elm = $('#mapa'), region = 'BR';
+        var stateHeatMap = new google.visualization.GeoChart($elm[0]);
+        var _on_res_call = function(){
+            stateHeatMap.draw(data, {
+                region: region,
+                legend: {
+                    numberFormat: "#.#"
+                },
+                displayMode: 'markers',
+                colorAxis: {colors: $elm.attr('data-colors').split(',')}
+            });
+        };
+        on_resize(_on_res_call)();
 
     }
 
