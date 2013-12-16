@@ -805,7 +805,10 @@ $(document).ready(function () {
                         parseFloat(item.lat),
                         parseFloat(item.lng),
                         item.nm,
-                        valor
+                        {v: valor, f: $.formatNumberCustom(valor, {
+                            format: "#,##0.##",
+                            locale: "br"
+                        }) }
                     ]);
 
                 }
