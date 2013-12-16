@@ -288,6 +288,8 @@ $.extend({
 
         if (number === null) {
             return '-';
+        } else if (number === "null") {
+            return '-';
         } else if ($.isNumber(number)) {
             return $.formatNumber(number, mask);
         } else {
