@@ -286,9 +286,9 @@ $.extend({
     },
     formatNumberCustom: function (number, mask) {
 
-        if (number === null) {
+        if (number == null) {
             return '-';
-        } else if (number === "null") {
+        } else if (number == "null") {
             return '-';
         } else if ($.isNumber(number)) {
             return $.formatNumber(number, mask);
