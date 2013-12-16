@@ -389,7 +389,7 @@ $(document).ready(function () {
                             } else {
                                 if (indicadorDATA.variable_type == 'str') {
                                     row_content += "<td class='valor'>$$valor</td>".render({
-                                        valor: series[i]
+                                        valor: series[i] == null ? '-' : series[i]
                                     });
                                     preenchido++;
                                 } else {
