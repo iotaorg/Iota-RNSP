@@ -37,7 +37,7 @@ sub verifiers_specs {
                         my $r = shift;
                         my $axis =
                           $self->result_source->schema->resultset('Region')
-                          ->find( { id => $r->get_value('upper_region') } );
+                          ->find( { id => $r->get_value('upper_region'), depth_level => 2 } );
                         return defined $axis;
                       }
                 },
@@ -62,8 +62,8 @@ sub verifiers_specs {
                         my $r = shift;
                         my $axis =
                           $self->result_source->schema->resultset('Region')
-                          ->find( { id => $r->get_value('upper_region') } );
-                        return defined $axis && $r->get_value('upper_region') != $r->get_value('id');
+                          ->find( { id => $r->get_value('upper_region'), depth_level => 2 } );
+                        return defined $axis;
                       }
                 },
                 subregions_valid_after => { required => 0, type => DataStr },
