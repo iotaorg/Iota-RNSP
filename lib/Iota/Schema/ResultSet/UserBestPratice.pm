@@ -85,7 +85,7 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            $values{name_url} = $text2uri->translate( $values{name} ) if $values{name};
+            $values{name_url} = $text2uri->translate( $values{name} ) if exists $values{name} && $values{name};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

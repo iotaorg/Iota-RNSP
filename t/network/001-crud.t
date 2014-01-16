@@ -34,7 +34,6 @@ eval {
                 [
                     api_key                       => 'test',
                     'network.create.name'         => 'prefeitura nao lembro o nome',
-                    'network.create.name_url'     => 'prefeitura-2',
                     'network.create.domain_name'  => 'foo-domain.org',
                     'network.create.institute_id' => '1',
 
@@ -53,7 +52,7 @@ eval {
             is( $res->code, 200, 'network exists -- 200 Success' );
 
             like( $res->content, qr|"prefeitura nao lembro o nome"|, 'name ok' );
-            like( $res->content, qr|"prefeitura-2"|, 'name_url ok' );
+            like( $res->content, qr|"prefeitura-nao-lembro-o-nome"|, 'name_url ok' );
 
             my $obj_uri = $uri->path_query;
             ( $res, $c ) = ctx_request(

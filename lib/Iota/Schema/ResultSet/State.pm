@@ -22,7 +22,6 @@ sub verifiers_specs {
             filters => [qw(trim)],
             profile => {
                 name       => { required => 1, type => 'Str' },
-                name_url   => { required => 0, type => 'Str' },
                 uf         => { required => 1, type => 'Str' },
                 country_id => { required => 1, type => 'Int' },
                 created_by => { required => 1, type => 'Int' },
@@ -34,7 +33,6 @@ sub verifiers_specs {
             profile => {
                 id         => { required => 1, type => 'Int' },
                 name       => { required => 1, type => 'Str' },
-                name_url   => { required => 0, type => 'Str' },
                 uf         => { required => 0, type => 'Str' },
                 country_id => { required => 0, type => 'Int' },
             },
@@ -55,7 +53,7 @@ sub action_specs {
 
             $values{uf} = uc $values{uf};
 
-            $values{name_url} = uc $text2uri->translate( $values{uf} ) unless $values{name_url};
+            $values{name_url} = uc $text2uri->translate( $values{uf} );
 
             my $var = $self->create( \%values );
 
@@ -71,7 +69,7 @@ sub action_specs {
 
             $values{uf} = uc $values{uf} if exists $values{uf};
 
-            $values{name_url} = uc $text2uri->translate( $values{uf} ) if $values{uf} && !exists $values{name_url};
+            $values{name_url} = uc $text2uri->translate( $values{uf} ) if exists $values{uf} && $values{uf};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
