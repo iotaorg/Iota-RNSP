@@ -45,7 +45,6 @@ sub verifiers_specs {
                 id                    => { required => 1, type => 'Int' },
                 axis_id               => { required => 0, type => 'Int' },
                 name                  => { required => 0, type => 'Str' },
-                name_url              => { required => 0, type => 'Str' },
                 description           => { required => 0, type => 'Str' },
                 methodology           => { required => 0, type => 'Str' },
                 goals                 => { required => 0, type => 'Str' },
@@ -72,7 +71,7 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            $values{name_url} = $text2uri->translate( $values{name} ) unless $values{name_url};
+            $values{name_url} = $text2uri->translate( $values{name} );
 
             my $var = $self->create( \%values );
 
@@ -85,6 +84,8 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            $values{name_url} = $text2uri->translate( $values{name} ) if $values{name};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
