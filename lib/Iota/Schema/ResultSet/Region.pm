@@ -63,7 +63,7 @@ sub verifiers_specs {
                         my $axis =
                           $self->result_source->schema->resultset('Region')
                           ->find( { id => $r->get_value('upper_region') } );
-                        return defined $axis;
+                        return defined $axis && $r->get_value('upper_region') != $r->get_value('id');
                       }
                 },
                 subregions_valid_after => { required => 0, type => DataStr },
