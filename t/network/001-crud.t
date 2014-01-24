@@ -77,6 +77,7 @@ eval {
             is( $res->code, 200, 'list 200' );
 
             my $list = eval { from_json( $res->content ) };
+
             is( $list->{network}[3]{name}, 'BarFoo', 'name from list ok' );
 
             ( $res, $c ) = ctx_request( DELETE $obj_uri );

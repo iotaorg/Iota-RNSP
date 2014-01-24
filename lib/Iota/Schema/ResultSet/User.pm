@@ -369,7 +369,11 @@ sub action_specs {
 
             if ($network_id) {
                 my $net = $self->result_source->schema->resultset('Network')->find( { id => $network_id } );
+                my $inst = $net->institute;
                 $values{institute_id} = $net->institute_id;
+
+                $values{regions_enabled} = $inst->can_use_regions if !exists $values{regions_enabled};
+                $values{can_create_indicators} = $inst->can_create_indicators if !exists $values{can_create_indicators};
             }
 
             my $user = $self->create( \%values, active => 1 );
