@@ -128,8 +128,8 @@ sub list_POST {
         my $filename = sprintf(
             'user_%i_%s_%s_%s',
             $user_id, $classe,
+            $foo->randpattern('sssss'),
             substr( $t->translate( $upload->basename ), 0, 200 ),
-            $foo->randpattern('....')
         );
 
         my $private_path =
