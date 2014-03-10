@@ -248,7 +248,7 @@ id,em portugues,en español
 6318,Número total de escolas públicas,Número total de escuelas públicas
 6320,Número total de escolas que mantêm classes no turno intermediário,Número total de escuelas que mantienen clases en el  turno intermedio
 6322,Número total de famílias que recebem recursos dos programas de transferência de renda,Número total de familias que reciben recursos de los programas de transferencia de renta
-6324,Número total de famílias que solicitam recursos dos programas de transferência de renda existentes ,Número total de familias que solicitan recursos de los programas de transferencia de renta existentes 
+6324,Número total de famílias que solicitam recursos dos programas de transferência de renda existentes ,Número total de familias que solicitan recursos de los programas de transferencia de renta existentes
 5936,Carregando mais informações,Cargando más información
 5938,Série Histórica de,Serie Histórica de
 5940,comparar com outras cidades,comparar con otras ciudades
@@ -298,7 +298,7 @@ id,em portugues,en español
 6146,Número de escolas públicas de ensino fundamental e médio com acesso à internet,Número de escuelas públicas de enseñanza primaria y secundaria con acceso a Internet
 6148,Número de famílias beneficiadas por programas habitacionais,Número de familias beneficiadas por programas habitacionales
 6150,Número de internações na rede pública por infecção respiratória aguda em crianças de 0 a 4 anos,Número de internaciones en la red pública por infección respiratoria aguda en niños de 0 a 4 años
-6152,Número de livros infanto-juvenis disponíveis em acervos de bibliotecas ,Número de libros infanto-juveniles disponibles en acervos de bibliotecas 
+6152,Número de livros infanto-juvenis disponíveis em acervos de bibliotecas ,Número de libros infanto-juveniles disponibles en acervos de bibliotecas
 4998,Preferências,Preferencias
 5000,Menus,Menús
 5004,Páginas,Páginas
@@ -572,9 +572,9 @@ id,em portugues,en español
 6328,Número total de indivíduos residentes com renda per capita até meio salário mínimo,Número total de individuos residentes con renta per cápita de hasta medio salario mínimo
 6330,Número total de indivíduos residentes com renda per capita até um quarto de salário mínimo,Número total de individuos residentes con renta per cápita de hasta un cuarto de salario mínimo
 6332,Número total de inscritos em creches (matrículas efetuadas + vagas solicitadas),Número total de inscriptos en jardines de infantes (matrículas efectuadas + vacantes solicitadas)
-6334,Número total de inscritos em pré-escolas municipais (matrículas efetuadas + vagas solicitadas) ,Número total de inscriptos en pre escuelas municipales (matrículas efectuadas + vacantes solicitadas) 
+6334,Número total de inscritos em pré-escolas municipais (matrículas efetuadas + vagas solicitadas) ,Número total de inscriptos en pre escuelas municipales (matrículas efectuadas + vacantes solicitadas)
 6336,Número total de inscritos no ensino fundamental (matrículas efetuadas + vagas solicitadas),Número total de inscriptos en la enseñanza primaria (matrículas efectuadas + vacantes solicitadas)
-6338,Número total de inscritos no ensino médio (matrículas efetuadas + vagas solicitadas) ,Número total de inscriptos en la enseñanza secundaria (matrículas efectuadas + vacantes solicitadas) 
+6338,Número total de inscritos no ensino médio (matrículas efetuadas + vagas solicitadas) ,Número total de inscriptos en la enseñanza secundaria (matrículas efectuadas + vacantes solicitadas)
 6340,Número total de internações de crianças por doenças diarreicas agudas (DDA) em crianças de 0 a 4 anos,Número total de internaciones de niños por enfermedades diarreicas agudas (DDA) en niños de 0 a 4 años
 6342,"Número total de internações de crianças residentes, de até 14 anos por causas relacionadas a possíveis agressões","Número total de internaciones de niños residentes, de hasta 14 años por causas relacionadas a posibles agresiones"
 6344,"Número total de internações de mulheres residentes, de 20 a 59 anos, por causas relacionadas a possíveis agressões","Número total de internaciones de mujeres residentes, de 20 a 59 años, por causas relacionadas a posibles agresiones"
@@ -901,7 +901,7 @@ id,em portugues,en español
 8148,Centro,Centro
 8154,ano 2000,año 2000
 8156,Dados de 2000,Datos de 2000
-8168,Incluindo o Programa Câmbio Verde ,Incluyendo el Programa Cambio Verde 
+8168,Incluindo o Programa Câmbio Verde ,Incluyendo el Programa Cambio Verde
 8170,Secretaria Municipal do Meio Ambiente de Curitiba,Secretaría Municipal de Medio Ambiente de Curitiba
 8196,Incluindo Autarquias e Empresa públicas,Incluyendo Autarquías y Empresas públicas
 8172,IBGE - 2010/ Cidade@,IBGE - 2010/ Ciudad@
@@ -1089,7 +1089,7 @@ El municipio está considerado la “Tierra del diamante”, pues en el  pasado 
 9029,Diminuir e monitorar os  recém –nascidos de baixo peso,Disminuir y monitorear a los recién nacidos de bajo peso
 9037,SISPRENATAL,SISPRENATAL
 9035,Erradicar desnutrição infantil no município de Tubarão,Erradicar la desnutrición infantil en el  municipio de Tubarão
-9041,Aumentar a proporção de leitos hospitalares para cada  mil habitantes  ,Aumentar la  proporción de lechos hospitalarios para cada mil habitantes  
+9041,Aumentar a proporção de leitos hospitalares para cada  mil habitantes  ,Aumentar la  proporción de lechos hospitalarios para cada mil habitantes
 9043,Entre com seu usuário e senha:,Entre con su usuario y contraseña/ clave:
 9045,Interface administrativa,Interfaz administrativa
 9047,Orientações básicas:<br /><br />No primeiro acesso é preciso mudar a senha no item &quot;Preferências&quot; e preencher os dados do movimento. É muito importante cadastrar uma pessoa responsável pelas informações que serão inseridas no sistema.<br /><br />No item &quot;Variáveis básicas&quot; você fará o cadastro de dados básicos do seu município. Parte destas informações será usada para compor a página principal de cada movimento.<br /><br />No item &quot;Indicadores&quot; você fará a navegação por temas/eixos e preencherá os dados.,Orientaciones básicas:<br /><br />Durante el primer acceso es necesario cambiar la contraseña en el ítem &quot;Preferencias&quot; y completar los datos del movimiento. Es muy importante registrar a una persona responsable por toda la información que se ingresará en el  sistema.<br /><br />En el ítem &quot;Variables básicas&quot; usted hará el registro de datos básicos de su municipio. Parte de esta información se usará para componer la  página principal de cada movimiento.<br /><br />En el ítem &quot;Indicadores&quot; usted hará la navegación por temas/ejes y completará los datos.
@@ -1358,7 +1358,7 @@ El municipio está considerado la “Tierra del diamante”, pues en el  pasado 
 9798,m²,m²
 9806,Habitantes por quilometro quadrado,Habitantes por kilómetro cuadrado
 9810,hab/km²,hab/km²
-14333,Garantir a igualdade de participação de negros e brancos no governo do município. ,Garantizar la igualdad de participación de negros y blancos en el gobierno del municipio. 
+14333,Garantir a igualdade de participação de negros e brancos no governo do município. ,Garantizar la igualdad de participación de negros y blancos en el gobierno del municipio.
 9818,Quilometro quadrado,Kilómetro cuadrado
 9822,km²,km²
 14403,INEP - Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira,INEP - Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira
@@ -1406,7 +1406,7 @@ Petrópolis, que fue colonizada inicialmente por los alemanes, también recibió
 14379,centro,centro
 14411,Manter o percentual em 100%.,Mantener el porcentaje en 100%.
 14385,Secretaria de Educação - Prefeitura de Rio das Ostras,Secretaría de Educación - Prefeitura de Rio das Ostras
-14387,Alcançar 54% no ano de 2013. ,Alcanzar el 54% en el año 2013. 
+14387,Alcançar 54% no ano de 2013. ,Alcanzar el 54% en el año 2013.
 14393,IBGE Estimativa da População 2012,IBGE Estimación de la Población 2012
 14397,Reduzir em 10% no ano de 2013,Reducir en un 10% en el  año 2013
 14399,"Manter o índice tentando reduzir até 7,27%.","Mantener el índice tratando de reducir hasta un 7,27%."
@@ -1421,7 +1421,7 @@ Petrópolis, que fue colonizada inicialmente por los alemanes, también recibió
 11634, Prefeitura de Florianópolis, Prefeitura de Florianópolis
 11804,Número de domicílios sem ligação de rede de esgoto  ÷ Número de domicílios do município  × 100,Número de domicilios sin conexión de red de desagües  ÷ Número de domicilios del municipio × 100
 11808,"Número total, em quilômetros quadrados  ( km² ) , de área destinada a conservação  ÷ Área total do município em quilômetros quadrados (km²)  × 100","Número total, en kilómetros cuadrados  (km²) , de área destinada a la conservación ÷ Área total del municipio en kilómetros cuadrados (km²)  × 100"
-12015,Prefeitura de Poços de Caldas ,Prefeitura de Poços de Caldas 
+12015,Prefeitura de Poços de Caldas ,Prefeitura de Poços de Caldas
 12161,Secretaria de Urbanismo de Tubarão/SC,Secretaría de Urbanismo de Tubarão/SC
 12711,"As reuniões dos Conselhos geralmente  são por: Oficios. convites,e_mail ou telefone
 As Audiências  Publica e Conferências : Jornal, site, folder","Las reuniones de los Consejos generalmente son por: oficios, invitaciones, e-mail o teléfono
@@ -1443,7 +1443,7 @@ Conselho dos Direitos da Criança e Adolescente
 Conselho Municipal de Habitação
 Conselho FUNDEB
 Conselho Municipal da Merenda Escolar
--Conferências 
+-Conferências
 -Audiências Publica
 ","Consejo Municipal de Salud
 Consejo Municipal de Asistencia Social
@@ -1454,7 +1454,7 @@ Consejo de los Derechos del Niño y del Adolescente
 Consejo Municipal de Habitación
 Consejo FUNDEB
 Consejo Municipal de la Merienda Escolar
--Conferencias 
+-Conferencias
 -Audiencias Públicas
 "
 12747,Planejando Cidades do Futuro,Planificando Ciudades del Futuro
@@ -1476,7 +1476,7 @@ Conselho dos Direitos da Criança e Adolescente
 Conselho Municipal de Habitação
 Conselho FUNDEB
 Conselho Municipal da Merenda Escolar
--Conferências 
+-Conferências
 -Audiências Publica","Consejo Municipal de Salud
 Consejo Municipal de Asistencia Social
 Consejo de Cultura
@@ -1486,7 +1486,7 @@ Consejo de los Derechos del Niño y del Adolescente
 Consejo Municipal de Habitación
 Consejo FUNDEB
 Consejo Municipal de la Merienda Escolar
--Conferencias 
+-Conferencias
 -Audiencias Públicas"
 12759,"Aparecerá na tela o cálculo (fórmula) que será feito com os dados que forem preenchidos, ou seja, o cálculo que será feito para compor aquele indicador e a periodicidade que você deverá atualiza-lo.<br /><br />Escolha o ano a que o dado se refere (exemplo: 2012) e clique em cadastrar.<br /><br />No cadastro você preencherá os dados necessários para compor o indicador: valor da variável, a fonte de onde vem o dado (Exemplo: Secretaria Municipal de Saúde), observações técnicas sobre o dado e uma meta estabelecida pelo seu município para o indicador.<br /><br />Após preencher os dados, clique em enviar.<br /><br />Essas informações aparecerão e na página dos indicadores do seu município. Se você por algum motivo não tem os dados necessários, clique em &quot;Não possuo os dados&quot;.<br /><br />Após o cadastro aparecerá para você uma tabela com os dados inseridos no sistema e o valor calculado do indicador. Você sempre preencherá dados do ano anterior ao vigente, portanto Você não poderá editar os dados. Caso necessite fazer a edição, preencha o formulário de fale conosco solicitando.","Aparecerá en la pantalla el cálculo (fórmula) que se hará con los datos que se completen, o sea, el cálculo que se hará para componer ese indicador y la periodicidad con la que usted deberá actualizarlo.<br /><br />Elija el año al cual se refiere el dato (Ejemplo: 2012) y clique en registrar.<br /><br />En el registro usted completará los datos necesarios para componer el indicador: valor de la variable, la fuente de donde proviene el dato (Ejemplo: Secretaría Municipal de Salud), observaciones técnicas sobre el dato y una meta establecida por su municipio para el indicador.<br /><br />Después de completar los datos, clique en enviar.<br /><br />Esas informaciones aparecerán y en la página de los indicadores de su municipio. Si usted, por algún motivo, no tiene los datos necesarios, clique en &quot;No poseo los datos&quot;.<br /><br />Después del registro aparecerá para usted una tabla con los datos ingresados en el  sistema y el valor calculado del indicador. Usted siempre completará datos del año anterior al vigente, por lo tanto, usted no podrá editar los datos. En el caso de que necesite hacer la  edición, complete el formulario de hable con nosotros para solicitarlo."
 12761,Salvar,Guardar
@@ -1804,7 +1804,7 @@ Las Audiencias Públicas y Conferencias: Diario, sitio, folletos"
 14051,"Atingir no IDBE nota 6,0 na média da Rede Municipal do Ensino Fundamental (4ª série) até 2015, e nota 6,2 até 2017.","Alcanzar en el  IDBE la nota 6,0 en la media de la Red Municipal de Enseñanza Primaria (4º grado) hasta 2015, y nota 6,2 hasta 2017."
 14227,"6,3 m²/habitante até 2016","6,3 m²/habitante hasta 2016"
 14229,Matricular 100% da demanda.,Matricular 100% de la demanda.
-14291,Diminuir o nº de atropelamentos e  o número de mortes em 5% ao ano.  ,Disminuir el número de atropellamientos y el número de muertes en un 5% al año.  
+14291,Diminuir o nº de atropelamentos e  o número de mortes em 5% ao ano.  ,Disminuir el número de atropellamientos y el número de muertes en un 5% al año.
 13993,Elaboração e implantação do Plano de Gestão de Resíduos Sólidos,Elaboración e implantación del Plan de Gestión de Residuos Sólidos
 13995,Fundação Municipal de Cultura e Esporte - Coordenação de Ações Culturais,Fundación Municipal de Cultura y Deporte - Coordinación de Acciones Culturales
 14001,Ampliar em 20% o numero de livros adultos até 2016,Ampliar en un 20% el número de libros adultos hasta 2016
@@ -1860,7 +1860,7 @@ Las Audiencias Públicas y Conferencias: Diario, sitio, folletos"
 14173,Adquirir mais 3.000 novos titulos.,Adquirir 3.000 nuevos títulos más.
 14179,ESCOLA DE EDUCAÇÃO BÁSICA JACINTO MACHADO,ESCUELA DE EDUCACIÓN  BÁSICA JACINTO  MACHADO
 14199,"TCL, Transgeraldo, Santoanjo","TCL, Transgeraldo, Santoanjo"
-14201,Alcançar 2/3 dos ônibus com acessibilidade p/ pessoas com deficiência até o final de 2016. ,Alcanzar 2/3 de los autobuses con accesibilidad para personas con deficiencias hasta fines de 2016. 
+14201,Alcançar 2/3 dos ônibus com acessibilidade p/ pessoas com deficiência até o final de 2016. ,Alcanzar 2/3 de los autobuses con accesibilidad para personas con deficiencias hasta fines de 2016.
 14235,Secretaria Municipal de Educação,Secretaría Municipal de Educación
 14247,SAMAE - JACINTO MACHADO,SAMAE - JACINTO  MACHADO
 14275,Reduzir o número de atropelamentos em 5% ao ano até 2016,Reducir el número de atropellamientos en un 5% al año hasta 2016
@@ -1873,7 +1873,7 @@ Las Audiencias Públicas y Conferencias: Diario, sitio, folletos"
 14237,O município não incide sobre indivíduos nesta faixa etária.,El municipio no incide sobre individuos en este intervalo de edades.
 14261,Segundo pirâmide etária IBGE dados de 5 a 19 anos.,Según la pirámide de edades del IBGE datos de 5 a 19 años.
 14269,Delegacia de Delitos de Trânsito e Crimes Ambientais / Polícia Militar de Santa Catarina,Delegacia de Delitos de Trânsito e Crimes Ambientais / Polícia Militar de Santa Catarina
-14277,Diminuir estes índices em 5 % ao ano. ,Disminuir estos índices en un 5 % al año. 
+14277,Diminuir estes índices em 5 % ao ano. ,Disminuir estos índices en un 5 % al año.
 14057,Melhorar a qualidade da internet nas escolas públicas.,Mejorar la calidad de Internet en las escuelas públicas.
 14061,Manter 100% da demanda atendida de vagas no ensino fundamental até 2016.,Mantener el 100% de la demanda de vacantes atendida en la enseñanza primaria hasta 2016.
 14063,Manter 100% das escolas públicas com esporte educacional no turno obrigatório até 2016.,Mantener el 100% de las escuelas públicas con deporte educacional en el turno obligatorio hasta 2016.
@@ -1890,7 +1890,7 @@ Las Audiencias Públicas y Conferencias: Diario, sitio, folletos"
 14293,A comunicação é realizada em espaços licitados como jornais e também é realizado um release e encaminhado a toda a imprensa para divulgação. inclusive no site institucional da Prefeitura Municipal,"La comunicación se realiza en espacios licitados como diarios y también se realiza un release y se encamina a toda la prensa para su divulgación, inclusive en el sitio institucional de la Alcaldía Municipal"
 14117,regiões,regiones
 14119,Secretaria de Desenvolvimento Social de Tubarão/SC,Secretaría de Desarrollo Social de Tubarão/SC
-14121,Ampliar o atendimento a demanda do Centro Referencia Especializado de Assistência Social – Centro POP em 10% ao ano ,Ampliar la atención a la demanda del Centro Referencia Especializado de Asistencia Social – Centro POP en un 10% al año 
+14121,Ampliar o atendimento a demanda do Centro Referencia Especializado de Assistência Social – Centro POP em 10% ao ano ,Ampliar la atención a la demanda del Centro Referencia Especializado de Asistencia Social – Centro POP en un 10% al año
 14143,100% das crianças que procuram vagas em creches atendidas .,Atendido el 100% de los niños que buscan vacantes en jardines de infantes.
 14145,<b>Gastos públicos em cada área administrativa do município</b>,<b>Gastos públicos en cada área administrativa del municipio</b>
 14147,<b>Total de gastos públicos em todas as áreas administrativas do município</b>,<b>Total de gastos públicos en todas las áreas administrativas del municipio</b>
@@ -1925,6 +1925,6 @@ Las Audiencias Públicas y Conferencias: Diario, sitio, folletos"
 14239,95% da demanda a ser atendida.,95% de la demanda a ser atendida.
 14295,Média de 30 pessoas,Media de 30 personas
 14257,SEEDUC-PMSCS,SEEDUC-PMSCS
-14279,Diminuir em 30% o número de mortes com bicicleta até 2016. ,Disminuir en un 30% el número de muertes con bicicleta hasta 2016. 
-14297,As reuniões são convocadas com um calendário mensal e agendadas anualmente ,Las reuniones son convocadas con un calendario mensual y se programan anualmente 
+14279,Diminuir em 30% o número de mortes com bicicleta até 2016. ,Disminuir en un 30% el número de muertes con bicicleta hasta 2016.
+14297,As reuniões são convocadas com um calendário mensal e agendadas anualmente ,Las reuniones son convocadas con un calendario mensual y se programan anualmente
 14301,"Para o exercício 2014, 2% das receitas correntes, alcançando 3% até 2017.","Para el ejercicio 2014, 2% de los ingresos corrientes, alcanzando el 3% hasta 2017."
