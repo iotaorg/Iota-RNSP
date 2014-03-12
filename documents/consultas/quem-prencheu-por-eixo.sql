@@ -94,6 +94,10 @@ c.name as nome_cidade,
 c.uf as nome_uf,
 u.name as nome_usuario,
 a.name as nome_eixo,
+
+u.email as email,
+case when  (select count(1) from user_file x where u.id=x.user_id and x.class_name='programa_metas')>=1 then 'sim' else 'nao' end as programa_de_metas,
+
 func_status_indicadores_by_user(u.id, a.id) as qtde_indicadores_preenchido,
 func_status_indicadores_by_user_justificado(u.id, a.id) as qtde_indicadores_preenchido_ou_justificado,
 (select count(1) from indicator x WHERE x.axis_id = a.id and (x.visibility_level='public' OR x.visibility_user_id
