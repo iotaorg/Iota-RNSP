@@ -31,7 +31,7 @@ sub _loc_str {
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $file = 'variaveis_exemplo.' . $c->stash->{type};
+    my $file = $c->get_lang(). '_variaveis_exemplo.' . $c->stash->{type};
 
     my $path = ( $c->config->{downloads}{tmp_dir} || '/tmp' ) . '/' . lc $file;
 

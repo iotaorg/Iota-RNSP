@@ -59,7 +59,7 @@ sub _download {
 
     my $network = $c->stash->{network};
 
-    my $file = $network->name_url;
+    my $file = $c->get_lang().'_' . $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
     $file .= '_' . $c->stash->{region}->name_url
@@ -106,6 +106,7 @@ sub _download {
 
     my @lines = (
         [
+            map { $self->_loc_str($c, $_) }
             'ID da cidade',
             'Nome da cidade ',
             'Eixo',

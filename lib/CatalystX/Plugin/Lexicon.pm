@@ -128,6 +128,11 @@ sub set_lang {
     $current_lang = $lang;
 }
 
+sub get_lang {
+    my ( $c ) = @_;
+    return $current_lang
+}
+
 __PACKAGE__;
 
 __END__
