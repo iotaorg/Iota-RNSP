@@ -137,22 +137,22 @@ sub _download {
     while ( my $data = $data_rs->next ) {
         my @this_row = (
             $data->{city_id},
-            $data->{city_name},
+            $self->_loc_str($c, $data->{city_name}),
             $data->{variable_id},
-            $data->{type} eq 'int'   ? 'Inteiro'
+            $self->_loc_str($c, $data->{type} eq 'int'   ? 'Inteiro'
             : $data->{type} eq 'str' ? 'Alfanumérico'
-            : 'Valor',
-            $data->{cognomen},
-            $self->_period_pt( $data->{period} ),
+            : 'Valor'),
+            $self->_loc_str($c, $data->{cognomen}),
+            $self->_loc_str($c, $self->_period_pt( $data->{period} )),
 
-            $data->{is_basic} ? 'sim' : 'não',
-            $data->{measurement_unit_name},
-            $data->{name},
+            $self->_loc_str($c, $data->{is_basic} ? 'sim' : 'não'),
+            $self->_loc_str($c, $data->{measurement_unit_name}),
+            $self->_loc_str($c, $data->{name}),
             $self->ymd2dmy( $data->{valid_from} ),
-            $data->{value},
-            $data->{observations},
-            $data->{source},
-            $data->{region_name},
+            $self->_loc_str($c, $data->{value}),
+            $self->_loc_str($c, $data->{observations}),
+            $self->_loc_str($c, $data->{source}),
+            $self->_loc_str($c, $data->{region_name}),
         );
         push @lines, \@this_row;
     }
@@ -167,6 +167,18 @@ sub _download {
         die $@;
     }
     $self->_download_and_detach( $c, $path );
+}
+
+sub _loc_str {
+    my ( $self, $c, $str ) = @_;
+
+    return $str if !defined $str || $str eq '';
+    return $str unless $str =~ /[A-Za-z]/o;
+    return $str if $str =~ /CONCATENAR/o;
+    return $str if $str =~ /^\s*$/o;
+    return $str if $str =~ /:\/\//o;
+
+    return $c->loc($str);
 }
 
 sub _period_pt {

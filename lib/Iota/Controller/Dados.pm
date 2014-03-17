@@ -39,6 +39,17 @@ use XML::Simple qw(:strict);
 use Digest::MD5;
 use DateTime::Format::Pg;
 
+sub _loc_str {
+    my ( $self, $c, $str ) = @_;
+
+    return $str if !defined $str || $str eq '';
+    return $str unless $str =~ /[A-Za-z]/o;
+    return $str if $str =~ /CONCATENAR/o;
+    return $str if $str =~ /^\s*$/o;
+    return $str if $str =~ /:\/\//o;
+
+    return $c->loc($str);
+}
 # download de todos os endpoints caem aqui
 sub _download {
     my ( $self, $c ) = @_;
@@ -126,27 +137,27 @@ sub _download {
         my @this_row = (
             $data->{city_id},
             $data->{city_name},
-            $data->{axis_name},
+            $self->_loc_str($c, $data->{axis_name}),
             $data->{indicator_id},
-            $data->{indicator_name},
-            $data->{formula_human},
-            $data->{goal},
-            $data->{goal_explanation},
-            $data->{goal_source},
-            $data->{goal_operator},
-            $data->{explanation},
-            $data->{tags},
-            $data->{observations},
-            $self->_period_pt( $data->{period} ),
-            $data->{variation_name},
-            $data->{variation_order},
-            $self->ymd2dmy( $data->{valid_from} ),
-            $data->{value},
-            $data->{user_goal},
-            $data->{justification_of_missing_field},
-            $data->{technical_information},
+            $self->_loc_str($c, $data->{indicator_name}),
+            $self->_loc_str($c, $data->{formula_human}),
+            $self->_loc_str($c, $data->{goal}),
+            $self->_loc_str($c, $data->{goal_explanation}),
+            $self->_loc_str($c, $data->{goal_source}),
+            $self->_loc_str($c, $data->{goal_operator}),
+            $self->_loc_str($c, $data->{explanation}),
+            $self->_loc_str($c, $data->{tags}),
+            $self->_loc_str($c, $data->{observations}),
+            $self->_loc_str($c, $self->_period_pt( $data->{period} )),
+            $self->_loc_str($c, $data->{variation_name}),
+            $self->_loc_str($c, $data->{variation_order}),
+            $self->_loc_str($c, $self->ymd2dmy( $data->{valid_from} )),
+            $self->_loc_str($c, $data->{value}),
+            $self->_loc_str($c, $data->{user_goal}),
+            $self->_loc_str($c, $data->{justification_of_missing_field}),
+            $self->_loc_str($c, $data->{technical_information}),
             $data->{region_name},
-            ref $data->{sources} eq 'ARRAY' ? ( join "\n", @{ $data->{sources} } ) : '',
+            ref $data->{sources} eq 'ARRAY' ? ( join "\n", map {$self->_loc_str($c, $_)} @{ $data->{sources} } ) : '',
             $data->{formula},
         );
         push @lines, \@this_row;

@@ -15,6 +15,18 @@ use JSON::XS;
 
 use Text::CSV_XS;
 
+sub _loc_str {
+    my ( $self, $c, $str ) = @_;
+
+    return $str if !defined $str || $str eq '';
+    return $str unless $str =~ /[A-Za-z]/o;
+    return $str if $str =~ /CONCATENAR/o;
+    return $str if $str =~ /^\s*$/o;
+    return $str if $str =~ /:\/\//o;
+
+    return $c->loc($str);
+}
+
 # download de todos os endpoints caem aqui
 sub _download {
     my ( $self, $c ) = @_;
@@ -35,7 +47,7 @@ sub _download {
     my @lines = ( [ 'ID da váriavel', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
-        push @lines, [ $var->{id}, $var->{name}, undef, undef, undef, undef ];
+        push @lines, [ $var->{id}, $self->_loc_str($c, $var->{name}), undef, undef, undef, undef ];
     }
 
     if ( $0 && $0 =~ /\.t$/ ) {
