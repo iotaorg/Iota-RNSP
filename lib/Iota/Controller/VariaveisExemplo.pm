@@ -134,7 +134,7 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_csv : Chained('/institute_load') : PathPart('variaveis_exemplo.csv') : Args(0) {
+sub download_csv : Chained('/institute_load') : PathPart('0variaveis_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
     $self->_download($c);
