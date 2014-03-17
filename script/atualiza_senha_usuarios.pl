@@ -38,6 +38,12 @@ foreach my $mail (@not_sent) {
         email => $mail->{email}
     } )->next;
 
-    print $who->update( { password => $mail->{password}} ), "\n";
+
+    if ($who){
+        $who->update( { password => $mail->{password}} );
+        print "$mail->{email} ok\n"
+    }else{
+        print "$mail->{email} nao encontrado\n"
+    }
 
 }
