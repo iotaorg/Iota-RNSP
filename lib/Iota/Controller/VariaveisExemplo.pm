@@ -126,7 +126,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename=variaveis_exemplo.$1" );
+    $c->response->headers->header( 'content-disposition' => "attachment;filename=".$c->get_lang()."_variaveis_exemplo.$1" );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
