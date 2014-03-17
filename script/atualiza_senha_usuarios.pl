@@ -36,7 +36,7 @@ foreach my $mail (@not_sent) {
 
     my $who = $schema->resultset('User')->search( {
         email => $mail->{email}
-    } );
+    } )->next;
 
     print $who->update( { password => $mail->{password}} ), "\n";
 
