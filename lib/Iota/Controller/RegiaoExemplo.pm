@@ -145,13 +145,13 @@ sub load_user : Chained('/institute_load') : PathPart('dados/usuario') : Capture
     $c->stash->{collation} = $rs;
 }
 
-sub download_csv : Chained('load_user') : PathPart('regiao_exemplo.csv') : Args(0) {
+sub regiao_download_csv : Chained('load_user') : PathPart('regiao_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
     $self->_download($c);
 }
 
-sub download_xls : Chained('load_user') : PathPart('regiao_exemplo.xls') : Args(0) {
+sub regiao_download_xls : Chained('load_user') : PathPart('regiao_exemplo.xls') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xls';
     $self->_download($c);
