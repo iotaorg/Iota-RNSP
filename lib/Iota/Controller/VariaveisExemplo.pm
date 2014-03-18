@@ -72,9 +72,10 @@ sub _download {
 
     }
 
-    my $file = $c->get_lang(). '_variaveis_exemplo.' . $c->stash->{type};
+    my $file = $c->get_lang(). '_variaveis_exemplo.';
     # evita conflito com outros usuarios
-    $file .= join '-', rand, rand, rand, rand if $ignore_cache;
+    $file .= join '-', rand, rand, rand, rand, '.' if $ignore_cache;
+    $file .= $c->stash->{type};
 
     my $path = ( $c->config->{downloads}{tmp_dir} || '/tmp' ) . '/' . lc $file;
 
