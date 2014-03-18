@@ -83,7 +83,10 @@ sub upsert {
                         (
                             {
                                 'me.region_id' => { 'in' => $region_by_lvl{2} },
-                                'me.generated_by_compute' => [ undef, 0 ]
+                                '-or' => [
+                                    {'me.generated_by_compute' => undef},
+                                    {'me.generated_by_compute' => 0},
+                                ]
                             }
                         ) x !!scalar $region_by_lvl{2},
                         (

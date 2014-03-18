@@ -115,7 +115,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     my @cities =
       $c->model('DB::City')
-      ->search( { id => { 'in' => [ map { $_->city_id } @users ] } }, { order_by => [ 'pais', 'uf', 'name' ] } )
+      ->search( { id => { 'in' => [ grep {defined $_} map { $_->city_id } @users ] } }, { order_by => [ 'pais', 'uf', 'name' ] } )
       ->as_hashref->all;
 
     for (@cities) {
