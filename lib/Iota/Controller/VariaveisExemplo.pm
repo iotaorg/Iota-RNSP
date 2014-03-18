@@ -78,7 +78,7 @@ sub _download {
 
     if ( -e $path ) {
         my $epoch_timestamp = ( stat($path) )[9];
-        unlink($path) if time() - $epoch_timestamp > 60;
+        unlink($path) if time() - $epoch_timestamp > 60 || $ignore_cache;
     }
 
     $self->_download_and_detach( $c, $path ) if !$ignore_cache && -e $path;
@@ -168,7 +168,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename="."variaveis-exemplo-".($custom ? 'indicadores-' : 'completa-').$c->get_lang().".$1" );
+    $c->response->headers->header( 'content-disposition' => "attachment;filename="."variaveis-exemplo-".($custom ? 'dos-indicadores-' : 'completa-').$c->get_lang().".$1" );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
