@@ -73,12 +73,14 @@ sub _download {
     }
 
     my $file = $c->get_lang(). '_variaveis_exemplo.' . $c->stash->{type};
+    # evita conflito com outros usuarios
+    $file .= join '-', rand, rand, rand, rand if $ignore_cache;
 
     my $path = ( $c->config->{downloads}{tmp_dir} || '/tmp' ) . '/' . lc $file;
 
     if ( -e $path ) {
         my $epoch_timestamp = ( stat($path) )[9];
-        unlink($path) if time() - $epoch_timestamp > 60 || $ignore_cache;
+        unlink($path) if time() - $epoch_timestamp > 60;
     }
 
     $self->_download_and_detach( $c, $path ) if !$ignore_cache && -e $path;
@@ -104,6 +106,8 @@ sub _download {
         die $@;
     }
     $self->_download_and_detach( $c, $path, $ignore_cache );
+
+    unlink($path) if $ignore_cache;
 }
 
 sub lines2file {
