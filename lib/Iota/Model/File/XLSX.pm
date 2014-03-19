@@ -13,10 +13,10 @@ use Encode;
 sub parse {
     my ( $self, $file ) = @_;
 
-    my $excel = Spreadsheet::XLSX->new($file);
+    my $excel = Spreadsheet::XLSX->new($file );
 
     my %expected_header = (
-        id    => qr /\b(id da v.riavel|v.riavel id)\b/io,
+        id    => qr /\b(id da v.ri.vel|v.ri.vel id)\b/io,
         date  => qr /\bdata\b/io,
         value => qr /\bvalor\b/io,
 
@@ -46,8 +46,11 @@ sub parse {
                     next unless $cell;
 
                     foreach my $header_name ( keys %expected_header ) {
+                        my $cell_Value = $cell->value();
+                        utf8::decode(  $cell_Value );
 
-                        if ( $cell->value() =~ $expected_header{$header_name} ) {
+
+                        if ( $cell_Value =~ $expected_header{$header_name} ) {
                             $header_found++;
                             $header_map->{$header_name} = $col;
                         }
@@ -68,6 +71,7 @@ sub parse {
                     next unless $cell;
 
                     my $value = $cell->value();
+                    utf8::decode($value);
 
                     # aqui é uma regra que você escolhe, pois as vezes o valor da célula pode ser nulo
                     next if !defined $value || $value =~ /^\s*$/;
@@ -79,13 +83,15 @@ sub parse {
                 if ( exists $registro->{id} && exists $registro->{date} && exists $registro->{value} ) {
 
                     $registro->{date} =
-                        $registro->{date} =~ /^20[0123][0-9]$/
-                      ? $registro->{date} . '-01-01'
-                      : DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+                        $registro->{date} =~ /^20[0123][0-9]$/       ? $registro->{date} . '-01-01'
+                    : $registro->{date} =~ /^\d{4}\-\d{2}\-\d{2}$/ ? $registro->{date}
+                    :   DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+                    $ok++;
+
 
                     die 'invalid variable id' unless $registro->{id} =~ /^\d+$/;
                     die 'invalid region id' if $registro->{region_id} && $registro->{region_id} !~ /^\d+$/;
-                    $ok++;
+
                     push @rows, $registro;
 
                 }

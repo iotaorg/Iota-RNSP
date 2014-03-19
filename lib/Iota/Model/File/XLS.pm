@@ -16,7 +16,7 @@ sub parse {
     my $xls = Spreadsheet::ParseExcel::Stream->new($file);
 
     my %expected_header = (
-        id    => qr /\b(id da v.riavel|v.riavel id)\b/io,
+        id    => qr /\b(id da v.ri.vel|v.ri.vel id)\b/io,
         date  => qr /\bdata\b/io,
         value => qr /\bvalor\b/io,
 

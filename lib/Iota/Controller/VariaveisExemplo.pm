@@ -89,7 +89,7 @@ sub _download {
     $rs = $rs->as_hashref;
 
 
-    my @lines = ( [ 'ID da váriavel', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
+    my @lines = ( [ 'ID da variável', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
         push @lines, [ $var->{id}, $self->_loc_str($c, $var->{name}), undef, undef, undef, undef ];
