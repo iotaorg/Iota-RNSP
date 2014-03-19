@@ -1107,6 +1107,7 @@ sub stash_tela_cidade {
         },
         { join => 'network_users' }
     )->next;
+    $c->detach('/error_404') unless $user;
 
     if ( $user->regions_enabled ) {
         $city->{regions} = [
