@@ -176,6 +176,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 indicator_network_visibilities
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorNetworkVisibility>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_network_visibilities",
+  "Iota::Schema::Result::IndicatorNetworkVisibility",
+  { "foreign.network_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 institute
 
 Type: belongs_to
@@ -217,8 +232,8 @@ Composing rels: L</network_users> -> user
 __PACKAGE__->many_to_many("users", "network_users", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-12-02 16:41:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:VvITkZrhXJjA6g2X6u/Rfg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BC9NZu2fp4+Px3FJBo42tg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

@@ -40,25 +40,16 @@ sub _download {
         # e nao compensa muito fazer isso agora.
         $ignore_cache = 1;
 
-        my @countries = @{ $c->stash->{network_data}{countries} };
         my @users_ids = $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^\d+$/
             ? ( $c->req->params->{user_id} )
             : @{ $c->stash->{network_data}{users_ids} };
 
-        my $indicators_rs = $c->model('DB::Indicator')->search(
-            {
-                '-or' => [
-                    { visibility_level => 'public' },
-                    { visibility_level => 'country', visibility_country_id => { 'in' => \@countries } },
-                    { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
-                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
-                ]
-            },
-            {
-                join => 'indicator_user_visibilities',
-                columns => ['me.id']
-            }
-        )->get_column('id')->as_query;
+        my $indicators_rs = $c->model('DB::Indicator')
+            ->filter_visibilities(
+                user_id      => $c->stash->{current_city_user_id},
+                networks_ids => $c->stash->{network_data}{network_ids},
+                users_ids    => \@users_ids,
+            )->get_column('id')->as_query;
 
         my $variables_id_rs = $c->model('DB::IndicatorVariable')->search(
             {

@@ -14,32 +14,12 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    my @user_ids = ( $c->stash->{user_obj}->id );
-    my $country  = eval { $c->stash->{user_obj}->city->country_id };
-    my @networks = $c->stash->{user_obj}->networks->all;
-    if (@networks) {
-        my $rs = $c->model('DB::User')->search(
-            {
-                'network_users.network_id' => [ map { $_->id } @networks ],
-                city_id                    => undef
-            },
-            { join => 'network_users' }
-        );
-        while ( my $u = $rs->next ) {
-            push @user_ids, $u->id;
-        }
-    }
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-    $c->stash->{collection} = $c->model('DB::Indicator')->search(
-        {
-            '-or' => [
-                { visibility_level => 'public' },
-                { visibility_level => 'country', visibility_country_id => $country },
-                { visibility_level => 'private', visibility_user_id => { 'in' => \@user_ids } },
-                { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@user_ids } },
-            ]
-        },
-        { join => ['indicator_user_visibilities'] }
+    $c->stash->{collection} = $c->model('DB::Indicator')->filter_visibilities(
+        user_id      => $c->stash->{current_city_user_id},
+        networks_ids => $c->stash->{network_data}{network_ids},
+        users_ids    => \@users_ids,
     );
 
 }
@@ -202,7 +182,13 @@ sub resumo_GET {
           map { $_->indicator_id }
           $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
-        my $rs = $c->stash->{collection}->search(
+
+        my $rs = $c->stash->{collection}
+            ->filter_visibilities(
+                user_id      => $user_id,
+                networks_ids => $c->stash->{network_data}{network_ids},
+            )
+            ->search(
             {
                 #'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
                 'me.id' => { '-not_in' => \@hide_indicator }

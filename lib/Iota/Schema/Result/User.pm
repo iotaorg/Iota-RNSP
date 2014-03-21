@@ -281,6 +281,21 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 indicator_network_visibilities
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorNetworkVisibility>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_network_visibilities",
+  "Iota::Schema::Result::IndicatorNetworkVisibility",
+  { "foreign.created_by" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_user_visibilities_created_by
 
 Type: has_many
@@ -717,8 +732,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-08 15:46:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x8hWAdZqvVT8XIoQek7ZPw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JYdltGA6sD4QQM4lGVyfTQ
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 

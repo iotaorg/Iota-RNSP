@@ -9,3 +9,4 @@ indicators-permissions [appschema] 2013-10-08T18:24:46Z cron <renato.cron@gmail.
 variable-role [permissions-for-regions] 2013-10-10T14:22:20Z cron <renato.cron@gmail.com> # new field for keep the user_type of who created that variable
 google_analytics [appschema] 2013-12-02T18:39:38Z cron <renato.cron@gmail.com> # google analytics on network
 variable_summarization [appschema] 2013-12-06T17:08:25Z cron <renato.cron@gmail.com> # sum or avg
+new_permissions_type [variable_summarization] 2014-03-19T13:11:31Z cron <renato.cron@gmail.com> # mudandos as permissoes para rede no lugar de admins

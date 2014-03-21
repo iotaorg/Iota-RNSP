@@ -164,12 +164,6 @@ __PACKAGE__->table("indicator");
   data_type: 'boolean'
   is_nullable: 1
 
-=head2 visibility_level
-
-  data_type: 'enum'
-  extra: {custom_type_name => "tp_visibility_level",list => ["public","private","country","restrict"]}
-  is_nullable: 1
-
 =head2 visibility_user_id
 
   data_type: 'integer'
@@ -201,6 +195,13 @@ __PACKAGE__->table("indicator");
 
   data_type: 'boolean'
   default_value: false
+  is_nullable: 0
+
+=head2 visibility_level
+
+  data_type: 'enum'
+  default_value: 'public'
+  extra: {custom_type_name => "tp_visibility_level",list => ["public","private","restrict","network","session"]}
   is_nullable: 0
 
 =cut
@@ -274,15 +275,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "dynamic_variations",
   { data_type => "boolean", is_nullable => 1 },
-  "visibility_level",
-  {
-    data_type => "enum",
-    extra => {
-      custom_type_name => "tp_visibility_level",
-      list => ["public", "private", "country", "restrict"],
-    },
-    is_nullable => 1,
-  },
   "visibility_user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "visibility_country_id",
@@ -295,6 +287,16 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "featured_in_home",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "visibility_level",
+  {
+    data_type => "enum",
+    default_value => "public",
+    extra => {
+      custom_type_name => "tp_visibility_level",
+      list => ["public", "private", "restrict", "network", "session"],
+    },
+    is_nullable => 0,
+  },
 );
 
 =head1 PRIMARY KEY
@@ -363,6 +365,21 @@ Related object: L<Iota::Schema::Result::IndicatorNetworkConfig>
 __PACKAGE__->has_many(
   "indicator_network_configs",
   "Iota::Schema::Result::IndicatorNetworkConfig",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 indicator_network_visibilities
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorNetworkVisibility>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_network_visibilities",
+  "Iota::Schema::Result::IndicatorNetworkVisibility",
   { "foreign.indicator_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -528,8 +545,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-17 14:21:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y60bLihzhKu0TeYA+gJBqQ
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dgfCuwhcZyD2yhwyNjBZHg
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

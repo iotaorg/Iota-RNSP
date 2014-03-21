@@ -335,41 +335,26 @@ sub list_GET {
 
     # superadmin visualiza todas
     if ( !exists $roles{superadmin} ) {
-        my @user_ids = ( $c->user->id );
-        my $country_id;
-
-        my $user = $c->model('DB::User')->search( { id => $c->user->id } )->next;
-        if ( $user->city_id ) {
-            my $user_city = $c->model('DB::City')->search( { id => $user->city_id } )->next;
-
-            $country_id = $user_city ? $user_city->country_id : undef;
-        }
-
-        my @networks = $user->networks->all;
-        if (@networks) {
-            my $rs = $c->model('DB::User')->search(
-                {
-                    'network_users.network_id' => [ map { $_->id } @networks ],
-                    city_id                    => undef
-                },
-                { join => 'network_users' }
-            );
-            while ( my $u = $rs->next ) {
-                push @user_ids, $u->id;
-            }
-        }
-
-        $rs = $rs->search(
-            {
-                '-or' => [
-                    { visibility_level => 'public' },
-                    { visibility_level => 'country', visibility_country_id => $country_id },
-                    { visibility_level => 'private', visibility_user_id => { 'in' => \@user_ids } },
-                    { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@user_ids } },
-                ]
-            },
-            { join => 'indicator_user_visibilities' }
+        my @user_ids = (
+            $roles{user}
+            ? ($c->user->id)
+            : ()
         );
+
+        my @networks = $c->user->networks->all;
+        if ($roles{admin}){
+            # todos os indicadores que os usuarios da rede dele pode ver
+
+            foreach my $net (@networks){
+                @user_ids = (map { $_->user_id } $net->network_users );
+            }
+
+        }
+
+        $rs = $rs->filter_visibilities(
+            networks_ids => [map {$_->id} @networks],
+            users_ids    => \@user_ids,
+        )
     }
 
     if ( $c->req->params->{use} eq 'edit' ) {
