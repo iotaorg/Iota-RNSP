@@ -67,7 +67,7 @@ eval {
                 [
                     'indicator.update.goal'               => '23',
                     'indicator.update.visibility_level'   => 'private',
-                    'indicator.update.visibility_user_id' => '3',
+                    'indicator.update.visibility_user_id' => '4',
                 ]
             );
             ok( $res->is_success, 'indicator updated' );
@@ -77,7 +77,7 @@ eval {
                 'indicator in DB' );
 
             is( $updated_indicator->goal,               '23', 'goal updated ok' );
-            is( $updated_indicator->visibility_user_id, '3',  'visibility_user_id ok' );
+            is( $updated_indicator->visibility_user_id, '4',  'visibility_user_id ok' );
 
             #####################
 
@@ -85,7 +85,7 @@ eval {
                 POST $uri->path_query,
                 [
                     'indicator.update.goal'             => '23',
-                    'indicator.update.visibility_level' => 'private',
+                    #'indicator.update.visibility_level' => 'private',
                 ]
             );
             ok( $res->is_success, 'indicator updated!' );
@@ -94,7 +94,7 @@ eval {
                 POST $uri->path_query,
                 [
                     'indicator.update.goal'             => '23',
-                    'indicator.update.visibility_level' => 'country',
+                    'indicator.update.visibility_level' => 'private',
                 ]
             );
             ok( !$res->is_success, 'indicator not updated' );
@@ -105,11 +105,11 @@ eval {
                 POST $uri->path_query,
                 [
                     'indicator.update.goal'                  => '25',
-                    'indicator.update.visibility_level'      => 'country',
-                    'indicator.update.visibility_country_id' => '1',
-
+                    'indicator.update.visibility_level'      => 'network',
+                    'indicator.update.visibility_networks_id' => '1,2',
                 ]
             );
+
             ok( $res->is_success, 'indicator updated' );
             is( $res->code, 202, 'indicator updated -- 202 Accepted' );
 
@@ -117,7 +117,7 @@ eval {
                 'indicator in DB' );
 
             is( $updated_indicator->goal,                  '25', 'goal updated ok' );
-            is( $updated_indicator->visibility_country_id, '1',  'visibility_country_id ok' );
+            is( $updated_indicator->indicator_network_visibilities->count, '2',  'visibility_networks ok' );
 
             #####################
 

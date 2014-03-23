@@ -19,7 +19,7 @@ enum 'VariableTypeEnum', [qw(int str num)];
 
 subtype VariableType, as 'VariableTypeEnum';
 
-enum 'VisibilityLevelEnum', [qw(public private restrict country)];
+enum 'VisibilityLevelEnum', [qw(public private restrict network)];
 
 subtype VisibilityLevel, as 'VisibilityLevelEnum';
 

@@ -45,8 +45,7 @@ eval {
                     'indicator.create.tags'          => 'you,me,she',
 
                     'indicator.create.observations'        => 'lala',
-                    'indicator.create.visibility_level'    => 'restrict',
-                    'indicator.create.visibility_users_id' => '1',
+                    'indicator.create.visibility_level'    => 'public',
 
                 ]
             );

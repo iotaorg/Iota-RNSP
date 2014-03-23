@@ -341,7 +341,7 @@ sub list_GET {
             : ()
         );
 
-        my @networks = $c->user->networks->all;
+        my @networks = $c->user->networks ? $c->user->networks->all : ();
         if ($roles{admin}){
             # todos os indicadores que os usuarios da rede dele pode ver
 

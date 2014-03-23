@@ -56,10 +56,11 @@ eval {
 
                     'indicator.create.observations'        => 'lala',
                     'indicator.create.visibility_level'    => 'restrict',
-                    'indicator.create.visibility_users_id' => '1',
+                    'indicator.create.visibility_users_id' => '4',
 
                 ]
             );
+
 
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
@@ -90,13 +91,17 @@ eval {
             my $indicator_res = eval { decode_json( $res->content ) };
             is( $indicator_res->{visibility_level}, 'restrict', 'visibility_level ok' );
 
-            is_deeply( $indicator_res->{restrict_to_users}, [1], 'restrict_to_users ok' );
+            is_deeply( $indicator_res->{restrict_to_users}, [4], 'restrict_to_users ok' );
             is( $indicator_res->{name}, 'Divisão Modal', 'name ok' );
 
             is( $indicator_res->{formula_human}, '5 + Foo Bar0', 'formula_human ok' );
 
             my @variables = $save_test->indicator_variables->all;
             is( $variables[0]->variable_id, $var1, 'variable saved in table' );
+
+            $Iota::TestOnly::Mock::AuthUser::_id    = 4;
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
+
 
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
 
@@ -105,6 +110,11 @@ eval {
 
             my $list = eval { from_json( $res->content ) };
             is( $list->{indicators}[0]{explanation}, 'explanation', 'explanation present!' );
+
+
+            $Iota::TestOnly::Mock::AuthUser::_id    = 1;
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+
 
             ( $res, $c ) = ctx_request( GET '/api/log' );
             ok( $res->is_success, 'listing ok!' );

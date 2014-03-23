@@ -20,15 +20,36 @@ use Iota::Types qw /VisibilityLevel/;
 sub _build_verifier_scope_name { 'indicator' }
 
 sub visibility_level_post_check {
+    my $self = shift;
     my $r   = shift;
+
     my $lvl = $r->get_value('visibility_level');
     return 1 if $lvl eq 'public';
 
-    return 1 if $lvl eq 'private'  && ( $r->get_value('visibility_user_id')    || '' ) =~ /^\d+$/;
-    return 1 if $lvl eq 'restrict' && ( $r->get_value('visibility_users_id')   || '' ) =~ /^(?:(?:\d*,?)\d+)+$/;
+    return &is_user($self, $r->get_value('visibility_user_id')) if $lvl eq 'private';
+    return &is_user($self, $r->get_value('visibility_users_id')) if $lvl eq 'restrict';
+
     return 1 if $lvl eq 'network'  && ( $r->get_value('visibility_networks_id')   || '' ) =~ /^(?:(?:\d*,?)\d+)+$/;
 
     return 0;
+}
+
+sub is_user {
+    my ($self, $input) = @_;
+
+    return  0 if ( $input  || '' ) !~ /^(?:(?:\d*,?)\d+)+$/;
+
+    my @ids = split /,/, $input;
+
+    return 1 unless @ids;
+
+    my $ct = $self->result_source->schema->resultset('User')->search( {
+        id => {'in' => \@ids},
+        active => 1,
+        city_id => {'!=' => undef}
+    } )->count;
+
+    return $ct == scalar @ids;
 }
 
 sub verifiers_specs {
@@ -90,7 +111,7 @@ sub verifiers_specs {
                 visibility_level => {
                     required   => 1,
                     type       => VisibilityLevel,
-                    post_check => \&visibility_level_post_check
+                    post_check => sub{&visibility_level_post_check($self, shift)}
                 },
                 visibility_user_id    => { required => 0, type => 'Int' },
                 visibility_country_id => { required => 0, type => 'Int' },
@@ -154,7 +175,7 @@ sub verifiers_specs {
                 visibility_level => {
                     required   => 0,
                     type       => VisibilityLevel,
-                    post_check => \&visibility_level_post_check
+                    post_check => sub{&visibility_level_post_check($self, shift)}
                 },
                 visibility_user_id    => { required => 0, type => 'Int' },
                 visibility_country_id => { required => 0, type => 'Int' },
@@ -278,8 +299,9 @@ sub action_specs {
             $var->update( \%values );
             if ( exists $values{visibility_level} ) {
 
-            $var->indicator_user_visibilities->delete;
-                    $var->indicator_network_visibilities->delete;
+
+                $var->indicator_user_visibilities->delete;
+                $var->indicator_network_visibilities->delete;
 
                 if ( $values{visibility_level} eq 'restrict' ) {
 
@@ -296,12 +318,12 @@ sub action_specs {
 
                     $var->indicator_user_visibilities->delete;
 
-                    $var->add_to_indicator_user_visibilities(
+                    $var->add_to_indicator_network_visibilities(
                         {
-                            user_id    => $_,
+                            network_id    => $_,
                             created_by => $var->user_id
                         }
-                    ) for @visible_users;
+                    ) for @visible_networks;
 
                 }else{
 
