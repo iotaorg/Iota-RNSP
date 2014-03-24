@@ -225,7 +225,7 @@ $(document).ready(function () {
         $.each(eixos_ordem, function (ix, eixo_index) {
             var eixo = indicadores_data.resumos[eixo_index];
 
-            table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='6'>$$eixo</th></thead>".render({
+            table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
                 eixo: eixo_index
             });
 
