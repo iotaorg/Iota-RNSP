@@ -235,7 +235,7 @@ $(document).ready(function () {
                 var has_any_data = institute_info.hide_empty_indicators ? 0 : 1;
 
                 if (datas.length > 0) {
-                    table_content += "<thead class='datas'><tr><th></th>";
+                    table_content += "<thead class='datas'><tr><th></th><th>Fonte</th>";
                     $.each(datas, function (index, value) {
                         table_content += "<th>$$data</th>".render({
                             data: (datas[index].nome) ? datas[index].nome : "Sem dados"
@@ -271,6 +271,26 @@ $(document).ready(function () {
                         explanation: item.explanation,
                         url: (base_url) ? (base_url + "/" + item.name_url) : ((window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url)
                     });
+					
+					var icone = "",
+						icone_title = "";
+					if (item.source){
+						if (item.source == "[ICES]"){
+							icone = "<img src='/static/images/icon_ICES.png'>";
+							icone_title = "Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)";
+						}else if(item.source == "[REDE]"){
+							icone = "<img src='/static/images/icon_Rede.png'>";
+							icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
+						}else{
+							table_content += "<td class='fonte'></td>";
+						}
+						table_content += "<td class='fonte'><div data-toggle='tooltip' data-placement='right' title data-original-title='$$title' class='bs-tooltip'>$$icone</div></td>".render({
+							icone: icone,
+							title: icone_title
+						});
+					}else{
+						table_content += "<td class='fonte'></td>";
+					}
                     if (item.valores.length > 0) {
 
                         var have_data = institute_info.hide_empty_indicators ? 0 : 1;
