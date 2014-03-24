@@ -322,6 +322,7 @@ sub resumo_GET {
                             formula        => $indicator->formula,
                             formula_human  => $indicator->formula_human,
                             name_url       => $indicator->name_url,
+                            source         => $indicator->source,
                             explanation    => $indicator->explanation,
                             variable_type  => $indicator->variable_type,
                             network_config => $config
