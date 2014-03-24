@@ -553,6 +553,7 @@ table .num{
 	text-decoration: none;
 }
 
+#cidades-indicadores .table tbody td.fonte,
 #cidades-indicadores .table tbody td.valor{
 	text-align: center;
 }
