@@ -244,7 +244,7 @@ $(document).ready(function () {
                     table_content += "<th></th></tr></thead>";
                     has_any_data++;
                 } else {
-                    table_content += '<thead class="datas ::nodata::"><tr><th><th>Nenhum ano preenchido<th></th><th></th><th></th></tr></thead>';
+                    table_content += '<thead class="datas ::nodata::"><tr><th></th><th></th><th colspan="10">Nenhum ano preenchido</th><th></th></tr></thead>';
                 }
 
 
@@ -281,13 +281,15 @@ $(document).ready(function () {
 						}else if(item.source == "[REDE]"){
 							icone = "<img src='/static/images/icon_Rede.png'>";
 							icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
+						}
+						if (icone != ""){
+							table_content += "<td class='fonte'><div data-toggle='tooltip' data-placement='right' title data-original-title='$$title' class='bs-tooltip'>$$icone</div></td>".render({
+								icone: icone,
+								title: icone_title
+							});
 						}else{
 							table_content += "<td class='fonte'></td>";
 						}
-						table_content += "<td class='fonte'><div data-toggle='tooltip' data-placement='right' title data-original-title='$$title' class='bs-tooltip'>$$icone</div></td>".render({
-							icone: icone,
-							title: icone_title
-						});
 					}else{
 						table_content += "<td class='fonte'></td>";
 					}
