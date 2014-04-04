@@ -278,6 +278,9 @@ $(document).ready(function () {
 						if (item.source == "[ICES]"){
 							icone = "<img src='/static/images/icon_ICES.png'>";
 							icone_title = "Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)";
+						}else if(item.source == "[PCS]"){
+							icone = "<img src='/static/images/icon_PCS.png'>";
+							icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
 						}else if(item.source == "[REDE]"){
 							icone = "<img src='/static/images/icon_Rede.png'>";
 							icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
