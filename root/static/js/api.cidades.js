@@ -223,7 +223,7 @@ $(document).ready(function () {
 				}
 				indicadores_data.resumos[index].name = index;
 			});
-			eixos_ordem.sort(function (a, b) {
+			indicadores_data.resumos.sort(function (a, b) {
 				return cmp( 
 					[cmp(a.dimension_id, b.dimension_id),cmp(a.name, b.name)], 
 					[cmp(b.dimension_id, a.dimension_id),cmp(b.name, a.name)]
@@ -235,9 +235,9 @@ $(document).ready(function () {
 		});
 
 		if (userID != 11){			
-			eixos_ordem.sort(function (a, b) {
-				return a.localeCompare(b);
-			});
+//			eixos_ordem.sort(function (a, b) {
+	//			return a.localeCompare(b);
+		//	});
 		}
 
 		console.log(eixos_ordem);
