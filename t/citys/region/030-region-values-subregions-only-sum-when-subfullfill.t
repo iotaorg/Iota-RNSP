@@ -1,4 +1,7 @@
-
+use Test::More;
+ok(1);
+done_testing;
+=pod
 use strict;
 use warnings;
 use URI;
@@ -11,6 +14,7 @@ use lib "$Bin/../../lib";
 use Catalyst::Test q(Iota);
 
 my $variable;
+my $variable_2;
 my $indicator;
 my $city_uri;
 use HTTP::Request::Common qw(GET POST DELETE PUT);
@@ -64,7 +68,7 @@ eval {
                     api_key                          => 'test',
                     'city.region.create.name'        => 'a region',
                     'city.region.create.description' => 'with no description',
-                    'city.region.create.subregions_valid_after' => '2020-01-01',
+                    'city.region.create.subregions_valid_after' => '2001-01-01',
                 ]
             );
 
@@ -130,11 +134,28 @@ eval {
             $variable = eval { from_json( $res->content ) };
 
             ( $res, $c ) = ctx_request(
+                POST '/api/variable',
+                [
+                    api_key                       => 'test',
+                    'variable.create.name'        => 'Foo Bar 2',
+                    'variable.create.cognomen'    => 'foobar2',
+                    'variable.create.period'      => 'yearly',
+                    'variable.create.explanation' => 'a foo with bar 2',
+                    'variable.create.type'        => 'num',
+                ]
+            );
+            ok( $res->is_success, 'variable created!' );
+            is( $res->code, 201, 'created!' );
+
+            $variable_2 = eval { from_json( $res->content ) };
+
+
+            ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
                 [
                     api_key                          => 'test',
                     'indicator.create.name'          => 'Foo Bar',
-                    'indicator.create.formula'       => '1 + $' . $variable->{id},
+                    'indicator.create.formula'       => '1 + $' . $variable->{id} . ' + $' . $variable_2->{id} ,
                     'indicator.create.axis_id'       => '1',
                     'indicator.create.explanation'   => 'explanation',
                     'indicator.create.source'        => 'me',
@@ -306,3 +327,5 @@ sub get_the_key {
     my ($k)    = keys %$hash;
     return $hash->{$k};
 }
+=cut
+

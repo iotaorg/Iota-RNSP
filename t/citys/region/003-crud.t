@@ -60,6 +60,7 @@ eval {
                     api_key                           => 'test',
                     'city.region.create.name'         => 'a region',
                     'city.region.create.polygon_path' => 'str',
+                    'city.region.create.subregions_valid_after' => '2010-01-01',
                     'city.region.create.description'  => 'with no description',
                 ]
             );
@@ -85,7 +86,7 @@ eval {
                     depth_level            => 2,
                     automatic_fill         => 0,
                     polygon_path           => 'str',
-                    subregions_valid_after => undef,
+                    subregions_valid_after => '2010-01-01 00:00:00',
                     description            => 'with no description',
                     name                   => 'a region',
                     name_url               => 'a-region',

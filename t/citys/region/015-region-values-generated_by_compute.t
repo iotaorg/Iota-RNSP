@@ -63,6 +63,7 @@ eval {
                     api_key                          => 'test',
                     'city.region.create.name'        => 'a region',
                     'city.region.create.description' => 'with no description',
+                    'city.region.create.subregions_valid_after' => '2010-01-01',
                 ]
             );
 

@@ -35,13 +35,20 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        my $axis =
+                        my $up_region =
                           $self->result_source->schema->resultset('Region')
                           ->find( { id => $r->get_value('upper_region'), depth_level => 2 } );
-                        return defined $axis;
+
+                        if (defined $up_region){
+                            # tem que estar preenchido, se nao, nao cria level 3!
+                            return 1 if $up_region->subregions_valid_after;
+                        }
+
+                        return 0;
                       }
                 },
 
+                subregions_valid_after => { required => 0, type => DataStr },
                 automatic_fill => { required => 0, type => 'Bool' },
 
             },
@@ -60,10 +67,16 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        my $axis =
+                        my $up_region =
                           $self->result_source->schema->resultset('Region')
                           ->find( { id => $r->get_value('upper_region'), depth_level => 2 } );
-                        return defined $axis;
+
+                        if (defined $up_region){
+                            # tem que estar preenchido, se nao, nao cria level 3!
+                            return 1 if $up_region->subregions_valid_after;
+                        }
+
+                        return 0;
                       }
                 },
                 subregions_valid_after => { required => 0, type => DataStr },
@@ -91,7 +104,10 @@ sub action_specs {
 
             if ( exists $values{depth_level} && $values{depth_level} == 3 ) {
                 $values{name_url} = '+' . $values{name_url};
+
+                delete $values{subregions_valid_after};
             }
+
 
             if ( exists $values{upper_region} && $values{upper_region} ) {
 

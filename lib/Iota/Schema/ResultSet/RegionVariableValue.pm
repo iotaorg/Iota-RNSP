@@ -227,13 +227,16 @@ sub action_specs {
             my $region = $schema->resultset('Region')->find( $values{region_id} );
 
             if ( $region->depth_level == 2 ) {
-                if ( $region->subregions_valid_after ) {
+                if ( $region->subregions_valid_after &&
+                    DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0
+                ) {
                     $values{active_value} = 0;
                 }
                 else {
                     # se nao tem subregions, sempre eh o ativo!
                     $values{active_value} = 1;
                 }
+
             }
             elsif ( $region->depth_level == 3 ) {
                 my $upper = $region->upper_region;
@@ -356,7 +359,9 @@ sub _put {
         die 'Illegal region for user.';
     }
     if ( $region->depth_level == 2 ) {
-        if ( $region->subregions_valid_after ) {
+        if ( $region->subregions_valid_after &&
+                DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0
+            ){
             $values{active_value} = 0;
         }
         else {

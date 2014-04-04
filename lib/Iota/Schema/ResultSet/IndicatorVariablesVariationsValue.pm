@@ -66,8 +66,11 @@ sub action_specs {
 
                 if ( exists $values{region_id} ) {
                     my $region = $schema->resultset('Region')->find( $values{region_id} );
+                    my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
                     if ( $region->depth_level == 2 ) {
-                        if ( $region->subregions_valid_after ) {
+                        if ( $region->subregions_valid_after &&
+                            DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0
+                        ) {
 
                             $values{active_value} = 0;
                         }
@@ -81,7 +84,6 @@ sub action_specs {
 
                         die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
 
-                        my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
                         die "cannot save subregion value before upper region tell subregions is valid\n"
                           if ( DateTime->compare( $value_of_date, $upper->subregions_valid_after ) < 0 );
 
