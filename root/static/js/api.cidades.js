@@ -233,8 +233,8 @@ $(document).ready(function () {
 		});
 
 		eixos_indicadores.sort(function (a, b) {
-			a = a.dimension_id + a.name;
-			b = b.dimension_id + b.name;
+			a = a.dimension_id;
+			b = b.dimension_id;
 
 			return a.localeCompare(b);
 		});
@@ -244,10 +244,10 @@ $(document).ready(function () {
 		});
 
         $.each(eixos_ordem, function (ix, eixo_index) {
-            var eixo = eixos_indicadores[eixo_index];
+            var eixo = eixos_indicadores[ix];
 
             table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
-                eixo: eixo_index
+                eixo: eixo_index.name
             });
 
             var periods = eixo;
