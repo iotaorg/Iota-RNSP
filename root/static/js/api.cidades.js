@@ -207,11 +207,7 @@ $(document).ready(function () {
         var cont = 0;
 
         var eixos_ordem = [];
-	
-		cmp = function(x, y){
-			return x > y ? 1 : x < y ? -1 : 0; 
-		};
-		
+			
 		if (userID == 11){			
 			$.each(indicadores_data.resumos, function (index, item) {
 				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
@@ -221,14 +217,18 @@ $(document).ready(function () {
 				}else{
 					indicadores_data.resumos[index].dimension_id = 3;
 				}
-				indicadores_data.resumos[index].name = index;
+				indicadores_data.resumos[index].name = indicadores_data.resumos[index].dimension_id + index;
 			});
+			console.log(indicadores_data);
+			
 			indicadores_data.resumos.sort(function (a, b) {
-				return cmp( 
-					[cmp(a.dimension_id, b.dimension_id),cmp(a.name, b.name)], 
-					[cmp(b.dimension_id, a.dimension_id),cmp(b.name, a.name)]
-				);
+				a = a.name;
+				b = b.name;
+
+				return a.localeCompare(b);
 			});
+			
+			console.log(indicadores_data);
 		}
 		$.each(indicadores_data.resumos, function (eixo_index, eixo) {
 			eixos_ordem.push(eixo_index);
@@ -239,8 +239,6 @@ $(document).ready(function () {
 	//			return a.localeCompare(b);
 		//	});
 		}
-
-		console.log(eixos_ordem);
 
         $.each(eixos_ordem, function (ix, eixo_index) {
             var eixo = indicadores_data.resumos[eixo_index];
