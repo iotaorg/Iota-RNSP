@@ -207,41 +207,44 @@ $(document).ready(function () {
         var cont = 0;
 
         var eixos_ordem = [];
-			
-		if (userID == 11){			
-			$.each(indicadores_data.resumos, function (index, item) {
+		
+		var eixos_indicadores = [];
+		
+		var dimension_id;
+		
+		$.each(indicadores_data.resumos, function (index, item) {
+			if (userID == 11){			
 				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
-					indicadores_data.resumos[index].dimension_id = 1;
+					dimension_id = 1;
 				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
-					indicadores_data.resumos[index].dimension_id = 2;
+					dimension_id = 2;
+				}else if (["Ação Local para a Saúde","Cultura para a Sustentabilidade","Economia Local Dinâmica, Criativa e Sustentável","Educação para a Sustentabilidade e Qualidade de Vida","Equidade, Justiça Social e Cultura de Paz","Melhor Mobilidade, Menos Tráfego","Planejamento e Desenho Urbano"].indexOf(index) > -1){
+					dimension_id = 3;
 				}else{
-					indicadores_data.resumos[index].dimension_id = 3;
+					dimension_id = 0;
 				}
-				indicadores_data.resumos[index].name = indicadores_data.resumos[index].dimension_id + index;
-			});
-			console.log(indicadores_data);
-			
-			indicadores_data.resumos.sort(function (a, b) {
-				a = a.name;
-				b = b.name;
-
-				return a.localeCompare(b);
-			});
-			
-			console.log(indicadores_data);
-		}
-		$.each(indicadores_data.resumos, function (eixo_index, eixo) {
-			eixos_ordem.push(eixo_index);
+			}else{
+				dimension_id = 0;
+			}
+			var new_result = item;
+			new_result.dimension_id = dimension_id;
+			new_result.name = index;
+			eixos_indicadores.push(new_result);
 		});
 
-		if (userID != 11){			
-//			eixos_ordem.sort(function (a, b) {
-	//			return a.localeCompare(b);
-		//	});
-		}
+		eixos_indicadores.sort(function (a, b) {
+			a = a.dimension_id + a.name;
+			b = b.dimension_id + b.name;
+
+			return a.localeCompare(b);
+		});
+			
+		$.each(eixos_indicadores, function (eixo_index, eixo) {
+			eixos_ordem.push(eixo.name);
+		});
 
         $.each(eixos_ordem, function (ix, eixo_index) {
-            var eixo = indicadores_data.resumos[eixo_index];
+            var eixo = eixos_indicadores[eixo_index];
 
             table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
                 eixo: eixo_index
