@@ -125,18 +125,12 @@ $(document).ready(function () {
         ib.open(map, marker);
     }
 
-
-
-
     function showCidadeData() {
 
         $("#cidades-dados .profile .title").html(cidade_data.cidade.name + ", " + cidade_data.cidade.uf);
         if (cidade_data.usuario.city_summary) {
             $("#cidades-dados .summary .content-fill").html(cidade_data.usuario.city_summary);
         }
-
-
-
 
         $tabela = $('dl.tabela');
         var user_files = cidade_data.usuario.files;
@@ -213,9 +207,24 @@ $(document).ready(function () {
         var cont = 0;
 
         var eixos_ordem = [];
+		
+		if (userID == 11){
+			$.each(indicadores_data.resumos, function (index, item) {
+				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
+					indicadores_data.resumos[index].dimension_id = "Sustentabilidade Ambiental e Mudança Climática";
+				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
+					indicadores_data.resumos[index].dimension_id = "Sustentabilidade Fiscal e Governabilidade";
+				}else{
+					indicadores_data.resumos[index].dimension_id = "Sustentabilidade Urbana";
+				}
+			});
+			console.log(indicadores_data.resumos);
+		}
+		
         $.each(indicadores_data.resumos, function (eixo_index, eixo) {
             eixos_ordem.push(eixo_index);
         });
+		console.log(eixos_ordem);
 
         eixos_ordem.sort(function (a, b) {
             return a.localeCompare(b);
