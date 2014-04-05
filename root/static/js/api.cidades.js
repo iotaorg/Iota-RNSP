@@ -268,16 +268,11 @@ $(document).ready(function () {
                     table_content += '<thead class="datas ::nodata::"><tr><th></th><th></th><th colspan="10">Nenhum ano preenchido</th><th></th></tr></thead>';
                 }
 
-
-
                 table_content += "<tbody class='::nodata::'>";
 
                 var indicadores = periods[period_index].indicadores;
                 indicadores.sort(function (a, b) {
-                    a = a.name;
-                    b = b.name;
-
-                    return a.localeCompare(b);
+                    return +a.dimension_id > +b.dimension_id ? 1 : -1;
                 });
                 $.each(indicadores, function (i, item) {
                     var tr_class;
