@@ -6,7 +6,11 @@ var ib;
 var cidade_data;
 var indicadores_data;
 var graficos = [];
-
+var dimensions_GO = {
+    "1": "Sustentabilidade Ambiental e Mudança Climática",
+    "2": "Sustentabilidade Fiscal e Governabilidade",
+    "3": "Sustentabilidade Urbana"
+};
 
 var functions = {};
 $(document).ready(function () {
