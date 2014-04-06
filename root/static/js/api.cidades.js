@@ -240,12 +240,22 @@ $(document).ready(function () {
 		$.each(eixos_indicadores, function (eixo_index, eixo) {
 			eixos_ordem.push(eixo.name);
 		});
+		
+		var dimension_ant = 0;
 
         $.each(eixos_ordem, function (ix, eixo_index) {
             var eixo = eixos_indicadores[ix].resumo;
 
+			if (eixos_indicadores[ix].dimension_id != dimension_ant){
+				if (dimension != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])){
+					table_content += "<thead class='dimensions collapsed ::nodata::'><tr><th colspan='10'>$$dimension</th></thead>".render({
+						dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
+					});			
+				}
+				dimension_ant = eixos_indicadores[ix].dimension_id;
+			}
             table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
-                eixo: eixo_index.name
+                eixo: eixo_index
             });
 
             var periods = eixo;
