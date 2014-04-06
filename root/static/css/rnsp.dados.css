@@ -535,6 +535,7 @@ table .num{
     color: #FFF;
 	text-align: left;
     background-color: #156b08;
+	text-transform: uppercase;
 }
 
 #cidades-indicadores .table thead.datas{
