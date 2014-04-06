@@ -247,7 +247,7 @@ $(document).ready(function () {
             var eixo = eixos_indicadores[ix].resumo;
 
 			if (eixos_indicadores[ix].dimension_id != dimension_ant){
-				if (dimension != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])){
+				if (eixos_indicadores[ix].dimension_id != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])){
 					table_content += "<thead class='dimensions collapsed ::nodata::'><tr><th colspan='10'>$$dimension</th></thead>".render({
 						dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
 					});			
