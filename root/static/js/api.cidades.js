@@ -226,9 +226,10 @@ $(document).ready(function () {
 			}else{
 				dimension_id = 0;
 			}
-			var new_result = item;
+			var new_result = [];
 			new_result.dimension_id = dimension_id;
 			new_result.name = index;
+			new_result.resumo = item;
 			eixos_indicadores.push(new_result);
 		});
 
@@ -241,7 +242,7 @@ $(document).ready(function () {
 		});
 
         $.each(eixos_ordem, function (ix, eixo_index) {
-            var eixo = eixos_indicadores[ix];
+            var eixo = eixos_indicadores[ix].resumo;
 
             table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
                 eixo: eixo_index.name
