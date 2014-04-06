@@ -233,10 +233,7 @@ $(document).ready(function () {
 		});
 
 		eixos_indicadores.sort(function (a, b) {
-			a = a.dimension_id;
-			b = b.dimension_id;
-
-			return a.localeCompare(b);
+			return +a.dimension_id > +b.dimension_id ? 1 : -1;
 		});
 			
 		$.each(eixos_indicadores, function (eixo_index, eixo) {
@@ -271,8 +268,11 @@ $(document).ready(function () {
                 table_content += "<tbody class='::nodata::'>";
 
                 var indicadores = periods[period_index].indicadores;
-                indicadores.sort(function (a, b) {
-                    return +a.dimension_id > +b.dimension_id ? 1 : -1;
+				indicadores.sort(function (a, b) {
+                    a = a.name;
+                    b = b.name;
+
+                    return a.localeCompare(b);					
                 });
                 $.each(indicadores, function (i, item) {
                     var tr_class;
