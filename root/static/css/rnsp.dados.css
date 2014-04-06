@@ -529,6 +529,13 @@ table .num{
 
     background-color: #222;
 }
+#cidades-indicadores .table thead.dimensions th{
+	font-weight: normal;
+	font-size: 1em;
+    color: #FFF;
+	text-align: left;
+    background-color: #156b08;
+}
 
 #cidades-indicadores .table thead.datas{
 	display: none;
