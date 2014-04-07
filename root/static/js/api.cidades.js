@@ -217,7 +217,7 @@ $(document).ready(function () {
 		var dimension_id;
 		
 		$.each(indicadores_data.resumos, function (index, item) {
-			if (userID == 11){ //GOIANIA			
+			if (userID == 149){ //GOIANIA			
 				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
 					dimension_id = 1;
 				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
