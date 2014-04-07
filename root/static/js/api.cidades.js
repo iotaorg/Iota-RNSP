@@ -217,7 +217,7 @@ $(document).ready(function () {
 		var dimension_id;
 		
 		$.each(indicadores_data.resumos, function (index, item) {
-			if (userID == 763){ //GOIANIA			
+			if (userID == 11){ //GOIANIA			
 				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
 					dimension_id = 1;
 				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
@@ -237,16 +237,12 @@ $(document).ready(function () {
 			new_result.sort_field = dimension_id + index;
 			eixos_indicadores.push(new_result);
 		});
-
-		console.log(eixos_indicadores);
 		
 		eixos_indicadores.sort(function (a, b) {
 			a = String(a.sort_field),
 			b = String(b.sort_field);
 			return a.localeCompare(b);
 		});
-
-		console.log(eixos_indicadores);
 		
 		$.each(eixos_indicadores, function (eixo_index, eixo) {
 			eixos_ordem.push(eixo.name);
