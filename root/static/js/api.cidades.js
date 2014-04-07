@@ -234,7 +234,7 @@ $(document).ready(function () {
 			new_result.dimension_id = dimension_id;
 			new_result.name = index;
 			new_result.resumo = item;
-			new_result.sort_field = dimension_id + item;
+			new_result.sort_field = dimension_id + index;
 			eixos_indicadores.push(new_result);
 		});
 
