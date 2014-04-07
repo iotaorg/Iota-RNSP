@@ -234,13 +234,20 @@ $(document).ready(function () {
 			new_result.dimension_id = dimension_id;
 			new_result.name = index;
 			new_result.resumo = item;
+			new_result.sort_field = dimension_id + item;
 			eixos_indicadores.push(new_result);
 		});
 
+		console.log(eixos_indicadores);
+		
 		eixos_indicadores.sort(function (a, b) {
-			return +a.dimension_id > +b.dimension_id ? 1 : -1;
+			a = String(a.sort_field),
+			b = String(b.sort_field);
+			return a.localeCompare(b);
 		});
-			
+
+		console.log(eixos_indicadores);
+		
 		$.each(eixos_indicadores, function (eixo_index, eixo) {
 			eixos_ordem.push(eixo.name);
 		});
