@@ -217,12 +217,12 @@ $(document).ready(function () {
 		var dimension_id;
 		
 		$.each(indicadores_data.resumos, function (index, item) {
-			if (userID == 763){ //GOIANIA			
+			if (userID == 11){ //GOIANIA			
 				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
 					dimension_id = 1;
 				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
 					dimension_id = 2;
-				}else if (["Ação Local para a Saúde","Cultura para a Sustentabilidade","Economia Local Dinâmica, Criativa e Sustentável","Educação para a Sustentabilidade e Qualidade de Vida","Equidade, Justiça Social e Cultura de Paz","Melhor Mobilidade, Menos Tráfego","Planejamento e Desenho Urbano"].indexOf(index) > -1){
+				}else if (["Ação Local para a Saúde","Cultura para a sustentabilidade","Economia Local, Dinâmica, Criativa e Sustentável","Educação para a Sustentabilidade e Qualidade de Vida","Equidade, Justiça Social e Cultura de Paz","Melhor Mobilidade, Menos Tráfego","Planejamento e Desenho Urbano"].indexOf(index) > -1){
 					dimension_id = 3;
 				}else{
 					dimension_id = 0;
