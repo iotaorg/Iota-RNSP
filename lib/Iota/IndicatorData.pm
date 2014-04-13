@@ -125,7 +125,8 @@ sub upsert {
 
         ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
     );
-    my $ind_variation_var = $self->_get_indicator_var_variables( indicators => \@indicators );
+    my ($variation_var_per_ind, $variation_variables) =
+        $self->_get_indicator_var_variables( indicators => \@indicators );
 
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
@@ -133,7 +134,7 @@ sub upsert {
 
         indicator_variables => $indicator_variables,
         variation_values    => $variation_values,
-        ind_variation_var   => $ind_variation_var
+        ind_variation_var   => $variation_var_per_ind
 
     );
 
@@ -210,7 +211,12 @@ sub upsert {
                 }
             }
             if ( scalar @$level3 ) {
-                my $level2 = $self->schema->compute_upper_regions($level3);
+                my $level2 = $self->schema->compute_upper_regions(
+                    $level3,
+                    [keys %$variable_ids],
+                    [keys %$variation_variables],
+                    $params{dates}
+                );
                 $self->upsert(
                     %params,
                     regions_id           => $level2->{compute_upper_regions},
@@ -368,10 +374,12 @@ sub _get_indicator_var_variables {
       ->as_hashref;
 
     my $out = {};
+    my $out2 = {};
     while ( my $row = $variables_rs->next ) {
         $out->{ $row->{indicator_id} }{ $row->{id} } = $row->{name};
+        $out2->{$row->{id}} = 1;
     }
-    return $out;
+    return ($out, $out2);
 }
 
 sub _get_indicator_values {
