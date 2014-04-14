@@ -173,7 +173,7 @@ sub upsert {
         );
 
 
-        if ( keys $period_values_level2 ){
+        if ( keys %$period_values_level2 ){
 
             my $institutes = {map {$_->{id} => $_->{active_me_when_empty}} $self->schema->resultset('Institute')->search(undef, {
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator'
