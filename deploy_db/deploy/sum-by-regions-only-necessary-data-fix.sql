@@ -176,4 +176,13 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
+DROP FUNCTION compute_upper_regions(integer[]);
+
+select compute_upper_regions(
+    ARRAY(select id from region where depth_level = 3 )::int[],
+    ARRAY(select variable_id from indicator_variable )::int[],
+    ARRAY(select id from indicator_variables_variations )::int[],
+    null
+);
+
 COMMIT;

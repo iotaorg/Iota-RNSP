@@ -12,7 +12,7 @@ our $DEBUG=0;
 
 sub upsert {
     my ( $self, %params ) = @_;
-    my $ind_rs = $self->schema->resultset('Indicator');
+    my $ind_rs = $self->schema->resultset('Indicator')->search({is_fake => 0});
 
     use DDP; p \%params if $DEBUG;
     # procura pelos indicadores enviados

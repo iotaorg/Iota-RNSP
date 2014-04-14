@@ -204,6 +204,12 @@ __PACKAGE__->table("indicator");
   extra: {custom_type_name => "tp_visibility_level",list => ["public","private","restrict","network","session"]}
   is_nullable: 0
 
+=head2 is_fake
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -297,6 +303,8 @@ __PACKAGE__->add_columns(
     },
     is_nullable => 0,
   },
+  "is_fake",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -545,8 +553,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dgfCuwhcZyD2yhwyNjBZHg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-04-14 14:41:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8lOnfuFN1Vyx9tus9V7B9Q
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

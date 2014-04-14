@@ -354,7 +354,9 @@ sub list_GET {
         $rs = $rs->filter_visibilities(
             networks_ids => [map {$_->id} @networks],
             users_ids    => \@user_ids,
-        )
+        )->search({
+            is_fake      => 0
+        });
     }
 
     if ( $c->req->params->{use} eq 'edit' ) {

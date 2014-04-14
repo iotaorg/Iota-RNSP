@@ -14,3 +14,4 @@ region_config [new_permissions_type] 2014-04-03T22:16:21Z cron <renato.cron@gmai
 sum-by-regions-only-necessary-data [appschema] 2014-04-13T23:37:34Z cron <renato.cron@gmail.com> # somar apenas o que eh necessario na hora de consolidar as regioes..
 region_config-fix [region_config] 2014-04-14T02:25:41Z cron <renato.cron@gmail.com> # fix lugar dos campos
 sum-by-regions-only-necessary-data-fix [sum-by-regions-only-necessary-data] 2014-04-14T17:16:21Z cron <renato.cron@gmail.com> # fix: precisa apagar todas as variaveis, nao apenas as que batem o count.
+invisible-indicador-for-basic-variables [sum-by-regions-only-necessary-data-fix] 2014-04-14T17:40:44Z cron <renato.cron@gmail.com> # criar indicadores invisiveis para servidr de filtro de variaveis para os usuarios da prefeitura

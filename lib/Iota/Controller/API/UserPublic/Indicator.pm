@@ -20,6 +20,7 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') : CaptureAr
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
+        is_fake      => 0
     );
 
 }

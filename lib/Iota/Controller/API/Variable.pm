@@ -207,14 +207,39 @@ sub list_GET {
     my $rs = $c->stash->{collection};
 
     $c->req->params->{use} ||= 'list';
+    my $is_user = $c->check_any_user_role('user');
 
-    if ( $c->req->params->{use} eq 'edit' && $c->check_any_user_role('user') ) {
+    if ( $c->req->params->{use} eq 'edit' && $is_user ) {
         $rs = $rs->search(
             {
                 'me.user_id' => $c->user->id
             }
         );
     }
+
+    unless ($c->req->params->{all_variables}){
+        if ( $c->req->params->{use} eq 'list' && $is_user ) {
+            my @user_ids = ($c->user->id);
+
+            my @networks = $c->user->networks ? $c->user->networks->all : ();
+
+            my $indicators_rs = $c->model('DB::Indicator')->filter_visibilities(
+                networks_ids => [map {$_->id} @networks],
+                users_ids    => \@user_ids,
+            )->get_column('id')->as_query;
+
+            my $variables_id_rs = $c->model('DB::IndicatorVariable')->search(
+                {
+                    indicator_id => {'in' => $indicators_rs }
+                }
+            )->get_column('variable_id')->as_query;
+
+            $rs = $rs->search({
+                'me.id' => {'in' => $variables_id_rs }
+            });
+        }
+    }
+
 
     my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
     my @objs;
