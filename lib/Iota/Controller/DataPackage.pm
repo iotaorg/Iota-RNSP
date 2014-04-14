@@ -174,6 +174,7 @@ sub _download {
             )->search(
                 {
                     'me.id' => { '-not_in' => \@hide_indicator },
+                    is_fake => 0
                 },
                 {
                     order_by     => 'me.name',

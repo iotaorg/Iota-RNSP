@@ -209,7 +209,7 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
-    )->as_hashref->all;
+    )->search({is_fake => 0})->as_hashref->all;
 
     $c->stash(
         cities     => $c->stash->{network_data}{cities},
@@ -229,7 +229,9 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             networks_ids => $c->stash->{network_data}{network_ids},
             users_ids    => \@users_ids,
         )->search(
-            undef,
+            {
+                is_fake => 0
+            },
             {
                 prefetch => 'axis',
                 order_by => 'me.name'

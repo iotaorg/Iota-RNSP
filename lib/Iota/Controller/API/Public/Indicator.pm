@@ -21,7 +21,7 @@ sub base : Chained('/api/public/network_object') : PathPart('indicator') : Captu
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
-    );
+    )->search({is_fake => 0});
 
 }
 

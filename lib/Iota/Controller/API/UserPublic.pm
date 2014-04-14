@@ -151,7 +151,8 @@ sub stash_indicators_and_users : Private {
             users_ids    => \@users_ids,
         )->search(
             {
-                'me.id' => { '-not_in' => \@hide_indicator }
+                'me.id' => { '-not_in' => \@hide_indicator },
+                is_fake => 0
             },
             { prefetch => ['axis'] }
         )->as_hashref->all;
