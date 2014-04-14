@@ -19,7 +19,7 @@ sub upsert {
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
 
-    push @{$params{regions_id}}, $params{region_id} if exists $params{region_id} && $params{region_id};
+    push @{$params{regions_id}}, delete $params{region_id} if exists $params{region_id} && $params{region_id};
 
     my @indicators = $ind_rs->all;
     my @indicators_ids = map { $_->id } @indicators;
@@ -509,10 +509,11 @@ sub _get_values_variation {
     }
     return {} unless scalar @indicator_ids;
 
+
     my $variations_rs = $self->schema->resultset('IndicatorVariation')->search(
         {
             indicator_id                                      => {'in' => \@indicator_ids},
-            'indicator_variables_variations_values.region_id' => {'in' => $params{region_id}},
+            ('indicator_variables_variations_values.region_id' => {'in' => $params{regions_id}}) x !!$params{regions_id},
 
             (
                 'indicator_variables_variations_values.valid_from' => {
