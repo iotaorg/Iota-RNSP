@@ -8,10 +8,13 @@ has schema => (
     required => 1
 );
 
+our $DEBUG=0;
+
 sub upsert {
     my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator');
 
+    use DDP; p \%params if $DEBUG;
     # procura pelos indicadores enviados
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
@@ -43,22 +46,43 @@ sub upsert {
     );
     my $period_values = {};
 
+
+    my $level3       = [];
+    my @upper_regions;
+
     if ( exists $params{regions_id} ) {
 
         my %region_by_lvl;
 
         # apenas carrega se for necessario
         unless ( exists $params{generated_by_compute} ) {
+
+            my %uppers;
             my $rs = $self->schema->resultset('Region')->search(
                 {
-                    id => $params{regions_id}
+                    id => { 'in' => $params{regions_id} }
                 },
-                { columns => [ 'id', 'depth_level' ] }
+                { columns => [ 'id', 'depth_level', 'upper_region', 'name' ] }
             )->as_hashref;
             while ( my $r = $rs->next ) {
                 push @{ $region_by_lvl{ $r->{depth_level} } }, $r->{id};
+                $uppers{$r->{upper_region}}++ if $r->{upper_region};
             }
+
+            if (keys %uppers){
+                $rs = $self->schema->resultset('Region')->search(
+                    {
+                        id => { 'in' => [keys %uppers] }
+                    },
+                    { columns => [ 'id' ] }
+                )->as_hashref;
+                while ( my $r = $rs->next ) {
+                    push @upper_regions, $r->{id};
+                }
+            }
+
         }
+        $level3 = $region_by_lvl{3} if exists $region_by_lvl{3};
 
         # procura pelos valores salvos naquela regiao
         my $rr_values_rs = $self->schema->resultset('RegionVariableValue');
@@ -99,12 +123,55 @@ sub upsert {
             )
         };
 
+        my $period_values_level2 = {};
+
+        if ( exists $params{generated_by_compute} && $params{regions2_ids}){
+            # se isso acontecer,
+            # carrega todos os valores nao ativos
+            # pois sao os que podem ser ativos caso
+            # nao existam na soma.
+            my $rr_values_rs_level2 = $rr_values_rs->search({
+                'me.region_id'    => { 'in' => $params{regions2_ids} },
+                'me.active_value' => 0
+            });
+
+            $self->_get_values_periods_region(
+                out => $period_values_level2,
+                rs  => $rr_values_rs_level2
+            );
+        }
+
         $rr_values_rs = $rr_values_rs->search($where);
 
         $self->_get_values_periods_region(
             out => $period_values,
             rs  => $rr_values_rs
         );
+use DDP; p $period_values if $DEBUG;
+use DDP; p $period_values_level2 if $DEBUG;
+
+        if ( keys $period_values_level2 ){
+
+            my $institutes = {map {$_->{id} => $_->{active_me_when_empty}} $self->schema->resultset('Institute')->search(undef, {
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            })->all};
+
+            my $user_vs_institute = {map {$_->{id} => $_->{institute_id}} $self->schema->resultset('User')->search({
+                ( 'me.id' => $params{user_id} ) x !!exists $params{user_id},
+                active => 1
+            }, {
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            })->all};
+
+            $self->_merge_regions_values(
+                sum     => $period_values,
+                inputed => $period_values_level2,
+                institutes => $institutes,
+                user_vs_institute => $user_vs_institute,
+
+            );
+
+        }
 
     }
     else {
@@ -140,8 +207,8 @@ sub upsert {
 
     #use DDP; p $indicator_variables; p $variation_values; p $results;
     my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
-    my $level3       = [];
-    my $regions_meta = $self->get_regions_meta( $level3, keys %$results );
+
+    my $regions_meta = $self->get_regions_meta( keys %$results );
 
     $self->schema->txn_do(
         sub {
@@ -210,6 +277,8 @@ sub upsert {
                     }
                 }
             }
+
+            use DDP; p $level3 if $DEBUG;
             if ( scalar @$level3 ) {
                 my $level2 = $self->schema->compute_upper_regions(
                     $level3,
@@ -219,7 +288,12 @@ sub upsert {
                 );
                 $self->upsert(
                     %params,
-                    regions_id           => $level2->{compute_upper_regions},
+
+                    #regions3_values => $period_values,
+                    #regions3_ids    => $level3,
+                    regions2_ids    => \@upper_regions,
+
+                    regions_id              => $level2->{compute_upper_regions},
                     generated_by_compute => 1,
                 );
             }
@@ -248,23 +322,50 @@ sub get_users_meta {
 
 # retorna cidade das regioes
 sub get_regions_meta {
-    my ( $self, $level3, @regions ) = @_;
+    my ( $self, @regions ) = @_;
 
     my $citys =
       $self->schema->resultset('Region')->search( { 'me.id' => { 'in' => [ grep { /\d/o } @regions ] } } )->as_hashref;
 
-    my $users = {};
+    my $regions = {};
 
     while ( my $row = $citys->next ) {
-        $users->{ $row->{id} } = {
+        $regions->{ $row->{id} } = {
             city_id => $row->{city_id},
-
-            #active  => $row->{depth_level} == 3 ? 1 : 0
         };
-        push @$level3, $row->{id} if $row->{depth_level} == 3;
+        #push @$level3, $row->{id} if $row->{depth_level} == 3;
     }
 
-    return $users;
+    return $regions;
+}
+
+sub _merge_regions_values {
+    my ( $self, %conf ) = @_;
+
+    return unless $conf{inputed}{0};
+
+    while (my ($region_id, $users) = each %{$conf{inputed}{0}}) {
+        next if $region_id eq 'null';
+
+        while (my ($user_id, $dates) = each %{$users} ) {
+
+            next unless $conf{institutes}{$conf{user_vs_institute}{$user_id}};
+
+
+            while (my ($date, $variables) = each %{$dates} ) {
+
+                while (my ($varid, $value) = each %{$variables} ) {
+
+                    next if exists $conf{sum}{1}{$region_id}{$user_id}{$date}{$varid};
+
+                    $conf{sum}{1}{$region_id}{$user_id}{$date}{$varid} = $value;
+
+                }
+
+            }
+        }
+    }
+
 }
 
 # monta na RAM a estrutura:

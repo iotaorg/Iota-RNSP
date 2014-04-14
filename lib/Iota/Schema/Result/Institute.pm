@@ -146,6 +146,22 @@ __PACKAGE__->table("institute");
   data_type: 'integer'
   is_nullable: 1
 
+=head2 aggregate_only_if_full
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+apenas faz as contas se as regioes abaixos estao com todas as variaveis preenchidas
+
+=head2 active_me_when_empty
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+o dado da regiao acima ira se consolidar como ativo caso nao exista valores para as subs.
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -197,6 +213,10 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "fixed_indicator_axis_id",
   { data_type => "integer", is_nullable => 1 },
+  "aggregate_only_if_full",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "active_me_when_empty",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -257,21 +277,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 region_config
-
-Type: might_have
-
-Related object: L<Iota::Schema::Result::RegionConfig>
-
-=cut
-
-__PACKAGE__->might_have(
-  "region_config",
-  "Iota::Schema::Result::RegionConfig",
-  { "foreign.institute_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 users
 
 Type: has_many
@@ -288,8 +293,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-04-04 08:44:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:T2WwD/xfaAODYiXpt8CjVg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-04-14 07:48:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XPm6TgVZ4E8k2EKcPEqTeg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
