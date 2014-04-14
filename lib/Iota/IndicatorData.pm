@@ -27,7 +27,7 @@ sub upsert {
 
     # procura por todas as variaveis que esses indicadores podem utilizar
     my @used_variables =
-      $self->schema->resultset('IndicatorVariable')->search( { indicator_id => \@indicators_ids } )->all;
+      $self->schema->resultset('IndicatorVariable')->search( { indicator_id => {in => \@indicators_ids} } )->all;
 
     my $variable_ids;
     my $indicator_variables;
@@ -511,8 +511,8 @@ sub _get_values_variation {
 
     my $variations_rs = $self->schema->resultset('IndicatorVariation')->search(
         {
-            indicator_id                                      => \@indicator_ids,
-            'indicator_variables_variations_values.region_id' => $params{region_id},
+            indicator_id                                      => {'in' => \@indicator_ids},
+            'indicator_variables_variations_values.region_id' => {'in' => $params{region_id}},
 
             (
                 'indicator_variables_variations_values.valid_from' => {
@@ -521,7 +521,7 @@ sub _get_values_variation {
               ) x !!exists $params{valid_from},
 
             (
-                'indicator_variables_variations_values.user_id' => $params{user_id}
+                'indicator_variables_variations_values.user_id' => {'in' => $params{user_id}}
               ) x !!exists $params{user_id},
 
         },
@@ -555,7 +555,7 @@ sub _get_indicator_var_variables {
     return {} unless scalar @indicator_ids;
 
     my $variables_rs =
-      $self->schema->resultset('IndicatorVariablesVariation')->search( { indicator_id => \@indicator_ids, } )
+      $self->schema->resultset('IndicatorVariablesVariation')->search( { indicator_id => {'in' => \@indicator_ids}, } )
       ->as_hashref;
 
     my $out = {};
@@ -636,7 +636,8 @@ sub _get_indicator_values {
                         }
                         my $formula = Iota::IndicatorFormula->new(
                             formula => $indicator->formula,
-                            schema  => $self->schema
+                            schema  => $self->schema,
+                            auto_check => 0
                         );
 
                         my %values = map { $_ => $data->{$_}[0] } @variables;
