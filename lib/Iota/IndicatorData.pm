@@ -14,7 +14,7 @@ sub upsert {
     my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator')->search({is_fake => 0});
 
-    use DDP; p \%params if $DEBUG;
+    #use DDP; p \%params if $DEBUG;
     # procura pelos indicadores enviados
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
@@ -85,7 +85,7 @@ sub upsert {
 
         }
 
-        use DDP; p \%region_by_lvl if $DEBUG;
+        #use DDP; p \%region_by_lvl if $DEBUG;
         die ("can't re-compile more than 2 regions levels at once") if keys %region_by_lvl > 1;
 
         $level3 = $region_by_lvl{3} if exists $region_by_lvl{3};
@@ -216,8 +216,8 @@ sub upsert {
 
         }
 
-        use DDP; p $period_values if $DEBUG;
-        use DDP; p $period_values_level2 if $DEBUG;
+        #use DDP; p $period_values if $DEBUG;
+        #use DDP; p $period_values_level2 if $DEBUG;
     }
     else {
         $period_values = $self->_get_values_periods($values_rs);
@@ -250,7 +250,7 @@ sub upsert {
 
     );
 
-    #use DDP; p $indicator_variables; p $variation_values; p $results;
+    ##use DDP; p $indicator_variables; p $variation_values; p $results;
     my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
 
     my $regions_meta = $self->get_regions_meta( keys %$results );
@@ -323,8 +323,8 @@ sub upsert {
                 }
             }
 
-            use DDP; p $level3 if $DEBUG;
-            use DDP; p $variable_ids if $DEBUG;
+            #use DDP; p $level3 if $DEBUG;
+            #use DDP; p $variable_ids if $DEBUG;
             if ( scalar @$level3 ) {
                 my $level2 = $self->schema->compute_upper_regions(
                     $level3,
