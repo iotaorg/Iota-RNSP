@@ -83,9 +83,6 @@ sub list_GET {
     $rs = $rs->search( { id => $c->req->params->{variable_id} } )
       if ( defined $c->req->params->{variable_id} );
 
-    my @list = $rs->as_hashref->all;
-
-
     $c->req->params->{use} ||= 'list';
     my $is_user = $c->check_any_user_role('user');
 
@@ -111,6 +108,8 @@ sub list_GET {
             });
         }
     }
+
+    my @list = $rs->as_hashref->all;
 
     my @objs;
     my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
