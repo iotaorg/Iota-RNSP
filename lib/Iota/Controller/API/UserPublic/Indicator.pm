@@ -219,10 +219,12 @@ sub resumo_GET {
 
             if ( !exists $periods_begin->{ $indicator->period } ) {
                 $periods_begin->{ $indicator->period } =
-                  $c->model('DB')->schema->voltar_periodo( $from_date, $indicator->period, $max_periodos )
+                  $c->model('DB')->schema->voltar_periodo( $from_date, $indicator->period, $max_periodos -1  )
                   ->{voltar_periodo};
             }
         }
+
+
 
         while ( my ( $periodo, $from_this_date ) = each %$periods_begin ) {
 

@@ -1,7 +1,5 @@
 use Test::More;
-ok(1);
-done_testing;
-=pod
+
 use strict;
 use warnings;
 use URI;
@@ -14,7 +12,7 @@ use lib "$Bin/../../lib";
 use Catalyst::Test q(Iota);
 
 my $variable;
-my $variable_2;
+my $variable2;
 my $indicator;
 my $city_uri;
 use HTTP::Request::Common qw(GET POST DELETE PUT);
@@ -31,23 +29,14 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 2;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
-
+my $current_var;
 eval {
     $schema->txn_do(
         sub {
 
             my ( $res, $c );
-            ( $res, $c ) = ctx_request(
-                POST '/api/city',
-                [
-                    api_key            => 'test',
-                    'city.create.name' => 'FooBar',
 
-                ]
-            );
-            ok( !$res->is_success, 'invalid request' );
-            is( $res->code, 400, 'invalid request' );
-
+            # cria cidade
             ( $res, $c ) = ctx_request(
                 POST '/api/city',
                 [
@@ -61,6 +50,7 @@ eval {
             ok( $res->is_success, 'city created!' );
             is( $res->code, 201, 'created!' );
 
+            # cria regiao
             $city_uri = $res->header('Location');
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
@@ -68,22 +58,23 @@ eval {
                     api_key                          => 'test',
                     'city.region.create.name'        => 'a region',
                     'city.region.create.description' => 'with no description',
-                    'city.region.create.subregions_valid_after' => '2001-01-01',
+                    'city.region.create.subregions_valid_after' => '2005-01-01',
                 ]
             );
 
             ok( $res->is_success, 'region created!' );
             is( $res->code, 201, 'region created!' );
 
-            my $reg1_uri = $res->header('Location');
-            my $reg1 = eval { from_json( $res->content ) };
+            my $region_uri = $res->header('Location');
+            my $region = eval { from_json( $res->content ) };
 
+            # hora das subregioes
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
                     api_key                           => 'test',
-                    'city.region.create.name'         => 'second region',
-                    'city.region.create.upper_region' => $reg1->{id},
+                    'city.region.create.name'         => 'subregion a',
+                    'city.region.create.upper_region' => $region->{id},
                     'city.region.create.description'  => 'with Description',
                 ]
             );
@@ -91,17 +82,17 @@ eval {
             ok( $res->is_success, 'region created!' );
             is( $res->code, 201, 'region created!' );
 
-            my $reg2_uri = $res->header('Location');
-            ( $res, $c ) = ctx_request( GET $reg2_uri );
-            my $reg2 = eval { from_json( $res->content ) };
-            ( $reg2->{id} ) = $reg2_uri =~ /\/([0-9]+)$/;
+            my $subregion1_uri = $res->header('Location');
+            ( $res, $c ) = ctx_request( GET $subregion1_uri );
+            my $subregion1 = eval { from_json( $res->content ) };
+            ( $subregion1->{id} ) = $subregion1_uri =~ /\/([0-9]+)$/;
 
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
                     api_key                           => 'test',
-                    'city.region.create.name'         => 'second region x',
-                    'city.region.create.upper_region' => $reg1->{id},
+                    'city.region.create.name'         => 'subregion b',
+                    'city.region.create.upper_region' => $region->{id},
                     'city.region.create.description'  => 'with Descriptionx',
                 ]
             );
@@ -109,19 +100,41 @@ eval {
             ok( $res->is_success, 'region created!' );
             is( $res->code, 201, 'region created!' );
 
-            my $reg3_uri = $res->header('Location');
-            ( $res, $c ) = ctx_request( GET $reg3_uri );
-            my $reg3 = eval { from_json( $res->content ) };
-            ( $reg3->{id} ) = $reg3_uri =~ /\/([0-9]+)$/;
+            my $subregion2_uri = $res->header('Location');
+            ( $res, $c ) = ctx_request( GET $subregion2_uri );
+            my $subregion2 = eval { from_json( $res->content ) };
+            ( $subregion2->{id} ) = $subregion2_uri =~ /\/([0-9]+)$/;
 
-            ( $res, $c ) = ctx_request( GET $reg1_uri );
+
+            ( $res, $c ) = ctx_request(
+                POST $city_uri . '/region',
+                [
+                    api_key                           => 'test',
+                    'city.region.create.name'         => 'subregion c',
+                    'city.region.create.upper_region' => $region->{id},
+                    'city.region.create.description'  => 'with Descriptionx',
+                ]
+            );
+
+            ok( $res->is_success, 'region created!' );
+            is( $res->code, 201, 'region created!' );
+
+            my $subregion3_uri = $res->header('Location');
+            ( $res, $c ) = ctx_request( GET $subregion3_uri );
+            my $subregion3 = eval { from_json( $res->content ) };
+            ( $subregion3->{id} ) = $subregion3_uri =~ /\/([0-9]+)$/;
+
+            # todas subregioes criadas.
+
+            # criando 2 variaveis
+            ( $res, $c ) = ctx_request( GET $region_uri );
             my $obj = eval { from_json( $res->content ) };
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable',
                 [
                     api_key                       => 'test',
-                    'variable.create.name'        => 'Foo Bar',
+                    'variable.create.name'        => 'Foo A',
                     'variable.create.cognomen'    => 'foobar',
                     'variable.create.period'      => 'yearly',
                     'variable.create.explanation' => 'a foo with bar',
@@ -137,7 +150,7 @@ eval {
                 POST '/api/variable',
                 [
                     api_key                       => 'test',
-                    'variable.create.name'        => 'Foo Bar 2',
+                    'variable.create.name'        => 'Foo B',
                     'variable.create.cognomen'    => 'foobar2',
                     'variable.create.period'      => 'yearly',
                     'variable.create.explanation' => 'a foo with bar 2',
@@ -147,15 +160,15 @@ eval {
             ok( $res->is_success, 'variable created!' );
             is( $res->code, 201, 'created!' );
 
-            $variable_2 = eval { from_json( $res->content ) };
+            $variable2 = eval { from_json( $res->content ) };
 
-
+            # cria indicador usando as duas variaveis
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
                 [
                     api_key                          => 'test',
                     'indicator.create.name'          => 'Foo Bar',
-                    'indicator.create.formula'       => '1 + $' . $variable->{id} . ' + $' . $variable_2->{id} ,
+                    'indicator.create.formula'       => '1 + $' . $variable->{id} . ' + $' . $variable2->{id} ,
                     'indicator.create.axis_id'       => '1',
                     'indicator.create.explanation'   => 'explanation',
                     'indicator.create.source'        => 'me',
@@ -175,46 +188,71 @@ eval {
                 $schema->txn_do(
                     sub {
                         my $ii;
-                        &update_region_valid_time( $reg1, undef );
-                        &add_value( $reg1_uri, '100', '2002' );
-                        &add_value( $reg1_uri, '130', '2003' );
-                        &add_value( $reg1_uri, '150', '2004' );
+                        $current_var = $variable->{id};
+                        &add_value( $region_uri, '100', '2002' );
+                        &add_value( $region_uri, '130', '2003' );
+                        &add_value( $region_uri, '150', '2004' );
 
-                        &update_region_valid_time( $reg1, '2005-01-01' );
-                        &add_value( $reg2_uri, '80', '2005' );
-                        &add_value( $reg3_uri, '82', '2005' );
+                        $current_var = $variable2->{id};
+                        &add_value( $region_uri, '200', '2002' );
+                        &add_value( $region_uri, '230', '2003' );
+                        &add_value( $region_uri, '300', '2004' );
 
-                        &add_value( $reg2_uri, '95', '2006' );
-                        &add_value( $reg3_uri, '94', '2006' );
+                        $ii = &get_indicator( $region, '2002' );
+                        is_deeply( $ii, ['301'], 'valor de 2002 ativo' );
 
-                        $ii = &get_indicator( $reg1, '2002' );
-                        is_deeply( $ii, ['101'], 'valor de 2002 ativo' );
-                        $ii = &get_indicator( $reg1, '2002', 1 );
-
+                        $ii = &get_indicator( $region, '2002', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2002' );
 
-                        $ii = &get_indicator( $reg1, '2003' );
-                        is_deeply( $ii, ['131'], 'valor de 2003 ativo' );
-                        $ii = &get_indicator( $reg1, '2003', 1 );
+                        $ii = &get_indicator( $region, '2003' );
+                        is_deeply( $ii, ['361'], 'valor de 2003 ativo' );
+
+                        $ii = &get_indicator( $region, '2003', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2003' );
 
-                        $ii = &get_indicator( $reg1, '2004' );
-                        is_deeply( $ii, ['151'], 'valor de 2004 ativo' );
-                        $ii = &get_indicator( $reg1, '2004', 1 );
+
+                        $ii = &get_indicator( $region, '2004' );
+                        is_deeply( $ii, ['451'], 'valor de 2004 ativo' );
+
+                        $ii = &get_indicator( $region, '2004', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2004' );
 
-                        $ii = &get_indicator( $reg1, '2005' );
+                        # verificado tudo antes de inserir os
+                        # valores para 2005+
+
+                        # sit 2:
+                        note('Nível superior preenchido, sem dados no nível inferior');
+
+                        $current_var = $variable->{id};
+                        &add_value( $region_uri, '55', '2005' );
+
+                        $current_var = $variable2->{id};
+                        &add_value( $region_uri, '66', '2005' );
+
+                        # como nao foi dito nada, a soma esta apenas no false.
+
+                        $ii = &get_indicator( $region, '2005' );
+                        is_deeply( $ii, [ ], 'valor de 2005 ativo nao existe' );
+
+                        $ii = &get_indicator( $region, '2005', 1 );
+                        is_deeply( $ii, [ 1 + 55 + 66], 'nao existe valor active_value=0 para 2005 eh a soma' );
+
+
+
+
+=pod
+                        $ii = &get_indicator( $region, '2005' );
                         is_deeply( $ii, [ 1 + 80 + 82 ], 'valor de 2005 ativo eh a soma' );
 
-                        $ii = &get_indicator( $reg1, '2005', 1 );
+                        $ii = &get_indicator( $region, '2005', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2005' );
 
-                        $ii = &get_indicator( $reg1, '2006' );
+                        $ii = &get_indicator( $region, '2006' );
                         is_deeply( $ii, [ 1 + 95 + 94 ], 'valor de 2006 ativo eh a soma' );
 
-                        $ii = &get_indicator( $reg1, '2006', 1 );
+                        $ii = &get_indicator( $region, '2006', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2006' );
-
+=cut
                         die 'undo-savepoint';
                     }
                 );
@@ -231,32 +269,8 @@ die $@ unless $@ =~ /rollback/;
 
 done_testing;
 
-sub update_region_valid_time {
 
-    $schema->resultset('Region')->find(
-        {
-            id => shift->{id}
-        }
-      )->update(
-        {
-            subregions_valid_after => shift
-        }
-      );
 
-}
-
-sub update_region_valid_time_api {
-    my ( $reg, $valid ) = @_;
-    my ( $res, $c )     = ctx_request(
-        POST $city_uri . '/region/' . $reg->{id},
-        [
-            api_key                                     => 'test',
-            'city.region.update.subregions_valid_after' => $valid,
-        ]
-    );
-
-    ok( $res->is_success, 'region updated!' );
-}
 
 sub add_value {
     my ( $region, $value, $year, $expcode ) = @_;
@@ -269,7 +283,7 @@ sub add_value {
     my $req = POST $region . '/value',
       [
         'region.variable.value.put.value'         => $value,
-        'region.variable.value.put.variable_id'   => $variable->{id},
+        'region.variable.value.put.variable_id'   => $current_var,
         'region.variable.value.put.value_of_date' => $year . '-01-01'
       ];
     $req->method('PUT');
@@ -327,5 +341,4 @@ sub get_the_key {
     my ($k)    = keys %$hash;
     return $hash->{$k};
 }
-=cut
 
