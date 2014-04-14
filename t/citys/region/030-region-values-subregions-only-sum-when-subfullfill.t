@@ -238,6 +238,25 @@ eval {
                         is_deeply( $ii, [ 1 + 55 + 66], 'nao existe valor active_value=0 para 2005 eh a soma' );
 
 
+                        # agora atualiza pra se nao exitir soma,
+                        # usar o valor da cidade.
+                        ( $res, $c ) = ctx_request(
+                            POST '/api/institute/1', # user_id=2 eh institute=1
+                            [
+                                'institute.update.active_me_when_empty' => '1',
+                                # aproveita pra ligar a soma apenas se verdadeiro.
+                                'institute.update.aggregate_only_if_full' => '1',
+                            ]
+                        );
+                        ok( $res->is_success, 'institute updated' );
+                        is( $res->code, 202, 'institute updated -- 202 Accepted' );
+
+
+                        $ii = &get_indicator( $region, '2005' );
+                        is_deeply( $ii, [ 1 + 55 + 66 ], 'valor de 2005 ativo agora existe' );
+
+                        $ii = &get_indicator( $region, '2005', 1 );
+                        is_deeply( $ii, [ 1 + 55 + 66 ], 'nao existe valor active_value=0 para 2005 tabem existe' );
 
 
 =pod
