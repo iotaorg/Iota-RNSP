@@ -1,7 +1,7 @@
 
 
 
-CREATE OR REPLACE FUNCTION func_status_indicadores_by_user(IN abc integer, in eixo int)
+CREATE OR REPLACE FUNCTION func_status_indicadores_by_user(IN abc integer, in eixo int, in indicadores_ids int[])
   RETURNS int AS
 $BODY$
 declare
@@ -35,6 +35,7 @@ from
     LEFT JOIN indicator_value iv_any ON iv_any.user_id = abc AND iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id IS NULL
     LEFT JOIN (SELECT indicator_id, COUNT(1) FROM user_indicator x WHERE x.user_id = abc AND justification_of_missing_field != '' GROUP BY 1) jm ON i.id = jm.indicator_id
     where i.axis_id= eixo
+    and i.id IN (SELECT DISTINCT UNNEST(indicadores_ids))
     GROUP BY i.id, i.axis_id, i.user_id,i.indicator_type,jm.COUNT
 ) x
 where _count_any = var_count ;
@@ -44,7 +45,7 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-  CREATE OR REPLACE FUNCTION func_status_indicadores_by_user_justificado(IN abc integer, in eixo int)
+  CREATE OR REPLACE FUNCTION func_status_indicadores_by_user_justificado(IN abc integer, in eixo int, in indicadores_ids int[])
   RETURNS int AS
 $BODY$
 declare
@@ -78,6 +79,7 @@ from
     LEFT JOIN indicator_value iv_any ON iv_any.user_id = abc AND iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id IS NULL
     LEFT JOIN (SELECT indicator_id, COUNT(1) FROM user_indicator x WHERE x.user_id = abc AND justification_of_missing_field != '' GROUP BY 1) jm ON i.id = jm.indicator_id
     where i.axis_id= eixo
+    and i.id IN (SELECT DISTINCT UNNEST(indicadores_ids))
     GROUP BY i.id, i.axis_id, i.user_id,i.indicator_type,jm.COUNT
 ) x
 where _count_any = var_count or justification_count > 0;
@@ -90,22 +92,90 @@ $BODY$
 create temp table _saida as
 select
 
-c.name as nome_cidade,
-c.uf as nome_uf,
-u.name as nome_usuario,
-a.name as nome_eixo,
+    c.name as nome_cidade,
+    c.uf as nome_uf,
+    u.name as nome_usuario,
+    a.name as nome_eixo,
 
-u.email as email,
-case when  (select count(1) from user_file x where u.id=x.user_id and x.class_name='programa_metas')>=1 then 'sim' else 'nao' end as programa_de_metas,
+    u.email as email,
+    case when  (select count(1) from user_file x where u.id=x.user_id and x.class_name='programa_metas')>=1 then 'sim' else 'nao' end as programa_de_metas,
 
-func_status_indicadores_by_user(u.id, a.id) as qtde_indicadores_preenchido,
-func_status_indicadores_by_user_justificado(u.id, a.id) as qtde_indicadores_preenchido_ou_justificado,
-(select count(1) from indicator x WHERE x.axis_id = a.id and (x.visibility_level='public' OR x.visibility_user_id
-IN (select id from "user" where institute_id = 1 and city_Id is null and active and id != 767)
-)) as total_indicadores_eixo,
-c.id as city_id,
-a.id as axis_id,
-u.id as user_id
+    func_status_indicadores_by_user(u.id, a.id, array(
+
+        select distinct x.id
+        from indicator x
+        WHERE x.axis_id = a.id
+        and (
+            x.visibility_level='public'
+            OR (
+                x.visibility_level='private' AND x.visibility_user_id IN (
+                    select id from "user"
+                    where institute_id = 1
+                    and city_Id is not null
+                    and active
+                )
+            )
+            OR (
+                x.visibility_level='network' AND x.id IN (
+                    select indicator_id from indicator_network_visibility
+                    where network_id = 1
+                )
+            )
+        )
+
+    )) as qtde_indicadores_preenchido,
+    func_status_indicadores_by_user_justificado(u.id, a.id,
+        array(
+
+            select distinct x.id
+            from indicator x
+            WHERE x.axis_id = a.id
+            and (
+                x.visibility_level='public'
+                OR (
+                    x.visibility_level='private' AND x.visibility_user_id IN (
+                        select id from "user"
+                        where institute_id = 1
+                        and city_Id is not null
+                        and active
+                    )
+                )
+                OR (
+                    x.visibility_level='network' AND x.id IN (
+                        select indicator_id from indicator_network_visibility
+                        where network_id = 1
+                    )
+                )
+            )
+
+        )
+
+    ) as qtde_indicadores_preenchido_ou_justificado,
+    (
+        select count(1)
+        from indicator x
+        WHERE x.axis_id = a.id
+        and (
+            x.visibility_level='public'
+            OR (
+                x.visibility_level='private' AND x.visibility_user_id IN (
+                    select id from "user"
+                    where institute_id = 1
+                    and city_Id is not null
+                    and active
+                )
+            )
+            OR (
+                x.visibility_level='network' AND x.id IN (
+                    select indicator_id from indicator_network_visibility
+                    where network_id = 1
+                )
+            )
+        )
+    ) as total_indicadores_eixo,
+    c.id as city_id,
+    a.id as axis_id,
+    u.id as user_id
 
 from "user" u
 join city c on c.id=u.city_id

@@ -19,6 +19,8 @@ sub upsert {
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
 
+    push @{$params{regions_id}}, $params{region_id} if exists $params{region_id} && $params{region_id};
+
     my @indicators = $ind_rs->all;
     my @indicators_ids = map { $_->id } @indicators;
     return unless scalar @indicators;
@@ -82,7 +84,12 @@ sub upsert {
             }
 
         }
+
+        use DDP; p \%region_by_lvl if $DEBUG;
+        die ("can't re-compile more than 2 regions levels at once") if keys %region_by_lvl > 1;
+
         $level3 = $region_by_lvl{3} if exists $region_by_lvl{3};
+
 
         # procura pelos valores salvos naquela regiao
         my $rr_values_rs = $self->schema->resultset('RegionVariableValue');
@@ -141,14 +148,30 @@ sub upsert {
             );
         }
 
+        my $period_values_sum = {};
+        # se eh regiao 2 compilando agora
+        # carrega todas as somas
+        if (exists $region_by_lvl{2} && !exists $params{regions2_ids}){
+
+            my $rr_values_rs_level2_sum = $rr_values_rs->search({
+                'me.region_id'            => { 'in' => $region_by_lvl{2} },
+                'me.generated_by_compute' => 1
+            });
+
+            $self->_get_values_periods_region(
+                out => $period_values_sum,
+                rs  => $rr_values_rs_level2_sum
+            );
+
+        }
+
         $rr_values_rs = $rr_values_rs->search($where);
 
         $self->_get_values_periods_region(
             out => $period_values,
             rs  => $rr_values_rs
         );
-use DDP; p $period_values if $DEBUG;
-use DDP; p $period_values_level2 if $DEBUG;
+
 
         if ( keys $period_values_level2 ){
 
@@ -171,8 +194,30 @@ use DDP; p $period_values_level2 if $DEBUG;
 
             );
 
+        }elsif ( exists $region_by_lvl{2} && !exists $params{regions2_ids} ){
+
+            my $institutes = {map {$_->{id} => $_->{active_me_when_empty}} $self->schema->resultset('Institute')->search(undef, {
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            })->all};
+
+            my $user_vs_institute = {map {$_->{id} => $_->{institute_id}} $self->schema->resultset('User')->search({
+                ( 'me.id' => $params{user_id} ) x !!exists $params{user_id},
+                active => 1
+            }, {
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            })->all};
+
+            $self->_check_subregions_values(
+                sum     => $period_values_sum,
+                inputed => $period_values,
+                institutes => $institutes,
+                user_vs_institute => $user_vs_institute,
+            );
+
         }
 
+        use DDP; p $period_values if $DEBUG;
+        use DDP; p $period_values_level2 if $DEBUG;
     }
     else {
         $period_values = $self->_get_values_periods($values_rs);
@@ -279,6 +324,7 @@ use DDP; p $period_values_level2 if $DEBUG;
             }
 
             use DDP; p $level3 if $DEBUG;
+            use DDP; p $variable_ids if $DEBUG;
             if ( scalar @$level3 ) {
                 my $level2 = $self->schema->compute_upper_regions(
                     $level3,
@@ -339,6 +385,9 @@ sub get_regions_meta {
     return $regions;
 }
 
+# faz o merge entre a soma das subregioes e o valor nao ativo da cidade
+# inputed = valores da cidade.
+# sum     = valores somados
 sub _merge_regions_values {
     my ( $self, %conf ) = @_;
 
@@ -367,6 +416,41 @@ sub _merge_regions_values {
     }
 
 }
+
+# faz o valor nao ativo da cidade se tornar ativo
+# caso nao exista soma para aquele cara.
+# inputed = valores atuais (falsos)
+# sum     = valores somados.
+sub _check_subregions_values {
+    my ( $self, %conf ) = @_;
+
+    return unless $conf{inputed}{0};
+
+    while (my ($region_id, $users) = each %{$conf{inputed}{0}}) {
+        next if $region_id eq 'null';
+
+        while (my ($user_id, $dates) = each %{$users} ) {
+
+            next unless $conf{institutes}{$conf{user_vs_institute}{$user_id}};
+
+
+            while (my ($date, $variables) = each %{$dates} ) {
+
+                while (my ($varid, $value) = each %{$variables} ) {
+
+                    next if exists$conf{sum}{1}{$region_id}{$user_id}{$date}{$varid};
+
+                    $conf{inputed}{1}{$region_id}{$user_id}{$date}{$varid} = $value;
+
+                }
+
+            }
+        }
+    }
+
+}
+
+
 
 # monta na RAM a estrutura:
 # $period_values = $region_id => $user_id => { $valid_from => { $variable_id => [ $value, $source ] } }

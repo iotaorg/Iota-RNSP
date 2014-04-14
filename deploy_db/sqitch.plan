@@ -13,3 +13,4 @@ new_permissions_type [variable_summarization] 2014-03-19T13:11:31Z cron <renato.
 region_config [new_permissions_type] 2014-04-03T22:16:21Z cron <renato.cron@gmail.com> # configuracao da somatoria da regiao
 sum-by-regions-only-necessary-data [appschema] 2014-04-13T23:37:34Z cron <renato.cron@gmail.com> # somar apenas o que eh necessario na hora de consolidar as regioes..
 region_config-fix [region_config] 2014-04-14T02:25:41Z cron <renato.cron@gmail.com> # fix lugar dos campos
+sum-by-regions-only-necessary-data-fix [sum-by-regions-only-necessary-data] 2014-04-14T17:16:21Z cron <renato.cron@gmail.com> # fix: precisa apagar todas as variaveis, nao apenas as que batem o count.

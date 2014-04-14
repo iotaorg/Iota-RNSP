@@ -291,7 +291,7 @@ eval {
 
                         note('sit 4: Nível superior preenchido, com dados completos no nível inferior');
 
-                        $Iota::IndicatorData::DEBUG=0;
+
                         $current_var = $variable2->{id};
                         # isso fecha a conta
                         &add_value( $subregion3_uri, '35', '2005' );
@@ -337,6 +337,72 @@ eval {
 
                         $ii = &get_indicator( $region, '2009', 1 );
                         is_deeply( $ii, [ ], 'nao existe valor active_value=0 para 2009' );
+
+                        note('sit 7: valor incompleto abaixo, e depois mudou o valor de cima');
+
+                        $current_var = $variable->{id};
+                        &add_value( $subregion1_uri, '8', '2066' );
+
+                        $current_var = $variable2->{id};
+                        &add_value( $subregion1_uri, '12', '2066' );
+
+                        $current_var = $variable->{id};
+                        &add_value( $region_uri, '888', '2066' );
+
+                        $current_var = $variable2->{id};
+                        my $reg_id2 = &add_value( $region_uri, '999', '2066' );
+
+                        # bom!
+                        $ii = &get_indicator( $region, '2066' );
+                        is_deeply( $ii, [ 1 + 888 + 999 ], 'valor ativo para 2066 eh o inputado.' );
+
+                        $ii = &get_indicator( $region, '2066', 1 );
+                        is_deeply( $ii, [ 1 + 888 + 999 ], 'valor inativo pra 2066 tambem eh o inputado.' );
+
+                        # agora bora por tudo nas sub-regioes.
+                        $current_var = $variable->{id};
+                        &add_value( $subregion2_uri, '8', '2066' );
+                        my $val_id1 = &add_value( $subregion3_uri, '8', '2066' );
+
+                        $current_var = $variable2->{id};
+                        &add_value( $subregion2_uri, '8', '2066' );
+                        my $val_id2 = &add_value( $subregion3_uri, '55', '2066' );
+
+
+                        $ii = &get_indicator( $region, '2066' );
+                        is_deeply( $ii, [ 1 + 8 + 12 + 8 + 8 + 8 + 55], 'valor ativo para 2066 eh a soma.' );
+
+                        $ii = &get_indicator( $region, '2066', 1 );
+                        is_deeply( $ii, [ 1 + 888 + 999 ], 'valor inativo pra 2066 eh o da macro' );
+
+                        # removendo agora um valor da sub.
+
+                        ( $res, $c ) = ctx_request( DELETE $subregion3_uri.'/value/'.$val_id2->{id} );
+                        is( $res->code, 204, 'response code is ' . 204 );
+
+                        # virou intermediario.
+                        $ii = &get_indicator( $region, '2066' );
+                        is_deeply( $ii, [ 1 + 999 + 24], 'virou intermediario' );
+
+                        ( $res, $c ) = ctx_request( DELETE $subregion3_uri.'/value/'.$val_id1->{id} );
+                        is( $res->code, 204, 'response code is ' . 204 );
+
+                        # voltou a ser o macro.
+                        $ii = &get_indicator( $region, '2066' );
+                        is_deeply( $ii, [ 1 + 888 + 999 ], 'voltou a ser macro' );
+
+                        $Iota::IndicatorData::DEBUG = 0;
+                        # apaga a da regiao.
+                        ( $res, $c ) = ctx_request( DELETE $region_uri.'/value/'.$reg_id2->{id} );
+                        is( $res->code, 204, 'response code is ' . 204 );
+
+                        # em branco.
+                        $ii = &get_indicator( $region, '2066' );
+                        is_deeply( $ii, [ ], 'nao tem mais..' );
+
+                        $ii = &get_indicator( $region, '2066', 1 );
+                        is_deeply( $ii, [ ], 'nao tem mais..' );
+
 
 
                         die 'undo-savepoint';
