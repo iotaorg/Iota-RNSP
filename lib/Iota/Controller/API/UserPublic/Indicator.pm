@@ -191,6 +191,7 @@ sub resumo_GET {
             )
             ->search(
             {
+                is_fake => 0,
                 #'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
                 'me.id' => { '-not_in' => \@hide_indicator }
             },
