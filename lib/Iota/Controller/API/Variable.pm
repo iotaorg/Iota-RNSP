@@ -235,7 +235,10 @@ sub list_GET {
             )->get_column('variable_id')->as_query;
 
             $rs = $rs->search({
-                'me.id' => {'in' => $variables_id_rs }
+                -or => [
+                    'me.id' => {'in' => $variables_id_rs },
+                    'me.user_id' => $c->user->id
+                ]
             });
         }
     }
