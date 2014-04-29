@@ -416,7 +416,31 @@ sub resumo_GET {
         $self->status_bad_request( $c, message => "$@", );
     }
     else {
-        $self->status_ok( $c, entity => $ret );
+
+        my $new_ret = {};
+        if (!$ENV{HARNESS_ACTIVE}){
+
+            while (my ($eixo, $periodos) = each %{ $ret->{resumos} } ){
+
+                $new_ret->{resumos}{ $c->loc($eixo) } = $ret->{resumos}{$eixo};
+
+                while (my ($periodo, $indicadores_gp) = each %{ $periodos } ){
+
+                    foreach my $indicador (@{$indicadores_gp->{indicadores}} ) {
+
+                        $indicador->{$_} = $c->loc($indicador->{$_})
+                            for qw/explanation formula_human name source/;
+
+                    }
+
+                }
+
+            }
+        }else{
+            $new_ret = $ret;
+        }
+
+        $self->status_ok( $c, entity => $new_ret );
     }
 }
 
