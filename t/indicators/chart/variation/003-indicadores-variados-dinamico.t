@@ -508,6 +508,7 @@ eval {
                 ]
             };
             delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0 .. 3;
+
             is_deeply( $res_variable_value, $expe,
                 '/api/indicator/' . $indicator->{id} . '/variable/value dont looks nice..' );
 
