@@ -620,6 +620,7 @@ sub values_GET {
                         push @variations,
                           {
                             name     => $var->name,
+                            id       => $var->id,
                             value    => $item->{variations}{ $var->id }{value},
                             variations_values => $item->{variations}{ $var->id }{variations_values},
                           };

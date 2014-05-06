@@ -211,13 +211,13 @@ $(document).ready(function () {
         var cont = 0;
 
         var eixos_ordem = [];
-		
+
 		var eixos_indicadores = [];
-		
+
 		var dimension_id;
-		
+
 		$.each(indicadores_data.resumos, function (index, item) {
-			if (userID == 763){ //GOIANIA			
+			if (userID == 763){ //GOIANIA
 				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
 					dimension_id = 1;
 				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
@@ -237,17 +237,17 @@ $(document).ready(function () {
 			new_result.sort_field = dimension_id + index;
 			eixos_indicadores.push(new_result);
 		});
-		
+
 		eixos_indicadores.sort(function (a, b) {
 			a = String(a.sort_field),
 			b = String(b.sort_field);
 			return a.localeCompare(b);
 		});
-		
+
 		$.each(eixos_indicadores, function (eixo_index, eixo) {
 			eixos_ordem.push(eixo.name);
 		});
-		
+
 		var dimension_ant = 0;
 
         $.each(eixos_ordem, function (ix, eixo_index) {
@@ -257,7 +257,7 @@ $(document).ready(function () {
 				if (eixos_indicadores[ix].dimension_id != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])){
 					table_content += "<thead class='dimensions'><tr><th colspan='10'>$$dimension</th></thead>".render({
 						dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
-					});			
+					});
 				}
 				dimension_ant = eixos_indicadores[ix].dimension_id;
 			}
@@ -290,7 +290,7 @@ $(document).ready(function () {
                     a = a.name;
                     b = b.name;
 
-                    return a.localeCompare(b);					
+                    return a.localeCompare(b);
                 });
                 $.each(indicadores, function (i, item) {
                     var tr_class;
@@ -305,7 +305,7 @@ $(document).ready(function () {
                         explanation: item.explanation,
                         url: (base_url) ? (base_url + "/" + item.name_url) : ((window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url)
                     });
-					
+
 					var icone = "",
 						icone_title = "";
 					if (item.source){
