@@ -500,9 +500,9 @@ sub values_GET {
         }
         my $definidos = scalar keys %{ $hash->{header} };
 
-        for my $variation (@indicator_variations) {
+        for my $faixa (@indicator_variations) {
 
-            my $rs = $variation->indicator_variables_variations_values->search(
+            my $rs = $faixa->indicator_variables_variations_values->search(
                 {
                     %{ $hash->{filters} },
                     region_id    => $c->req->params->{region_id},
@@ -564,9 +564,9 @@ sub values_GET {
                     my $vals = {};
                     my $ids = {};
 
-                    for my $variation (@indicator_variations) {
+                    for my $faixa (@indicator_variations) {
 
-                        my $rs = $variation->indicator_variables_variations_values->search(
+                        my $rs = $faixa->indicator_variables_variations_values->search(
                             {
                                 valid_from   => $begin,
                                 user_id      => $user_id,
@@ -579,34 +579,35 @@ sub values_GET {
                             $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
                               $r->{value};
                             $ids->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                              $r->{id};
+                              $r;
                         }
 
-                        my $qtde_dados = keys %{ $vals->{ $variation->id } };
+                        my $qtde_dados = keys %{ $vals->{ $faixa->id } };
 
                         unless ( $qtde_dados == @indicator_variables ) {
-                            $item->{variations}{ $variation->id } = { value => '-' };
+                            $item->{variations}{ $faixa->id } = { value => '-' };
 
-                            delete $vals->{ $variation->id };
+                            delete $vals->{ $faixa->id };
                         }
                     }
 
                     # TODO ler do indicador qual o totalization_method
                     my $sum = undef;
-                    foreach my $variation_id ( keys %$vals ) {
+                    foreach my $faixa_id ( keys %$ids ) {
                         $sum ||= 0;
 
-                        my $val = $indicator_formula->evaluate_with_alias(
+                        my $val = exists $vals->{$faixa_id} ? $indicator_formula->evaluate_with_alias(
                             V => { map { $_->{varid} => $_->{value} } @order },
-                            N => $vals->{$variation_id},
-                        );
+                            N => $vals->{$faixa_id},
+                        ) : undef;
 
-                        $item->{variations}{$variation_id} = { value => $val,
+                        $item->{variations}{$faixa_id} = {
+                            value => $val,
                             variations_values => {
                                 map { $_ => {
-                                    id    => (exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$variation_id}{$_}),
-                                    value => $vals->{$variation_id}{$_},
-                                } } keys %{$vals->{$variation_id}},
+                                    id    => (exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$faixa_id}{$_}{id}),
+                                    value => $ids->{$faixa_id}{$_}->{value},
+                                } } keys %{$ids->{$faixa_id}},
                             }
                         };
                         $sum += $val;

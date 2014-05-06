@@ -337,7 +337,7 @@ sub action_specs {
                 my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
                 $data->upsert( indicators => [ $var->id ], );
-
+=pod
                 # recalcula a regiao 3
                 my @ids = map {$_->{id}} $self->result_source->schema->resultset('Region')->search({
                     depth_level => 3
@@ -357,7 +357,7 @@ sub action_specs {
                 })->all;
 
                 $data->upsert( indicators => [ $var->id ], regions_id => \@ids);
-
+=cut
             }
 
             return $var;
