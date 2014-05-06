@@ -337,7 +337,7 @@ sub action_specs {
                 my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
                 $data->upsert( indicators => [ $var->id ], );
-=pod
+
                 # recalcula a regiao 3
                 my @ids = map {$_->{id}} $self->result_source->schema->resultset('Region')->search({
                     depth_level => 3
@@ -346,7 +346,7 @@ sub action_specs {
                     result_class => 'DBIx::Class::ResultClass::HashRefInflator'
                 })->all;
 
-                $data->upsert( indicators => [ $var->id ], regions_id => \@ids);
+                $data->upsert( indicators => [ $var->id ], regions_id => \@ids) if scalar @ids;
 
                 # recalcula a regiao 2 que pode nao ter filha, logo nao recalculou a de cima.
                 @ids = map {$_->{id}} $self->result_source->schema->resultset('Region')->search({
@@ -356,8 +356,8 @@ sub action_specs {
                     result_class => 'DBIx::Class::ResultClass::HashRefInflator'
                 })->all;
 
-                $data->upsert( indicators => [ $var->id ], regions_id => \@ids);
-=cut
+                $data->upsert( indicators => [ $var->id ], regions_id => \@ids) if scalar @ids;
+
             }
 
             return $var;
