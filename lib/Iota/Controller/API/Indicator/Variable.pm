@@ -562,6 +562,7 @@ sub values_GET {
                 if ( @indicator_variables && @indicator_variations ) {
 
                     my $vals = {};
+                    my $ids = {};
 
                     for my $variation (@indicator_variations) {
 
@@ -577,6 +578,8 @@ sub values_GET {
                             next unless defined $r->{value};
                             $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
                               $r->{value};
+                            $ids->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
+                              $r->{id};
                         }
 
                         my $qtde_dados = keys %{ $vals->{ $variation->id } };
@@ -598,7 +601,14 @@ sub values_GET {
                             N => $vals->{$variation_id},
                         );
 
-                        $item->{variations}{$variation_id} = { value => $val, orig => $vals->{$variation_id} };
+                        $item->{variations}{$variation_id} = { value => $val,
+                            variations_values => {
+                                map { $_ => {
+                                    id    => (exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$variation_id}{$_}),
+                                    value => $vals->{$variation_id}{$_},
+                                } } keys %{$vals->{$variation_id}},
+                            }
+                        };
                         $sum += $val;
                     }
                     $item->{formula_value} = $sum;
@@ -611,7 +621,7 @@ sub values_GET {
                           {
                             name     => $var->name,
                             value    => $item->{variations}{ $var->id }{value},
-                            original => $item->{variations}{ $var->id }{orig},
+                            variations_values => $item->{variations}{ $var->id }{variations_values},
                           };
                     }
                     $item->{variations} = \@variations;

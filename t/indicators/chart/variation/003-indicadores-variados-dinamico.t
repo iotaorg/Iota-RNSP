@@ -304,9 +304,9 @@ eval {
                         'variations' => [
                             {
                                 'value'  => 19,
-                                original => {
-                                    $subvar[0]{id} => 3,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 3 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
 
                                 'name' => "Até 1/2 salário mínimo."
@@ -314,27 +314,27 @@ eval {
                             {
 
                                 'value'  => 21,
-                                original => {
-                                    $subvar[0]{id} => 5,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 5 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
                                 'value'  => 22,
-                                original => {
-                                    $subvar[0]{id} => 6,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 6 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
                                 'value'  => 26,
-                                original => {
-                                    $subvar[0]{id} => 10,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 10 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => 'outros.'
                             }
@@ -356,36 +356,36 @@ eval {
                             {
 
                                 'value'  => 21,
-                                original => {
-                                    $subvar[0]{id} => 4,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 4 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Até 1/2 salário mínimo."
                             },
                             {
 
                                 'value'  => 21,
-                                original => {
-                                    $subvar[0]{id} => 4,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 4 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
                                 'value'  => 18,
-                                original => {
-                                    $subvar[0]{id} => 1,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 1 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
                                 'value'  => 22,
-                                original => {
-                                    $subvar[0]{id} => 5,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 5 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => 'outros.'
                             }
@@ -407,36 +407,36 @@ eval {
                             {
 
                                 'value'  => 23,
-                                original => {
-                                    $subvar[0]{id} => 5,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 5 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Até 1/2 salário mínimo."
                             },
                             {
 
                                 'value'  => 22,
-                                original => {
-                                    $subvar[0]{id} => 4,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 4 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Mais de 1/2 a 1 salário mínimo."
                             },
                             {
 
                                 'value'  => 24,
-                                original => {
-                                    $subvar[0]{id} => 6,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 6 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => "Mais de 1 a 2 salários mínimos."
                             },
                             {
 
                                 'value'  => 26,
-                                original => {
-                                    $subvar[0]{id} => 8,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 8 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
                                 'name' => 'outros.'
                             }
@@ -458,9 +458,9 @@ eval {
                             {
 
                                 'value'  => 23,
-                                original => {
-                                    $subvar[0]{id} => 4,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 4 , id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
 
                                 'name' => "Até 1/2 salário mínimo."
@@ -468,9 +468,9 @@ eval {
                             {
 
                                 'value'  => 23,
-                                original => {
-                                    $subvar[0]{id} => 4,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 4, id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
 
                                 'name' => "Mais de 1/2 a 1 salário mínimo."
@@ -479,9 +479,9 @@ eval {
 
                                 'value' => 26,
 
-                                original => {
-                                    $subvar[0]{id} => 7,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value => 7, id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
 
                                 'name' => "Mais de 1 a 2 salários mínimos."
@@ -489,9 +489,9 @@ eval {
                             {
 
                                 'value'  => 28,
-                                original => {
-                                    $subvar[0]{id} => 9,
-                                    $subvar[1]{id} => 1,
+                                variations_values => {
+                                    $subvar[0]{id} => { value =>9, id => 'test'},
+                                    $subvar[1]{id} => { value => 1 , id => 'test'},
                                 },
 
                                 'name' => 'outros.'

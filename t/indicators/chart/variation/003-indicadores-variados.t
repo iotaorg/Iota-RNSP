@@ -435,7 +435,7 @@ eval {
             };
             delete $res_variable_value->{rows}[$_]{valores}[0]{id} for 0 .. 3;
             for my $f ( 0 .. 3 ) {
-                delete $res_variable_value->{rows}[$_]{variations}[$f]{original} for 0 .. 3;
+                delete $res_variable_value->{rows}[$_]{variations}[$f]{variations_values} for 0 .. 3;
             }
             is_deeply( $res_variable_value, $expe,
                 '/api/indicator/' . $indicator->{id} . '/variable/value dont looks nice..' );
