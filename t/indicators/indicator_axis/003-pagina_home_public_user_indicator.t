@@ -251,7 +251,7 @@ eval {
                 '2012-01-15', 'data da primeira semana ok' );
 
             is( join( ',', @{ $obj->{resumos}{'Bens Naturais Comuns'}{weekly}{indicadores}[0]{valores} } ),
-                '-,32,36,37', 'valores da semana ok' );
+                '30,32,36,37', 'valores da semana ok' );
 
             die 'rollback';
         }

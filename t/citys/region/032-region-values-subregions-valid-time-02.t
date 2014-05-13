@@ -268,7 +268,7 @@ sub get_indicator {
           . $Iota::TestOnly::Mock::AuthUser::_id
           . '/indicator?from_date='
           . $year
-          . '-01-01&number_of_periods=1&region_id='
+          . '-01-01&number_of_periods=0&region_id='
           . $region->{id}
           . '&active_value='
           . $not );

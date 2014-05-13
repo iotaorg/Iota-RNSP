@@ -171,7 +171,9 @@ retorna os valores dos ultimos 4 periodos de cada indicator
 sub resumo_GET {
     my ( $self, $c ) = @_;
     my $ret;
-    my $max_periodos = $c->req->params->{number_of_periods} || 4;
+    my $max_periodos = exists $c->req->params->{number_of_periods} && $c->req->params->{number_of_periods} =~ /^[0-9]+$/
+        ? $c->req->params->{number_of_periods}
+        : 4;
     my $from_date = $c->req->params->{from_date};
 
     $c->forward('/institute_load');
@@ -250,9 +252,15 @@ sub resumo_GET {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
                     'me.valid_from'   => {
-                        '>=' => $from_this_date,
+                        ($from_date && $from_date eq $from_this_date ) ?
 
-                        ( '<=' => $from_date ) x !!$from_date
+                        (
+                            '=' => $from_date,
+                        ) : (
+                            '>=' => $from_this_date,
+
+                            ( '<=' => $from_date ) x !!$from_date
+                        )
                     },
 
                     'me.region_id'    => $c->req->params->{region_id},
@@ -340,6 +348,9 @@ sub resumo_GET {
                             valores => $item
                         }
                     );
+
+
+
                 }
 
             }
@@ -365,7 +376,7 @@ sub resumo_GET {
                 # inseridos no primeiro loop do indicador (caso ele apareca em dois grupos)
                 delete $datas->{''};
 
-                my $i = $max_periodos;
+                my $i = $max_periodos == 0 ? 1 : $max_periodos;
                 foreach my $data ( sort { $b cmp $a } keys %{$datas} ) {
                     last if $i <= 0;
                     $datas_ar[ --$i ] = {
