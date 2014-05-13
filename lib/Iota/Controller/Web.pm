@@ -1218,26 +1218,23 @@ sub _load_variables {
     my $show  = {};
     my $order = {};
 
-    # a configuracao do usuario sempre tem preferencia sob a do admin
     while ( my ( $vid, $wants ) = each %$aux ) {
 
-        if ( @$wants == 1 && $wants->[0][0] ) {
-            $order->{$vid} = $wants->[0][2];
-            $show->{$vid}++ and last;
-        }
-
         foreach my $conf (@$wants) {
-            if ( $conf->[1] == $mid && $conf->[0] ) {
+            # a configuracao do usuario sempre tem preferencia sob a do admin
+            if ( $conf->[1] == $mid ) {
                 $order->{$vid} = $conf->[2];
-                $show->{$vid}++ and last;
+                $show->{$vid} =  $conf->[0];
+                last;
             }
-            elsif ( $conf->[0] && !exists $order->{$vid} ) {
+            elsif ( $conf->[0] && !exists $show->{$vid}) {
                 $order->{$vid} = $conf->[2];
-                $show->{$vid}++ and last;
+                $show->{$vid}++;
             }
         }
 
     }
+    $show = { grep {$show->{$_}} keys %$show };
 
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },

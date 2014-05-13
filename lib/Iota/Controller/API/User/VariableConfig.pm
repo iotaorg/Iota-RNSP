@@ -190,6 +190,7 @@ sub list_GET {
         while ( my $r = $configrs->next ) {
             $out->{ $r->{variable_id} } = { ( map { $_ => $r->{$_} } qw(id display_in_home) ) };
         }
+
         $self->status_ok( $c, entity => $out );
     }
 }
