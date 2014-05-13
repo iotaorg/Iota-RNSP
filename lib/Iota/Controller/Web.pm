@@ -1112,9 +1112,11 @@ sub stash_tela_cidade : Private {
 
     my $city = $c->model('DB::City')->search(
         {
-            pais     => lc $c->stash->{pais},
-            uf       => uc $c->stash->{estado},
-            name_uri => lc $c->stash->{cidade}
+            'me.pais'     => lc $c->stash->{pais},
+            'me.uf'       => uc $c->stash->{estado},
+            'me.name_uri' => lc $c->stash->{cidade}
+        }, {
+            prefetch => [{'state' => 'country'}]
         }
     )->as_hashref->next;
 
@@ -1174,7 +1176,7 @@ sub stash_tela_cidade : Private {
     $self->_load_menu( $c, $menurs );
 
     $self->_load_variables( $c, $user );
-
+use DDP; p $city;
     $user = { $user->get_inflated_columns };
     $c->stash(
         city     => $city,
