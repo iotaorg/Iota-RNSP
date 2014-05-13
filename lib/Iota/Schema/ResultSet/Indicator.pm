@@ -21,33 +21,35 @@ sub _build_verifier_scope_name { 'indicator' }
 
 sub visibility_level_post_check {
     my $self = shift;
-    my $r   = shift;
+    my $r    = shift;
 
     my $lvl = $r->get_value('visibility_level');
     return 1 if $lvl eq 'public';
 
-    return &is_user($self, $r->get_value('visibility_user_id')) if $lvl eq 'private';
-    return &is_user($self, $r->get_value('visibility_users_id')) if $lvl eq 'restrict';
+    return &is_user( $self, $r->get_value('visibility_user_id') )  if $lvl eq 'private';
+    return &is_user( $self, $r->get_value('visibility_users_id') ) if $lvl eq 'restrict';
 
-    return 1 if $lvl eq 'network'  && ( $r->get_value('visibility_networks_id')   || '' ) =~ /^(?:(?:\d*,?)\d+)+$/;
+    return 1 if $lvl eq 'network' && ( $r->get_value('visibility_networks_id') || '' ) =~ /^(?:(?:\d*,?)\d+)+$/;
 
     return 0;
 }
 
 sub is_user {
-    my ($self, $input) = @_;
+    my ( $self, $input ) = @_;
 
-    return  0 if ( $input  || '' ) !~ /^(?:(?:\d*,?)\d+)+$/;
+    return 0 if ( $input || '' ) !~ /^(?:(?:\d*,?)\d+)+$/;
 
     my @ids = split /,/, $input;
 
     return 1 unless @ids;
 
-    my $ct = $self->result_source->schema->resultset('User')->search( {
-        id => {'in' => \@ids},
-        active => 1,
-        city_id => {'!=' => undef}
-    } )->count;
+    my $ct = $self->result_source->schema->resultset('User')->search(
+        {
+            id      => { 'in' => \@ids },
+            active  => 1,
+            city_id => { '!=' => undef }
+        }
+    )->count;
 
     return $ct == scalar @ids;
 }
@@ -111,12 +113,12 @@ sub verifiers_specs {
                 visibility_level => {
                     required   => 1,
                     type       => VisibilityLevel,
-                    post_check => sub{&visibility_level_post_check($self, shift)}
+                    post_check => sub { &visibility_level_post_check( $self, shift ) }
                 },
-                visibility_user_id    => { required => 0, type => 'Int' },
-                visibility_country_id => { required => 0, type => 'Int' },
-                visibility_users_id   => { required => 0, type => 'Str' },
-                visibility_networks_id   => { required => 0, type => 'Str' },
+                visibility_user_id     => { required => 0, type => 'Int' },
+                visibility_country_id  => { required => 0, type => 'Int' },
+                visibility_users_id    => { required => 0, type => 'Str' },
+                visibility_networks_id => { required => 0, type => 'Str' },
 
             },
         ),
@@ -175,12 +177,12 @@ sub verifiers_specs {
                 visibility_level => {
                     required   => 0,
                     type       => VisibilityLevel,
-                    post_check => sub{&visibility_level_post_check($self, shift)}
+                    post_check => sub { &visibility_level_post_check( $self, shift ) }
                 },
-                visibility_user_id    => { required => 0, type => 'Int' },
-                visibility_country_id => { required => 0, type => 'Int' },
-                visibility_users_id   => { required => 0, type => 'Str' },
-                visibility_networks_id   => { required => 0, type => 'Str' },
+                visibility_user_id     => { required => 0, type => 'Int' },
+                visibility_country_id  => { required => 0, type => 'Int' },
+                visibility_users_id    => { required => 0, type => 'Str' },
+                visibility_networks_id => { required => 0, type => 'Str' },
 
             },
         ),
@@ -225,10 +227,11 @@ sub action_specs {
                         created_by => $var->user_id
                     }
                 ) for @visible_users;
-            }elsif ( $values{visibility_level} eq 'network' ) {
+            }
+            elsif ( $values{visibility_level} eq 'network' ) {
                 $var->add_to_indicator_network_visibilities(
                     {
-                        network_id    => $_,
+                        network_id => $_,
                         created_by => $var->user_id
                     }
                 ) for @visible_networks;
@@ -264,8 +267,6 @@ sub action_specs {
               tags source observations
               /;
 
-
-
             my $visibility_users_id = delete $values{visibility_users_id};
             my @visible_users = $visibility_users_id ? split /,/, $visibility_users_id : ();
 
@@ -294,11 +295,10 @@ sub action_specs {
             }
 
             $values{visibility_user_id} = undef
-                if exists $values{visibility_level} && $values{visibility_level} eq 'public';
+              if exists $values{visibility_level} && $values{visibility_level} eq 'public';
 
             $var->update( \%values );
             if ( exists $values{visibility_level} ) {
-
 
                 $var->indicator_user_visibilities->delete;
                 $var->indicator_network_visibilities->delete;
@@ -314,20 +314,20 @@ sub action_specs {
                         }
                     ) for @visible_users;
 
-                }elsif ( $values{visibility_level} eq 'network' ) {
+                }
+                elsif ( $values{visibility_level} eq 'network' ) {
 
                     $var->indicator_user_visibilities->delete;
 
                     $var->add_to_indicator_network_visibilities(
                         {
-                            network_id    => $_,
+                            network_id => $_,
                             created_by => $var->user_id
                         }
                     ) for @visible_networks;
 
-                }else{
-
-
+                }
+                else {
 
                 }
             }
@@ -339,24 +339,30 @@ sub action_specs {
                 $data->upsert( indicators => [ $var->id ], );
 
                 # recalcula a regiao 3
-                my @ids = map {$_->{id}} $self->result_source->schema->resultset('Region')->search({
-                    depth_level => 3
-                }, {
-                    columns => ['id'],
-                    result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-                })->all;
+                my @ids = map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
+                    {
+                        depth_level => 3
+                    },
+                    {
+                        columns      => ['id'],
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                )->all;
 
-                $data->upsert( indicators => [ $var->id ], regions_id => \@ids) if scalar @ids;
+                $data->upsert( indicators => [ $var->id ], regions_id => \@ids ) if scalar @ids;
 
                 # recalcula a regiao 2 que pode nao ter filha, logo nao recalculou a de cima.
-                @ids = map {$_->{id}} $self->result_source->schema->resultset('Region')->search({
-                    depth_level => 2
-                }, {
-                    columns => ['id'],
-                    result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-                })->all;
+                @ids = map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
+                    {
+                        depth_level => 2
+                    },
+                    {
+                        columns      => ['id'],
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                )->all;
 
-                $data->upsert( indicators => [ $var->id ], regions_id => \@ids) if scalar @ids;
+                $data->upsert( indicators => [ $var->id ], regions_id => \@ids ) if scalar @ids;
 
             }
 
@@ -367,37 +373,54 @@ sub action_specs {
 }
 
 sub filter_visibilities {
-    my ($self, %filters) = @_;
+    my ( $self, %filters ) = @_;
 
-    my @users_ids = exists $filters{users_ids} && $filters{users_ids} ? grep {/^[0-9]+$/} @{$filters{users_ids}} : ();
-    my @networks_ids = exists $filters{networks_ids} && $filters{networks_ids} ? grep {/^[0-9]+$/} @{$filters{networks_ids}} : ();
+    my @users_ids =
+      exists $filters{users_ids} && $filters{users_ids} ? grep { /^[0-9]+$/ } @{ $filters{users_ids} } : ();
+    my @networks_ids =
+      exists $filters{networks_ids} && $filters{networks_ids} ? grep { /^[0-9]+$/ } @{ $filters{networks_ids} } : ();
 
-    @users_ids = ($filters{user_id}) if exists $filters{user_id} && $filters{user_id} && $filters{user_id} =~ /^[0-9]+$/;
+    @users_ids = ( $filters{user_id} )
+      if exists $filters{user_id} && $filters{user_id} && $filters{user_id} =~ /^[0-9]+$/;
 
-    return $self->search({
-        'me.id' => {
-            'in' => $self->result_source->schema->resultset('Indicator')->search(
-                {
-                    '-or' => [
-                        { visibility_level => 'public' },
+    return $self->search(
+        {
+            'me.id' => {
+                'in' => $self->result_source->schema->resultset('Indicator')->search(
+                    {
+                        '-or' => [
+                            { visibility_level => 'public' },
 
-                        (@users_ids
-                        ? (
-                            { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
-                            { visibility_level => 'restrict', 'indicator_user_visibilities.user_id' => { 'in' => \@users_ids } },
-                        ) : ()),
-                        (@networks_ids
-                        ? (
-                            { visibility_level => 'network', 'indicator_network_visibilities.network_id' => { 'in' => \@networks_ids } },
-                        ) : ()),
-                    ]
-                },
-                {
-                    join     => ['indicator_user_visibilities', 'indicator_network_visibilities'],
-                }
-            )->get_column('id')->as_query
+                            (
+                                @users_ids
+                                ? (
+                                    { visibility_level => 'private', visibility_user_id => { 'in' => \@users_ids } },
+                                    {
+                                        visibility_level                      => 'restrict',
+                                        'indicator_user_visibilities.user_id' => { 'in' => \@users_ids }
+                                    },
+                                  )
+                                : ()
+                            ),
+                            (
+                                @networks_ids
+                                ? (
+                                    {
+                                        visibility_level                            => 'network',
+                                        'indicator_network_visibilities.network_id' => { 'in' => \@networks_ids }
+                                    },
+                                  )
+                                : ()
+                            ),
+                        ]
+                    },
+                    {
+                        join => [ 'indicator_user_visibilities', 'indicator_network_visibilities' ],
+                    }
+                )->get_column('id')->as_query
+            }
         }
-    });
+    );
 
 }
 

@@ -20,7 +20,6 @@ my $current_lang;
 
 my $cache_lang_prefix = '/tmp/cache.lang.';
 
-
 sub setup {
     my $c = shift;
 
@@ -64,7 +63,7 @@ sub lexicon_reload_self {
         $cache->{ $r->{lang} }{ $r->{lex_key} } = $r->{lex_value};
     }
 
-    my $cache_lang_file   = "$cache_lang_prefix$$";
+    my $cache_lang_file = "$cache_lang_prefix$$";
     open my $FG, '>', $cache_lang_file;
     print $FG '1';
     close $FG;
@@ -82,7 +81,7 @@ sub loc {
       : $c->user     ? $c->user->cur_lang
       :                $default;
 
-    my $cache_lang_file   = "$cache_lang_prefix$$";
+    my $cache_lang_file = "$cache_lang_prefix$$";
     unless ( -e $cache_lang_file ) {
         &lexicon_reload_self;
     }
@@ -131,8 +130,8 @@ sub set_lang {
 }
 
 sub get_lang {
-    my ( $c ) = @_;
-    return $current_lang
+    my ($c) = @_;
+    return $current_lang;
 }
 
 __PACKAGE__;

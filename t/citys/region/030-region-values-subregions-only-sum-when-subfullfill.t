@@ -55,9 +55,9 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
                 [
-                    api_key                          => 'test',
-                    'city.region.create.name'        => 'a region',
-                    'city.region.create.description' => 'with no description',
+                    api_key                                     => 'test',
+                    'city.region.create.name'                   => 'a region',
+                    'city.region.create.description'            => 'with no description',
                     'city.region.create.subregions_valid_after' => '2005-01-01',
                 ]
             );
@@ -104,7 +104,6 @@ eval {
             ( $res, $c ) = ctx_request( GET $subregion2_uri );
             my $subregion2 = eval { from_json( $res->content ) };
             ( $subregion2->{id} ) = $subregion2_uri =~ /\/([0-9]+)$/;
-
 
             ( $res, $c ) = ctx_request(
                 POST $city_uri . '/region',
@@ -168,7 +167,7 @@ eval {
                 [
                     api_key                          => 'test',
                     'indicator.create.name'          => 'Foo Bar',
-                    'indicator.create.formula'       => '1 + $' . $variable->{id} . ' + $' . $variable2->{id} ,
+                    'indicator.create.formula'       => '1 + $' . $variable->{id} . ' + $' . $variable2->{id},
                     'indicator.create.axis_id'       => '1',
                     'indicator.create.explanation'   => 'explanation',
                     'indicator.create.source'        => 'me',
@@ -210,7 +209,6 @@ eval {
                         $ii = &get_indicator( $region, '2003', 1 );
                         is_deeply( $ii, [], 'nao existe valor active_value=0 para 2003' );
 
-
                         $ii = &get_indicator( $region, '2004' );
                         is_deeply( $ii, ['451'], 'valor de 2004 ativo' );
 
@@ -232,11 +230,10 @@ eval {
                         # como nao foi dito nada, a soma esta apenas no false.
 
                         $ii = &get_indicator( $region, '2005' );
-                        is_deeply( $ii, [ ], 'valor de 2005 ativo nao existe' );
+                        is_deeply( $ii, [], 'valor de 2005 ativo nao existe' );
 
                         $ii = &get_indicator( $region, '2005', 1 );
-                        is_deeply( $ii, [ 1 + 55 + 666], 'nao existe valor active_value=0 para 2005 eh a soma' );
-
+                        is_deeply( $ii, [ 1 + 55 + 666 ], 'nao existe valor active_value=0 para 2005 eh a soma' );
 
                         $Iota::TestOnly::Mock::AuthUser::_id    = 1;
                         @Iota::TestOnly::Mock::AuthUser::_roles = qw/ superadmin /;
@@ -244,9 +241,10 @@ eval {
                         # agora atualiza pra se nao exitir soma,
                         # usar o valor da cidade.
                         ( $res, $c ) = ctx_request(
-                            POST '/api/institute/1', # user_id=2 eh institute=1
+                            POST '/api/institute/1',    # user_id=2 eh institute=1
                             [
                                 'institute.update.active_me_when_empty' => '1',
+
                                 # aproveita pra ligar a soma apenas se verdadeiro.
                                 'institute.update.aggregate_only_if_full' => '1',
                             ]
@@ -264,7 +262,6 @@ eval {
                         is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 tabem existe' );
                         note('sit 3: Nível superior preenchido, com dados incompletos no nível inferior');
 
-
                         $current_var = $variable->{id};
                         &add_value( $subregion2_uri, '10', '2005' );
                         &add_value( $subregion3_uri, '10', '2005' );
@@ -275,38 +272,43 @@ eval {
                         &add_value( $subregion2_uri, '34', '2005' );
 
                         $ii = &get_indicator( $region, '2005' );
-                        is_deeply( $ii, [ 1 + 55 + 666 ], 'valor de 2005 ativo ainda eh da regiao 2 apenas');
+                        is_deeply( $ii, [ 1 + 55 + 666 ], 'valor de 2005 ativo ainda eh da regiao 2 apenas' );
                         $ii = &get_indicator( $region, '2005', 1 );
                         is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 tabem existe' );
-
 
                         $current_var = $variable->{id};
                         &add_value( $subregion1_uri, '10', '2005' );
 
                         $ii = &get_indicator( $region, '2005' );
-                        is_deeply( $ii, [ 1 + 30 + 666 ], 'valor de 2005 ativo agora esta usando um pouco de cada (30 eh a soma da vriavel 1) e a 666 da variavel 2' );
+                        is_deeply(
+                            $ii,
+                            [ 1 + 30 + 666 ],
+'valor de 2005 ativo agora esta usando um pouco de cada (30 eh a soma da vriavel 1) e a 666 da variavel 2'
+                        );
                         $ii = &get_indicator( $region, '2005', 1 );
                         is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 tabem existe' );
 
-
                         note('sit 4: Nível superior preenchido, com dados completos no nível inferior');
 
-
                         $current_var = $variable2->{id};
+
                         # isso fecha a conta
                         &add_value( $subregion3_uri, '35', '2005' );
 
                         $ii = &get_indicator( $region, '2005' );
-                        is_deeply( $ii, [ 1 + (10+33)+(10+34)+(10+35) ], 'valor de 2005 ativo agora eh a soma das 3 subs.' );
+                        is_deeply(
+                            $ii,
+                            [ 1 + ( 10 + 33 ) + ( 10 + 34 ) + ( 10 + 35 ) ],
+                            'valor de 2005 ativo agora eh a soma das 3 subs.'
+                        );
 
                         $ii = &get_indicator( $region, '2005', 1 );
                         is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 eh o da cidade.' );
 
-
                         note('sit 5: Nível inferior preenchido completamente, sem dados no nível superior');
 
                         $current_var = $variable->{id};
-                        &add_value( $subregion1_uri, '8', '2008' );
+                        &add_value( $subregion1_uri, '8',  '2008' );
                         &add_value( $subregion2_uri, '16', '2008' );
                         &add_value( $subregion3_uri, '32', '2008' );
 
@@ -316,15 +318,19 @@ eval {
                         &add_value( $subregion3_uri, '36', '2008' );
 
                         $ii = &get_indicator( $region, '2008' );
-                        is_deeply( $ii, [ 1 + (8+33)+(16+34)+(32+36) ], 'valor de 2008 ativo agora eh a soma das 3 subs.' );
+                        is_deeply(
+                            $ii,
+                            [ 1 + ( 8 + 33 ) + ( 16 + 34 ) + ( 32 + 36 ) ],
+                            'valor de 2008 ativo agora eh a soma das 3 subs.'
+                        );
 
                         $ii = &get_indicator( $region, '2008', 1 );
-                        is_deeply( $ii, [ ], 'nao existe valor active_value=0 para 2008' );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2008' );
 
                         note('sit 6: Nível inferior incompleto, sem dados no nível superior');
 
                         $current_var = $variable->{id};
-                        &add_value( $subregion1_uri, '8', '2009' );
+                        &add_value( $subregion1_uri, '8',  '2009' );
                         &add_value( $subregion3_uri, '32', '2009' );
 
                         $current_var = $variable2->{id};
@@ -333,10 +339,10 @@ eval {
                         &add_value( $subregion3_uri, '36', '2009' );
 
                         $ii = &get_indicator( $region, '2009' );
-                        is_deeply( $ii, [ ], 'sem valor ativo para 2009' );
+                        is_deeply( $ii, [], 'sem valor ativo para 2009' );
 
                         $ii = &get_indicator( $region, '2009', 1 );
-                        is_deeply( $ii, [ ], 'nao existe valor active_value=0 para 2009' );
+                        is_deeply( $ii, [], 'nao existe valor active_value=0 para 2009' );
 
                         note('sit 7: valor incompleto abaixo, e depois mudou o valor de cima');
 
@@ -368,23 +374,22 @@ eval {
                         &add_value( $subregion2_uri, '8', '2066' );
                         my $val_id2 = &add_value( $subregion3_uri, '55', '2066' );
 
-
                         $ii = &get_indicator( $region, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 12 + 8 + 8 + 8 + 55], 'valor ativo para 2066 eh a soma.' );
+                        is_deeply( $ii, [ 1 + 8 + 12 + 8 + 8 + 8 + 55 ], 'valor ativo para 2066 eh a soma.' );
 
                         $ii = &get_indicator( $region, '2066', 1 );
                         is_deeply( $ii, [ 1 + 888 + 999 ], 'valor inativo pra 2066 eh o da macro' );
 
                         # removendo agora um valor da sub.
 
-                        ( $res, $c ) = ctx_request( DELETE $subregion3_uri.'/value/'.$val_id2->{id} );
+                        ( $res, $c ) = ctx_request( DELETE $subregion3_uri. '/value/' . $val_id2->{id} );
                         is( $res->code, 204, 'response code is ' . 204 );
 
                         # virou intermediario.
                         $ii = &get_indicator( $region, '2066' );
-                        is_deeply( $ii, [ 1 + 999 + 24], 'virou intermediario' );
+                        is_deeply( $ii, [ 1 + 999 + 24 ], 'virou intermediario' );
 
-                        ( $res, $c ) = ctx_request( DELETE $subregion3_uri.'/value/'.$val_id1->{id} );
+                        ( $res, $c ) = ctx_request( DELETE $subregion3_uri. '/value/' . $val_id1->{id} );
                         is( $res->code, 204, 'response code is ' . 204 );
 
                         # voltou a ser o macro.
@@ -392,18 +397,17 @@ eval {
                         is_deeply( $ii, [ 1 + 888 + 999 ], 'voltou a ser macro' );
 
                         $Iota::IndicatorData::DEBUG = 0;
+
                         # apaga a da regiao.
-                        ( $res, $c ) = ctx_request( DELETE $region_uri.'/value/'.$reg_id2->{id} );
+                        ( $res, $c ) = ctx_request( DELETE $region_uri. '/value/' . $reg_id2->{id} );
                         is( $res->code, 204, 'response code is ' . 204 );
 
                         # em branco.
                         $ii = &get_indicator( $region, '2066' );
-                        is_deeply( $ii, [ ], 'nao tem mais..' );
+                        is_deeply( $ii, [], 'nao tem mais..' );
 
                         $ii = &get_indicator( $region, '2066', 1 );
-                        is_deeply( $ii, [ ], 'nao tem mais..' );
-
-
+                        is_deeply( $ii, [], 'nao tem mais..' );
 
                         die 'undo-savepoint';
                     }
@@ -420,9 +424,6 @@ eval {
 die $@ unless $@ =~ /rollback/;
 
 done_testing;
-
-
-
 
 sub add_value {
     my ( $region, $value, $year, $expcode ) = @_;

@@ -8,18 +8,18 @@ has schema => (
     required => 1
 );
 
-our $DEBUG=0;
+our $DEBUG = 0;
 
 sub upsert {
     my ( $self, %params ) = @_;
-    my $ind_rs = $self->schema->resultset('Indicator')->search({is_fake => 0});
+    my $ind_rs = $self->schema->resultset('Indicator')->search( { is_fake => 0 } );
 
     #use DDP; p \%params if $DEBUG;
     # procura pelos indicadores enviados
     $ind_rs = $ind_rs->search( { id => $params{indicators} } )
       if exists $params{indicators};
 
-    push @{$params{regions_id}}, delete $params{region_id} if exists $params{region_id} && $params{region_id};
+    push @{ $params{regions_id} }, delete $params{region_id} if exists $params{region_id} && $params{region_id};
 
     my @indicators = $ind_rs->all;
     my @indicators_ids = map { $_->id } @indicators;
@@ -27,7 +27,7 @@ sub upsert {
 
     # procura por todas as variaveis que esses indicadores podem utilizar
     my @used_variables =
-      $self->schema->resultset('IndicatorVariable')->search( { indicator_id => {in => \@indicators_ids} } )->all;
+      $self->schema->resultset('IndicatorVariable')->search( { indicator_id => { in => \@indicators_ids } } )->all;
 
     my $variable_ids;
     my $indicator_variables;
@@ -48,8 +48,7 @@ sub upsert {
     );
     my $period_values = {};
 
-
-    my $level3       = [];
+    my $level3 = [];
     my @upper_regions;
 
     if ( exists $params{regions_id} ) {
@@ -68,15 +67,15 @@ sub upsert {
             )->as_hashref;
             while ( my $r = $rs->next ) {
                 push @{ $region_by_lvl{ $r->{depth_level} } }, $r->{id};
-                $uppers{$r->{upper_region}}++ if $r->{upper_region};
+                $uppers{ $r->{upper_region} }++ if $r->{upper_region};
             }
 
-            if (keys %uppers){
+            if ( keys %uppers ) {
                 $rs = $self->schema->resultset('Region')->search(
                     {
-                        id => { 'in' => [keys %uppers] }
+                        id => { 'in' => [ keys %uppers ] }
                     },
-                    { columns => [ 'id' ] }
+                    { columns => ['id'] }
                 )->as_hashref;
                 while ( my $r = $rs->next ) {
                     push @upper_regions, $r->{id};
@@ -86,10 +85,9 @@ sub upsert {
         }
 
         #use DDP; p \%region_by_lvl if $DEBUG;
-        die ("can't re-compile more than 2 regions levels at once") if keys %region_by_lvl > 1;
+        die("can't re-compile more than 2 regions levels at once") if keys %region_by_lvl > 1;
 
         $level3 = $region_by_lvl{3} if exists $region_by_lvl{3};
-
 
         # procura pelos valores salvos naquela regiao
         my $rr_values_rs = $self->schema->resultset('RegionVariableValue');
@@ -114,10 +112,7 @@ sub upsert {
                         (
                             {
                                 'me.region_id' => { 'in' => $region_by_lvl{2} },
-                                '-or' => [
-                                    {'me.generated_by_compute' => undef},
-                                    {'me.generated_by_compute' => 0},
-                                ]
+                                '-or' => [ { 'me.generated_by_compute' => undef }, { 'me.generated_by_compute' => 0 }, ]
                             }
                         ) x !!scalar $region_by_lvl{2},
                         (
@@ -132,15 +127,18 @@ sub upsert {
 
         my $period_values_level2 = {};
 
-        if ( exists $params{generated_by_compute} && $params{regions2_ids}){
+        if ( exists $params{generated_by_compute} && $params{regions2_ids} ) {
+
             # se isso acontecer,
             # carrega todos os valores nao ativos
             # pois sao os que podem ser ativos caso
             # nao existam na soma.
-            my $rr_values_rs_level2 = $rr_values_rs->search({
-                'me.region_id'    => { 'in' => $params{regions2_ids} },
-                'me.active_value' => 0
-            });
+            my $rr_values_rs_level2 = $rr_values_rs->search(
+                {
+                    'me.region_id'    => { 'in' => $params{regions2_ids} },
+                    'me.active_value' => 0
+                }
+            );
 
             $self->_get_values_periods_region(
                 out => $period_values_level2,
@@ -149,14 +147,17 @@ sub upsert {
         }
 
         my $period_values_sum = {};
+
         # se eh regiao 2 compilando agora
         # carrega todas as somas
-        if (exists $region_by_lvl{2} && !exists $params{regions2_ids}){
+        if ( exists $region_by_lvl{2} && !exists $params{regions2_ids} ) {
 
-            my $rr_values_rs_level2_sum = $rr_values_rs->search({
-                'me.region_id'            => { 'in' => $region_by_lvl{2} },
-                'me.generated_by_compute' => 1
-            });
+            my $rr_values_rs_level2_sum = $rr_values_rs->search(
+                {
+                    'me.region_id'            => { 'in' => $region_by_lvl{2} },
+                    'me.generated_by_compute' => 1
+                }
+            );
 
             $self->_get_values_periods_region(
                 out => $period_values_sum,
@@ -172,45 +173,63 @@ sub upsert {
             rs  => $rr_values_rs
         );
 
+        if ( keys %$period_values_level2 ) {
 
-        if ( keys %$period_values_level2 ){
+            my $institutes = {
+                map { $_->{id} => $_->{active_me_when_empty} } $self->schema->resultset('Institute')->search(
+                    undef,
+                    {
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                )->all
+            };
 
-            my $institutes = {map {$_->{id} => $_->{active_me_when_empty}} $self->schema->resultset('Institute')->search(undef, {
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            })->all};
-
-            my $user_vs_institute = {map {$_->{id} => $_->{institute_id}} $self->schema->resultset('User')->search({
-                ( 'me.id' => $params{user_id} ) x !!exists $params{user_id},
-                active => 1
-            }, {
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            })->all};
+            my $user_vs_institute = {
+                map { $_->{id} => $_->{institute_id} } $self->schema->resultset('User')->search(
+                    {
+                        ( 'me.id' => $params{user_id} ) x !!exists $params{user_id}, active => 1
+                    },
+                    {
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                )->all
+            };
 
             $self->_merge_regions_values(
-                sum     => $period_values,
-                inputed => $period_values_level2,
-                institutes => $institutes,
+                sum               => $period_values,
+                inputed           => $period_values_level2,
+                institutes        => $institutes,
                 user_vs_institute => $user_vs_institute,
 
             );
 
-        }elsif ( exists $region_by_lvl{2} && !exists $params{regions2_ids} ){
+        }
+        elsif ( exists $region_by_lvl{2} && !exists $params{regions2_ids} ) {
 
-            my $institutes = {map {$_->{id} => $_->{active_me_when_empty}} $self->schema->resultset('Institute')->search(undef, {
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            })->all};
+            my $institutes = {
+                map { $_->{id} => $_->{active_me_when_empty} } $self->schema->resultset('Institute')->search(
+                    undef,
+                    {
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                )->all
+            };
 
-            my $user_vs_institute = {map {$_->{id} => $_->{institute_id}} $self->schema->resultset('User')->search({
-                ( 'me.id' => $params{user_id} ) x !!exists $params{user_id},
-                active => 1
-            }, {
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            })->all};
+            my $user_vs_institute = {
+                map { $_->{id} => $_->{institute_id} } $self->schema->resultset('User')->search(
+                    {
+                        ( 'me.id' => $params{user_id} ) x !!exists $params{user_id}, active => 1
+                    },
+                    {
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                )->all
+            };
 
             $self->_check_subregions_values(
-                sum     => $period_values_sum,
-                inputed => $period_values,
-                institutes => $institutes,
+                sum               => $period_values_sum,
+                inputed           => $period_values,
+                institutes        => $institutes,
                 user_vs_institute => $user_vs_institute,
             );
 
@@ -237,8 +256,8 @@ sub upsert {
 
         ( 'me.generated_by_compute' => 1 ) x !!exists $params{generated_by_compute}
     );
-    my ($variation_var_per_ind, $variation_variables) =
-        $self->_get_indicator_var_variables( indicators => \@indicators );
+    my ( $variation_var_per_ind, $variation_variables ) =
+      $self->_get_indicator_var_variables( indicators => \@indicators );
 
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
@@ -251,7 +270,7 @@ sub upsert {
     );
 
     ##use DDP; p $indicator_variables; p $variation_values; p $results;
-    my $users_meta   = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
+    my $users_meta = $self->get_users_meta( users => [ map { keys %{ $results->{$_} } } keys %$results ] );
 
     my $regions_meta = $self->get_regions_meta( keys %$results );
 
@@ -328,8 +347,8 @@ sub upsert {
             if ( scalar @$level3 ) {
                 my $level2 = $self->schema->compute_upper_regions(
                     $level3,
-                    [keys %$variable_ids],
-                    [keys %$variation_variables],
+                    [ keys %$variable_ids ],
+                    [ keys %$variation_variables ],
                     $params{dates}
                 );
                 $self->upsert(
@@ -337,9 +356,9 @@ sub upsert {
 
                     #regions3_values => $period_values,
                     #regions3_ids    => $level3,
-                    regions2_ids    => \@upper_regions,
+                    regions2_ids => \@upper_regions,
 
-                    regions_id              => $level2->{compute_upper_regions},
+                    regions_id           => $level2->{compute_upper_regions},
                     generated_by_compute => 1,
                 );
             }
@@ -376,9 +395,8 @@ sub get_regions_meta {
     my $regions = {};
 
     while ( my $row = $citys->next ) {
-        $regions->{ $row->{id} } = {
-            city_id => $row->{city_id},
-        };
+        $regions->{ $row->{id} } = { city_id => $row->{city_id}, };
+
         #push @$level3, $row->{id} if $row->{depth_level} == 3;
     }
 
@@ -393,17 +411,16 @@ sub _merge_regions_values {
 
     return unless $conf{inputed}{0};
 
-    while (my ($region_id, $users) = each %{$conf{inputed}{0}}) {
+    while ( my ( $region_id, $users ) = each %{ $conf{inputed}{0} } ) {
         next if $region_id eq 'null';
 
-        while (my ($user_id, $dates) = each %{$users} ) {
+        while ( my ( $user_id, $dates ) = each %{$users} ) {
 
-            next unless $conf{institutes}{$conf{user_vs_institute}{$user_id}};
+            next unless $conf{institutes}{ $conf{user_vs_institute}{$user_id} };
 
+            while ( my ( $date, $variables ) = each %{$dates} ) {
 
-            while (my ($date, $variables) = each %{$dates} ) {
-
-                while (my ($varid, $value) = each %{$variables} ) {
+                while ( my ( $varid, $value ) = each %{$variables} ) {
 
                     next if exists $conf{sum}{1}{$region_id}{$user_id}{$date}{$varid};
 
@@ -426,19 +443,18 @@ sub _check_subregions_values {
 
     return unless $conf{inputed}{0};
 
-    while (my ($region_id, $users) = each %{$conf{inputed}{0}}) {
+    while ( my ( $region_id, $users ) = each %{ $conf{inputed}{0} } ) {
         next if $region_id eq 'null';
 
-        while (my ($user_id, $dates) = each %{$users} ) {
+        while ( my ( $user_id, $dates ) = each %{$users} ) {
 
-            next unless $conf{institutes}{$conf{user_vs_institute}{$user_id}};
+            next unless $conf{institutes}{ $conf{user_vs_institute}{$user_id} };
 
+            while ( my ( $date, $variables ) = each %{$dates} ) {
 
-            while (my ($date, $variables) = each %{$dates} ) {
+                while ( my ( $varid, $value ) = each %{$variables} ) {
 
-                while (my ($varid, $value) = each %{$variables} ) {
-
-                    next if exists$conf{sum}{1}{$region_id}{$user_id}{$date}{$varid};
+                    next if exists $conf{sum}{1}{$region_id}{$user_id}{$date}{$varid};
 
                     $conf{inputed}{1}{$region_id}{$user_id}{$date}{$varid} = $value;
 
@@ -449,8 +465,6 @@ sub _check_subregions_values {
     }
 
 }
-
-
 
 # monta na RAM a estrutura:
 # $period_values = $region_id => $user_id => { $valid_from => { $variable_id => [ $value, $source ] } }
@@ -509,11 +523,11 @@ sub _get_values_variation {
     }
     return {} unless scalar @indicator_ids;
 
-
     my $variations_rs = $self->schema->resultset('IndicatorVariation')->search(
         {
-            indicator_id                                      => {'in' => \@indicator_ids},
-            ('indicator_variables_variations_values.region_id' => {'in' => $params{regions_id}}) x !!$params{regions_id},
+            indicator_id => { 'in' => \@indicator_ids },
+            ( 'indicator_variables_variations_values.region_id' => { 'in' => $params{regions_id} } ) x
+              !!$params{regions_id},
 
             (
                 'indicator_variables_variations_values.valid_from' => {
@@ -522,7 +536,7 @@ sub _get_values_variation {
               ) x !!exists $params{valid_from},
 
             (
-                'indicator_variables_variations_values.user_id' => {'in' => $params{user_id}}
+                'indicator_variables_variations_values.user_id' => { 'in' => $params{user_id} }
               ) x !!exists $params{user_id},
 
         },
@@ -556,16 +570,16 @@ sub _get_indicator_var_variables {
     return {} unless scalar @indicator_ids;
 
     my $variables_rs =
-      $self->schema->resultset('IndicatorVariablesVariation')->search( { indicator_id => {'in' => \@indicator_ids}, } )
-      ->as_hashref;
+      $self->schema->resultset('IndicatorVariablesVariation')
+      ->search( { indicator_id => { 'in' => \@indicator_ids }, } )->as_hashref;
 
-    my $out = {};
+    my $out  = {};
     my $out2 = {};
     while ( my $row = $variables_rs->next ) {
         $out->{ $row->{indicator_id} }{ $row->{id} } = $row->{name};
-        $out2->{$row->{id}} = 1;
+        $out2->{ $row->{id} } = 1;
     }
-    return ($out, $out2);
+    return ( $out, $out2 );
 }
 
 sub _get_indicator_values {
@@ -636,8 +650,8 @@ sub _get_indicator_values {
                             $sources{$str}++;
                         }
                         my $formula = Iota::IndicatorFormula->new(
-                            formula => $indicator->formula,
-                            schema  => $self->schema,
+                            formula    => $indicator->formula,
+                            schema     => $self->schema,
                             auto_check => 0
                         );
 

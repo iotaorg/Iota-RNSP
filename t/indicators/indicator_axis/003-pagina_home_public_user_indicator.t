@@ -231,7 +231,8 @@ eval {
             &add_value( '/api/variable/' . $basic_id . '/value', '1193-03-25', 6 );
             &add_value( '/api/variable/' . $basic_id . '/value', '1195-03-25', 7 );
 
-            ( $res, $c ) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator?from_date=2012-01-01' );
+            ( $res, $c ) = ctx_request(
+                GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator?from_date=2012-01-01' );
 
             my $obj = eval { from_json( $res->content ) };
             is_deeply(
@@ -242,7 +243,8 @@ eval {
             is( join( ',', @{ $obj->{resumos}{grupo1}{yearly}{indicadores}[0]{valores} } ),
                 '26.8,28.6,25.8,23.5', 'valores ok' );
 
-            ( $res, $c ) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator?from_date=2012-01-30' );
+            ( $res, $c ) = ctx_request(
+                GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator?from_date=2012-01-30' );
 
             $obj = eval { from_json( $res->content ) };
 

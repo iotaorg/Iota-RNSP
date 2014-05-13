@@ -166,22 +166,21 @@ sub _download {
 
         my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-        my $rs = $c->model('DB::Indicator')
-            ->filter_visibilities(
-                user_id      => $c->stash->{current_city_user_id},
-                networks_ids => $c->stash->{network_data}{network_ids},
-                users_ids    => \@users_ids,
-            )->search(
-                {
-                    'me.id' => { '-not_in' => \@hide_indicator },
-                    is_fake => 0
-                },
-                {
-                    order_by     => 'me.name',
-                    select       => [qw/name_url/],
-                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-                }
-            );
+        my $rs = $c->model('DB::Indicator')->filter_visibilities(
+            user_id      => $c->stash->{current_city_user_id},
+            networks_ids => $c->stash->{network_data}{network_ids},
+            users_ids    => \@users_ids,
+          )->search(
+            {
+                'me.id' => { '-not_in' => \@hide_indicator },
+                is_fake => 0
+            },
+            {
+                order_by     => 'me.name',
+                select       => [qw/name_url/],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            }
+          );
 
         my $base_rel = join '/', 'http:/', $network->domain_name, $c->stash->{pais}, $c->stash->{estado},
           $c->stash->{cidade};

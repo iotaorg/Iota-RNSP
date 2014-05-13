@@ -42,7 +42,7 @@ sub _download {
 
     my $network = $c->stash->{network};
 
-    my $file = $c->get_lang().'variaveis.' . $network->name_url;
+    my $file = $c->get_lang() . 'variaveis.' . $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
     $file .= '_' . $c->stash->{region}->name_url
@@ -63,12 +63,13 @@ sub _download {
 
     my @lines = (
         [
-            map { $self->_loc_str($c, $_)}
-                'ID da cidade', 'Nome da cidade ',
-                'ID', 'Tipo', 'Apelido', 'Período de atualização',
-                'É Básica?', 'Unidade de medida',
-                'Nome', 'Data', 'Valor', 'Observações', 'Fonte preenchida',
-                'Nome Região'
+            map { $self->_loc_str( $c, $_ ) } 'ID da cidade', 'Nome da cidade ',
+            'ID',               'Tipo',
+            'Apelido',          'Período de atualização',
+            'É Básica?',      'Unidade de medida',
+            'Nome',             'Data',
+            'Valor',            'Observações',
+            'Fonte preenchida', 'Nome Região'
         ]
     );
 
@@ -138,22 +139,25 @@ sub _download {
     while ( my $data = $data_rs->next ) {
         my @this_row = (
             $data->{city_id},
-            $self->_loc_str($c, $data->{city_name}),
+            $self->_loc_str( $c, $data->{city_name} ),
             $data->{variable_id},
-            $self->_loc_str($c, $data->{type} eq 'int'   ? 'Inteiro'
-            : $data->{type} eq 'str' ? 'Alfanumérico'
-            : 'Valor'),
-            $self->_loc_str($c, $data->{cognomen}),
-            $self->_loc_str($c, $self->_period_pt( $data->{period} )),
+            $self->_loc_str(
+                $c,
+                $data->{type} eq 'int'   ? 'Inteiro'
+                : $data->{type} eq 'str' ? 'Alfanumérico'
+                :                          'Valor'
+            ),
+            $self->_loc_str( $c, $data->{cognomen} ),
+            $self->_loc_str( $c, $self->_period_pt( $data->{period} ) ),
 
-            $self->_loc_str($c, $data->{is_basic} ? 'sim' : 'não'),
-            $self->_loc_str($c, $data->{measurement_unit_name}),
-            $self->_loc_str($c, $data->{name}),
+            $self->_loc_str( $c, $data->{is_basic} ? 'sim' : 'não' ),
+            $self->_loc_str( $c, $data->{measurement_unit_name} ),
+            $self->_loc_str( $c, $data->{name} ),
             $self->ymd2dmy( $data->{valid_from} ),
-            $self->_loc_str($c, $data->{value}),
-            $self->_loc_str($c, $data->{observations}),
-            $self->_loc_str($c, $data->{source}),
-            $self->_loc_str($c, $data->{region_name}),
+            $self->_loc_str( $c, $data->{value} ),
+            $self->_loc_str( $c, $data->{observations} ),
+            $self->_loc_str( $c, $data->{source} ),
+            $self->_loc_str( $c, $data->{region_name} ),
         );
         push @lines, \@this_row;
     }

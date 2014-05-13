@@ -35,35 +35,39 @@ sub _download {
 
     my $ignore_cache = 0;
 
-    if ($c->req->params->{from_indicators}){
+    if ( $c->req->params->{from_indicators} ) {
+
         # da muito trabalho cachear essas informações "per user"
         # e nao compensa muito fazer isso agora.
         $ignore_cache = 1;
 
-        my @users_ids = $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^\d+$/
-            ? ( $c->req->params->{user_id} )
-            : @{ $c->stash->{network_data}{users_ids} };
+        my @users_ids =
+          $c->req->params->{user_id} && $c->req->params->{user_id} =~ /^\d+$/
+          ? ( $c->req->params->{user_id} )
+          : @{ $c->stash->{network_data}{users_ids} };
 
-        my $indicators_rs = $c->model('DB::Indicator')
-            ->filter_visibilities(
-                user_id      => $c->stash->{current_city_user_id},
-                networks_ids => $c->stash->{network_data}{network_ids},
-                users_ids    => \@users_ids,
-            )->get_column('id')->as_query;
+        my $indicators_rs = $c->model('DB::Indicator')->filter_visibilities(
+            user_id      => $c->stash->{current_city_user_id},
+            networks_ids => $c->stash->{network_data}{network_ids},
+            users_ids    => \@users_ids,
+        )->get_column('id')->as_query;
 
         my $variables_id_rs = $c->model('DB::IndicatorVariable')->search(
             {
-                indicator_id => {'in' => $indicators_rs }
+                indicator_id => { 'in' => $indicators_rs }
             }
         )->get_column('variable_id')->as_query;
 
-        $rs = $rs->search({
-            'me.id' => {'in' => $variables_id_rs }
-        });
+        $rs = $rs->search(
+            {
+                'me.id' => { 'in' => $variables_id_rs }
+            }
+        );
 
     }
 
-    my $file = $c->get_lang(). '_variaveis_exemplo.';
+    my $file = $c->get_lang() . '_variaveis_exemplo.';
+
     # evita conflito com outros usuarios
     $file .= join '-', rand, rand, rand, rand, '.' if $ignore_cache;
     $file .= $c->stash->{type};
@@ -79,11 +83,10 @@ sub _download {
 
     $rs = $rs->as_hashref;
 
-
     my @lines = ( [ 'ID da variável', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
-        push @lines, [ $var->{id}, $self->_loc_str($c, $var->{name}), undef, undef, undef, undef ];
+        push @lines, [ $var->{id}, $self->_loc_str( $c, $var->{name} ), undef, undef, undef, undef ];
     }
 
     if ( $0 && $0 =~ /\.t$/ ) {
@@ -164,7 +167,11 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename="."variaveis-exemplo-".($custom ? 'dos-indicadores-' : 'completa-').$c->get_lang().".$1" );
+    $c->response->headers->header( 'content-disposition' => "attachment;filename="
+          . "variaveis-exemplo-"
+          . ( $custom ? 'dos-indicadores-' : 'completa-' )
+          . $c->get_lang()
+          . ".$1" );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);

@@ -337,26 +337,29 @@ sub list_GET {
     if ( !exists $roles{superadmin} ) {
         my @user_ids = (
             $roles{user}
-            ? ($c->user->id)
+            ? ( $c->user->id )
             : ()
         );
 
         my @networks = $c->user->networks ? $c->user->networks->all : ();
-        if ($roles{admin}){
+        if ( $roles{admin} ) {
+
             # todos os indicadores que os usuarios da rede dele pode ver
 
-            foreach my $net (@networks){
-                @user_ids = (map { $_->user_id } $net->network_users );
+            foreach my $net (@networks) {
+                @user_ids = ( map { $_->user_id } $net->network_users );
             }
 
         }
 
         $rs = $rs->filter_visibilities(
-            networks_ids => [map {$_->id} @networks],
+            networks_ids => [ map { $_->id } @networks ],
             users_ids    => \@user_ids,
-        )->search({
-            is_fake      => 0
-        });
+          )->search(
+            {
+                is_fake => 0
+            }
+          );
     }
 
     if ( $c->req->params->{use} eq 'edit' ) {

@@ -13,7 +13,7 @@ use Encode;
 sub parse {
     my ( $self, $file ) = @_;
 
-    my $excel = Spreadsheet::XLSX->new($file );
+    my $excel = Spreadsheet::XLSX->new($file);
 
     my %expected_header = (
         id    => qr /\b(id da v.ri.vel|v.ri.vel id)\b/io,
@@ -47,8 +47,7 @@ sub parse {
 
                     foreach my $header_name ( keys %expected_header ) {
                         my $cell_Value = $cell->value();
-                        utf8::decode(  $cell_Value );
-
+                        utf8::decode($cell_Value);
 
                         if ( $cell_Value =~ $expected_header{$header_name} ) {
                             $header_found++;
@@ -84,10 +83,9 @@ sub parse {
 
                     $registro->{date} =
                         $registro->{date} =~ /^20[0123][0-9]$/       ? $registro->{date} . '-01-01'
-                    : $registro->{date} =~ /^\d{4}\-\d{2}\-\d{2}$/ ? $registro->{date}
-                    :   DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
+                      : $registro->{date} =~ /^\d{4}\-\d{2}\-\d{2}$/ ? $registro->{date}
+                      :   DateTime::Format::Excel->parse_datetime( $registro->{date} )->ymd;
                     $ok++;
-
 
                     die 'invalid variable id' unless $registro->{id} =~ /^\d+$/;
                     die 'invalid region id' if $registro->{region_id} && $registro->{region_id} !~ /^\d+$/;

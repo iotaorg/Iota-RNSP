@@ -44,8 +44,8 @@ eval {
                     'indicator.create.goal_operator' => '>=',
                     'indicator.create.tags'          => 'you,me,she',
 
-                    'indicator.create.observations'        => 'lala',
-                    'indicator.create.visibility_level'    => 'public',
+                    'indicator.create.observations'     => 'lala',
+                    'indicator.create.visibility_level' => 'public',
 
                 ]
             );

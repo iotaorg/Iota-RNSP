@@ -562,7 +562,7 @@ sub values_GET {
                 if ( @indicator_variables && @indicator_variations ) {
 
                     my $vals = {};
-                    my $ids = {};
+                    my $ids  = {};
 
                     for my $faixa (@indicator_variations) {
 
@@ -596,18 +596,23 @@ sub values_GET {
                     foreach my $faixa_id ( keys %$ids ) {
                         $sum ||= 0;
 
-                        my $val = exists $vals->{$faixa_id} ? $indicator_formula->evaluate_with_alias(
+                        my $val =
+                          exists $vals->{$faixa_id}
+                          ? $indicator_formula->evaluate_with_alias(
                             V => { map { $_->{varid} => $_->{value} } @order },
                             N => $vals->{$faixa_id},
-                        ) : undef;
+                          )
+                          : undef;
 
                         $item->{variations}{$faixa_id} = {
-                            value => $val,
+                            value             => $val,
                             variations_values => {
-                                map { $_ => {
-                                    id    => (exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$faixa_id}{$_}{id}),
-                                    value => $ids->{$faixa_id}{$_}->{value},
-                                } } keys %{$ids->{$faixa_id}},
+                                map {
+                                    $_ => {
+                                        id => ( exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$faixa_id}{$_}{id} ),
+                                        value => $ids->{$faixa_id}{$_}->{value},
+                                      }
+                                } keys %{ $ids->{$faixa_id} },
                             }
                         };
                         $sum += $val;
@@ -620,9 +625,9 @@ sub values_GET {
                     foreach my $var (@indicator_variations) {
                         push @variations,
                           {
-                            name     => $var->name,
-                            (exists $ENV{HARNESS_ACTIVE} ? () : (id => $var->id)),
-                            value    => $item->{variations}{ $var->id }{value},
+                            name => $var->name,
+                            ( exists $ENV{HARNESS_ACTIVE} ? () : ( id => $var->id ) ),
+                            value             => $item->{variations}{ $var->id }{value},
                             variations_values => $item->{variations}{ $var->id }{variations_values},
                           };
                     }

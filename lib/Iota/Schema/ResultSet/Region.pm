@@ -39,7 +39,8 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('Region')
                           ->find( { id => $r->get_value('upper_region'), depth_level => 2 } );
 
-                        if (defined $up_region){
+                        if ( defined $up_region ) {
+
                             # tem que estar preenchido, se nao, nao cria level 3!
                             return 1 if $up_region->subregions_valid_after;
                         }
@@ -49,7 +50,7 @@ sub verifiers_specs {
                 },
 
                 subregions_valid_after => { required => 0, type => DataStr },
-                automatic_fill => { required => 0, type => 'Bool' },
+                automatic_fill         => { required => 0, type => 'Bool' },
 
             },
         ),
@@ -71,7 +72,8 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('Region')
                           ->find( { id => $r->get_value('upper_region'), depth_level => 2 } );
 
-                        if (defined $up_region){
+                        if ( defined $up_region ) {
+
                             # tem que estar preenchido, se nao, nao cria level 3!
                             return 1 if $up_region->subregions_valid_after;
                         }
@@ -107,7 +109,6 @@ sub action_specs {
 
                 delete $values{subregions_valid_after};
             }
-
 
             if ( exists $values{upper_region} && $values{upper_region} ) {
 

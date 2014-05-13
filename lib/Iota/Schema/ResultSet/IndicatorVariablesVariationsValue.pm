@@ -65,12 +65,11 @@ sub action_specs {
                 my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
                 if ( exists $values{region_id} ) {
-                    my $region = $schema->resultset('Region')->find( $values{region_id} );
+                    my $region        = $schema->resultset('Region')->find( $values{region_id} );
                     my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
                     if ( $region->depth_level == 2 ) {
-                        if ( $region->subregions_valid_after &&
-                            DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0
-                        ) {
+                        if ( $region->subregions_valid_after
+                            && DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0 ) {
 
                             $values{active_value} = 0;
                         }

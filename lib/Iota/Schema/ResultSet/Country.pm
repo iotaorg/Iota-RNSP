@@ -29,8 +29,8 @@ sub verifiers_specs {
         update => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                id       => { required => 1, type => 'Int' },
-                name     => { required => 1, type => 'Str' },
+                id   => { required => 1, type => 'Int' },
+                name => { required => 1, type => 'Str' },
             },
         ),
 

@@ -61,7 +61,6 @@ eval {
                 ]
             );
 
-
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
 
@@ -102,7 +101,6 @@ eval {
             $Iota::TestOnly::Mock::AuthUser::_id    = 4;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
 
-
             ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
 
             ok( $res->is_success, 'listing ok!' );
@@ -111,10 +109,8 @@ eval {
             my $list = eval { from_json( $res->content ) };
             is( $list->{indicators}[0]{explanation}, 'explanation', 'explanation present!' );
 
-
             $Iota::TestOnly::Mock::AuthUser::_id    = 1;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
-
 
             ( $res, $c ) = ctx_request( GET '/api/log' );
             ok( $res->is_success, 'listing ok!' );

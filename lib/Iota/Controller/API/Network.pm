@@ -150,7 +150,7 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->search(undef, {order_by => 'id'})->as_hashref->all;
+    my @list = $c->stash->{collection}->search( undef, { order_by => 'id' } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list) {

@@ -87,39 +87,45 @@ sub action_specs {
             my $recalc = 0;
 
             my $var = $self->find( delete $values{id} );
-            $recalc++ if (exists $values{active_me_when_empty} &&
-                $var->active_me_when_empty != $values{active_me_when_empty});
+            $recalc++
+              if ( exists $values{active_me_when_empty}
+                && $var->active_me_when_empty != $values{active_me_when_empty} );
 
-            $recalc++ if (exists $values{aggregate_only_if_full} &&
-                $var->aggregate_only_if_full != $values{aggregate_only_if_full});
+            $recalc++
+              if ( exists $values{aggregate_only_if_full}
+                && $var->aggregate_only_if_full != $values{aggregate_only_if_full} );
 
             $var->update( \%values );
             $var->discard_changes;
 
             if ( exists $values{can_use_regions} && $values{can_use_regions} == 0 ) {
                 $var->users->update( { regions_enabled => 0 } );
-            }elsif ( exists $values{can_use_regions} && $values{can_use_regions} == 1 ) {
+            }
+            elsif ( exists $values{can_use_regions} && $values{can_use_regions} == 1 ) {
                 $var->users->update( { regions_enabled => 1 } );
             }
 
             if ( exists $values{can_create_indicators} && $values{can_create_indicators} == 0 ) {
                 $var->users->update( { can_create_indicators => 0 } );
-            }elsif ( exists $values{can_create_indicators} && $values{can_create_indicators} == 1 ) {
+            }
+            elsif ( exists $values{can_create_indicators} && $values{can_create_indicators} == 1 ) {
                 $var->users->update( { can_create_indicators => 1 } );
             }
 
-
-            if ($recalc){
+            if ($recalc) {
                 my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
                 $data->upsert(
                     regions_id => [
-                        map {$_->{id}} $self->result_source->schema->resultset('Region')->search({
-                            depth_level => 3
-                        }, {
-                            columns => ['id'],
-                            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-                        })->all
+                        map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
+                            {
+                                depth_level => 3
+                            },
+                            {
+                                columns      => ['id'],
+                                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                            }
+                        )->all
                     ],
                 );
             }

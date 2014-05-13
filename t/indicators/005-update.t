@@ -84,7 +84,8 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $uri->path_query,
                 [
-                    'indicator.update.goal'             => '23',
+                    'indicator.update.goal' => '23',
+
                     #'indicator.update.visibility_level' => 'private',
                 ]
             );
@@ -104,8 +105,8 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST $uri->path_query,
                 [
-                    'indicator.update.goal'                  => '25',
-                    'indicator.update.visibility_level'      => 'network',
+                    'indicator.update.goal'                   => '25',
+                    'indicator.update.visibility_level'       => 'network',
                     'indicator.update.visibility_networks_id' => '1,2',
                 ]
             );
@@ -116,7 +117,7 @@ eval {
             ok( $updated_indicator = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
                 'indicator in DB' );
 
-            is( $updated_indicator->goal,                  '25', 'goal updated ok' );
+            is( $updated_indicator->goal,                                  '25', 'goal updated ok' );
             is( $updated_indicator->indicator_network_visibilities->count, '2',  'visibility_networks ok' );
 
             #####################

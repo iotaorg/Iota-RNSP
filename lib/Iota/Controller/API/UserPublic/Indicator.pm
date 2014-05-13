@@ -171,9 +171,10 @@ retorna os valores dos ultimos 4 periodos de cada indicator
 sub resumo_GET {
     my ( $self, $c ) = @_;
     my $ret;
-    my $max_periodos = exists $c->req->params->{number_of_periods} && $c->req->params->{number_of_periods} =~ /^[0-9]+$/
-        ? $c->req->params->{number_of_periods}
-        : 4;
+    my $max_periodos =
+      exists $c->req->params->{number_of_periods} && $c->req->params->{number_of_periods} =~ /^[0-9]+$/
+      ? $c->req->params->{number_of_periods}
+      : 4;
     my $from_date = $c->req->params->{from_date};
 
     $c->forward('/institute_load');
@@ -185,20 +186,18 @@ sub resumo_GET {
           map { $_->indicator_id }
           $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
-
-        my $rs = $c->stash->{collection}
-            ->filter_visibilities(
-                user_id      => $user_id,
-                networks_ids => $c->stash->{network_data}{network_ids},
-            )
-            ->search(
+        my $rs = $c->stash->{collection}->filter_visibilities(
+            user_id      => $user_id,
+            networks_ids => $c->stash->{network_data}{network_ids},
+          )->search(
             {
                 is_fake => 0,
+
                 #'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
                 'me.id' => { '-not_in' => \@hide_indicator }
             },
             { prefetch => [ 'indicator_variations', 'axis' ] }
-        );
+          );
 
         my $rs_confs = $c->model('DB::IndicatorNetworkConfig')->search(
             {
@@ -228,8 +227,6 @@ sub resumo_GET {
             }
         }
 
-
-
         while ( my ( $periodo, $from_this_date ) = each %$periods_begin ) {
 
             my $custom_axis  = {};
@@ -252,11 +249,13 @@ sub resumo_GET {
                     'me.indicator_id' => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
                     'me.user_id'      => $user_id,
                     'me.valid_from'   => {
-                        ($from_date && $from_date eq $from_this_date ) ?
+                        ( $from_date && $from_date eq $from_this_date )
+                        ?
 
-                        (
+                          (
                             '=' => $from_date,
-                        ) : (
+                          )
+                        : (
                             '>=' => $from_this_date,
 
                             ( '<=' => $from_date ) x !!$from_date
@@ -349,8 +348,6 @@ sub resumo_GET {
                         }
                     );
 
-
-
                 }
 
             }
@@ -429,25 +426,25 @@ sub resumo_GET {
     else {
 
         my $new_ret = {};
-        if (!$ENV{HARNESS_ACTIVE}){
+        if ( !$ENV{HARNESS_ACTIVE} ) {
 
-            while (my ($eixo, $periodos) = each %{ $ret->{resumos} } ){
+            while ( my ( $eixo, $periodos ) = each %{ $ret->{resumos} } ) {
 
                 $new_ret->{resumos}{ $c->loc($eixo) } = $ret->{resumos}{$eixo};
 
-                while (my ($periodo, $indicadores_gp) = each %{ $periodos } ){
+                while ( my ( $periodo, $indicadores_gp ) = each %{$periodos} ) {
 
-                    foreach my $indicador (@{$indicadores_gp->{indicadores}} ) {
+                    foreach my $indicador ( @{ $indicadores_gp->{indicadores} } ) {
 
-                        $indicador->{$_} = $c->loc($indicador->{$_})
-                            for qw/explanation formula_human name source/;
+                        $indicador->{$_} = $c->loc( $indicador->{$_} ) for qw/explanation formula_human name source/;
 
                     }
 
                 }
 
             }
-        }else{
+        }
+        else {
             $new_ret = $ret;
         }
 

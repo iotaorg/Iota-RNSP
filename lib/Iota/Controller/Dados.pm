@@ -50,6 +50,7 @@ sub _loc_str {
 
     return $c->loc($str);
 }
+
 # download de todos os endpoints caem aqui
 sub _download {
     my ( $self, $c ) = @_;
@@ -59,7 +60,7 @@ sub _download {
 
     my $network = $c->stash->{network};
 
-    my $file = $c->get_lang().'_' . $network->name_url;
+    my $file = $c->get_lang() . '_' . $network->name_url;
     $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
     $file .= '_' . $c->stash->{region}->name_url
@@ -106,8 +107,7 @@ sub _download {
 
     my @lines = (
         [
-            map { $self->_loc_str($c, $_) }
-            'ID da cidade',
+            map { $self->_loc_str( $c, $_ ) } 'ID da cidade',
             'Nome da cidade ',
             'Eixo',
             'ID Indicador',
@@ -138,27 +138,29 @@ sub _download {
         my @this_row = (
             $data->{city_id},
             $data->{city_name},
-            $self->_loc_str($c, $data->{axis_name}),
+            $self->_loc_str( $c, $data->{axis_name} ),
             $data->{indicator_id},
-            $self->_loc_str($c, $data->{indicator_name}),
-            $self->_loc_str($c, $data->{formula_human}),
-            $self->_loc_str($c, $data->{goal}),
-            $self->_loc_str($c, $data->{goal_explanation}),
-            $self->_loc_str($c, $data->{goal_source}),
-            $self->_loc_str($c, $data->{goal_operator}),
-            $self->_loc_str($c, $data->{explanation}),
-            $self->_loc_str($c, $data->{tags}),
-            $self->_loc_str($c, $data->{observations}),
-            $self->_loc_str($c, $self->_period_pt( $data->{period} )),
-            $self->_loc_str($c, $data->{variation_name}),
-            $self->_loc_str($c, $data->{variation_order}),
-            $self->_loc_str($c, $self->ymd2dmy( $data->{valid_from} )),
-            $self->_loc_str($c, $data->{value}),
-            $self->_loc_str($c, $data->{user_goal}),
-            $self->_loc_str($c, $data->{justification_of_missing_field}),
-            $self->_loc_str($c, $data->{technical_information}),
+            $self->_loc_str( $c, $data->{indicator_name} ),
+            $self->_loc_str( $c, $data->{formula_human} ),
+            $self->_loc_str( $c, $data->{goal} ),
+            $self->_loc_str( $c, $data->{goal_explanation} ),
+            $self->_loc_str( $c, $data->{goal_source} ),
+            $self->_loc_str( $c, $data->{goal_operator} ),
+            $self->_loc_str( $c, $data->{explanation} ),
+            $self->_loc_str( $c, $data->{tags} ),
+            $self->_loc_str( $c, $data->{observations} ),
+            $self->_loc_str( $c, $self->_period_pt( $data->{period} ) ),
+            $self->_loc_str( $c, $data->{variation_name} ),
+            $self->_loc_str( $c, $data->{variation_order} ),
+            $self->_loc_str( $c, $self->ymd2dmy( $data->{valid_from} ) ),
+            $self->_loc_str( $c, $data->{value} ),
+            $self->_loc_str( $c, $data->{user_goal} ),
+            $self->_loc_str( $c, $data->{justification_of_missing_field} ),
+            $self->_loc_str( $c, $data->{technical_information} ),
             $data->{region_name},
-            ref $data->{sources} eq 'ARRAY' ? ( join "\n", map {$self->_loc_str($c, $_)} @{ $data->{sources} } ) : '',
+            ref $data->{sources} eq 'ARRAY'
+            ? ( join "\n", map { $self->_loc_str( $c, $_ ) } @{ $data->{sources} } )
+            : '',
             $data->{formula},
         );
         push @lines, \@this_row;

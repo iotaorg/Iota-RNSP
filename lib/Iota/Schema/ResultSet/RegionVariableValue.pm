@@ -227,9 +227,8 @@ sub action_specs {
             my $region = $schema->resultset('Region')->find( $values{region_id} );
 
             if ( $region->depth_level == 2 ) {
-                if ( $region->subregions_valid_after &&
-                    DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0
-                ) {
+                if ( $region->subregions_valid_after
+                    && DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0 ) {
                     $values{active_value} = 0;
                 }
                 else {
@@ -359,9 +358,8 @@ sub _put {
         die 'Illegal region for user.';
     }
     if ( $region->depth_level == 2 ) {
-        if ( $region->subregions_valid_after &&
-                DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0
-            ){
+        if ( $region->subregions_valid_after
+            && DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0 ) {
             $values{active_value} = 0;
         }
         else {

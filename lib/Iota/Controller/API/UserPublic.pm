@@ -9,9 +9,8 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
-sub base: Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
+sub base : Chained('/api/root') : PathPart('public/user') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-
 
     $c->forward('/institute_load');
 
@@ -141,21 +140,19 @@ sub stash_indicators_and_users : Private {
         push @{ $ret->{admin_users} }, { ( map { $_ => $user->{$_} } qw/name id/ ) };
     }
 
-
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-    my @indicators = $c->model('DB::Indicator')
-        ->filter_visibilities(
-            user_id      => $c->stash->{current_city_user_id},
-            networks_ids => $c->stash->{network_data}{network_ids},
-            users_ids    => \@users_ids,
-        )->search(
-            {
-                'me.id' => { '-not_in' => \@hide_indicator },
-                is_fake => 0
-            },
-            { prefetch => ['axis'] }
-        )->as_hashref->all;
+    my @indicators = $c->model('DB::Indicator')->filter_visibilities(
+        user_id      => $c->stash->{current_city_user_id},
+        networks_ids => $c->stash->{network_data}{network_ids},
+        users_ids    => \@users_ids,
+      )->search(
+        {
+            'me.id' => { '-not_in' => \@hide_indicator },
+            is_fake => 0
+        },
+        { prefetch => ['axis'] }
+      )->as_hashref->all;
 
     $ret->{indicators} = \@indicators;
 

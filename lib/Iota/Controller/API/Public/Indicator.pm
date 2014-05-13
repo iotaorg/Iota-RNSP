@@ -14,14 +14,13 @@ __PACKAGE__->config( default => 'application/json' );
 sub base : Chained('/api/public/network_object') : PathPart('indicator') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
     $c->stash->{collection} = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
-    )->search({is_fake => 0});
+    )->search( { is_fake => 0 } );
 
 }
 

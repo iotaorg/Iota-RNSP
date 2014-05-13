@@ -217,32 +217,33 @@ sub list_GET {
         );
     }
 
-    unless ($c->req->params->{all_variables}){
+    unless ( $c->req->params->{all_variables} ) {
         if ( $c->req->params->{use} eq 'list' && $is_user ) {
-            my @user_ids = ($c->user->id);
+            my @user_ids = ( $c->user->id );
 
             my @networks = $c->user->networks ? $c->user->networks->all : ();
 
             my $indicators_rs = $c->model('DB::Indicator')->filter_visibilities(
-                networks_ids => [map {$_->id} @networks],
+                networks_ids => [ map { $_->id } @networks ],
                 users_ids    => \@user_ids,
             )->get_column('id')->as_query;
 
             my $variables_id_rs = $c->model('DB::IndicatorVariable')->search(
                 {
-                    indicator_id => {'in' => $indicators_rs }
+                    indicator_id => { 'in' => $indicators_rs }
                 }
             )->get_column('variable_id')->as_query;
 
-            $rs = $rs->search({
-                -or => [
-                    'me.id' => {'in' => $variables_id_rs },
-                    'me.user_id' => $c->user->id
-                ]
-            });
+            $rs = $rs->search(
+                {
+                    -or => [
+                        'me.id'      => { 'in' => $variables_id_rs },
+                        'me.user_id' => $c->user->id
+                    ]
+                }
+            );
         }
     }
-
 
     my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
     my @objs;
