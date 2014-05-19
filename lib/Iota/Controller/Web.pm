@@ -1248,7 +1248,7 @@ sub _load_variables {
         }
 
     }
-    $show = { grep { $show->{$_} } keys %$show };
+    $show = { map { $show->{$_} ? ($_ => 1) : () } keys %$show };
 
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },
