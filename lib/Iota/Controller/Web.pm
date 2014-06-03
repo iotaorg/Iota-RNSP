@@ -214,7 +214,9 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
-    )->search( { is_fake => 0 } )->as_hashref->all;
+    )->search( { is_fake => 0 }, {
+        order_by => 'name',
+    } )->as_hashref->all;
 
     $c->stash(
         cities     => $c->stash->{network_data}{cities},
