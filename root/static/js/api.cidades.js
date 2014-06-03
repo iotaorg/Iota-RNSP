@@ -271,7 +271,7 @@ $(document).ready(function () {
                 var has_any_data = institute_info.hide_empty_indicators ? 0 : 1;
 
                 if (datas.length > 0) {
-                    table_content += "<thead class='datas'><tr><th></th><th>Fonte</th>";
+                    table_content += "<thead class='datas'><tr><th></th><th>Autor</th>";
                     $.each(datas, function (index, value) {
                         table_content += "<th>$$data</th>".render({
                             data: (datas[index].nome) ? datas[index].nome : "Sem dados"
