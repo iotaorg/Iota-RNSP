@@ -221,6 +221,7 @@ $(document).ready(function () {
                         dado: source_values_unique.join("</li><li>")
                     }));
                 }
+
                 if ((observations_values) && $.trim(observations_values) !== "") {
                     var observations_values_unique = [];
                     $.each(observations_values, function (i, el) {
@@ -239,6 +240,8 @@ $(document).ready(function () {
                         dado: indicador_data.user_indicator_config.technical_information.replace(/\n/g, '<br/>')
                     }));
                 }
+
+                $(".tabela", $dados).append( $('#justifications').html() );
 
                 if (!(indicador_data.variable_type == 'str')) {
 

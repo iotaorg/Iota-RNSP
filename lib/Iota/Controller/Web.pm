@@ -214,9 +214,12 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
-    )->search( { is_fake => 0 }, {
-        order_by => 'name',
-    } )->as_hashref->all;
+      )->search(
+        { is_fake => 0 },
+        {
+            order_by => 'name',
+        }
+      )->as_hashref->all;
 
     $c->stash(
         cities     => $c->stash->{network_data}{cities},
@@ -763,8 +766,38 @@ sub network_indicator : Chained('network_cidade') PathPart('') CaptureArgs(1) {
 }
 
 sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
+    my ( $self, $c ) = @_;
+
+    $self->_load_user_justification_of_missing_field($c);
+
     $c->stash( template => 'home_indicador.tt' );
+}
+
+sub _load_user_justification_of_missing_field {
+    my ( $self, $c ) = @_;
+
+    my $indicator = $c->stash->{indicator};
+    my $city      = $c->stash->{city};
+    my $user      = $c->stash->{user};
+
+    my @justifications = $c->model('DB::UserIndicator')->search(
+        {
+            user_id      => $user->{id},
+            indicator_id => $indicator->{id},
+            region_id    => undef,
+            '-and'       => [
+                { justification_of_missing_field => { '!=' => undef } },
+                { justification_of_missing_field => { '!=' => '' } },
+            ]
+        },
+        {
+            order_by => ['valid_from']
+        }
+    )->all;
+
+    $c->stash->{justifications} = \@justifications;
+
+
 }
 
 sub home_network_indicator : Chained('institute_load') PathPart('') CaptureArgs(1) {
@@ -1117,8 +1150,9 @@ sub stash_tela_cidade : Private {
             'me.pais'     => lc $c->stash->{pais},
             'me.uf'       => uc $c->stash->{estado},
             'me.name_uri' => lc $c->stash->{cidade}
-        }, {
-            prefetch => [{'state' => 'country'}]
+        },
+        {
+            prefetch => [ { 'state' => 'country' } ]
         }
     )->as_hashref->next;
 
@@ -1178,7 +1212,7 @@ sub stash_tela_cidade : Private {
     $self->_load_menu( $c, $menurs );
 
     $self->_load_variables( $c, $user );
-use DDP; p $city;
+
     $user = { $user->get_inflated_columns };
     $c->stash(
         city     => $city,
@@ -1250,7 +1284,7 @@ sub _load_variables {
         }
 
     }
-    $show = { map { $show->{$_} ? ($_ => 1) : () } keys %$show };
+    $show = { map { $show->{$_} ? ( $_ => 1 ) : () } keys %$show };
 
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },
