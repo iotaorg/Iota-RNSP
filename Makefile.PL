@@ -73,6 +73,7 @@ requires 'Statistics::Basic';
 
 requires 'Catalyst::Plugin::StatusMessage';
 
+requires 'Template::AutoFilter';
 requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Plugin::Session::DynamicExpiry';
 requires 'Catalyst::Plugin::Session::State::Cookie';
