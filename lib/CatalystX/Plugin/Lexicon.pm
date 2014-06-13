@@ -78,7 +78,7 @@ sub loc {
 
     $origin_lang =
         $origin_lang ? $origin_lang
-      : $c->user     ? $c->user->cur_lang
+      : $c->user && $c->user_in_realm('default')    ? $c->user->cur_lang
       :                $default;
 
     my $cache_lang_file = "$cache_lang_prefix$$";
@@ -91,7 +91,7 @@ sub loc {
     }
     else {
 
-        my $user_id = $c->user ? $c->user->id : $c->config->{admin_langs_id};
+        my $user_id = $c->user && $c->user_in_realm('default') ? $c->user->id : $c->config->{admin_langs_id};
         my @add_langs = split /,/, $c->config->{forced_langs};
 
         foreach my $lang (@add_langs) {

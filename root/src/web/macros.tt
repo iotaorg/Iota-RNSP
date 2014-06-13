@@ -1,0 +1,172 @@
+[%~
+SET ID_COUNT=0;
+MACRO input_text(name, label, opt) BLOCK;
+IF (!opt.classes) ; opt.classes = []; END;
+
+
+opt.classes.push('form-control');
+IF (opt.req || opt.required); opt.classes.push('required'); END;
+
+SET id = "elm_${name}";
+
+
+    IF body.$name && body.$name.defined;
+        opt.value = body.$name;
+    END;
+    IF opt.type == 'password' && !opt.keep_password;
+        opt.value = '';
+    END;
+
+%]
+<div class="form-group [%IF !DISABLE_MESSAGES && form_error.$name == 'invalid'%]has-error[%ELSIF !DISABLE_MESSAGES && form_error.$name%]has-warning[%END%]">
+    <label class="[%IF opt.label_col%][%opt.label_col%][%ELSE%]col-lg-4[%END%] [%IF opt.control_label != 'NO'%]control-label[%END%]" for="[%id%]">[%l(label)|none%]</label>
+    <div class="[%IF opt.input_col%][%opt.input_col%][%ELSE%]col-lg-8[%END%]">
+        <div class="[%IF opt.pre || opt.app%]input-group[%END%] [%IF opt.divclass%] [%opt.divclass%][%END%]">
+            [%IF opt.pre%]<span class="input-group-addon">[%opt.pre|none%]</span>[%END%]
+            <[%IF opt.textbox%]textarea[%ELSE%]input[%END%] [% IF opt.data%][%FOREACH xx IN opt.data.keys%]data-[%xx%]="[% opt.data.$xx %]" [%END%][%END%] [%IF opt.value.defined%]value="[%opt.value%]"[%END%] id="[%id%]" name="[%name%]" type="[%IF opt.type%][%opt.type%][%ELSE%]text[%END%]"
+            [% IF opt.pattern %] pattern="[% opt.pattern %]" [% END %]
+            [%~ IF opt.classes %] class="[% opt.classes.join(" ") %]"[% END ~%]
+            [%~ IF opt.disabled %] disabled="disabled"[% END ~%]
+            [%~ IF opt.placeholder %] placeholder="[%l(opt.placeholder)%]"[% END ~%]
+            [%~ IF opt.checked %] checked="checked"[% END ~%]
+            [%~ IF opt.autooff %] autocomplete="off"[% END ~%]
+            [%~ IF opt.tabindex %] tabindex="[% opt.tabindex %]"[% END ~%]
+            [%~ IF opt.extratags %] [%opt.extratags|none%][% END ~%]
+            [%~ IF opt.size %] size="[%opt.size|none%]"[% END ~%]
+            [%~ IF opt.maxlength %] maxlength="[% opt.maxlength %]"[% END ~%]>[%IF opt.textbox%][%IF opt.value.defined%][%l(opt.value)%][%END%]</textarea>[%END%]
+            [%IF opt.app%]<span class="input-group-addon">[%opt.app|none%]</span>[%END%]
+            [%IF opt.help%]<span class="label label-warning">[%opt.help %]</span>[%END%]
+
+            [%IF opt.input_append%][%opt.input_append|none%][%END%]
+        </div>
+        [%IF !DISABLE_MESSAGES && form_error.$name%]
+            <span class="label label-danger">
+                [%-IF form_error.$name == 'invalid'-%]
+                    [%-IF opt.only_digits && !opt.value.match('^[0-9]+$') -%]
+                        [%l('Digite apenas números')%]
+                    [%ELSIF opt.db_unique %]
+                        [% opt.db_unique%] [%l('já utilizado. Escolha um novo.')%]
+                    [%ELSIF opt.check_length && opt.value.length != opt.check_length%]
+                        [%l('Código inválido')%]
+                    [%ELSIF opt.email%]
+                        [%l('E-mail inválido ou já está em uso por outra pessoa.')%]
+                    [%ELSIF opt.date || opt.birth_date%]
+                        [%IF opt.birth_date && too_young%]
+                            [%l('O condutor deve ser maior')%]
+                        [%ELSE%]
+                            [%l('Data inválida')%]
+                        [%END%]
+                    [%ELSE%]
+                        [%l('Valor inválido')%]
+                    [%END%]
+                [%-ELSE-%]
+                    [%l('Este campo não pode ser vazio')%]
+                [%END%]
+            </span>
+        [%END%]
+        [% IF opt.support %]<p>[% (opt.support) %]</p>[% END %]
+    </div>
+</div>[%
+END;
+
+MACRO checkbox(name, label, opt) BLOCK;
+IF (!opt.classes) ; opt.classes = []; END;
+
+IF (opt.req || opt.required); opt.classes.push('required'); END;
+    SET id = "elm_${name}";
+
+    IF !opt.defined('value');
+        opt.value = 1;
+    END;
+
+    IF body.$name && body.$name.defined;
+        opt.checked = body.$name == opt.value ? 1 : 0;
+    END;
+
+%]
+<div class="form-group [%IF !DISABLE_MESSAGES && form_error.$name == 'invalid'%]has-error[%ELSIF !DISABLE_MESSAGES && form_error.$name%]has-warning[%END%]">
+    [%IF opt.inverted == '1'%]
+    <label class="[%IF opt.label_col%][%opt.label_col%][%ELSE%]col-lg-4[%END%] [%IF opt.control_label != 'NO'%]control-label[%END%]" for="[%id%]">[%l(label)|none%]</label>
+    <div class="[%IF opt.input_col%][%opt.input_col%][%ELSE%]col-lg-8[%END%]">
+      <div class="checkbox">
+          <input type="[% opt.type || 'checkbox' %]" id="[% id %]" name="[% name %]"
+        [% IF opt.pattern %] pattern="[% opt.pattern %]" [% END %]
+        value="[% opt.value | html %]"
+        [%~ IF opt.classes %] class="[% opt.classes.join(" ") %]"[% END ~%]
+        [%~ IF opt.disabled %] disabled="disabled"[% END ~%]
+        [%~ IF opt.checked %] checked="checked"[% END ~%]/>
+
+        [%IF form_error.$name%]<span class="help-inline">[%IF form_error.$name == 'invalid'%][%l('Valor inválido')%][%ELSE%][%l('Este campo não pode ser vazio')%][%END%]</span>[%END%]
+        [% IF opt.support %]<p>[% (opt.support) %]</p>[% END %]
+      </div>
+    </div>
+    [%ELSE%]
+    <div class="[%IF opt.input_col%][%opt.input_col%][%ELSE%]col-lg-4[%END%]">
+      <div class="checkbox">
+        <label>
+          <input type="[% opt.type || 'checkbox' %]" id="[% id %]" name="[% name %]"
+        [% IF opt.pattern %] pattern="[% opt.pattern %]" [% END %]
+        value="[% opt.value | html %]"
+        [%~ IF opt.classes %] class="[% opt.classes.join(" ") %]"[% END ~%]
+        [%~ IF opt.disabled %] disabled="disabled"[% END ~%]
+        [%~ IF opt.checked %] checked="checked"[% END ~%]/> [%label%]
+        </label>
+
+        [%IF form_error.$name%]<span class="help-inline">[%IF form_error.$name == 'invalid'%][%l('Valor inválido')%][%ELSE%][%l('Este campo não pode ser vazio')%][%END%]</span>[%END%]
+        [% IF opt.support %]<p>[% (opt.support) %]</p>[% END %]
+      </div>
+    </div>
+    [%END%]
+  </div>
+[% END;
+
+MACRO select_field(name, label, opt) BLOCK;
+IF (!opt.classes) ; opt.classes = []; END;
+opt.classes.push('form-control');
+IF (opt.req || opt.required); opt.classes.push('required'); END;
+
+    SET id = "elm_${name}";
+
+    IF body.$name && body.$name.defined;
+        value_name = opt.name;
+        opt.value = body.$name;
+    END;
+
+%]
+
+<div class="form-group [%IF form_error.$name == 'invalid'%]has-error[%ELSIF form_error.$name%]has-warning[%END%]">
+
+    <label class="[%IF opt.label_col%][%opt.label_col%][%ELSE%]col-lg-4[%END%] [%IF opt.control_label != 'NO'%]control-label[%END%]" for="[%id%]">[%l(label)|none%]</label>
+
+    <div class="[%IF opt.input_col%][%opt.input_col%][%ELSE%]col-lg-8[%END%]">
+
+          <select id="[% id %]" name="[% name %]"
+        [% IF opt.classes %] class="[% opt.classes.join(' ') %]"[%~ END ~%]
+        [% IF opt.disabled %] disabled="disabled"[%~ END ~%]>
+            [%IF !opt.without_select_opt%]<option value="">[%l('Selecione')%]</option>[%END%]
+            [% FOREACH item = opt.array;
+
+                    SET this_value = item.0;
+                    SET this_name = item.1;
+                    SET extratags = item.2;
+
+                %]<option [%IF extratags%][%FOREACH xx IN extratags.keys%]data-[%xx%]="[% extratags.$xx %]" [%END%][%END%] value="[% this_value | html %]" [% IF this_value == opt.value %]selected="selected"[% END %]>[% (this_name) %]</option>
+            [% END %]
+            [% FOREACH item = opt.array_fixed;
+
+                    SET this_value = item;
+                    SET this_name = item;
+
+                %]<option value="[% this_value | html %]" [% IF this_value == opt.value %]selected="selected"[% END %]>[% (this_name) %]</option>
+            [% END %]
+        </select>
+        [%IF form_error.$name%]<span class="help-inline">[%IF form_error.$name == 'invalid'%][%l('Valor inválido')%][%ELSE%][%l('Este campo não pode ser vazio')%][%END%]</span>[%END%]
+        [% IF opt.support %]<p>[% (opt.support) %]</p>[% END %]
+
+    </div>
+</div>
+
+[%
+END
+
+~%]

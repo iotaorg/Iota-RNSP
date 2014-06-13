@@ -1,0 +1,103 @@
+[% PROCESS 'web/macros.tt' %]
+<h1>[%l('Login')%]</h1>
+<div class="row">
+    <div class="col-sm-2 hidden-sm hidden-xs text-center">
+        <span style="font-size: 8em; margin-top: 0.4em; color: #428bca;" class="glyphicon glyphicon-user"></span>
+        <a href="https://www.google.com.br/search?q=0b101010%20in%20decimal" target="_blank"><span style="font-size: 12px; color: #FFF;margin-top: -2em;display: block;position: relative;">0b101010</span></a>
+    </div>
+
+
+    <div class="col-md-10 col-sm-12">
+
+                <p>[%l('Mantenha-se informado dos indicadores de seu interesse utilizando o nosso sistema de newsletter personalizado.')%]</p>
+
+                [% INCLUDE 'web/messages.tt' %]
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">[%l('Faça o login')%] </h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+            <div class="col-md-12">
+
+
+                <form class="form-horizontal" method="post" action="/login/check">
+
+                    <input type="hidden" name="network_id" value="[%network.id%]">
+
+                    [%input_text('email','E-mail', { app => '@', label_col => 'col-lg-12', input_col => 'col-lg-12', control_label => 'NO' })|none%]
+                    [%input_text('password','Senha', { app => '<span class="glyphicon glyphicon-lock"></span>', type=>'password',label_col => 'col-lg-12', input_col => 'col-lg-12', control_label => 'NO' })|none%]
+
+                    <div class="form-group ">
+                        <div class="col-lg-8 col-lg-offset-2 ">
+                            <button type="submit" class="btn col-sm-12 btn-primary" data-loading-text="Processando...">[%l('Entrar')%]</button>
+                            <br>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+            </div>[%#row%]
+        </div>[%#panel%]
+
+        <h5>[%l('Utilize o mesmo login para os seguintes endereços')%]:</h5>
+
+        <ul>
+        [% FOREACH  n IN networks %]
+            <li><a target="_blank" href="[%n.domain_name%]">[%n.domain_name%]</a></li>
+        [%END %]
+        </ul>
+
+
+</div>
+<div class="col-md-6">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">[%l('Não tem uma conta?')%] [%l('Crie uma agora')%]!</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+            <div class="col-md-12">
+
+                <form class="form-horizontal" method="post" action="/login/new-account">
+
+                    <input type="hidden" name="network_id" value="[%network.id%]">
+
+                        [%input_text('end_user.create.name','Nome completo', { required => 1, label_col => 'col-lg-12', input_col => 'col-lg-12', control_label => 'NO' })|none%]
+
+                        [%input_text('end_user.create.email','Informe seu endereço de e-mail', { email => 1, required => 1, app => '<span class="glyphicon glyphicon-envelope"></span>', label_col => 'col-lg-12', input_col => 'col-lg-12', control_label => 'NO' })|none%]
+                        [%input_text('end_user.create.password', 'Escolha uma senha para usar no Iota <small>(mínimo de 5 caracteres)</small>', { required => 1, type => 'password', app => '<span class="glyphicon glyphicon-lock"></span>', label_col => 'col-lg-12', input_col => 'col-lg-12', control_label => 'NO' })|none%]
+                        [%input_text('end_user.create.password_confirm', 'Por favor, confirme sua nova senha', { required => 1, type => 'password', app => '<span class="glyphicon glyphicon-lock"></span>', label_col => 'col-lg-12', input_col => 'col-lg-12', control_label => 'NO' })|none%]
+
+                    <div class="form-group ">
+                        <div class="col-lg-8 col-lg-offset-2 ">
+                            <button type="submit" class="btn col-sm-12 btn-primary" data-loading-text="Processando...">[%l('Criar conta')%]</button>
+                            <br>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+            </div>[%#row%]
+        </div>[%#panel%]
+
+    </div>
+
+</div>
+</div>
+
+
+
+
+</div>

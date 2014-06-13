@@ -82,6 +82,27 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{c_req_path} = $c->req->path;
 }
 
+sub load_status_msgs: Private {
+    my ($self, $c) = @_;
+
+    $c->load_status_msgs;
+    my $status_msg = $c->stash->{status_msg};
+    my $error_msg  = $c->stash->{error_msg};
+
+    @{ $c->stash }{ keys %$status_msg } = values %$status_msg if ref $status_msg eq 'HASH';
+    @{ $c->stash }{ keys %$error_msg }  = values %$error_msg  if ref $error_msg eq 'HASH';
+
+    if ($c->stash->{form_error} && ref $c->stash->{form_error} eq 'HASH'){
+        my $aff = {};
+        foreach (keys %{$c->stash->{form_error}}){
+            my ($hm, $fo) = $_ =~ /(.+)\.(.+)$/;
+
+            $aff->{$hm} = $fo;
+        }
+        $c->stash->{form_error} = $aff;
+    }
+}
+
 sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
@@ -1178,7 +1199,7 @@ sub stash_tela_cidade : Private {
     $self->_load_menu( $c, $menurs );
 
     $self->_load_variables( $c, $user );
-use DDP; p $city;
+
     $user = { $user->get_inflated_columns };
     $c->stash(
         city     => $city,

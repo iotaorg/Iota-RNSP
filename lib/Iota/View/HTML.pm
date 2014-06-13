@@ -2,13 +2,14 @@ package Iota::View::HTML;
 
 use strict;
 use base 'Catalyst::View::TT';
-
+use Template::AutoFilter;
 __PACKAGE__->config(
     {
         TEMPLATE_EXTENSION => '.tt',
         ENCODING           => 'UTF-8',
         DEFAULT_ENCODING   => 'UTF-8',
 
+    CLASS    => 'Template::AutoFilter',
         INCLUDE_PATH => [ Iota->path_to( 'root', 'src' ), Iota->path_to( 'root', 'lib' ) ],
         WRAPPER      => 'site/wrapper',
         ERROR        => 'error.tt',

@@ -30,6 +30,16 @@ use Catalyst qw/
 
   Assets
 
+  StatusMessage
+
+  Session::DynamicExpiry
+  Session
+
+  Session::Store::File
+  Session::State::Cookie
+  Session::PerUser
+
+
   /;
 
 extends 'Catalyst';

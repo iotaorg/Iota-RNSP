@@ -1,1 +1,15 @@
-<li><a href="/frontend/[% IF institute.short_name == 'gov' %]prefeitura[%ELSE%][% IF network.id == 3 %]latino[%ELSE%]movimento[%END%][%END%]/?ref=iota">[%l('Acesso')%]</a></li>
+
+[%IF !c.user%]
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user icon-user icon-white"></i> [%l('Acessos')%] <b class="caret"></b></a>
+<ul class="dropdown-menu">
+    <li><a href="/login">[%l('Minha conta')%]</a></li>
+    <li class="divider"></li>
+    <li><a href="/frontend/[% IF institute.short_name == 'gov' %]prefeitura[%ELSE%][% IF network.id == 3 %]latino[%ELSE%]movimento[%END%][%END%]/?ref=iota">[%l('Administração')%]</a></li>
+</ul>
+</li>
+[%ELSE%]
+<li>
+<a href="/logout">[%l('Logout')%]</a>
+</li>
+[%END%]

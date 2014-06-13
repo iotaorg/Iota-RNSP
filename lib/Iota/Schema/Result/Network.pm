@@ -86,6 +86,12 @@ __PACKAGE__->table("network");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 is_virtual
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -119,6 +125,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "is_virtual",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -232,8 +240,8 @@ Composing rels: L</network_users> -> user
 __PACKAGE__->many_to_many("users", "network_users", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BC9NZu2fp4+Px3FJBo42tg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-13 10:29:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HD0uZq/qIE0/ciiJpeowQA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

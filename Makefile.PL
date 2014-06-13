@@ -18,7 +18,9 @@ requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
-requires 'Catalyst::Plugin::Session::State::Cookie';
+
+
+
 requires 'Geo::Google::PolylineEncoder';
 requires 'I18N::AcceptLanguage';
 requires 'HTML::Scrubber';
@@ -68,6 +70,14 @@ requires 'JavaScript::Minifier::XS';
 
 requires 'Catalyst::Plugin::Assets';
 requires 'Statistics::Basic';
+
+requires 'Catalyst::Plugin::StatusMessage';
+
+requires 'Catalyst::Plugin::Authentication';
+requires 'Catalyst::Plugin::Session::DynamicExpiry';
+requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Plugin::Session::PerUser';
+
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';

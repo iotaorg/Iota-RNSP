@@ -16,3 +16,4 @@ region_config-fix [region_config] 2014-04-14T02:25:41Z cron <renato.cron@gmail.c
 sum-by-regions-only-necessary-data-fix [sum-by-regions-only-necessary-data] 2014-04-14T17:16:21Z cron <renato.cron@gmail.com> # fix: precisa apagar todas as variaveis, nao apenas as que batem o count.
 invisible-indicador-for-basic-variables [sum-by-regions-only-necessary-data-fix] 2014-04-14T17:40:44Z cron <renato.cron@gmail.com> # criar indicadores invisiveis para servidr de filtro de variaveis para os usuarios da prefeitura
 fix-volta-periodo [appschema] 2014-05-13T13:21:11Z cron <renato.cron@gmail.com> # fix
+end-users [appschema] 2014-06-11T12:59:08Z cron <renato.cron@gmail.com> # .

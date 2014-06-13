@@ -68,7 +68,7 @@
     [%- CALL assets.include("js/parceiros.gov.js")-%]
 [%- END -%]
 
-[%- assets.export("css") -%]
+[%- assets.export("css") |none-%]
 
 [%-IF custom_css-%]
     <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
@@ -95,19 +95,19 @@
   </div>
 <![endif]-->
 <div id="iota-app">
-    [% INCLUDE site/nav_bar.tt%]
-    [% INCLUDE site/page_header.tt%]
+    [% INCLUDE site/nav_bar.tt|none%]
+    [% INCLUDE site/page_header.tt|none%]
 
 
 
     <div class="page-content">
         <div class="container">
-            [% content %]
+            [% content |none%]
         </div>
     </div>
 
 
-    [% INCLUDE site/fotter.tt%]
+    [% INCLUDE site/fotter.tt |none%]
 
 </div>
 
@@ -117,10 +117,10 @@
 
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry,visualization&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-[% assets.export("js") %]
+[% assets.export("js")|none %]
 
-[% INCLUDE site/ga.tt%]
+[% INCLUDE site/ga.tt|none%]
 
 </body>
 </html>[%END%]
-[%ELSE%][%content%][%END%]
+[%ELSE%][%content|none%][%END%]

@@ -1,0 +1,2 @@
+[%IF error_msg %]<div class="alert alert-danger iota"><p>[%error_msg%]</p></div>[%END%]
+[%IF status_msg %]<div class="alert alert-success iota"><p>[%status_msg%]</p></div>[%END%]

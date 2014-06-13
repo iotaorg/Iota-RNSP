@@ -56,7 +56,7 @@
     [%- CALL assets.include("v2/css/temp.parceiro.gov.css")-%]
 [%- END -%]
 
-[%- assets.export("css") -%]
+[%- assets.export("css")|none -%]
 
 [%-IF custom_css-%]
     <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
@@ -65,21 +65,21 @@
 <body><div id="fb-root"></div>
 [%INCLUDE 'site/ie_message.tt'%]
 <div id="iota-app">
-    [% INCLUDE site/nav_bar.tt%]
-    [% INCLUDE site/page_header.tt%]
+    [% INCLUDE site/nav_bar.tt|none%]
+    [% INCLUDE site/page_header.tt|none%]
 
     <div class="container">
-        [% content%]
+        [% content|none%]
     </div>
 
-    [% INCLUDE site/fotter.tt%]
+    [% INCLUDE site/fotter.tt|none%]
 </div>
 
 
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
 
-[% assets.export("js") %]
+[% assets.export("js") |none%]
 
 [% INCLUDE site/ga.tt%]
 </body>
