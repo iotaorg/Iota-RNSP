@@ -77,6 +77,10 @@ requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Plugin::Session::DynamicExpiry';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Session::PerUser';
+requires 'Catalyst::Plugin::Session::Store::File';
+
+
+
 
 
 requires 'Text::CSV_XS';
