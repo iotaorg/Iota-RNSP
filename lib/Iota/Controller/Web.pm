@@ -82,8 +82,8 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{c_req_path} = $c->req->path;
 }
 
-sub load_status_msgs: Private {
-    my ($self, $c) = @_;
+sub load_status_msgs : Private {
+    my ( $self, $c ) = @_;
 
     $c->load_status_msgs;
     my $status_msg = $c->stash->{status_msg};
@@ -92,10 +92,10 @@ sub load_status_msgs: Private {
     @{ $c->stash }{ keys %$status_msg } = values %$status_msg if ref $status_msg eq 'HASH';
     @{ $c->stash }{ keys %$error_msg }  = values %$error_msg  if ref $error_msg eq 'HASH';
 
-    if ($c->stash->{form_error} && ref $c->stash->{form_error} eq 'HASH'){
+    if ( $c->stash->{form_error} && ref $c->stash->{form_error} eq 'HASH' ) {
         my $aff = {};
-        foreach (keys %{$c->stash->{form_error}}){
-            my ($hm, $fo) = $_ =~ /(.+)\.(.+)$/;
+        foreach ( keys %{ $c->stash->{form_error} } ) {
+            my ( $hm, $fo ) = $_ =~ /(.+)\.(.+)$/;
 
             $aff->{$hm} = $fo;
         }
@@ -235,9 +235,12 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
-    )->search( { is_fake => 0 }, {
-        order_by => 'name',
-    } )->as_hashref->all;
+      )->search(
+        { is_fake => 0 },
+        {
+            order_by => 'name',
+        }
+      )->as_hashref->all;
 
     $c->stash(
         cities     => $c->stash->{network_data}{cities},
@@ -1138,8 +1141,9 @@ sub stash_tela_cidade : Private {
             'me.pais'     => lc $c->stash->{pais},
             'me.uf'       => uc $c->stash->{estado},
             'me.name_uri' => lc $c->stash->{cidade}
-        }, {
-            prefetch => [{'state' => 'country'}]
+        },
+        {
+            prefetch => [ { 'state' => 'country' } ]
         }
     )->as_hashref->next;
 
@@ -1271,7 +1275,7 @@ sub _load_variables {
         }
 
     }
-    $show = { map { $show->{$_} ? ($_ => 1) : () } keys %$show };
+    $show = { map { $show->{$_} ? ( $_ => 1 ) : () } keys %$show };
 
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },

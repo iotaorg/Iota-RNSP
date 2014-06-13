@@ -9,7 +9,7 @@ __PACKAGE__->config(
         ENCODING           => 'UTF-8',
         DEFAULT_ENCODING   => 'UTF-8',
 
-    CLASS    => 'Template::AutoFilter',
+        CLASS        => 'Template::AutoFilter',
         INCLUDE_PATH => [ Iota->path_to( 'root', 'src' ), Iota->path_to( 'root', 'lib' ) ],
         WRAPPER      => 'site/wrapper',
         ERROR        => 'error.tt',

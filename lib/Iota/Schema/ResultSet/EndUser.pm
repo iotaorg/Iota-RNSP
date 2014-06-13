@@ -53,7 +53,6 @@ sub verifiers_specs {
             },
         ),
 
-
     };
 }
 

@@ -39,7 +39,6 @@ use Catalyst qw/
   Session::State::Cookie
   Session::PerUser
 
-
   /;
 
 extends 'Catalyst';

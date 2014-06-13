@@ -78,8 +78,8 @@ sub loc {
 
     $origin_lang =
         $origin_lang ? $origin_lang
-      : $c->user && $c->user_in_realm('default')    ? $c->user->cur_lang
-      :                $default;
+      : $c->user && $c->user_in_realm('default') ? $c->user->cur_lang
+      :                                            $default;
 
     my $cache_lang_file = "$cache_lang_prefix$$";
     unless ( -e $cache_lang_file ) {
