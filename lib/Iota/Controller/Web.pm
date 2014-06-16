@@ -226,6 +226,17 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
 }
 
+sub erro: Chained('institute_load') PathPart('erro') Args(0) {
+    my ( $self, $c ) = @_;
+
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        template   => 'error.tt'
+    );
+}
+
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c ) = @_;
 

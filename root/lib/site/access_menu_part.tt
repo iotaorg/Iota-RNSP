@@ -10,6 +10,6 @@
 </li>
 [%ELSE%]
 <li>
-<a href="/logout">[%l('Logout')%]</a>
+<a href="[%c.uri_for_action('/web/account/index')%]"><i class="glyphicon glyphicon-user icon-user icon-white"></i> [%l('Minha conta')%]</a>
 </li>
 [%END%]

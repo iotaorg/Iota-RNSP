@@ -43,6 +43,7 @@ sub index : Path : Args(0) {
         web_open_axis  => 1
     );
     $c->forward( 'build_indicators_menu', [1] );
+    $c->forward('/load_status_msgs');
 
 }
 
@@ -54,7 +55,14 @@ sub root : Chained('/') PathPart('') CaptureArgs(0) {
 
 sub default : Path {
     my ( $self, $c ) = @_;
-    $c->response->body('Page not found');
+
+    eval{ $c->forward('/institute_load') };
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+    );
+    $c->stash->{template} = 'not_found.tt';
     $c->response->status(404);
 }
 
@@ -62,9 +70,17 @@ sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
 
-    $c->response->body( $x->path . ' Page not found: ' . ( $foo || '' ) );
+    eval{ $c->forward('/institute_load') };
 
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+    );
+    $c->stash->{template} = 'not_found.tt';
     $c->response->status(404);
+
+    $c->stash->{message} = ( $x->path . ' Page not found: ' . ( $foo || '' ) );
+
 
 }
 

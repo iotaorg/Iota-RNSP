@@ -218,3 +218,28 @@ div.loading {
 div.sociais>h5 {
     color: #666
 }
+
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .bottom-padding { padding-bottom: 0.5em; }
+    .responsive-padding { padding: 5px; }
+
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+}

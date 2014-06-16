@@ -120,9 +120,41 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-13 10:18:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xxwulEEt1LCZeDm2iCoRJg
+=head2 end_user_indicator_users
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::EndUserIndicatorUser>
+
+=cut
+
+__PACKAGE__->has_many(
+  "end_user_indicator_users",
+  "Iota::Schema::Result::EndUserIndicatorUser",
+  { "foreign.end_user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 end_user_indicators
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::EndUserIndicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "end_user_indicators",
+  "Iota::Schema::Result::EndUserIndicator",
+  { "foreign.end_user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-16 09:41:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QpB8dNJYw9DJwWf4asiVMw
 
 
 __PACKAGE__->remove_column('password');
