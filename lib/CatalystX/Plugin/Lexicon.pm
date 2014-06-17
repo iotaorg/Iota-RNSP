@@ -76,9 +76,12 @@ sub loc {
 
     my $default = $c->config->{default_lang};
 
+    # o HARNESS_ACTIVE eh desabilitado no teste que usamos.
+    my $is_user = $c->user && ($ENV{HARNESS_ACTIVE_REMOVED} || $c->user_in_realm('default'));
+
     $origin_lang =
         $origin_lang ? $origin_lang
-      : $c->user && $c->user_in_realm('default') ? $c->user->cur_lang
+      : $is_user ? $c->user->cur_lang
       :                                            $default;
 
     my $cache_lang_file = "$cache_lang_prefix$$";
@@ -91,7 +94,7 @@ sub loc {
     }
     else {
 
-        my $user_id = $c->user && $c->user_in_realm('default') ? $c->user->id : $c->config->{admin_langs_id};
+        my $user_id = $is_user ? $c->user->id : $c->config->{admin_langs_id};
         my @add_langs = split /,/, $c->config->{forced_langs};
 
         foreach my $lang (@add_langs) {
