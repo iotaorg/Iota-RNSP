@@ -1,0 +1,51 @@
+<div class="menu-left">
+<div class="category" id="group_list">
+    <div class="select [%IF web_open_axis%]open-me[%END%]" selected-id="[%active_group.id%]" data-select-title="[%l('Selecione um grupo para filtrar')%]">
+        [%-l( active_group.name )-%]
+    </div>
+    <div class="options" style="display: none;">
+        <div class="option" group-id="0">
+        [%-l( 'Todos os indicadores' )-%]
+        </div>
+        <div class="option" group-id="f">
+        [%-l('Indicadores em destaque')-%]
+        </div>
+        [%FOREACH a IN groups.keys.sort() %]
+        <div class="option" group-id="[%groups.$a%]">
+            [%-l(a)-%]
+        </div>
+        [%END%]
+    </div>
+</div>
+
+
+<div id="indicators_container">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="[%l('Pesquisar indicadores')%]" id="indicator-search" >
+        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+    </div>
+    <span class="label label-info hideimp" id="search_status" data-text="[%l('Mais __NUM__ indicadores em outros grupos encontrados')%]"></span>
+
+
+    <div id="indicators_list" class="indicators indicators-home">
+
+    <table class="table table-condensed table-hover">
+    <col class="col-xs-10"></col>
+    <col class="col-xs-2"></col>
+    <tbody >
+    [%-FOREACH i IN indicators.sort('name')-%]
+    <tr class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]"  indicator-id="[%i.id%]">
+    <td >
+        [% l(i.name)%]
+    </td>
+    <td class="has-button">
+        <button type="button" class="btn btn-primary btn-block btn-xs">[% l('Acompanhar todas as cidades')%]</button>
+    </td>
+    </tr>
+    [%-END-%]
+    </tbody>
+    </table>
+
+    </div>
+</div>
+</div>

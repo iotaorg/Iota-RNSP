@@ -160,11 +160,19 @@ body {
 }
 
 #indicators_list .item{
+    font-size: 10pt;
+}
+
+#indicators_list td.has-button{
+    padding-top: 3px;
+    padding-bottom: 0;
+}
+/* os links da home precisam ficar 'bonitos'    */
+#indicators_list a.item{
+    display: block!important;
     border-bottom: 1px solid #e0e0e0;
     padding: 5px;
     color: #333;
-    display: block!important;
-    font-size: 10pt;
 }
 
 #indicators_list .item.hideimp, span.hideimp{

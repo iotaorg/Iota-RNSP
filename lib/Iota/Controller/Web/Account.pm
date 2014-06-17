@@ -39,6 +39,8 @@ sub index: Chained('base') PathPart('account') Args(0) {
 
                 $c->stash->{title} = $c->loc('Acompanhar indicadores');
 
+                $c->forward( '/build_indicators_menu', [1] );
+
             }
         },
     ];

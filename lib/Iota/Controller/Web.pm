@@ -74,7 +74,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         $net = $c->model('DB::Network')->search( { institute_id => 1 } )->first;
     }
 
-    $c->detach( '/error_404', [ 'Nenhuma rede para o dominio ' . $domain . '!' ] ) unless $net;
+    $c->detach( '/error_404', [ $c->loc('Nenhuma rede para o dominio') . ' ' . $domain . '!' ] ) unless $net;
 
     $c->stash->{network} = $net;
 
@@ -105,6 +105,8 @@ sub load_status_msgs : Private {
 
 sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
+
+    $c->stash->{institute_loaded} = 1;
 
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes

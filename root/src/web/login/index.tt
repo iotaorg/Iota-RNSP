@@ -51,7 +51,7 @@
 
         <ul>
         [% FOREACH  n IN networks %]
-            <li><a target="_blank" href="[%n.domain_name%]">[%n.domain_name%]</a></li>
+            <li><a target="_blank" href="http://[%n.domain_name%]">[%n.domain_name%]</a></li>
         [%END %]
         </ul>
 

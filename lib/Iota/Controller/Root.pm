@@ -70,7 +70,7 @@ sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
 
-    eval{ $c->forward('/institute_load') };
+    eval{ $c->forward('/institute_load') } if !exists $c->stash->{institute_loaded};
 
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
@@ -79,7 +79,22 @@ sub error_404 : Private {
     $c->stash->{template} = 'not_found.tt';
     $c->response->status(404);
 
-    $c->stash->{message} = ( $x->path . ' Page not found: ' . ( $foo || '' ) );
+    $c->stash->{message} = ( $foo ? $foo : $x->path );
+
+
+    if ($foo =~ /Nenhuma rede/){
+        $c->stash->{networks} = [
+            $c->model('DB::Network')->search(
+                {
+                    is_virtual => 0
+                },
+                {
+                    columns      => ['domain_name'],
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                }
+            )->all
+        ];
+    }
 
 
 }
