@@ -9,7 +9,7 @@
 </ul>
 </li>
 [%ELSE%]
-<li>
+<li [% IF my_account_menu %]class="active"[%END%]>
 <a href="[%c.uri_for_action('/web/account/index')%]"><i class="glyphicon glyphicon-user icon-user icon-white"></i> [%l('Minha conta')%]</a>
 </li>
 [%END%]

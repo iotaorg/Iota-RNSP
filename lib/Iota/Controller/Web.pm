@@ -65,7 +65,23 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my $net    = $c->model('DB::Network')->search(
         { domain_name => $domain },
         {
-            prefetch => 'institute'
+            join     => 'institute',
+            collapse => 1,
+            columns  => [
+                qw/
+                  me.id
+                  me.name
+                  me.name_url
+                  me.ga_account
+                  me.domain_name
+
+                  institute.id
+                  institute.name
+                  institute.short_name
+                  institute.bypass_indicator_axis_if_custom
+                  institute.hide_empty_indicators
+                  /
+            ]
         }
     )->first;
 
@@ -129,7 +145,12 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
-    my @files = $admin->user_files;
+    my @files = $admin->user_files->search(
+        undef,
+        {
+            columns => [qw/created_at class_name private_path/]
+        }
+    )->all;
 
     foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
         if ( $file->class_name eq 'custom.css' ) {
@@ -203,15 +224,8 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
                 map { $_ => $c->stash->{institute}->$_ }
                   qw/
                   name
-                  short_name
-                  description
                   bypass_indicator_axis_if_custom
                   hide_empty_indicators
-                  license
-                  license_url
-                  image_url
-                  datapackage_autor
-                  datapackage_autor_email
                   /
             )
         }
@@ -228,14 +242,13 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
 }
 
-sub erro: Chained('institute_load') PathPart('erro') Args(0) {
+sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     my ( $self, $c ) = @_;
-
 
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
-        template   => 'error.tt'
+        template       => 'error.tt'
     );
 }
 
@@ -276,12 +289,23 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             is_fake => 0
         },
         {
-            prefetch => 'axis',
-            order_by => 'me.name'
+            join     => 'axis',
+            collapse => 1,
+            order_by => 'me.name',
+            columns  => [
+                qw/
+                  axis.id
+                  axis.name
+
+                  me.id
+                  me.name
+                  me.name_url
+                  me.period
+                  me.explanation
+                  /
+            ]
         }
       )->as_hashref->all;
-
-    #exit;
 
     my $city = $c->stash->{city};
 
@@ -1192,7 +1216,12 @@ sub stash_tela_cidade : Private {
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
     $c->stash( public => $public );
 
-    my @files = $user->user_files;
+    my @files = $user->user_files->search(
+        undef,
+        {
+            columns => [qw/private_path created_at class_name/]
+        }
+    )->all;
 
     foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
         if ( $file->class_name eq 'custom.css' ) {

@@ -65,7 +65,13 @@ sub do_account : Chained('base') PathPart('new-account') Args(0) {
 
         $c->authenticate( { email => $user, password => $password }, 'enduser' );
 
-        $c->detach( '/web/form/redirect_ok', [ '/index', [], {}, 'Conta criada com sucesso! Navegue no site e siga os indicadores!' ] );
+        $c->detach(
+            '/web/form/redirect_ok',
+            [
+                '/web/account/index', [],
+                { opt => 'indicators' }, 'Conta criada com sucesso! Navegue no site e siga os indicadores!'
+            ]
+        );
     }
 
     $c->log->error("$@") if $@;
@@ -90,7 +96,8 @@ sub check : Chained('base') PathPart('check') Args(0) {
             )
           ) {
 
-            $c->detach( '/web/form/redirect_ok', [ '/index', [], {}, 'Bem vindo, ' . $c->user->name ] );
+            $c->detach( '/web/form/redirect_ok',
+                [ '/web/account/index', [], { opt => 'indicators' }, 'Bem vindo, ' . $c->user->name ] );
 
         }
         else {

@@ -1,0 +1,21 @@
+<form id="frm_user_edit">
+    <div class="modal-body">
+
+        <h3>[%l(end_user_indicator.indicator.name)%]</h3>
+        <p>[%l('Você está acompanhando este indicador em')%] [%IF end_user_indicator.all_users%]<b>[%l('todas as cidades')%]</b>[%ELSE%]<b>[%l('algumas cidades')%]</b>[%END%].</p>
+
+        [%IF end_user_indicator.all_users%]
+            <button type="button" class="btn btn-default select-cities">[%l('Selecionar cidades para acompanhamento')%]</button>
+
+                    [%END%]
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" style="float:left" class="btn btn-danger stop-follow">[%l('Parar de seguir')%]</button>
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">[%l('Fechar')%]</button>
+        <button type="button" class="btn btn-primary">[%l('Salvar alterações')%]</button>
+    </div>
+</div>
+</form>

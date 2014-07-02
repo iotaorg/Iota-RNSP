@@ -19,7 +19,7 @@
 </div>
 
 
-<div id="indicators_container">
+<div data-list-endpoint="[%c.uri_for_action('/web/form/enduserindicator/list')%]" data-modal-endpoint="[%c.uri_for_action('/web/account/end_user_indicator_modal', [''])%]"  id="indicators_container" class="end_user_indicator">
     <div class="input-group">
         <input type="text" class="form-control" placeholder="[%l('Pesquisar indicadores')%]" id="indicator-search" >
         <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
@@ -30,16 +30,20 @@
     <div id="indicators_list" class="indicators indicators-home">
 
     <table class="table table-condensed table-hover">
-    <col class="col-xs-10"></col>
-    <col class="col-xs-2"></col>
+    <col class="col-xs-10 col-md-9"></col>
+    <col class="col-xs-2 col-md-3"></col>
     <tbody >
     [%-FOREACH i IN indicators.sort('name')-%]
     <tr class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]"  indicator-id="[%i.id%]">
-    <td >
+    <td>
         [% l(i.name)%]
     </td>
-    <td class="has-button">
-        <button type="button" class="btn btn-primary btn-block btn-xs">[% l('Acompanhar todas as cidades')%]</button>
+    <td class="has-button text-right" data-edit-txt="[% l('Alterar preferências') %]">
+        [%IF following.${i.id}%]
+        <button data-end_user_indicator="[%following.${i.id}.id%]" type="button" class="btn btn-xs btn-warning edit-pref"> [% l('Alterar preferências') %]</button>
+        [%ELSE%]
+        <button type="button" class="btn btn-primary btn-xs follow-indicator">[% l('Acompanhar este indicador')%]</button>
+        [%END%]
     </td>
     </tr>
     [%-END-%]
@@ -48,4 +52,21 @@
 
     </div>
 </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_edit" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">[%l('Editando preferências')%]</h4>
+      </div>
+
+      <div class="remote-content"></div>
+
+    </div>
+  </div>
 </div>

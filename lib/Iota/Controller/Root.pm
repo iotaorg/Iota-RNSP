@@ -56,7 +56,7 @@ sub root : Chained('/') PathPart('') CaptureArgs(0) {
 sub default : Path {
     my ( $self, $c ) = @_;
 
-    eval{ $c->forward('/institute_load') };
+    eval { $c->forward('/institute_load') };
 
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
@@ -70,7 +70,7 @@ sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
 
-    eval{ $c->forward('/institute_load') } if !exists $c->stash->{institute_loaded};
+    eval { $c->forward('/institute_load') } if !exists $c->stash->{institute_loaded};
 
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
@@ -81,8 +81,7 @@ sub error_404 : Private {
 
     $c->stash->{message} = ( $foo ? $foo : $x->path );
 
-
-    if ($foo =~ /Nenhuma rede/){
+    if ( $foo =~ /Nenhuma rede/ ) {
         $c->stash->{networks} = [
             $c->model('DB::Network')->search(
                 {
@@ -95,7 +94,6 @@ sub error_404 : Private {
             )->all
         ];
     }
-
 
 }
 

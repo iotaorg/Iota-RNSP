@@ -1,9 +1,10 @@
 <h2>[% title %]</h2>
+[% INCLUDE "web/messages.tt" %]
 <div class="row">
   <div class="col-sm-3">
 
     <div class="sidebar-nav">
-    <div class="navbar navbar-blue" role="navigation">
+    <div class="navbar navbar-inverse" role="navigation">
         <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".left-submenu">
             <span class="sr-only">Alternar navegação</span>
@@ -16,7 +17,7 @@
         <div class="navbar-collapse collapse left-submenu">
         <ul class="nav navbar-nav">
             [%FOREACH mn IN submenu%]
-                <li class="[%mn.active ? 'active':''%]"><a href="[%c.req.uri_with({ opt => mn.name })%]">[%mn.title%]</a></li>
+                <li class="[%mn.active ? 'active':''%]"><a href="[%c.req.uri_with({ opt => mn.name })%]"><i class="glyphicon glyphicon-circle-arrow-right" style="[%mn.active ? 'color: yellow!important;':''%]"></i> [%mn.title%]</a></li>
             [%END%]
         </ul>
         </div>

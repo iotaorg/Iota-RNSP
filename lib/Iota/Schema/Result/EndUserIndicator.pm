@@ -70,6 +70,12 @@ __PACKAGE__->table("end_user_indicator");
   data_type: 'boolean'
   is_nullable: 0
 
+=head2 network_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -93,6 +99,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "all_users",
   { data_type => "boolean", is_nullable => 0 },
+  "network_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -154,9 +162,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 network
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-16 09:41:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Gn6DvlC6B3DdE2PBqY987w
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::Network>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "network",
+  "Iota::Schema::Result::Network",
+  { id => "network_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-30 08:41:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YZ4R4+Pxf1U58xtH7igaYA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

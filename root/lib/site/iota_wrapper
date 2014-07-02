@@ -42,12 +42,14 @@
 
 [%-CALL assets.include("js/indicatos-menu.js")%]
 
+
 [%-CALL assets.include("js/stupidtable.min.js")%]
 [%-CALL assets.include("v2/js/google_visualization.js")%]
 
 [%-CALL assets.include("v2/js/load-google-maps.js")%]
 [%-CALL assets.include("v2/js/load-isotope.js")%]
 
+[%-CALL assets.include("v2/js/me/account-end-user-indicator.js")%]
 
 [%- IF network.id == 1  -%]
     [%- CALL assets.include("css/parceiros.gov.css")-%]

@@ -8,7 +8,7 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 
-sub root : Chained('/') : PathPart('form') : CaptureArgs(0) {
+sub root : Chained('/light_institute_load') : PathPart('me/form') : CaptureArgs(0) {
 }
 
 sub redirect_ok : Private {
@@ -44,6 +44,19 @@ sub not_found : Private {
     my ( $self, $c ) = @_;
 
     $c->stash->{template} = 'not_found.tt';
+    $c->detach();
+}
+
+sub need_login : Private {
+    my ( $self, $c ) = @_;
+
+    my $mid = $c->set_error_msg(
+        {
+            error_msg => 'Faça o login para acessar a página',
+        }
+    );
+
+    $c->res->redirect( '/login?mid=' . $mid );
     $c->detach();
 }
 
