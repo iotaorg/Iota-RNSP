@@ -18,3 +18,4 @@ invisible-indicador-for-basic-variables [sum-by-regions-only-necessary-data-fix]
 fix-volta-periodo [appschema] 2014-05-13T13:21:11Z cron <renato.cron@gmail.com> # fix
 end-users [appschema] 2014-06-11T12:59:08Z cron <renato.cron@gmail.com> # .
 end-users-by-network [end-users] 2014-06-30T11:39:57Z cron <renato.cron@gmail.com> # .
+end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cron@gmail.com># mail queue
