@@ -140,8 +140,9 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     my @current_admins = grep { !$_->city_id } @users;
 
+
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] ) unless @current_admins;
-    $c->detach( '/error_404', ['Mais de um admin de rede para o dominio enocntrado!'] ) if @current_admins > 1;
+    $c->detach( '/error_404', ['Mais de um admin de rede para o dominio encontrado!'] ) if @current_admins > 1;
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
