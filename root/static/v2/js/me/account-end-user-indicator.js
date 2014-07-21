@@ -59,9 +59,6 @@ $(document).ready(function () {
         });
 
 
-        console.log(end_user_indicator_id);
-
-
     });
 
     function _delete_item(end_user_indicator_id){
@@ -70,13 +67,20 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'DELETE',
-            url: modal_endpoint + end_user_indicator_id,
+            url: list_endpoint + '/' + end_user_indicator_id,
             success: function (data, textStatus, jqXHR) {
 
-                $('#modal_edit').modal('close');
+                $('#modal_edit .remote-content').html($('#stop_follow').html());
+
+
+
+                $('#modal_edit').on('hidden.bs.modal', function (e) {
+                    location.reload();
+                })
 
             },
             complete: function (data) {
+
             }
         });
 

@@ -70,3 +70,18 @@
     </div>
   </div>
 </div>
+
+<div id="stop_follow">
+
+    <div class="row">
+
+        <div class="col-sm-2 hidden-sm hidden-xs text-center">
+            <span style="font-size: 4em; margin: 0.4em; color: #8b42ca; " class="glyphicon glyphicon-remove-sign"> </span>
+        </div>
+        <div class="col-md-10 col-sm-12">
+            <h5 style="vertical-align: middle;line-height: 6em;">[%l('Você deixou de seguir este indicador!')%]</h5>
+        </div>
+
+    </div>
+
+</div>
