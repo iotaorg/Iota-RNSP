@@ -2,6 +2,7 @@
 <p>
 [%l('Ocorreu um erro!')%]
 </p>
+[% INCLUDE 'web/messages.tt' %]
 <p>
 [%l('Aqui está a mensagem de erro, sobre a possibilidade remota de que isso significa alguma coisa para você')%]: <span class="error"> [%error%] </ span>
 </p>

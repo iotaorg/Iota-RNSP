@@ -15,13 +15,13 @@
 
 
 
-[%-CALL assets.include("js/bootstrap.min.js")-%]
+[%-CALL assets.include("js/bootstrap.min.js") |none-%]
 
 
-[%-CALL assets.include("css/bootstrap.min.css")%]
-[%-CALL assets.include("css/bootstrap-responsive.min.css")%]
+[%-CALL assets.include("css/bootstrap.min.css")|none%]
+[%-CALL assets.include("css/bootstrap-responsive.min.css")|none%]
 
-[%- assets.export("css") -%]
+[%- assets.export("css")|none -%]
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -29,12 +29,12 @@
 <div id="iota-app">
     <div class="page-content">
         <div class="container">
-            [% content %]
+            [% content |none%]
         </div>
     </div>
 </div>
 <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
-[% assets.export("js") %]
+[% assets.export("js") |none%]
 </body>
 </html>
-[%ELSE%][%content%][%END%]
+[%ELSE%][%content|none%][%END%]

@@ -126,7 +126,6 @@ sub process {
                     $status .= $@ if $@;
                     die $@ if $@;
                 }
-
                 my $data = Iota::IndicatorData->new( schema => $schema->schema );
                 if ( exists $with_region->{dates} ) {
                     $data->upsert(
@@ -137,7 +136,6 @@ sub process {
                         user_id    => $user_id
                     );
                 }
-
                 if ( exists $without_region->{dates} ) {
                     $data->upsert(
                         indicators => [

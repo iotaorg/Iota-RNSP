@@ -2,13 +2,14 @@ package Iota::View::HTML;
 
 use strict;
 use base 'Catalyst::View::TT';
-
+use Template::AutoFilter;
 __PACKAGE__->config(
     {
         TEMPLATE_EXTENSION => '.tt',
         ENCODING           => 'UTF-8',
         DEFAULT_ENCODING   => 'UTF-8',
 
+        CLASS        => 'Template::AutoFilter',
         INCLUDE_PATH => [ Iota->path_to( 'root', 'src' ), Iota->path_to( 'root', 'lib' ) ],
         WRAPPER      => 'site/wrapper',
         ERROR        => 'error.tt',
@@ -90,5 +91,33 @@ sub l {
     return $c->loc( $text, @args ) || $text;
 }
 
+sub ymd_to_dmy {
+    my ( $self, $c, $str ) = @_;
+    return '' unless $str;
+
+    $str = "$str";
+    $str =~ s/(\d{4})-(\d{2})-(\d{2})/$3\/$2\/$1/;
+
+    return $str;
+
+}
+
+sub ymd_to_human {
+    my ( $self, $c, $str ) = @_;
+    return '' unless $str;
+
+    $str = "$str";
+    $str =~ s/(\d{4})-(\d{2})-(\d{2})/$3\/$2\/$1/;
+
+    $str =~ s/T/ /;
+
+    if ( length $str > 16 ) {
+
+        substr( $str, 16, 3 ) = '';
+    }
+
+    return substr( $str, 0, 10 + 6 );
+
+}
 1;
 

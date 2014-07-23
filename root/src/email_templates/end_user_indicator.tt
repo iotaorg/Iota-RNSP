@@ -1,0 +1,64 @@
+[% l_ola %] [%name%],
+
+<p>[% l_resumo_antes_tabela %]</p>
+<table border="0" height="100%" width="100%" id="bodyTable" cellspacing="2" cellpadding="0" border="0" align="center" bgcolor="#000000">
+    <tr>
+        <td align="center" valign="top">
+            <table border="0" cellpadding="8" cellspacing="0" width="100%" id="emailContainer">
+                <tr bgcolor="#ffffff">
+                    <td align="center">[%l_evento%]</td>
+                    <td align="center">[%l_aconteceu_em%]</td>
+                    <td align="center">[%l_indicador%]</td>
+                    <td align="center">[%l_data_do_valor%]</td>
+                    <td align="center">[%l_valor%]</td>
+                    <td align="center">[%l_cidade%]</td>
+                    <td align="center">[%l_regiao%]</td>
+                    <td align="center">[%l_variacao%]</td>
+                    <td align="center">[%l_tipo_do_valor%]</td>
+                    <td align="center">[%l_fontes%]</td>
+                </tr>
+
+                [%FOREACH r IN reports %]
+
+                <tr bgcolor="[% r.operation_type == 'DELETE' ? '#FFE4E4' : '#E4FFE4'%]">
+                    <td align="center">
+                        [% r.operation_type == 'DELETE' ? l_removido : l_inserido %]
+                    </td>
+                    <td align="center">
+                        [% ymd_to_human(r.created_at)%]
+                    </font></td>
+                    <td align="center">
+                        [%r.indicator.name%]
+                    </font></td>
+                    <td align="center">
+                        [% date4period(r.valid_from, r.indicator.period)%]
+                    </font></td>
+                    <td align="center">
+                        [%r.value%]
+                    </font></td>
+                    <td align="center">
+                        [%r.user.city.name%] / [%r.user.city.state.name%]
+                    </font></td>
+
+                    <td align="center">
+                        [%r.region.name%]
+                    </font></td>
+                    <td align="center">
+                        [%r.variation_name%]
+                    </font></td>
+                    <td align="center">
+                        [% r.active_value ? l_ativo : l_inativo %] [% r.generated_by_compute ? "/ $l_sumario" : '' %]
+                    </font></td>
+                    <td align="center">
+                        [% r.sources.join(' ')  %]
+                    </font></td>
+                </tr>
+
+                [%END%]
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+<p>[%l_resumo_depois_tabela.replace('__NUM__', num_indicadores)%]</p>

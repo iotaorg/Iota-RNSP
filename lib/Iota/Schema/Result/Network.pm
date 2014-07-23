@@ -86,6 +86,12 @@ __PACKAGE__->table("network");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 is_virtual
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -119,6 +125,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "is_virtual",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -160,6 +168,21 @@ __PACKAGE__->add_unique_constraint("network_domain_name_key", ["domain_name"]);
 __PACKAGE__->add_unique_constraint("network_name_url_key", ["name_url"]);
 
 =head1 RELATIONS
+
+=head2 end_user_indicators
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::EndUserIndicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "end_user_indicators",
+  "Iota::Schema::Result::EndUserIndicator",
+  { "foreign.network_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 =head2 indicator_network_configs
 
@@ -232,8 +255,8 @@ Composing rels: L</network_users> -> user
 __PACKAGE__->many_to_many("users", "network_users", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BC9NZu2fp4+Px3FJBo42tg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-30 08:41:37
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5SoQMvHGIssvSTjM6nFwOA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

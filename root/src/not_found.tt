@@ -1,0 +1,12 @@
+<h1>[%l('Página não encontrada')%]!</h1>
+
+[% message%]
+
+[% IF networks %]
+<h5>[%l('Tente um dos seguintes endereços')%]:</h5>
+<ul>
+[% FOREACH  n IN networks %]
+    <li><a href="http://[%n.domain_name%]">[%n.domain_name%]</a></li>
+[%END %]
+</ul>
+[%END%]

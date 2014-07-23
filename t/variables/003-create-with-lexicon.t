@@ -23,6 +23,7 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 2;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
+$ENV{HARNESS_ACTIVE_REMOVED} = 1;
 
 eval {
     $schema->txn_do(

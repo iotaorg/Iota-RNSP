@@ -1,0 +1,35 @@
+<h2>[% title %]</h2>
+[% INCLUDE "web/messages.tt" %]
+<div class="row">
+  <div class="col-sm-3">
+
+    <div class="sidebar-nav">
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".left-submenu">
+            <span class="sr-only">Alternar navegação</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <span class="visible-xs navbar-brand">Mais opções de menu</span>
+        </div>
+        <div class="navbar-collapse collapse left-submenu">
+        <ul class="nav navbar-nav">
+            [%FOREACH mn IN submenu%]
+                <li class="[%mn.active ? 'active':''%]"><a href="[%c.req.uri_with({ opt => mn.name })%]"><i class="glyphicon glyphicon-circle-arrow-right" style="[%mn.active ? 'color: yellow!important;':''%]"></i> [%mn.title%]</a></li>
+            [%END%]
+        </ul>
+        </div>
+    </div>
+    </div>
+
+  </div>
+    <div class="col-sm-9">
+        [% PROCESS "web/account/part-${active_submenu.name}.tt" %]
+    </div>
+</div>
+
+
+
+

@@ -65,7 +65,23 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my $net    = $c->model('DB::Network')->search(
         { domain_name => $domain },
         {
-            prefetch => 'institute'
+            join     => 'institute',
+            collapse => 1,
+            columns  => [
+                qw/
+                  me.id
+                  me.name
+                  me.name_url
+                  me.ga_account
+                  me.domain_name
+
+                  institute.id
+                  institute.name
+                  institute.short_name
+                  institute.bypass_indicator_axis_if_custom
+                  institute.hide_empty_indicators
+                  /
+            ]
         }
     )->first;
 
@@ -74,7 +90,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         $net = $c->model('DB::Network')->search( { institute_id => 1 } )->first;
     }
 
-    $c->detach( '/error_404', [ 'Nenhuma rede para o dominio ' . $domain . '!' ] ) unless $net;
+    $c->detach( '/error_404', [ $c->loc('Nenhuma rede para o dominio') . ' ' . $domain . '!' ] ) unless $net;
 
     $c->stash->{network} = $net;
 
@@ -82,8 +98,31 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{c_req_path} = $c->req->path;
 }
 
+sub load_status_msgs : Private {
+    my ( $self, $c ) = @_;
+
+    $c->load_status_msgs;
+    my $status_msg = $c->stash->{status_msg};
+    my $error_msg  = $c->stash->{error_msg};
+
+    @{ $c->stash }{ keys %$status_msg } = values %$status_msg if ref $status_msg eq 'HASH';
+    @{ $c->stash }{ keys %$error_msg }  = values %$error_msg  if ref $error_msg eq 'HASH';
+
+    if ( $c->stash->{form_error} && ref $c->stash->{form_error} eq 'HASH' ) {
+        my $aff = {};
+        foreach ( keys %{ $c->stash->{form_error} } ) {
+            my ( $hm, $fo ) = $_ =~ /(.+)\.(.+)$/;
+
+            $aff->{$hm} = $fo;
+        }
+        $c->stash->{form_error} = $aff;
+    }
+}
+
 sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
+
+    $c->stash->{institute_loaded} = 1;
 
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
@@ -102,11 +141,16 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     my @current_admins = grep { !$_->city_id } @users;
 
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] ) unless @current_admins;
-    $c->detach( '/error_404', ['Mais de um admin de rede para o dominio enocntrado!'] ) if @current_admins > 1;
+    $c->detach( '/error_404', ['Mais de um admin de rede para o dominio encontrado!'] ) if @current_admins > 1;
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
-    my @files = $admin->user_files;
+    my @files = $admin->user_files->search(
+        undef,
+        {
+            columns => [qw/created_at class_name private_path/]
+        }
+    )->all;
 
     foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
         if ( $file->class_name eq 'custom.css' ) {
@@ -180,15 +224,8 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
                 map { $_ => $c->stash->{institute}->$_ }
                   qw/
                   name
-                  short_name
-                  description
                   bypass_indicator_axis_if_custom
                   hide_empty_indicators
-                  license
-                  license_url
-                  image_url
-                  datapackage_autor
-                  datapackage_autor_email
                   /
             )
         }
@@ -203,6 +240,16 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
       }
       if !exists $c->req->cookies->{cur_lang} || $c->req->cookies->{cur_lang} ne $cur_lang;
 
+}
+
+sub erro : Chained('institute_load') PathPart('erro') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        template       => 'error.tt'
+    );
 }
 
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
@@ -242,12 +289,23 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             is_fake => 0
         },
         {
-            prefetch => 'axis',
-            order_by => 'me.name'
+            join     => 'axis',
+            collapse => 1,
+            order_by => 'me.name',
+            columns  => [
+                qw/
+                  axis.id
+                  axis.name
+
+                  me.id
+                  me.name
+                  me.name_url
+                  me.period
+                  me.explanation
+                  /
+            ]
         }
       )->as_hashref->all;
-
-    #exit;
 
     my $city = $c->stash->{city};
 
@@ -1188,7 +1246,12 @@ sub stash_tela_cidade : Private {
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
     $c->stash( public => $public );
 
-    my @files = $user->user_files;
+    my @files = $user->user_files->search(
+        undef,
+        {
+            columns => [qw/private_path created_at class_name/]
+        }
+    )->all;
 
     foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
         if ( $file->class_name eq 'custom.css' ) {

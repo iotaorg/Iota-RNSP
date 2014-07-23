@@ -1,4 +1,4 @@
-
+[% INCLUDE 'web/messages.tt' %]
 <div id="content">
 
     <div class="row" id="indicadores-dados">

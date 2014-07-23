@@ -362,6 +362,36 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 end_user_indicator_users
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::EndUserIndicatorUser>
+
+=cut
+
+__PACKAGE__->has_many(
+  "end_user_indicator_users",
+  "Iota::Schema::Result::EndUserIndicatorUser",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 end_user_indicators
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::EndUserIndicator>
+
+=cut
+
+__PACKAGE__->has_many(
+  "end_user_indicators",
+  "Iota::Schema::Result::EndUserIndicator",
+  { "foreign.indicator_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 indicator_network_configs
 
 Type: has_many
@@ -553,8 +583,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-04-14 14:41:47
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8lOnfuFN1Vyx9tus9V7B9Q
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-16 09:41:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nfvl1Lt77SfD9UE/zvAArg
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",
