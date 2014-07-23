@@ -9,14 +9,15 @@ use Config::General;
 use Template;
 
 use Encode;
-use JSON qw / decode_json /;
+use JSON::XS;
 
-my $file = "$Bin/../iota_pcs_local.conf";
-$file = "$Bin/../iota_pcs.conf" unless -e $file;
+my $file = "$Bin/../iota_local.conf";
+$file = "$Bin/../iota.conf" unless -e $file;
 
 my %config = new Config::General($file)->getall;
-use DDP;
-p %config;
+
+#use DDP;
+# \%config;exit;
 use Email::MIME;
 use Email::Sender::Simple qw(sendmail);
 
@@ -34,43 +35,70 @@ my $config_tt = {
     INTERPOLATE  => 1,
     POST_CHOMP   => 1,
     EVAL_PERL    => 0,
+
+    ENCODING => 'utf8',
+
 };
 my $tt = Template->new($config_tt);
 
-my @not_sent = $schema->resultset('EmailsQueue')->search( { sent => 0 } )->all;
+while (1) {
+    $schema->txn_do(
+        sub {
+            my @not_sent = $schema->resultset('EmailsQueue')->search(
+                {
+                    sent => 0
+                },
+                {
+                    for  => 'update',
+                    rows => 10
+                }
+            )->all;
 
-print @not_sent . " emails para enviar...\n";
-foreach my $mail (@not_sent) {
+            print localtime(time) . ": " . @not_sent . " emails para enviar...\n";
+            foreach my $mail (@not_sent) {
 
-    my ( $body, $subject ) = ('') x 2;
+                my ( $body, $subject ) = ('') x 2;
 
-    my $vars  = decode_json( $mail->variables );
-    my $title = $mail->subject;
+                my $vars_js = $mail->variables;
 
-    $tt->process( $mail->template, $vars, \$body )    || die $tt->error(), "\n";
-    $tt->process( \$title,         $vars, \$subject ) || die $tt->error(), "\n";
-    my $message = Email::MIME->create(
-        header => [
-            From    => $config{email}{from},
-            To      => $mail->to,
-            Subject => $subject
-        ],
-        attributes => {
-            content_type => "text/html",
-            encoding     => 'quoted-printable',
-            charset      => 'UTF-8',
-        },
-        body_str => Encode::decode( "UTF-8", $body )
+                $vars_js = encode( 'utf8', $vars_js );
+
+                my $vars = eval { decode_json($vars_js) };
+                my $title = $mail->subject;
+
+                $vars->{ymd_to_human} = sub { Iota::View::HTML::ymd_to_human( undef, undef, @_ ) };
+                $vars->{date4period} = sub { Iota::View::HTML::date4period( undef, undef, @_ ) };
+
+                $tt->process( $mail->template, $vars, \$body, { binmode => ':utf8' } ) || die $tt->error(), "\n";
+                $tt->process( \$title, $vars, \$subject ) || die $tt->error(), "\n";
+
+                my $message = Email::MIME->create(
+                    header => [
+                        From    => $config{email}{from},
+                        To      => $mail->to,
+                        Subject => $subject
+                    ],
+                    attributes => {
+                        content_type => "text/html",
+                        encoding     => 'base64',
+                        charset      => 'UTF-8',
+                    },
+                    body_str => $body
+                );
+
+                print "Enviando email para " . $mail->to . "...\n";
+                eval { sendmail( $message, { transport => $transport } ) };
+                print "Erro: $@\n---\n" if $@;
+
+                $mail->sent(1);
+                $mail->sent_at( \"now()" );
+                $mail->text_status( $@ ? "Error: $@" : 'success' );
+                $mail->update();
+            }
+        }
     );
 
-    print "Enviando email para " . $mail->to . "...\n";
-    eval { sendmail( $message, { transport => $transport } ) };
-    print "Erro: $@\n---\n" if $@;
-
-    $mail->sent(1);
-    $mail->sent_at( \"now()" );
-    $mail->text_status( $@ ? 'success' : "Error: $@" );
-    $mail->update();
+    sleep 60;
 }
 
 print "Fim do programa\n";

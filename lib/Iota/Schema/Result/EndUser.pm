@@ -122,6 +122,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 end_user_indicator_queues
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::EndUserIndicatorQueue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "end_user_indicator_queues",
+  "Iota::Schema::Result::EndUserIndicatorQueue",
+  { "foreign.end_user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 end_user_indicator_users
 
 Type: has_many
@@ -153,8 +168,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-16 09:41:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QpB8dNJYw9DJwWf4asiVMw
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-07-22 09:33:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0hxXbU1+5tq7WTSSmHDFMQ
 
 
 __PACKAGE__->remove_column('password');

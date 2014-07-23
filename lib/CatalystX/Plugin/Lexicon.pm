@@ -46,7 +46,6 @@ sub setup_lexicon_plugin {
 
     $current_lang = $c->config->{default_lang};
 
-    $c->lexicon_reload_self;
 }
 
 sub lexicon_reload_all {
@@ -56,10 +55,10 @@ sub lexicon_reload_all {
 
 sub lexicon_reload_self {
 
-    my @load = $resultset->search( undef, { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->all;
+    my $rs = $resultset->search( undef, { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     $cache = {};
-    foreach my $r (@load) {
+    while ( my $r = $rs->next ) {
         $cache->{ $r->{lang} }{ $r->{lex_key} } = $r->{lex_value};
     }
 
