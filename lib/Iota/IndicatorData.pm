@@ -173,6 +173,7 @@ sub upsert {
             rs  => $rr_values_rs
         );
 
+        # se ta recompilando a regiao 2 com a soma, entra aqui.
         if ( keys %$period_values_level2 ) {
 
             my $institutes = {
@@ -204,6 +205,7 @@ sub upsert {
             );
 
         }
+        # se ta subindo valor da regiao 2 direto, entra aqui.
         elsif ( exists $region_by_lvl{2} && !exists $params{regions2_ids} ) {
 
             my $institutes = {
