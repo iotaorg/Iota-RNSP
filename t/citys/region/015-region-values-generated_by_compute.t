@@ -153,6 +153,8 @@ eval {
 
             &add_value( $reg2_uri, '100', '2010' );
             my $tmp = &get_values($reg2);
+            use DDP;
+            p $tmp;
 
             is( scalar @$tmp, '1', 'só tem 1 linha' );
             my $ii = &get_indicator( $reg2, '2010' );
@@ -266,7 +268,9 @@ sub add_value {
       ];
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
-
+    use DDP;
+    p $res;
+    exit;
     ok( $res->is_success, 'variable value created' );
     is( $res->code, 201, 'value added -- 201 ' );
     my $id = eval { from_json( $res->content ) };
@@ -287,16 +291,24 @@ sub get_values {
           . $variable->{id}
           . '&active_value='
           . $not );
+    use DDP;
+    p '/api/user/'
+      . $Iota::TestOnly::Mock::AuthUser::_id
+      . '/variable?region_id='
+      . $region->{id}
+      . '&is_basic=0&variable_id='
+      . $variable->{id}
+      . '&active_value='
+      . $not;
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
-
+    use DDP;
+    p $list;
     return $list->{variables}[0]{values};
 }
 
 sub get_indicator {
-    my ( $region, $year, $not ) = @_;
-
-    $not = $not ? 0 : 1;
+    my ( $region, $year, ) = @_;
 
     my ( $res, $c ) =
       ctx_request( GET '/api/public/user/'
@@ -304,9 +316,7 @@ sub get_indicator {
           . '/indicator?from_date='
           . $year
           . '-01-01&number_of_periods=1&region_id='
-          . $region->{id}
-          . '&active_value='
-          . $not );
+          . $region->{id} );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
     my $list = eval { from_json( $res->content ) };
     $list = &get_the_key( &get_the_key( &get_the_key($list) ) )->{indicadores}[0]{valores};

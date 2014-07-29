@@ -22,6 +22,10 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
       unless $id =~ /^[0-9]+$/;
 
     $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+
+    use DDP;
+    p $c->stash->{object};
+
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
@@ -108,10 +112,21 @@ sub variable_DELETE {
             region_id  => $object->region_id
         };
 
+        my $conf2;
+        if ( $object->region->get_column('upper_region') ) {
+            $conf2 = {
+                indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
+                dates      => [ $object->valid_from->datetime ],
+                user_id    => $object->user_id,
+                region_id  => $object->region->get_column('upper_region')
+            };
+        }
+
         $object->delete;
 
         # apaga os dados dos indicadores, ja q o valor nao existe mais
         $data->upsert(%$conf);
+        $data->upsert(%$conf2);
 
     }
 

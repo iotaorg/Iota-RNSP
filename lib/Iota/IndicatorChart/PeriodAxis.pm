@@ -433,7 +433,6 @@ sub _load_variables_values {
         {
             user_id      => { 'in' => $options{user_id} },
             indicator_id => $self->indicator->id,
-            active_value => 1,
 
             region_id => undef,    ## TODO arrumar isso pra pegar a regiao la de cima!!
 

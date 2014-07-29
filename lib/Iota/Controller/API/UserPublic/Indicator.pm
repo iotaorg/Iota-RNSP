@@ -262,8 +262,7 @@ sub resumo_GET {
                         )
                     },
 
-                    'me.region_id'    => $c->req->params->{region_id},
-                    'me.active_value' => $active_value
+                    'me.region_id' => $c->req->params->{region_id},
                 }
             )->as_hashref;
             my $indicator_values = {};

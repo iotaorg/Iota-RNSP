@@ -20,6 +20,7 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
       unless $id =~ /^[0-9]+$/;
 
     $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 

@@ -261,7 +261,6 @@ eval {
                         $ii = &get_indicator( $region, '2005', 1 );
                         is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 tabem existe' );
                         note('sit 3: Nível superior preenchido, com dados incompletos no nível inferior');
-
                         $current_var = $variable->{id};
                         &add_value( $subregion2_uri, '10', '2005' );
                         &add_value( $subregion3_uri, '10', '2005' );
@@ -387,7 +386,11 @@ eval {
 
                         # virou intermediario.
                         $ii = &get_indicator( $region, '2066' );
-                        is_deeply( $ii, [ 1 + 999 + 24 ], 'virou intermediario' );
+                        is_deeply(
+                            $ii,
+                            [ 1 + 999 + 24 ],
+'virou intermediario, que signfica, uma variavel vai vir da regiao, e a segunda da soma das 3 abaixo.'
+                        );
 
                         ( $res, $c ) = ctx_request( DELETE $subregion3_uri. '/value/' . $val_id1->{id} );
                         is( $res->code, 204, 'response code is ' . 204 );

@@ -28,6 +28,7 @@ __PACKAGE__->result_source_instance->view_definition(
        from indicator_value v
        join tregions x on x.id = v.region_id
        where v.city_id = (select city_id from "user" where id = ?) and v.indicator_id = ?
+       and v.active_value = true
 
        group by 1
    )
@@ -43,7 +44,7 @@ __PACKAGE__->result_source_instance->view_definition(
     from region as r
     join tregions x on x.id=r.id
     CROSS join periods pp
-    left join indicator_value v on r.id = v.region_id and v.city_id = (select city_id from "user" where id = ?) and v.indicator_id = ? and pp.valid_from = v.valid_from
+    left join indicator_value v on r.id = v.region_id and v.city_id = (select city_id from "user" where id = ?) and v.indicator_id = ? and pp.valid_from = v.valid_from and v.active_value = true
 
     order by num
 ]

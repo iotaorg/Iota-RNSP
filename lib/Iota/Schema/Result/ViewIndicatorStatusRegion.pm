@@ -68,8 +68,8 @@ from (
        jm.count as justification_count
 
     from indicators i
-    left join indicator_value iv_last on iv_last.user_id = ? and iv_last.indicator_id = i.id AND iv_last.active_value AND iv_last.valid_from = last_period AND iv_last.region_id = ?
-    left join indicator_value iv_any on iv_any.user_id = ? and iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id = ?
+    left join indicator_value iv_last on iv_last.user_id = ? and iv_last.indicator_id = i.id AND iv_last.valid_from = last_period AND iv_last.region_id = ?
+    left join indicator_value iv_any on iv_any.user_id = ? and iv_any.indicator_id = i.id AND iv_any.region_id = ?
     LEFT JOIN (SELECT indicator_id, count(1) FROM user_indicator x WHERE x.user_id = ? and justification_of_missing_field != '' AND x.region_id= ? group by 1 ) jm on i.id = jm.indicator_id
     group by i.id,i.last_period, i.user_id,i.indicator_type,jm.count
 ) r

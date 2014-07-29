@@ -19,3 +19,4 @@ fix-volta-periodo [appschema] 2014-05-13T13:21:11Z cron <renato.cron@gmail.com> 
 end-users [appschema] 2014-06-11T12:59:08Z cron <renato.cron@gmail.com> # .
 end-users-by-network [end-users] 2014-06-30T11:39:57Z cron <renato.cron@gmail.com> # .
 end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cron@gmail.com># mail queue
+0055-update-compute-upper-regions [variable_summarization] 2014-07-25T20:45:43Z cron <renato.cron@gmail.com> # updating function compute upper regiosn to return ever upper regions of bellow regions

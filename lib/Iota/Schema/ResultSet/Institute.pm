@@ -119,7 +119,7 @@ sub action_specs {
                     regions_id => [
                         map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
                             {
-                                depth_level => 3
+                                depth_level => $_
                             },
                             {
                                 columns      => ['id'],
@@ -127,7 +127,8 @@ sub action_specs {
                             }
                         )->all
                     ],
-                );
+                ) for ( 3, 2 );
+
             }
 
             return $var;

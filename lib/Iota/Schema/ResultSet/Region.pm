@@ -148,7 +148,8 @@ sub action_specs {
                 my $new = DateTimeX::Easy->new( $values{subregions_valid_after} );
                 my $old = $var->subregions_valid_after;
 
-                my @tables = qw/IndicatorValue IndicatorVariablesVariationsValue RegionVariableValue/;
+                # TODO rever çá porra agora.. porque saiu o IndicatorValue daqui.
+                my @tables = qw/IndicatorVariablesVariationsValue RegionVariableValue/;
 
                 my $cmp = DateTime->compare( $new, $old );
 
@@ -180,8 +181,11 @@ sub action_specs {
                         # apaga os ativos, **provavelmente** calculados
                         $rs->search( { generated_by_compute => 1 } )->delete;
 
+
+
                         # altera todos os nao computados para ativos
                         $rs->search( { generated_by_compute => undef } )->update( { active_value => 1 } );
+
                     }
 
                 }
@@ -198,8 +202,11 @@ sub action_specs {
                                 valid_from => { '>=' => $new->datetime }
                             }
                         );
+
+
                         $rs->search( { active_value => 1, generated_by_compute => undef } )
-                          ->update( { active_value => 0 } );
+                            ->update( { active_value => 0 } );
+
                     }
 
                 }
