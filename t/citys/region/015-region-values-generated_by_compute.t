@@ -35,27 +35,27 @@ eval {
             my $inst = $schema->resultset('Institute')->create(
                 {
                     active_me_when_empty => 1,
-                    name => 'name',
-                    short_name => 'short_name',
+                    name                 => 'name',
+                    short_name           => 'short_name',
 
                 }
             );
             my $net = $schema->resultset('Network')->create(
                 {
-                    name => 'name',
-                    name_url => 'short_name',
-                    domain_name => 'domain_name',
-                    created_by => 1,
+                    name         => 'name',
+                    name_url     => 'short_name',
+                    domain_name  => 'domain_name',
+                    created_by   => 1,
                     institute_id => $inst->id,
                 }
             );
 
             my $u = $schema->resultset('User')->create(
                 {
-                    name => 'name',
-                    email => 'email@email.com',
-                    institute_id => $inst->id,
-                    password => '!!!',
+                    name            => 'name',
+                    email           => 'email@email.com',
+                    institute_id    => $inst->id,
+                    password        => '!!!',
                     regions_enabled => 1
                 }
             );
@@ -64,7 +64,7 @@ eval {
 
             $ENV{HARNESS_ACTIVE_institute_id} = $inst->id;
 
-            $Iota::TestOnly::Mock::AuthUser::_id    = $u->id;
+            $Iota::TestOnly::Mock::AuthUser::_id = $u->id;
 
             ( $res, $c ) = ctx_request(
                 POST '/api/city',
@@ -187,8 +187,6 @@ eval {
 
             &add_value( $reg2_uri, '100', '2010' );
             my $tmp = &get_values($reg2);
-            use DDP;
-            p $tmp;
 
             is( scalar @$tmp, '1', 'só tem 1 linha' );
             my $ii = &get_indicator( $reg2, '2010' );
@@ -302,6 +300,7 @@ sub add_value {
       ];
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
+
     #use DDP;
     #p $res;
     #exit;

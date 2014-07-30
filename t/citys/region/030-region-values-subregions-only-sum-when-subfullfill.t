@@ -33,6 +33,7 @@ my $current_var;
 eval {
     $schema->txn_do(
         sub {
+
 =pod
             my $inst = $schema->resultset('Institute')->create(
                 {
@@ -68,6 +69,7 @@ eval {
 
             $Iota::TestOnly::Mock::AuthUser::_id    = $u->id;
 =cut
+
             my ( $res, $c );
 
             # cria cidade
@@ -294,7 +296,6 @@ eval {
 
                         #$ii = &get_indicator( $region, '2005', 1 );
 
-
                         #is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 tabem existe' );
 
                         note('sit 3: Nível superior preenchido, com dados incompletos no nível inferior');
@@ -322,6 +323,7 @@ eval {
                             [ 1 + 30 + 666 ],
 'valor de 2005 ativo agora esta usando um pouco de cada (30 eh a soma da vriavel 1) e a 666 da variavel 2'
                         );
+
                         #$ii = &get_indicator( $region, '2005', 1 );
                         #is_deeply( $ii, [ 1 + 55 + 666 ], 'valor active_value=0 para 2005 tabem existe' );
 

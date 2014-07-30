@@ -181,8 +181,6 @@ sub action_specs {
                         # apaga os ativos, **provavelmente** calculados
                         $rs->search( { generated_by_compute => 1 } )->delete;
 
-
-
                         # altera todos os nao computados para ativos
                         $rs->search( { generated_by_compute => undef } )->update( { active_value => 1 } );
 
@@ -203,9 +201,8 @@ sub action_specs {
                             }
                         );
 
-
                         $rs->search( { active_value => 1, generated_by_compute => undef } )
-                            ->update( { active_value => 0 } );
+                          ->update( { active_value => 0 } );
 
                     }
 

@@ -114,8 +114,9 @@ sub action_specs {
 
             #use DDP; p $recalc;
             if ($recalc) {
-            #$Iota::IndicatorData::DEBUG=1;
-            #print STDERR "\n\n\n\n\n" x 10;
+
+                #$Iota::IndicatorData::DEBUG=1;
+                #print STDERR "\n\n\n\n\n" x 10;
                 my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
                 $data->upsert(

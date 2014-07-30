@@ -34,27 +34,27 @@ eval {
             my $inst = $schema->resultset('Institute')->create(
                 {
                     active_me_when_empty => 1,
-                    name => 'name',
-                    short_name => 'short_name',
+                    name                 => 'name',
+                    short_name           => 'short_name',
 
                 }
             );
             my $net = $schema->resultset('Network')->create(
                 {
-                    name => 'name',
-                    name_url => 'short_name',
-                    domain_name => 'domain_name',
-                    created_by => 1,
+                    name         => 'name',
+                    name_url     => 'short_name',
+                    domain_name  => 'domain_name',
+                    created_by   => 1,
                     institute_id => $inst->id,
                 }
             );
 
             my $u = $schema->resultset('User')->create(
                 {
-                    name => 'name',
-                    email => 'email@email.com',
-                    institute_id => $inst->id,
-                    password => '!!!',
+                    name            => 'name',
+                    email           => 'email@email.com',
+                    institute_id    => $inst->id,
+                    password        => '!!!',
                     regions_enabled => 1
                 }
             );
@@ -63,7 +63,7 @@ eval {
 
             $ENV{HARNESS_ACTIVE_institute_id} = $inst->id;
 
-            $Iota::TestOnly::Mock::AuthUser::_id    = $u->id;
+            $Iota::TestOnly::Mock::AuthUser::_id = $u->id;
 
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
@@ -251,19 +251,23 @@ eval {
             is( $rows[0]->variation_name, 'faixa0', 'faixa ok' );
             is( $rows[0]->value,          '19',     'valor ok' );
             is( $rows[0]->region_id,      $reg1->{id} );
-            is( $rows[0]->generated_by_compute, 0 );
+
+            #is( $rows[0]->generated_by_compute, 0 );
 
             is( $rows[1]->variation_name, 'faixa1', 'faixa ok' );
             is( $rows[1]->value,          '21',     'valor ok' );
 
-            is( $rows[1]->region_id,            $reg1->{id} );
-            is( $rows[1]->generated_by_compute, 0 );
+            is( $rows[1]->region_id, $reg1->{id} );
 
-            is( $rows[2]->region_id,            $reg0->{id} );
-            is( $rows[2]->generated_by_compute, 1 );
+            #is( $rows[1]->generated_by_compute, 0 );
 
-            is( $rows[3]->region_id,            $reg0->{id} );
-            is( $rows[3]->generated_by_compute, 1 );
+            is( $rows[2]->region_id, $reg0->{id} );
+
+            #is( $rows[2]->generated_by_compute, 1 );
+
+            is( $rows[3]->region_id, $reg0->{id} );
+
+            #is( $rows[3]->generated_by_compute, 1 );
 
             my $period = &_get( 200,
                     '/api/indicator/'

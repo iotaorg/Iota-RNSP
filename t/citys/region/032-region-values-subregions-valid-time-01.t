@@ -35,27 +35,27 @@ eval {
             my $inst = $schema->resultset('Institute')->create(
                 {
                     active_me_when_empty => 1,
-                    name => 'name',
-                    short_name => 'short_name',
+                    name                 => 'name',
+                    short_name           => 'short_name',
 
                 }
             );
             my $net = $schema->resultset('Network')->create(
                 {
-                    name => 'name',
-                    name_url => 'short_name',
-                    domain_name => 'domain_name',
-                    created_by => 1,
+                    name         => 'name',
+                    name_url     => 'short_name',
+                    domain_name  => 'domain_name',
+                    created_by   => 1,
                     institute_id => $inst->id,
                 }
             );
 
             my $u = $schema->resultset('User')->create(
                 {
-                    name => 'name',
-                    email => 'email@email.com',
-                    institute_id => $inst->id,
-                    password => '!!!',
+                    name            => 'name',
+                    email           => 'email@email.com',
+                    institute_id    => $inst->id,
+                    password        => '!!!',
                     regions_enabled => 1
                 }
             );
@@ -64,7 +64,7 @@ eval {
 
             $ENV{HARNESS_ACTIVE_institute_id} = $inst->id;
 
-            $Iota::TestOnly::Mock::AuthUser::_id    = $u->id;
+            $Iota::TestOnly::Mock::AuthUser::_id = $u->id;
 
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
@@ -198,8 +198,9 @@ eval {
                         &add_value( $reg3_uri, '82', '2005' );
 
                         &add_value( $reg2_uri, '95', '2006' );
-                        $Iota::IndicatorData::DEBUG=1;
+                        $Iota::IndicatorData::DEBUG = 1;
                         &add_value( $reg3_uri, '94', '2006' );
+
 =pod
                         $ii = &get_indicator( $reg1, '2002' );
                         is_deeply( $ii, ['101'], 'valor de 2002 ativo' );
@@ -221,7 +222,7 @@ eval {
                         $ii = &get_indicator( $reg1, '2005' );
                         is_deeply( $ii, [ 1 + 80 + 82 ], 'valor de 2005 ativo eh a soma' );
 
-                        $Iota::IndicatorData::DEBUG=0;
+                        $Iota::IndicatorData::DEBUG = 0;
 
                         #$ii = &get_indicator( $reg1, '2005', 1 );
                         #is_deeply( $ii, [], 'nao existe valor active_value=0 para 2005' );
@@ -334,7 +335,7 @@ sub get_indicator {
           . '&active_value='
           . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
-    use DDP; p $res;
+
     my $list = eval { from_json( $res->content ) };
     $list = &get_the_key( &get_the_key( &get_the_key($list) ) )->{indicadores}[0]{valores};
 
