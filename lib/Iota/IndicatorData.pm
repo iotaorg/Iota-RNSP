@@ -307,7 +307,7 @@ use DDP; p $region_level if $DEBUG;
             }
 
             if ( scalar @upper_regions ) {
-
+#print STDERR "-" x 100, "\n";
             use DDP; p \@upper_regions if $DEBUG;
                 $self->upsert(
                     %params,
@@ -362,8 +362,9 @@ sub get_regions_meta {
 sub _merge_regions_values {
     my ( $self, %conf ) = @_;
 
-    return unless $conf{sum}{1};
-use DDP; p $conf{institutes};
+    #return unless $conf{sum}{1};
+
+    use DDP; p $conf{institutes} if $DEBUG;
     use DDP; p "aaaaaaaaaaa" if $DEBUG;
     use DDP; p $conf{inputed} if $DEBUG;
     # corre a soma, e transforma o inputed em 1 se nao existir.
@@ -413,9 +414,9 @@ use DDP; p $conf{institutes};
         }
     }
 
-
     use DDP; p "cccccccc" if $DEBUG;
     use DDP; p $conf{inputed} if $DEBUG;
+
 
 }
 

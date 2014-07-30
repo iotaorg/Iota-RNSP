@@ -112,8 +112,7 @@ sub list_GET {
     }
 
     my @list = $rs->as_hashref->all;
-    use DDP;
-    p \@list;
+
     my @objs;
     my $region_id = exists $c->req->params->{region_id} ? $c->req->params->{region_id} : undef;
     my $vtable = $region_id ? 'region_variable_values' : 'values';

@@ -32,11 +32,39 @@ eval {
     $schema->txn_do(
         sub {
 
-            $schema->resultset('Institute')->update(
+            my $inst = $schema->resultset('Institute')->create(
                 {
-                    active_me_when_empty => 1
+                    active_me_when_empty => 1,
+                    name => 'name',
+                    short_name => 'short_name',
+
                 }
             );
+            my $net = $schema->resultset('Network')->create(
+                {
+                    name => 'name',
+                    name_url => 'short_name',
+                    domain_name => 'domain_name',
+                    created_by => 1,
+                    institute_id => $inst->id,
+                }
+            );
+
+            my $u = $schema->resultset('User')->create(
+                {
+                    name => 'name',
+                    email => 'email@email.com',
+                    institute_id => $inst->id,
+                    password => '!!!',
+                    regions_enabled => 1
+                }
+            );
+            $u->add_to_user_roles( { role => { name => 'admin' } } );
+            $u->add_to_network_users( { network_id => $net->id } );
+
+            $ENV{HARNESS_ACTIVE_institute_id} = $inst->id;
+
+            $Iota::TestOnly::Mock::AuthUser::_id    = $u->id;
 
             my ( $res, $c );
             ( $res, $c ) = ctx_request(
@@ -265,7 +293,7 @@ sub add_value {
 
     my ( $res, $c ) = ctx_request($req);
 
-    exit if $expcode == 404;
+    #exit if $expcode == 404;
     ok( $res->is_success, 'variable value created' ) if $expcode == 201;
     is( $res->code, $expcode, 'response code is ' . $expcode );
     my $id = eval { from_json( $res->content ) };
@@ -306,6 +334,7 @@ sub get_indicator {
           . '&active_value='
           . $not );
     is( $res->code, 200, 'list the values exists -- 200 Success' );
+    use DDP; p $res;
     my $list = eval { from_json( $res->content ) };
     $list = &get_the_key( &get_the_key( &get_the_key($list) ) )->{indicadores}[0]{valores};
 

@@ -23,9 +23,6 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
     $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
 
-    use DDP;
-    p $c->stash->{object};
-
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
