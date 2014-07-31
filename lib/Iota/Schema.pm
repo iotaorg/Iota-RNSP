@@ -26,7 +26,7 @@ sub AUTOLOAD {
             $self->storage->dbh->selectrow_hashref( "select * from $name ( " . substr( '?,' x @args, 0, -1 ) . ')',
                 undef, @args );
         };
-        do { print $@; return undef } if $@;
+        do { print STDERR $@; return undef } if $@;
         return $res;
     };
     goto &$AUTOLOAD;
@@ -49,7 +49,7 @@ sub get_weeks_of_year {
         ", { Slice => {} }, $year, $year, $year, $year
         );
     };
-    do { print $@; return undef } if $@;
+    do { print STDERR $@; print $@; return undef } if $@;
 
     return $res;
 }
@@ -58,11 +58,11 @@ sub f_compute_all_upper_regions {
     my ($self) = @_;
     my $res = eval {
         $self->storage->dbh->selectall_arrayref(
-            "SELECT compute_upper_regions( ARRAY(select id from region where depth_level = 3 )::int[] );
+"SELECT compute_upper_regions( ARRAY(select id from region where depth_level = 3 )::int[], null, null, null, 3 );
         ", { Slice => {} }
         );
     };
-    do { die $@; return undef } if $@;
+    do { print STDERR $@; die $@; return undef } if $@;
 
     return $res;
 }

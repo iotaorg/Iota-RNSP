@@ -87,7 +87,11 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     # gambiarra pra ter rede nos testes..
     if ( exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} ) {
-        $net = $c->model('DB::Network')->search( { institute_id => 1 } )->first;
+        $net =
+          $c->model('DB::Network')
+          ->search(
+            { institute_id => exists $ENV{HARNESS_ACTIVE_institute_id} ? $ENV{HARNESS_ACTIVE_institute_id} : 1 } )
+          ->first;
     }
 
     $c->detach( '/error_404', [ $c->loc('Nenhuma rede para o dominio') . ' ' . $domain . '!' ] ) unless $net;

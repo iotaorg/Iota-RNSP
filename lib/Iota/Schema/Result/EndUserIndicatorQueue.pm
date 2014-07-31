@@ -119,17 +119,11 @@ __PACKAGE__->table("end_user_indicator_queue");
   data_type: 'character varying[]'
   is_nullable: 1
 
-=head2 active_value
+=head2 values_used
 
-  data_type: 'boolean'
-  default_value: true
-  is_nullable: 0
-
-=head2 generated_by_compute
-
-  data_type: 'boolean'
-  default_value: false
-  is_nullable: 0
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
 
 =cut
 
@@ -185,10 +179,12 @@ __PACKAGE__->add_columns(
   },
   "sources",
   { data_type => "character varying[]", is_nullable => 1 },
-  "active_value",
-  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
-  "generated_by_compute",
-  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "values_used",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -221,8 +217,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-07-22 10:07:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z3zyP8+k3Gcg+MVvZ1sPsg
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-07-28 12:28:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LvJuSFqaX7OIwy68x/Rz3w
 
 
 __PACKAGE__->belongs_to(

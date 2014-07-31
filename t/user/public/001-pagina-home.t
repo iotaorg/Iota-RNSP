@@ -261,6 +261,8 @@ eval {
             ( $res, $c ) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator' );
             $obj = eval { from_json( $res->content ) };
 
+            #use DDP;
+            #p $obj;
             is( $obj->{resumos}{'Bens Naturais Comuns'}{weekly}{datas}[0]{data},
                 '2012-01-08', 'data da primeira semana ok' );
             is( join( ',', @{ $obj->{resumos}{'Bens Naturais Comuns'}{weekly}{indicadores}[0]{valores} } ),

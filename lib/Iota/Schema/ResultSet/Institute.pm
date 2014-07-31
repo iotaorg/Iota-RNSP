@@ -112,14 +112,18 @@ sub action_specs {
                 $var->users->update( { can_create_indicators => 1 } );
             }
 
+            #use DDP; p $recalc;
             if ($recalc) {
+
+                #$Iota::IndicatorData::DEBUG=1;
+                #print STDERR "\n\n\n\n\n" x 10;
                 my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
                 $data->upsert(
                     regions_id => [
                         map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
                             {
-                                depth_level => 3
+                                depth_level => $_
                             },
                             {
                                 columns      => ['id'],
@@ -127,7 +131,8 @@ sub action_specs {
                             }
                         )->all
                     ],
-                );
+                ) for ( 3, 2 );
+
             }
 
             return $var;

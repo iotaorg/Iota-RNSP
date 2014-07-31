@@ -498,6 +498,8 @@ sub kml_file_POST {
             die "no upload found\n";
         }
     };
+
+    print STDERR " >>>>> $@" if $@;
     $c->res->body( to_json( { error => "$@" } ) ) if $@;
 
     $c->detach;

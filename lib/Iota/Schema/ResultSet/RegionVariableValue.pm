@@ -368,7 +368,7 @@ sub _put {
         }
     }
     elsif ( $region->depth_level == 3 ) {
-        my $upper = $region->upper_region;
+        my $upper = $region->upper_region->discard_changes;
 
         die "upper region valid date cannot be null\n" unless ( $upper->subregions_valid_after );
         die
