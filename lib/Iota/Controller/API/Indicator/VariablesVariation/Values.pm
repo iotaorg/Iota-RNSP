@@ -146,7 +146,9 @@ sub values_DELETE {
             dates   => [ $obj->valid_from->datetime ],
             user_id => $obj->user_id,
 
-            ( regions_id => [ $obj->region_id ] ) x !!$obj->region_id
+            ( regions_id => [ $obj->region_id ] ) x !!$obj->region_id,
+            variables_variations_ids => [ $obj->indicator_variables_variation_id  ],
+
         };
 
         $obj->delete;

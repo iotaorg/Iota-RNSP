@@ -147,7 +147,8 @@ sub variable_DELETE {
         my $conf = {
             indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
             dates      => [ $object->valid_from->datetime ],
-            user_id    => $object->user_id
+            user_id    => $object->user_id,
+            variables_ids => [$object->variable_id],
         };
 
         $object->delete;

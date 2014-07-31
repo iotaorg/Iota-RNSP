@@ -59,39 +59,26 @@ sub upsert {
 
         my %region_by_lvl;
 
-        # apenas carrega se for necessario
-        unless ( exists $params{generated_by_compute} ) {
 
-            my %uppers;
-            my $rs = $self->schema->resultset('Region')->search(
-                {
-                    id => { 'in' => $params{regions_id} }
-                },
-                { columns => [ 'id', 'depth_level', 'upper_region', 'name' ] }
-            )->as_hashref;
-            while ( my $r = $rs->next ) {
-                push @{ $region_by_lvl{ $r->{depth_level} } }, $r->{id};
-                $uppers{ $r->{upper_region} }++ if $r->{upper_region};
-            }
+        my $uppers;
+        my $rs = $self->schema->resultset('Region')->search(
+            {
+                id => { 'in' => $params{regions_id} }
+            },
+            { columns => [ 'id', 'depth_level', 'upper_region', 'name' ] }
+        )->as_hashref;
+        while ( my $r = $rs->next ) {
+            push @{ $region_by_lvl{ $r->{depth_level} } }, $r->{id};
 
-            if ( keys %uppers ) {
-                $rs = $self->schema->resultset('Region')->search(
-                    {
-                        id => { 'in' => [ keys %uppers ] }
-                    },
-                    { columns => ['id'] }
-                )->as_hashref;
-                while ( my $r = $rs->next ) {
-                    push @upper_regions, $r->{id};
-                }
-            }
-
+            $uppers->{ $r->{depth_level} }{ $r->{upper_region} }++ if $r->{upper_region} && $r->{upper_region} != $r->{id};
         }
 
         #use DDP; p \%region_by_lvl if $DEBUG;
-        die("can't re-compile more than 2 regions levels at once") if keys %region_by_lvl > 1;
+        die("Can't upsert more than 1 depth_level at once. Please contact admin of the system.") if keys %region_by_lvl > 1;
 
         my ($region_level) = keys %region_by_lvl;
+
+        @upper_regions = keys %{$uppers->{ $region_level } || {}};
 
         #use DDP; p "region_level $region_level" if $DEBUG;
         # se esta consolidando por região,
@@ -107,7 +94,8 @@ sub upsert {
             # se enviado nulo, o parametro são considerados todas as variaveis ou leveis
             my $ret = $self->schema->compute_upper_regions(
                 $region_by_lvl{$region_level},
-                $params{variables_ids}, $params{variables_variations_ids},
+                $params{variables_ids},
+                $params{variables_variations_ids},
                 $params{dates}, $region_level
             );
             if ( !$ret ) {
@@ -231,7 +219,7 @@ sub upsert {
     undef $institutes_conf;
     undef $user_vs_institute;
 
-    my ( $variation_var_per_ind, $variation_variables ) =
+    my ( $variation_var_per_ind ) =
       $self->_get_indicator_var_variables( indicators => \@indicators );
 
     my $results = $self->_get_indicator_values(
@@ -624,12 +612,13 @@ sub _get_indicator_var_variables {
       ->search( { indicator_id => { 'in' => \@indicator_ids }, } )->as_hashref;
 
     my $out  = {};
-    my $out2 = {};
+    #my $out2 = {};
     while ( my $row = $variables_rs->next ) {
         $out->{ $row->{indicator_id} }{ $row->{id} } = $row->{name};
-        $out2->{ $row->{id} } = 1;
+     #   $out2->{ $row->{id} } = 1;
     }
-    return ( $out, $out2 );
+
+    return ( $out,  );
 }
 
 sub _get_indicator_values {

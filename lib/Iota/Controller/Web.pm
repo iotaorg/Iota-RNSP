@@ -646,7 +646,7 @@ sub stash_comparacao_distritos : Private {
             my $definidos = [ grep { defined $_->{num} } @$distritos ];
 
             # melhor = mais alto, entao inverte as cores
-            if ( $indicator->{sort_direction} eq 'greater value' ) {
+            if ( !$indicator->{sort_direction} || $indicator->{sort_direction} eq 'greater value' ) {
                 $_->{i} = 4 - $_->{i} for @$definidos;
                 $distritos =
                   [ ( reverse grep { defined $_->{num} } @$distritos ), grep { !defined $_->{num} } @$distritos ];

@@ -106,24 +106,29 @@ sub variable_DELETE {
             indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
             dates      => [ $object->valid_from->datetime ],
             user_id    => $object->user_id,
-            region_id  => $object->region_id
-        };
+            region_id  => $object->region_id,
 
+            variables_ids => [ $object->variable_id ],
+        };
+=pod
         my $conf2;
         if ( $object->region->get_column('upper_region') ) {
             $conf2 = {
                 indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
                 dates      => [ $object->valid_from->datetime ],
                 user_id    => $object->user_id,
-                region_id  => $object->region->get_column('upper_region')
+                region_id  => $object->region->get_column('upper_region'),
+
+                variables_ids => [ $object->variable_id ],
+
             };
         }
-
+=cut
         $object->delete;
 
         # apaga os dados dos indicadores, ja q o valor nao existe mais
         $data->upsert(%$conf);
-        $data->upsert(%$conf2);
+        #$data->upsert(%$conf2);
 
     }
 
@@ -225,7 +230,7 @@ sub list_PUT {
 
     my $dm = eval { $c->model('DataManager') };
     if ( $@ && $@ =~ /\n$/ ) {
-        $self->status_bad_request( $c, message => $@ ), $c->detach;
+        $self->status_bad_request( $c, message => "$@" ), $c->detach;
     }
     elsif ($@) {
         die $@;
@@ -236,7 +241,7 @@ sub list_PUT {
 
     my $objectect = eval { $dm->get_outcome_for('region.variable.value.put') };
     if ( $@ && $@ =~ /\n$/ ) {
-        $self->status_bad_request( $c, message => $@ ), $c->detach;
+        $self->status_bad_request( $c, message => "$@" ), $c->detach;
     }
     elsif ($@) {
         die $@;
