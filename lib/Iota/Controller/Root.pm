@@ -81,7 +81,7 @@ sub error_404 : Private {
 
     $c->stash->{message} = ( $foo ? $foo : $x->path );
 
-    if ( $foo =~ /Nenhuma rede/ ) {
+    if ( $foo && $foo =~ /Nenhuma rede/ ) {
         $c->stash->{networks} = [
             $c->model('DB::Network')->search(
                 {
