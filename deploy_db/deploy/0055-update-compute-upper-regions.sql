@@ -184,8 +184,8 @@ $BODY$
 
 truncate indicator_value;
 
-DROP INDEX ix_indicator_value__value_unique;
-DROP INDEX ix_indicator_value__value_unique_region;
+DROP INDEX IF EXISTS ix_indicator_value__value_unique ;
+DROP INDEX IF EXISTS ix_indicator_value__value_unique_region;
 
 
 CREATE UNIQUE INDEX ix_indicator_value__value_unique
