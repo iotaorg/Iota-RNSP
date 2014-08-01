@@ -94,9 +94,9 @@ sub list_POST {
                     $per_variable->{$var_id} = $ok;
 
                     $data->upsert(
-                        indicators => [ $data->indicators_from_variables( variables => [$var_id] ) ],
-                        dates      => [@dates],
-                        user_id    => $me->id,
+                        indicators    => [ $data->indicators_from_variables( variables => [$var_id] ) ],
+                        dates         => [@dates],
+                        user_id       => $me->id,
                         variables_ids => [$var_id],
                     );
                 }

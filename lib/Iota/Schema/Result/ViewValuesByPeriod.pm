@@ -18,11 +18,11 @@ __PACKAGE__->result_source_instance->is_virtual(1);
 __PACKAGE__->result_source_instance->view_definition(
     q[
     with vperiods as (
-    select valid_from, variable_id, user_id
-    from variable_value x
-    where x.variable_id in (select * from UNNEST(?::int[]))
-    and user_id = ?
-    group by 1,2,3
+        select valid_from, variable_id, user_id
+        from variable_value x
+        where x.variable_id in (select * from UNNEST(?::int[]))
+        and user_id = ?
+        group by 1,2,3
     )
     select
         p.variable_id,
