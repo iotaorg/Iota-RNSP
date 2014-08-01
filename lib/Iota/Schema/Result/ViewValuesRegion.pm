@@ -34,7 +34,7 @@ __PACKAGE__->result_source_instance->view_definition(
         variation_name,
         pp.valid_from,
         r.name,
-        value::numeric as num,
+        CASE WHEN i.variable_type = 'str' THEN '1' ELSE value END as num,
         polygon_path,
         r.name_url,
         r.id
@@ -43,6 +43,7 @@ __PACKAGE__->result_source_instance->view_definition(
     join tregions x on x.id=r.id
     CROSS join periods pp
     left join indicator_value v on r.id = v.region_id and v.city_id = (select city_id from "user" where id = ?) and v.indicator_id = ? and pp.valid_from = v.valid_from
+    join indicator i on i.id = v.indicator_id
 
     order by num
 ]
