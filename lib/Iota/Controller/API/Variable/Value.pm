@@ -145,10 +145,10 @@ sub variable_DELETE {
         my $data = Iota::IndicatorData->new( schema => $c->model('DB')->schema );
 
         my $conf = {
-            indicators => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
-            dates      => [ $object->valid_from->datetime ],
-            user_id    => $object->user_id,
-            variables_ids => [$object->variable_id],
+            indicators    => [ $data->indicators_from_variables( variables => [ $object->variable_id ] ) ],
+            dates         => [ $object->valid_from->datetime ],
+            user_id       => $object->user_id,
+            variables_ids => [ $object->variable_id ],
         };
 
         $object->delete;

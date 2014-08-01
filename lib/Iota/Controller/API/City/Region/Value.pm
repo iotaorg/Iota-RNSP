@@ -110,6 +110,7 @@ sub variable_DELETE {
 
             variables_ids => [ $object->variable_id ],
         };
+
 =pod
         my $conf2;
         if ( $object->region->get_column('upper_region') ) {
@@ -124,10 +125,12 @@ sub variable_DELETE {
             };
         }
 =cut
+
         $object->delete;
 
         # apaga os dados dos indicadores, ja q o valor nao existe mais
         $data->upsert(%$conf);
+
         #$data->upsert(%$conf2);
 
     }

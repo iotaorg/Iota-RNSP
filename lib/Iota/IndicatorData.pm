@@ -59,7 +59,6 @@ sub upsert {
 
         my %region_by_lvl;
 
-
         my $uppers;
         my $rs = $self->schema->resultset('Region')->search(
             {
@@ -70,15 +69,17 @@ sub upsert {
         while ( my $r = $rs->next ) {
             push @{ $region_by_lvl{ $r->{depth_level} } }, $r->{id};
 
-            $uppers->{ $r->{depth_level} }{ $r->{upper_region} }++ if $r->{upper_region} && $r->{upper_region} != $r->{id};
+            $uppers->{ $r->{depth_level} }{ $r->{upper_region} }++
+              if $r->{upper_region} && $r->{upper_region} != $r->{id};
         }
 
         #use DDP; p \%region_by_lvl if $DEBUG;
-        die("Can't upsert more than 1 depth_level at once. Please contact admin of the system.") if keys %region_by_lvl > 1;
+        die("Can't upsert more than 1 depth_level at once. Please contact admin of the system.")
+          if keys %region_by_lvl > 1;
 
         my ($region_level) = keys %region_by_lvl;
 
-        @upper_regions = keys %{$uppers->{ $region_level } || {}};
+        @upper_regions = keys %{ $uppers->{$region_level} || {} };
 
         #use DDP; p "region_level $region_level" if $DEBUG;
         # se esta consolidando por região,
@@ -94,8 +95,7 @@ sub upsert {
             # se enviado nulo, o parametro são considerados todas as variaveis ou leveis
             my $ret = $self->schema->compute_upper_regions(
                 $region_by_lvl{$region_level},
-                $params{variables_ids},
-                $params{variables_variations_ids},
+                $params{variables_ids}, $params{variables_variations_ids},
                 $params{dates}, $region_level
             );
             if ( !$ret ) {
@@ -219,8 +219,7 @@ sub upsert {
     undef $institutes_conf;
     undef $user_vs_institute;
 
-    my ( $variation_var_per_ind ) =
-      $self->_get_indicator_var_variables( indicators => \@indicators );
+    my ($variation_var_per_ind) = $self->_get_indicator_var_variables( indicators => \@indicators );
 
     my $results = $self->_get_indicator_values(
         indicators => \@indicators,
@@ -611,14 +610,16 @@ sub _get_indicator_var_variables {
       $self->schema->resultset('IndicatorVariablesVariation')
       ->search( { indicator_id => { 'in' => \@indicator_ids }, } )->as_hashref;
 
-    my $out  = {};
+    my $out = {};
+
     #my $out2 = {};
     while ( my $row = $variables_rs->next ) {
         $out->{ $row->{indicator_id} }{ $row->{id} } = $row->{name};
-     #   $out2->{ $row->{id} } = 1;
+
+        #   $out2->{ $row->{id} } = 1;
     }
 
-    return ( $out,  );
+    return ( $out, );
 }
 
 sub _get_indicator_values {
