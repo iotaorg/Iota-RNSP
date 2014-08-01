@@ -39,13 +39,16 @@ sub process {
 
     my @vars_db =
       $schema->resultset('Variable')
-      ->search( { id => { in => [ keys %varids ] } }, { select => [qw/id period/], as => [qw/id period/] } )
+      ->search( { id => { in => [ keys %varids ] } }, { select => [qw/id period type/], as => [qw/id period type/] } )
       ->as_hashref->all;
+    my %var_vs_id = map { $_->{id} => $_ } @vars_db;
 
     my %regsids = map { $_->{region_id} => 1 } grep { $_->{region_id} } @{ $parse->{rows} };
     my @regs_db =
       $schema->resultset('Region')
-      ->search( { id => { in => [ keys %regsids ] } }, { select => [qw/id/], as => [qw/id/] } )->as_hashref->all;
+      ->search( { id => { in => [ keys %regsids ] } }, { select => [qw/id depth_level/], as => [qw/id depth_level/] } )->as_hashref->all;
+
+    my %reg_vs_id = map { $_->{id} => $_ } @regs_db;
 
     # se tem menos variaveis no banco do que as enviadas
     if ( @vars_db < keys %varids ) {
@@ -92,8 +95,23 @@ sub process {
 
                 # percorre as linhas e insere no banco
                 # usando o modelo certo.
+                my $c = 0;
 
                 foreach my $r ( @{ $parse->{rows} } ) {
+                    $c++;
+
+                    my $variable = $var_vs_id{$r->{id}};
+
+                    my $type = $variable->{type};
+
+                    my $old_value = $r->{value};
+
+                    $r->{value} = $self->_verify_variable_type($r->{value}, $type);
+
+                    if (!defined $r->{value}){
+                        $status = "Valor '$old_value' não é um número válido [registro número $c]. Por favor, envie formatado corretamente.";
+                      #  die "invalid number";
+                    }
 
                     my $ref = {
                         do_not_calc => 1,
@@ -123,7 +141,7 @@ sub process {
 
                         eval { $vv_rs->_put( $periods{ $r->{id} }, %$ref ); };
                     }
-                    $status .= $@ if $@;
+                    $status .= "$@" if $@;
                     die $@ if $@;
                 }
                 my $data = Iota::IndicatorData->new( schema => $schema->schema );
@@ -157,6 +175,40 @@ sub process {
         file_id => $file_id
     };
 
+}
+
+sub _verify_variable_type {
+    my ($self, $value, $type) = @_;
+
+    return $value if $type eq 'str';
+
+    # certo, entao agora o type é int ou num.
+
+    # vamos tratar o caso mais comum, que é [0-9]{1,3}\.[0-9]{1,3},[0-9]
+    if ($value =~ /[0-9]{1,3}\.[0-9]{1,3},[0-9]{1,9}$/){
+        $value =~ s/\.//g;
+        $value =~ s/,/./;
+    }
+    # valores só com virgula.. eh . no banco..
+    elsif ($value =~ /^[0-9]{1,15},[0-9]{1,9}$/){
+
+        $value =~ s/,/./;
+    }
+    # e agora o inverso... usou , e depois um .
+    elsif ($value =~ /[0-9]{1,3}\,[0-9]{1,3}.[0-9]{1,9}$/){
+        $value =~ s/,//g;
+        $value =~ s/\./,/;
+    }
+
+    # se parece com numero ?
+    if ($value =~ /^[0-9]{1,15}\.[0-9]{1,9}$/ || $value =~ /^[0-9]{1,15}$/){
+
+        $value = int($value) if $type eq 'int';
+
+        return $value;
+    }
+    # retorna undef.
+    undef();
 }
 
 1;
