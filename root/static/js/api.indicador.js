@@ -389,7 +389,7 @@ $(document).ready(function () {
 
                             if (vv.name == $('#variation').val()) {
                                 valor = vv.value;
-                                valoresxx = vv.original;
+                                valoresxx = vv.variations_values;
                             }
                         });
 
@@ -401,13 +401,13 @@ $(document).ready(function () {
                                 if (valoresxx == undefined || valoresxx[id] == undefined || valoresxx[id] === '' || valoresxx[id] == '-') {
                                     history_table += "<td class='formula_valor'>-</td>";
                                 } else {
-                                    var format_value = parseFloat(valoresxx[id]);
+                                    var format_value = parseFloat(valoresxx[id]['value']);
                                     var format_string = "#,##0.##";
                                     if (format_value.toFixed(2) === 0) {
                                         format_string = "#,##0.###";
                                     }
                                     history_table += "<td class='formula_valor'>$$valor</td>".render({
-                                        valor: $.formatNumberCustom(valoresxx[id], {
+                                        valor: $.formatNumberCustom(format_value, {
                                             format: format_string,
                                             locale: "br"
                                         })
