@@ -34,7 +34,7 @@ __PACKAGE__->result_source_instance->view_definition(
         variation_name,
         pp.valid_from,
         r.name,
-        CASE WHEN i.variable_type = 'str' THEN '1' ELSE value END as num,
+        (CASE WHEN i.variable_type = 'str' THEN '1' ELSE value END)::numeric as num,
         polygon_path,
         r.name_url,
         r.id
