@@ -38,16 +38,16 @@ sub iterate {
             next unless defined $r->{num};
             my $num = $r->{num};
 
-            if ( $order[0] && $num < $order[0] ) {
+            if (  $num < $order[0] ) {
                 $r->{i} = 0;
             }
-            elsif ( $order[1] && $num < $order[1] ) {
+            elsif (  $num < $order[1] ) {
                 $r->{i} = 1;
             }
-            elsif ( $order[2] && $num < $order[2] ) {
+            elsif ( $num < $order[2] ) {
                 $r->{i} = 2;
             }
-            elsif ( $order[3] && $num < $order[3] ) {
+            elsif ( $num < $order[3] ) {
                 $r->{i} = 3;
             }
             else {
