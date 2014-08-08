@@ -155,7 +155,6 @@ sub indicator_GET {
 
               visibility_level
               visibility_user_id
-              visibility_country_id
 
               featured_in_home
 
@@ -169,6 +168,10 @@ sub indicator_GET {
 
         $object_ref->visibility_level eq 'restrict'
         ? ( restrict_to_users => [ map { $_->user_id } $object_ref->indicator_user_visibilities ] )
+        : (),
+
+        $object_ref->visibility_level eq 'network'
+        ? ( restrict_to_networks => [ map { $_->network_id } $object_ref->indicator_network_visibilities ] )
         : (),
 
     };
