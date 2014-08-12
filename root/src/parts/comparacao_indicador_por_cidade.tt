@@ -10,7 +10,7 @@
             <dd>[%l(indicator.formula_human)%]</dd>
             [%IF indicator.goal_explanation%]
                 <dt>[%l('Referência de Meta')%]:</dt>
-                <dd>[%l(indicator.goal_explanation)%]
+                <dd>[%l(indicator.goal_explanation)|none%]
                     [%IF indicator.goal_source%]<blockquote><small><cite title="[%l('Fonte da meta')%]">[%l(indicator.goal_source)%]</cite></small></blockquote>[%END%]
                 </dd>
             [%END%]
