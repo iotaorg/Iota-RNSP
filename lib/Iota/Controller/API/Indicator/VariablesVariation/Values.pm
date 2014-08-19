@@ -258,7 +258,7 @@ sub list_POST {
 
     my $obj = eval { $dm->get_outcome_for('indicator.variation_value.create') };
     if ( $@ && $@ =~ /\n$/ ) {
-        $self->status_bad_request( $c, message => $@ ), $c->detach;
+        $self->status_bad_request( $c, message => "$@" ), $c->detach;
     }
     elsif ($@) {
         die $@;
