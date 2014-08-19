@@ -247,7 +247,7 @@ sub list_POST {
 
     my $dm = eval { $c->model('DataManager') };
     if ( $@ && $@ =~ /\n$/ ) {
-        $self->status_bad_request( $c, message => $@ ), $c->detach;
+        $self->status_bad_request( $c, message => "$@" ), $c->detach;
     }
     elsif ($@) {
         die $@;
