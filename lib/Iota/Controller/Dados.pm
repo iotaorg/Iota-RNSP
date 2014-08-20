@@ -435,6 +435,8 @@ sub download_indicators_GET {
     while ( my $row = $data_rs->next ) {
         $row->{period}     = $self->_period_pt( $row->{period} );
         $row->{valid_from} = $self->ymd2dmy( $row->{valid_from} );
+        $row->{values_used} = eval{decode_json($row->{values_used})};
+
         push @objs, $row;
     }
 

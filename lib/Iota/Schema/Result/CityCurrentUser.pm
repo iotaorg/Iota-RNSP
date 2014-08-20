@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::CityCurrentUser;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,8 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 
 =head1 TABLE: C<city_current_user>
 
@@ -53,12 +53,15 @@ __PACKAGE__->table("city_current_user");
 =cut
 
 __PACKAGE__->add_columns(
-    "city_id", { data_type => "integer", is_nullable => 1 },
-    "user_id", { data_type => "integer", is_nullable => 1 },
+  "city_id",
+  { data_type => "integer", is_nullable => 1 },
+  "user_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z9VwP8eJgfMDW2Jy0D1laQ
+
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-08-20 15:33:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:t3QI1FdfoMMlq4T0LKzQMQ
 
 __PACKAGE__->add_columns(
     "city_id", { data_type => "integer", is_nullable => 0 },

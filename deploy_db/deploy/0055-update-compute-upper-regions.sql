@@ -3,7 +3,7 @@
 
 BEGIN;
 
-DROP FUNCTION compute_upper_regions(integer[], integer[], integer[], date[]);
+DROP FUNCTION compute_upper_regions(integer[], integer[], integer[], date[]) ;
 
 -- drop FUNCTION compute_upper_regions(_ids integer[], _var_ids integer[], _var_variation_ids integer[], _dates date[], _cur_level int);
 CREATE OR REPLACE FUNCTION compute_upper_regions(_ids integer[], _var_ids integer[], _var_variation_ids integer[], _dates date[], _cur_level int)

@@ -15,7 +15,7 @@ __PACKAGE__->add_columns(
       city_id city_name variable_id type cognomen period exp_source
       is_basic measurement_unit_name name valid_from value observations
       source user_id institute_id
-      region_name region_id
+      region_name region_id active_value generated_by_compute
       /
 );
 
@@ -44,7 +44,9 @@ __PACKAGE__->result_source_instance->view_definition(
         i.id as institute_id,
         r.name as region_name,
         r.id as region_id,
-        vv.created_at as updated_at
+        vv.created_at as updated_at,
+        vv.active_value,
+        vv.generated_by_compute
 
     from region_variable_value vv
     join region r on vv.region_id = r.id
@@ -77,7 +79,9 @@ __PACKAGE__->result_source_instance->view_definition(
         i.id as institute_id,
         r.name as region_name,
         r.id as region_id,
-        vv.created_at as updated_at
+        vv.created_at as updated_at,
+        vv.active_value,
+        vv.generated_by_compute
 
     from indicator_variables_variations_value vv
     join region r on vv.region_id = r.id

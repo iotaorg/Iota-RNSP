@@ -160,7 +160,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<user_value_period_key>
+=head2 C<ix_variable_value>
 
 =over 4
 
@@ -174,10 +174,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint(
-  "user_value_period_key",
-  ["variable_id", "user_id", "valid_from"],
-);
+__PACKAGE__->add_unique_constraint("ix_variable_value", ["variable_id", "user_id", "valid_from"]);
 
 =head1 RELATIONS
 
@@ -252,8 +249,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 15:21:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dGp5IwKq8QuTo4Kog/SC8w
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-08-20 15:33:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IWdRneVl1s1u37pwza+yQw
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",
