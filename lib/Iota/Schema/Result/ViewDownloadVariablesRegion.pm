@@ -55,8 +55,7 @@ __PACKAGE__->result_source_instance->view_definition(
     join network n on n.id = nu.network_id
     join institute i on i.id = n.institute_id
     join city c on c.id = u.city_id
-    --where value is not null and value != ''
-    where vv.region_id = ?
+
     union all
     SELECT
 
@@ -90,8 +89,7 @@ __PACKAGE__->result_source_instance->view_definition(
     join network n on n.id = nu.network_id
     join institute i on i.id = n.institute_id
     join city c on c.id = u.city_id
-    where --value is not null and value != ''
-    vv.region_id = ?
+
 
 ]
 );
