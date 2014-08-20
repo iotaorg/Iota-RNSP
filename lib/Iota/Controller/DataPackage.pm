@@ -40,9 +40,9 @@ sub _download {
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 
-            exists $c->stash->{region}
-            ? ( bind => [ ( $c->stash->{region}->id ) x 2 ] )
-            : ()
+            #exists $c->stash->{region}
+            #? ( bind => [ ( $c->stash->{region}->id ) x 2 ] )
+            #: ()
         }
       );
 
