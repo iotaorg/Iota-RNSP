@@ -69,7 +69,7 @@ sub _download {
             'É Básica?',      'Unidade de medida',
             'Nome',             'Data',
             'Valor',            'Observações',
-            'Fonte preenchida', 'Nome Região'
+            'Fonte preenchida', 'Nome Região', 'Valor ativo?', 'Gerado por computador?'
         ]
     );
 
@@ -80,9 +80,9 @@ sub _download {
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
 
-            exists $c->stash->{region}
-            ? ( bind => [ ( $c->stash->{region}->id ) x 2 ] )
-            : ()
+            #exists $c->stash->{region}
+            #? ( bind => [ ( $c->stash->{region}->id ) x 2 ] )
+            #: ()
         }
       );
 
@@ -158,6 +158,10 @@ sub _download {
             $self->_loc_str( $c, $data->{observations} ),
             $self->_loc_str( $c, $data->{source} ),
             $self->_loc_str( $c, $data->{region_name} ),
+
+            $self->_loc_str( $c, $data->{active_value} ? 'sim' : 'não' ),
+            $self->_loc_str( $c, $data->{generated_by_compute} ? 'sim' : 'não' ),
+
         );
         push @lines, \@this_row;
     }

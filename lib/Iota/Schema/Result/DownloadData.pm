@@ -30,6 +30,7 @@ use base 'DBIx::Class::Core';
 =cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 
 =head1 TABLE: C<download_data>
 
@@ -179,6 +180,12 @@ __PACKAGE__->table("download_data");
   data_type: 'timestamp'
   is_nullable: 1
 
+=head2 values_used
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -238,11 +245,17 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "updated_at",
   { data_type => "timestamp", is_nullable => 1 },
+  "values_used",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-12 15:08:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:NZPslV9eYRyGjKBoHt3UGQ
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-08-20 15:33:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:onu4FzwwBTin1FNz8q5o1g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

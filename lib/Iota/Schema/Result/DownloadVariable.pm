@@ -30,6 +30,7 @@ use base 'DBIx::Class::Core';
 =cut
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
+__PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 
 =head1 TABLE: C<download_variable>
 
@@ -177,8 +178,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-08-12 15:08:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1IMQ0Q50CB3czSc+ZxlI9Q
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-08-20 15:33:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:12+0gjLC/BWBkkSsEecIIQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
