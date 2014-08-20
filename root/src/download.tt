@@ -90,7 +90,7 @@
         <select name="cidade" class="form-control">
             <option value="" selected="selected">[%l('Todas')%]</option>
             [%FOREACH cc IN cities.sort('name') %]
-            <option value="br/[%c.uf%]/[%c.name_uri%]">[%cc.name%], [%cc.uf%]</option>
+            <option value="br/[%cc.uf%]/[%cc.name_uri%]">[%cc.name%], [%cc.uf%]</option>
             [%END%]
         </select>
     </div>
