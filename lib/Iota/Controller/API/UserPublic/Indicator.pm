@@ -508,9 +508,38 @@ sub indicator_status_GET {
             $ratios->{ delete $f->{id} } = $f;
         }
 
+        my %roles = map { $_ => 1 } $c->user->roles;
+        my @user_ids = (
+            $roles{user}
+            ? ( $user_id )
+            : ()
+        );
+
+        my @networks = $c->stash->{user_obj}->networks ? $c->stash->{user_obj}->networks->all : ();
+        if ( $roles{admin} ) {
+
+            # todos os indicadores que os usuarios da rede dele pode ver
+
+            foreach my $net (@networks) {
+                @user_ids = ( map { $_->user_id } $net->network_users );
+            }
+
+        }
+
+        my $indicators_rs = $c->model('DB::Indicator')->filter_visibilities(
+            networks_ids => [ map { $_->id } @networks ],
+            users_ids    => \@user_ids,
+          )->search(
+            {
+                is_fake => 0
+            }
+          )->get_column('id')->as_query;
+
         # status
         $rs = $c->model('DB')->resultset( 'ViewIndicatorStatus' . $region_tb )->search_rs(
-            undef,
+            {
+                id => { 'in' => $indicators_rs }
+            },
             {
                 bind =>
 
