@@ -203,6 +203,20 @@ eval {
             $ret2 = eval { from_json( $res->content ) };
             is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
 
+            ( $res, $c ) = ctx_request(
+                POST $user1_uri. '/kml',
+                'Content-Type' => 'form-data',
+                Content        => [
+                    api_key   => 'test',
+                    'arquivo' => [ $Bin . '/mais-um.kml' ],
+                ]
+            );
+
+            ok( $res->is_success, 'OK' );
+            is( $res->code, 200, 'upload done!' );
+            $ret2 = eval { from_json( $res->content ) };
+            is( @{ $ret2->{vec} }, 5, 'tem 5 vetores' );
+
             die 'rollback';
 
         }
