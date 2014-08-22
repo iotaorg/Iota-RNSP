@@ -32,7 +32,7 @@ from
        (greatest(1, (SELECT COUNT(1) FROM indicator_variations x WHERE x.indicator_id = i.id AND user_id IN (abc, i.user_id))))::int AS var_count,
        (jm.COUNT)::int AS justification_count
     FROM indicator i
-    LEFT JOIN indicator_value iv_any ON iv_any.user_id = abc AND iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id IS NULL
+    LEFT JOIN indicator_value iv_any ON iv_any.user_id = abc AND iv_any.indicator_id = i.id  AND iv_any.region_id IS NULL
     LEFT JOIN (SELECT indicator_id, COUNT(1) FROM user_indicator x WHERE x.user_id = abc AND justification_of_missing_field != '' GROUP BY 1) jm ON i.id = jm.indicator_id
     where i.axis_id= eixo
     and i.id IN (SELECT DISTINCT UNNEST(indicadores_ids))
@@ -76,7 +76,7 @@ from
        (greatest(1, (SELECT COUNT(1) FROM indicator_variations x WHERE x.indicator_id = i.id AND user_id IN (abc, i.user_id))))::int AS var_count,
        (jm.COUNT)::int AS justification_count
     FROM indicator i
-    LEFT JOIN indicator_value iv_any ON iv_any.user_id = abc AND iv_any.indicator_id = i.id AND iv_any.active_value AND iv_any.region_id IS NULL
+    LEFT JOIN indicator_value iv_any ON iv_any.user_id = abc AND iv_any.indicator_id = i.id AND iv_any.region_id IS NULL
     LEFT JOIN (SELECT indicator_id, COUNT(1) FROM user_indicator x WHERE x.user_id = abc AND justification_of_missing_field != '' GROUP BY 1) jm ON i.id = jm.indicator_id
     where i.axis_id= eixo
     and i.id IN (SELECT DISTINCT UNNEST(indicadores_ids))
