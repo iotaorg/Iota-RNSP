@@ -132,9 +132,21 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
     $c->forward('light_institute_load') if !exists $c->stash->{c_req_path};
 
+    my @inner_page;
+
+    if (exists $c->stash->{user_obj} && ref $c->stash->{user_obj}  eq 'Iota::Model::DB::User'){
+        @inner_page = (
+            '-or' => [
+                { 'user.city_id' => undef },
+                { 'user.id' => $c->stash->{user_obj}->id }
+            ]
+        );
+    }
+
     my @users = $c->stash->{network}->users->search(
         {
             active => 1,
+            @inner_page
         },
         {
             prefetch => [ 'city', 'network_users' ]
@@ -143,7 +155,6 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     $c->stash->{current_all_users} = \@users;
 
     my @current_admins = grep { !$_->city_id } @users;
-
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] ) unless @current_admins;
     $c->detach( '/error_404', ['Mais de um admin de rede para o dominio encontrado!'] ) if @current_admins > 1;
 
@@ -207,6 +218,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
         cities     => \@cities
     };
+
 
     my $cur_lang = exists $c->req->cookies->{cur_lang} ? $c->req->cookies->{cur_lang}->value : undef;
 

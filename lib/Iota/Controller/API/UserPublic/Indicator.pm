@@ -178,6 +178,7 @@ sub resumo_GET {
     my $from_date = $c->req->params->{from_date};
 
     $c->forward('/institute_load');
+
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
         my $institute = $c->stash->{user_obj}->institute;
@@ -186,7 +187,7 @@ sub resumo_GET {
           map { $_->indicator_id }
           $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
-        my $rs = $c->stash->{collection}->filter_visibilities(
+        my $rs = $c->model('DB::Indicator')->filter_visibilities(
             user_id      => $user_id,
             networks_ids => $c->stash->{network_data}{network_ids},
           )->search(

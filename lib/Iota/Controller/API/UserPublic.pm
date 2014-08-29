@@ -163,6 +163,7 @@ sub stash_indicators_and_users : Private {
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
+
     $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
       unless $id =~ /^[0-9]+$/;
 
