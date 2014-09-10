@@ -278,7 +278,7 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
-        users_ids    => \@users_ids,
+        #users_ids    => \@users_ids,
       )->search(
         { is_fake => 0 },
         {
@@ -301,7 +301,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
-        users_ids    => \@users_ids,
+        #users_ids    => \@users_ids,
       )->search(
         {
             is_fake => 0
