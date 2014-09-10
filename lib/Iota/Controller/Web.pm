@@ -207,13 +207,15 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
         # redes de todos os usuarios que estão na pagina.
         network_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ } map {
-                    map { $_->network_id }
-                      $_->network_users
-                } grep { defined $_->city_id } @users;
-              }
+            #do {
+            #    my %seen;
+            #    grep { !$seen{$_}++ } map {
+            #        map { $_->network_id }
+            #          $_->network_users
+            #    } grep { defined $_->city_id } @users;
+            #  }
+
+            $c->stash->{network}->id
         ],
         admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
         cities     => \@cities
