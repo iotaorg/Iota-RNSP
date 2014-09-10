@@ -185,3 +185,7 @@ and u.city_id is not null;
 
 
 copy _saida to '/tmp/status.indicadores.csv' CSV HEADER;
+
+select id, name, email, cidade || ' - '||estado , (select count(1) from user_best_pratice x where x.user_id=me.id) as c from "user" me order by c desc;
+
+
