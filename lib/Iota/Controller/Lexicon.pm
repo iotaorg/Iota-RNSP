@@ -45,10 +45,36 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
 
     $self->save_lexicons($c) if $c->req->method eq 'POST';
 
+    my $min_length = exists $c->req->params->{min_length} && $c->req->params->{min_length} =~ /^[0-9]+$/ ?
+        $c->req->params->{min_length} : undef;
+    my $max_length = exists $c->req->params->{max_length} && $c->req->params->{max_length} =~ /^[0-9]+$/ ?
+        $c->req->params->{max_length} : 150;
+
+    my $filter_like = exists $c->req->params->{filter_like} && $c->req->params->{filter_like} !~ /^\s+$/ ?
+        $c->req->params->{filter_like} : undef;
+
+    $c->stash->{max_length} = $max_length;
+    $c->stash->{min_length} = $min_length;
+    $c->stash->{filter_like} = $filter_like;
+
     my @lexs = $c->model('DB::Lexicon')->search(
         {
             lex_value => { like => '? %' },
-            user_id   => $c->user->id
+            user_id   => $c->user->id,
+
+            $filter_like ? ( lex_key => { like => \["'%'|| ? || '%'", [foo => $filter_like]] } ) : (),
+
+            ($max_length || $min_length) ?
+            (
+                '-and' => [
+                    $max_length ? (
+                        \"length(lex_key) <= $max_length"
+                    ) : (),
+                    $min_length ? (
+                        \"length(lex_key) >= $min_length"
+                    ) : (),
+                ]
+            ): ()
         },
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -77,6 +103,7 @@ sub save_lexicons {
             user_id => $c->user->id
         }
     );
+
     my $i = 0;
     while ( my ( $name, $value ) = each %{ $c->req->params } ) {
         next unless $value;
@@ -89,7 +116,7 @@ sub save_lexicons {
         $i++;
     }
 
-    $c->lexicon_reload_all();
+    $c->lexicon_reload_all() if $i;
 
     $c->response->cookies->{'reload_lex'} = {
         value   => 1,
