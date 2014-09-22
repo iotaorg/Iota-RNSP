@@ -17,6 +17,7 @@ sub verifiers_specs {
     my $self = shift;
     return {
         upsert => Data::Verifier->new(
+            filters => [qw(trim)],
             profile => {
                 indicator_id     => { required => 1, type => 'Int' },
                 network_id       => { required => 1, type => 'Int' },
