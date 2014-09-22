@@ -177,8 +177,6 @@ sub resumo_GET {
       : 4;
     my $from_date = $c->req->params->{from_date};
 
-    $c->forward('/institute_load');
-
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
         my $institute = $c->stash->{user_obj}->institute;

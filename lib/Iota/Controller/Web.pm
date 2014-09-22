@@ -207,14 +207,16 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
         # redes de todos os usuarios que estão na pagina.
         network_ids => [
-            #do {
-            #    my %seen;
-            #    grep { !$seen{$_}++ } map {
-            #        map { $_->network_id }
-            #          $_->network_users
-            #    } grep { defined $_->city_id } @users;
-            #  }
-
+            do {
+                my %seen;
+                grep { !$seen{$_}++ } map {
+                    map { $_->network_id }
+                      $_->network_users
+                } grep { defined $_->city_id } @users;
+            }
+        ],
+        # rede selecionada do idioma.
+        network_id => [
             $c->stash->{network}->id
         ],
         admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
@@ -277,7 +279,7 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
 
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
-        networks_ids => $c->stash->{network_data}{network_ids},
+        networks_ids => $c->stash->{network_data}{network_id},
         #users_ids    => \@users_ids,
       )->search(
         { is_fake => 0 },
@@ -298,9 +300,10 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
+    use DDP; p $c->stash->{current_city_user_id};
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
-        networks_ids => $c->stash->{network_data}{network_ids},
+        networks_ids => $c->stash->{current_city_user_id} ? $c->stash->{network_data}{network_ids} : $c->stash->{network_data}{network_id},
         #users_ids    => \@users_ids,
       )->search(
         {
@@ -1171,6 +1174,11 @@ sub stash_tela_indicator : Private {
     delete $c->stash->{template};
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    use DDP; p $c->stash->{network_data}{network_ids};
+    $c->stash->{use_all_networks} = 1;
+    $c->forward('/institute_load');
+    use DDP; p $c->stash->{network_data}{network_ids};
 
     my $indicator = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
