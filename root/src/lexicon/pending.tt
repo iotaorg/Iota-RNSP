@@ -12,6 +12,15 @@
         <dd>[%lexicons.${origin_lang}.${lang}.text.size%]</dd>
     </dl>
 
+    <form method="get">
+
+        <input type="hidden" name="api_key" value="[%c.req.params.api_key%]"/>
+
+        Tamanho minimo: <input type="text" name="min_length" value="[%min_length%]"/>
+        Tamanho máximo: <input type="text" name="max_length" value="[%max_length%]"/>
+        Contém palavra: <input type="text" name="filter_like" value="[%filter_like%]"/>
+        <button class="btn btn-default" type="submit" >Filtrar</button>
+    </form>
     [%END%]
 
     [%IF message %]<div class="alert"><p>[%message%]</p></div>[%END%]
@@ -63,4 +72,15 @@
 [%END%]
 [%ELSE%]
 <h1>[%l('Não há mais textos pedentes de tradução')%]!</h1>
+
+
+<form method="get">
+
+    <input type="hidden" name="api_key" value="[%c.req.params.api_key%]"/>
+
+    Tamanho minimo: <input type="text" name="min_length" value="[%min_length%]"/>
+    Tamanho máximo: <input type="text" name="max_length" value="[%max_length%]"/>
+    Contém palavra: <input type="text" name="filter_like" value="[%filter_like%]"/>
+    <button class="btn btn-default" type="submit" >Filtrar</button>
+</form>
 [%END%]
