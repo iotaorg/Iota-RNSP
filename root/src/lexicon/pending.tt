@@ -16,9 +16,15 @@
 
         <input type="hidden" name="api_key" value="[%c.req.params.api_key%]"/>
 
-        Tamanho minimo: <input type="text" name="min_length" value="[%min_length%]"/>
-        Tamanho máximo: <input type="text" name="max_length" value="[%max_length%]"/>
-        Contém palavra: <input type="text" name="filter_like" value="[%filter_like%]"/>
+        <div class="input-group">
+        Tamanho minimo: <input class="form-control"  type="text" name="min_length" value="[%min_length%]"/>
+        </div>
+        <div class="input-group">
+        Tamanho máximo: <input class="form-control"  type="text" name="max_length" value="[%max_length%]"/>
+        </div>
+        <div class="input-group">
+        Contém palavra: <input class="form-control"  type="text" name="filter_like" value="[%filter_like%]"/>
+        </div>
         <button class="btn btn-default" type="submit" >Filtrar</button>
     </form>
     [%END%]
@@ -78,9 +84,15 @@
 
     <input type="hidden" name="api_key" value="[%c.req.params.api_key%]"/>
 
-    Tamanho minimo: <input type="text" name="min_length" value="[%min_length%]"/>
-    Tamanho máximo: <input type="text" name="max_length" value="[%max_length%]"/>
-    Contém palavra: <input type="text" name="filter_like" value="[%filter_like%]"/>
+    <div class="input-group">
+    Tamanho minimo: <input type="text" class="form-control"  name="min_length" value="[%min_length%]"/>
+    </div>
+    <div class="input-group">
+    Tamanho máximo: <input type="text" class="form-control" name="max_length" value="[%max_length%]"/>
+    </div>
+    <div class="input-group">
+    Contém palavra: <input type="text" class="form-control" name="filter_like" value="[%filter_like%]"/>
+    </div>
     <button class="btn btn-default" type="submit" >Filtrar</button>
 </form>
 [%END%]
