@@ -68,6 +68,22 @@ sub lexicon_reload_self {
     close $FG;
 }
 
+ # TODO
+=pod
+
+update lexicon m set translated_from_lexicon = true,
+lex_value = (select x.lex_key from lexicon x where x.lang = 'es' and x.origin_lang='pt-br' and x.lex_value=m.lex_key order by length(lex_key) limit 1)
+where origin_lang='es' and lang='pt-br' and lex_key in (select lex_value from lexicon where lang = 'es' and origin_lang='pt-br');
+
+
+update lexicon m set translated_from_lexicon = true,
+lex_value = (select x.lex_key from lexicon x where x.lang = 'pt-br' and x.origin_lang='es' and x.lex_value=m.lex_key order by length(lex_key) limit 1)
+where origin_lang='pt-br' and lang='es' and lex_key in (select lex_value from lexicon where lang = 'pt-br' and origin_lang='es') and lex_value like '? %';
+
+
+
+
+=cut
 sub loc {
     my ( $c, $text, $origin_lang, @conf ) = @_;
 
