@@ -291,6 +291,7 @@ sub update_region_valid_time {
 sub add_value {
     my ( $region, $value, $year ) = @_;
 
+    $value =~ s/,/./;
     # PUT normal
     my $req = POST $region . '/value',
       [

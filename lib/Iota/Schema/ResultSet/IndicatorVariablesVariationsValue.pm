@@ -14,6 +14,28 @@ use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'indicator.variation_value' }
 
+
+sub value_check {
+    my ( $self, $r ) = @_;
+
+    my $indicator_variables_variation_id = $r->get_value('indicator_variables_variation_id');
+    my $schema      = $self->result_source->schema;
+    unless ($indicator_variables_variation_id) {
+        $indicator_variables_variation_id = $self->search( { id => $r->get_value('id') } )->first->indicator_variables_variation_id;
+    }
+
+    my $var = $schema->resultset('IndicatorVariablesVariation')->find( { id => $indicator_variables_variation_id } );
+
+    if ( $var->type eq 'int' && $r->get_value('value') !~ /^[-+]?[0-9]+$/ ) {
+        return 0;
+    }
+    elsif ( $var->type eq 'num' && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/ ) {
+        return 0;
+    }
+
+    return 1;
+}
+
 sub verifiers_specs {
     my $self = shift;
     return {
@@ -34,7 +56,13 @@ sub verifiers_specs {
                 },
                 indicator_variables_variation_id => { required => 1, type => 'Int' },
                 period                           => { required => 0, type => 'Str' },
-                value                            => { required => 0, type => 'Str' },
+                value                            => {
+                    required => 0, type => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->value_check($r);
+                    },
+                },
                 summarization_method             => { required => 0, type => 'Str' },
             },
         ),
@@ -43,7 +71,13 @@ sub verifiers_specs {
             filters => [qw(trim)],
             profile => {
                 id                   => { required => 1, type => 'Int' },
-                value                => { required => 0, type => 'Str' },
+                value                => {
+                    required => 0, type => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        return $self->value_check($r);
+                    },
+                },
                 summarization_method => { required => 0, type => 'Str' },
             },
         ),

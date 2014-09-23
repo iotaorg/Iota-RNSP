@@ -228,8 +228,8 @@ eval {
             $variable_url = $uri4->path_query;
 
             &add_value( $variable_url, '2011-01-01', '222,5' );
-            &add_value( $variable_url, '2010-01-08', '1 222 245,8' );
-            &add_value( $variable_url, '2009-01-15', '11.246,8' );
+            &add_value( $variable_url, '2010-01-08', '1222245,8' );
+            &add_value( $variable_url, '2009-01-15', '11246,8' );
             &add_value( $variable_url, '2008-01-26', '258' );
 
             # variavel basicas
@@ -280,6 +280,8 @@ done_testing;
 
 sub add_value {
     my ( $variable_url, $date, $value ) = @_;
+
+    $value =~ s/,/./;
 
     my $req = POST $variable_url,
       [

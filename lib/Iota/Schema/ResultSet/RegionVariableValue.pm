@@ -20,35 +20,9 @@ use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'region.variable.value' }
 
-my $str2number = sub {
-    my $str = shift;
-    if ( $str =~ /[^\d]/ ) {
-        $str =~ s/\.(\d{3})/$1/g;
-        $str =~ s/\s(\d{3})/$1/g;
-        $str =~ s/\,/./;
-    }
-    return $str;
-};
 
 sub value_check {
-    my ( $self, $r ) = @_;
-
-    my $variable_id = $r->get_value('variable_id');
-    my $schema      = $self->result_source->schema;
-    unless ($variable_id) {
-        $variable_id = $self->search( { id => $r->get_value('id') } )->first->variable_id;
-    }
-
-    my $var = $schema->resultset('Variable')->find( { id => $variable_id } );
-
-    if ( $var->type eq 'int' && $r->get_value('value') !~ /^[-+]?[0-9]+$/ ) {
-        return 0;
-    }
-    elsif ( $var->type eq 'num' && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/ ) {
-        return 0;
-    }
-
-    return 1;
+    Iota::Schema::ResultSet::VariableValue::value_check(@_);
 }
 
 # TODO deixar o campo 'source' obrigatorio quando o campo 'value' for vazio
@@ -66,7 +40,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->value_check($r);
                     },
-                    filters => [$str2number]
+
                 },
                 source        => { required => 0, type => 'Str' },
                 observations  => { required => 0, type => 'Str' },
@@ -132,7 +106,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->value_check($r);
                     },
-                    filters => [$str2number]
+
                 },
                 value_of_date => {
                     required   => 1,
@@ -178,7 +152,7 @@ sub verifiers_specs {
 
                         return $self->value_check($r);
                     },
-                    filters => [$str2number]
+
                 },
                 observations  => { required => 0, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },

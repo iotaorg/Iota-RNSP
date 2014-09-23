@@ -654,6 +654,8 @@ sub _delete {
 sub add_value {
     my ( $variable_url, $date, $value ) = @_;
 
+    $value =~ s/,/./;
+
     $variable_url .= '/value';
     my $req = POST $variable_url,
       [

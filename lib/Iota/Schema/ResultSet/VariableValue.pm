@@ -20,17 +20,6 @@ use Iota::Types qw /VariableType DataStr/;
 sub _build_verifier_scope_name { 'variable.value' }
 use DateTimeX::Easy;
 
-my $str2number = sub {
-    my $str = shift;
-
-    if ( $str && $str =~ /[^\d]/ ) {
-        $str =~ s/\.(\d{3})/$1/g;
-        $str =~ s/\s(\d{3})/$1/g;
-        $str =~ s/\,/./;
-    }
-    return $str;
-};
-
 sub value_check {
     my ( $self, $r ) = @_;
 
@@ -67,7 +56,6 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->value_check($r);
                     },
-                    filters => [$str2number]
                 },
                 source        => { required => 0, type => 'Str' },
                 observations  => { required => 0, type => 'Str' },
@@ -130,7 +118,6 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->value_check($r);
                     },
-                    filters => [$str2number]
                 },
                 value_of_date => {
                     required   => 1,
@@ -174,7 +161,6 @@ sub verifiers_specs {
 
                         return $self->value_check($r);
                     },
-                    filters => [$str2number]
                 },
                 observations  => { required => 0, type => 'Str' },
                 user_id       => { required => 1, type => 'Int' },

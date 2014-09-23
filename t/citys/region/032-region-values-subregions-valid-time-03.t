@@ -264,6 +264,7 @@ sub update_region_valid_time_api {
 sub add_value {
     my ( $region, $value, $year, $expcode ) = @_;
 
+    $value =~ s/,/./;
     $expcode ||= 201;
 
     note "POSTING $region/value\tyear $year, value $value";
