@@ -46,7 +46,7 @@
                     <small><cite title="Paulo de Martino Jannuzzi"><a href="http://dicionario.fundap.sp.gov.br/Verbete/141" rel="nofollow" target="_blank">http://dicionario.fundap.sp.gov.br/Verbete/141</a></cite></small>
                 </blockquote>
 
-                <p>[%l('Dentro da plataforma Iota, o um <strong>indicador</strong> é composto por uma ou mais <strong>variáveis</strong> agrupadas por operadores matemáticos.')|none%]</p>
+                <p>[%l('Dentro da plataforma Iota, um <strong>indicador</strong> é composto por uma ou mais <strong>variáveis</strong> agrupadas por operadores matemáticos.')|none%]</p>
                 <p>[%l('Cada <strong>variável</strong> tem um período de atualização, por exemplo, <i>diariamente</i>, <i>semanalmente</i>, <i>mensalmente</i> ou <i>anualmente</i>.')|none%]</p>
                 <p>[%l('Quandos os dados são inseridos no Iota, a entrada contém qual <strong>variável</strong>, qual <strong>a data</strong> e qual a <strong>fonte</strong> daquela entrada.')|none%]</p>
                 <p>[%l('Com isso, os <strong>indicadores</strong> que utilizam daquela <strong>variável</strong> são atualizados automaticamente e geram um novo número, chamado de <strong>valor do indicador</strong>.')|none%]</p>
