@@ -139,7 +139,7 @@ sub pending : Chained('load_pending') PathPart('') Args(0) {
 
 }
 
-sub pending_count : Chained('env') PathPart('count') Args(0) {
+sub pending_count : Chained('env') PathPart('pending/count') Args(0) {
     my ( $self, $c ) = @_;
 
     $c->stash->{count_only} = 1;
