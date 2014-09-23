@@ -34,22 +34,24 @@
 
     [%FOREACH lang IN lexicons.${origin_lang}.keys %]
 
-        [%IF lexicons.${origin_lang}.${lang}.word%]
-            <table style="word-break: break-word" class="table table-hover">
-            <legend>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</legend>
-                <tr>
-                    <th>[%lang_name.${origin_lang}%]</th>
-                    <th>[%lang_name.$lang%]</th>
-                </tr>
-                [%FOREACH lex IN lexicons.${origin_lang}.${lang}.word%]
-                <tr>
-                    <th class="span4">[%lex.lex_key| html%]</th>
-                    <td class="span8"><input class="span8" type="text" name="lex_[%lex.id%]">
-                    </td>
-                </tr>
-                [%END%]
-            </table>
-        [%END%]
+        <div style="height: 500px; overflow: auto">
+            [%IF lexicons.${origin_lang}.${lang}.word%]
+                <table style="word-break: break-word" class="table table-hover">
+                <legend>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</legend>
+                    <tr>
+                        <th>[%lang_name.${origin_lang}%]</th>
+                        <th>[%lang_name.$lang%]</th>
+                    </tr>
+                    [%FOREACH lex IN lexicons.${origin_lang}.${lang}.word%]
+                    <tr>
+                        <th class="span4">[%lex.lex_key| html%]</th>
+                        <td class="span8"><input class="span8" type="text" name="lex_[%lex.id%]">
+                        </td>
+                    </tr>
+                    [%END%]
+                </table>
+            [%END%]
+        </div>
 
         <div style="height: 500px; overflow: auto">
 
