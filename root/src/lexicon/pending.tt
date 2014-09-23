@@ -35,9 +35,9 @@
     [%FOREACH lang IN lexicons.${origin_lang}.keys %]
 
         [%IF lexicons.${origin_lang}.${lang}.word%]
+            <h2>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</h2>
             <div style="height: 500px; overflow: auto">
                 <table style="word-break: break-word" class="table table-hover">
-                <legend>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</legend>
                     <tr>
                         <th>[%lang_name.${origin_lang}%]</th>
                         <th>[%lang_name.$lang%]</th>
@@ -54,10 +54,10 @@
         [%END%]
 
         [%IF lexicons.${origin_lang}.${lang}.text%]
+            <h2>[%l('Textos longos para traduzir para')%] [%lang_name.$lang%]</h2>
             <div style="height: 500px; overflow: auto">
 
                 <table class="table table-hover">
-                <legend>[%l('Textos longos para traduzir para')%] [%lang_name.$lang%]</legend>
                     <tr>
                         <th>[%lang_name.${origin_lang}%]</th>
                         <th>[%lang_name.$lang%]</th>
