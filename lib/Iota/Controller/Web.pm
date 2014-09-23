@@ -300,11 +300,28 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-    use DDP; p $c->stash->{current_city_user_id};
+    my $show_user_private_indicators = $c->stash->{show_user_private_indicators};
+    my $network_ids = [
+        do {
+            my %seen;
+            grep { !$seen{$_}++ } map {
+                map { $_->network_id }
+                    $_->network_users
+            } grep { defined $_->city_id } grep { $show_user_private_indicators->{$_->id} } @{$c->stash->{current_all_users}};
+        }
+    ];
+
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
-        user_id      => $c->stash->{current_city_user_id},
-        networks_ids => $c->stash->{current_city_user_id} ? $c->stash->{network_data}{network_ids} : $c->stash->{network_data}{network_id},
-        #users_ids    => \@users_ids,
+
+        $show_user_private_indicators && keys %$show_user_private_indicators
+        ? (
+            users_ids    => [keys %$show_user_private_indicators],
+            networks_ids => $network_ids
+        )
+        : (
+            user_id      => $c->stash->{current_city_user_id},
+            networks_ids => $c->stash->{current_city_user_id} ? $c->stash->{network_data}{network_ids} : $c->stash->{network_data}{network_id},
+        )
       )->search(
         {
             is_fake => 0
@@ -1095,6 +1112,8 @@ sub stash_comparacao_cidades {
 
     my %shown = exists $c->req->params->{graphs} ? map { $_ => 1 } split '-', $c->req->params->{graphs} : ();
 
+    $c->stash->{show_user_private_indicators} = \%shown;
+
     foreach my $user ( @{ $c->stash->{users_series} } ) {
         next unless exists $user->{by_period};
 
@@ -1203,17 +1222,24 @@ sub stash_tela_indicator : Private {
     # anti bug de quem chamar isso sem ler o fonte ^^
     delete $c->stash->{template};
 
-    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+    my $show_user_private_indicators = $c->stash->{show_user_private_indicators} = {
+        $c->stash->{current_city_user_id} => 1
+    };
 
-    use DDP; p $c->stash->{network_data}{network_ids};
-    $c->stash->{use_all_networks} = 1;
-    $c->forward('/institute_load');
-    use DDP; p $c->stash->{network_data}{network_ids};
+    my $network_ids = [
+        do {
+            my %seen;
+            grep { !$seen{$_}++ } map {
+                map { $_->network_id }
+                    $_->network_users
+            } grep { defined $_->city_id } grep { $show_user_private_indicators->{$_->id} } @{$c->stash->{current_all_users}};
+        }
+    ];
 
     my $indicator = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
-        networks_ids => $c->stash->{network_data}{network_ids},
-        users_ids    => \@users_ids,
+        networks_ids => $network_ids,
+        #users_ids    => \@users_ids,
       )->search(
         {
             name_url => $c->stash->{indicator},

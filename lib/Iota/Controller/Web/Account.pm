@@ -119,8 +119,6 @@ sub end_user_indicator_modal_base : Chained('base') PathPart('end-user-indicator
       )->next
       or $c->forward('/web/form/not_found');
 
-    use DDP;
-    p $c->stash->{end_user_indicator};
 
 }
 

@@ -144,7 +144,7 @@ sub loc {
                                             (select true from lexicon x where x.lang = ?
                                                 and x.origin_lang = ?
                                                 and x.lex_value   = ?
-                                                order by length(lex_key) limit 1), false)", $origin_lang, $lang, $text],
+                                                order by length(lex_key) limit 1), NULL)", $origin_lang, $lang, $text],
 
                         user_id     => $user_id,
                         origin_lang => $origin_lang
