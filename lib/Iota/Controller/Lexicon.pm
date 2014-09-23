@@ -45,10 +45,11 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
 
     $self->save_lexicons($c) if $c->req->method eq 'POST';
 
+
     my $min_length = exists $c->req->params->{min_length} && $c->req->params->{min_length} =~ /^[0-9]+$/ ?
         $c->req->params->{min_length} : undef;
     my $max_length = exists $c->req->params->{max_length} && $c->req->params->{max_length} =~ /^[0-9]+$/ ?
-        $c->req->params->{max_length} : 60;
+        $c->req->params->{max_length} : $c->stash->{count_only} ? undef : 60;
 
     my $filter_like = exists $c->req->params->{filter_like} && $c->req->params->{filter_like} !~ /^\s+$/ ?
         $c->req->params->{filter_like} : undef;
@@ -57,10 +58,11 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
     $c->stash->{min_length} = $min_length;
     $c->stash->{filter_like} = $filter_like;
 
-    my @lexs = $c->model('DB::Lexicon')->search(
+    my $rs = $c->model('DB::Lexicon')->search(
         {
             lex_value => { like => '? %' },
-            user_id   => $c->user->id,
+
+            ($c->user->id != 1 ? (user_id   => $c->user->id) : ()),
 
             $filter_like ? ( lex_key => { like => \["'%'|| ? || '%'", [foo => $filter_like]] } ) : (),
 
@@ -80,8 +82,14 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
             order_by     => [ 'lang', 'lex_key' ]
         }
-    )->all;
+    );
 
+    if ($c->stash->{count_only}){
+        $c->stash->{count} = $rs->count;
+        return;
+    }
+
+    my @lexs = $rs->all;
     $c->stash->{count} = scalar @lexs;
 
     for my $lex (@lexs) {
@@ -131,8 +139,12 @@ sub pending : Chained('load_pending') PathPart('') Args(0) {
 
 }
 
-sub pending_count : Chained('load_pending') PathPart('count') Args(0) {
+sub pending_count : Chained('env') PathPart('count') Args(0) {
     my ( $self, $c ) = @_;
+
+    $c->stash->{count_only} = 1;
+
+    $self->load_pending( $c );
 
     $c->res->body(qq|{"count":${\$c->stash->{count}}}|);
 }
