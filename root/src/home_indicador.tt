@@ -1,4 +1,14 @@
+<div id="justifications" class="hide">
+[%IF justifications.size > 0 %]
+<div class="dados">
+<dl class="tabela dl-horizontal">
+<dt>[%l('Justificativas')%]:</dt>
+[%FOREACH j IN justifications%]<dd><strong>[%date4period(j.valid_from, indicator.period)%]</strong>: [% l(j.justification_of_missing_field)%]</dd>[%END%]
+</dl>
+</div>
+[%END%]
 
+</div>
 <div class="content" id="content">
     <div class="row" id="indicador-dados">
         <div class="span4">

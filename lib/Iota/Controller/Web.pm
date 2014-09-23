@@ -131,7 +131,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
     $c->forward('light_institute_load') if !exists $c->stash->{c_req_path};
-
+=pod
     my @inner_page;
 
     if (exists $c->stash->{user_obj} && ref $c->stash->{user_obj}  eq 'Iota::Model::DB::User'){
@@ -142,11 +142,11 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
             ]
         );
     }
-
+=cut
     my @users = $c->stash->{network}->users->search(
         {
             active => 1,
-            @inner_page
+    #        @inner_page
         },
         {
             prefetch => [ 'city', 'network_users' ]
@@ -845,8 +845,38 @@ sub network_indicator : Chained('network_cidade') PathPart('') CaptureArgs(1) {
 }
 
 sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0) {
-    my ( $self, $c, $cidade ) = @_;
+    my ( $self, $c ) = @_;
+
+    $self->_load_user_justification_of_missing_field($c);
+
     $c->stash( template => 'home_indicador.tt' );
+}
+
+sub _load_user_justification_of_missing_field {
+    my ( $self, $c ) = @_;
+
+    my $indicator = $c->stash->{indicator};
+    my $city      = $c->stash->{city};
+    my $user      = $c->stash->{user};
+
+    my @justifications = $c->model('DB::UserIndicator')->search(
+        {
+            user_id      => $user->{id},
+            indicator_id => $indicator->{id},
+            region_id    => undef,
+            '-and'       => [
+                { justification_of_missing_field => { '!=' => undef } },
+                { justification_of_missing_field => { '!=' => '' } },
+            ]
+        },
+        {
+            order_by => ['valid_from']
+        }
+    )->all;
+
+    $c->stash->{justifications} = \@justifications;
+
+
 }
 
 sub home_network_indicator : Chained('institute_load') PathPart('') CaptureArgs(1) {

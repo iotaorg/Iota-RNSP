@@ -48,7 +48,7 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
     my $min_length = exists $c->req->params->{min_length} && $c->req->params->{min_length} =~ /^[0-9]+$/ ?
         $c->req->params->{min_length} : undef;
     my $max_length = exists $c->req->params->{max_length} && $c->req->params->{max_length} =~ /^[0-9]+$/ ?
-        $c->req->params->{max_length} : 150;
+        $c->req->params->{max_length} : 60;
 
     my $filter_like = exists $c->req->params->{filter_like} && $c->req->params->{filter_like} !~ /^\s+$/ ?
         $c->req->params->{filter_like} : undef;
