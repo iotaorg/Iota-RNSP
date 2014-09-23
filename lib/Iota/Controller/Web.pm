@@ -131,7 +131,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
     $c->forward('light_institute_load') if !exists $c->stash->{c_req_path};
-
+=pod
     my @inner_page;
 
     if (exists $c->stash->{user_obj} && ref $c->stash->{user_obj}  eq 'Iota::Model::DB::User'){
@@ -142,11 +142,11 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
             ]
         );
     }
-
+=cut
     my @users = $c->stash->{network}->users->search(
         {
             active => 1,
-            @inner_page
+    #        @inner_page
         },
         {
             prefetch => [ 'city', 'network_users' ]

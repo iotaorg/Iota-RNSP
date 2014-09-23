@@ -87,7 +87,11 @@ where origin_lang='pt-br' and lang='es' and lex_key in (select lex_value from le
 sub loc {
     my ( $c, $text, $origin_lang, @conf ) = @_;
 
-    return $text if ( !defined $text || $text eq '' );
+    return $text if exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE};
+    return $text if ( !defined $text || $text =~ /^\s+$/ );
+
+    $text =~ s/^\s+//;
+    $text =~ s/\s+$//;
 
     my $default = $c->config->{default_lang};
 
@@ -130,7 +134,18 @@ sub loc {
                         lex         => '*',
                         lang        => $lang,
                         lex_key     => $text,
-                        lex_value   => $str,
+                        lex_value   => \["coalesce(
+                                            (select x.lex_key from lexicon x where x.lang = ?
+                                                and x.origin_lang = ?
+                                                and x.lex_value   = ?
+                                                order by length(lex_key) limit 1), ?)", $origin_lang, $lang, $text, $str],
+
+                        translated_from_lexicon   => \["coalesce(
+                                            (select true from lexicon x where x.lang = ?
+                                                and x.origin_lang = ?
+                                                and x.lex_value   = ?
+                                                order by length(lex_key) limit 1), false)", $origin_lang, $lang, $text],
+
                         user_id     => $user_id,
                         origin_lang => $origin_lang
                     }

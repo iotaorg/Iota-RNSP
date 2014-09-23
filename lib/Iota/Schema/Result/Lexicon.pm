@@ -93,6 +93,11 @@ __PACKAGE__->table("lexicon");
   default_value: 'pt-br'
   is_nullable: 0
 
+=head2 translated_from_lexicon
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -134,6 +139,8 @@ __PACKAGE__->add_columns(
   },
   "origin_lang",
   { data_type => "text", default_value => "pt-br", is_nullable => 0 },
+  "translated_from_lexicon",
+  { data_type => "boolean", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -149,8 +156,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-17 14:21:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iklk0jFa9R3kjT6rvSHuVw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-09-22 21:25:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vOc1k6ogeuxXzx1KRtYXMg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
