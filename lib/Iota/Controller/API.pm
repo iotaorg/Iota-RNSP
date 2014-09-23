@@ -211,6 +211,9 @@ sub base : Chained('logged_in') : PathPart('') : CaptureArgs(0) {
               if $k =~ /password/
               || $k =~ /email/
               || $k =~ /formula/
+              || $k =~ /polygon_path/
+              || $k =~ /name_url/
+              || $k =~ /(city|user|state|country|city\.region)\.(create|update)\.name/
               || $k eq 'api_key'
               || $k eq 'arquivo'
               || $k eq 'lex';
