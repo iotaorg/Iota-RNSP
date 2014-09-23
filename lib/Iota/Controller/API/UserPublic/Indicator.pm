@@ -185,9 +185,23 @@ sub resumo_GET {
           map { $_->indicator_id }
           $c->stash->{user_obj}->user_indicator_configs->search( { hide_indicator => 1 } )->all;
 
+        my $show_user_private_indicators = $c->stash->{show_user_private_indicators} = {
+            $user_id => 1
+        };
+
+        my $network_ids = [
+            do {
+                my %seen;
+                grep { !$seen{$_}++ } map {
+                    map { $_->network_id }
+                        $_->network_users
+                } grep { defined $_->city_id } grep { $show_user_private_indicators->{$_->id} } @{$c->stash->{current_all_users}};
+            }
+        ];
+
         my $rs = $c->model('DB::Indicator')->filter_visibilities(
             user_id      => $user_id,
-            networks_ids => $c->stash->{network_data}{network_ids},
+            networks_ids => $network_ids,
           )->search(
             {
                 is_fake => 0,

@@ -1236,6 +1236,7 @@ sub stash_tela_indicator : Private {
         }
     ];
 
+
     my $indicator = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $network_ids,
