@@ -129,7 +129,7 @@ sub loc {
             )->count;
 
             if ( $exists == 0 ) {
-                $resultset->create(
+                eval{$resultset->create(
                     {
                         lex         => '*',
                         lang        => $lang,
@@ -149,7 +149,7 @@ sub loc {
                         user_id     => $user_id,
                         origin_lang => $origin_lang
                     }
-                );
+                )};
             }
         }
         return $current_lang eq $origin_lang ? $text : "? $text";
