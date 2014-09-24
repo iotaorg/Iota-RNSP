@@ -108,7 +108,7 @@ sub save_lexicons {
 
     my $rs = $c->model('DB::Lexicon')->search(
         {
-            user_id => $c->user->id
+            ($c->user->id != 1 ? (user_id   => $c->user->id) : ()),
         }
     );
 
