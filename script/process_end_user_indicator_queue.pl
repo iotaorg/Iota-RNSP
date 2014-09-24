@@ -89,7 +89,7 @@ foreach my $user (@users) {
                     ],
 
                     #for => 'update',
-                    order_by     => \"date_trunc('seconds', me.created_at), user_id, indicator_id, operation_type DESC",
+                    order_by     => \"date_trunc('seconds', me.created_at), me.user_id, me.indicator_id, me.operation_type DESC",
                     result_class => 'DBIx::Class::ResultClass::HashRefInflator'
                 }
             )->all;
