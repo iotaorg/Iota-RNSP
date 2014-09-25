@@ -81,7 +81,7 @@
 
         [%FOREACH period IN choosen_periods.2%]
         [%SET val=user.by_period.${period}.avg%]
-        <td class="num" title="[%val.replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
+        <td class="num" title="[%val|format('%f')|replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
         [%END%]
         <td class="opcoes">
             <div class="btn-group">
@@ -100,7 +100,7 @@
 
         [%FOREACH period IN choosen_periods.2%]
         [%SET val=user.by_period.${period}.by_variation.${v}.value%]
-        <td class="num" title="[%val.replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
+        <td class="num" title="[%val|format('%f')|replace('\.',',')%]" data-sort-value="[%val%]">[% val ? value4human(val, 'num') : '-' %]</td>
         [%END%]
         <td class="opcoes">
             <div class="btn-group">
