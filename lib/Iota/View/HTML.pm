@@ -50,14 +50,18 @@ sub date4period {
 
 sub value4human {
     my ( $self, $c, $value, $variable_type, $measurement_unit ) = @_;
-    return $value if $variable_type eq 'str' || $value =~ /[a-z]/;
+
+    return $value if $variable_type eq 'str';
+    return 0 if $value < 0.0001;
+    return $value =~ /[a-z]/;
+
 
     my $pre = '';
     my $mid = '';
     my $end = '';
-    if ( $variable_type eq 'num' ) {
-        return 0 if $value < 0.0001;
 
+    if ( $variable_type eq 'num' ) {
+        $value = sprintf('%f', $value);
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );
