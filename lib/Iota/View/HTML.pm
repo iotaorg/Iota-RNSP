@@ -53,8 +53,7 @@ sub value4human {
 
     return $value if $variable_type eq 'str';
     return 0 if $value < 0.0001;
-    return $value =~ /[a-z]/;
-
+    return $value if $value =~ /[a-z]/;
 
     my $pre = '';
     my $mid = '';
