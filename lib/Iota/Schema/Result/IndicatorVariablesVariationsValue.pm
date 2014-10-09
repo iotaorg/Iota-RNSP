@@ -107,6 +107,12 @@ __PACKAGE__->table("indicator_variables_variations_value");
   default_value: true
   is_nullable: 0
 
+=head2 end_ts
+
+  data_type: 'timestamp'
+  default_value: infinity
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -144,6 +150,8 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", is_nullable => 1 },
   "active_value",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "end_ts",
+  { data_type => "timestamp", default_value => "infinity", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -211,8 +219,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 15:21:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ts86EmejK7dKoJybtvt4Og
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-10-07 16:39:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7JeWlrJ9BNbtQZR96rkv3g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

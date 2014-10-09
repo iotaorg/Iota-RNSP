@@ -123,6 +123,12 @@ __PACKAGE__->table("region_variable_value");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 end_ts
+
+  data_type: 'timestamp'
+  default_value: infinity
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -166,6 +172,8 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "cloned_from_user",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "end_ts",
+  { data_type => "timestamp", default_value => "infinity", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -179,37 +187,6 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("id");
-
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<region_variable_value_region_id_variable_id_user_id_valid_f_key>
-
-=over 4
-
-=item * L</region_id>
-
-=item * L</variable_id>
-
-=item * L</user_id>
-
-=item * L</valid_from>
-
-=item * L</active_value>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint(
-  "region_variable_value_region_id_variable_id_user_id_valid_f_key",
-  [
-    "region_id",
-    "variable_id",
-    "user_id",
-    "valid_from",
-    "active_value",
-  ],
-);
 
 =head1 RELATIONS
 
@@ -279,8 +256,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-07-16 15:21:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:a0tAASkGFT2gSGGzjJGpvg
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-10-07 16:39:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x6EAxMd9SkBdc50MB7yDIA
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",
