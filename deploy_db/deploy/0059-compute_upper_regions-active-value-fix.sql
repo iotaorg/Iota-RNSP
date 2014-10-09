@@ -57,7 +57,7 @@ ALTER TABLE region_variable_value DROP CONSTRAINT region_variable_value_region_i
 
 alter table indicator_variables_variations_value add column end_ts timestamp not null default 'infinity';
 
-DROP INDEX ix_indicator_variables_variations_value_region;
+DROP INDEX IF EXISTS  ix_indicator_variables_variations_value_region;
 
 CREATE UNIQUE INDEX ix_indicator_variables_variations_value_region
   ON indicator_variables_variations_value
@@ -65,7 +65,7 @@ CREATE UNIQUE INDEX ix_indicator_variables_variations_value_region
   (indicator_variation_id, indicator_variables_variation_id, valid_from, user_id, active_value, region_id)
   WHERE region_id IS NOT NULL AND end_ts = 'infinity';
 
-DROP INDEX ix_indicator_variables_variations_value_region;
+DROP INDEX IF EXISTS ix_indicator_variables_variations_value_region;
 
 CREATE UNIQUE INDEX ix_indicator_variables_variations_value_region
   ON indicator_variables_variations_value
