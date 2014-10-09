@@ -5,7 +5,7 @@ BEGIN;
 
 alter table region_variable_value add column end_ts timestamp not null default 'infinity';
 
-DROP INDEX ix_region_variable_value;
+DROP INDEX IF EXISTS ix_region_variable_value;
 
 CREATE UNIQUE INDEX ix_region_variable_value
   ON region_variable_value
@@ -14,7 +14,7 @@ CREATE UNIQUE INDEX ix_region_variable_value
   WHERE region_id IS NULL AND end_ts = 'infinity';
 
 
-DROP INDEX ix_region_variable_value_region;
+DROP INDEX IF EXISTS ix_region_variable_value_region;
 
 CREATE UNIQUE INDEX ix_region_variable_value_region
   ON region_variable_value
@@ -22,28 +22,28 @@ CREATE UNIQUE INDEX ix_region_variable_value_region
   (variable_id, user_id, valid_from, active_value, region_id)
   WHERE region_id IS NOT NULL AND end_ts = 'infinity';
 
-DROP INDEX region_variable_value_idx_cloned_from_user;
+DROP INDEX IF EXISTS region_variable_value_idx_cloned_from_user;
 
 CREATE INDEX region_variable_value_idx_cloned_from_user
   ON region_variable_value
   USING btree
   (cloned_from_user) WHERE end_ts = 'infinity';
 
-DROP INDEX region_variable_value_idx_region_id;
+DROP INDEX IF EXISTS region_variable_value_idx_region_id;
 
 CREATE INDEX region_variable_value_idx_region_id
   ON region_variable_value
   USING btree
   (region_id) where end_ts = 'infinity';
 
-DROP INDEX region_variable_value_idx_user_id;
+DROP INDEX IF EXISTS region_variable_value_idx_user_id;
 
 CREATE INDEX region_variable_value_idx_user_id
   ON region_variable_value
   USING btree
   (user_id) where end_ts = 'infinity';
 
-DROP INDEX region_variable_value_idx_variable_id;
+DROP INDEX IF EXISTS region_variable_value_idx_variable_id;
 
 CREATE INDEX region_variable_value_idx_variable_id
   ON region_variable_value
