@@ -23,3 +23,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0056-download-data-with-values [0055-update-compute-upper-regions] 2014-08-20T18:27:25Z cron <renato.cron@gmail.com> # download-data-with-values
 0057-add-lexicon-index [0056-download-data-with-values] 2014-09-22T19:06:32Z cron <renato.cron@gmail.com> # add lex index
 0058-auto-add-lex [0057-add-lexicon-index] 2014-09-22T19:18:36Z cron <renato.cron@gmail.com> # add auto field
+0059-compute_upper_regions-active-value-fix [0058-auto-add-lex] 2014-10-06T13:25:30Z cron <renato.cron@gmail.com> # change compute_upper_regions to consolidate with active_value from bellow

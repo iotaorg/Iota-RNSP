@@ -200,7 +200,7 @@ sub action_specs {
 
             my $region = $schema->resultset('Region')->find( $values{region_id} );
 
-            if ( $region->depth_level == 2 ) {
+            if ( $region->depth_level <= 2 ) {
                 if ( $region->subregions_valid_after
                     && DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0 ) {
                     $values{active_value} = 0;
@@ -222,7 +222,26 @@ sub action_specs {
 
             }
 
-            my $varvalue = $self->create( \%values );
+            my $varvalue;
+            if (exists $values{active_value} && $values{active_value} == 0){
+                eval{
+                    $schema->txn_do(
+                        sub {
+                            $varvalue = $self->create( \%values );
+                        }
+                    )
+                };
+
+                # se ja existe, e nao eh ativo, entao ja entra ~morto~.
+                if ($@ && $@ =~ /duplicate key value violates unique constraint/){
+                    $varvalue = $self->create( {%values, end_ts => \'now()'} );
+                }elsif($@){
+                    die($@);
+                }
+            }else{
+                $varvalue = $self->create( \%values );
+            }
+
             $varvalue->discard_changes;
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
@@ -331,7 +350,7 @@ sub _put {
     if ( $user->city_id && $region->city_id != $user->city_id ) {
         die 'Illegal region for user.';
     }
-    if ( $region->depth_level == 2 ) {
+    if ( $region->depth_level <= 2 ) {
         if ( $region->subregions_valid_after
             && DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0 ) {
             $values{active_value} = 0;
@@ -355,6 +374,7 @@ sub _put {
     # existir, atualiza a data e o valor!
     my $row = $self->search(
         {
+            end_ts               => 'infinity',
             user_id              => $values{user_id},
             region_id            => $values{region_id},
             variable_id          => $values{variable_id},
@@ -385,7 +405,24 @@ sub _put {
         $values{valid_from}  = $dates->{period_begin};
         $values{valid_until} = $dates->{period_end};
 
-        $row = $self->create( \%values );
+
+        if (exists $values{active_value} && $values{active_value} == 0){
+            eval{
+                $schema->txn_do(
+                    sub {
+                        $row = $self->create( \%values )
+                    }
+                )
+            };
+            # se ja existe, e nao eh ativo, entao ja entra ~morto~.
+            if ($@ && $@ =~ /duplicate key value violates unique constraint/){
+                $row = $self->create( {%values, end_ts => \'now()'} );
+            }elsif($@){
+                die $@;
+            }
+        }else{
+            $row = $self->create( \%values )
+        }
     }
 
     if ( exists $values{source} && $values{source} ) {

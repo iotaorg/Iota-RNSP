@@ -101,7 +101,7 @@ sub action_specs {
                 if ( exists $values{region_id} ) {
                     my $region        = $schema->resultset('Region')->find( $values{region_id} );
                     my $value_of_date = DateTimeX::Easy->new( $values{value_of_date} );
-                    if ( $region->depth_level == 2 ) {
+                    if ( $region->depth_level <= 2 ) {
                         if ( $region->subregions_valid_after
                             && DateTime->compare( $value_of_date, $region->subregions_valid_after ) >= 0 ) {
 
@@ -133,7 +133,25 @@ sub action_specs {
                 $values{valid_until} = $values{valid_from};
             }
 
-            my $var = $self->create( \%values );
+            my $var;
+            if (exists $values{active_value} && $values{active_value} == 0){
+                eval{
+                    $schema->txn_do(
+                        sub {
+                            $var = $self->create( \%values )
+                        }
+                    )
+                };
+                # se ja existe, e nao eh ativo, entao ja entra ~morto~.
+                if ($@ && $@ =~ /duplicate key value violates unique constraint/){
+                    $var = $self->create( {%values, end_ts => \'now()'} );
+                }elsif($@){
+                    die $@;
+                }
+            }else{
+                $var = $self->create( \%values )
+            }
+
             $var->discard_changes;
 
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
