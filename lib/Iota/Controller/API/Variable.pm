@@ -157,7 +157,13 @@ sub variable_DELETE {
 
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-    eval { $obj->delete };
+
+    $c->model('DB')->schema->txn_do(
+        sub {
+            $obj->user_variable_configs->delete;
+            $obj->delete;
+        }
+    );
 
     if ($@) {
         $self->status_bad_request( $c, message => "You can't delete this variable. Delete values first." ), $c->detach;

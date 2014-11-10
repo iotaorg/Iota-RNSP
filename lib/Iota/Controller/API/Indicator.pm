@@ -267,25 +267,33 @@ sub indicator_DELETE {
     my $obj = $c->stash->{object}->next;
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-    $c->model('DB::IndicatorVariablesVariationsValue')
-      ->search( { indicator_variables_variation_id => [ map { $_->id } $obj->indicator_variables_variations->all ] } )
-      ->delete;
+    $c->model('DB')->schema->txn_do(
+        sub {
 
-    $obj->user_indicator_configs->delete;
+        $c->model('DB::IndicatorVariablesVariationsValue')
+        ->search( { indicator_variables_variation_id => [ map { $_->id } $obj->indicator_variables_variations->all ] } )
+        ->delete;
 
-    $obj->indicator_user_visibilities->delete;
-    $obj->indicator_network_configs->delete;
+        $obj->user_indicator_configs->delete;
 
-    $obj->indicator_values->delete;
+        $obj->indicator_user_visibilities->delete;
+        $obj->indicator_network_configs->delete;
 
-    $obj->indicator_variables->delete;
+        $obj->indicator_values->delete;
 
-    $obj->indicator_variations->delete;
+        $obj->indicator_variables->delete;
 
-    $obj->indicator_variables_variations->delete;
+        $obj->indicator_variations->delete;
 
-    $obj->user_indicators->delete;
-    $obj->delete;
+        $obj->indicator_variables_variations->delete;
+
+        $obj->user_indicators->delete;
+        $obj->delete;
+    });
+
+    if ($@) {
+        $self->status_bad_request( $c, message => "$@" ), $c->detach;
+    }
 
     $self->status_no_content($c);
 }
