@@ -61,7 +61,25 @@ sub user_file_POST {
     $c->res->content_type('application/json; charset=utf8');
 
     my $upload = $c->req->upload('arquivo');
+
     if ($upload) {
+
+        if ($classe =~ /(imagem_cidade|logo_movimento|perfil_xd)/){
+
+            my $exiv = `which exiv2 2>&1`;
+            chomp($exiv);
+
+            if (`which 2>&1` eq '' && $exiv){
+                my $x = $upload->tempname;
+                my $ret = `$exiv $x 2>&1`;
+
+                if ($ret !~ /Image size/){
+                    $c->res->body( to_json( { error => 'not an image' } ) );
+                    $c->detach;
+                }
+            }
+        }
+
         my $user_id = $c->stash->{object}->next->id;
         my $filename =
           sprintf( 'user_%i_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename ), 0, 200 ) );

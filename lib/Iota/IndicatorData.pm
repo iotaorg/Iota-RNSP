@@ -310,7 +310,7 @@ sub upsert {
 
             if ( scalar @upper_regions ) {
 
-                print STDERR "-" x 100, "\n";
+               # print STDERR "-" x 100, "\n";
                # use DDP; p \@upper_regions if $DEBUG;
                 $self->upsert(
                     %params,
