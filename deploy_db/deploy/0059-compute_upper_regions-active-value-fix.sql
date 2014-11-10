@@ -129,7 +129,7 @@ BEGIN
     JOIN institute it ON it.id = u.institute_id
     WHERE CASE WHEN it.aggregate_only_if_full THEN qtde_regions = total_regions ELSE TRUE END;
 
-
+/*
 raise notice '_cur_level => % ', _cur_level;
 
 raise notice 'aggregate_only_if_full => _x ';
@@ -143,7 +143,7 @@ raise notice 'aggregate_only_if_full => _x ';
     (items.variable_id),
     (items.total);
 END LOOP;
-
+*/
     -- apaga as existentes
     DELETE
     FROM region_variable_value
@@ -173,6 +173,7 @@ END LOOP;
                         variable_id
         FROM _x WHERE active_value = FALSE )
     AND active_value = FALSE;
+    /*
 raise notice 'active_value false => _x ';
 
  FOR items IN select * from _x where active_value = false LOOP
@@ -183,7 +184,7 @@ raise notice 'active_value false => _x ';
     (items.variable_id),
     (items.total);
 END LOOP;
-
+*/
     -- insere como generated_by_compute=true
     INSERT INTO region_variable_value ( region_id, variable_id, valid_from,
                 user_id, value_of_date, value, SOURCE, generated_by_compute, active_value )
