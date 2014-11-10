@@ -51,6 +51,7 @@ sub date4period {
 sub value4human {
     my ( $self, $c, $value, $variable_type, $measurement_unit ) = @_;
 
+    return 'OK' if defined $value && $value == 1 && $variable_type eq 'str';
     return $value if $variable_type eq 'str';
     return 0 if $value < 0.0001;
     return $value if $value =~ /[a-z]/;

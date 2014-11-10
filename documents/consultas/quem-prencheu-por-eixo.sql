@@ -108,12 +108,7 @@ select
         and (
             x.visibility_level='public'
             OR (
-                x.visibility_level='private' AND x.visibility_user_id IN (
-                    select id from "user"
-                    where institute_id = 1
-                    and city_Id is not null
-                    and active
-                )
+                x.visibility_level='private' AND x.visibility_user_id = u.id
             )
             OR (
                 x.visibility_level='network' AND x.id IN (
@@ -133,12 +128,7 @@ select
             and (
                 x.visibility_level='public'
                 OR (
-                    x.visibility_level='private' AND x.visibility_user_id IN (
-                        select id from "user"
-                        where institute_id = 1
-                        and city_Id is not null
-                        and active
-                    )
+                    x.visibility_level='private' AND x.visibility_user_id = u.id
                 )
                 OR (
                     x.visibility_level='network' AND x.id IN (
@@ -158,12 +148,7 @@ select
         and (
             x.visibility_level='public'
             OR (
-                x.visibility_level='private' AND x.visibility_user_id IN (
-                    select id from "user"
-                    where institute_id = 1
-                    and city_Id is not null
-                    and active
-                )
+                x.visibility_level='private' AND x.visibility_user_id = u.id
             )
             OR (
                 x.visibility_level='network' AND x.id IN (
