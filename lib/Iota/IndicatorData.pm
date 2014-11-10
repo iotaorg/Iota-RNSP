@@ -98,7 +98,7 @@ sub upsert {
                 $params{variables_ids}, $params{variables_variations_ids},
                 $params{dates}, $region_level
             );
-            use DDP; p $ret;
+            #use DDP; p $ret;
             if ( !$ret ) {
                 print STDERR "\n\n\n$@\n\n\n";
             }
