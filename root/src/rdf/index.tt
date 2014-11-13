@@ -1,0 +1,25 @@
+<h2>RDF</h2>
+
+<p class="well well-small">Welcome to Iota RDF!</p>
+
+<p>All URI's (<i>base of the subjects</i>) are index over <a href="http://[%c.config.rdf_domain%]/rdf">[%c.config.rdf_domain%]/rdf</a>. This was done for RDF's URI not rely on filtered data of a specific Iota network domain.</p>
+
+<h2>Available data</h2>
+
+<ul>
+    <li>variable</li>
+</ul>
+
+<del>
+<h2>SPARQL</h2>
+
+A SPARQL 1x.1 servers is running on <a href="http://[%c.config.rdf_domain%]/sparql">http://[%c.config.rdf_domain%]/sparql</a>
+
+<h2>Formats</h2>
+<p>This RDF implementation supports the following serialization types: <i>ntriples</i>, <i>nquads</i>, <i>rdfxml</i>, <i>rdfjson</i>, <i>ntriples-canonical</i> and <i>turtle</i>. <b>turtle</b> is the default option.</p>
+
+</del>
+<p class="well well-small">
+Eg: <a target="about:_rdf" href="http://[%c.config.rdf_domain%]/rdf/variable/19?format=ntriples">http://[%c.config.rdf_domain%]/rdf/variable/19?format=ntriples</a>
+</p>
+
