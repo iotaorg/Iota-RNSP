@@ -75,6 +75,9 @@ __PACKAGE__->config(
 
     'View::HTML' => { expose_methods => [ 'date4period', 'value4human', 'l' ] },
 
+    # cache geral, carregado do banco quando recebe o valor de dynamic
+    rdf_domain   => 'dynamic'
+
 );
 
 after 'setup_components' => sub {

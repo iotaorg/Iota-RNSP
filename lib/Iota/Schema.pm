@@ -67,5 +67,20 @@ sub f_compute_all_upper_regions {
     return $res;
 }
 
+sub period_to_rdf {
+    my ($self, $period ) = @_;
+    return {qw|
+        daily        http://purl.org/cld/freq/daily
+        weekly       http://purl.org/cld/freq/weekly
+        monthly      http://purl.org/cld/freq/monthly
+        bimonthly    http://purl.org/cld/freq/bimonthly
+        quarterly    http://purl.org/cld/freq/quarterly
+        semi-annual  http://purl.org/cld/freq/semiannual
+        yearly       http://purl.org/cld/freq/annual
+        decade       http://purl.org/cld/freq/irregular
+    |}->{$period};
+
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

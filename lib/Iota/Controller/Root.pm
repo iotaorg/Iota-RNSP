@@ -66,6 +66,12 @@ sub default : Path {
     $c->response->status(404);
 }
 
+sub error_404_rdf : Private {
+    my ( $self, $c, $foo ) = @_;
+    $c->res->status(404);
+    $c->res->body('resource not found');
+}
+
 sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;

@@ -47,6 +47,7 @@ sub setup_lexicon_plugin {
     $current_lang = $c->config->{default_lang};
 
 }
+ use Digest::MD5 qw(md5_hex);
 
 sub lexicon_reload_all {
     my @files = glob("$cache_lang_prefix*");
@@ -68,7 +69,23 @@ sub lexicon_reload_self {
     close $FG;
 }
 
- # TODO
+sub valid_values_for_lex_key {
+    my ($self, $lex) = @_;
+
+    my $cache_lang_file = "$cache_lang_prefix$$";
+    unless ( -e $cache_lang_file ) {
+        &lexicon_reload_self;
+    }
+    my $out = {};
+    foreach my $lang (keys %$cache){
+        if (exists $cache->{$lang}{$lex} && $cache->{$lang}{$lex} !~ /^\?\s/){
+            $out->{$lang} = $cache->{$lang}{$lex};
+        }
+    }
+    wantarray ? %$out : $out;
+}
+
+
 =pod
 
 update lexicon m set translated_from_lexicon = true,
