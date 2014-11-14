@@ -21,6 +21,7 @@ sub object : Chained('base') PathPart('') CaptureArgs(1) {
     $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } )->next;
     $c->stash->{object} or $c->detach('/error_404_rdf');
 }
+use Encode qw(encode decode);
 
 sub show : Chained('object') PathPart('') Args(0) {
     my ( $self, $c, $id ) = @_;
@@ -48,10 +49,13 @@ sub show : Chained('object') PathPart('') Args(0) {
 
     # explanation => dct:description
     %str = $c->valid_values_for_lex_key( $object->explanation );
-    $rdf->assert_literal( $uri, 'dct:description', $rdf->new_literal( $str{$_} , $_ )) for keys %str;
 
-    $c->res->body($rdf->serialize( format => $c->stash->{serialize_formart} ));
-    $c->res->header('Content-Type', $c->stash->{format_vs_contenttype}{$c->stash->{serialize_formart}});
+    $rdf->assert_literal( $uri, 'dct:description', $rdf->new_literal( $str{$_}, $_ )) for keys %str;
+
+    my $output = $rdf->serialize( format => $c->stash->{serialize_format} );
+
+    $c->res->body($output);
+    $c->res->header('Content-Type', $c->stash->{format_vs_contenttype}{$c->stash->{serialize_format}});
 }
 
 __PACKAGE__->meta->make_immutable;

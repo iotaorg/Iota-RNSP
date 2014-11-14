@@ -17,7 +17,7 @@ sub base : Chained('/') PathPart('rdf') CaptureArgs(0) {
         turtle text/plain
     |};
 
-    $c->stash->{serialize_formart} =
+    $c->stash->{serialize_format} =
         exists $c->stash->{format_vs_contenttype}{$c->req->params->{format}}
         ? $c->req->params->{format}
         : 'turtle';
