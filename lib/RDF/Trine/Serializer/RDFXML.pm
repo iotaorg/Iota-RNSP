@@ -175,7 +175,6 @@ sub _statements_same_subject_as_string {
 	my @statements	= @_;
 	my $s			= $statements[0]->subject;
 
-	use DDP; p [caller(3)];
 	my $id;
 	if ($s->isa('RDF::Trine::Node::Blank')) {
 		my $b	= $s->blank_identifier;
