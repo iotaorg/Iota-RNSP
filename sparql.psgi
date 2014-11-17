@@ -33,7 +33,6 @@ use lib "$Bin/lib";
 use Data::Dumper;
 use Plack::Request;
 use Plack::Builder;
-use Config::JFDI;
 use Carp qw(confess);
 use RDF::Endpoint;
 use LWP::MediaTypes qw(add_type);

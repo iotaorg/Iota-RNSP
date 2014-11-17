@@ -20,6 +20,10 @@ requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 
 
+requires 'XML::LibXML';
+requires 'HTML::HTML5::Writer';
+requires 'RDF::Helper';
+requires 'RDF::Endpoint';
 
 requires 'Geo::Google::PolylineEncoder';
 requires 'I18N::AcceptLanguage';
