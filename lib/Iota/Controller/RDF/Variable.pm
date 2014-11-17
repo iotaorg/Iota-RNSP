@@ -29,28 +29,14 @@ sub show : Chained('object') PathPart('') Args(0) {
     my $schema = $c->model('DB')->schema;
 
     my $object = $c->stash->{object};
-    my $uri = 'http://' . $c->config->{rdf_domain} . $c->req->uri->path;
 
     my $rdf = $c->model('RDF')->rdf;
 
-    # id => dct:Identifier
-    $rdf->assert_literal( $uri, 'dct:Identifier', $object->id );
-
-    # period => dct:accrualPeriodicity
-    $rdf->assert_resource( $uri, 'dct:accrualPeriodicity', $schema->period_to_rdf($object->period) );
-
-    # reserva memoria uma vez só
-    my %str = ();
-
-    # name => dct:title
-    %str = $c->valid_values_for_lex_key( $object->name );
-
-    $rdf->assert_literal( $uri, 'dct:title', $rdf->new_literal( $str{$_} , $_ )) for keys %str;
-
-    # explanation => dct:description
-    %str = $c->valid_values_for_lex_key( $object->explanation );
-
-    $rdf->assert_literal( $uri, 'dct:description', $rdf->new_literal( $str{$_}, $_ )) for keys %str;
+    $object->populate_rdf(
+        rdf => $rdf,
+        rdf_domain => $c->config->{rdf_domain},
+        valid_values_for_lex_key => sub { $c->valid_values_for_lex_key(@_) }
+    );
 
     my $output = $rdf->serialize( format => $c->stash->{serialize_format} );
 

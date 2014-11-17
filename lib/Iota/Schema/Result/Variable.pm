@@ -341,5 +341,37 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->has_many( "values", "Iota::Schema::Result::VariableValue", { "foreign.variable_id" => "self.id" }, );
 
+
+sub populate_rdf {
+    my ($object, %opts) = @_;
+
+    my $schema = $object->result_source->schema;
+    my $rdf = $opts{rdf};
+    my $valid_values_for_lex_key = $opts{valid_values_for_lex_key};
+
+    my $uri = 'http://' . $opts{rdf_domain} . '/rdf/variable/' . $object->id;
+
+    # id => dct:Identifier
+    $rdf->assert_literal( $uri, 'dct:Identifier', $object->id );
+
+    # period => dct:accrualPeriodicity
+    $rdf->assert_resource( $uri, 'dct:accrualPeriodicity', $schema->period_to_rdf($object->period) );
+
+    # reserva memoria uma vez só
+    my %str = ();
+
+    # name => dct:title
+    %str = $valid_values_for_lex_key->( $object->name );
+
+    $rdf->assert_literal( $uri, 'dct:title', $rdf->new_literal( $str{$_} , $_ )) for keys %str;
+
+    # explanation => dct:description
+    %str = $valid_values_for_lex_key->( $object->explanation );
+
+    $rdf->assert_literal( $uri, 'dct:description', $rdf->new_literal( $str{$_}, $_ )) for keys %str;
+
+    return 1;
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
