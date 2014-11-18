@@ -64,7 +64,7 @@
     </div>
 
 
-    <div class="col-md-10 col-sm-12">
+    <div class="col-md-5 col-sm-6">
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h3 class="panel-title">API [%l('para desenvolvedores')%]</h3>
@@ -78,7 +78,24 @@
         </div>
     </div>
 
+    <div class="col-md-5 col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">RDF [%l('para desenvolvedores')%]</h3>
+            </div>
+            <div class="panel-body">
+                <p>[%l('Você pode consultar as variaveis e indicadores utilizando RDF')%].</p>
+
+                <p>[%l('Para saber mais, navegue até a seção <a data-animated-anchor href="#api">API</a>').
+                replace('<a data-animated-anchor href="#api">API</a>', '<a href="/rdf">RDF</a>')|none%].</p>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
 
 <h1><span class="glyphicon glyphicon-floppy-save"></span> [%l('Baixar arquivos')%]</h1>
 
