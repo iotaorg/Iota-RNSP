@@ -28,12 +28,20 @@ textarea,.CodeMirror-wrapping{ border: 1px solid #000 }
         <p>
                 <textarea id="query" name="query" rows="10" cols="60">
 PREFIX dct: &lt;http://purl.org/dc/terms/>
-SELECT  ?x ?title ?accrualPeriodicity ?description
-
-WHERE  {
- ?x dct:title ?title .
- ?x dct:accrualPeriodicity ?accrualPeriodicity .
- ?x dct:description ?description .
+SELECT  ?o ?id ?titleBR ?titleES
+WHERE
+{
+  ?o dct:Identifier ?id .
+  OPTIONAL
+  {
+    ?o dct:title ?titleBR .
+    FILTER(LANGMATCHES(LANG(?titleBR), "pt-BR"))
+  }
+  OPTIONAL
+  {
+    ?o dct:title ?titleES .
+    FILTER(LANGMATCHES(LANG(?titleES), "es"))
+  }
 }
 </textarea><br/>
                 <select id="media-type" name="media-type">
