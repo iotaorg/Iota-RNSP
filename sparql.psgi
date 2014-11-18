@@ -53,6 +53,15 @@ use Iota;
 my $schema = Iota->model('DB');
 my $rdf    = Iota->model('RDF')->rdf;
 
+use RDF::Trine::Store;
+use RDF::Trine::Model;
+
+my $store = RDF::Trine::Store->new_with_config( {
+      storetype => 'Hexastore',
+} );
+
+$rdf->model(RDF::Trine::Model->new( $store ));
+
 my $rdf_domain = $schema->resultset('Network')->search({rdf_identifier => 1})->next->domain_name;
 my $fake_c = FakeCatalyst->new( user => FakeUser->new( cur_lang => 'pt-br' ), config => Iota->config );
 
@@ -60,23 +69,32 @@ sub valid_values_for_lex_key {
     CatalystX::Plugin::Lexicon::valid_values_for_lex_key( $fake_c, @_ );
 }
 
-my $rs = $schema->resultset('Variable');
+my $i = 0;
+my $rs = $schema->resultset('Variable')->search(undef,{ rows =>1000,offset => 0  });
 
 while (my $object = $rs->next){
 
+    $i++;
     $object->populate_rdf(
         rdf => $rdf,
         rdf_domain => $rdf_domain,
         valid_values_for_lex_key => \&valid_values_for_lex_key
     );
 
+    undef $object;
 }
+undef $rs;
+undef $fake_c;
+undef $schema;
+
+
+use DDP; p $i;
 
 my $fname = "$dump/dump.iota.n3";
 open(my $f, '>', $fname) or die "cant open $fname $!";
 $rdf->serialize( filename =>$f, format => 'ntriples');
 
-`gzip $fname`;
+`gzip -f $fname`;
 
 my $end  = RDF::Endpoint->new( $rdf->model, {
     update => 0,
