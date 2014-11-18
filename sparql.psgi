@@ -70,7 +70,7 @@ sub valid_values_for_lex_key {
 }
 
 my $i = 0;
-my $rs = $schema->resultset('Variable')->search(undef,{ rows =>1000,offset => 0  });
+my $rs = $schema->resultset('Variable');
 
 while (my $object = $rs->next){
 
