@@ -71,6 +71,7 @@ sub lexicon_reload_self {
 
 sub valid_values_for_lex_key {
     my ($self, $lex) = @_;
+    return wantarray ? () : {} unless $lex;
 
     my $cache_lang_file = "$cache_lang_prefix$$";
     unless ( -e $cache_lang_file ) {
@@ -78,7 +79,7 @@ sub valid_values_for_lex_key {
     }
     my $out = {};
     foreach my $lang (keys %$cache){
-        if (exists $cache->{$lang}{$lex} && $cache->{$lang}{$lex} !~ /^\?\s/){
+        if (exists $cache->{$lang}{$lex} && $cache->{$lang}{$lex} !~ /^\?\s/ && $cache->{$lang}{$lex}){
             $out->{$lang} = $cache->{$lang}{$lex};
         }
     }

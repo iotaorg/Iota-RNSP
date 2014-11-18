@@ -351,8 +351,10 @@ sub populate_rdf {
 
     my $uri = 'http://' . $opts{rdf_domain} . '/rdf/variable/' . $object->id;
 
+    $rdf->assert_literal( $uri, 'rdf:ID', 'variable' );
+
     # id => dct:Identifier
-    $rdf->assert_literal( $uri, 'dct:Identifier', $object->id );
+    $rdf->assert_literal( $uri, 'dct:Identifier', $rdf->new_literal( $object->id, undef, 'xsd:integer' )  );
 
     # period => dct:accrualPeriodicity
     $rdf->assert_resource( $uri, 'dct:accrualPeriodicity', $schema->period_to_rdf($object->period) );
@@ -369,6 +371,7 @@ sub populate_rdf {
     %str = $valid_values_for_lex_key->( $object->explanation );
 
     $rdf->assert_literal( $uri, 'dct:description', $rdf->new_literal( $str{$_}, $_ )) for keys %str;
+
 
     return 1;
 }

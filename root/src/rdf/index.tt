@@ -1,26 +1,26 @@
-<h2>RDF</h2>
+<h2>Welcome</h2>
 
-<p class="well well-small">Welcome to Iota RDF!</p>
+<p>This is [%c.config.rdf_domain%] RDF page.</p>
 
 <p>All URI's (<i>base of the subjects</i>) are index over <a href="http://[%c.config.rdf_domain%]/rdf">[%c.config.rdf_domain%]/rdf</a>. This was done for RDF's URI not rely on filtered data of a specific Iota network domain.</p>
+
+
+<h2>N-Triples Dump <small>updated each 2 hours</small></h2>
+<a href="/static/built/rdf/dump.iota.n3.gz">dump.iota.n3.gz</a> Import it into your favorite RDF/XML parser!
 
 
 <h2>SPARQL <small>updated each 2 hours</small></h2>
 
 A complete SPARQL 1.1 implementation is running on <a href="http://[%c.config.rdf_domain%]/sparql">http://[%c.config.rdf_domain%]/sparql</a>
 
-
-<h2>N-Triples Dump <small>updated each 2 hours</small></h2>
-<a href="/static/built/rdf/dump.iota.n3.gz">dump.iota.n3.gz</a>
-
-
 <h2>Available data</h2>
 
 <ul>
-    <li>variable</li>
+    <li>variables [id, name, period and description]</li>
+    <li>indicators [id, name, name_url, period and description]</li>
 </ul>
 
-<h2>Formats</h2>
+<h2>Output formats</h2>
 <p>This RDF implementation supports the following serialization types: <i>ntriples</i>, <i>nquads</i>, <i>rdfxml</i>, <i>rdfjson</i>, <i>ntriples-canonical</i> and <i>turtle</i>. <b>turtle</b> is the default option.</p>
 
 <p class="well well-small">

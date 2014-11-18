@@ -1,14 +1,14 @@
-package Iota::Controller::RDF::Variable;
+package Iota::Controller::RDF::Indicator;
 use Moose;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller::REST' }
 use utf8;
 
-sub base : Chained('/rdf/base') PathPart('variable') CaptureArgs(0) {
+sub base : Chained('/rdf/base') PathPart('indicator') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    $c->stash->{collection} = $c->model('DB::Variable');
+    $c->stash->{collection} = $c->model('DB::Indicator');
 }
 
 sub object : Chained('base') PathPart('') CaptureArgs(1) {

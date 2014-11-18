@@ -592,5 +592,45 @@ __PACKAGE__->belongs_to(
     { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+
+sub populate_rdf {
+    my ($object, %opts) = @_;
+
+    my $schema = $object->result_source->schema;
+    my $rdf = $opts{rdf};
+    my $valid_values_for_lex_key = $opts{valid_values_for_lex_key};
+
+    my $uri = 'http://' . $opts{rdf_domain} . '/rdf/indicator/' . $object->id;
+
+
+    $rdf->assert_literal( $uri, 'rdf:ID', 'indicator' );
+
+
+    # id => dct:Identifier
+    $rdf->assert_literal( $uri, 'dct:Identifier', $object->id );
+
+    # period => dct:accrualPeriodicity
+    $rdf->assert_resource( $uri, 'dct:accrualPeriodicity', $schema->period_to_rdf($object->period) );
+
+    # reserva memoria uma vez só
+    my %str = ();
+
+    # name => dct:title
+    %str = $valid_values_for_lex_key->( $object->name );
+
+    $rdf->assert_literal( $uri, 'dct:title', $rdf->new_literal( $str{$_} , $_ )) for keys %str;
+
+    # explanation => dct:description
+    %str = $valid_values_for_lex_key->( $object->explanation );
+
+    $rdf->assert_literal( $uri, 'dct:description', $rdf->new_literal( $str{$_}, $_ )) for keys %str;
+
+    # name_url => dct:subject
+    $rdf->assert_literal( $uri, 'dct:subject', $object->name_url);
+
+    return 1;
+}
+
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
