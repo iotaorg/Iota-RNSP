@@ -69,33 +69,38 @@ sub valid_values_for_lex_key {
     CatalystX::Plugin::Lexicon::valid_values_for_lex_key( $fake_c, @_ );
 }
 
-my $i = 0;
-my $rs = $schema->resultset('Variable');
+for my $table (qw/Variable Indicator/){
+    my $rs = $schema->resultset($table);
 
-while (my $object = $rs->next){
+    my $i = 0;
+    while (my $object = $rs->next){
+        $i++;
+        $object->populate_rdf(
+            rdf => $rdf,
+            rdf_domain => $rdf_domain,
+            valid_values_for_lex_key => \&valid_values_for_lex_key
+        );
 
-    $i++;
-    $object->populate_rdf(
-        rdf => $rdf,
-        rdf_domain => $rdf_domain,
-        valid_values_for_lex_key => \&valid_values_for_lex_key
-    );
-
-    undef $object;
+        undef $object;
+    }
+    print STDERR "# Loaded $i $table...\n";
+    undef $rs;
 }
-undef $rs;
-undef $fake_c;
 undef $schema;
+undef $fake_c;
 
-
-use DDP; p $i;
 
 my $fname = "$dump/dump.iota.n3";
+print STDERR "# Writing to $fname\n";
 open(my $f, '>', $fname) or die "cant open $fname $!";
 $rdf->serialize( filename =>$f, format => 'ntriples');
 
+print STDERR "# gziping...\n";
 `gzip -f $fname`;
 
+print STDERR "# Done\n";
+
+print STDERR "# Starting server now\n";
 my $end  = RDF::Endpoint->new( $rdf->model, {
     update => 0,
     html => {

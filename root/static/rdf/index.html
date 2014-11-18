@@ -28,9 +28,13 @@ textarea,.CodeMirror-wrapping{ border: 1px solid #000 }
         <p>
                 <textarea id="query" name="query" rows="10" cols="60">
 PREFIX dct: &lt;http://purl.org/dc/terms/>
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT  ?o ?id ?titleBR ?titleES
 WHERE
 {
+  ?o rdf:ID "variable" .
   ?o dct:Identifier ?id .
   OPTIONAL
   {
@@ -43,6 +47,8 @@ WHERE
     FILTER(LANGMATCHES(LANG(?titleES), "es"))
   }
 }
+ORDER BY ASC(xsd:integer(?id))
+LIMIT 100
 </textarea><br/>
                 <select id="media-type" name="media-type">
                         <option value="">Result Format...</option>
