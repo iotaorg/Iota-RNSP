@@ -1,9 +1,23 @@
 <h1>[%l('Mapa do site')%]</h1>
 <div class="row">
+    <div class="col-md-3">
+        <h3>[%l('Links')%]</h3>
+        <ul>
+            <li><a href="/">[%l('Lista de indicadores da')%] [%network.name%]</a></li>
+            <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
+            <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
+        </ul>
 
-    <div class="span3">
-    <div [%IF indicators.size > cities.size%]lockfixed[%END%]>
-        <h2>[%l('Cidades')%]</h2>
+        <h3>[%l('Boas práticas')%]</h3>
+        <ul>
+            [%FOREACH bp IN best_pratices%]
+            <li><a href="/[%bp.user_url%]/boas-praticas">[% bp.city_name %] ([%bp.count%])</a></li>
+            [%END%]
+        </ul>
+    </div>
+
+    <div class="col-md-3">
+        <h3>[%l('Cidades')%]</h3>
         <ul>
         [%FOREACH city IN cities.sort('name') %]
             <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%] ([%city.uf%])</a></li>
@@ -11,12 +25,10 @@
         [%city=undef%]
         </ul>
     </div>
-    </div>
 
-    <div class="span6">
-    <div [%IF indicators.size < cities.size%]lockfixed[%END%]>
+    <div class="col-md-6">
 
-        <h2>[%l('Indicadores')%]</h2>
+        <h3>[%l('Indicadores')%]</h3>
         <ul>
         [%FOREACH i IN indicators %]
             <li><a href="/[%i.name_url%]">[%l(i.name)%]</a></li>
@@ -24,25 +36,6 @@
         </ul>
     </div>
 
-    </div>
-
-    <div class="span3">
-     <div lockfixed>
-        <h2>[%l('Links')%]</h2>
-        <ul>
-            <li><a href="/">[%l('Lista de indicadores da')%] [%network.name%]</a></li>
-            <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
-            <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
-        </ul>
-
-        <h2>[%l('Boas práticas')%]</h2>
-        <ul>
-            [%FOREACH bp IN best_pratices%]
-            <li><a href="/[%bp.user_url%]/boas-praticas">[% bp.city_name %] ([%bp.count%])</a></li>
-            [%END%]
-        </ul>
-    </div>
-    </div>
 </div>
 
 

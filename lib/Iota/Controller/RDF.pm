@@ -32,7 +32,13 @@ sub base : Chained('/') PathPart('rdf') CaptureArgs(0) {
 
 sub index : Chained('base') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{custom_wrapper} = 'iota-wrapper.tt';
+
+    $c->stash(
+        custom_wrapper => 'iota-wrapper.tt',
+        v2 => 1,
+        custom_wrapper => 'site/iota_wrapper',
+        c_req_path => 'rdf',
+    );
 }
 
 __PACKAGE__->meta->make_immutable;

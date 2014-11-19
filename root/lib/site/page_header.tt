@@ -1,3 +1,4 @@
+[%IF public%]
 <div class="page-header">
     <div class="container">
         [%IF !v2%]<p class="logo">Iota</p>[%END%]
@@ -29,3 +30,4 @@
 
     </div>
 </div>
+[%END%]

@@ -1,6 +1,7 @@
 <li [% IF c_req_path == '' %]class="active"[%END%]>
 <a href="/">[%l('Indicadores')%]</a>
 </li>
+
 [% IF city %]
 <li [% IF "${c_req_path}" == "${city.pais}/$city.uf/$city.name_uri" %]class="active"[%END%]><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[%city.name%]</a></li>
 
@@ -15,6 +16,7 @@
     <a href="[%files_link%]">[%l('Arquivos')%]</a>
 </li>
 [%END%]
+
 
 [% END %]
 [% IF menu %]
@@ -46,3 +48,9 @@
 [%- IF network.id == 1  -%]
 <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
 [%-END-%]
+
+[%IF c_req_path%]
+<li [% IF c_req_path == "rdf" %]class="active"[%END%]>
+    <a href="/rdf">[%l('RDF')%]</a>
+</li>
+[%END%]

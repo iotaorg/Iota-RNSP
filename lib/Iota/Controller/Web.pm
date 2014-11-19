@@ -313,7 +313,9 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         cities        => $c->stash->{network_data}{cities},
         indicators    => \@indicators,
         best_pratices => \@good_pratices,
-        template      => 'mapa_site.tt'
+        template      => 'mapa_site.tt',
+        v2 => 1,
+        custom_wrapper => 'site/iota_wrapper',
     );
 }
 
