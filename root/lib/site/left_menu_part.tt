@@ -49,7 +49,7 @@
 <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
 [%-END-%]
 
-[%IF c_req_path%]
+[%IF c_req_path == "rdf"%]
 <li [% IF c_req_path == "rdf" %]class="active"[%END%]>
     <a href="/rdf">[%l('RDF')%]</a>
 </li>
