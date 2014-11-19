@@ -277,6 +277,7 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
+    use DDP; p \@users_ids;
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_id},
@@ -288,9 +289,22 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         }
       )->as_hashref->all;
 
+    my @good_pratices = $c->model('DB::UserBestPratice')->search({
+        'user.active' => 1,
+        'user.id' => { '-in' => \@users_ids }
+    }, {
+        select => [\"city.pais || '/' || city.uf || '/' || city.name_uri as user_url", \'city.name as city_name', \'count(1)'],
+        as      => ['user_url', 'city_name', 'count'],
+        group_by => ['user_url', 'city_name'],
+        join => {'user' => 'city'},
+        result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+        order_by => 'city_name'
+    })->all;
+
     $c->stash(
         cities     => $c->stash->{network_data}{cities},
         indicators => \@indicators,
+        best_pratices => \@good_pratices,
         template   => 'mapa_site.tt'
     );
 }

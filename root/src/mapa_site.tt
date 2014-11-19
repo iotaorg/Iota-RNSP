@@ -34,9 +34,18 @@
             <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
             <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
         </ul>
+
+        <h2>[%l('Boas práticas')%]</h2>
+        <ul>
+            [%FOREACH bp IN best_pratices%]
+            <li><a href="/[%bp.user_url%]/boas-praticas">[% bp.city_name %] ([%bp.count%])</a></li>
+            [%END%]
+        </ul>
     </div>
     </div>
 </div>
+
+
 
 <script type="text/javascript">
 var ref = 'mapa_site';
