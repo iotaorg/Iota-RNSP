@@ -278,8 +278,7 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-    use DDP;
-    p \@users_ids;
+
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_id},
