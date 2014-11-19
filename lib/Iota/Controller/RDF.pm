@@ -33,6 +33,7 @@ sub base : Chained('/') PathPart('rdf') CaptureArgs(0) {
 sub index : Chained('base') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 
+    $c->forward('/light_institute_load');
     $c->stash(
         custom_wrapper => 'iota-wrapper.tt',
         v2 => 1,
