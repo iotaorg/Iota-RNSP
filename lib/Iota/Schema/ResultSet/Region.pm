@@ -46,7 +46,7 @@ sub verifiers_specs {
                         }
 
                         return 0;
-                      }
+                    }
                 },
 
                 subregions_valid_after => { required => 0, type => DataStr },
@@ -79,7 +79,7 @@ sub verifiers_specs {
                         }
 
                         return 0;
-                      }
+                    }
                 },
                 subregions_valid_after => { required => 0, type => DataStr },
 

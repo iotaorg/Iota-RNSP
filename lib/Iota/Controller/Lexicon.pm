@@ -45,38 +45,37 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
 
     $self->save_lexicons($c) if $c->req->method eq 'POST';
 
+    my $min_length = exists $c->req->params->{min_length}
+      && $c->req->params->{min_length} =~ /^[0-9]+$/ ? $c->req->params->{min_length} : undef;
+    my $max_length =
+      exists $c->req->params->{max_length}
+      && $c->req->params->{max_length} =~ /^[0-9]+$/ ? $c->req->params->{max_length}
+      : $c->stash->{count_only}                      ? undef
+      :                                                60;
 
-    my $min_length = exists $c->req->params->{min_length} && $c->req->params->{min_length} =~ /^[0-9]+$/ ?
-        $c->req->params->{min_length} : undef;
-    my $max_length = exists $c->req->params->{max_length} && $c->req->params->{max_length} =~ /^[0-9]+$/ ?
-        $c->req->params->{max_length} : $c->stash->{count_only} ? undef : 60;
+    my $filter_like = exists $c->req->params->{filter_like}
+      && $c->req->params->{filter_like} !~ /^\s+$/ ? $c->req->params->{filter_like} : undef;
 
-    my $filter_like = exists $c->req->params->{filter_like} && $c->req->params->{filter_like} !~ /^\s+$/ ?
-        $c->req->params->{filter_like} : undef;
-
-    $c->stash->{max_length} = $max_length;
-    $c->stash->{min_length} = $min_length;
+    $c->stash->{max_length}  = $max_length;
+    $c->stash->{min_length}  = $min_length;
     $c->stash->{filter_like} = $filter_like;
 
     my $rs = $c->model('DB::Lexicon')->search(
         {
             lex_value => { like => '? %' },
 
-            ($c->user->id != 1 ? (user_id   => $c->user->id) : ()),
+            ( $c->user->id != 1 ? ( user_id => $c->user->id ) : () ),
 
-            $filter_like ? ( lex_key => { like => \["'%'|| ? || '%'", [foo => $filter_like]] } ) : (),
+            $filter_like ? ( lex_key => { like => \[ "'%'|| ? || '%'", [ foo => $filter_like ] ] } ) : (),
 
-            ($max_length || $min_length) ?
-            (
+            ( $max_length || $min_length )
+            ? (
                 '-and' => [
-                    $max_length ? (
-                        \"length(lex_key) <= $max_length"
-                    ) : (),
-                    $min_length ? (
-                        \"length(lex_key) >= $min_length"
-                    ) : (),
+                    $max_length ? ( \"length(lex_key) <= $max_length" ) : (),
+                    $min_length ? ( \"length(lex_key) >= $min_length" ) : (),
                 ]
-            ): ()
+              )
+            : ()
         },
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -84,7 +83,7 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
         }
     );
 
-    if ($c->stash->{count_only}){
+    if ( $c->stash->{count_only} ) {
         $c->stash->{count} = $rs->count;
         return;
     }
@@ -106,11 +105,7 @@ sub load_pending : Chained('env') PathPart('pending') CaptureArgs(0) {
 sub save_lexicons {
     my ( $self, $c ) = @_;
 
-    my $rs = $c->model('DB::Lexicon')->search(
-        {
-            ($c->user->id != 1 ? (user_id   => $c->user->id) : ()),
-        }
-    );
+    my $rs = $c->model('DB::Lexicon')->search( { ( $c->user->id != 1 ? ( user_id => $c->user->id ) : () ), } );
 
     my $i = 0;
     while ( my ( $name, $value ) = each %{ $c->req->params } ) {
@@ -144,7 +139,7 @@ sub pending_count : Chained('env') PathPart('pending/count') Args(0) {
 
     $c->stash->{count_only} = 1;
 
-    $self->load_pending( $c );
+    $self->load_pending($c);
 
     $c->res->body(qq|{"count":${\$c->stash->{count}}}|);
 }

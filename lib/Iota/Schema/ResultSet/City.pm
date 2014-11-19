@@ -45,7 +45,7 @@ sub verifiers_specs {
                         my $it =
                           $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
                         return defined $it;
-                      }
+                    }
                 },
 
                 latitude                    => { required => 0, type => 'Num' },
@@ -75,7 +75,7 @@ sub verifiers_specs {
                         my $it =
                           $self->result_source->schema->resultset('State')->find( { id => $r->get_value('state_id') } );
                         return defined $it;
-                      }
+                    }
                 },
 
                 latitude                    => { required => 0, type => 'Num' },

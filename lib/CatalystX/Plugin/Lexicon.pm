@@ -47,7 +47,7 @@ sub setup_lexicon_plugin {
     $current_lang = $c->config->{default_lang};
 
 }
- use Digest::MD5 qw(md5_hex);
+use Digest::MD5 qw(md5_hex);
 
 sub lexicon_reload_all {
     my @files = glob("$cache_lang_prefix*");
@@ -70,7 +70,7 @@ sub lexicon_reload_self {
 }
 
 sub valid_values_for_lex_key {
-    my ($self, $lex) = @_;
+    my ( $self, $lex ) = @_;
     return wantarray ? () : {} unless $lex;
 
     my $cache_lang_file = "$cache_lang_prefix$$";
@@ -78,14 +78,13 @@ sub valid_values_for_lex_key {
         &lexicon_reload_self;
     }
     my $out = {};
-    foreach my $lang (keys %$cache){
-        if (exists $cache->{$lang}{$lex} && $cache->{$lang}{$lex} !~ /^\?\s/ && $cache->{$lang}{$lex}){
+    foreach my $lang ( keys %$cache ) {
+        if ( exists $cache->{$lang}{$lex} && $cache->{$lang}{$lex} !~ /^\?\s/ && $cache->{$lang}{$lex} ) {
             $out->{$lang} = $cache->{$lang}{$lex};
         }
     }
     wantarray ? %$out : $out;
 }
-
 
 =pod
 
@@ -102,6 +101,7 @@ where origin_lang='pt-br' and lang='es' and lex_key in (select lex_value from le
 
 
 =cut
+
 sub loc {
     my ( $c, $text, $origin_lang, @conf ) = @_;
 
@@ -147,27 +147,33 @@ sub loc {
             )->count;
 
             if ( $exists == 0 ) {
-                eval{$resultset->create(
-                    {
-                        lex         => '*',
-                        lang        => $lang,
-                        lex_key     => $text,
-                        lex_value   => \["coalesce(
+                eval {
+                    $resultset->create(
+                        {
+                            lex       => '*',
+                            lang      => $lang,
+                            lex_key   => $text,
+                            lex_value => \[
+                                "coalesce(
                                             (select x.lex_key from lexicon x where x.lang = ?
                                                 and x.origin_lang = ?
                                                 and x.lex_value   = ?
-                                                order by length(lex_key) limit 1), ?)", $origin_lang, $lang, $text, $str],
+                                                order by length(lex_key) limit 1), ?)", $origin_lang, $lang, $text, $str
+                            ],
 
-                        translated_from_lexicon   => \["coalesce(
+                            translated_from_lexicon => \[
+                                "coalesce(
                                             (select true from lexicon x where x.lang = ?
                                                 and x.origin_lang = ?
                                                 and x.lex_value   = ?
-                                                order by length(lex_key) limit 1), NULL)", $origin_lang, $lang, $text],
+                                                order by length(lex_key) limit 1), NULL)", $origin_lang, $lang, $text
+                            ],
 
-                        user_id     => $user_id,
-                        origin_lang => $origin_lang
-                    }
-                )};
+                            user_id     => $user_id,
+                            origin_lang => $origin_lang
+                        }
+                    );
+                };
             }
         }
         return $current_lang eq $origin_lang ? $text : "? $text";

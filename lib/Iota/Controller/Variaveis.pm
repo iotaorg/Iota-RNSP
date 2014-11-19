@@ -63,13 +63,22 @@ sub _download {
 
     my @lines = (
         [
-            map { $self->_loc_str( $c, $_ ) } 'ID da cidade', 'Nome da cidade ',
-            'ID',               'Tipo',
-            'Apelido',          'Período de atualização',
-            'É Básica?',      'Unidade de medida',
-            'Nome',             'Data',
-            'Valor',            'Observações',
-            'Fonte preenchida', 'Nome Região', 'Valor ativo?', 'Gerado por computador?'
+            map { $self->_loc_str( $c, $_ ) } 'ID da cidade',
+            'Nome da cidade ',
+            'ID',
+            'Tipo',
+            'Apelido',
+            'Período de atualização',
+            'É Básica?',
+            'Unidade de medida',
+            'Nome',
+            'Data',
+            'Valor',
+            'Observações',
+            'Fonte preenchida',
+            'Nome Região',
+            'Valor ativo?',
+            'Gerado por computador?'
         ]
     );
 
@@ -159,7 +168,7 @@ sub _download {
             $self->_loc_str( $c, $data->{source} ),
             $self->_loc_str( $c, $data->{region_name} ),
 
-            $self->_loc_str( $c, $data->{active_value} ? 'sim' : 'não' ),
+            $self->_loc_str( $c, $data->{active_value}         ? 'sim' : 'não' ),
             $self->_loc_str( $c, $data->{generated_by_compute} ? 'sim' : 'não' ),
 
         );

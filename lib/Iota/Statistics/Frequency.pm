@@ -41,7 +41,7 @@ sub iterate {
             if ( defined $order[0] && $num < $order[0] ) {
                 $r->{i} = 0;
             }
-            elsif (defined $order[1] &&  $num < $order[1] ) {
+            elsif ( defined $order[1] && $num < $order[1] ) {
                 $r->{i} = 1;
             }
             elsif ( defined $order[2] && $num < $order[2] ) {

@@ -31,15 +31,15 @@ sub show : Chained('object') PathPart('') Args(0) {
     my $rdf = $c->model('RDF')->rdf;
 
     $object->populate_rdf(
-        rdf => $rdf,
-        rdf_domain => $c->config->{rdf_domain},
+        rdf                      => $rdf,
+        rdf_domain               => $c->config->{rdf_domain},
         valid_values_for_lex_key => sub { $c->valid_values_for_lex_key(@_) }
     );
 
     my $output = $rdf->serialize( format => $c->stash->{serialize_format} );
 
     $c->res->body($output);
-    $c->res->header('Content-Type', $c->stash->{format_vs_contenttype}{$c->stash->{serialize_format}});
+    $c->res->header( 'Content-Type', $c->stash->{format_vs_contenttype}{ $c->stash->{serialize_format} } );
 }
 
 __PACKAGE__->meta->make_immutable;

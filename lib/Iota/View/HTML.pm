@@ -54,6 +54,7 @@ sub value4human {
     return 'OK' if defined $value && $value == 1 && $variable_type eq 'str';
     return $value if $variable_type eq 'str';
     return 0 if $value < 0.0001;
+
     return $value if $value =~ /[a-z]/;
 
     my $pre = '';
@@ -61,7 +62,7 @@ sub value4human {
     my $end = '';
 
     if ( $variable_type eq 'num' ) {
-        $value = sprintf('%f', $value);
+        $value = sprintf( '%f', $value );
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );

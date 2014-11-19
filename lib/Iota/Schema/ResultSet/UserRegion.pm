@@ -34,7 +34,7 @@ sub verifiers_specs {
                             }
                         );
                         return !defined $row;
-                      }
+                    }
                 },
                 region_classification_name => { required => 1, type => 'Str' },
             },

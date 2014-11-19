@@ -33,8 +33,9 @@ our ($VERSION);
 our %serializer_names;
 our %format_uris;
 our %media_types;
+
 BEGIN {
-	$VERSION	= '1.011';
+    $VERSION = '1.011';
 }
 
 use RDF::Trine::Serializer::NQuads;
@@ -45,7 +46,6 @@ use RDF::Trine::Serializer::RDFJSON;
 use RDF::Trine::Serializer::Turtle;
 use RDF::Trine::Serializer::TriG;
 use RDF::Trine::Serializer::RDFPatch;
-
 
 =head1 METHODS
 
@@ -58,7 +58,7 @@ Returns a list of valid serializer names for use as arguments to the serializer 
 =cut
 
 sub serializer_names {
-	return keys %serializer_names;
+    return keys %serializer_names;
 }
 
 =item C<< new ( $serializer_name, %options ) >>
@@ -77,16 +77,17 @@ use C<< base_uri => $base_uri >> .
 =cut
 
 sub new {
-	my $class	= shift;
-	my $name	= shift;
-	my $key		= lc($name);
-	$key		=~ s/[^-a-z]//g;
+    my $class = shift;
+    my $name  = shift;
+    my $key   = lc($name);
+    $key =~ s/[^-a-z]//g;
 
-	if (my $class = $serializer_names{ $key }) {
-		return $class->new( @_ );
-	} else {
-		throw RDF::Trine::Error::SerializationError -text => "No serializer known named $name";
-	}
+    if ( my $class = $serializer_names{$key} ) {
+        return $class->new(@_);
+    }
+    else {
+        throw RDF::Trine::Error::SerializationError -text => "No serializer known named $name";
+    }
 }
 
 =item C<< negotiate ( request_headers => $request_headers, %options ) >>
@@ -107,58 +108,64 @@ serializer constructor.
 =cut
 
 sub negotiate {
-	my $class	= shift;
-	my %options	= @_;
-	my $headers	= delete $options{ 'request_headers' };
-	my $restrict	= delete $options{ 'restrict' };
-	my $extend	= delete $options{ 'extend' } || {};
-	my %sclasses;
-	if (ref($restrict) && ref($restrict) eq 'ARRAY') {
-		$sclasses{ $serializer_names{$_} } = 1 for @$restrict;
-	} else {
-		%sclasses = reverse %serializer_names;
-	}
-	my @default_variants;
-	while (my($type, $sclass) = each(%media_types)) {
-		next unless $sclasses{$sclass};
-		my $qv;
-		# slightly prefer turtle as a readable format to others
-		# try hard to avoid using ntriples as 'text/plain' isn't very useful for conneg
-		if ($type eq 'text/turtle') {
-			$qv	= 1.0;
-		} elsif ($type eq 'text/plain') {
-			$qv	= 0.2;
-		} else {
-			$qv	= 0.99;
-		}
-		$qv		-= 0.01 if ($type =~ m#/x-#);				# prefer non experimental media types
-		$qv		-= 0.01 if ($type =~ m#^application/(?!rdf[+]xml)#);	# prefer standard rdf/xml to other application/* formats
-		push(@default_variants, [$type, $qv, $type]);
-	}
+    my $class    = shift;
+    my %options  = @_;
+    my $headers  = delete $options{'request_headers'};
+    my $restrict = delete $options{'restrict'};
+    my $extend   = delete $options{'extend'} || {};
+    my %sclasses;
+    if ( ref($restrict) && ref($restrict) eq 'ARRAY' ) {
+        $sclasses{ $serializer_names{$_} } = 1 for @$restrict;
+    }
+    else {
+        %sclasses = reverse %serializer_names;
+    }
+    my @default_variants;
+    while ( my ( $type, $sclass ) = each(%media_types) ) {
+        next unless $sclasses{$sclass};
+        my $qv;
 
-	my %custom_thunks;
-	my @custom_variants;
-	while (my($type,$thunk) = each(%$extend)) {
-		push(@custom_variants, [$thunk, 1.0, $type]);
-		$custom_thunks{ $thunk }	= [$type, $thunk];
-	}
+        # slightly prefer turtle as a readable format to others
+        # try hard to avoid using ntriples as 'text/plain' isn't very useful for conneg
+        if ( $type eq 'text/turtle' ) {
+            $qv = 1.0;
+        }
+        elsif ( $type eq 'text/plain' ) {
+            $qv = 0.2;
+        }
+        else {
+            $qv = 0.99;
+        }
+        $qv -= 0.01 if ( $type =~ m#/x-# );    # prefer non experimental media types
+        $qv -= 0.01
+          if ( $type =~ m#^application/(?!rdf[+]xml)# );    # prefer standard rdf/xml to other application/* formats
+        push( @default_variants, [ $type, $qv, $type ] );
+    }
 
-	# remove variants with media types that are in custom_variants from @variants
-	my @variants	= grep { not exists $extend->{ $_->[2] } } @default_variants;
-	push(@variants, @custom_variants);
+    my %custom_thunks;
+    my @custom_variants;
+    while ( my ( $type, $thunk ) = each(%$extend) ) {
+        push( @custom_variants, [ $thunk, 1.0, $type ] );
+        $custom_thunks{$thunk} = [ $type, $thunk ];
+    }
 
-	my $stype	= choose( \@variants, $headers );
-	if (defined($stype) and $custom_thunks{ $stype }) {
-		my $thunk	= $stype;
-		my $type	= $custom_thunks{ $stype }[0];
-		return ($type, $thunk);
-	}
+    # remove variants with media types that are in custom_variants from @variants
+    my @variants = grep { not exists $extend->{ $_->[2] } } @default_variants;
+    push( @variants, @custom_variants );
 
-	if (defined($stype) and my $sclass = $media_types{ $stype }) {
-		return ($stype, $sclass->new( %options ));
-	} else {
-		throw RDF::Trine::Error::SerializationError -text => "No appropriate serializer found for content-negotiation";
-	}
+    my $stype = choose( \@variants, $headers );
+    if ( defined($stype) and $custom_thunks{$stype} ) {
+        my $thunk = $stype;
+        my $type  = $custom_thunks{$stype}[0];
+        return ( $type, $thunk );
+    }
+
+    if ( defined($stype) and my $sclass = $media_types{$stype} ) {
+        return ( $stype, $sclass->new(%options) );
+    }
+    else {
+        throw RDF::Trine::Error::SerializationError -text => "No appropriate serializer found for content-negotiation";
+    }
 }
 
 =item C<< media_types >>
@@ -168,14 +175,14 @@ Returns a list of media types appropriate for the format of the serializer.
 =cut
 
 sub media_types {
-	my $self	= shift;
-	my $class	= ref($self) || $self;
-	my @list;
-	while (my($type, $sclass) = each(%media_types)) {
-		push(@list, $type) if ($sclass eq $class);
-	}
-	my @types	= sort @list;
-	return @types;
+    my $self = shift;
+    my $class = ref($self) || $self;
+    my @list;
+    while ( my ( $type, $sclass ) = each(%media_types) ) {
+        push( @list, $type ) if ( $sclass eq $class );
+    }
+    my @types = sort @list;
+    return @types;
 }
 
 =item C<< serialize_model_to_file ( $fh, $model ) >>
@@ -190,13 +197,13 @@ Serializes the C<< $model >>, returning the result as a string.
 =cut
 
 sub serialize_model_to_string {
-	my $self	= shift;
-	my $model	= shift;
-	my $string	= '';
-	open( my $fh, '>:raw', \$string );
-	$self->serialize_model_to_file( $fh, $model );
-	close($fh);
-	return $string;
+    my $self   = shift;
+    my $model  = shift;
+    my $string = '';
+    open( my $fh, '>:raw', \$string );
+    $self->serialize_model_to_file( $fh, $model );
+    close($fh);
+    return $string;
 }
 
 =item C<< serialize_iterator_to_file ( $file, $iterator ) >>
@@ -212,17 +219,16 @@ that can be serialized.
 =cut
 
 sub serialize_iterator_to_file {
-	my $self	= shift;
-	my $fh		= shift;
-	my $iter	= shift;
-	my %args	= @_;
-	my $model	= RDF::Trine::Model->temporary_model;
-	while (my $st = $iter->next) {
-		$model->add_statement( $st );
-	}
-	return $self->serialize_model_to_file( $fh, $model );
+    my $self  = shift;
+    my $fh    = shift;
+    my $iter  = shift;
+    my %args  = @_;
+    my $model = RDF::Trine::Model->temporary_model;
+    while ( my $st = $iter->next ) {
+        $model->add_statement($st);
+    }
+    return $self->serialize_model_to_file( $fh, $model );
 }
-
 
 =item C<< serialize_iterator_to_string ( $iterator ) >>
 
@@ -233,17 +239,14 @@ C<< serialize_iterator_to_file >>.
 =cut
 
 sub serialize_iterator_to_string {
-	my $self	= shift;
-	my $iter	= shift;
-	my $string	= '';
-	open( my $fh, '>', \$string );
-	$self->serialize_iterator_to_file( $fh, $iter );
-	close($fh);
-	return $string;
+    my $self   = shift;
+    my $iter   = shift;
+    my $string = '';
+    open( my $fh, '>', \$string );
+    $self->serialize_iterator_to_file( $fh, $iter );
+    close($fh);
+    return $string;
 }
-
-
-
 
 =back
 
@@ -273,9 +276,9 @@ Returns a new serializer sink object backed by a filehandle.
 =cut
 
 sub new {
-	my $class	= shift;
-	my $fh		= shift;
-	return bless([$fh],$class);
+    my $class = shift;
+    my $fh    = shift;
+    return bless( [$fh], $class );
 }
 
 =item C<< emit ( $data ) >>
@@ -285,9 +288,9 @@ Write the C<< $data >> to the sink.
 =cut
 
 sub emit {
-	my $self	= shift;
-	my $data	= shift;
-	print {$self->[0]} $data;
+    my $self = shift;
+    my $data = shift;
+    print { $self->[0] } $data;
 }
 
 =back
@@ -317,9 +320,9 @@ Returns a new serializer sink object backed by a string.
 =cut
 
 sub new {
-	my $class	= shift;
-	my $string	= decode_utf8("");
-	return bless(\$string,$class);
+    my $class  = shift;
+    my $string = decode_utf8("");
+    return bless( \$string, $class );
 }
 
 =item C<< emit ( $data ) >>
@@ -329,9 +332,9 @@ Write the C<< $data >> to the sink.
 =cut
 
 sub emit {
-	my $self	= shift;
-	my $data	= shift;
-	$$self		.= $data;
+    my $self = shift;
+    my $data = shift;
+    $$self .= $data;
 }
 
 =item C<< prepend ( $data ) >>
@@ -341,9 +344,9 @@ Prepend the C<< $data >> to the underlying string.
 =cut
 
 sub prepend {
-	my $self	= shift;
-	my $data	= shift;
-	$$self		= $data . $$self;
+    my $self = shift;
+    my $data = shift;
+    $$self = $data . $$self;
 }
 
 =item C<< string () >>
@@ -353,8 +356,8 @@ Returns the string value of all data written to the sink.
 =cut
 
 sub string {
-	my $self	= shift;
-	return $$self;
+    my $self = shift;
+    return $$self;
 }
 
 =back

@@ -247,7 +247,7 @@ sub read_values {
     my $indicator = $self->indicator;
     my $period    = $indicator->period;
 
-    my $type = $indicator->variable_type;
+    my $type   = $indicator->variable_type;
     my $is_str = $type eq 'str';
 
     my $user_id = ref $options{user_id} eq 'ARRAY' ? $options{user_id} : [ $options{user_id} ];
@@ -349,7 +349,6 @@ sub read_values {
                         if ( $value ne '-' ) {
                             $sum ||= 0;
 
-
                             $sum += $is_str ? 1 : $value;
                         }
                     }
@@ -364,12 +363,13 @@ sub read_values {
                 if ( $valor ne '-' ) {
                     $sum_ok = $total_ok = 1;
 
-                    if ($is_str){
+                    if ($is_str) {
                         $total += 1;
                         $sum   += 1;
                         $row->{max} = 1 if 1 > $row->{max};
                         $row->{min} = 1 if 1 < $row->{min};
-                    }else{
+                    }
+                    else {
                         $total += $valor;
                         $sum   += $valor;
                         $row->{max} = $valor if $valor > $row->{max};

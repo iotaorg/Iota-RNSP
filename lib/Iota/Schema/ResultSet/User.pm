@@ -36,7 +36,7 @@ sub verifiers_specs {
                         return 0
                           if defined $self->find( { email => $r->get_value('email') } );
                         return 1;
-                      }
+                    }
                 },
                 password => {
                     required  => 1,
@@ -96,7 +96,7 @@ sub verifiers_specs {
                         }
 
                         return 1;
-                      }
+                    }
                 },
 
                 nome_responsavel_cadastro => { required => 0, type => 'Str' },
@@ -166,7 +166,7 @@ sub verifiers_specs {
                         }
 
                         return 1;
-                      }
+                    }
                 },
                 network_ids => {
                     required   => 1,
@@ -222,7 +222,7 @@ sub verifiers_specs {
 
                         return 0 if $invalid;
                         return 1;
-                      }
+                    }
                 },
                 name => {
                     required => 1,
@@ -237,7 +237,7 @@ sub verifiers_specs {
                             return $existing_user->id == $r->get_value('id');
                         }
                         return 1;
-                      }
+                    }
                 },
                 password => {
                     required  => 0,
@@ -281,7 +281,7 @@ sub verifiers_specs {
                         my $r = shift;
 
                         return $self->search( { email => $r->get_value('email') } )->count > 0;
-                      }
+                    }
                 },
                 password => {
                     required => 1,
@@ -308,7 +308,7 @@ sub verifiers_specs {
                         my $rs =
                           $self->search($where)->search_related( 'id_user', { email => $r->get_value('email') } );
                         return $rs->count > 0;
-                      }
+                    }
                 },
                 email => {
                     required   => 1,
@@ -319,7 +319,7 @@ sub verifiers_specs {
                         #return 0
                         #if defined $self->find( { email => $r->get_value('email') } );
                         return 1;
-                      }
+                    }
                 },
                 password => {
                     required  => 1,

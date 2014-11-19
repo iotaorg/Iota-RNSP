@@ -12,7 +12,6 @@ sub parse {
       && exists $kml->{Document}[0]{Folder}[0]
       && ref $kml->{Document}[0]{Folder} eq 'ARRAY';
 
-
     return undef
       unless ref $kml eq 'HASH'
       && exists $kml->{Document}
@@ -44,8 +43,8 @@ sub parse {
               && ref $line->{coordinates} eq 'ARRAY';
             my $str = $line->{coordinates}[0] . ' ';
 
-
-            my $ok  = ($str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+\s)+$/o) || ($str =~ /(?:-?\d+(?:\.\d+)?\,\s?-?\d+(?:\.\d+)?,\d+(?:\.\d+)?)/);
+            my $ok = ( $str =~ /^(-?\d+\.\d+\,\s?-?\d+\.\d+\s)+$/o )
+              || ( $str =~ /(?:-?\d+(?:\.\d+)?\,\s?-?\d+(?:\.\d+)?,\d+(?:\.\d+)?)/ );
 
             return undef unless $ok;
         }
@@ -62,7 +61,7 @@ sub parse {
 
             my $with_zero = $str =~ /(?:-?\d+(?:\.\d+)?\,\s?-?\d+(?:\.\d+)?,\d+(?:\.\d+)?)/;
 
-            if ($with_zero){
+            if ($with_zero) {
                 $str =~ s/^\s+//;
                 $str =~ s/\s+$//;
             }
@@ -71,10 +70,11 @@ sub parse {
 
             my @pos;
             foreach my $lnt (@latlng) {
-                if ($with_zero){
+                if ($with_zero) {
                     $lnt =~ /(.+)\,(.+)\,\d+(?:\.\d+)?/o;
                     push @pos, [ $1, $2 ];
-                }else{
+                }
+                else {
                     $lnt =~ /(.+)\,(.+)/o;
                     push @pos, [ $1, $2 ];
                 }

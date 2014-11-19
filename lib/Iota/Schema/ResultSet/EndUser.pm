@@ -34,7 +34,7 @@ sub verifiers_specs {
                         return 0
                           if defined $self->find( { email => $r->get_value('email') } );
                         return 1;
-                      }
+                    }
                 },
                 password => {
                     required  => 1,

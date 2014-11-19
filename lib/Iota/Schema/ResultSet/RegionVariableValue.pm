@@ -20,7 +20,6 @@ use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'region.variable.value' }
 
-
 sub value_check {
     Iota::Schema::ResultSet::VariableValue::value_check(@_);
 }
@@ -68,7 +67,7 @@ sub verifiers_specs {
                                   ->{period_begin}
                             }
                         )->count == 0;
-                      }
+                    }
 
                 },
                 variable_id => {
@@ -78,7 +77,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->result_source->schema->resultset('Variable')
                           ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
-                      }
+                    }
                 },
             },
         ),
@@ -95,7 +94,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->search( { id => $r->get_value('id'), generated_by_compute => undef } )->count ==
                           1;
-                      }
+                    }
 
                 },
                 observations => { required => 0, type => 'Str' },
@@ -129,7 +128,7 @@ sub verifiers_specs {
                                   $schema->f_extract_period_edge( $var->variable->period, $date )->{period_begin}
                             }
                         )->count == 1;
-                      }
+                    }
 
                 },
             },
@@ -174,7 +173,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->result_source->schema->resultset('Variable')
                           ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
-                      }
+                    }
                 },
             },
         ),
@@ -223,22 +222,24 @@ sub action_specs {
             }
 
             my $varvalue;
-            if (exists $values{active_value} && $values{active_value} == 0){
-                eval{
+            if ( exists $values{active_value} && $values{active_value} == 0 ) {
+                eval {
                     $schema->txn_do(
                         sub {
                             $varvalue = $self->create( \%values );
                         }
-                    )
+                    );
                 };
 
                 # se ja existe, e nao eh ativo, entao ja entra ~morto~.
-                if ($@ && $@ =~ /duplicate key value violates unique constraint/){
-                    $varvalue = $self->create( {%values, end_ts => \'now()'} );
-                }elsif($@){
+                if ( $@ && $@ =~ /duplicate key value violates unique constraint/ ) {
+                    $varvalue = $self->create( { %values, end_ts => \'now()' } );
+                }
+                elsif ($@) {
                     die($@);
                 }
-            }else{
+            }
+            else {
                 $varvalue = $self->create( \%values );
             }
 
@@ -405,23 +406,25 @@ sub _put {
         $values{valid_from}  = $dates->{period_begin};
         $values{valid_until} = $dates->{period_end};
 
-
-        if (exists $values{active_value} && $values{active_value} == 0){
-            eval{
+        if ( exists $values{active_value} && $values{active_value} == 0 ) {
+            eval {
                 $schema->txn_do(
                     sub {
-                        $row = $self->create( \%values )
+                        $row = $self->create( \%values );
                     }
-                )
+                );
             };
+
             # se ja existe, e nao eh ativo, entao ja entra ~morto~.
-            if ($@ && $@ =~ /duplicate key value violates unique constraint/){
-                $row = $self->create( {%values, end_ts => \'now()'} );
-            }elsif($@){
+            if ( $@ && $@ =~ /duplicate key value violates unique constraint/ ) {
+                $row = $self->create( { %values, end_ts => \'now()' } );
+            }
+            elsif ($@) {
                 die $@;
             }
-        }else{
-            $row = $self->create( \%values )
+        }
+        else {
+            $row = $self->create( \%values );
         }
     }
 

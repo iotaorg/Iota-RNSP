@@ -81,7 +81,7 @@ sub verifiers_specs {
                                   ->{period_begin}
                             }
                         )->count == 0;
-                      }
+                    }
 
                 },
                 variable_id => {
@@ -91,7 +91,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->result_source->schema->resultset('Variable')
                           ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
-                      }
+                    }
                 },
             },
         ),
@@ -107,7 +107,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         return $self->search( { id => $r->get_value('id') } )->count == 1;
-                      }
+                    }
 
                 },
                 observations => { required => 0, type => 'Str' },
@@ -140,7 +140,7 @@ sub verifiers_specs {
                                   $schema->f_extract_period_edge( $var->variable->period, $date )->{period_begin}
                             }
                         )->count == 1;
-                      }
+                    }
 
                 },
             },
@@ -182,7 +182,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->result_source->schema->resultset('Variable')
                           ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
-                      }
+                    }
                 },
             },
         ),

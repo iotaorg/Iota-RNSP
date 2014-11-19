@@ -34,7 +34,7 @@ eval {
     $schema->txn_do(
         sub {
 
-        my ( $res, $c );
+            my ( $res, $c );
 
             # cria cidade
             ( $res, $c ) = ctx_request(
@@ -51,7 +51,6 @@ eval {
             is( $res->code, 201, 'created!' );
 
             $city_uri = $res->header('Location');
-
 
             # cria regiao
             ( $res, $c ) = ctx_request(
@@ -84,13 +83,12 @@ eval {
             ok( $res->is_success, 'region created!' );
             is( $res->code, 201, 'region created!' );
 
-
             my $region_uri = $res->header('Location');
             my $region = eval { from_json( $res->content ) };
 
-            $schema->resultset('Region')->search({ id => $upper->{id} })->update({ depth_level => 1  });
+            $schema->resultset('Region')->search( { id => $upper->{id} } )->update( { depth_level => 1 } );
 
-            $schema->resultset('Region')->search({ id => $region->{id} })->update({ upper_region => $upper->{id} });
+            $schema->resultset('Region')->search( { id => $region->{id} } )->update( { upper_region => $upper->{id} } );
 
             # hora das subregioes
             ( $res, $c ) = ctx_request(
@@ -110,8 +108,6 @@ eval {
             ( $res, $c ) = ctx_request( GET $subregion1_uri );
             my $subregion1 = eval { from_json( $res->content ) };
             ( $subregion1->{id} ) = $subregion1_uri =~ /\/([0-9]+)$/;
-
-
 
             # todas subregioes criadas.
 
@@ -242,8 +238,7 @@ eval {
                         &add_value( $subregion1_uri, '33', '2005' );
 
                         $ii = &get_indicator( $region, '2005' );
-                        is_deeply( $ii, [ 1 + 55 + 33], 'valor de 2005 ativo ainda eh da regiao 2 apenas' );
-
+                        is_deeply( $ii, [ 1 + 55 + 33 ], 'valor de 2005 ativo ainda eh da regiao 2 apenas' );
 
                         $current_var = $variable->{id};
                         &add_value( $subregion1_uri, '10', '2005' );
@@ -251,36 +246,27 @@ eval {
                         $ii = &get_indicator( $region, '2005' );
                         is_deeply(
                             $ii,
-                            [ 1 + 10 + 33],
+                            [ 1 + 10 + 33 ],
 'valor de 2005 ativo agora esta usando um pouco de cada (10 eh a soma da vriavel 1) e a 33 da variavel 2'
                         );
 
                         note('sit 4: Nível superior preenchido, com dados completos no nível inferior');
 
                         $ii = &get_indicator( $region, '2005' );
-                        is_deeply(
-                            $ii,
-                            [ 1 + ( 10 + 33 ) ],
-                            'valor de 2005 ativo agora eh a soma das 3 subs.'
-                        );
-
+                        is_deeply( $ii, [ 1 + ( 10 + 33 ) ], 'valor de 2005 ativo agora eh a soma das 3 subs.' );
 
                         note('sit 5: Nível inferior preenchido completamente, sem dados no nível superior');
 
                         $current_var = $variable->{id};
-                        &add_value( $subregion1_uri, '8',  '2008' );
+                        &add_value( $subregion1_uri, '8', '2008' );
 
                         $current_var = $variable2->{id};
                         &add_value( $subregion1_uri, '33', '2008' );
 
                         $ii = &get_indicator( $region, '2008' );
-                        is_deeply(
-                            $ii,
-                            [ 1 + ( 8 + 33 )  ],
-                            'valor de 2008 ativo agora eh a soma das 3 subs.'
-                        );
+                        is_deeply( $ii, [ 1 + ( 8 + 33 ) ], 'valor de 2008 ativo agora eh a soma das 3 subs.' );
                         $ii = &get_indicator( $upper, '2008' );
-                        is_deeply( $ii, [ 1 + 8 + 33  ], 'city: valor de 2008 ativo agora eh a soma das 3 subs' );
+                        is_deeply( $ii, [ 1 + 8 + 33 ], 'city: valor de 2008 ativo agora eh a soma das 3 subs' );
 
                         note('sit 7: valor incompleto abaixo, e depois mudou o valor de cima');
 
@@ -302,36 +288,34 @@ eval {
 
                         # 8 = soma das regioes, 999 =  inputado em cima.
                         $ii = &get_indicator( $upper, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 999  ], 'city: valor ativo para 2066 eh o inputado.' );
-
+                        is_deeply( $ii, [ 1 + 8 + 999 ], 'city: valor ativo para 2066 eh o inputado.' );
 
                         $current_var = $variable2->{id};
                         &add_value( $subregion1_uri, '12', '2066' );
 
                         $ii = &get_indicator( $region, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 12  ], 'valor ativo para 2066 eh a soma.' );
+                        is_deeply( $ii, [ 1 + 8 + 12 ], 'valor ativo para 2066 eh a soma.' );
 
                         $ii = &get_indicator( $upper, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 12  ], 'city: valor ativo para 2066 tbm eh a soma.' );
-
+                        is_deeply( $ii, [ 1 + 8 + 12 ], 'city: valor ativo para 2066 tbm eh a soma.' );
 
                         $current_var = $variable2->{id};
                         &add_value( $upper_uri, '2000', '2066' );
 
                         $ii = &get_indicator( $upper, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 12  ], 'city: valor se manteve.' );
+                        is_deeply( $ii, [ 1 + 8 + 12 ], 'city: valor se manteve.' );
 
                         $current_var = $variable2->{id};
                         &add_value( $upper_uri, '2000', '2066' );
 
                         $ii = &get_indicator( $upper, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 12  ], 'city: valor se manteve.' );
+                        is_deeply( $ii, [ 1 + 8 + 12 ], 'city: valor se manteve.' );
 
                         $current_var = $variable->{id};
                         &add_value( $upper_uri, '2000', '2066' );
 
                         $ii = &get_indicator( $upper, '2066' );
-                        is_deeply( $ii, [ 1 + 8 + 12  ], 'city: valor se manteve.' );
+                        is_deeply( $ii, [ 1 + 8 + 12 ], 'city: valor se manteve.' );
 
                         $current_var = $variable->{id};
                         &add_value( $upper_uri, '2000', '2055' );
@@ -340,7 +324,7 @@ eval {
                         &add_value( $upper_uri, '1500', '2055' );
 
                         $ii = &get_indicator( $upper, '2055' );
-                        is_deeply( $ii, [ 1 + 2000 + 1500  ], 'city: valor da cidade eh o imputado.' );
+                        is_deeply( $ii, [ 1 + 2000 + 1500 ], 'city: valor da cidade eh o imputado.' );
 
                         die 'undo-savepoint';
                     }
