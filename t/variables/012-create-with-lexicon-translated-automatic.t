@@ -26,10 +26,10 @@ $stash->add_symbol( '&_user', sub { return $user } );
 
 $ENV{HARNESS_ACTIVE_REMOVED} = 1;
 
-sub no_point ($){
-    my ($x)= shift;
+sub no_point ($) {
+    my ($x) = shift;
     $x =~ s/^\?\s//;
-    $x
+    $x;
 }
 eval {
     $schema->txn_do(
@@ -94,17 +94,18 @@ eval {
                 'pt-br' => {},
                 'es'    => {}
             };
+
             foreach (@all) {
                 push @{ $out->{ $_->lang } }, $_->lex_value;
-                $out_id->{ $_->lang }{$_->lex_value} = $_->id;
+                $out_id->{ $_->lang }{ $_->lex_value } = $_->id;
             }
             $out->{$_} = [ sort { $a cmp $b } @{ $out->{$_} } ] for qw/pt-br es/;
 
             is_deeply(
                 $out,
                 {
-                    'pt-br' => [ '? int', '? si', '? yearly',],
-                    'es'    => [ 'int', 'si',  'yearly', ]
+                    'pt-br' => [ '? int', '? si', '? yearly', ],
+                    'es'    => [ 'int',   'si',   'yearly', ]
                 },
                 'ok'
             );
@@ -112,13 +113,12 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST ':lexicon/pending',
                 [
-                    api_key => 'test',
-                    'lex_' .$out_id->{'pt-br'}{'? si'}  => 'sim',
+                    api_key                             => 'test',
+                    'lex_' . $out_id->{'pt-br'}{'? si'} => 'sim',
                 ]
             );
 
-            like($res->content, qr/<p>1\s/, 'traduziu 1 palavra');
-
+            like( $res->content, qr/<p>1\s/, 'traduziu 1 palavra' );
 
             note('loading again');
             @all = $rs->search(
@@ -135,12 +135,12 @@ eval {
                 push @{ $out->{ $_->lang } }, $_->lex_value;
             }
 
-            $out->{$_} = [ sort { no_point ($a) cmp no_point($b) } @{ $out->{$_} } ] for qw/pt-br es/;
+            $out->{$_} = [ sort { no_point($a) cmp no_point($b) } @{ $out->{$_} } ] for qw/pt-br es/;
             is_deeply(
                 $out,
                 {
-                    'pt-br' => [ '? int', 'sim', '? yearly',],
-                    'es'    => [ 'int', 'si',  'yearly', ]
+                    'pt-br' => [ '? int', 'sim', '? yearly', ],
+                    'es'    => [ 'int',   'si',  'yearly', ]
                 },
                 'ok'
             );
@@ -183,25 +183,24 @@ eval {
             foreach (@all) {
                 push @{ $out->{ $_->lang } }, $_->lex_value;
 
-                print STDERR sprintf "# %s => %s, key '%s' => '%s'\n", $_->origin_lang, $_->lang, $_->lex_key, $_->lex_value;
+                print STDERR sprintf "# %s => %s, key '%s' => '%s'\n", $_->origin_lang, $_->lang, $_->lex_key,
+                  $_->lex_value;
 
-                $translated_from_lexicon->{$_->lex_key} = $_->lex_value if $_->translated_from_lexicon;
+                $translated_from_lexicon->{ $_->lex_key } = $_->lex_value if $_->translated_from_lexicon;
 
             }
             $out->{$_} = [ sort { no_point $a cmp no_point $b } @{ $out->{$_} } ] for qw/pt-br es/;
 
-            is($translated_from_lexicon->{sim}, 'si', 'ok, traduziu sozinho!');
+            is( $translated_from_lexicon->{sim}, 'si', 'ok, traduziu sozinho!' );
 
             is_deeply(
                 $out,
                 {
-                    'pt-br' => [ '? int', 'sim', 'sim', '? yearly',],
-                    'es'    => [ 'int', 'si', 'si', 'yearly', ]
+                    'pt-br' => [ '? int', 'sim', 'sim', '? yearly', ],
+                    'es'    => [ 'int',   'si',  'si',  'yearly', ]
                 },
                 'ok'
             );
-
-
 
             die 'rollback';
         }

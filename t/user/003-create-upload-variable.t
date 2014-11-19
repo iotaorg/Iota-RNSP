@@ -140,7 +140,6 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-
             like( $res->content, qr/não é um número válido/, 'não é um número válido' );
 
             die 'rollback';

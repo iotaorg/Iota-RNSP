@@ -14,14 +14,14 @@ use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'indicator.variation_value' }
 
-
 sub value_check {
     my ( $self, $r ) = @_;
 
     my $indicator_variables_variation_id = $r->get_value('indicator_variables_variation_id');
-    my $schema      = $self->result_source->schema;
+    my $schema                           = $self->result_source->schema;
     unless ($indicator_variables_variation_id) {
-        $indicator_variables_variation_id = $self->search( { id => $r->get_value('id') } )->first->indicator_variables_variation_id;
+        $indicator_variables_variation_id =
+          $self->search( { id => $r->get_value('id') } )->first->indicator_variables_variation_id;
     }
 
     my $var = $schema->resultset('IndicatorVariablesVariation')->find( { id => $indicator_variables_variation_id } );
@@ -52,27 +52,29 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->result_source->schema->resultset('IndicatorVariation')
                           ->find( { id => $r->get_value('indicator_variation_id') } ) ? 1 : 0;
-                      }
+                    }
                 },
                 indicator_variables_variation_id => { required => 1, type => 'Int' },
                 period                           => { required => 0, type => 'Str' },
                 value                            => {
-                    required => 0, type => 'Str',
+                    required   => 0,
+                    type       => 'Str',
                     post_check => sub {
                         my $r = shift;
                         return $self->value_check($r);
                     },
                 },
-                summarization_method             => { required => 0, type => 'Str' },
+                summarization_method => { required => 0, type => 'Str' },
             },
         ),
 
         update => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                id                   => { required => 1, type => 'Int' },
-                value                => {
-                    required => 0, type => 'Str',
+                id    => { required => 1, type => 'Int' },
+                value => {
+                    required   => 0,
+                    type       => 'Str',
                     post_check => sub {
                         my $r = shift;
                         return $self->value_check($r);
@@ -134,22 +136,25 @@ sub action_specs {
             }
 
             my $var;
-            if (exists $values{active_value} && $values{active_value} == 0){
-                eval{
+            if ( exists $values{active_value} && $values{active_value} == 0 ) {
+                eval {
                     $schema->txn_do(
                         sub {
-                            $var = $self->create( \%values )
+                            $var = $self->create( \%values );
                         }
-                    )
+                    );
                 };
+
                 # se ja existe, e nao eh ativo, entao ja entra ~morto~.
-                if ($@ && $@ =~ /duplicate key value violates unique constraint/){
-                    $var = $self->create( {%values, end_ts => \'now()'} );
-                }elsif($@){
+                if ( $@ && $@ =~ /duplicate key value violates unique constraint/ ) {
+                    $var = $self->create( { %values, end_ts => \'now()' } );
+                }
+                elsif ($@) {
                     die $@;
                 }
-            }else{
-                $var = $self->create( \%values )
+            }
+            else {
+                $var = $self->create( \%values );
             }
 
             $var->discard_changes;

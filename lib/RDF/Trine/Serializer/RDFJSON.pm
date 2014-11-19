@@ -47,12 +47,13 @@ use RDF::Trine::Error qw(:try);
 ######################################################################
 
 our ($VERSION);
+
 BEGIN {
-	$VERSION	= '1.011';
-	$RDF::Trine::Serializer::serializer_names{ 'rdfjson' }	= __PACKAGE__;
-	foreach my $type (qw(application/json application/x-rdf+json)) {
-		$RDF::Trine::Serializer::media_types{ $type }	= __PACKAGE__;
-	}
+    $VERSION = '1.011';
+    $RDF::Trine::Serializer::serializer_names{'rdfjson'} = __PACKAGE__;
+    foreach my $type (qw(application/json application/x-rdf+json)) {
+        $RDF::Trine::Serializer::media_types{$type} = __PACKAGE__;
+    }
 }
 
 ######################################################################
@@ -64,10 +65,10 @@ Returns a new serializer object.
 =cut
 
 sub new {
-	my $class	= shift;
-	my %args	= @_;
-	my $self = bless( {}, $class);
-	return $self;
+    my $class = shift;
+    my %args  = @_;
+    my $self  = bless( {}, $class );
+    return $self;
 }
 
 =item C<< serialize_model_to_file ( $file, $model [,\%json_options] ) >>
@@ -80,12 +81,12 @@ C<%json_options> is an options hash suitable for JSON::to_json.
 =cut
 
 sub serialize_model_to_file {
-	my $self	  = shift;
-	my $file	  = shift;
-	my $model  = shift;
-	my $opts   = shift;
-	my $string = encode_json($model->as_hashref);
-	print {$file} $string;
+    my $self   = shift;
+    my $file   = shift;
+    my $model  = shift;
+    my $opts   = shift;
+    my $string = encode_json( $model->as_hashref );
+    print {$file} $string;
 }
 
 =item C<< serialize_model_to_string ( $model [,\%json_options] ) >>
@@ -97,11 +98,11 @@ C<%json_options> is an options hash suitable for JSON::to_json.
 =cut
 
 sub serialize_model_to_string {
-	my $self	  = shift;
-	my $model  = shift;
-	my $opts   = shift;
-	my $string = encode_json($model->as_hashref);
-	return $string;
+    my $self   = shift;
+    my $model  = shift;
+    my $opts   = shift;
+    my $string = encode_json( $model->as_hashref );
+    return $string;
 }
 
 1;

@@ -51,7 +51,7 @@ sub verifiers_specs {
                                 user_id     => $r->get_value('user_id'),
                             }
                         )->count ? 0 : 1;
-                      }
+                    }
                 }
             }
         ),
@@ -69,7 +69,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         return $self->find( { id => $r->get_value('id') } ) ? 1 : 0;
-                      }
+                    }
                 },
                 display_in_home => {
                     required => 1,
@@ -102,7 +102,7 @@ sub action_specs {
             my $obj = $self->find( delete $values{id} )->update( \%values );
             $obj->discard_changes;
             return $obj;
-          }
+        }
     };
 }
 

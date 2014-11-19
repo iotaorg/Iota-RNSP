@@ -128,10 +128,10 @@ $schema->txn_do(
                     my $obj = eval { decode_json( $res->content ) };
 
                     die Dumper {
-                        err     => Dumper $obj,
-                          value => $registro;
-                    }
-                    unless $res->is_success;
+                        err   => Dumper $obj,
+                        value => $registro;
+                      }
+                      unless $res->is_success;
 
                     $registro->{id} = $obj;
 

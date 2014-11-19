@@ -157,7 +157,6 @@ sub variable_DELETE {
 
     $self->status_gone( $c, message => 'deleted' ), $c->detach unless $obj;
 
-
     $c->model('DB')->schema->txn_do(
         sub {
             $obj->user_variable_configs->delete;

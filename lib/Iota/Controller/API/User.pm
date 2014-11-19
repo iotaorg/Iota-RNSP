@@ -64,16 +64,16 @@ sub user_file_POST {
 
     if ($upload) {
 
-        if ($classe =~ /(imagem_cidade|logo_movimento|perfil_xd)/){
+        if ( $classe =~ /(imagem_cidade|logo_movimento|perfil_xd)/ ) {
 
             my $exiv = `which exiv2 2>&1`;
             chomp($exiv);
 
-            if (`which 2>&1` eq '' && $exiv){
-                my $x = $upload->tempname;
+            if ( `which 2>&1` eq '' && $exiv ) {
+                my $x   = $upload->tempname;
                 my $ret = `$exiv $x 2>&1`;
 
-                if ($ret !~ /Image size/){
+                if ( $ret !~ /Image size/ ) {
                     $c->res->body( to_json( { error => 'not an image' } ) );
                     $c->detach;
                 }

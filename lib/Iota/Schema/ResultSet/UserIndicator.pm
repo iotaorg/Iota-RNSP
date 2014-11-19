@@ -49,7 +49,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $self->result_source->schema->resultset('Indicator')
                           ->find( { id => $r->get_value('indicator_id') } ) ? 1 : 0;
-                      }
+                    }
                 },
                 valid_from => {
                     required   => 1,
@@ -83,7 +83,7 @@ sub verifiers_specs {
                             }
                         )->count == 0;
 
-                      }
+                    }
                 },
             }
         ),
@@ -97,7 +97,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         return $self->find( { id => $r->get_value('id') } ) ? 1 : 0;
-                      }
+                    }
                 },
                 justification_of_missing_field => {
                     required => 0,
@@ -147,7 +147,7 @@ sub action_specs {
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
             return $var;
-          }
+        }
     };
 }
 

@@ -37,7 +37,7 @@ sub verifiers_specs {
                                 name         => $r->get_value('name'),
                             }
                         )->count == 0;
-                      }
+                    }
                 },
                 indicator_id => { required => 1, type => 'Int' },
                 order        => { required => 1, type => 'Int' },
@@ -70,7 +70,7 @@ sub verifiers_specs {
                                 name         => $r->get_value('name'),
                             }
                         )->count == 0;
-                      }
+                    }
                 },
                 order => { required => 0, type => 'Int' },
             },

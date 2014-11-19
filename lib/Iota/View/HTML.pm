@@ -56,13 +56,12 @@ sub value4human {
     return 0 if $value < 0.0001;
     return $value =~ /[a-z]/;
 
-
     my $pre = '';
     my $mid = '';
     my $end = '';
 
     if ( $variable_type eq 'num' ) {
-        $value = sprintf('%f', $value);
+        $value = sprintf( '%f', $value );
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );

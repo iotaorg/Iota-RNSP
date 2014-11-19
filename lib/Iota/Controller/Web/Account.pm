@@ -31,7 +31,7 @@ sub index : Chained('base') PathPart('account') Args(0) {
             title => $c->loc('Minha conta'),
             init  => sub {
                 $c->stash->{title} = $c->loc('Minha conta');
-              }
+            }
         },
         {
             name  => 'indicators',
@@ -45,7 +45,7 @@ sub index : Chained('base') PathPart('account') Args(0) {
 
                 $c->forward('load_end_user_indicators');
 
-              }
+            }
         },
     ];
 
@@ -118,7 +118,6 @@ sub end_user_indicator_modal_base : Chained('base') PathPart('end-user-indicator
         }
       )->next
       or $c->forward('/web/form/not_found');
-
 
 }
 

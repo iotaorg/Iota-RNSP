@@ -131,6 +131,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
     $c->forward('light_institute_load') if !exists $c->stash->{c_req_path};
+
 =pod
     my @inner_page;
 
@@ -143,10 +144,12 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         );
     }
 =cut
+
     my @users = $c->stash->{network}->users->search(
         {
             active => 1,
-    #        @inner_page
+
+            #        @inner_page
         },
         {
             prefetch => [ 'city', 'network_users' ]
@@ -213,16 +216,14 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
                     map { $_->network_id }
                       $_->network_users
                 } grep { defined $_->city_id } @users;
-            }
+              }
         ],
+
         # rede selecionada do idioma.
-        network_id => [
-            $c->stash->{network}->id
-        ],
+        network_id => [ $c->stash->{network}->id ],
         admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
         cities     => \@cities
     };
-
 
     my $cur_lang = exists $c->req->cookies->{cur_lang} ? $c->req->cookies->{cur_lang}->value : undef;
 
@@ -277,10 +278,12 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-    use DDP; p \@users_ids;
+    use DDP;
+    p \@users_ids;
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_id},
+
         #users_ids    => \@users_ids,
       )->search(
         { is_fake => 0 },
@@ -289,23 +292,29 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         }
       )->as_hashref->all;
 
-    my @good_pratices = $c->model('DB::UserBestPratice')->search({
-        'user.active' => 1,
-        'user.id' => { '-in' => \@users_ids }
-    }, {
-        select => [\"city.pais || '/' || city.uf || '/' || city.name_uri as user_url", \'city.name as city_name', \'count(1)'],
-        as      => ['user_url', 'city_name', 'count'],
-        group_by => ['user_url', 'city_name'],
-        join => {'user' => 'city'},
-        result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-        order_by => 'city_name'
-    })->all;
+    my @good_pratices = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => \@users_ids }
+        },
+        {
+            select => [
+                \"city.pais || '/' || city.uf || '/' || city.name_uri as user_url", \'city.name as city_name',
+                \'count(1)'
+            ],
+            as       => [ 'user_url', 'city_name', 'count' ],
+            group_by => [ 'user_url', 'city_name' ],
+            join         => { 'user' => 'city' },
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => 'city_name'
+        }
+    )->all;
 
     $c->stash(
-        cities     => $c->stash->{network_data}{cities},
-        indicators => \@indicators,
+        cities        => $c->stash->{network_data}{cities},
+        indicators    => \@indicators,
         best_pratices => \@good_pratices,
-        template   => 'mapa_site.tt'
+        template      => 'mapa_site.tt'
     );
 }
 
@@ -315,26 +324,28 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
     my $show_user_private_indicators = $c->stash->{show_user_private_indicators};
-    my $network_ids = [
+    my $network_ids                  = [
         do {
             my %seen;
             grep { !$seen{$_}++ } map {
                 map { $_->network_id }
-                    $_->network_users
-            } grep { defined $_->city_id } grep { $show_user_private_indicators->{$_->id} } @{$c->stash->{current_all_users}};
-        }
+                  $_->network_users
+              } grep { defined $_->city_id }
+              grep   { $show_user_private_indicators->{ $_->id } } @{ $c->stash->{current_all_users} };
+          }
     ];
 
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
 
         $show_user_private_indicators && keys %$show_user_private_indicators
         ? (
-            users_ids    => [keys %$show_user_private_indicators],
+            users_ids    => [ keys %$show_user_private_indicators ],
             networks_ids => $network_ids
-        )
+          )
         : (
             user_id      => $c->stash->{current_city_user_id},
-            networks_ids => $c->stash->{current_city_user_id} ? $c->stash->{network_data}{network_ids} : $c->stash->{network_data}{network_id},
+            networks_ids => $c->stash->{current_city_user_id} ? $c->stash->{network_data}{network_ids}
+            : $c->stash->{network_data}{network_id},
         )
       )->search(
         {
@@ -907,7 +918,6 @@ sub _load_user_justification_of_missing_field {
 
     $c->stash->{justifications} = \@justifications;
 
-
 }
 
 sub home_network_indicator : Chained('institute_load') PathPart('') CaptureArgs(1) {
@@ -1236,24 +1246,24 @@ sub stash_tela_indicator : Private {
     # anti bug de quem chamar isso sem ler o fonte ^^
     delete $c->stash->{template};
 
-    my $show_user_private_indicators = $c->stash->{show_user_private_indicators} = {
-        $c->stash->{current_city_user_id} => 1
-    };
+    my $show_user_private_indicators = $c->stash->{show_user_private_indicators} =
+      { $c->stash->{current_city_user_id} => 1 };
 
     my $network_ids = [
         do {
             my %seen;
             grep { !$seen{$_}++ } map {
                 map { $_->network_id }
-                    $_->network_users
-            } grep { defined $_->city_id } grep { $show_user_private_indicators->{$_->id} } @{$c->stash->{current_all_users}};
-        }
+                  $_->network_users
+              } grep { defined $_->city_id }
+              grep   { $show_user_private_indicators->{ $_->id } } @{ $c->stash->{current_all_users} };
+          }
     ];
-
 
     my $indicator = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $network_ids,
+
         #users_ids    => \@users_ids,
       )->search(
         {

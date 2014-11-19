@@ -15,7 +15,7 @@ sub upsert {
     my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator')->search( { is_fake => 0 } );
 
-#    use DDP;
+    #    use DDP;
     #p \%params if $DEBUG;
 
     #use DDP; p \%params if $DEBUG;
@@ -98,6 +98,7 @@ sub upsert {
                 $params{variables_ids}, $params{variables_variations_ids},
                 $params{dates}, $region_level
             );
+
             #use DDP; p $ret;
             if ( !$ret ) {
                 print STDERR "\n\n\n$@\n\n\n";
@@ -112,15 +113,16 @@ sub upsert {
 
         # procura pelos valores salvos naquela regiao
         my $where = {
-            'me.end_ts'       => 'infinity',
+            'me.end_ts' => 'infinity',
             ( 'me.user_id'    => $params{user_id} ) x !!exists $params{user_id},
             ( 'me.valid_from' => $params{dates} ) x !!exists $params{dates},
 
             'me.variable_id' => { 'in' => [ keys %$variable_ids ] },
             'me.region_id'   => { 'in' => $params{regions_id} },
         };
-#use DDP; p "where" if $DEBUG;
-#use DDP; p $where if $DEBUG;
+
+        #use DDP; p "where" if $DEBUG;
+        #use DDP; p $where if $DEBUG;
         my $rr_values_rs = $self->schema->resultset('RegionVariableValue')->search($where);
 
         my $inputed_values = {};
@@ -136,8 +138,9 @@ sub upsert {
                 )
             )
         );
+
         #use DDP; p "inputed values" if $DEBUG;
-#use DDP; p $inputed_values if $DEBUG;
+        #use DDP; p $inputed_values if $DEBUG;
         #use DDP; p $inputed_values if $region_level == 2 && $DEBUG;
         my $sum_values = {};
 
@@ -154,7 +157,7 @@ sub upsert {
         );
 
         #use DDP; p "sum values" if $DEBUG;
-#use DDP; p $sum_values if $DEBUG;
+        #use DDP; p $sum_values if $DEBUG;
         #use DDP; p $sum_values if $region_level == 2 && $DEBUG;
 
         # carrega a preferencia dos indicadores,
@@ -179,8 +182,9 @@ sub upsert {
                 }
             )->all
         };
-#use DDP; p "user vs inst" if $DEBUG;
-#use DDP; p $user_vs_institute if $DEBUG;
+
+        #use DDP; p "user vs inst" if $DEBUG;
+        #use DDP; p $user_vs_institute if $DEBUG;
         $self->_merge_regions_values(
             sum               => $sum_values,
             inputed           => $inputed_values,
@@ -201,8 +205,9 @@ sub upsert {
         delete $inputed_values->{0};
 
         undef $sum_values;
+
         #use DDP; p "after merge" if $DEBUG;
-#use DDP; p $inputed_values if $DEBUG;
+        #use DDP; p $inputed_values if $DEBUG;
     }
     else {
         $period_values = $self->_get_values_periods($values_rs);
@@ -310,8 +315,8 @@ sub upsert {
 
             if ( scalar @upper_regions ) {
 
-               # print STDERR "-" x 100, "\n";
-               # use DDP; p \@upper_regions if $DEBUG;
+                # print STDERR "-" x 100, "\n";
+                # use DDP; p \@upper_regions if $DEBUG;
                 $self->upsert(
                     %params,
 
@@ -387,7 +392,8 @@ sub _merge_regions_values {
             }
         }
     }
-#use DDP; p $conf{inputed}{0} if $DEBUG;
+
+    #use DDP; p $conf{inputed}{0} if $DEBUG;
     # corre a soma falsa, e transforma o inputed em 0, MESMO SE JA EXISTE.
     while ( my ( $region_id, $users ) = each %{ $conf{sum}{0} } ) {
         next if $region_id eq 'null';
@@ -406,7 +412,8 @@ sub _merge_regions_values {
             }
         }
     }
-#use DDP; p $conf{inputed}{0} if $DEBUG;
+
+    #use DDP; p $conf{inputed}{0} if $DEBUG;
     # percorre os inputados falsos, trasnforma em 1 e nao tem região.
     while ( my ( $region_id, $users ) = each %{ $conf{inputed}{0} } ) {
         next if $region_id eq 'null';
