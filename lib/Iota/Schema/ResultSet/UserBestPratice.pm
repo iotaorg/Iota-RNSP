@@ -15,6 +15,9 @@ my $text2uri = Text2URI->new();
 use Iota::Types qw /VariableType DataStr/;
 
 sub _build_verifier_scope_name { 'best_pratice' }
+use JSON::XS;
+
+use utf8;
 
 sub verifiers_specs {
     my $self = shift;
@@ -76,6 +79,31 @@ sub action_specs {
             my $var = $self->create( \%values );
 
             $var->discard_changes;
+
+            if (exists $ENV{SEND_BEST_PRATICE_EMAIL_TO} &&
+                $ENV{SEND_BEST_PRATICE_EMAIL_TO}){
+                my $user = $var->user;
+
+                my $net = $user->networks->first;
+
+                my $queue = $self->result_source->schema->resultset('EmailsQueue');
+                $queue->create(
+                    {
+                        to        => $ENV{SEND_BEST_PRATICE_EMAIL_TO},
+                        subject   => 'Nova boa prática criada [% name %]',
+                        template  => 'new_best_pratice.tt',
+                        variables => encode_json( {
+                            (map { $_ => $var->$_ } qw / id name name_url / ),
+
+                            network_domain => $net ? $net->domain_name : '',
+
+                            city_url => (join '/', $user->city->pais, $user->city->uf, $user->city->name_uri),
+
+                        }),
+                        sent      => 0
+                    }
+                );
+            }
             return $var;
         },
         update => sub {
