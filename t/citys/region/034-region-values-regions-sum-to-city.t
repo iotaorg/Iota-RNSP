@@ -6,6 +6,7 @@ use URI;
 use Test::More;
 use JSON qw(from_json);
 
+use utf8;
 use FindBin qw($Bin);
 use lib "$Bin/../../lib";
 
@@ -361,6 +362,8 @@ sub add_value {
     $req->method('PUT');
     my ( $res, $c ) = ctx_request($req);
 
+    use Data::Dumper;
+    print Dumper $res;
     ok( $res->is_success, 'variable value created' ) if $expcode == 201;
     is( $res->code, $expcode, 'response code is ' . $expcode );
     my $id = eval { from_json( $res->content ) };
