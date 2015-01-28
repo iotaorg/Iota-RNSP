@@ -676,7 +676,6 @@ sub stash_comparacao_distritos : Private {
         }
 
     }
-
     my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
         {},
         {
@@ -690,10 +689,12 @@ sub stash_comparacao_distritos : Private {
     while ( my $r = $valor_rs->next ) {
         $r->{variation_name} ||= '';
 
+        delete $r->{polygon_path} if $r->{polygon_path} eq 'null';
         $r->{polygon_path} = $r->{polygon_path} ? [ $r->{polygon_path} ] : $poly_reg3->{ $r->{id} };
 
         push @{ $por_ano->{ delete $r->{valid_from} }{ delete $r->{variation_name} } }, $r;
     }
+
 
     my $freq = Iota::Statistics::Frequency->new();
 

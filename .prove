@@ -1,0 +1,726 @@
+---
+generation: 1
+last_run_time: 1421668971.73799
+tests:
+  t/001-verifier.t:
+    elapsed: 0.0940959453582764
+    gen: 1
+    last_pass_time: 1421668955.0004
+    last_result: 0
+    last_run_time: 1421668955.0004
+    last_todo: 0
+    seq: 52
+    total_passes: 1
+  t/002-data-manager.t:
+    elapsed: 0.0668039321899414
+    gen: 1
+    last_pass_time: 1421668956.05563
+    last_result: 0
+    last_run_time: 1421668956.05563
+    last_todo: 0
+    seq: 57
+    total_passes: 1
+  t/02pod.t:
+    elapsed: 0.0634860992431641
+    gen: 1
+    last_pass_time: 1421668952.30051
+    last_result: 0
+    last_run_time: 1421668952.30051
+    last_todo: 0
+    seq: 44
+    total_passes: 1
+  t/03podcoverage.t:
+    elapsed: 0.0614728927612305
+    gen: 1
+    last_pass_time: 1421668956.54631
+    last_result: 0
+    last_run_time: 1421668956.54631
+    last_todo: 0
+    seq: 60
+    total_passes: 1
+  t/04Frequency.t:
+    elapsed: 0.0794920921325684
+    gen: 1
+    last_pass_time: 1421668965.93093
+    last_result: 0
+    last_run_time: 1421668965.93093
+    last_todo: 0
+    seq: 75
+    total_passes: 1
+  t/05lang.t:
+    elapsed: 0.0680558681488037
+    gen: 1
+    last_pass_time: 1421668941.32437
+    last_result: 0
+    last_run_time: 1421668941.32437
+    last_todo: 0
+    seq: 10
+    total_passes: 1
+  t/axis/001-crud.t:
+    elapsed: 0.157392024993896
+    gen: 1
+    last_pass_time: 1421668957.02124
+    last_result: 0
+    last_run_time: 1421668957.02124
+    last_todo: 0
+    seq: 62
+    total_passes: 1
+  t/axis/008-list.t:
+    elapsed: 0.0614280700683594
+    gen: 1
+    last_pass_time: 1421668966.11454
+    last_result: 0
+    last_run_time: 1421668966.11454
+    last_todo: 0
+    seq: 76
+    total_passes: 1
+  t/best-pratice/001-crud.t:
+    elapsed: 0.207962989807129
+    gen: 1
+    last_pass_time: 1421668944.56174
+    last_result: 0
+    last_run_time: 1421668944.56174
+    last_todo: 0
+    seq: 21
+    total_passes: 1
+  t/best-pratice/002-crud-axis.t:
+    elapsed: 0.20754599571228
+    gen: 1
+    last_pass_time: 1421668943.69985
+    last_result: 0
+    last_run_time: 1421668943.69985
+    last_todo: 0
+    seq: 18
+    total_passes: 1
+  t/citys/003-create.t:
+    elapsed: 0.40505313873291
+    gen: 1
+    last_pass_time: 1421668941.23863
+    last_result: 0
+    last_run_time: 1421668941.23863
+    last_todo: 0
+    seq: 9
+    total_passes: 1
+  t/citys/005-update.t:
+    elapsed: 0.169264078140259
+    gen: 1
+    last_pass_time: 1421668940.47986
+    last_result: 0
+    last_run_time: 1421668940.47986
+    last_todo: 0
+    seq: 2
+    total_passes: 1
+  t/citys/006-delete.t:
+    elapsed: 0.108698129653931
+    gen: 1
+    last_pass_time: 1421668940.53677
+    last_result: 0
+    last_run_time: 1421668940.53677
+    last_todo: 0
+    seq: 3
+    total_passes: 1
+  t/citys/region/003-crud.t:
+    elapsed: 0.410890102386475
+    gen: 1
+    last_pass_time: 1421668945.4919
+    last_result: 0
+    last_run_time: 1421668945.4919
+    last_todo: 0
+    seq: 23
+    total_passes: 1
+  t/citys/region/010-region-values.t:
+    elapsed: 1.24109196662903
+    gen: 1
+    last_pass_time: 1421668947.64027
+    last_result: 0
+    last_run_time: 1421668947.64027
+    last_todo: 0
+    seq: 28
+    total_passes: 1
+  t/citys/region/012-region-values-variation-gen-by-compute.t:
+    elapsed: 5.61181497573853
+    gen: 1
+    last_pass_time: 1421668965.81336
+    last_result: 0
+    last_run_time: 1421668965.81336
+    last_todo: 0
+    seq: 73
+    total_passes: 1
+  t/citys/region/012-region-values-variation.t:
+    elapsed: 1.54990792274475
+    gen: 1
+    last_pass_time: 1421668954.86921
+    last_result: 0
+    last_run_time: 1421668954.86921
+    last_todo: 0
+    seq: 50
+    total_passes: 1
+  t/citys/region/014-two-regions-same-year-value.t:
+    elapsed: 0.483299016952515
+    gen: 1
+    last_pass_time: 1421668951.27272
+    last_result: 0
+    last_run_time: 1421668951.27272
+    last_todo: 0
+    seq: 35
+    total_passes: 1
+  t/citys/region/015-region-values-generated_by_compute.t:
+    elapsed: 5.42770600318909
+    gen: 1
+    last_pass_time: 1421668971.73675
+    last_result: 0
+    last_run_time: 1421668971.73675
+    last_todo: 0
+    seq: 80
+    total_passes: 1
+  t/citys/region/030-region-values-subregions-only-sum-when-subfullfill.t:
+    elapsed: 6.38087701797485
+    gen: 1
+    last_pass_time: 1421668964.34254
+    last_result: 0
+    last_run_time: 1421668964.34254
+    last_todo: 0
+    seq: 69
+    total_passes: 1
+  t/citys/region/032-region-values-subregions-valid-time-01.t:
+    elapsed: 1.22837114334106
+    gen: 1
+    last_pass_time: 1421668950.28708
+    last_result: 0
+    last_run_time: 1421668950.28708
+    last_todo: 0
+    seq: 32
+    total_passes: 1
+  t/citys/region/032-region-values-subregions-valid-time-02.t:
+    elapsed: 1.20026087760925
+    gen: 1
+    last_pass_time: 1421668946.83445
+    last_result: 0
+    last_run_time: 1421668946.83445
+    last_todo: 0
+    seq: 25
+    total_passes: 1
+  t/citys/region/032-region-values-subregions-valid-time-03.t:
+    elapsed: 1.89384508132935
+    gen: 1
+    last_pass_time: 1421668953.69854
+    last_result: 0
+    last_run_time: 1421668953.69854
+    last_todo: 0
+    seq: 48
+    total_passes: 1
+  t/citys/region/032-region-values-subregions-valid-time-04.t:
+    elapsed: 1.39354205131531
+    gen: 1
+    last_pass_time: 1421668949.1835
+    last_result: 0
+    last_run_time: 1421668949.1835
+    last_todo: 0
+    seq: 31
+    total_passes: 1
+  t/citys/region/034-region-values-regions-sum-to-city.t:
+    elapsed: 4.24631309509277
+    gen: 1
+    last_pass_time: 1421668969.97337
+    last_result: 0
+    last_run_time: 1421668969.97337
+    last_todo: 0
+    seq: 78
+    total_passes: 1
+  t/country/001-crud-state.t:
+    elapsed: 0.186308145523071
+    gen: 1
+    last_pass_time: 1421668940.43353
+    last_result: 0
+    last_run_time: 1421668940.43353
+    last_todo: 0
+    seq: 1
+    total_passes: 1
+  t/country/001-crud.t:
+    elapsed: 0.158726930618286
+    gen: 1
+    last_pass_time: 1421668956.70831
+    last_result: 0
+    last_run_time: 1421668956.70831
+    last_todo: 0
+    seq: 61
+    total_passes: 1
+  t/indicators/003-create-network-config.t:
+    elapsed: 0.405582189559937
+    gen: 1
+    last_pass_time: 1421668944.10991
+    last_result: 0
+    last_run_time: 1421668944.10991
+    last_todo: 0
+    seq: 19
+    total_passes: 1
+  t/indicators/003-create-users.t:
+    elapsed: 0.453455924987793
+    gen: 1
+    last_pass_time: 1421668955.96588
+    last_result: 0
+    last_run_time: 1421668955.96588
+    last_todo: 0
+    seq: 56
+    total_passes: 1
+  t/indicators/003-create.t:
+    elapsed: 0.33430004119873
+    gen: 1
+    last_pass_time: 1421668940.57852
+    last_result: 0
+    last_run_time: 1421668940.57852
+    last_todo: 0
+    seq: 4
+    total_passes: 1
+  t/indicators/005-update.t:
+    elapsed: 0.401766061782837
+    gen: 1
+    last_pass_time: 1421668952.00928
+    last_result: 0
+    last_run_time: 1421668952.00928
+    last_todo: 0
+    seq: 41
+    total_passes: 1
+  t/indicators/006-delete.t:
+    elapsed: 0.0988008975982666
+    gen: 1
+    last_pass_time: 1421668947.81322
+    last_result: 0
+    last_run_time: 1421668947.81322
+    last_todo: 0
+    seq: 29
+    total_passes: 1
+  t/indicators/009-create-with-user-indicator.t:
+    elapsed: 7.38717007637024
+    gen: 1
+    last_pass_time: 1421668951.6506
+    last_result: 0
+    last_run_time: 1421668951.6506
+    last_todo: 0
+    seq: 38
+    total_passes: 1
+  t/indicators/090-indicator.t:
+    elapsed: 0.0850870609283447
+    gen: 1
+    last_pass_time: 1421668952.77459
+    last_result: 0
+    last_run_time: 1421668952.77459
+    last_todo: 0
+    seq: 46
+    total_passes: 1
+  t/indicators/chart/000--variaveis-indicadores.t:
+    elapsed: 1.24197292327881
+    gen: 1
+    last_pass_time: 1421668953.11313
+    last_result: 0
+    last_run_time: 1421668953.11313
+    last_todo: 0
+    seq: 47
+    total_passes: 1
+  t/indicators/chart/001-chart_period_axis.t:
+    elapsed: 1.5766658782959
+    gen: 1
+    last_pass_time: 1421668958.33322
+    last_result: 0
+    last_run_time: 1421668958.33322
+    last_todo: 0
+    seq: 66
+    total_passes: 1
+  t/indicators/chart/002-variable_table.t:
+    elapsed: 1.5098888874054
+    gen: 1
+    last_pass_time: 1421668960.00885
+    last_result: 0
+    last_run_time: 1421668960.00885
+    last_todo: 0
+    seq: 68
+    total_passes: 1
+  t/indicators/chart/variation/003-indicadores-variados-dinamico.t:
+    elapsed: 5.2272469997406
+    gen: 1
+    last_pass_time: 1421668946.24255
+    last_result: 0
+    last_run_time: 1421668946.24255
+    last_todo: 0
+    seq: 24
+    total_passes: 1
+  t/indicators/chart/variation/003-indicadores-variados.t:
+    elapsed: 5.11787891387939
+    gen: 1
+    last_pass_time: 1421668951.31664
+    last_result: 0
+    last_run_time: 1421668951.31664
+    last_todo: 0
+    seq: 36
+    total_passes: 1
+  t/indicators/config/003-indicator_config.t:
+    elapsed: 0.372326135635376
+    gen: 1
+    last_pass_time: 1421668956.46181
+    last_result: 0
+    last_run_time: 1421668956.46181
+    last_todo: 0
+    seq: 59
+    total_passes: 1
+  t/indicators/indicator_axis/001-crud.t:
+    elapsed: 0.189926147460938
+    gen: 1
+    last_pass_time: 1421668942.11499
+    last_result: 0
+    last_run_time: 1421668942.11499
+    last_todo: 0
+    seq: 14
+    total_passes: 1
+  t/indicators/indicator_axis/002-item-crud.t:
+    elapsed: 0.317792892456055
+    gen: 1
+    last_pass_time: 1421668950.77325
+    last_result: 0
+    last_run_time: 1421668950.77325
+    last_todo: 0
+    seq: 34
+    total_passes: 1
+  t/indicators/indicator_axis/003-pagina_home_public_user_indicator.t:
+    elapsed: 2.03950214385986
+    gen: 1
+    last_pass_time: 1421668966.60864
+    last_result: 0
+    last_run_time: 1421668966.60864
+    last_todo: 0
+    seq: 77
+    total_passes: 1
+  t/institute/001-crud.t:
+    elapsed: 0.16900897026062
+    gen: 1
+    last_pass_time: 1421668947.53943
+    last_result: 0
+    last_run_time: 1421668947.53943
+    last_todo: 0
+    seq: 27
+    total_passes: 1
+  t/institute/001-institute-status.t:
+    elapsed: 0.0600841045379639
+    gen: 1
+    last_pass_time: 1421668964.77793
+    last_result: 0
+    last_run_time: 1421668964.77793
+    last_todo: 0
+    seq: 72
+    total_passes: 1
+  t/kml/001-upload-kmls.t:
+    elapsed: 1.79645705223083
+    gen: 1
+    last_pass_time: 1421668959.59086
+    last_result: 0
+    last_run_time: 1421668959.59086
+    last_todo: 0
+    seq: 67
+    total_passes: 1
+  t/measurement_unit/001-crud.t:
+    elapsed: 0.192631006240845
+    gen: 1
+    last_pass_time: 1421668947.1909
+    last_result: 0
+    last_run_time: 1421668947.1909
+    last_todo: 0
+    seq: 26
+    total_passes: 1
+  t/model_DB.t:
+    elapsed: 0.0681719779968262
+    gen: 1
+    last_pass_time: 1421668940.67177
+    last_result: 0
+    last_run_time: 1421668940.67177
+    last_todo: 0
+    seq: 5
+    total_passes: 1
+  t/network/001-crud.t:
+    elapsed: 0.15866494178772
+    gen: 1
+    last_pass_time: 1421668956.37427
+    last_result: 0
+    last_run_time: 1421668956.37427
+    last_todo: 0
+    seq: 58
+    total_passes: 1
+  t/page/001-crud-menu.t:
+    elapsed: 0.201639890670776
+    gen: 1
+    last_pass_time: 1421668944.92307
+    last_result: 0
+    last_run_time: 1421668944.92307
+    last_todo: 0
+    seq: 22
+    total_passes: 1
+  t/page/001-crud.t:
+    elapsed: 0.165556907653809
+    gen: 1
+    last_pass_time: 1421668951.68361
+    last_result: 0
+    last_run_time: 1421668951.68361
+    last_todo: 0
+    seq: 39
+    total_passes: 1
+  t/source/001-crud.t:
+    elapsed: 0.163892984390259
+    gen: 1
+    last_pass_time: 1421668940.768
+    last_result: 0
+    last_run_time: 1421668940.768
+    last_todo: 0
+    seq: 6
+    total_passes: 1
+  t/user/00-login.t:
+    elapsed: 0.227957010269165
+    gen: 1
+    last_pass_time: 1421668951.79358
+    last_result: 0
+    last_run_time: 1421668951.79358
+    last_todo: 0
+    seq: 40
+    total_passes: 1
+  t/user/002-authorization.t:
+    elapsed: 0.191393136978149
+    gen: 1
+    last_pass_time: 1421668952.53636
+    last_result: 0
+    last_run_time: 1421668952.53636
+    last_todo: 0
+    seq: 45
+    total_passes: 1
+  t/user/003-create-upload-variable.t:
+    elapsed: 0.267481088638306
+    gen: 1
+    last_pass_time: 1421668964.58208
+    last_result: 0
+    last_run_time: 1421668964.58208
+    last_todo: 0
+    seq: 71
+    total_passes: 1
+  t/user/003-create.t:
+    elapsed: 0.472567081451416
+    gen: 1
+    last_pass_time: 1421668951.4202
+    last_result: 0
+    last_run_time: 1421668951.4202
+    last_todo: 0
+    seq: 37
+    total_passes: 1
+  t/user/005-update.t:
+    elapsed: 0.14354395866394
+    gen: 1
+    last_pass_time: 1421668957.64254
+    last_result: 0
+    last_run_time: 1421668957.64254
+    last_todo: 0
+    seq: 64
+    total_passes: 1
+  t/user/006-delete.t:
+    elapsed: 0.107288837432861
+    gen: 1
+    last_pass_time: 1421668964.35404
+    last_result: 0
+    last_run_time: 1421668964.35404
+    last_todo: 0
+    seq: 70
+    total_passes: 1
+  t/user/009-forget_password_queue.t:
+    elapsed: 0.0736258029937744
+    gen: 1
+    last_pass_time: 1421668943.53059
+    last_result: 0
+    last_run_time: 1421668943.53059
+    last_todo: 0
+    seq: 17
+    total_passes: 1
+  t/user/011-user-networks.t:
+    elapsed: 0.827547073364258
+    gen: 1
+    last_pass_time: 1421668948.85676
+    last_result: 0
+    last_run_time: 1421668948.85676
+    last_todo: 0
+    seq: 30
+    total_passes: 1
+  t/user/020-network-upload-css.t:
+    elapsed: 0.0709600448608398
+    gen: 1
+    last_pass_time: 1421668940.81293
+    last_result: 0
+    last_run_time: 1421668940.81293
+    last_todo: 0
+    seq: 7
+    total_passes: 1
+  t/user/021-user-files.t:
+    elapsed: 0.182425975799561
+    gen: 1
+    last_pass_time: 1421668943.44077
+    last_result: 0
+    last_run_time: 1421668943.44077
+    last_todo: 0
+    seq: 16
+    total_passes: 1
+  t/user/021-user-region-name.t:
+    elapsed: 0.177860975265503
+    gen: 1
+    last_pass_time: 1421668957.78271
+    last_result: 0
+    last_run_time: 1421668957.78271
+    last_todo: 0
+    seq: 65
+    total_passes: 1
+  t/user/099-create-upload-variable-region.t:
+    elapsed: 0.258846044540405
+    gen: 1
+    last_pass_time: 1421668952.22992
+    last_result: 0
+    last_run_time: 1421668952.22992
+    last_todo: 0
+    seq: 43
+    total_passes: 1
+  t/user/public/001-indicator-status.t:
+    elapsed: 1.78813600540161
+    gen: 1
+    last_pass_time: 1421668943.32954
+    last_result: 0
+    last_run_time: 1421668943.32954
+    last_todo: 0
+    seq: 15
+    total_passes: 1
+  t/user/public/001-pagina-home.t:
+    elapsed: 2.11953997612
+    gen: 1
+    last_pass_time: 1421668954.87763
+    last_result: 0
+    last_run_time: 1421668954.87763
+    last_todo: 0
+    seq: 51
+    total_passes: 1
+  t/user/public/002-indicator-status-varied-indicator.t:
+    elapsed: 2.77744913101196
+    gen: 1
+    last_pass_time: 1421668957.57579
+    last_result: 0
+    last_run_time: 1421668957.57579
+    last_todo: 0
+    seq: 63
+    total_passes: 1
+  t/variables/003-create-with-lexicon-2idioms.t:
+    elapsed: 0.17573618888855
+    gen: 1
+    last_pass_time: 1421668941.61422
+    last_result: 0
+    last_run_time: 1421668941.61422
+    last_todo: 0
+    seq: 12
+    total_passes: 1
+  t/variables/003-create-with-lexicon.t:
+    elapsed: 0.185470104217529
+    gen: 1
+    last_pass_time: 1421668941.75088
+    last_result: 0
+    last_run_time: 1421668941.75088
+    last_todo: 0
+    seq: 13
+    total_passes: 1
+  t/variables/003-create.t:
+    elapsed: 3.96619915962219
+    gen: 1
+    last_pass_time: 1421668969.98673
+    last_result: 0
+    last_run_time: 1421668969.98673
+    last_todo: 0
+    seq: 79
+    total_passes: 1
+  t/variables/005-update.t:
+    elapsed: 0.111593961715698
+    gen: 1
+    last_pass_time: 1421668955.40858
+    last_result: 0
+    last_run_time: 1421668955.40858
+    last_todo: 0
+    seq: 54
+    total_passes: 1
+  t/variables/006-delete.t:
+    elapsed: 0.117561101913452
+    gen: 1
+    last_pass_time: 1421668965.84555
+    last_result: 0
+    last_run_time: 1421668965.84555
+    last_todo: 0
+    seq: 74
+    total_passes: 1
+  t/variables/010-list-values.t:
+    elapsed: 0.365879058837891
+    gen: 1
+    last_pass_time: 1421668955.9309
+    last_result: 0
+    last_run_time: 1421668955.9309
+    last_todo: 0
+    seq: 55
+    total_passes: 1
+  t/variables/011-list-periods.t:
+    elapsed: 0.111905097961426
+    gen: 1
+    last_pass_time: 1421668952.21092
+    last_result: 0
+    last_run_time: 1421668952.21092
+    last_todo: 0
+    seq: 42
+    total_passes: 1
+  t/variables/012-create-with-lexicon-translated-automatic.t:
+    elapsed: 0.303097009658813
+    gen: 1
+    last_pass_time: 1421668954.18221
+    last_result: 0
+    last_run_time: 1421668954.18221
+    last_todo: 0
+    seq: 49
+    total_passes: 1
+  t/variables/config/003-config.t:
+    elapsed: 0.365044116973877
+    gen: 1
+    last_pass_time: 1421668941.33593
+    last_result: 0
+    last_run_time: 1421668941.33593
+    last_todo: 0
+    seq: 11
+    total_passes: 1
+  t/variables/config/095-config-region.t:
+    elapsed: 1.30031394958496
+    gen: 1
+    last_pass_time: 1421668950.63742
+    last_result: 0
+    last_run_time: 1421668950.63742
+    last_todo: 0
+    seq: 33
+    total_passes: 1
+  t/variables/values/001-crud.t:
+    elapsed: 0.559501886367798
+    gen: 1
+    last_pass_time: 1421668944.17082
+    last_result: 0
+    last_run_time: 1421668944.17082
+    last_todo: 0
+    seq: 20
+    total_passes: 1
+  t/variables/values/001-put_update_or_create.t:
+    elapsed: 0.261374950408936
+    gen: 1
+    last_pass_time: 1421668955.34063
+    last_result: 0
+    last_run_time: 1421668955.34063
+    last_todo: 0
+    seq: 53
+    total_passes: 1
+  t/variables/values/020-cloning.t:
+    elapsed: 0.531425952911377
+    gen: 1
+    last_pass_time: 1421668941.22748
+    last_result: 0
+    last_run_time: 1421668941.22748
+    last_todo: 0
+    seq: 8
+    total_passes: 1
+version: 1
+...
