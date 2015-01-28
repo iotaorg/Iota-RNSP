@@ -10,7 +10,7 @@ __PACKAGE__->table_class('DBIx::Class::ResultSource::View');
 # For the time being this is necessary even for virtual views
 __PACKAGE__->table('ViewValoresDistritos');
 
-__PACKAGE__->add_columns(qw/variation_name valid_from name num polygon_path name_url id/);
+__PACKAGE__->add_columns(qw/variation_name valid_from num id/);
 
 # do not attempt to deploy() this view
 __PACKAGE__->result_source_instance->is_virtual(1);
@@ -33,10 +33,7 @@ __PACKAGE__->result_source_instance->view_definition(
    select
         variation_name,
         pp.valid_from,
-        r.name,
         (CASE WHEN i.variable_type = 'str' THEN '1' ELSE value END)::numeric as num,
-        polygon_path,
-        r.name_url,
         r.id
 
     from region as r

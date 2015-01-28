@@ -106,6 +106,7 @@
     var userID = [% user.id %];
     var cityID = [% city.id %];
     var regionID = [% region.id %];
+
 [%IF region.depth_level == 2-%]
     var load_map = [{
         map_elm: '#mapa',

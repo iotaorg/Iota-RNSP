@@ -665,17 +665,35 @@ sub stash_comparacao_distritos : Private {
 
     $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
 
-    my $poly_reg3 = {};
+    my $polys = {};
+    my $regs = {};
     foreach my $reg ( @{ $c->stash->{city}{regions} } ) {
         next unless $reg->{subregions};
 
-        foreach my $sub ( @{ $reg->{subregions} } ) {
-            next unless $sub->{polygon_path};
 
-            push @{ $poly_reg3->{ $reg->{id} } }, $sub->{polygon_path};
+        if ($region->depth_level == 2){
+            $regs->{$reg->{id}} = { map { $_ => $reg->{$_} } qw/name name_url/ };
+
+            foreach my $sub ( @{ $reg->{subregions} } ) {
+
+                delete $sub->{polygon_path}
+                    if defined $sub->{polygon_path} && $sub->{polygon_path} eq 'null';
+                next unless $sub->{polygon_path};
+
+                push @{ $polys->{ $reg->{id} } }, $sub->{polygon_path};
+            }
+        }elsif ($region->depth_level == 3){
+
+            foreach my $sub ( @{ $reg->{subregions} } ) {
+                $regs->{$sub->{id}} = { map { $_ => $sub->{$_} } qw/name name_url/ };
+
+                push @{ $polys->{ $sub->{id} } }, $sub->{polygon_path};
+            }
+
+
         }
-
     }
+
     my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
         {},
         {
@@ -689,34 +707,31 @@ sub stash_comparacao_distritos : Private {
     while ( my $r = $valor_rs->next ) {
         $r->{variation_name} ||= '';
 
-        delete $r->{polygon_path} if $r->{polygon_path} eq 'null';
-        $r->{polygon_path} = $r->{polygon_path} ? [ $r->{polygon_path} ] : $poly_reg3->{ $r->{id} };
-
         push @{ $por_ano->{ delete $r->{valid_from} }{ delete $r->{variation_name} } }, $r;
     }
-
-
     my $freq = Iota::Statistics::Frequency->new();
 
     my $out = {};
     while ( my ( $ano, $variacoes ) = each %$por_ano ) {
-        while ( my ( $variacao, $distritos ) = each %$variacoes ) {
+        while ( my ( $variacao, $distintos ) = each %$variacoes ) {
 
-            my $stat = $freq->iterate($distritos);
+            my $distintos_ref_id = {map {$_->{id} => $_ } @$distintos};
 
-            my $definidos = [ grep { defined $_->{num} } @$distritos ];
+            my $stat = $freq->iterate($distintos);
+
+            my $definidos = [ grep { defined $_->{num} } @$distintos ];
 
             # melhor = mais alto, entao inverte as cores
             if ( !$indicator->{sort_direction} || $indicator->{sort_direction} eq 'greater value' ) {
                 $_->{i} = 4 - $_->{i} for @$definidos;
-                $distritos =
-                  [ ( reverse grep { defined $_->{num} } @$distritos ), grep { !defined $_->{num} } @$distritos ];
+                $distintos =
+                  [ ( reverse grep { defined $_->{num} } @$distintos ), grep { !defined $_->{num} } @$distintos ];
                 $definidos = [ reverse @$definidos ];
             }
 
             if ($stat) {
                 $out->{$ano}{$variacao} = {
-                    all    => $distritos,
+                    all    => $distintos,
                     top3   => [ $definidos->[0], $definidos->[1], $definidos->[2], ],
                     lower3 => [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
                     mean   => $stat->mean()
@@ -741,10 +756,24 @@ sub stash_comparacao_distritos : Private {
                 $_->{i} = 5 for @$definidos;
             }
 
-            $out->{$ano}{$variacao} = { all => $distritos }
+            $out->{$ano}{$variacao} = { all => $distintos }
               unless exists $out->{$ano}{$variacao};
 
-            my @nao_definidos = grep { !defined $_->{num} } @$distritos;
+
+            foreach my $region_id (keys %$regs){
+
+                unless (exists $distintos_ref_id->{$region_id}){
+                    $distintos_ref_id->{$region_id} = {};
+                    push @$distintos, $distintos_ref_id->{$region_id};
+                }
+
+                $distintos_ref_id->{$region_id}{polygon_path} = $polys->{$region_id};
+                $distintos_ref_id->{$region_id}{$_} = $regs->{$region_id}{$_} for keys %{$regs->{$region_id}};
+
+            }
+
+
+            my @nao_definidos = grep { !defined $_->{num} } @$distintos;
             for (@nao_definidos) {
                 $_->{i}   = 5;             # amarelo/sem valor
                 $_->{num} = 'n/d';

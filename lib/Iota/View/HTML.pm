@@ -53,6 +53,7 @@ sub value4human {
 
     return 'OK' if defined $value && $value == 1 && $variable_type eq 'str';
     return $value if $variable_type eq 'str';
+    return 'n/d' if defined $value && $value eq 'n/d';
     return 0 if $value < 0.0001;
 
     return $value if $value =~ /[a-z]/;
@@ -86,7 +87,10 @@ sub value4human {
         $pre =~ s/^\.//;             # remove leading dot, if any
     }
 
-    return "$pre$mid$end";
+
+    my $x = "$pre$mid$end";
+    $x =~ s/,000$//;
+    return $x;
 }
 
 sub l {
