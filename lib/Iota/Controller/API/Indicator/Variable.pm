@@ -4,7 +4,7 @@ package Iota::Controller::API::Indicator::Variable;
 use Moose;
 use JSON qw(encode_json);
 use Iota::IndicatorFormula;
-
+use JSON::XS;
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
@@ -424,235 +424,317 @@ sub values_GET {
     my ( $self, $c ) = @_;
     my $ret;
     my $hash = {};
+
+
     eval {
         my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
-        my @indicator_variations;
-        my @indicator_variables;
-        if ( $indicator->indicator_type eq 'varied' ) {
+        #   workarround 1                      && workarround2
+        if ($c->req->params->{indicator_value} && $indicator->indicator_type eq 'normal' ){
 
-            if ( $indicator->dynamic_variations ) {
-                $hash->{filters} = { user_id => [ $indicator->user_id, $c->stash->{user_id} || $c->user->id ] };
-                @indicator_variations =
-                  $indicator->indicator_variations->search( $hash->{filters}, { order_by => 'order' } )->all;
-            }
-            else {
-                $hash->{filters} = { user_id => $c->stash->{user_id} || $c->user->id };
-                @indicator_variations = $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
-            }
 
-            @indicator_variables = $indicator->indicator_variables_variations->all;
+            my @variables = $indicator->indicator_variables->search(undef, {
+                prefetch => 'variable',
+                order_by => ['variable.name'],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            });
 
-            foreach my $v (@indicator_variables) {
-                push @{ $hash->{variables_variations} },
-                  {
-                    id   => $v->id,
-                    name => $v->name,
-                  };
-            }
-        }
+            my $x = 0;
+            $hash->{header}{$_->{variable}{name}} = $x++ foreach (@variables);
 
-        my $indicator_formula = Iota::IndicatorFormula->new(
-            formula => $indicator->formula,
-            schema  => $c->model('DB')->schema
-        );
-        my $valuetb      = $c->req->params->{region_id}           ? 'region_variable_values'        : 'values';
-        my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
+            my $user_id = $c->stash->{user_id} || $c->user->id;
+            my $cond = {
 
-        my $cond = {
-            -or => [
-                $valuetb . '.user_id' => $c->stash->{user_id} || $c->user->id,
-                $valuetb . '.user_id' => undef,
-            ],
-            'me.id' => [ $indicator_formula->variables ],
+                'me.user_id' => $user_id,
+                'me.indicator_id' => $indicator->id,
 
-            (
-                $valuetb eq 'region_variable_values'
+                ($c->req->params->{region_id}
                 ? (
-                    $valuetb . '.region_id'    => [ $c->req->params->{region_id}, undef ],
-                    $valuetb . '.active_value' => $active_value
-                  )
-                : ()
-            )
-        };
+                    'me.region_id' => $c->req->params->{region_id}
+                ) : (
+                    'me.region_id' => undef
+                )),
 
-        my $rs = $c->model('DB')->resultset('Variable')->search_rs( $cond, { prefetch => [$valuetb] } );
-
-        my $tmp = {};
-        my $x   = 0;
-        while ( my $row = $rs->next ) {
-            $hash->{header}{ $row->name } = $x;
-
-            foreach my $value ( $row->$valuetb ) {
-                push @{ $tmp->{ $value->valid_from } },
-                  {
-                    col           => $x,
-                    varid         => $row->id,
-                    value_of_date => $value->value_of_date->datetime,
-                    value         => $value->value,
-                    value_id      => $value->id,
-                    observations  => $value->observations,
-                    source        => $value->source,
-                    name          => $row->name
-                  };
-            }
-            $x++;
-        }
-        my $definidos = scalar keys %{ $hash->{header} };
-
-        for my $faixa (@indicator_variations) {
-
-            my $rs = $faixa->indicator_variables_variations_values->search(
-                {
-                    %{ $hash->{filters} },
-                    region_id    => $c->req->params->{region_id},
-                    active_value => $active_value
-                },
-                {
-                    select   => [qw/valid_from/],
-                    as       => [qw/valid_from/],
-                    group_by => [qw/valid_from/]
-                }
-            );
-
-            while ( my $item = $rs->next ) {
-                push @{ $tmp->{ $item->valid_from } }, {};
-            }
-        }
-
-        my $user_id = $c->stash->{user_id} || $c->user->id;
-
-        foreach my $begin ( sort { $a cmp $b } keys %$tmp ) {
-
-            my @order = sort { $a->{col} <=> $b->{col} } grep { exists $_->{col} } @{ $tmp->{$begin} };
-            my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs(
-                {
-                    user_id      => $user_id,
-                    valid_from   => $begin,
-                    indicator_id => $indicator->id,
-                    region_id    => $c->req->params->{region_id}
-                }
-            )->next;
-
-            my $item = {
-                formula_value => undef,
-                valid_from    => $begin,
-                valores       => []
             };
-            foreach (@order) {
-                $item->{valores}[ $hash->{header}{ $_->{name} } ] = {
-                    variable_id   => $_->{varid},
-                    value_of_date => $_->{value_of_date},
-                    id            => $_->{value_id},
-                    observations  => $_->{observations},
-                    source        => $_->{source},
-                    value         => $_->{value}
-                };
-            }
 
-            @order = grep { defined $_->{value} } @order;
+            my $rs = $c->model('DB::IndicatorValue')->search($cond, {
+                order_by => ['me.valid_from'],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            });
 
-            if ($attrs) {
-                $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
-                $item->{goal}                           = $attrs->goal;
-            }
 
-            if ( $definidos == scalar @order ) {
+            while (my $row = $rs->next){
 
-                if ( @indicator_variables && @indicator_variations ) {
+                my @sources = @{$row->{sources}};
 
-                    my $vals = {};
-                    my $ids  = {};
 
-                    for my $faixa (@indicator_variations) {
+                push @{$hash->{rows}}, {
 
-                        my $rs = $faixa->indicator_variables_variations_values->search(
-                            {
-                                valid_from   => $begin,
-                                user_id      => $user_id,
-                                region_id    => $c->req->params->{region_id},
-                                active_value => $active_value
+                    formula_value => $row->{value},
+                    valores       => [do {
+                        my $values = eval{decode_json $row->{values_used}};
+                        my @rets;
+
+                        my $x = 0;
+                        foreach my $var (@variables){
+                            $x++;
+
+                            my $source;
+                            # tenta distribuir um pouco os sources.
+                            if ($x == 1 && @variables > 1 ){
+                                $source = shift @sources;
+                            }else{
+                                $source = join "\n", @sources;
                             }
-                        )->as_hashref;
-                        while ( my $r = $rs->next ) {
-                            next unless defined $r->{value};
-                            $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                              $r->{value};
-                            $ids->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                              $r;
+
+                            push @rets, {
+                                (source => $source),
+                                variable_id => $var->{variable}{id},
+                                value => $values->{$var->{variable}{id}} || $@,
+                                observations => undef,
+                                value_of_date => $row->{valid_from},
+                                id => 'fake',
+                            };
                         }
 
-                        my $qtde_dados = keys %{ $vals->{ $faixa->id } };
+                        @rets;
+                    }],
+                    valid_from => $row->{valid_from}
 
-                        unless ( $qtde_dados == @indicator_variables ) {
-                            $item->{variations}{ $faixa->id } = { value => '-' };
+                }
 
-                            delete $vals->{ $faixa->id };
-                        }
-                    }
+            }
 
-                    # TODO ler do indicador qual o totalization_method
-                    my $sum = undef;
-                    foreach my $faixa_id ( keys %$ids ) {
-                        $sum ||= 0;
+            $ret = $hash;
+        }else{
 
-                        my $val =
-                          exists $vals->{$faixa_id}
-                          ? $indicator_formula->evaluate_with_alias(
-                            V => { map { $_->{varid} => $_->{value} } @order },
-                            N => $vals->{$faixa_id},
-                          )
-                          : undef;
+            my @indicator_variations;
+            my @indicator_variables;
+            if ( $indicator->indicator_type eq 'varied' ) {
 
-                        $item->{variations}{$faixa_id} = {
-                            value             => $val,
-                            variations_values => {
-                                map {
-                                    $_ => {
-                                        id => ( exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$faixa_id}{$_}{id} ),
-                                        value => $ids->{$faixa_id}{$_}->{value},
-                                      }
-                                } keys %{ $ids->{$faixa_id} },
-                            }
-                        };
-                        $sum += $val;
-                    }
-                    $item->{formula_value} = $sum;
-
-                    my @variations;
-
-                    # corre na ordem
-                    foreach my $var (@indicator_variations) {
-                        push @variations,
-                          {
-                            name => $var->name,
-                            ( exists $ENV{HARNESS_ACTIVE} ? () : ( id => $var->id ) ),
-                            value             => $item->{variations}{ $var->id }{value},
-                            variations_values => $item->{variations}{ $var->id }{variations_values},
-                          };
-                    }
-                    $item->{variations} = \@variations;
-
+                if ( $indicator->dynamic_variations ) {
+                    $hash->{filters} = { user_id => [ $indicator->user_id, $c->stash->{user_id} || $c->user->id ] };
+                    @indicator_variations =
+                    $indicator->indicator_variations->search( $hash->{filters}, { order_by => 'order' } )->all;
                 }
                 else {
+                    $hash->{filters} = { user_id => $c->stash->{user_id} || $c->user->id };
+                    @indicator_variations = $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
+                }
 
-                    if ( $indicator->formula =~ /#\d/ ) {
-                        $item->{formula_value} = 'ERR#';
+                @indicator_variables = $indicator->indicator_variables_variations->all;
+
+                foreach my $v (@indicator_variables) {
+                    push @{ $hash->{variables_variations} },
+                    {
+                        id   => $v->id,
+                        name => $v->name,
+                    };
+                }
+            }
+
+            my $indicator_formula = Iota::IndicatorFormula->new(
+                formula => $indicator->formula,
+                schema  => $c->model('DB')->schema
+            );
+            my $valuetb      = $c->req->params->{region_id}           ? 'region_variable_values'        : 'values';
+            my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
+
+            my $cond = {
+                -or => [
+                    $valuetb . '.user_id' => $c->stash->{user_id} || $c->user->id,
+                    $valuetb . '.user_id' => undef,
+                ],
+                'me.id' => [ $indicator_formula->variables ],
+
+                (
+                    $valuetb eq 'region_variable_values'
+                    ? (
+                        $valuetb . '.region_id'    => [ $c->req->params->{region_id}, undef ],
+                        $valuetb . '.active_value' => $active_value
+                    )
+                    : ()
+                )
+            };
+
+            my $rs = $c->model('DB')->resultset('Variable')->search_rs( $cond, { prefetch => [$valuetb] } );
+
+            my $tmp = {};
+            my $x   = 0;
+            while ( my $row = $rs->next ) {
+                $hash->{header}{ $row->name } = $x;
+
+                foreach my $value ( $row->$valuetb ) {
+                    push @{ $tmp->{ $value->valid_from } },
+                    {
+                        col           => $x,
+                        varid         => $row->id,
+                        value_of_date => $value->value_of_date->datetime,
+                        value         => $value->value,
+                        value_id      => $value->id,
+                        observations  => $value->observations,
+                        source        => $value->source,
+                        name          => $row->name
+                    };
+                }
+                $x++;
+            }
+            my $definidos = scalar keys %{ $hash->{header} };
+
+            for my $faixa (@indicator_variations) {
+
+                my $rs = $faixa->indicator_variables_variations_values->search(
+                    {
+                        %{ $hash->{filters} },
+                        region_id    => $c->req->params->{region_id},
+                        active_value => $active_value
+                    },
+                    {
+                        select   => [qw/valid_from/],
+                        as       => [qw/valid_from/],
+                        group_by => [qw/valid_from/]
+                    }
+                );
+
+                while ( my $item = $rs->next ) {
+                    push @{ $tmp->{ $item->valid_from } }, {};
+                }
+            }
+
+            my $user_id = $c->stash->{user_id} || $c->user->id;
+
+            foreach my $begin ( sort { $a cmp $b } keys %$tmp ) {
+
+                my @order = sort { $a->{col} <=> $b->{col} } grep { exists $_->{col} } @{ $tmp->{$begin} };
+                my $attrs = $c->model('DB')->resultset('UserIndicator')->search_rs(
+                    {
+                        user_id      => $user_id,
+                        valid_from   => $begin,
+                        indicator_id => $indicator->id,
+                        region_id    => $c->req->params->{region_id}
+                    }
+                )->next;
+
+                my $item = {
+                    formula_value => undef,
+                    valid_from    => $begin,
+                    valores       => []
+                };
+                foreach (@order) {
+                    $item->{valores}[ $hash->{header}{ $_->{name} } ] = {
+                        variable_id   => $_->{varid},
+                        value_of_date => $_->{value_of_date},
+                        id            => $_->{value_id},
+                        observations  => $_->{observations},
+                        source        => $_->{source},
+                        value         => $_->{value}
+                    };
+                }
+
+                @order = grep { defined $_->{value} } @order;
+
+                if ($attrs) {
+                    $item->{justification_of_missing_field} = $attrs->justification_of_missing_field;
+                    $item->{goal}                           = $attrs->goal;
+                }
+
+                if ( $definidos == scalar @order ) {
+
+                    if ( @indicator_variables && @indicator_variations ) {
+
+                        my $vals = {};
+                        my $ids  = {};
+
+                        for my $faixa (@indicator_variations) {
+
+                            my $rs = $faixa->indicator_variables_variations_values->search(
+                                {
+                                    valid_from   => $begin,
+                                    user_id      => $user_id,
+                                    region_id    => $c->req->params->{region_id},
+                                    active_value => $active_value
+                                }
+                            )->as_hashref;
+                            while ( my $r = $rs->next ) {
+                                next unless defined $r->{value};
+                                $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
+                                $r->{value};
+                                $ids->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
+                                $r;
+                            }
+
+                            my $qtde_dados = keys %{ $vals->{ $faixa->id } };
+
+                            unless ( $qtde_dados == @indicator_variables ) {
+                                $item->{variations}{ $faixa->id } = { value => '-' };
+
+                                delete $vals->{ $faixa->id };
+                            }
+                        }
+
+                        # TODO ler do indicador qual o totalization_method
+                        my $sum = undef;
+                        foreach my $faixa_id ( keys %$ids ) {
+                            $sum ||= 0;
+
+                            my $val =
+                            exists $vals->{$faixa_id}
+                            ? $indicator_formula->evaluate_with_alias(
+                                V => { map { $_->{varid} => $_->{value} } @order },
+                                N => $vals->{$faixa_id},
+                            )
+                            : undef;
+
+                            $item->{variations}{$faixa_id} = {
+                                value             => $val,
+                                variations_values => {
+                                    map {
+                                        $_ => {
+                                            id => ( exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$faixa_id}{$_}{id} ),
+                                            value => $ids->{$faixa_id}{$_}->{value},
+                                        }
+                                    } keys %{ $ids->{$faixa_id} },
+                                }
+                            };
+                            $sum += $val;
+                        }
+                        $item->{formula_value} = $sum;
+
+                        my @variations;
+
+                        # corre na ordem
+                        foreach my $var (@indicator_variations) {
+                            push @variations,
+                            {
+                                name => $var->name,
+                                ( exists $ENV{HARNESS_ACTIVE} ? () : ( id => $var->id ) ),
+                                value             => $item->{variations}{ $var->id }{value},
+                                variations_values => $item->{variations}{ $var->id }{variations_values},
+                            };
+                        }
+                        $item->{variations} = \@variations;
+
                     }
                     else {
 
-                        $item->{formula_value} =
-                          $indicator_formula->evaluate( map { $_->{varid} => $_->{value} } @order );
+                        if ( $indicator->formula =~ /#\d/ ) {
+                            $item->{formula_value} = 'ERR#';
+                        }
+                        else {
+
+                            $item->{formula_value} =
+                            $indicator_formula->evaluate( map { $_->{varid} => $_->{value} } @order );
+                        }
                     }
+
                 }
+
+                push @{ $hash->{rows} }, $item;
 
             }
 
-            push @{ $hash->{rows} }, $item;
-
+            $ret = $hash;
         }
-
-        $ret = $hash;
     };
     if ($@) {
         $self->status_bad_request( $c, message => "$@", );
