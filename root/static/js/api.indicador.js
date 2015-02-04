@@ -171,7 +171,7 @@ $(document).ready(function () {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value' + (param ? '?indicator_value=1' : param + '&indicator_value=1' )).render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value' + (param ? param + '&indicator_value=1' : '?indicator_value=1' )).render({
                 id: userID,
                 indicator_id: indicadorID
             }),
