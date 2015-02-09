@@ -490,7 +490,7 @@ sub values_GET {
                             push @rets, {
                                 (source => $source),
                                 variable_id => $var->{variable}{id},
-                                value => $values->{$var->{variable}{id}} || $@,
+                                value => defined $values->{$var->{variable}{id}} ? $values->{$var->{variable}{id}} : $@,
                                 observations => undef,
                                 value_of_date => $row->{valid_from},
                                 id => 'fake',
