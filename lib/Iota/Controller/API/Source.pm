@@ -144,7 +144,7 @@ sub list_GET {
     foreach my $obj (@list) {
         push @objs,
           {
-            ( map { $_ => $obj->{$_} } qw(id name) ),
+            ( map { $_ => $obj->{$_} } qw(id name user_id) ),
             url => $c->uri_for_action( $self->action_for('source'), [ $obj->{id} ] )->as_string,
           };
     }

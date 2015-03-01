@@ -45,6 +45,14 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            my $old = $self->search({
+                user_id => $values{user_id},
+                -and => [\[
+                    'lower(name) = ?', [a => (lc $values{name})]
+                ]]
+            })->next;
+            return $old if $old;
+
             my $var = $self->create( \%values );
 
             $var->discard_changes;
