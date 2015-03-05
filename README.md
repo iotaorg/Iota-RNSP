@@ -5,14 +5,14 @@ O aplicativo é uma plataforma que permite a criação dos indicadores, com o ob
 Ele foi criado inicialmente para atender ao "Programa Cidades Sustentaveis" uma parceria da Rede Nossa São Paulo,
 Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira por Cidades Justas e Sustentáveis.
 
-[Consulte o site do Iota!](http://awareti.github.io/Iota/)
+[Consulte o site do Iota!](http://eokoe.github.io/Iota/)
 
 
-[![Build Status](https://secure.travis-ci.org/AwareTI/Iota.png?branch=master)](https://travis-ci.org/AwareTI/Iota)
+[![Build Status](https://secure.travis-ci.org/eokoe/Iota.png?branch=master)](https://travis-ci.org/eokoe/Iota)
 
 ## Wiki
 
-[Você pode consultar a wiki para saber mais detalhes](https://github.com/AwareTI/Iota/wiki)
+[Você pode consultar a wiki para saber mais detalhes](https://github.com/eokoe/Iota/wiki)
 
 
 > [02 Iota Como instalar uma cópia no linux](https://github.com/AwareTI/Iota/wiki/Iota---Como-instalar-uma-cópia-no-linux)
@@ -73,6 +73,10 @@ Para as cidades com menos de 50 mil habitantes é sugerido um número
 diferenciado de indicadores. E, para aquelas que desejarem avançar nesse
 processo de monitoramento de políticas públicas em prol da sustentabilidade,
 os indicadores gerais podem ser incorporados aos básicos.
+
+### Licença
+
+The GNU General Public License v3.0
 
 ### Desenvolvimento de software para apoio
 
