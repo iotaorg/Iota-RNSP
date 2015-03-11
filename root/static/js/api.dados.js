@@ -587,7 +587,7 @@ $(document).ready(function () {
         var linhas = [];
         var tooltips = [];
 
-        var ymax, ymin, maxlength;
+        var ymax, ymin, ymin_real, maxlength;
         if (indicadorDATA.goal) {
 
             var $maximo_linhas = dadosGrafico.labels.length;
@@ -645,6 +645,7 @@ $(document).ready(function () {
                         if (String(valor).length > maxlength) maxlength = String(valor).length;
 
                         tooltips.push(parseFloat(valor).toFixed(2));
+                        ymin_real = ymin;
                     } else {
                         tooltips.push(" "); //jogar valor em branco na tooltip caso a sequencia nao tenha valor
                     }
@@ -679,6 +680,11 @@ $(document).ready(function () {
         line.Set('chart.axis.color', '#bbbbbb');
         line.Set('chart.colors', colors);
         line.Set('chart.tickmarks', 'filledcircle');
+
+        if (ymin_real < 0){
+	        line.Set('chart.xaxispos', 'center');
+        }
+
         line.Draw();
 
         montaLegenda({
