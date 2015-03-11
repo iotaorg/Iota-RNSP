@@ -423,15 +423,19 @@ $(document).ready(function () {
 
     function geraGraficos() {
 
+
         for (i = 0; i < graficos.length; i++) {
-            ymin = 0;
-            $.each(graficos, function(index,item){
+            var ymin = 0;
+
+            $.each(graficos[i], function(index,item){
                 if (index == 0){
-                    ymin = item;    
+                    ymin = item;
                 }else{
-                    if (item < ymin) ymin = item;
+                    if (item && item < ymin) ymin = item;
                 }
             });
+
+
             var line = new RGraph.Line('graph-' + i, graficos[i]);
             line.Set('chart.ylabels', false);
             line.Set('chart.noaxes', true);
@@ -443,7 +447,7 @@ $(document).ready(function () {
             line.Set('chart.gutter.bottom', 0);
             line.Set('chart.colors', ['#b4b4b4']);
 
-            if (ymin < 0){
+            if (ymin< 0){
                 line.Set('chart.xaxispos', 'center');
             }
 
