@@ -996,7 +996,7 @@ use Chart::Clicker::Drawing::ColorAllocator;
 
 sub web_load_country : Private {
     my ( $self, $c ) = @_;
-
+use DDP; p $c->stash->{network};
     $c->stash->{network_data}{countries} = [
         do {
             my %seen;

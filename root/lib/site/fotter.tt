@@ -1,3 +1,7 @@
+[% IF network.id == 3 %]
+<iframe src="http://redciudades.net/iframes/footer/" style="position: relative; border: none; background: transparent;" id="redNavIframe" scrolling="no" frameborder="0" marginheight="0" marginwidth="0" height="612px" width="100%"></iframe>
+[%END%]
+
 [% IF network.id == 1 %]
 <hr>
 <div class="container">
