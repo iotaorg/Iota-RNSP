@@ -1,7 +1,7 @@
 <div class="row">
     <div class="span8">
         <h1>[%page.title%] - <small>[% city.name%] / [%city.uf %]</small></h1>
-        [%page.content%]
+        [%page.content | none %]
     </div>
     <div class="span4">
         <h5>Mais páginas</h5>
