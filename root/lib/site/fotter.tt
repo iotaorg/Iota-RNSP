@@ -67,7 +67,7 @@
             <div class="span3 col-sm-3">
                 <div >
                     <div class="iota-logo">
-                        <a href="http://awareti.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><span class="spt-logo-96" title="Iota"></span></a>
+                        <a href="http://eokoe.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><span class="spt-logo-96" title="Iota"></span></a>
                     </div>
                     <div class="opendata-logo">
                         <a href="http://www.opendefinition.org/okd/" target="_blank"><span class="spt-od_80x15_blue" title="OpenData"></span></a>
@@ -75,7 +75,7 @@
                 </div>
                 <div >
                     <div class="aware">
-                        [%l('Desenvolvido por')%] <a href="http://www.aware.com.br" target="_blank">Aware <span class="spt-icone_aware" width="15" height="15" alt="Logo Aware"></a>
+                        [%l('Desenvolvido por')%] <a href="http://www.eokoe.com" target="_blank">eokoe</a>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                             <a href="http://www.facebook.com/programacidadessustentaveis" target="_blank" class="social-icon facebook" title="Facebook">facebook</a>
                             <a href="http://www.youtube.com/user/cidadessustentaveis" target="_blank" class="social-icon youtube" title="Youtube">youtube</a>
                             <a href="https://plus.google.com/115196492426365904810/about" target="_blank&quot;&quot;" class="social-icon googleplus" title="Google+">google+</a>
-                            <a href="/rss" class="social-icon rss" title="RSS">rss</a>
+
                         </div>
 
                     </div>
