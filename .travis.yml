@@ -1,7 +1,7 @@
 language: perl
 perl:
-  - "5.16"
-  - "5.10"
+  - "5.16.3"
+  - "5.20.2"
 env:
   - PERL_CPANM_OPT="-v --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --mirror http://cpan.mirrors.travis-ci.org --cascade-search --notest --force --skip-satisfied --no-interactive"
 before_install:
