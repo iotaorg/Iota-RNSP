@@ -1,0 +1,9 @@
+/home/cron/iota/logs/* {
+    daily
+    missingok
+    rotate 52
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+}
