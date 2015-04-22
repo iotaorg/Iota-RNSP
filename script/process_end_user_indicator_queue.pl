@@ -95,8 +95,6 @@ foreach my $user (@users) {
                 }
             )->all;
 
-            $rs->update( { email_sent => 1 } );
-
             # TODO perguntar o idioma do end-user no cadastro!
             CatalystX::Plugin::Lexicon::set_lang( $fake_c, 'pt-br' );
 
@@ -147,6 +145,8 @@ foreach my $user (@users) {
                     sent => 0
                 }
             );
+
+            $rs->delete;
 
         }
     );
