@@ -63,7 +63,9 @@ sub value4human {
     my $end = '';
 
     if ( $variable_type eq 'num' ) {
-        $value = sprintf( '%.2f', $value );
+        my $round = int($value) == 0 ? 3 : 2;
+
+        $value = sprintf( "%.${round}f", $value );
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );
