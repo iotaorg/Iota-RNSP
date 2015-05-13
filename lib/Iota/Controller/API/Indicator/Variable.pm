@@ -5,6 +5,7 @@ use Moose;
 use JSON qw(encode_json);
 use Iota::IndicatorFormula;
 use JSON::XS;
+use Encode qw(encode);
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
@@ -472,6 +473,9 @@ sub values_GET {
 
                     formula_value => $row->{value},
                     valores       => [do {
+
+                        my $q = encode('UTF-8', $row->{values_used});
+
                         my $values = eval{decode_json $row->{values_used}};
                         my @rets;
 

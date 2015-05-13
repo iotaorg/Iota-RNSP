@@ -32,6 +32,7 @@ __PACKAGE__->config( default => 'application/json' );
 use utf8;
 use File::Basename;
 use JSON::XS;
+use Encode qw(encode);
 use Iota::IndicatorFormula;
 use Text::CSV_XS;
 use Spreadsheet::WriteExcel;
@@ -435,7 +436,10 @@ sub download_indicators_GET {
     while ( my $row = $data_rs->next ) {
         $row->{period}      = $self->_period_pt( $row->{period} );
         $row->{valid_from}  = $self->ymd2dmy( $row->{valid_from} );
-        $row->{values_used} = eval { decode_json( $row->{values_used} ) };
+
+        my $q = encode('UTF-8', $row->{values_used});
+
+        $row->{values_used} = eval { decode_json( $q ) };
 
         push @objs, $row;
     }
