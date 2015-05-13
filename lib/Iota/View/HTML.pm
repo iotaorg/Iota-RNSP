@@ -68,7 +68,7 @@ sub value4human {
         $value = sprintf( "%.${round}f", $value );
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
-            $end = substr( $2, 0, 2 );
+            $end = $2;
             $mid = ',';
         }
         else {
