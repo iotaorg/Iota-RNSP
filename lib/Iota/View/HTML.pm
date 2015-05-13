@@ -63,13 +63,10 @@ sub value4human {
     my $end = '';
 
     if ( $variable_type eq 'num' ) {
-        $value = sprintf( '%f', $value );
+        $value = sprintf( '%.2f', $value );
         if ( $value =~ /^(\d+)\.(\d+)$/ ) {
             $pre = $1;
             $end = substr( $2, 0, 2 );
-            if ( $end eq '00' && $2 ) {
-                $end = substr( $2, 0, 3 );
-            }
             $mid = ',';
         }
         else {
@@ -89,7 +86,6 @@ sub value4human {
 
 
     my $x = "$pre$mid$end";
-    $x =~ s/,000$//;
     return $x;
 }
 
