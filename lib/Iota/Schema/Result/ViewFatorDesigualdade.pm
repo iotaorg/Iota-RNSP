@@ -30,8 +30,8 @@ __PACKAGE__->result_source_instance->view_definition(
         AND value::numeric > 0
     )
     SELECT valid_from, max_valor, min_valor, max_valor/min_valor as fator,
-        (select array_to_string(array_agg(DISTINCT rname), ', ') from tmp where "value" = max_valor) as max_nomes,
-        (select array_to_string(array_agg(DISTINCT rname), ', ') from tmp where "value" = min_valor) as min_nomes
+        (select array_to_string(array_agg(DISTINCT rname), ', ') from tmp where "value" = max_valor AND tmp.valid_from = zo.valid_from) as max_nomes,
+        (select array_to_string(array_agg(DISTINCT rname), ', ') from tmp where "value" = min_valor  AND tmp.valid_from = zo.valid_from) as min_nomes
     FROM (
         select valid_from,
             max(value) as max_valor,
