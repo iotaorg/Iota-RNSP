@@ -475,8 +475,7 @@ sub values_GET {
                     valores       => [do {
 
                         my $q = encode('UTF-8', $row->{values_used});
-
-                        my $values = eval{decode_json $row->{values_used}};
+                        my $values = eval{decode_json $q};
                         my @rets;
 
                         my $x = 0;
