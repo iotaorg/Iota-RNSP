@@ -112,9 +112,8 @@ __PACKAGE__->table("indicator_value");
 
 =head2 observations
 
-  data_type: 'text'
+  data_type: 'character varying[]'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -158,11 +157,7 @@ __PACKAGE__->add_columns(
     original    => { data_type => "varchar" },
   },
   "observations",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "character varying[]", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -265,8 +260,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-05-29 10:14:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bERy4wivrIScwDTKa+BuBA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-05-29 10:59:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8UKlX9slJHlgAj84O0DVRg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
