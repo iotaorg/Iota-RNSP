@@ -8,7 +8,7 @@ has schema => (
     isa      => 'Any',
     required => 1
 );
-use Encode qw/encode/;
+use Encode qw/decode/;
 
 our $DEBUG = 0;
 
@@ -770,7 +770,7 @@ sub _get_indicator_values {
                             my $valor = $formula->evaluate_with_alias(@calcvars);
 
                             $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} =
-                              [ $valor, [ keys %sources ], encode('UTF-8', encode_json( {@calcvars} )), [ keys %observations ] ];
+                              [ $valor, [ keys %sources ], decode('UTF-8', encode_json( {@calcvars} )), [ keys %observations ] ];
                         }
 
                     }
@@ -779,7 +779,7 @@ sub _get_indicator_values {
 
                         # '' = variacao
                         $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} =
-                          [ $valor, [ keys %sources ], encode('UTF-8', encode_json( \%values )), [ keys %observations ] ];
+                          [ $valor, [ keys %sources ], decode('UTF-8', encode_json( \%values )), [ keys %observations ] ];
                     }
 
                 }
