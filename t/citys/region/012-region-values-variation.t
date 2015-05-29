@@ -226,7 +226,7 @@ eval {
             is( scalar @rows, 0, 'sem linhas, pois os dados estao incompletos' );
 
             &add_value( $reg1_uri, $var1, '2010-01-01', 15 );
-            @rows = $schema->resultset('IndicatorValue')->all;
+            @rows = $schema->resultset('IndicatorValue')->search(undef, { order_by => 'id'})->all;
 
             is( scalar @rows, 2, 'dudas linhas, pois agora temos os dados' );
 
