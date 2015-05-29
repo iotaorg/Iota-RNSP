@@ -61,7 +61,7 @@ while (1) {
 
                 my $vars_js = $mail->variables;
 
-                $vars_js = encode( 'utf8', $vars_js );
+                # $vars_js = encode( 'utf8', $vars_js );
 
                 my $vars = eval { decode_json($vars_js) };
                 my $title = $mail->subject;
