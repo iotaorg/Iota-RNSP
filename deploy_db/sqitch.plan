@@ -26,3 +26,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0059-compute_upper_regions-active-value-fix [0058-auto-add-lex] 2014-10-06T13:25:30Z cron <renato.cron@gmail.com> # change compute_upper_regions to consolidate with active_value from bellow
 0060-campos-para-rdf [0059-compute_upper_regions-active-value-fix] 2014-11-13T17:33:09Z cron <renato.cron@gmail.com> # campos na tabela de redes para indicar quem eh o dominio ativo
 0061-unique-sources-per-user [0060-campos-para-rdf] 2015-03-01T00:20:54Z cron <renato.cron@gmail.com> # unique source per user
+0062-observations [0061-unique-sources-per-user] 2015-05-29T13:13:35Z cron <renato.cron@gmail.com> # %observations on indicator-value

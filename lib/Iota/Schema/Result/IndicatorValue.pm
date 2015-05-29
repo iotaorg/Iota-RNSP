@@ -110,6 +110,12 @@ __PACKAGE__->table("indicator_value");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 observations
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -146,6 +152,12 @@ __PACKAGE__->add_columns(
   "sources",
   { data_type => "character varying[]", is_nullable => 1 },
   "values_used",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "observations",
   {
     data_type   => "text",
     is_nullable => 1,
@@ -253,8 +265,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-07-28 11:27:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cLcFBgO/9WoK3Ne+Dhj6XA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-05-29 10:14:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bERy4wivrIScwDTKa+BuBA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

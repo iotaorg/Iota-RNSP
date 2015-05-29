@@ -298,9 +298,10 @@ sub upsert {
                                     institute_id   => $users_meta->{$user_id}{institute_id},
                                     variation_name => $variation,
 
-                                    value       => $variations->{$variation}[0],
-                                    sources     => $variations->{$variation}[1],
-                                    values_used => $variations->{$variation}[2],
+                                    value        => $variations->{$variation}[0],
+                                    sources      => $variations->{$variation}[1],
+                                    values_used  => $variations->{$variation}[2],
+                                    observations => $variations->{$variation}[3],
 
                                     region_id => $region_id,
 
@@ -439,7 +440,7 @@ sub _merge_regions_values {
 }
 
 # monta na RAM a estrutura:
-# $period_values = $region_id => $user_id => { $valid_from => { $variable_id => [ $value, $source ] } }
+# $period_values = $region_id => $user_id => { $valid_from => { $variable_id => [ $value, $source, $observations ] } }
 # assim fica facil saber se em determinado periodo
 # existem dados para todas as variaveis
 
@@ -455,7 +456,7 @@ sub _get_values_periods {
         next if !defined $row->{value} || $row->{value} eq '';
 
         $out->{'1'}{'null'}{ $row->{user_id} }{ $row->{valid_from} }{ $row->{variable_id} } =
-          [ $row->{value}, $row->{source}, ];
+          [ $row->{value}, $row->{source}, $row->{observations} ];
     }
 
     return $out;
@@ -471,7 +472,7 @@ sub _get_values_periods_region {
     while ( my $row = $rs->next ) {
         next if !defined $row->{value} || $row->{value} eq '';
         $out->{ $row->{active_value} }{ $row->{region_id} }{ $row->{user_id} }{ $row->{valid_from} }
-          { $row->{variable_id} } = [ $row->{value}, $row->{source}, ];
+          { $row->{variable_id} } = [ $row->{value}, $row->{source}, $row->{observations} ];
     }
 
     return $out;
@@ -725,6 +726,13 @@ sub _get_indicator_values {
                         next unless $str;
                         $sources{$str}++;
                     }
+                    my %observations;
+                    for my $var (@variables) {
+                        my $str = $data->{$var}[2];
+                        next unless $str;
+                        $observations{$str}++;
+                    }
+
                     my $formula = Iota::IndicatorFormula->new(
                         formula    => $indicator->formula,
                         schema     => $self->schema,
@@ -761,7 +769,7 @@ sub _get_indicator_values {
                             my $valor = $formula->evaluate_with_alias(@calcvars);
 
                             $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} =
-                              [ $valor, [ keys %sources ], encode_json( {@calcvars} ) ];
+                              [ $valor, [ keys %sources ], encode_json( {@calcvars} ), [ keys %observations ] ];
                         }
 
                     }
@@ -770,7 +778,7 @@ sub _get_indicator_values {
 
                         # '' = variacao
                         $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} =
-                          [ $valor, [ keys %sources ], encode_json( \%values ) ];
+                          [ $valor, [ keys %sources ], encode_json( \%values ), [ keys %observations ] ];
                     }
 
                 }

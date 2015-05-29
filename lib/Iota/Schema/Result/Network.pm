@@ -92,6 +92,11 @@ __PACKAGE__->table("network");
   default_value: false
   is_nullable: 0
 
+=head2 rdf_identifier
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -127,6 +132,8 @@ __PACKAGE__->add_columns(
   },
   "is_virtual",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "rdf_identifier",
+  { data_type => "boolean", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -166,6 +173,18 @@ __PACKAGE__->add_unique_constraint("network_domain_name_key", ["domain_name"]);
 =cut
 
 __PACKAGE__->add_unique_constraint("network_name_url_key", ["name_url"]);
+
+=head2 C<network_rdf_identifier_key>
+
+=over 4
+
+=item * L</rdf_identifier>
+
+=back
+
+=cut
+
+__PACKAGE__->add_unique_constraint("network_rdf_identifier_key", ["rdf_identifier"]);
 
 =head1 RELATIONS
 
@@ -255,8 +274,8 @@ Composing rels: L</network_users> -> user
 __PACKAGE__->many_to_many("users", "network_users", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-06-30 08:41:37
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5SoQMvHGIssvSTjM6nFwOA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-05-29 10:14:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:j4nauB0bvj7kwSSK3mV6dw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
