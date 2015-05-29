@@ -467,7 +467,7 @@ sub values_GET {
             while (my $row = $rs->next){
 
                 my @sources = @{$row->{sources}};
-
+                my @observations = $row->{observations} ? @{$row->{observations}} : [];
 
                 push @{$hash->{rows}}, {
 
@@ -490,11 +490,19 @@ sub values_GET {
                                 $source = join "\n", @sources;
                             }
 
+                            my $observations;
+                            # tenta distribuir um pouco os observations.
+                            if ($x == 1 && @variables > 1 ){
+                                $observations = shift @observations;
+                            }else{
+                                $observations = join "\n", @observations;
+                            }
+
                             push @rets, {
                                 (source => $source),
                                 variable_id => $var->{variable}{id},
                                 value => defined $values->{$var->{variable}{id}} ? $values->{$var->{variable}{id}} : $@,
-                                observations => undef,
+                                observations => $observations,
                                 value_of_date => $row->{valid_from},
                                 id => 'fake',
                             };
