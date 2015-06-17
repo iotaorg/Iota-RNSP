@@ -10,6 +10,9 @@ sub base : Chained('/institute_load') PathPart('me') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     $c->forward('/web/form/need_login') unless $c->user;
+    $c->forward('/web/form/need_login') unless ref $c->user =~ /enduser/i;
+
+
 
     $c->stash(
         custom_wrapper  => 'site/iota_wrapper',
@@ -68,24 +71,20 @@ sub load_end_user_indicators : Private {
 
     my $following = {};
 
-    if ($c->user){
-        my $rs = $c->user->end_user_indicators->search(
-            {
-                network_id => $c->stash->{network}->id
-            },
-            {
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-                columns      => [ 'id', 'indicator_id' ]
-            }
-        );
-
-        while ( my $r = $rs->next ) {
-            $following->{ $r->{indicator_id} } = $r;
+    my $rs = $c->user->end_user_indicators->search(
+        {
+            network_id => $c->stash->{network}->id
+        },
+        {
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            columns      => [ 'id', 'indicator_id' ]
         }
-        $c->stash->{following} = $following;
-    }else{
-        $c->forward('/web/form/not_found');
+    );
+
+    while ( my $r = $rs->next ) {
+        $following->{ $r->{indicator_id} } = $r;
     }
+    $c->stash->{following} = $following;
 
 }
 
