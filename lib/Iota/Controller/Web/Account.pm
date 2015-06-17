@@ -68,20 +68,24 @@ sub load_end_user_indicators : Private {
 
     my $following = {};
 
-    my $rs = $c->user->end_user_indicators->search(
-        {
-            network_id => $c->stash->{network}->id
-        },
-        {
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            columns      => [ 'id', 'indicator_id' ]
-        }
-    );
+    if ($c->user){
+        my $rs = $c->user->end_user_indicators->search(
+            {
+                network_id => $c->stash->{network}->id
+            },
+            {
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                columns      => [ 'id', 'indicator_id' ]
+            }
+        );
 
-    while ( my $r = $rs->next ) {
-        $following->{ $r->{indicator_id} } = $r;
+        while ( my $r = $rs->next ) {
+            $following->{ $r->{indicator_id} } = $r;
+        }
+        $c->stash->{following} = $following;
+    }else{
+        $c->forward('/web/form/not_found');
     }
-    $c->stash->{following} = $following;
 
 }
 
