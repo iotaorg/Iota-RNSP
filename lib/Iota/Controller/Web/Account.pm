@@ -10,6 +10,9 @@ sub base : Chained('/institute_load') PathPart('me') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     $c->forward('/web/form/need_login') unless $c->user;
+    $c->forward('/web/form/need_login') unless ref $c->user =~ /enduser/i;
+
+
 
     $c->stash(
         custom_wrapper  => 'site/iota_wrapper',

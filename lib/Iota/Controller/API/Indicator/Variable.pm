@@ -426,98 +426,110 @@ sub values_GET {
     my $ret;
     my $hash = {};
 
-
     eval {
         my $indicator = $c->stash->{indicator_obj} || $c->stash->{indicator};
 
         #   workarround 1                      && workarround2
-        if ($c->req->params->{indicator_value} && $indicator->indicator_type eq 'normal' ){
+        if ( $c->req->params->{indicator_value} && $indicator->indicator_type eq 'normal' ) {
 
-
-            my @variables = $indicator->indicator_variables->search(undef, {
-                prefetch => 'variable',
-                order_by => ['variable.name'],
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            });
+            my @variables = $indicator->indicator_variables->search(
+                undef,
+                {
+                    prefetch     => 'variable',
+                    order_by     => ['variable.name'],
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                }
+            );
 
             my $x = 0;
-            $hash->{header}{$_->{variable}{name}} = $x++ foreach (@variables);
+            $hash->{header}{ $_->{variable}{name} } = $x++ foreach (@variables);
 
             my $user_id = $c->stash->{user_id} || $c->user->id;
             my $cond = {
 
-                'me.user_id' => $user_id,
+                'me.user_id'      => $user_id,
                 'me.indicator_id' => $indicator->id,
 
-                ($c->req->params->{region_id}
-                ? (
-                    'me.region_id' => $c->req->params->{region_id}
-                ) : (
-                    'me.region_id' => undef
-                )),
+                (
+                    $c->req->params->{region_id}
+                    ? ( 'me.region_id' => $c->req->params->{region_id} )
+                    : ( 'me.region_id' => undef )
+                ),
 
             };
 
-            my $rs = $c->model('DB::IndicatorValue')->search($cond, {
-                order_by => ['me.valid_from'],
-                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-            });
+            my $rs = $c->model('DB::IndicatorValue')->search(
+                $cond,
+                {
+                    order_by     => ['me.valid_from'],
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                }
+            );
 
+            while ( my $row = $rs->next ) {
 
-            while (my $row = $rs->next){
+                my @sources = @{ $row->{sources} };
+                my @observations = $row->{observations} ? @{ $row->{observations} } : [];
 
-                my @sources = @{$row->{sources}};
-                my @observations = $row->{observations} ? @{$row->{observations}} : [];
-
-                push @{$hash->{rows}}, {
+                push @{ $hash->{rows} }, {
 
                     formula_value => $row->{value},
-                    valores       => [do {
+                    valores       => [
+                        do {
 
-                        my $q = encode('UTF-8', $row->{values_used});
-                        my $values = eval{decode_json $q};
-                        my @rets;
+                            my $q = encode( 'UTF-8', $row->{values_used} );
+                            my $values = eval { decode_json $q};
+                            my @rets;
 
-                        my $x = 0;
-                        foreach my $var (@variables){
-                            $x++;
+                            my $x = 0;
+                            foreach my $var (@variables) {
+                                $x++;
 
-                            my $source;
-                            # tenta distribuir um pouco os sources.
-                            if ($x == 1 && @variables > 1 ){
-                                $source = shift @sources;
-                            }else{
-                                $source = join "\n", @sources;
+                                my $source;
+
+                                # tenta distribuir um pouco os sources.
+                                if ( $x == 1 && @variables > 1 ) {
+                                    $source = shift @sources;
+                                }
+                                else {
+                                    $source = join "\n", @sources;
+                                }
+
+                                my $observations;
+
+                                # tenta distribuir um pouco os observations.
+                                if ( $x == 1 && @variables > 1 ) {
+                                    $observations = shift @observations;
+                                }
+                                else {
+                                    $observations = join "\n", @observations;
+                                }
+
+                                push @rets,
+                                  {
+                                    ( source => $source ),
+                                    variable_id => $var->{variable}{id},
+                                    value       => defined $values->{ $var->{variable}{id} }
+                                    ? $values->{ $var->{variable}{id} }
+                                    : $@,
+                                    observations  => $observations,
+                                    value_of_date => $row->{valid_from},
+                                    id            => 'fake',
+                                  };
                             }
 
-                            my $observations;
-                            # tenta distribuir um pouco os observations.
-                            if ($x == 1 && @variables > 1 ){
-                                $observations = shift @observations;
-                            }else{
-                                $observations = join "\n", @observations;
-                            }
-
-                            push @rets, {
-                                (source => $source),
-                                variable_id => $var->{variable}{id},
-                                value => defined $values->{$var->{variable}{id}} ? $values->{$var->{variable}{id}} : $@,
-                                observations => $observations,
-                                value_of_date => $row->{valid_from},
-                                id => 'fake',
-                            };
-                        }
-
-                        @rets;
-                    }],
+                            @rets;
+                          }
+                    ],
                     valid_from => $row->{valid_from}
 
-                }
+                  }
 
             }
 
             $ret = $hash;
-        }else{
+        }
+        else {
 
             my @indicator_variations;
             my @indicator_variables;
@@ -526,21 +538,22 @@ sub values_GET {
                 if ( $indicator->dynamic_variations ) {
                     $hash->{filters} = { user_id => [ $indicator->user_id, $c->stash->{user_id} || $c->user->id ] };
                     @indicator_variations =
-                    $indicator->indicator_variations->search( $hash->{filters}, { order_by => 'order' } )->all;
+                      $indicator->indicator_variations->search( $hash->{filters}, { order_by => 'order' } )->all;
                 }
                 else {
                     $hash->{filters} = { user_id => $c->stash->{user_id} || $c->user->id };
-                    @indicator_variations = $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
+                    @indicator_variations =
+                      $indicator->indicator_variations->search( undef, { order_by => 'order' } )->all;
                 }
 
                 @indicator_variables = $indicator->indicator_variables_variations->all;
 
                 foreach my $v (@indicator_variables) {
                     push @{ $hash->{variables_variations} },
-                    {
+                      {
                         id   => $v->id,
                         name => $v->name,
-                    };
+                      };
                 }
             }
 
@@ -563,7 +576,7 @@ sub values_GET {
                     ? (
                         $valuetb . '.region_id'    => [ $c->req->params->{region_id}, undef ],
                         $valuetb . '.active_value' => $active_value
-                    )
+                      )
                     : ()
                 )
             };
@@ -577,7 +590,7 @@ sub values_GET {
 
                 foreach my $value ( $row->$valuetb ) {
                     push @{ $tmp->{ $value->valid_from } },
-                    {
+                      {
                         col           => $x,
                         varid         => $row->id,
                         value_of_date => $value->value_of_date->datetime,
@@ -586,7 +599,7 @@ sub values_GET {
                         observations  => $value->observations,
                         source        => $value->source,
                         name          => $row->name
-                    };
+                      };
                 }
                 $x++;
             }
@@ -669,9 +682,9 @@ sub values_GET {
                             while ( my $r = $rs->next ) {
                                 next unless defined $r->{value};
                                 $vals->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                                $r->{value};
+                                  $r->{value};
                                 $ids->{ $r->{indicator_variation_id} }{ $r->{indicator_variables_variation_id} } =
-                                $r;
+                                  $r;
                             }
 
                             my $qtde_dados = keys %{ $vals->{ $faixa->id } };
@@ -689,12 +702,12 @@ sub values_GET {
                             $sum ||= 0;
 
                             my $val =
-                            exists $vals->{$faixa_id}
-                            ? $indicator_formula->evaluate_with_alias(
+                              exists $vals->{$faixa_id}
+                              ? $indicator_formula->evaluate_with_alias(
                                 V => { map { $_->{varid} => $_->{value} } @order },
                                 N => $vals->{$faixa_id},
-                            )
-                            : undef;
+                              )
+                              : undef;
 
                             $item->{variations}{$faixa_id} = {
                                 value             => $val,
@@ -703,7 +716,7 @@ sub values_GET {
                                         $_ => {
                                             id => ( exists $ENV{HARNESS_ACTIVE} ? 'test' : $ids->{$faixa_id}{$_}{id} ),
                                             value => $ids->{$faixa_id}{$_}->{value},
-                                        }
+                                          }
                                     } keys %{ $ids->{$faixa_id} },
                                 }
                             };
@@ -716,12 +729,12 @@ sub values_GET {
                         # corre na ordem
                         foreach my $var (@indicator_variations) {
                             push @variations,
-                            {
+                              {
                                 name => $var->name,
                                 ( exists $ENV{HARNESS_ACTIVE} ? () : ( id => $var->id ) ),
                                 value             => $item->{variations}{ $var->id }{value},
                                 variations_values => $item->{variations}{ $var->id }{variations_values},
-                            };
+                              };
                         }
                         $item->{variations} = \@variations;
 
@@ -734,7 +747,7 @@ sub values_GET {
                         else {
 
                             $item->{formula_value} =
-                            $indicator_formula->evaluate( map { $_->{varid} => $_->{value} } @order );
+                              $indicator_formula->evaluate( map { $_->{varid} => $_->{value} } @order );
                         }
                     }
 
