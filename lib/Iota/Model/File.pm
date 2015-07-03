@@ -31,7 +31,8 @@ sub process {
     my $status = $@ ? $@ : '';
 
     $status .= 'Linhas aceitas: ' . $parse->{ok} . "\n";
-    $status .= 'Linhas ignoradas: ' . $parse->{ignored} . "\n" if $parse->{ignored};
+    $status .= 'Linhas ignoradas: ' . $parse->{ignored} . "\n"
+      if $parse->{ignored};
     $status .= "Cabeçalho não encontrado!\n" unless $parse->{header_found};
 
     my %varids = map { $_->{id} => 1 } @{ $parse->{rows} };
@@ -39,14 +40,17 @@ sub process {
 
     my @vars_db =
       $schema->resultset('Variable')
-      ->search( { id => { in => [ keys %varids ] } }, { select => [qw/id period type/], as => [qw/id period type/] } )
+      ->search( { id => { in => [ keys %varids ] } },
+        { select => [qw/id period type/], as => [qw/id period type/] } )
       ->as_hashref->all;
     my %var_vs_id = map { $_->{id} => $_ } @vars_db;
 
-    my %regsids = map { $_->{region_id} => 1 } grep { $_->{region_id} } @{ $parse->{rows} };
+    my %regsids =
+      map { $_->{region_id} => 1 } grep { $_->{region_id} } @{ $parse->{rows} };
     my @regs_db =
       $schema->resultset('Region')
-      ->search( { id => { in => [ keys %regsids ] } }, { select => [qw/id depth_level/], as => [qw/id depth_level/] } )
+      ->search( { id => { in => [ keys %regsids ] } },
+        { select => [qw/id depth_level/], as => [qw/id depth_level/] } )
       ->as_hashref->all;
 
     my %reg_vs_id = map { $_->{id} => $_ } @regs_db;
@@ -107,7 +111,8 @@ sub process {
 
                     my $old_value = $r->{value};
 
-                    $r->{value} = $self->_verify_variable_type( $r->{value}, $type );
+                    $r->{value} =
+                      $self->_verify_variable_type( $r->{value}, $type );
 
                     if ( !defined $r->{value} ) {
                         $status =
@@ -147,11 +152,16 @@ sub process {
                     $status .= "$@" if $@;
                     die $@ if $@;
                 }
-                my $data = Iota::IndicatorData->new( schema => $schema->schema );
+                my $data =
+                  Iota::IndicatorData->new( schema => $schema->schema );
                 if ( exists $with_region->{dates} ) {
                     $data->upsert(
-                        indicators =>
-                          [ $data->indicators_from_variables( variables => [ keys %{ $with_region->{variables} } ] ) ],
+                        indicators => [
+                            $data->indicators_from_variables(
+                                variables =>
+                                  [ keys %{ $with_region->{variables} } ]
+                            )
+                        ],
                         dates      => [ keys %{ $with_region->{dates} } ],
                         regions_id => [ keys %{ $with_region->{regions} } ],
                         user_id    => $user_id
@@ -160,7 +170,10 @@ sub process {
                 if ( exists $without_region->{dates} ) {
                     $data->upsert(
                         indicators => [
-                            $data->indicators_from_variables( variables => [ keys %{ $without_region->{variables} } ] )
+                            $data->indicators_from_variables(
+                                variables =>
+                                  [ keys %{ $without_region->{variables} } ]
+                            )
                         ],
                         dates   => [ keys %{ $without_region->{dates} } ],
                         user_id => $user_id

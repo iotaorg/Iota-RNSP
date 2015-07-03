@@ -97,6 +97,12 @@ __PACKAGE__->table("network");
   data_type: 'boolean'
   is_nullable: 1
 
+=head2 topic
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -134,6 +140,8 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "rdf_identifier",
   { data_type => "boolean", is_nullable => 1 },
+  "topic",
+  { data_type => "boolean", default_value => \"false", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -274,8 +282,8 @@ Composing rels: L</network_users> -> user
 __PACKAGE__->many_to_many("users", "network_users", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-05-29 10:14:14
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:j4nauB0bvj7kwSSK3mV6dw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-03 15:41:42
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fzutxdeuVucjRgETH1zfrw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

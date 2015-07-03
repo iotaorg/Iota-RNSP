@@ -30,7 +30,8 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp",
+    "PassphraseColumn" );
 
 =head1 TABLE: C<file>
 
@@ -117,8 +118,10 @@ Related object: L<Iota::Schema::Result::VariableValue>
 =cut
 
 __PACKAGE__->has_many(
-    "variable_values", "Iota::Schema::Result::VariableValue",
-    { "foreign.file_id" => "self.id" }, { cascade_copy => 0, cascade_delete => 0 },
+    "variable_values",
+    "Iota::Schema::Result::VariableValue",
+    { "foreign.file_id" => "self.id" },
+    { cascade_copy      => 0, cascade_delete => 0 },
 );
 
 # Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34

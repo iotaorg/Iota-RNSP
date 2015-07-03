@@ -60,7 +60,7 @@ __PACKAGE__->config(
 
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
-    enable_catalyst_header                      => 1,    # Send X-Catalyst header
+    enable_catalyst_header                      => 1,   # Send X-Catalyst header
 
     private_path => 'root/static/user',
     public_url   => '/static/user',
@@ -69,7 +69,7 @@ __PACKAGE__->config(
 
         path        => '/static',
         output_path => 'built/',
-        minify      => 1,
+        minify      => 0,
         stash_var   => 'assets'
     },
 
@@ -152,7 +152,3 @@ it under the same terms as Perl itself.
 =cut
 
 1;
-
-
-
-

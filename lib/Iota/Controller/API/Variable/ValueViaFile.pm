@@ -8,7 +8,8 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
-sub base : Chained('/api/variable/base') : PathPart('value_via_file') : CaptureArgs(0) {
+sub base : Chained('/api/variable/base') : PathPart('value_via_file') :
+  CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     $c->stash->{collection} = $c->model('DB::VariableValue');
@@ -53,4 +54,3 @@ sub file_POST {
 }
 
 1;
-
