@@ -1,9 +1,8 @@
--- Deploy iota:0063-fix-type to pg
--- requires: 0062-observations
+-- Deploy iota:0064-topic-network to pg
+-- requires: 0063-fix-type
 
 BEGIN;
 
-
-alter table network add column topic boolean default false;
+	ALTER TABLE network add column topic boolean default false;
 
 COMMIT;

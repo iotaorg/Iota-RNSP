@@ -28,3 +28,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0061-unique-sources-per-user [0060-campos-para-rdf] 2015-03-01T00:20:54Z cron <renato.cron@gmail.com> # unique source per user
 0062-observations [0061-unique-sources-per-user] 2015-05-29T13:13:35Z cron <renato.cron@gmail.com> # %observations on indicator-value
 0063-fix-type [0062-observations] 2015-05-29T13:58:55Z cron <renato.cron@gmail.com> # alter table indicator_value alter observations type varchar[] using observations::text[]
+0064-topic-network [0063-fix-type] 2015-07-03T18:55:51Z Renan Carvalho <renan.carvalho@eokoe.com> # criando campo na tabela net para tema
