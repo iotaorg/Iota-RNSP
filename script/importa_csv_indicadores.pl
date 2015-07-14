@@ -111,33 +111,34 @@ $schema->txn_do(
                       eval { Iota::IndicatorFormula->new( formula => $registro->{formula}, schema => $schema ) };
 
                     $registro->{formula} = 'CONCATENAR' . $registro->{formula} if $@ && $@ =~ /is a str and/;
-RTY:
-eval{
-                    my ( $res, $c ) = ctx_request(
-                        POST '/api/indicator',
-                        [
-                            api_key                             => 'test',
-                            'indicator.create.axis_id'          => $registro->{axis_id},
-                            'indicator.create.name'             => $registro->{name},
-                            'indicator.create.formula'          => $registro->{formula},
-                            'indicator.create.observations'     => $registro->{observations},
-                            'indicator.create.explanation'      => $registro->{explanation},
-                            'indicator.create.goal'             => $registro->{goal},
-                            'indicator.create.goal_explanation' => $registro->{goal_explanation},
-                            'indicator.create.goal_source'      => $registro->{goal_source},
-                            'indicator.create.source'           => $registro->{source},
-                            'indicator.create.sort_direction'   => $registro->{sort_direction},
+                    my $obj;
+                  RTY:
+                    eval {
+                        my ( $res, $c ) = ctx_request(
+                            POST '/api/indicator',
+                            [
+                                api_key                             => 'test',
+                                'indicator.create.axis_id'          => $registro->{axis_id},
+                                'indicator.create.name'             => $registro->{name},
+                                'indicator.create.formula'          => $registro->{formula},
+                                'indicator.create.observations'     => $registro->{observations},
+                                'indicator.create.explanation'      => $registro->{explanation},
+                                'indicator.create.goal'             => $registro->{goal},
+                                'indicator.create.goal_explanation' => $registro->{goal_explanation},
+                                'indicator.create.goal_source'      => $registro->{goal_source},
+                                'indicator.create.source'           => $registro->{source},
+                                'indicator.create.sort_direction'   => $registro->{sort_direction},
 
-                            'indicator.create.visibility_level'       => 'network',
-                            'indicator.create.visibility_networks_id' => '6',
-                        ]
-                    );
-                    my $obj = eval { decode_json( $res->content ) };
-};
-if ($@ && $@ =~/already exists/){
-    $registro->{name} .= ' 2';
-    goto RTY;
-}
+                                'indicator.create.visibility_level'       => 'network',
+                                'indicator.create.visibility_networks_id' => '6',
+                            ]
+                        );
+                         $obj = eval { decode_json( $res->content ) };
+                    };
+                    if ( $@ && $@ =~ /already exists/ ) {
+                        $registro->{name} .= ' 2';
+                        goto RTY;
+                    }
 
                     die Dumper {
                         err   => Dumper $obj,
