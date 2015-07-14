@@ -107,6 +107,11 @@ $schema->txn_do(
                     $registro->{formula} =~ s/\s+/ /g;
                     $registro->{formula} =~ s/\$\s+(\d)/\$$1/g;
 
+                    my $err =
+                      eval { Iota::IndicatorFormula->new( formula => $registro->{formula}, schema => $schema ) };
+
+                    $registro->{formula} = 'CONCATERNAR' . $registro->{formula} if $err =~ /is a str and/;
+
                     my ( $res, $c ) = ctx_request(
                         POST '/api/indicator',
                         [
@@ -131,7 +136,7 @@ $schema->txn_do(
                     die Dumper {
                         err   => Dumper $obj,
                         value => $registro
-                      } unless $res->is_success;
+                    } unless $res->is_success;
 
                     $registro->{id} = $obj;
 
