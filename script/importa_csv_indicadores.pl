@@ -36,12 +36,19 @@ $schema->txn_do(
         open my $fh, "<:encoding(utf8)", $file or die "$file: $!";
 
         my %expected_header = (
-            name          => qr/\bname\b/,
-            formula       => qr/formula/,
-            axis_id       => qr/axis_id/,
-            explanation   => qr/explanation/,
-            goal_operator => qr/goal_operator/,
-            observations  => qr/observations/,
+            name             => qr/\bname\b/,
+            formula          => qr/formula/,
+            axis_id          => qr/axis_id/,
+            explanation      => qr/explanation/,
+            goal             => qr/goal/,
+            goal_explanation => qr/goal_explanation/,
+            goal_source      => qr/goal_source/,
+            source           => qr/source/,
+
+            goal_operator  => qr/goal_operator/,
+            observations   => qr/observations/,
+            sort_direction => qr/sort_direction/,
+
         );
 
         my @rows;
@@ -103,16 +110,20 @@ $schema->txn_do(
                     my ( $res, $c ) = ctx_request(
                         POST '/api/indicator',
                         [
-                            api_key                          => 'test',
-                            'indicator.create.axis_id'       => $registro->{axis_id},
-                            'indicator.create.name'          => $registro->{name},
-                            'indicator.create.formula'       => $registro->{formula},
-                            'indicator.create.observations'  => $registro->{observations},
-                            'indicator.create.explanation'   => $registro->{explanation},
-                            'indicator.create.goal_operator' => $registro->{goal_operator},
+                            api_key                             => 'test',
+                            'indicator.create.axis_id'          => $registro->{axis_id},
+                            'indicator.create.name'             => $registro->{name},
+                            'indicator.create.formula'          => $registro->{formula},
+                            'indicator.create.observations'     => $registro->{observations},
+                            'indicator.create.explanation'      => $registro->{explanation},
+                            'indicator.create.goal'             => $registro->{goal},
+                            'indicator.create.goal_explanation' => $registro->{goal_explanation},
+                            'indicator.create.goal_source'      => $registro->{goal_source},
+                            'indicator.create.source'           => $registro->{source},
+                            'indicator.create.sort_direction'   => $registro->{sort_direction},
 
-                            'indicator.create.visibility_level'   => 'private',
-                            'indicator.create.visibility_user_id' => 3
+                            'indicator.create.visibility_level'       => 'network',
+                            'indicator.create.visibility_networks_id' => '6'
                         ]
                     );
                     my $obj = eval { decode_json( $res->content ) };
