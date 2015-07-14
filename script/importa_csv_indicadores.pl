@@ -130,7 +130,7 @@ $schema->txn_do(
 
                     die Dumper {
                         err   => Dumper $obj,
-                        value => $registro;
+                        value => $registro
                       } unless $res->is_success;
 
                     $registro->{id} = $obj;
