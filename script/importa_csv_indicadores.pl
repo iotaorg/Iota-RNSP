@@ -111,10 +111,9 @@ $schema->txn_do(
                       eval { Iota::IndicatorFormula->new( formula => $registro->{formula}, schema => $schema ) };
 
                     $registro->{formula} = 'CONCATENAR' . $registro->{formula} if $@ && $@ =~ /is a str and/;
-                    my $obj;
+                    my ( $obj, $res, $c );
                   RTY:
-                    eval {
-                        my ( $res, $c ) = ctx_request(
+                        ( $res, $c ) = ctx_request(
                             POST '/api/indicator',
                             [
                                 api_key                             => 'test',
@@ -133,19 +132,23 @@ $schema->txn_do(
                                 'indicator.create.visibility_networks_id' => '6',
                             ]
                         );
-                        die Dumper {
-                            err   => Dumper $obj,
-                            value => $registro,
-                            err => $@
-                        } unless $res->is_success;
 
-                        $obj = eval { decode_json( $res->content ) };
-                    };
-
-                    if ( $@ && $@ =~ /already exists/ ) {
+                    $obj = eval { decode_json( $res->content ) };
+use DDP; p $obj;
+                    if ( $res->content =~ /name/ &&$res->content =~ /invalid/  ) {
                         $registro->{name} .= ' 2';
                         goto RTY;
                     }
+                    else {
+                        die $@ if $@;
+                    }
+                    die Dumper {
+                        err   => Dumper $obj,
+                        value => $registro,
+                        err   => $@
+                    } unless $res->is_success;
+
+
 
                     $registro->{id} = $obj;
 
