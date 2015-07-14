@@ -72,6 +72,7 @@ sub verifiers_specs {
                                 schema  => $self->result_source->schema
                             );
                         };
+                        use DDP; p  $@;
                         return $@ eq '';
                     },
                 },
