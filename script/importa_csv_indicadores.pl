@@ -111,7 +111,8 @@ $schema->txn_do(
                       eval { Iota::IndicatorFormula->new( formula => $registro->{formula}, schema => $schema ) };
 
                     $registro->{formula} = 'CONCATENAR' . $registro->{formula} if $@ && $@ =~ /is a str and/;
-
+RTY:
+eval{
                     my ( $res, $c ) = ctx_request(
                         POST '/api/indicator',
                         [
@@ -132,6 +133,11 @@ $schema->txn_do(
                         ]
                     );
                     my $obj = eval { decode_json( $res->content ) };
+};
+if ($@ && $@ =~/already exists/){
+    $registro->{name} .= ' 2';
+    goto RTY;
+}
 
                     die Dumper {
                         err   => Dumper $obj,
