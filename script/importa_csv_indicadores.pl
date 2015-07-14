@@ -37,17 +37,17 @@ $schema->txn_do(
 
         my %expected_header = (
             name             => qr/\bname\b/,
-            formula          => qr/formula/,
-            axis_id          => qr/axis_id/,
-            explanation      => qr/explanation/,
-            goal             => qr/goal/,
-            goal_explanation => qr/goal_explanation/,
-            goal_source      => qr/goal_source/,
-            source           => qr/source/,
+            formula          => qr/formula\b/,
+            axis_id          => qr/axis_id\b/,
+            explanation      => qr/explanation\b/,
+            goal             => qr/goal\b/,
+            goal_explanation => qr/goal_explanation\b/,
+            goal_source      => qr/goal_source\b/,
+            source           => qr/source\b/,
 
-            goal_operator  => qr/goal_operator/,
-            observations   => qr/observations/,
-            sort_direction => qr/sort_direction/,
+            goal_operator  => qr/goal_operator\b/,
+            observations   => qr/observations\b/,
+            sort_direction => qr/sort_direction\b/,
 
         );
 
