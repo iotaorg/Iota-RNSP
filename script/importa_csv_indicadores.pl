@@ -123,7 +123,7 @@ $schema->txn_do(
                             'indicator.create.sort_direction'   => $registro->{sort_direction},
 
                             'indicator.create.visibility_level'       => 'network',
-                            'indicator.create.visibility_networks_id' => '6'
+                            'indicator.create.visibility_networks_id' => '6',
                         ]
                     );
                     my $obj = eval { decode_json( $res->content ) };
@@ -131,8 +131,7 @@ $schema->txn_do(
                     die Dumper {
                         err   => Dumper $obj,
                         value => $registro;
-                      }
-                      unless $res->is_success;
+                      } unless $res->is_success;
 
                     $registro->{id} = $obj;
 
@@ -141,7 +140,7 @@ $schema->txn_do(
                 }
                 else {
                     use DDP;
-                    p @data;
+                    p \@data;
                     p $registro;
                     $ignored++;
                 }
