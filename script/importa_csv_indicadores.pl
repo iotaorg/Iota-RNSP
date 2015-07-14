@@ -133,17 +133,19 @@ $schema->txn_do(
                                 'indicator.create.visibility_networks_id' => '6',
                             ]
                         );
-                         $obj = eval { decode_json( $res->content ) };
+                        die Dumper {
+                            err   => Dumper $obj,
+                            value => $registro,
+                            err => $@
+                        } unless $res->is_success;
+
+                        $obj = eval { decode_json( $res->content ) };
                     };
+
                     if ( $@ && $@ =~ /already exists/ ) {
                         $registro->{name} .= ' 2';
                         goto RTY;
                     }
-
-                    die Dumper {
-                        err   => Dumper $obj,
-                        value => $registro
-                    } unless $res->is_success;
 
                     $registro->{id} = $obj;
 
