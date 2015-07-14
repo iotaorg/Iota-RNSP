@@ -110,7 +110,7 @@ $schema->txn_do(
                     my $err =
                       eval { Iota::IndicatorFormula->new( formula => $registro->{formula}, schema => $schema ) };
 
-                    $registro->{formula} = 'CONCATERNAR' . $registro->{formula} if $@ && $@ =~ /is a str and/;
+                    $registro->{formula} = 'CONCATENAR' . $registro->{formula} if $@ && $@ =~ /is a str and/;
 
                     my ( $res, $c ) = ctx_request(
                         POST '/api/indicator',
