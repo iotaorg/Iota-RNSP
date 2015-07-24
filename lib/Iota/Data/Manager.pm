@@ -10,7 +10,8 @@ use Data::Diver qw(Dive);
 use Iota::Data::Visitor;
 
 has _input => ( is => 'ro', isa => 'HashRef', init_arg => 'input' );
-has input => ( is => 'ro', isa => 'HashRef', init_arg => undef, lazy_build => 1 );
+has input =>
+  ( is => 'ro', isa => 'HashRef', init_arg => undef, lazy_build => 1 );
 
 has actions => (
     is      => 'ro',
@@ -83,4 +84,3 @@ around success => sub {
     return !!( $self->$orig(@_) && scalar keys %{ $self->results } );
 };
 1;
-

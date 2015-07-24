@@ -19,9 +19,42 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
       unless $id =~ /^[0-9]+$/;
 
-    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+    $c->stash->{object} =
+      $c->stash->{collection}->search_rs( { 'me.id' => $id } );
 
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
+}
+
+sub user : Chained('object') : PathPart('user') : Args(1) : ActionClass('REST')
+{
+    my ( $self, $c, $id ) = @_;
+    $c->stash->{user_id} = $id;
+}
+
+sub user_POST {
+    my ( $self, $c ) = @_;
+
+    #    $self->status_forbidden( $c, message => "access denied", ), $c->detach
+    #      unless $c->check_any_user_role(qw(superadmin));
+    use DDP;
+    $c->stash->{network} = $c->stash->{object}->next;
+    p $c->stash->{network};
+    $c->stash->{network}
+      ->add_to_network_users( { user_id => $c->stash->{user_id} } );
+
+    #$self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
+    #  $c->detach
+    #  unless $dm->success;
+
+    #my $obj = $dm->get_outcome_for('network.update');
+
+    $self->status_accepted(
+        $c,
+        location => $c->uri_for( $self->action_for('network'),
+            [ $c->stash->{object}->{id} ] )->as_string,
+        entity => { name => 'teste' }
+      ),
+      $c->detach;
 }
 
 sub network : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
@@ -88,14 +121,16 @@ sub network_POST {
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
+      $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('network.update');
 
     $self->status_accepted(
         $c,
-        location => $c->uri_for( $self->action_for('network'), [ $obj->id ] )->as_string,
+        location =>
+          $c->uri_for( $self->action_for('network'), [ $obj->id ] )->as_string,
         entity => { name => $obj->name, id => $obj->id }
       ),
       $c->detach
@@ -149,8 +184,21 @@ Retorna:
 
 sub list_GET {
     my ( $self, $c ) = @_;
+    my $rs      = $c->stash->{collection};
+    my $topic   = $c->req->params->{topic} if $c->req->params->{topic};
+    my $user_id = $c->req->params->{user_id} if $c->req->params->{user_id};
+    if ($topic) {
+        $rs = $rs->search( { topic => $topic } ) if $topic;
 
-    my @list = $c->stash->{collection}->search( undef, { order_by => 'id' } )->as_hashref->all;
+    }
+    if ($user_id) {
+        use DDP;
+        p $user_id;
+        $rs = $rs->search( { 'network_users.user_id' => undef },
+            { join => 'network_users' } );
+
+    }
+    my @list = $rs->search( undef, { order_by => 'id' } )->as_hashref->all;
     my @objs;
 
     foreach my $obj (@list) {
@@ -163,7 +211,9 @@ sub list_GET {
                   institute_id domain_name
                   )
             ),
-            url => $c->uri_for_action( $self->action_for('network'), [ $obj->{id} ] )->as_string,
+            url => $c->uri_for_action(
+                $self->action_for('network'), [ $obj->{id} ]
+            )->as_string,
         };
     }
 
@@ -196,13 +246,15 @@ sub list_POST {
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
+      $c->detach
       unless $dm->success;
-    my $object = $dm->get_outcome_for('network.create');
+    my $object = $dm->get_outcome_for('network_user.create');
 
     $self->status_created(
         $c,
-        location => $c->uri_for( $self->action_for('network'), [ $object->id ] )->as_string,
+        location => $c->uri_for( $self->action_for('network'), [ $object->id ] )
+          ->as_string,
         entity => {
             name => $object->name,
             id   => $object->id,
@@ -213,4 +265,3 @@ sub list_POST {
 
 with 'Iota::TraitFor::Controller::Search';
 1;
-

@@ -20,7 +20,9 @@ around list_GET => sub {
     my $self = shift;
     my ($c)  = @_;
 
-    my @columns = defined $c->req->params->{columns} ? split /,/, $c->req->params->{columns} : ();
+    my @columns = defined $c->req->params->{columns}
+      ? split /,/, $c->req->params->{columns}
+      : ();
 
     my $qtde_param = 0;
 
@@ -72,7 +74,10 @@ around list_GET => sub {
                 }
                 else {
                     if ( $colNm eq '_' ) { push @row, undef; next }
-                    push @row, $enabled ? $self->_loc_str( $c, $data->{$colNm} ) : $data->{$colNm};
+                    push @row,
+                      $enabled
+                      ? $self->_loc_str( $c, $data->{$colNm} )
+                      : $data->{$colNm};
                 }
             }
             push @aaData, \@row;
@@ -96,4 +101,3 @@ sub _loc_str {
 }
 
 1;
-
