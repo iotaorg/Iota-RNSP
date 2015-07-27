@@ -311,8 +311,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-09-26 14:10:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h3C6Zt2aU2Af3GvvEjKAmg
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:511t0Ihp3UujvkqYTt2o0Q
 
 __PACKAGE__->has_many( "current_users", "Iota::Schema::Result::CityCurrentUser", { "foreign.city_id" => "self.id" }, );
 

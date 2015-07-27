@@ -732,8 +732,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2014-03-20 09:10:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JYdltGA6sD4QQM4lGVyfTQ
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ui3PbJbTICxOubmlD7WlIA
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 

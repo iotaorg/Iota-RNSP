@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::ActionsLog;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<actions_log>
 
@@ -83,30 +82,30 @@ __PACKAGE__->table("actions_log");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "actions_log_id_seq",
-    },
-    "dt_when",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 0,
-        original      => { default_value => \"now()" },
-    },
-    "url",
-    { data_type => "text", is_nullable => 1 },
-    "user_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "message",
-    { data_type => "text", is_nullable => 1 },
-    "ip",
-    { data_type => "text", is_nullable => 1 },
-    "indicator_id",
-    { data_type => "integer", is_nullable => 1 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "actions_log_id_seq",
+  },
+  "dt_when",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
+  "url",
+  { data_type => "text", is_nullable => 1 },
+  "user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "message",
+  { data_type => "text", is_nullable => 1 },
+  "ip",
+  { data_type => "text", is_nullable => 1 },
+  "indicator_id",
+  { data_type => "integer", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -132,19 +131,20 @@ Related object: L<Iota::Schema::Result::User>
 =cut
 
 __PACKAGE__->belongs_to(
-    "user",
-    "Iota::Schema::Result::User",
-    { id => "user_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "user",
+  "Iota::Schema::Result::User",
+  { id => "user_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-03-06 13:39:34
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O6vkrrP/J9XXPolV5dIcpw
+
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TV8fUxjU6+avUg/cZkRgDg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
