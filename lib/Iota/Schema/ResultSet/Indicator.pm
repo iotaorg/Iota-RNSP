@@ -65,7 +65,19 @@ sub verifiers_specs {
         create => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                name    => { required => 1, type => 'Str' },
+                name => {
+                    required   => 1,
+                    type       => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+                        my $name_url = eval { $text2uri->translate( $r->get_value('name') ) };
+
+                        my $exists = $self->result_source->schema->resultset('Indicator')->search( { name_url => $name_url } )->count;
+
+                        return $exists == 0;
+                    },
+
+                },
                 formula => {
                     required   => 1,
                     type       => 'Str',

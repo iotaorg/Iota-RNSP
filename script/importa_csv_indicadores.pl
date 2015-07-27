@@ -36,12 +36,19 @@ $schema->txn_do(
         open my $fh, "<:encoding(utf8)", $file or die "$file: $!";
 
         my %expected_header = (
-            name          => qr/\bname\b/,
-            formula       => qr/formula/,
-            axis_id       => qr/axis_id/,
-            explanation   => qr/explanation/,
-            goal_operator => qr/goal_operator/,
-            observations  => qr/observations/,
+            name             => qr/\bname\b/,
+            formula          => qr/formula\b/,
+            axis_id          => qr/axis_id\b/,
+            explanation      => qr/explanation\b/,
+            goal             => qr/goal\b/,
+            goal_explanation => qr/goal_explanation\b/,
+            goal_source      => qr/goal_source\b/,
+            source           => qr/source\b/,
+
+            goal_operator  => qr/goal_operator\b/,
+            observations   => qr/observations\b/,
+            sort_direction => qr/sort_direction\b/,
+
         );
 
         my @rows;
@@ -100,28 +107,48 @@ $schema->txn_do(
                     $registro->{formula} =~ s/\s+/ /g;
                     $registro->{formula} =~ s/\$\s+(\d)/\$$1/g;
 
-                    my ( $res, $c ) = ctx_request(
-                        POST '/api/indicator',
-                        [
-                            api_key                          => 'test',
-                            'indicator.create.axis_id'       => $registro->{axis_id},
-                            'indicator.create.name'          => $registro->{name},
-                            'indicator.create.formula'       => $registro->{formula},
-                            'indicator.create.observations'  => $registro->{observations},
-                            'indicator.create.explanation'   => $registro->{explanation},
-                            'indicator.create.goal_operator' => $registro->{goal_operator},
+                    my $err =
+                      eval { Iota::IndicatorFormula->new( formula => $registro->{formula}, schema => $schema ) };
 
-                            'indicator.create.visibility_level'   => 'private',
-                            'indicator.create.visibility_user_id' => 3
-                        ]
-                    );
-                    my $obj = eval { decode_json( $res->content ) };
+                    $registro->{formula} = 'CONCATENAR' . $registro->{formula} if $@ && $@ =~ /is a str and/;
+                    my ( $obj, $res, $c );
+                  RTY:
+                        ( $res, $c ) = ctx_request(
+                            POST '/api/indicator',
+                            [
+                                api_key                             => 'test',
+                                'indicator.create.axis_id'          => $registro->{axis_id},
+                                'indicator.create.name'             => $registro->{name},
+                                'indicator.create.formula'          => $registro->{formula},
+                                'indicator.create.observations'     => $registro->{observations},
+                                'indicator.create.explanation'      => $registro->{explanation},
+                                'indicator.create.goal'             => $registro->{goal},
+                                'indicator.create.goal_explanation' => $registro->{goal_explanation},
+                                'indicator.create.goal_source'      => $registro->{goal_source},
+                                'indicator.create.source'           => $registro->{source},
+                                'indicator.create.sort_direction'   => $registro->{sort_direction},
 
+                                'indicator.create.visibility_level'       => 'network',
+                                'indicator.create.visibility_networks_id' => '6',
+                            ]
+                        );
+
+                    $obj = eval { decode_json( $res->content ) };
+use DDP; p $obj;
+                    if ( $res->content =~ /name/ &&$res->content =~ /invalid/  ) {
+                        $registro->{name} .= ' 2';
+                        goto RTY;
+                    }
+                    else {
+                        die $@ if $@;
+                    }
                     die Dumper {
                         err   => Dumper $obj,
-                        value => $registro;
-                      }
-                      unless $res->is_success;
+                        value => $registro,
+                        err   => $@
+                    } unless $res->is_success;
+
+
 
                     $registro->{id} = $obj;
 
@@ -130,7 +157,7 @@ $schema->txn_do(
                 }
                 else {
                     use DDP;
-                    p @data;
+                    p \@data;
                     p $registro;
                     $ignored++;
                 }

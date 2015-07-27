@@ -17,6 +17,8 @@
                         [%END%]
                     [% ELSIF network.id == 1 %]
                         <a href="http://www.cidadessustentaveis.org.br"><img src="/static/images/logo.png" alt="Programa Cidades Sustentáveis" /></a>
+                    [% ELSIF network.id == 6 %]
+                        <a href="http://indicadores.atletaspelobrasil.org.br"><img src="/static/images/logo-cidades-do-esporte.jpeg" alt="Cidades do Esporte" /></a>
                     [% END %]
                 </div>
             </div>
