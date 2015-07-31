@@ -192,8 +192,6 @@ sub list_GET {
 
     }
     if ($user_id) {
-        use DDP;
-        p $user_id;
         $rs = $rs->search( { 'network_users.user_id' => undef },
             { join => 'network_users' } );
 
