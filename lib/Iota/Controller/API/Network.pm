@@ -192,13 +192,15 @@ sub list_GET {
 
     }
     if ($user_id) {
-        $rs = $rs->search( { 'network_users.user_id' => undef },
+        $rs = $rs->search( { 'network_users.user_id' => $user_id },
             { join => 'network_users' } );
 
     }
     my @list = $rs->search( undef, { order_by => 'id' } )->as_hashref->all;
     my @objs;
-
+    use DDP;
+    p $c->req->params->{user_id};
+    p \@list;
     foreach my $obj (@list) {
         push @objs, {
             (
