@@ -28,7 +28,10 @@ while ( my $object = $objects->fetch ) {
     $object->{measurement_unit_id} = undef;
     $object->{source}              = undef;
 
-    $schema->resultset('Variable')->create( { %{$object} } )
-      unless $schema->resultset('Variable')
+    my $variable = $schema->resultset('Variable')
       ->search( { cognomen => $object->{cognomen} } )->next;
+
+    $schema->resultset('Variable')->create( { %{$object} } )
+      unless $variable;
+    print $variable->id . "\n";
 }
