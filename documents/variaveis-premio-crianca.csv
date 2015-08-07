@@ -1,0 +1,50 @@
+Alunos do ensino fundamental da rede municipal que utilizam transporte escolar;Alunos do ensino fundamental da rede municipal que utilizam transporte escolar;prem_crian_nova_1;1;int;yearly;;0;;superadmin;sum
+Escolas municipais de ensino fundamental com Conselho de Escola eleito  ;Escolas municipais de ensino fundamental com Conselho de Escola eleito  ;prem_crian_nova_2;1;int;yearly;;0;;superadmin;sum
+Existência de Conselho Municipal da Criança (e do Adolescente);Existência de Conselho Municipal da Criança (e do Adolescente). Responder sim ou não.;prem_crian_nova_3;1;str;yearly;;0;;superadmin;sum
+Existência de Fundo Municipal específico para  políticas destinadas à criança (e ao adolescente);Existência de Fundo Municipal específico para  políticas destinadas à criança (e ao adolescente). Responder sim ou não.;prem_crian_nova_4;1;str;yearly;;0;;superadmin;sum
+Houve ampliação da licença maternidade de 120 para 180 dias para servidoras públicas do município?;Houve ampliação da licença maternidade de 120 para 180 dias para servidoras públicas do município? Responder sim ou não.;prem_crian_nova_5;1;str;yearly;;0;;superadmin;sum
+Matrículas em tempo integral na rede municipal - creche;Matrículas em tempo integral na rede municipal - creche;prem_crian_nova_6;1;int;yearly;;0;;superadmin;sum
+Matrículas em tempo integral na rede municipal - ensino fundamental anos finais;Matrículas em tempo integral na rede municipal - ensino fundamental anos finais;prem_crian_nova_7;1;int;yearly;;0;;superadmin;sum
+Matrículas em tempo integral na rede municipal - ensino fundamental anos iniciais;Matrículas em tempo integral na rede municipal - ensino fundamental anos iniciais;prem_crian_nova_8;1;int;yearly;;0;;superadmin;sum
+Matrículas em tempo integral na rede municipal - pré-escola;Matrículas em tempo integral na rede municipal - pré-escola;prem_crian_nova_9;1;int;yearly;;0;;superadmin;sum
+Número de acidentes de trânsito no município envolvendo crianças (até 14 anos de idade);Número de acidentes de trânsito no município envolvendo crianças (até 14 anos de idade);prem_crian_nova_10;1;int;yearly;;0;;superadmin;sum
+Número de Conselhos Tutelares;Número de Conselhos Tutelares;prem_crian_nova_11;1;int;yearly;;0;;superadmin;sum
+Número de escolas da rede municipal que atingiram ou ultrapassaram a meta do Ideb - Rede municipal até  4ª série/5º ano ;Número de escolas da rede municipal que atingiram ou ultrapassaram a meta do Ideb - Rede municipal até  4ª série/5º ano ;prem_crian_nova_12;1;int;yearly;;0;;superadmin;sum
+Número de escolas da rede municipal que atingiram ou ultrapassaram a meta do Ideb - Rede municipal até 8ª série/9º ano;Número de escolas da rede municipal que atingiram ou ultrapassaram a meta do Ideb - Rede municipal até 8ª série/9º ano;prem_crian_nova_13;1;int;yearly;;0;;superadmin;sum
+Número de escolas de ensino fundamental com grêmio eleitos;Número de escolas de ensino fundamental com grêmio eleitos;prem_crian_nova_14;1;int;yearly;;0;;superadmin;sum
+Número de escolas públicas de ensino fundamental e médio com sala de informática;Número de escolas públicas de ensino fundamental e médio com sala de informática;prem_crian_nova_15;1;int;yearly;;0;;superadmin;sum
+Número de mortes de crianças em acidentes de trânsito (até 14 anos de idade);Número de mortes de crianças em acidentes de trânsito (até 14 anos de idade);prem_crian_nova_16;1;int;yearly;;0;;superadmin;sum
+Número de mortes de pessoas de 0 a 14 anos por desastres socioambientais;Número de mortes de pessoas de 0 a 14 anos por desastres socioambientais;prem_crian_nova_17;1;int;yearly;;0;;superadmin;sum
+Número de unidades de saúde com atendimento dentário;Número de unidades de saúde com atendimento dentário;prem_crian_nova_18;1;int;yearly;;0;;superadmin;sum
+Número de unidades de saúde com atendimento oftalmológico;Número de unidades de saúde com atendimento oftalmológico;prem_crian_nova_19;1;int;yearly;;0;;superadmin;sum
+Número de unidades de saúde com atendimento pediátrico;Número de unidades de saúde com atendimento pediátrico;prem_crian_nova_20;1;int;yearly;;0;;superadmin;sum
+Número total de crianças (0 a 14 anos) infectadas por doenças hídricas;Número total de crianças (0 a 14 anos) infectadas por doenças hídricas;prem_crian_nova_21;1;int;yearly;;0;;superadmin;sum
+Número total de crianças em situação de rua (0 a 14 anos);Número total de crianças em situação de rua (0 a 14 anos);prem_crian_nova_22;1;int;yearly;;0;;superadmin;sum
+Número total de crianças de 0 a 14 anos infectadas com dengue;Número total de crianças de 0 a 14 anos infectadas com dengue;prem_crian_nova_23;1;int;yearly;;0;;superadmin;sum
+Número total de crianças residentes em habitações subnormais (0 a 14 anos);Número total de crianças residentes em habitações subnormais (0 a 14 anos);prem_crian_nova_24;1;int;yearly;;0;;superadmin;sum
+Número total de escolas da rede municipal até  4ª série/ 5º ano ;Número total de escolas da rede municipal até  4ª série/ 5º ano ;prem_crian_nova_25;1;int;yearly;;0;;superadmin;sum
+Número total de escolas da rede municipal até 8ª série/9º ano;Número total de escolas da rede municipal até 8ª série/9º ano;prem_crian_nova_26;1;int;yearly;;0;;superadmin;sum
+Número total de escolas públicas com ensino fundamental;Número total de escolas públicas com ensino fundamental;prem_crian_nova_27;1;int;yearly;;0;;superadmin;sum
+Número total de óbitos de crianças até 5 anos de idade;Número total de óbitos de crianças até 5 anos de idade;prem_crian_nova_28;1;int;yearly;;0;;superadmin;sum
+Número total de pediatras;Número total de pediatras;prem_crian_nova_29;1;int;yearly;;0;;superadmin;sum
+Número total de unidades de saúde pública do município;Número total de unidades de saúde pública do município;prem_crian_nova_30;1;int;yearly;;0;;superadmin;sum
+O município possui algum mecanismo de orçamento participativo que envolva crianças?;O município possui algum mecanismo de orçamento participativo que envolva crianças? Responder sim ou não.;prem_crian_nova_31;1;str;yearly;;0;;superadmin;sum
+Partos realizados com cesariana;Partos realizados com cesariana;prem_crian_nova_32;1;int;yearly;;0;;superadmin;sum
+População na faixa etária de 4 a 14 anos;População na faixa etária de 4 a 14 anos;prem_crian_nova_33;1;int;yearly;;0;;superadmin;sum
+Porcentagem de crianças com obesidade;Porcentagem de crianças com obesidade;prem_crian_nova_34;1;num;yearly;;0;;superadmin;sum
+Porcentagem de crianças com peso elevado para a idade;Porcentagem de crianças com peso elevado para a idade;prem_crian_nova_35;1;num;yearly;;0;;superadmin;sum
+Proporção de cobertura populacional estimada da Equipe Saúde da Família;Proporção de cobertura populacional estimada da Equipe Saúde da Família;prem_crian_nova_36;1;num;yearly;;0;;superadmin;sum
+Taxa de distorção entre série-idade - Anos finais do ensino fundamental;Taxa de distorção entre série-idade - Anos finais do ensino fundamental;prem_crian_nova_37;1;num;yearly;;0;;superadmin;sum
+Taxa de distorção entre série-idade - Anos iniciais do ensino fundamental;Taxa de distorção entre série-idade - Anos iniciais do ensino fundamental;prem_crian_nova_38;1;num;yearly;;0;;superadmin;sum
+Total de alunos matriculados no ensino fundamental da rede municipal;Total de alunos matriculados no ensino fundamental da rede municipal;prem_crian_nova_39;1;int;yearly;;0;;superadmin;sum
+Total de escolas de ensino fundamental;Total de escolas de ensino fundamental;prem_crian_nova_40;1;int;yearly;;0;;superadmin;sum
+Total de escolas municipais;Total de escolas municipais;prem_crian_nova_41;1;int;yearly;;0;;superadmin;sum
+Total de indivíduos de 4 a 14 anos na escola;Total de indivíduos de 4 a 14 anos na escola;prem_crian_nova_42;1;int;yearly;;0;;superadmin;sum
+Total de matrículas (parcial+integral) na rede municipal - creche;Total de matrículas (parcial+integral) na rede municipal - creche;prem_crian_nova_43;1;int;yearly;;0;;superadmin;sum
+Total de matrículas (parcial+integral) na rede municipal - fundamental anos finais;Total de matrículas (parcial+integral) na rede municipal - fundamental anos finais;prem_crian_nova_44;1;int;yearly;;0;;superadmin;sum
+Total de matrículas (parcial+integral) na rede municipal - fundamental anos iniciais;Total de matrículas (parcial+integral) na rede municipal - fundamental anos iniciais;prem_crian_nova_45;1;int;yearly;;0;;superadmin;sum
+Total de matrículas (parcial+integral) na rede municipal - pré-escola;Total de matrículas (parcial+integral) na rede municipal - pré-escola;prem_crian_nova_46;1;int;yearly;;0;;superadmin;sum
+Total de mortes de crianças de 0 a 14 anos de idade;Total de mortes de crianças de 0 a 14 anos de idade;prem_crian_nova_47;1;int;yearly;;0;;superadmin;sum
+Total de partos no município;Total de partos no município;prem_crian_nova_48;1;int;yearly;;0;;superadmin;sum
+Valor do PNAE utilizado para compra de alimentos provenientes de agricultura familiar;Valor do PNAE utilizado para compra de alimentos provenientes de agricultura familiar;prem_crian_nova_49;1;num;yearly;;0;;superadmin;sum
+Valor total repassado ao município pelo Programa Nacional de Alimentação Escolar (PNAE);Valor total repassado ao município pelo Programa Nacional de Alimentação Escolar (PNAE);prem_crian_nova_50;1;num;yearly;;0;;superadmin;sum
