@@ -44,13 +44,15 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
-
-            my $old = $self->search({
-                user_id => $values{user_id},
-                -and => [\[
-                    'lower(name) = ?', [a => (lc $values{name})]
-                ]]
-            })->next;
+            use DDP;
+            p \%values;
+            my $old = $self->search(
+                {
+                    user_id => $values{user_id},
+                    -and =>
+                      [ \[ 'lower(name) = ?', [ a => ( lc $values{name} ) ] ] ]
+                }
+            )->next;
             return $old if $old;
 
             my $var = $self->create( \%values );
@@ -74,4 +76,3 @@ sub action_specs {
 }
 
 1;
-

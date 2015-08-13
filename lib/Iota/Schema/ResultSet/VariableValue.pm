@@ -2,7 +2,7 @@
 package Iota::Schema::ResultSet::VariableValue;
 
 use namespace::autoclean;
-
+use utf8;
 use Moose;
 extends 'DBIx::Class::ResultSet';
 with 'Iota::Role::Verification';
@@ -26,7 +26,8 @@ sub value_check {
     my $variable_id = $r->get_value('variable_id');
     my $schema      = $self->result_source->schema;
     unless ($variable_id) {
-        $variable_id = $self->search( { id => $r->get_value('id') } )->first->variable_id;
+        $variable_id =
+          $self->search( { id => $r->get_value('id') } )->first->variable_id;
     }
 
     my $var = $schema->resultset('Variable')->find( { id => $variable_id } );
@@ -34,7 +35,9 @@ sub value_check {
     if ( $var->type eq 'int' && $r->get_value('value') !~ /^[-+]?[0-9]+$/ ) {
         return 0;
     }
-    elsif ( $var->type eq 'num' && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/ ) {
+    elsif ($var->type eq 'num'
+        && $r->get_value('value') !~ /^[-+]?[0-9]+\.?[0-9]*$/ )
+    {
         return 0;
     }
 
@@ -66,18 +69,22 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
 
-                        #return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
+#return 0 if (!$r->get_value('value'));  # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
-                        my $var    = $schema->resultset('Variable')->find( { id => $r->get_value('variable_id') } );
-                        my $date   = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
+                        my $var    = $schema->resultset('Variable')
+                          ->find( { id => $r->get_value('variable_id') } );
+                        my $date =
+                          DateTimeX::Easy->new( $r->get_value('value_of_date') )
+                          ->datetime;
 
                         # f_extract_period_edge
                         return $self->search(
                             {
                                 user_id     => $r->get_value('user_id'),
                                 variable_id => $r->get_value('variable_id'),
-                                valid_from  => $schema->f_extract_period_edge( $var ? $var->period : 'yearly', $date )
+                                valid_from  => $schema->f_extract_period_edge(
+                                    $var ? $var->period : 'yearly', $date )
                                   ->{period_begin}
                             }
                         )->count == 0;
@@ -89,8 +96,11 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return $self->result_source->schema->resultset('Variable')
-                          ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
+                        return $self->result_source->schema->resultset(
+                            'Variable')
+                          ->find( { id => $r->get_value('variable_id') } )
+                          ? 1
+                          : 0;
                     }
                 },
             },
@@ -106,7 +116,8 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return $self->search( { id => $r->get_value('id') } )->count == 1;
+                        return $self->search( { id => $r->get_value('id') } )
+                          ->count == 1;
                     }
 
                 },
@@ -125,19 +136,24 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
 
-                        #return 0 if (!$r->get_value('value')); # TODO verificar se foi salvo justificativa
+#return 0 if (!$r->get_value('value')); # TODO verificar se foi salvo justificativa
 
                         my $schema = $self->result_source->schema;
-                        my $var = $self->search( { id => $r->get_value('id') } )->first;
+                        my $var =
+                          $self->search( { id => $r->get_value('id') } )->first;
 
-                        my $date = DateTimeX::Easy->new( $r->get_value('value_of_date') )->datetime;
+                        my $date =
+                          DateTimeX::Easy->new( $r->get_value('value_of_date') )
+                          ->datetime;
 
                         # f_extract_period_edge
                         return $var && $self->search(
                             {
                                 id => $r->get_value('id'),
                                 valid_from =>
-                                  $schema->f_extract_period_edge( $var->variable->period, $date )->{period_begin}
+                                  $schema->f_extract_period_edge(
+                                    $var->variable->period, $date )
+                                  ->{period_begin}
                             }
                         )->count == 1;
                     }
@@ -168,11 +184,11 @@ sub verifiers_specs {
                     required => 1,
                     type     => DataStr,
 
-                    #post_check => sub {
-                    #    my $r = shift;
-                    #    return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
-                    #    return 1;
-                    #},
+#post_check => sub {
+#    my $r = shift;
+#    return 0 if (!$r->get_value('justification_of_missing_field') && !$r->get_value('value'));
+#    return 1;
+#},
 
                 },
                 variable_id => {
@@ -180,8 +196,11 @@ sub verifiers_specs {
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
-                        return $self->result_source->schema->resultset('Variable')
-                          ->find( { id => $r->get_value('variable_id') } ) ? 1 : 0;
+                        return $self->result_source->schema->resultset(
+                            'Variable')
+                          ->find( { id => $r->get_value('variable_id') } )
+                          ? 1
+                          : 0;
                     }
                 },
             },
@@ -195,13 +214,16 @@ sub action_specs {
     return {
         create => sub {
             my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
+            $values{value_of_date} =
+              DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
             my $schema = $self->result_source->schema;
-            my $var    = $schema->resultset('Variable')->find( { id => $values{variable_id} } );
-            my $date   = $values{value_of_date};
+            my $var    = $schema->resultset('Variable')
+              ->find( { id => $values{variable_id} } );
+            my $date = $values{value_of_date};
 
-            my $dates = $schema->f_extract_period_edge( $var->period || 'yearly', $date );
+            my $dates =
+              $schema->f_extract_period_edge( $var->period || 'yearly', $date );
             $values{valid_from}  = $dates->{period_begin};
             $values{valid_until} = $dates->{period_end};
 
@@ -210,19 +232,26 @@ sub action_specs {
 
             if ( exists $values{source} && $values{source} ) {
                 my $source =
-                  $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
+                  $self->result_source->schema->resultset('Source')
+                  ->find_or_new( { name => $values{source} } );
                 if ( !$source->in_storage ) {
                     $source->user_id( $values{user_id} );
                     $source->insert;
                 }
             }
 
-            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
+            my $data =
+              Iota::IndicatorData->new(
+                schema => $self->result_source->schema );
 
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $varvalue->variable_id ] ) ],
-                dates      => [ $values{valid_from} ],
-                user_id    => $varvalue->user_id,
+                indicators => [
+                    $data->indicators_from_variables(
+                        variables => [ $varvalue->variable_id ]
+                    )
+                ],
+                dates   => [ $values{valid_from} ],
+                user_id => $varvalue->user_id,
 
                 variables_ids => [ $varvalue->variable_id ],
             );
@@ -231,7 +260,8 @@ sub action_specs {
         },
         update => sub {
             my %values = shift->valid_values;
-            $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
+            $values{value_of_date} =
+              DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
@@ -245,18 +275,25 @@ sub action_specs {
 
             if ( exists $values{source} && $values{source} ) {
                 my $source =
-                  $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
+                  $self->result_source->schema->resultset('Source')
+                  ->find_or_new( { name => $values{source} } );
                 if ( !$source->in_storage ) {
                     $source->user_id( $values{user_id} );
                     $source->insert;
                 }
             }
 
-            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
+            my $data =
+              Iota::IndicatorData->new(
+                schema => $self->result_source->schema );
             $data->upsert(
-                indicators => [ $data->indicators_from_variables( variables => [ $var->variable_id ] ) ],
-                dates      => [ $var->valid_from->ymd ],
-                user_id    => $var->user_id,
+                indicators => [
+                    $data->indicators_from_variables(
+                        variables => [ $var->variable_id ]
+                    )
+                ],
+                dates   => [ $var->valid_from->ymd ],
+                user_id => $var->user_id,
 
                 variables_ids => [ $var->variable_id ],
             );
@@ -267,7 +304,8 @@ sub action_specs {
             my %values = shift->valid_values;
 
             my $schema = $self->result_source->schema;
-            my $var    = $schema->resultset('Variable')->find( $values{variable_id} );
+            my $var =
+              $schema->resultset('Variable')->find( $values{variable_id} );
 
             $self->_put( $var ? $var->period : 'yearly', %values );
 
@@ -280,7 +318,8 @@ sub _put {
     my ( $self, $period, %values ) = @_;
     my $dont_calc = delete $values{do_not_calc};
     delete $values{cache_ref};
-    $values{value_of_date} = DateTimeX::Easy->new( $values{value_of_date} )->datetime;
+    $values{value_of_date} =
+      DateTimeX::Easy->new( $values{value_of_date} )->datetime;
 
     my $schema = $self->result_source->schema;
 
@@ -288,7 +327,8 @@ sub _put {
       for keys %values;
     return unless keys %values;
 
-    my $dates = $schema->f_extract_period_edge( $period, $values{value_of_date} );
+    my $dates =
+      $schema->f_extract_period_edge( $period, $values{value_of_date} );
 
     # procura por uma variavel daquele usuario naquele periodo, se
     # existir, atualiza a data e o valor!
@@ -312,9 +352,17 @@ sub _put {
 
                 ( exists $values{source} ? ( source => $values{source} ) : () ),
 
-                ( exists $values{observations} ? ( observations => $values{observations} ) : () ),
+                (
+                    exists $values{observations}
+                    ? ( observations => $values{observations} )
+                    : ()
+                ),
 
-                ( exists $values{file_id} ? ( file_id => $values{file_id} ) : () ),
+                (
+                    exists $values{file_id}
+                    ? ( file_id => $values{file_id} )
+                    : ()
+                ),
 
             }
         );
@@ -329,20 +377,32 @@ sub _put {
     }
 
     if ( exists $values{source} && $values{source} ) {
-        my $source = $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
-        if ( !$source->in_storage ) {
-            $source->user_id( $values{user_id} );
-            $source->insert;
+        my $source = $self->result_source->schema->resultset('Source');
+        my $source_available =
+          $source->search( { name => { ilike => "%$values{source}%" } }, )
+          ->next;
+        use DDP;
+        warn 'lol';
+
+        p $source;
+        if ( !$source_available ) {
+            $source->create(
+                { name => $values{source}, user_id => $values{user_id} } );
         }
     }
 
     if ( !$dont_calc ) {
-        my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
+        my $data =
+          Iota::IndicatorData->new( schema => $self->result_source->schema );
 
         $data->upsert(
-            indicators => [ $data->indicators_from_variables( variables => [ $values{variable_id} ] ) ],
-            dates      => [ $dates->{period_begin} ],
-            user_id    => $values{user_id},
+            indicators => [
+                $data->indicators_from_variables(
+                    variables => [ $values{variable_id} ]
+                )
+            ],
+            dates   => [ $dates->{period_begin} ],
+            user_id => $values{user_id},
 
             variables_ids => [ $values{variable_id} ],
 
@@ -353,4 +413,3 @@ sub _put {
 }
 
 1;
-
