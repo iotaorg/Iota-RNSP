@@ -381,10 +381,6 @@ sub _put {
         my $source_available =
           $source->search( { name => { ilike => "%$values{source}%" } }, )
           ->next;
-        use DDP;
-        warn 'lol';
-
-        p $source;
         if ( !$source_available ) {
             $source->create(
                 { name => $values{source}, user_id => $values{user_id} } );
