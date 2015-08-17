@@ -83,7 +83,7 @@
                 <div class="row-fluid">
                     <div class="span9 col-sm-8 parceiros">
                         <h4>[%l('Parceiros')%]</h4>
-                        <a href="http://www.appcivico.com/" target="_blank"><span class="spt-logo-dualtec" title="Appcivicoteste"></span></a>
+						<a href="http://www.appcivico.com" target="_blank"><span class="spt-logo-appcivico" title="Appcivico"></span></a>
                         <a href="http://www.w3c.br/" target="_blank"><span class="spt-logo-w3c" title="W3C Brasil"></span></a>
                         <a href="http://www.nic.br/" target="_blank"><span class="spt-logo-nicbr" title="NIC.br"></span></a>
                         <a href="http://www.cgi.br/" target="_blank"><span class="spt-logo-cgibr" title="CGI.BR"></span></a>

@@ -1,5 +1,5 @@
-.spt-cc, .spt-facebook-icon_25x25, .spt-forward_disabled, .spt-forward_enabled_hover, .spt-globe_icon, .spt-google-page-logo-25x25, .spt-icone_aware, .spt-indicator_icon, .spt-logo-96, .spt-logo-cgibr, .spt-logo-dualtec, .spt-logo-nicbr, .spt-logo-w3c, .spt-od_80x15_blue, .spt-separator-arrow, .spt-seta, .spt-seta_up, .spt-sort_asc, .spt-sort_asc_disabled, .spt-sort_both, .spt-sort_desc, .spt-sort_desc_disabled, .spt-twitter-icon-25x25, .spt-forward_enabled{
-	background: url(/static/v2/img/sprites-v2.png) no-repeat;
+.spt-cc, .spt-facebook-icon_25x25, .spt-forward_disabled, .spt-forward_enabled_hover, .spt-globe_icon, .spt-google-page-logo-25x25, .spt-icone_aware, .spt-indicator_icon, .spt-logo-96, .spt-logo-cgibr, .spt-logo-appcivico, .spt-logo-dualtec, .spt-logo-nicbr, .spt-logo-w3c, .spt-od_80x15_blue, .spt-separator-arrow, .spt-seta, .spt-seta_up, .spt-sort_asc, .spt-sort_asc_disabled, .spt-sort_both, .spt-sort_desc, .spt-sort_desc_disabled, .spt-twitter-icon-25x25, .spt-forward_enabled{
+	background: url(/static/v2/img/sprites-v3.png) no-repeat;
 display: inline-block;
 }
 
@@ -64,6 +64,11 @@ display: inline-block;
 }
 
 .spt-logo-dualtec{
+    background-position: -313px 0;
+    width: 65px;
+    height: 64px;
+}
+.spt-logo-appcivico{
     background-position: -313px 0;
     width: 65px;
     height: 64px;
