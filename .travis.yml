@@ -5,6 +5,7 @@ perl:
 env:
   - PERL_CPANM_OPT="-v --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --mirror http://cpan.mirrors.travis-ci.org --cascade-search --notest --force --skip-satisfied --no-interactive"
 before_install:
+  - perlbrew list; perlbrew available; exit 1;
   - sudo apt-get install postgresql libdbd-pg-perl
   - cpanm --quiet --notest App::Sqitch
   - env; find  ~/ | grep sqitch | grep bin;  exit 1
