@@ -7,6 +7,7 @@ env:
 before_install:
   - sudo apt-get install postgresql libdbd-pg-perl
   - cpanm --quiet --notest App::Sqitch
+  - env; find  ~/ | grep sqitch | grep bin;  exit 1
   - cpanm -n Module::Install Catalyst::Devel Text::CSV JSON::Any MooseX::Types::JSON
   - cpanm -n DBIx::Class
   - cpanm -n DBIx::Class::Optional::Dependencies
