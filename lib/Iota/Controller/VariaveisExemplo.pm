@@ -48,7 +48,7 @@ sub _download {
 
         my $indicators_rs = $c->model('DB::Indicator')->filter_visibilities(
             user_id      => $c->stash->{current_city_user_id},
-            networks_ids => $c->stash->{network_data}{network_ids},
+            networks_ids => $c->stash->{network_data}{network_id},
             users_ids    => \@users_ids,
         )->get_column('id')->as_query;
 
@@ -83,10 +83,15 @@ sub _download {
 
     $rs = $rs->as_hashref;
 
-    my @lines = ( [ 'ID da variável', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
+    my @lines =
+      ( [ 'ID da variável', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
 
     while ( my $var = $rs->next ) {
-        push @lines, [ $var->{id}, $self->_loc_str( $c, $var->{name} ), undef, undef, undef, undef ];
+        push @lines,
+          [
+            $var->{id}, $self->_loc_str( $c, $var->{name} ),
+            undef, undef, undef, undef
+          ];
     }
 
     if ( $0 && $0 =~ /\.t$/ ) {
@@ -167,7 +172,8 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename="
+    $c->response->headers->header(
+            'content-disposition' => "attachment;filename="
           . "variaveis-exemplo-"
           . ( $custom ? 'dos-indicadores-' : 'completa-' )
           . $c->get_lang()
@@ -179,17 +185,18 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub doido_download_csv : Chained('/institute_load') : PathPart('variaveis_exemplo.csv') : Args(0) {
+sub doido_download_csv : Chained('/institute_load') :
+  PathPart('variaveis_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
     $self->_download($c);
 }
 
-sub download_xls : Chained('/institute_load') : PathPart('variaveis_exemplo.xls') : Args(0) {
+sub download_xls : Chained('/institute_load') :
+  PathPart('variaveis_exemplo.xls') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xls';
     $self->_download($c);
 }
 
 1;
-

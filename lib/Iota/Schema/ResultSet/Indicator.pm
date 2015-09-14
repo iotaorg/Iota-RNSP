@@ -70,9 +70,12 @@ sub verifiers_specs {
                     type       => 'Str',
                     post_check => sub {
                         my $r = shift;
-                        my $name_url = eval { $text2uri->translate( $r->get_value('name') ) };
+                        my $name_url =
+                          eval { $text2uri->translate( $r->get_value('name') ) };
 
-                        my $exists = $self->result_source->schema->resultset('Indicator')->search( { name_url => $name_url } )->count;
+                        my $exists =
+                          $self->result_source->schema->resultset('Indicator')
+                          ->search( { name_url => $name_url } )->count;
 
                         return $exists == 0;
                     },
@@ -224,12 +227,14 @@ sub action_specs {
             $values{name_url} = $text2uri->translate( $values{name} );
 
             my $visibility_users_id = delete $values{visibility_users_id};
-            my @visible_users       = $visibility_users_id
+            my @visible_users =
+              $visibility_users_id
               ? split /,/, $visibility_users_id
               : ();
 
             my $visibility_networks_id = delete $values{visibility_networks_id};
-            my @visible_networks       = $visibility_networks_id
+            my @visible_networks =
+              $visibility_networks_id
               ? split /,/, $visibility_networks_id
               : ();
 
@@ -299,12 +304,14 @@ sub action_specs {
               /;
 
             my $visibility_users_id = delete $values{visibility_users_id};
-            my @visible_users       = $visibility_users_id
+            my @visible_users =
+              $visibility_users_id
               ? split /,/, $visibility_users_id
               : ();
 
             my $visibility_networks_id = delete $values{visibility_networks_id};
-            my @visible_networks       = $visibility_networks_id
+            my @visible_networks =
+              $visibility_networks_id
               ? split /,/, $visibility_networks_id
               : ();
 
