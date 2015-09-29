@@ -200,7 +200,7 @@ sub list_GET {
     my @objs;
     use DDP;
     p $c->req->params->{user_id};
-    p \@list;
+    p @list;
     foreach my $obj (@list) {
         push @objs, {
             (

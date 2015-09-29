@@ -45,7 +45,7 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
             use DDP;
-            p \%values;
+            p %values;
             my $old = $self->search(
                 {
                     user_id => $values{user_id},
