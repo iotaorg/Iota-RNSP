@@ -1,38 +1,39 @@
 $(document).ready(function() {
-    var $groups = $('#group_list'),
-        $container = $('#indicators_container'),
-        $list = $('#indicators_list'),
-        $search = $('#indicator-search'),
-        $status = $('#search_status'),
+    var $groups = $('#topic_group_list'),
+        $container = $('#topic_indicators_container'),
+        $list = $('#topic_indicators_list'),
+        $search = $('#topic-indicator-search'),
+        $status = $('#topic_search_status'),
         _select_caption = '',
-        _current_group = $groups.find('.select').attr('selected-id'),
-        $select = $groups.find('.select:first'),
-        _on_menu_click = function (event) {
+        _current_group = $groups.find('.topic_select').attr('selected-id'),
+        $select = $groups.find('.topic_select:first'),
 
+        _on_menu_click = function (event) {
+			console.log($list);
             var $me = $(event.target);
             if (typeof $me.attr('group-id') !== "undefined") {
 
                 _select_caption = $me.text();
                 _current_group = $me.attr('group-id');
-
+				console.log(_current_group);
                 // todo mundo
                 if (_current_group === '0') {
-                    $list.find('.item').removeClass('hideimp');
+                    $list.find('.topic_item').removeClass('hideimp');
                 } else {
-                    $list.find('.item').addClass('hideimp');
-                    $list.find('.item.g' + _current_group).removeClass('hideimp');
+                    $list.find('.topic_item').addClass('hideimp');
+                    $list.find('.topic_item.g' + _current_group).removeClass('hideimp');
                 }
-
                 __old_search_val2 = '';
                 _do_search();
             }
 
-            if ($groups.find('.options:first').is(':visible')) {
+            if ($groups.find('.topic_options:first').is(':visible')) {
 
                 $select.text(_select_caption);
+				console.log(_select_caption);
                 $select.removeClass('open');
 
-                $groups.find('.options:first').hide();
+                $groups.find('.topic_options:first').hide();
 
                 $container.show();
 
@@ -42,7 +43,7 @@ $(document).ready(function() {
                 $select.addClass('open');
 
                 $container.hide();
-                $groups.find('.options:first').show();
+                $groups.find('.topic_options:first').show();
             }
 
             return false;
@@ -51,6 +52,7 @@ $(document).ready(function() {
         _do_search = function () {
             var val = $search.val().trim();
 
+			console.log('lolllll');
             if (__old_search_val2 == val || val === '') {
                 return false;
             }
@@ -59,8 +61,8 @@ $(document).ready(function() {
             var match = normalize(val),
                 _count = 0;
             match = match.replace(/\s+/g, '.+');
-
-            var matches = $('.indicators .item').filter(function () {
+			console.log(match);
+            var matches = $('.topic_indicators .topic_item').filter(function () {
 
                 var re = new RegExp(match, ''),
                     _true = re.test(normalize($(this).text().trim()));
@@ -71,7 +73,7 @@ $(document).ready(function() {
             });
 
 
-            $list.find('.item').addClass('hideimp');
+            $list.find('.topic_item').addClass('hideimp');
 
             if (_current_group != '0') {
                 $(matches).each(function (index) {
@@ -118,10 +120,10 @@ $(document).ready(function() {
             }
 
             if (val === '') {
-                $list.find('.item.hideimp').removeClass('hideimp');
+                $list.find('.topic_item.hideimp').removeClass('hideimp');
             } else {
                 if (__old_search_val === '') {
-                    $list.find('.item').addClass('hideimp');
+                    $list.find('.topic_item').addClass('hideimp');
                 }
                 clearInterval(_search_int);
                 _search_int = setTimeout(_do_search, 110);
@@ -135,7 +137,7 @@ $(document).ready(function() {
         };
 
 
-    $list.find('.item').tooltip();
+    $list.find('.topic_item').tooltip();
 
     $status.click(_show_all);
     $search.keyup(debounce(_search_status, 20));

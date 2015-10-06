@@ -75,6 +75,79 @@ body {
     border-left: 10px solid #333;
     padding: 5px;
 }
+#topic_group_list {
+    margin-bottom: 10px;
+}
+
+#topic_group_list {
+    font-size: 10pt;
+}
+
+#topic_indicators_container .input-group{
+    margin-bottom: 20px;
+}
+
+#topic_group_list .topic_select{
+    padding: 5px 8px;
+    border: 1px solid #e5e5e5;
+    background-color: #f5f5f5;
+    padding-right: 22px;
+    color: #222;
+    position: relative;
+    margin-bottom: 10px
+}
+
+#topic_group_list .topic_select:hover{
+    background-color: #f0f0f0;
+}
+
+#topic_group_list .topic_select:after {
+    content: '';
+    position: absolute;
+    z-index: 4;
+    width: 14px;
+    height: 7px;
+    background-image: url(/static/v2/img/sprites-v2.png);
+    /* .spt-seta */
+    background-position: -365px -73px ;
+    right: 10px;
+    top: 11px;
+}
+
+#topic_group_list .topic_select.open:after {
+    background-position: -365px -65px ;
+}
+
+
+#topic_group_list .topic_select:hover,
+#topic_group_list .option:hover{
+    cursor: hand;
+    cursor: pointer;
+}
+
+#topic_group_list .option:hover{
+    background-color: #e1ffff;
+}
+
+#topic_group_list .topic_options{
+    display: none;
+    background-color: #f5f5f5;
+    border: 1px solid #e5e5e5;
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#topic_group_list .option{
+    padding: 5px;
+    padding-left: 15px;
+    border-bottom: 1px solid #e5e5e5;
+
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
 
 /* "select"/"combo box" do menu dos indicadores  */
 #group_list {
@@ -150,7 +223,45 @@ body {
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
+/* menu dos indicadores  */
+#topic_indicators_list {
+    height: 465px;
+    overflow: hidden;
+    width: 99.5%;
+}
 
+#topic_indicators_list .topic_item{
+    font-size: 10pt;
+}
+
+#topic_indicators_list td.has-button{
+    padding-top: 3px;
+    padding-bottom: 0;
+}
+/* os links da home precisam ficar 'bonitos'    */
+#topic_indicators_list a.topic_item{
+    display: block!important;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 5px;
+    color: #333;
+}
+
+#topic_indicators_list .topic_item.hideimp, span.hideimp{
+    display: none!important;
+}
+
+#topic_indicators_list .topic_item.selected{
+    color: #006666;
+    background-color: #ccffff;
+}
+
+#topic_search_status {
+    display: block;
+    text-align: center;
+    padding: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
 
 /* menu dos indicadores  */
 #indicators_list {

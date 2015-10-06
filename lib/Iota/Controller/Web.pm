@@ -206,7 +206,8 @@ sub institute_load : Chained('light_institute_load') PathPart('')
       grep { defined $_->city_id } @users;
 
     $c->stash->{current_cities} = \@cities;
-
+    use DDP;
+    p $c->stash->{network};
     $c->stash->{network_data} = {
         states => [
             do {
@@ -340,6 +341,197 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     );
 }
 
+sub topic_network : Chained('') PathPart('') Args(0) {
+    my ( $self, $c, $no_template ) = @_;
+
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my $show_user_private_indicators =
+      $c->stash->{show_user_private_indicators};
+
+    my $network_ids = [
+        do {
+            my %seen;
+            grep { !$seen{$_}++ } map {
+                map { $_->network_id }
+                  $_->network_users
+              } grep { defined $_->city_id }
+              grep   { $show_user_private_indicators->{ $_->id } }
+              @{ $c->stash->{current_all_users} };
+          }
+    ];
+
+    use DDP;
+    p $c->stash->{network_data}{network_id};
+    my @indicators = $c->model('DB::Indicator')->search(
+        {
+            is_fake         => 0,
+            'network.topic' => 1,
+        },
+        {
+            join => [ 'axis', { indicator_network_visibilities => 'network' } ],
+            collapse => 1,
+            order_by => 'me.name',
+            columns  => [
+                qw/
+                  axis.id
+                  axis.name
+
+                  me.id
+                  me.name
+                  me.name_url
+                  me.period
+                  me.explanation
+                  /
+            ]
+        }
+    )->as_hashref->all;
+
+    my $city = $c->stash->{city};
+
+    my $user_id = $city && $c->stash->{user} ? $c->stash->{user}{id} : undef;
+
+    my $id_vs_group_name = {};
+    my $groups           = {};
+    my $group_id         = 0;
+
+    my @custom_axis =
+      $user_id
+      ? $c->model('DB::UserIndicatorAxis')->search(
+        {
+            user_id => $user_id
+        },
+        {
+            prefetch => 'user_indicator_axis_items'
+        }
+      )->as_hashref->all
+      : ();
+
+    if (@custom_axis) {
+        my $ind_vs_group = {};
+
+        foreach my $g (@custom_axis) {
+
+            foreach ( @{ $g->{user_indicator_axis_items} } ) {
+                push @{ $ind_vs_group->{ $_->{indicator_id} } }, $g->{name};
+            }
+        }
+
+        for my $i (@indicators) {
+            next if !exists $ind_vs_group->{ $i->{id} };
+
+            foreach my $group_name ( @{ $ind_vs_group->{ $i->{id} } } ) {
+                if ( !exists $groups->{$group_name} ) {
+                    $group_id++;
+
+                    $groups->{$group_name}         = $group_id;
+                    $id_vs_group_name->{$group_id} = $group_name;
+                }
+
+                push @{ $i->{groups} }, $groups->{$group_name};
+            }
+        }
+    }
+
+    my $region =
+      $c->stash->{region}
+      ? { $c->stash->{region}->get_inflated_columns }
+      : $c->stash->{region};
+
+    my $selected_indicator = $c->stash->{indicator};
+
+    my $active_group = {
+        name => 'Todos os indicadores',
+        id   => 0
+    };
+
+    my $institute = $c->stash->{institute};
+
+    my $count_used_groups = {};
+
+    for my $i (@indicators) {
+
+        if ( !exists $groups->{ $i->{axis}{name} } ) {
+            $group_id++;
+
+            $id_vs_group_name->{$group_id} = $i->{axis}{name};
+            $groups->{ $i->{axis}{name} } = $group_id;
+        }
+
+        my $group_id = $groups->{ $i->{axis}{name} };
+
+        # se ja tem algum grupo, entao nao verifica se precisa inserir
+        if ( $i->{groups} && @{ $i->{groups} } > 0 ) {
+            if ( !$institute->bypass_indicator_axis_if_custom ) {
+                push @{ $i->{groups} }, $group_id;
+                $count_used_groups->{$group_id}++;
+            }
+            else {
+                $count_used_groups->{$group_id} = 0
+                  if !exists $count_used_groups->{$group_id};
+            }
+        }
+        else {
+            push @{ $i->{groups} }, $group_id;
+
+            $count_used_groups->{$group_id}++;
+        }
+
+        if ( $selected_indicator && $selected_indicator->{id} == $i->{id} ) {
+            $i->{selected} = 1;
+
+            $active_group = {
+                name => $id_vs_group_name->{ $i->{groups}[0] },
+                id   => $i->{groups}[0]
+            };
+        }
+
+        if ($region) {
+
+            $i->{href} = join '/', '', $city->{pais}, $city->{uf},
+              $city->{name_uri}, 'regiao', $region->{name_url},
+              $i->{name_url};
+
+        }
+        elsif ($city) {
+
+            $i->{href} = join '/', '', $city->{pais}, $city->{uf},
+              $city->{name_uri}, $i->{name_url};
+
+        }
+        else {
+            $i->{href} = '/' . $i->{name_url};
+        }
+    }
+
+    # todos os $count_used_groups = 0 sao eixos (nao grupos), que nao
+    # foram usados em nenhum indicador.
+    while ( my ( $group_id, $count ) = each %$count_used_groups ) {
+        next unless $count == 0;
+
+        delete $groups->{ $id_vs_group_name->{$group_id} };
+        delete $id_vs_group_name->{$group_id};
+    }
+
+    if ( $active_group->{id} ) {
+        for my $i (@indicators) {
+            $i->{visible} =
+              ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
+        }
+    }
+    use DDP;
+    p $groups;
+    p $active_group;
+    $c->stash(
+        topic_groups       => $groups,
+        topic_active_group => $active_group,
+        topic_indicators   => \@indicators,
+
+    );
+
+    #$c->stash( template => 'list_indicators.tt' ) if !$no_template;
+}
+
 sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
   Args(0) {
     my ( $self, $c, $no_template ) = @_;
@@ -359,7 +551,8 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
               @{ $c->stash->{current_all_users} };
           }
     ];
-
+    use DDP;
+    p $c->stash->{network_data}{network_ids};
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
 
         $show_user_private_indicators && keys %$show_user_private_indicators
@@ -528,7 +721,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
               ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
         }
     }
-
+    use DDP;
     $c->stash(
         groups       => $groups,
         active_group => $active_group,

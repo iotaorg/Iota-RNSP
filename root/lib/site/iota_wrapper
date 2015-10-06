@@ -41,6 +41,7 @@
 [%-CALL assets.include("v2/js/jquery.isotope.min.js")%]
 
 [%-CALL assets.include("js/indicatos-menu.js")%]
+[%-CALL assets.include("js/indicators-topic-menu.js")%]
 
 
 [%-CALL assets.include("js/stupidtable.min.js")%]
