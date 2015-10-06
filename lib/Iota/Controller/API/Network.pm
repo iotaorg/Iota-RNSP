@@ -36,9 +36,9 @@ sub user_POST {
 
     #    $self->status_forbidden( $c, message => "access denied", ), $c->detach
     #      unless $c->check_any_user_role(qw(superadmin));
-    use DDP;
+
     $c->stash->{network} = $c->stash->{object}->next;
-    p $c->stash->{network};
+
     $c->stash->{network}
       ->add_to_network_users( { user_id => $c->stash->{user_id} } );
 
@@ -198,9 +198,7 @@ sub list_GET {
     }
     my @list = $rs->search( undef, { order_by => 'id' } )->as_hashref->all;
     my @objs;
-    use DDP;
-    p $c->req->params->{user_id};
-    p \@list;
+
     foreach my $obj (@list) {
         push @objs, {
             (
@@ -249,7 +247,8 @@ sub list_POST {
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
       $c->detach
       unless $dm->success;
-    my $object = $dm->get_outcome_for('network_user.create');
+    my $object = $dm->get_outcome_for('network.create');
+
 
     $self->status_created(
         $c,

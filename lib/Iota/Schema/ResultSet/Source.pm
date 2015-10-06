@@ -44,8 +44,7 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
-            use DDP;
-            p \%values;
+
             my $old = $self->search(
                 {
                     user_id => $values{user_id},

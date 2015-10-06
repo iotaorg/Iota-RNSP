@@ -56,6 +56,7 @@ sub action_specs {
 
             my $var = $self->create( \%values );
             $var->discard_changes;
+
             return $var;
         },
         update => sub {

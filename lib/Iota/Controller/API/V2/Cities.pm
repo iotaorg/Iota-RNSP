@@ -20,7 +20,12 @@ sub list_GET {
     $self->status_ok(
         $c,
         entity => {
-            cities => $c->stash->{network_data}{cities}
+            cities => [
+                map {
+                    my $r = $_;
+                    +{ ( map { $_ => $r->$_ } qw/id name uf pais latitude longitude name_uri summary/ ) }
+                } @{ $c->stash->{network_data}{cities} }
+            ]
         }
     );
 }
