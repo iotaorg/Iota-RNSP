@@ -123,6 +123,10 @@ sub load_status_msgs : Private {
     }
 }
 
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
+
 sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
@@ -145,21 +149,91 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     }
 =cut
 
-    my @users = $c->stash->{network}->users->search(
+    my $cache_key = $c->stash->{network}->users->search(
         {
             active => 1,
-
-            #        @inner_page
         },
         {
-            prefetch => [ 'city', 'network_users' ]
+            select       => [ \'md5( array_agg(me.user_id::text || me.network_id::text || "user".city_id::text )::text)' ],
+            as           => ['md5'],
+            order_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id' ],
+            group_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id' ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
-    )->all;
-    $c->stash->{current_all_users} = \@users;
+    )->next;
+    $cache_key = $cache_key->{md5};
 
-    my @current_admins = grep { !$_->city_id } @users;
+    $cache_key = "institute_load-$cache_key";
+
+    my $schema=$c->model('DB')->schema;
+    my $stash = $redis->get($cache_key);
+
+    if ($stash){
+        $stash = thaw($stash);
+        $_->result_source->schema( $schema ) for @{ $stash->{current_all_users} };
+        $_->result_source->schema( $schema ) for @{ $stash->{current_admins} };
+    }else {
+
+        my @users = $c->stash->{network}->users->search(
+            {
+                active => 1,
+            },
+            {
+                prefetch => [ 'city', 'network_users' ]
+            }
+        )->all;
+
+        $stash->{current_all_users} = \@users;
+
+        my @cities = sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
+          map  { $_->city }
+          grep { defined $_->city_id } @users;
+
+        $stash->{network_data} = {
+            states => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ } grep { defined } map { $_->state_id } @cities;
+                  }
+            ],
+            users_ids => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ } map { $_->id } grep { defined $_->city_id } @users;
+                  }
+            ],
+
+            # redes de todos os usuarios que estão na pagina.
+            network_ids => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ } map {
+                        map { $_->network_id }
+                          $_->network_users
+                    } grep { defined $_->city_id } @users;
+                  }
+            ],
+
+            # rede selecionada do idioma.
+            network_id => [ $c->stash->{network}->id ],
+            admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
+            cities     => \@cities
+        };
+
+        $stash->{current_admins} =[ grep { !$_->city_id } @users];
+
+        $redis->set($cache_key, nfreeze($stash));
+    }
+
+    my @current_admins = @{ $stash->{current_admins} };
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] ) unless @current_admins;
     $c->detach( '/error_404', ['Mais de um admin de rede para o dominio encontrado!'] ) if @current_admins > 1;
+
+    delete $stash->{current_admins};
+    $c->stash->{ $_ } = $stash->{$_} for keys %$stash;
+
+    # tem que ver pra nao ler do mesmo lugar?
+    $c->stash->{current_cities} = $c->stash->{network_data}{cities};
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
@@ -187,43 +261,6 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     # utilizada para fazer filtro dos indicados
     # apenas para a cidade dele [o segundo parametro é ignorado]
     $c->stash->{current_city_user_id} = undef;
-
-    my @cities = sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
-      map  { $_->city }
-      grep { defined $_->city_id } @users;
-
-    $c->stash->{current_cities} = \@cities;
-
-    $c->stash->{network_data} = {
-        states => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ } grep { defined } map { $_->state_id } @cities;
-              }
-        ],
-        users_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ } map { $_->id } grep { defined $_->city_id } @users;
-              }
-        ],
-
-        # redes de todos os usuarios que estão na pagina.
-        network_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ } map {
-                    map { $_->network_id }
-                      $_->network_users
-                } grep { defined $_->city_id } @users;
-              }
-        ],
-
-        # rede selecionada do idioma.
-        network_id => [ $c->stash->{network}->id ],
-        admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
-        cities     => \@cities
-    };
 
     my $cur_lang = exists $c->req->cookies->{cur_lang} ? $c->req->cookies->{cur_lang}->value : undef;
 
@@ -278,7 +315,6 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
-
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_id},
@@ -310,11 +346,11 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     )->all;
 
     $c->stash(
-        cities        => $c->stash->{network_data}{cities},
-        indicators    => \@indicators,
-        best_pratices => \@good_pratices,
-        template      => 'mapa_site.tt',
-        v2 => 1,
+        cities         => $c->stash->{network_data}{cities},
+        indicators     => \@indicators,
+        best_pratices  => \@good_pratices,
+        template       => 'mapa_site.tt',
+        v2             => 1,
         custom_wrapper => 'site/iota_wrapper',
     );
 }
@@ -666,30 +702,29 @@ sub stash_comparacao_distritos : Private {
     $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
 
     my $polys = {};
-    my $regs = {};
+    my $regs  = {};
     foreach my $reg ( @{ $c->stash->{city}{regions} } ) {
         next unless $reg->{subregions};
 
-
-        if ($region->depth_level == 2){
-            $regs->{$reg->{id}} = { map { $_ => $reg->{$_} } qw/name name_url/ };
+        if ( $region->depth_level == 2 ) {
+            $regs->{ $reg->{id} } = { map { $_ => $reg->{$_} } qw/name name_url/ };
 
             foreach my $sub ( @{ $reg->{subregions} } ) {
 
                 delete $sub->{polygon_path}
-                    if defined $sub->{polygon_path} && $sub->{polygon_path} eq 'null';
+                  if defined $sub->{polygon_path} && $sub->{polygon_path} eq 'null';
                 next unless $sub->{polygon_path};
 
                 push @{ $polys->{ $reg->{id} } }, $sub->{polygon_path};
             }
-        }elsif ($region->depth_level == 3){
+        }
+        elsif ( $region->depth_level == 3 ) {
 
             foreach my $sub ( @{ $reg->{subregions} } ) {
-                $regs->{$sub->{id}} = { map { $_ => $sub->{$_} } qw/name name_url/ };
+                $regs->{ $sub->{id} } = { map { $_ => $sub->{$_} } qw/name name_url/ };
 
                 push @{ $polys->{ $sub->{id} } }, $sub->{polygon_path};
             }
-
 
         }
     }
@@ -715,7 +750,7 @@ sub stash_comparacao_distritos : Private {
     while ( my ( $ano, $variacoes ) = each %$por_ano ) {
         while ( my ( $variacao, $distintos ) = each %$variacoes ) {
 
-            my $distintos_ref_id = {map {$_->{id} => $_ } @$distintos};
+            my $distintos_ref_id = { map { $_->{id} => $_ } @$distintos };
 
             my $stat = $freq->iterate($distintos);
 
@@ -759,23 +794,21 @@ sub stash_comparacao_distritos : Private {
             $out->{$ano}{$variacao} = { all => $distintos }
               unless exists $out->{$ano}{$variacao};
 
+            foreach my $region_id ( keys %$regs ) {
 
-            foreach my $region_id (keys %$regs){
-
-                unless (exists $distintos_ref_id->{$region_id}){
+                unless ( exists $distintos_ref_id->{$region_id} ) {
                     $distintos_ref_id->{$region_id} = {};
                     push @$distintos, $distintos_ref_id->{$region_id};
                 }
 
                 $distintos_ref_id->{$region_id}{polygon_path} = $polys->{$region_id};
-                $distintos_ref_id->{$region_id}{$_} = $regs->{$region_id}{$_} for keys %{$regs->{$region_id}};
+                $distintos_ref_id->{$region_id}{$_} = $regs->{$region_id}{$_} for keys %{ $regs->{$region_id} };
 
             }
 
-
             my @nao_definidos = grep { !defined $_->{num} } @$distintos;
             for (@nao_definidos) {
-                $_->{i}   = 5;             # amarelo/sem valor
+                $_->{i}   = 5;       # amarelo/sem valor
                 $_->{num} = 'n/d';
             }
             push @$definidos, @nao_definidos;
