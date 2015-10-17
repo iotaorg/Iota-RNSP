@@ -45,6 +45,9 @@ sub index : Path : Args(0) {
     $c->forward( 'build_indicators_menu', [1] );
     $c->forward('/load_status_msgs');
 
+    $c->forward('/topic_network');
+    use DDP;
+    p $c->stash->{lol};
 }
 
 sub root : Chained('/') PathPart('') CaptureArgs(0) {
@@ -76,7 +79,8 @@ sub error_404 : Private {
     my ( $self, $c, $foo ) = @_;
     my $x = $c->req->uri;
 
-    eval { $c->forward('/institute_load') } if !exists $c->stash->{institute_loaded};
+    eval { $c->forward('/institute_load') }
+      if !exists $c->stash->{institute_loaded};
 
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',

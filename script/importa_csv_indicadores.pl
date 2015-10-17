@@ -141,7 +141,7 @@ $schema->txn_do(
                               $registro->{sort_direction},
 
                             'indicator.create.visibility_level' => 'network',
-                            'indicator.create.visibility_networks_id' => '6',
+                            'indicator.create.visibility_networks_id' => '9',
                         ]
                     );
 

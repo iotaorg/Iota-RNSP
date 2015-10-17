@@ -3,7 +3,7 @@
 
     <div class="row" id="indicadores-dados">
         <div class="col-md-4">
-            <h2>[%l('Indicadores')%]</h2>
+            <h2>[%l('Indicadores1')%]</h2>
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
@@ -43,7 +43,16 @@
 
         </div>
     </div>
-
+	[% IF network_data.network_id.0 == 1 %]
+	<div class="row" id="premio">
+		<div class="col-md-12">
+            <h2>[%l('Prêmio - Indicadores')%]</h2>
+            <div lockfixed>
+            [% INCLUDE 'parts/menu_topic_indicators.tt'%]
+            </div>
+        </div>
+	</div>
+	[%END%]
     <div id="dados-abertos">
         <h2>[%l('Dados abertos')%]</h2>
 
