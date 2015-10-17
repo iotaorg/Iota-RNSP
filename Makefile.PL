@@ -83,9 +83,9 @@ requires 'Catalyst::Plugin::Session::DynamicExpiry';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Plugin::Session::Store::File';
-
-
-
+requires 'MooseX::Types::JSON';
+requires 'JSON::Any';
+requires 'Text::CSV';
 
 
 requires 'Text::CSV_XS';
@@ -95,6 +95,8 @@ requires 'MooseX::Traits';
 requires 'DBD::Pg';
 requires 'Statistics::Descriptive';
 requires 'XML::Simple';
+requires 'App::Sqitch';
+
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
