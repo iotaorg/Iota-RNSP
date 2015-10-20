@@ -206,9 +206,7 @@ sub institute_load : Chained('light_institute_load') PathPart('')
       grep { defined $_->city_id } @users;
 
     $c->stash->{current_cities} = \@cities;
-    use DDP;
-    p $c->stash->{network};
-    $c->stash->{network_data} = {
+    $c->stash->{network_data}   = {
         states => [
             do {
                 my %seen;
@@ -361,8 +359,6 @@ sub topic_network : Chained('') PathPart('') Args(0) {
           }
     ];
 
-    use DDP;
-    p $c->stash->{network_data}{network_id};
     my @indicators = $c->model('DB::Indicator')->search(
         {
             is_fake         => 0,
@@ -519,9 +515,6 @@ sub topic_network : Chained('') PathPart('') Args(0) {
               ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
         }
     }
-    use DDP;
-    p $groups;
-    p $active_group;
     $c->stash(
         topic_groups       => $groups,
         topic_active_group => $active_group,
@@ -551,8 +544,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
               @{ $c->stash->{current_all_users} };
           }
     ];
-    use DDP;
-    p $c->stash->{network_data}{network_ids};
     my @indicators = $c->model('DB::Indicator')->filter_visibilities(
 
         $show_user_private_indicators && keys %$show_user_private_indicators
@@ -588,7 +579,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
             ]
         }
       )->as_hashref->all;
-
     my $city = $c->stash->{city};
 
     my $user_id = $city && $c->stash->{user} ? $c->stash->{user}{id} : undef;
@@ -721,7 +711,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
               ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
         }
     }
-    use DDP;
     $c->stash(
         groups       => $groups,
         active_group => $active_group,
@@ -1233,10 +1222,8 @@ sub home_network_indicator : Chained('institute_load') PathPart('')
     $self->stash_comparacao_cidades($c);
 
     $c->stash->{indicator} = { $c->stash->{indicator}->get_inflated_columns };
-
     $c->stash->{indicator}{created_at} =
       $c->stash->{indicator}{created_at}->datetime;
-
     $self->json_to_view( $c, indicator_json => $c->stash->{indicator} );
 
     if (   $c->stash->{current_part}
@@ -1524,25 +1511,35 @@ sub _add_default_periods {
         if ( $cont == 0 ) {
             $ant = "$i-01-01";
         }
+
         elsif ( $cont == $step - 1 ) {
-            push @periods,
-              [
-                $ant, "$i-01-01", [@loop],
-                $c->req->uri_with( { valid_from => $ant } )->as_string
-              ];
+            push @periods, [
+                $ant,
+                "$i-01-01",
+                [@loop],
+                $c->req->uri_with(
+                    { valid_from => $ant, valid_from_desc => undef }
+                  )->as_string,
+                $c->req->uri_with(
+                    {
+                        valid_from_desc => $i . "-01-01",
+                        valid_from      => undef
+                    }
+                  )->as_string,
+
+            ];
             undef @loop;
             $cont = -1;
         }
-
         $cont++;
     }
     $c->stash->{data_periods} = \@periods;
 
     $c->req->params->{valid_from} =
-      exists $c->req->params->{valid_from}
-      ? $c->req->params->{valid_from}
+         exists $c->req->params->{valid_from}
+      || exists $c->req->params->{valid_from_desc}
+      ? $c->req->params->{valid_from} || $c->req->params->{valid_from_desc}
       : $periods[-1][0];
-
     my $ativo = undef;
 
     my $i = 0;
@@ -1556,6 +1553,10 @@ sub _add_default_periods {
         }
         $i++;
     }
+    $c->req->params->{valid_from_desc} =
+      exists $c->req->params->{valid_from_desc}
+      ? $c->req->params->{valid_from_desc}
+      : $periods[-1][0];
 
     if ( defined $ativo ) {
         $c->req->params->{from}      = $periods[$ativo][0];
@@ -1618,6 +1619,8 @@ sub stash_tela_indicator : Private {
 
 sub stash_tela_cidade : Private {
     my ( $self, $c ) = @_;
+
+    $self->_add_default_periods($c);
 
     my $city = $c->model('DB::City')->search(
         {

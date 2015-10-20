@@ -3,7 +3,7 @@
 
     <div class="row" id="indicadores-dados">
         <div class="col-md-4">
-            <h2>[%l('Indicadores1')%]</h2>
+            <h2>[%l('Indicadores')%]</h2>
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>

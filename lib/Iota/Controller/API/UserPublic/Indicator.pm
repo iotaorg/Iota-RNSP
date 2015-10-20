@@ -2,6 +2,7 @@ package Iota::Controller::API::UserPublic::Indicator;
 
 use Moose;
 
+use Date::Calc qw/Add_Delta_YM/;
 use Iota::IndicatorFormula;
 use Iota::IndicatorChart::PeriodAxis;
 
@@ -16,14 +17,12 @@ sub base : Chained('/api/userpublic/object') : PathPart('indicator') :
     my ( $self, $c ) = @_;
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
-
     $c->stash->{collection} = $c->model('DB::Indicator')->filter_visibilities(
         user_id      => $c->stash->{current_city_user_id},
         networks_ids => $c->stash->{network_data}{network_ids},
         users_ids    => \@users_ids,
         is_fake      => 0
     );
-
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -34,7 +33,6 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     $c->stash->{indicator} =
       $c->stash->{collection}->search_rs( { 'me.id' => $id } );
     $c->stash->{indicator_obj} = $c->stash->{indicator}->next;
-
     $c->detach('/error_404') unless $c->stash->{indicator_obj};
 
 }
@@ -60,7 +58,6 @@ sub indicator : Chained('object') : PathPart('') : Args(0) :
 
 sub indicator_GET {
     my ( $self, $c ) = @_;
-
     $c->stash->{object} = $c->stash->{indicator};
     my $controller = $c->controller('API::Indicator');
     $controller->indicator_GET($c);
@@ -183,6 +180,9 @@ sub resumo_GET {
       ? $c->req->params->{number_of_periods}
       : 4;
     my $from_date = $c->req->params->{from_date};
+    use DDP;
+    p $from_date;
+    p $max_periodos;
 
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
@@ -252,7 +252,6 @@ sub resumo_GET {
                     $max_periodos )->{voltar_periodo};
             }
         }
-
         while ( my ( $periodo, $from_this_date ) = each %$periods_begin ) {
 
             my $custom_axis  = {};
@@ -393,7 +392,6 @@ sub resumo_GET {
 
             }
         }
-
         while ( my ( $axis, $periodos ) = each %{ $ret->{resumos} } ) {
 
             while ( my ( $periodo, $ind_info ) = each %{$periodos} ) {
@@ -403,6 +401,7 @@ sub resumo_GET {
         # indicadores duma vez
                 my $datas = {};
                 my @datas_ar;
+
                 foreach my $in (@$indicadores) {
                     $datas->{$_}{nome} = $in->{valores}{$_}{nome}
                       for ( keys %{ $in->{valores} } );
@@ -414,21 +413,48 @@ sub resumo_GET {
 
      # tira data dos valores vazios
      # inseridos no primeiro loop do indicador (caso ele apareca em dois grupos)
-                delete $datas->{''};
+                my ( $year, $month, $day ) =
+                  ( split q/-/, $periods_begin->{yearly} );
 
+                my @date;
+                push @date,
+                  ( join q/-/, Add_Delta_YM( $year, $month, $day, $_, 0 ) )
+                  for ( 0 .. 3 );
+
+                use DDP;
+                delete $datas->{''};
                 my $i = $max_periodos == 0 ? 1 : $max_periodos;
-                foreach my $data ( sort { $b cmp $a } keys %{$datas} ) {
-                    last if $i <= 0;
-                    $datas_ar[ --$i ] = {
-                        data => $data || '',
+                for my $d (@date) {
+                    push @datas_ar,
+                      {
+                        data => $_->{data},
+                        nome => $_->{nome}
+                      },
+                      next
+                      if defined $datas->{data};
+                    push @datas_ar,
+                      {
+                        data => $d,
                         nome =>
                           Iota::IndicatorChart::PeriodAxis::get_label_of_period(
-                            $data, $periodo
+                            $d, $periodo
                           )
-                    };
+                      };
+
                 }
 
-                # pronto, agora @datas ja tem a lista correta e na ordem!
+#                foreach my $data ( sort { $b cmp $a } keys %{$datas} ) {
+#                    last if $i <= 0;
+#                    $datas_ar[ --$i ] = {
+#                        data => $data,
+#                        nome =>
+#                          Iota::IndicatorChart::PeriodAxis::get_label_of_period(
+#                            $data, $periodo
+#                          )
+#                    };
+#                }
+#
+# pronto, agora @datas ja tem a lista correta e na ordem!
                 foreach my $in (@$indicadores) {
                     my @valores;
                     foreach my $data (@datas_ar) {
@@ -481,7 +507,8 @@ sub resumo_GET {
 
             while ( my ( $eixo, $periodos ) = each %{ $ret->{resumos} } ) {
 
-                $new_ret->{resumos}{ $c->loc($eixo) } = $ret->{resumos}{$eixo};
+                $new_ret->{resumos}{ $c->loc($eixo) } =
+                  $ret->{resumos}{$eixo};
 
                 while ( my ( $periodo, $indicadores_gp ) = each %{$periodos} ) {
 
@@ -501,7 +528,6 @@ sub resumo_GET {
         else {
             $new_ret = $ret;
         }
-
         $self->status_ok( $c, entity => $new_ret );
     }
 }
