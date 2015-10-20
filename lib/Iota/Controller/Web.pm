@@ -148,30 +148,28 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         );
     }
 =cut
-=pod
+
     my $cache_key = $c->stash->{network}->users->search(
         {
             active => 1,
         },
         {
-            select       => [ \'md5( array_agg(me.user_id::text || me.network_id::text || "user".city_id::text || network_users.network_id )::text)' ],
+            select       => [ \'md5( array_agg(me.user_id::text || me.network_id::text || coalesce("user".city_id::text, \'\')  ORDER BY me.user_id, me.network_id, "user".city_id )::text)' ],
             as           => ['md5'],
-            order_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id', 'network_users.network_id' ],
-            group_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id', 'network_users.network_id' ],
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            join => 'network_users',
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
     )->next;
+
     $cache_key = $cache_key->{md5};
     $cache_key = "institute_load-$cache_key";
 
     my $schema=$c->model('DB')->schema;
-=cut
-    my $stash;
-    if (0){
-        #$stash = thaw($stash);
-        #$_->result_source->schema( $schema ) for @{ $stash->{current_all_users} };
-        #$_->result_source->schema( $schema ) for @{ $stash->{current_admins} };
+    my $stash = $redis->get($cache_key);
+
+    if ($stash){
+        $stash = thaw($stash);
+        $_->result_source->schema( $schema ) for @{ $stash->{current_all_users} };
+        $_->result_source->schema( $schema ) for @{ $stash->{current_admins} };
     }else {
 
         my @users = $c->stash->{network}->users->search(
@@ -222,7 +220,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
         $stash->{current_admins} =[ grep { !$_->city_id } @users];
 
-        #$redis->set($cache_key, nfreeze($stash));
+        $redis->set($cache_key, nfreeze($stash));
     }
 
     my @current_admins = @{ $stash->{current_admins} };
