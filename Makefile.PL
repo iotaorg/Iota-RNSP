@@ -24,6 +24,8 @@ requires 'XML::LibXML';
 requires 'HTML::HTML5::Writer';
 requires 'RDF::Helper';
 requires 'RDF::Endpoint';
+requires 'Redis';
+requires 'Storable';
 
 requires 'Geo::Google::PolylineEncoder';
 requires 'I18N::AcceptLanguage';

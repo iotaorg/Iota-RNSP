@@ -129,6 +129,10 @@ sub load_status_msgs : Private {
     }
 }
 
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
+
 sub institute_load : Chained('light_institute_load') PathPart('')
   CaptureArgs(0) {
     my ( $self, $c ) = @_;
@@ -152,24 +156,99 @@ sub institute_load : Chained('light_institute_load') PathPart('')
     }
 =cut
 
-    my @users = $c->stash->{network}->users->search(
+    my $cache_key = $c->stash->{network}->users->search(
         {
             active => 1,
-
-            #        @inner_page
         },
         {
-            prefetch => [ 'city', 'network_users' ]
+            select => [
+                \'md5( array_agg(me.user_id::text || me.network_id::text || coalesce("user".city_id::text, \'\')  ORDER BY me.user_id, me.network_id, "user".city_id )::text)'
+            ],
+            as           => ['md5'],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
-    )->all;
-    $c->stash->{current_all_users} = \@users;
+    )->next;
 
-    my @current_admins = grep { !$_->city_id } @users;
+    $cache_key = $cache_key->{md5};
+    $cache_key = "institute_load-$cache_key";
+
+    my $schema = $c->model('DB')->schema;
+    my $stash  = $redis->get($cache_key);
+
+    if ($stash) {
+        $stash = thaw($stash);
+        $_->result_source->schema($schema) for @{ $stash->{current_all_users} };
+        $_->result_source->schema($schema) for @{ $stash->{current_admins} };
+    }
+    else {
+
+        my @users = $c->stash->{network}->users->search(
+            {
+                active => 1,
+            },
+            {
+                prefetch => [ 'city', 'network_users' ]
+            }
+        )->all;
+
+        $stash->{current_all_users} = \@users;
+
+        my @cities =
+          sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
+          map  { $_->city }
+          grep { defined $_->city_id } @users;
+
+        $stash->{network_data} = {
+            states => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ }
+                      grep { defined } map { $_->state_id } @cities;
+                  }
+            ],
+            users_ids => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ }
+                      map { $_->id } grep { defined $_->city_id } @users;
+                  }
+            ],
+
+            # redes de todos os usuarios que estão na pagina.
+            network_ids => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ } map {
+                        map { $_->network_id }
+                          $_->network_users
+                    } grep { defined $_->city_id } @users;
+                  }
+            ],
+
+            # rede selecionada do idioma.
+            network_id => [ $c->stash->{network}->id ],
+            admins_ids =>
+              [ map { $_->id } grep { !defined $_->city_id } @users ],
+            cities => \@cities
+        };
+
+        $stash->{current_admins} = [ grep { !$_->city_id } @users ];
+
+        $redis->set( $cache_key, nfreeze($stash) );
+    }
+
+    my @current_admins = @{ $stash->{current_admins} };
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] )
       unless @current_admins;
     $c->detach( '/error_404',
         ['Mais de um admin de rede para o dominio encontrado!'] )
       if @current_admins > 1;
+
+    delete $stash->{current_admins};
+    $c->stash->{$_} = $stash->{$_} for keys %$stash;
+
+    # tem que ver pra nao ler do mesmo lugar?
+    $c->stash->{current_cities} = $c->stash->{network_data}{cities};
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
@@ -199,45 +278,6 @@ sub institute_load : Chained('light_institute_load') PathPart('')
     # utilizada para fazer filtro dos indicados
     # apenas para a cidade dele [o segundo parametro é ignorado]
     $c->stash->{current_city_user_id} = undef;
-
-    my @cities =
-      sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
-      map  { $_->city }
-      grep { defined $_->city_id } @users;
-
-    $c->stash->{current_cities} = \@cities;
-    $c->stash->{network_data}   = {
-        states => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ }
-                  grep { defined } map { $_->state_id } @cities;
-              }
-        ],
-        users_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ }
-                  map { $_->id } grep { defined $_->city_id } @users;
-              }
-        ],
-
-        # redes de todos os usuarios que estão na pagina.
-        network_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ } map {
-                    map { $_->network_id }
-                      $_->network_users
-                } grep { defined $_->city_id } @users;
-              }
-        ],
-
-        # rede selecionada do idioma.
-        network_id => [ $c->stash->{network}->id ],
-        admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
-        cities     => \@cities
-    };
 
     my $cur_lang =
       exists $c->req->cookies->{cur_lang}
@@ -921,123 +961,122 @@ sub stash_comparacao_distritos : Private {
         }
         elsif ( $region->depth_level == 3 ) {
 
-            foreach my $sub ( @{ $reg->{subregions} } ) {
-                $regs->{ $sub->{id} } =
-                  { map { $_ => $sub->{$_} } qw/name name_url/ };
+            $regs->{ $sub->{id} } =
+              { map { $_ => $sub->{$_} } qw/name name_url/ };
 
-                push @{ $polys->{ $sub->{id} } }, $sub->{polygon_path};
-            }
-
+            push @{ $polys->{ $sub->{id} } }, $sub->{polygon_path};
         }
+
     }
+}
 
-    my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
-        {},
-        {
-            bind => [
-                $region->depth_level, $region->id, $user->{id},
-                $indicator->{id},     $user->{id}, $indicator->{id},
-            ],
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-        }
-    );
-    my $por_ano = {};
-
-    while ( my $r = $valor_rs->next ) {
-        $r->{variation_name} ||= '';
-
-        push @{ $por_ano->{ delete $r->{valid_from} }
-              { delete $r->{variation_name} } }, $r;
-    }
-    my $freq = Iota::Statistics::Frequency->new();
-
-    my $out = {};
-    while ( my ( $ano, $variacoes ) = each %$por_ano ) {
-        while ( my ( $variacao, $distintos ) = each %$variacoes ) {
-
-            my $distintos_ref_id = { map { $_->{id} => $_ } @$distintos };
-
-            my $stat = $freq->iterate($distintos);
-
-            my $definidos = [ grep { defined $_->{num} } @$distintos ];
-
-            # melhor = mais alto, entao inverte as cores
-            if (  !$indicator->{sort_direction}
-                || $indicator->{sort_direction} eq 'greater value' )
-            {
-                $_->{i} = 4 - $_->{i} for @$definidos;
-                $distintos = [
-                    ( reverse grep { defined $_->{num} } @$distintos ),
-                    grep { !defined $_->{num} } @$distintos
-                ];
-                $definidos = [ reverse @$definidos ];
-            }
-
-            if ($stat) {
-                $out->{$ano}{$variacao} = {
-                    all => $distintos,
-                    top3 =>
-                      [ $definidos->[0], $definidos->[1], $definidos->[2], ],
-                    lower3 =>
-                      [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
-                    mean => $stat->mean()
-                };
-            }
-            elsif ( @$definidos == 4 ) {
-                $definidos->[0]{i} = 0;    # Alta / Melhor
-                $definidos->[1]{i} = 1;    # acima media
-                $definidos->[2]{i} = 3;    # abaixo da media
-                $definidos->[3]{i} = 4;    # Baixa / Pior
-            }
-            elsif ( @$definidos == 3 ) {
-                $definidos->[0]{i} = 0;    # Alta / Melhor
-                $definidos->[1]{i} = 2;    # média
-                $definidos->[2]{i} = 4;    # Baixa / Pior
-            }
-            elsif ( @$definidos == 2 ) {
-                $definidos->[0]{i} = 0;    # Alta / Melhor
-                $definidos->[1]{i} = 4;    # Baixa / Pior
-            }
-            else {
-                $_->{i} = 5 for @$definidos;
-            }
-
-            $out->{$ano}{$variacao} = { all => $distintos }
-              unless exists $out->{$ano}{$variacao};
-
-            foreach my $region_id ( keys %$regs ) {
-
-                unless ( exists $distintos_ref_id->{$region_id} ) {
-                    $distintos_ref_id->{$region_id} = {};
-                    push @$distintos, $distintos_ref_id->{$region_id};
-                }
-
-                $distintos_ref_id->{$region_id}{polygon_path} =
-                  $polys->{$region_id};
-                $distintos_ref_id->{$region_id}{$_} = $regs->{$region_id}{$_}
-                  for keys %{ $regs->{$region_id} };
-
-            }
-
-            my @nao_definidos = grep { !defined $_->{num} } @$distintos;
-            for (@nao_definidos) {
-                $_->{i}   = 5;       # amarelo/sem valor
-                $_->{num} = 'n/d';
-            }
-            push @$definidos, @nao_definidos;
-        }
-    }
-
-    $c->stash->{analise_comparativa} = $out;
-
-    if (   $c->stash->{current_part}
-        && $c->stash->{current_part} eq 'analise_comparativa' )
+my $valor_rs = $schema->resultset('ViewValuesRegion')->search(
+    {},
     {
-        $c->stash(
-            template        => 'parts/analise_comparativa.tt',
-            without_wrapper => 1
-        );
+        bind => [
+            $region->depth_level, $region->id, $user->{id},
+            $indicator->{id},     $user->{id}, $indicator->{id},
+        ],
+        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
     }
+);
+my $por_ano = {};
+
+while ( my $r = $valor_rs->next ) {
+    $r->{variation_name} ||= '';
+
+    push
+      @{ $por_ano->{ delete $r->{valid_from} }{ delete $r->{variation_name} } },
+      $r;
+}
+my $freq = Iota::Statistics::Frequency->new();
+
+my $out = {};
+while ( my ( $ano, $variacoes ) = each %$por_ano ) {
+    while ( my ( $variacao, $distintos ) = each %$variacoes ) {
+
+        my $distintos_ref_id = { map { $_->{id} => $_ } @$distintos };
+
+        my $stat = $freq->iterate($distintos);
+
+        my $definidos = [ grep { defined $_->{num} } @$distintos ];
+
+        # melhor = mais alto, entao inverte as cores
+        if (  !$indicator->{sort_direction}
+            || $indicator->{sort_direction} eq 'greater value' )
+        {
+            $_->{i} = 4 - $_->{i} for @$definidos;
+            $distintos = [
+                ( reverse grep { defined $_->{num} } @$distintos ),
+                grep { !defined $_->{num} } @$distintos
+            ];
+            $definidos = [ reverse @$definidos ];
+        }
+
+        if ($stat) {
+            $out->{$ano}{$variacao} = {
+                all  => $distintos,
+                top3 => [ $definidos->[0], $definidos->[1], $definidos->[2], ],
+                lower3 =>
+                  [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
+                mean => $stat->mean()
+            };
+        }
+        elsif ( @$definidos == 4 ) {
+            $definidos->[0]{i} = 0;    # Alta / Melhor
+            $definidos->[1]{i} = 1;    # acima media
+            $definidos->[2]{i} = 3;    # abaixo da media
+            $definidos->[3]{i} = 4;    # Baixa / Pior
+        }
+        elsif ( @$definidos == 3 ) {
+            $definidos->[0]{i} = 0;    # Alta / Melhor
+            $definidos->[1]{i} = 2;    # média
+            $definidos->[2]{i} = 4;    # Baixa / Pior
+        }
+        elsif ( @$definidos == 2 ) {
+            $definidos->[0]{i} = 0;    # Alta / Melhor
+            $definidos->[1]{i} = 4;    # Baixa / Pior
+        }
+        else {
+            $_->{i} = 5 for @$definidos;
+        }
+
+        $out->{$ano}{$variacao} = { all => $distintos }
+          unless exists $out->{$ano}{$variacao};
+
+        foreach my $region_id ( keys %$regs ) {
+
+            unless ( exists $distintos_ref_id->{$region_id} ) {
+                $distintos_ref_id->{$region_id} = {};
+                push @$distintos, $distintos_ref_id->{$region_id};
+            }
+
+            $distintos_ref_id->{$region_id}{polygon_path} =
+              $polys->{$region_id};
+            $distintos_ref_id->{$region_id}{$_} = $regs->{$region_id}{$_}
+              for keys %{ $regs->{$region_id} };
+
+        }
+
+        my @nao_definidos = grep { !defined $_->{num} } @$distintos;
+        for (@nao_definidos) {
+            $_->{i}   = 5;       # amarelo/sem valor
+            $_->{num} = 'n/d';
+        }
+        push @$definidos, @nao_definidos;
+    }
+}
+
+$c->stash->{analise_comparativa} = $out;
+
+if (   $c->stash->{current_part}
+    && $c->stash->{current_part} eq 'analise_comparativa' )
+{
+    $c->stash(
+        template        => 'parts/analise_comparativa.tt',
+        without_wrapper => 1
+    );
+}
 }
 
 sub cidade_regiao_indicator_render : Chained('cidade_regiao_indicator')
