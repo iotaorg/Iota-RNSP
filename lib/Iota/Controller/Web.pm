@@ -154,15 +154,15 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
             active => 1,
         },
         {
-            select       => [ \'md5( array_agg(me.user_id::text || me.network_id::text || "user".city_id::text )::text)' ],
+            select       => [ \'md5( array_agg(me.user_id::text || me.network_id::text || "user".city_id::text || network_users.network_id )::text)' ],
             as           => ['md5'],
-            order_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id' ],
-            group_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id' ],
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            order_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id', 'network_users.network_id' ],
+            group_by     => [ 'me.network_id', 'me.user_id', \'"user".city_id', 'network_users.network_id' ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            join => 'network_users',
         }
     )->next;
     $cache_key = $cache_key->{md5};
-
     $cache_key = "institute_load-$cache_key";
 
     my $schema=$c->model('DB')->schema;
