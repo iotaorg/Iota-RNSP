@@ -222,7 +222,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
         $stash->{current_admins} =[ grep { !$_->city_id } @users];
 
-        $redis->set($cache_key, nfreeze($stash));
+        #$redis->set($cache_key, nfreeze($stash));
     }
 
     my @current_admins = @{ $stash->{current_admins} };
