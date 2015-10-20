@@ -148,7 +148,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         );
     }
 =cut
-
+=pod
     my $cache_key = $c->stash->{network}->users->search(
         {
             active => 1,
@@ -167,11 +167,11 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     my $schema=$c->model('DB')->schema;
     my $stash = $redis->get($cache_key);
-
-    if ($stash){
-        $stash = thaw($stash);
-        $_->result_source->schema( $schema ) for @{ $stash->{current_all_users} };
-        $_->result_source->schema( $schema ) for @{ $stash->{current_admins} };
+=cut
+    if (0){
+        #$stash = thaw($stash);
+        #$_->result_source->schema( $schema ) for @{ $stash->{current_all_users} };
+        #$_->result_source->schema( $schema ) for @{ $stash->{current_admins} };
     }else {
 
         my @users = $c->stash->{network}->users->search(
