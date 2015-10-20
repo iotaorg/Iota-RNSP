@@ -45,9 +45,7 @@ sub index : Path : Args(0) {
     $c->forward( 'build_indicators_menu', [1] );
     $c->forward('/load_status_msgs');
 
-    $c->forward('/topic_network');
-    use DDP;
-    p $c->stash->{lol};
+    #$c->forward('/topic_network');
 }
 
 sub root : Chained('/') PathPart('') CaptureArgs(0) {

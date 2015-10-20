@@ -43,7 +43,7 @@
 
         </div>
     </div>
-	[% IF network_data.network_id.0 == 1 %]
+	[% IF topic_indicators.size > 0%]
 	<div class="row" id="premio">
 		<div class="col-md-12">
             <h2>[%l('Prêmio - Indicadores')%]</h2>
