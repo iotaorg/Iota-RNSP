@@ -166,8 +166,8 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     $cache_key = "institute_load-$cache_key";
 
     my $schema=$c->model('DB')->schema;
-    my $stash = $redis->get($cache_key);
 =cut
+    my $stash;
     if (0){
         #$stash = thaw($stash);
         #$_->result_source->schema( $schema ) for @{ $stash->{current_all_users} };
