@@ -74,13 +74,13 @@
 					</a>
 				</div>
 			</div>
-			<div class="period">
+		<!--	<div class="period">
 				<div id="date-ruler">
 					[%FOREACH d IN data_periods%]
 					<a href="[%d.4%]" class="item [%IF d.0 == choosen_periods.0%]active[%END%] ">[% date4period(d.0, "yearly")%]-[%date4period(d.1, "yearly")%]</a>
 					[%END%]
 				</div>
-			</div>
+			</div>-->
 
         [% ELSE %]
 			<div class="row" >

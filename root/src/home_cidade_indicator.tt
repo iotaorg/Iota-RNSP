@@ -65,9 +65,18 @@
             <div class="span12">
                 <div id="cidades-indicadores">
                     <h5>[%l('Indicadores separados por eixos')%] [% IF city.regions.size>0 %]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao">[%l('visualizar indicadores por região')%]</a></small>[% END %]</h5>
+					<div class="period">
+						<div id="date-ruler">
+							[%FOREACH d IN data_periods%]
+							<a href="[%d.4%]" class="item [%IF d.0 == choosen_periods.0%]active[%END%] ">[% date4period(d.0, 'yearly')%]-[%date4period(d.1, 'yearly')%]</a>
+							[%END%]
+						</div>
+					</div>
+
                     <div class="table">
                         <div class="loading"><p>[%l('Carregando...')%]</p></div>
                     </div>
+
                 </div>
                 [%IF institute.hide_empty_indicators%]
                 <label class="checkbox">

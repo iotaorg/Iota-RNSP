@@ -183,9 +183,8 @@ $(document).ready(function () {
 
     function loadIndicadoresData() {
         var param = typeof regionID == "undefined" ? '' : '?region_id=' + regionID;
-
-		
 		if (param){
+			if (location.search){
 			var date = location.search.split('valid_from_desc=')[1];
 			var date_parser = date.split("-"); 
 
@@ -194,6 +193,7 @@ $(document).ready(function () {
 			date = date_parser.join("-"); 
 
 			param = param + '&' + 'from_date='+date;
+			}
 			
 		}else{
 
