@@ -577,7 +577,6 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
     $c->stash->{cidade} = $cidade;
 
     $c->forward('stash_tela_cidade');
-    warn 'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH';
     $c->stash->{title} = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 
     $self->load_region_names($c) if $c->stash->{user}{regions_enabled};

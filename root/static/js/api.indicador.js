@@ -392,7 +392,7 @@ $(document).ready(function () {
                                 valoresxx = vv.variations_values;
                             }
                         });
-
+						
 
                         if (hvariado.length) {
 
@@ -422,6 +422,7 @@ $(document).ready(function () {
                         if (format_value.toFixed(2) === 0) {
                             format_string = "#,##0.###";
                         }
+
                         history_table += "<td class='formula_valor'>$$valor</td>".render({
                             valor: $.formatNumberCustom(valor, {
                                 format: format_string,
@@ -433,7 +434,7 @@ $(document).ready(function () {
 
                         if (historico_data.rows[index].formula_value != null && historico_data.rows[index].formula_value != "-") {
                             var format_value = parseFloat(historico_data.rows[index].formula_value);
-                            var format_string = "#,##0.##";
+                            var format_string = "#,##0.####";
                             if (format_value.toFixed(2) === 0) {
                                 format_string = "#,##0.###";
                             }
