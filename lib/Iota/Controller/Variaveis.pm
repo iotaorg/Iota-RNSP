@@ -43,10 +43,16 @@ sub _download {
     my $network = $c->stash->{network};
 
     my $file = $c->get_lang() . 'variaveis.' . $network->name_url;
-    $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
+    $file .= '_'
+      . $c->stash->{pais} . '_'
+      . $c->stash->{estado} . '_'
+      . $c->stash->{cidade}
       if $c->stash->{cidade};
+    $c->stash->{all_region} = 1, delete $c->stash->{region}
+      if $c->stash->{region} eq 'all';
     $file .= '_' . $c->stash->{region}->name_url
       if exists $c->stash->{region} && $c->stash->{region};
+
     $file .= '_' . $c->stash->{indicator}{name_url}
       if $c->stash->{indicator};
     $file .= '.' . $c->stash->{type};
@@ -82,9 +88,11 @@ sub _download {
         ]
     );
 
-    my $data_rs =
-      $c->model('DB')->resultset( exists $c->stash->{region} ? 'ViewDownloadVariablesRegion' : 'DownloadVariable' )
-      ->search(
+    my $data_rs = $c->model('DB')->resultset(
+        ( exists $c->stash->{region} || exists $c->stash->{all_region} )
+        ? 'ViewDownloadVariablesRegion'
+        : 'DownloadVariable'
+      )->search(
         { institute_id => $c->stash->{institute}->id },
         {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -116,7 +124,8 @@ sub _download {
             { join => 'network_users' }
         )->next;
 
-        $data_rs = $data_rs->search( { user_id => $user ? $user->{id} : -9012345 } );
+        $data_rs =
+          $data_rs->search( { user_id => $user ? $user->{id} : -9012345 } );
     }
 
     if ( exists $c->stash->{indicator} ) {
@@ -126,14 +135,16 @@ sub _download {
                     'in' => [
                         (
                             map { $_->variable_id }
-                              $c->model('DB::IndicatorVariable')
-                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
+                              $c->model('DB::IndicatorVariable')->search(
+                                { indicator_id => $c->stash->{indicator}{id} }
+                              )->all
                         ),
 
                         (
                             map { -( $_->id ) }
-                              $c->model('DB::IndicatorVariation')
-                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
+                              $c->model('DB::IndicatorVariation')->search(
+                                { indicator_id => $c->stash->{indicator}{id} }
+                              )->all
                         )
                     ]
                 }
@@ -142,7 +153,13 @@ sub _download {
     }
 
     if ( exists $c->stash->{region} && $c->stash->{region} ) {
+
         $data_rs = $data_rs->search( { region_id => $c->stash->{region}->id } );
+    }
+    else {
+        if ( exists $c->stash->{all_region} ) {
+            $data_rs = $data_rs->search( { region_id => { '!=', undef } } );
+        }
     }
 
     while ( my $data = $data_rs->next ) {
@@ -168,8 +185,10 @@ sub _download {
             $self->_loc_str( $c, $data->{source} ),
             $self->_loc_str( $c, $data->{region_name} ),
 
-            $self->_loc_str( $c, $data->{active_value}         ? 'sim' : 'não' ),
-            $self->_loc_str( $c, $data->{generated_by_compute} ? 'sim' : 'não' ),
+            $self->_loc_str( $c, $data->{active_value} ? 'sim' : 'não' ),
+            $self->_loc_str(
+                $c, $data->{generated_by_compute} ? 'sim' : 'não'
+            ),
 
         );
         push @lines, \@this_row;
@@ -309,7 +328,8 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
+    $c->response->headers->header(
+        'content-disposition' => "attachment;filename=" . basename($path) );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
@@ -317,7 +337,8 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_variables : Chained('/institute_load') PathPart('download-variables') Args(0) ActionClass('REST') {
+sub download_variables : Chained('/institute_load')
+  PathPart('download-variables') Args(0) ActionClass('REST') {
 
 }
 
@@ -326,15 +347,18 @@ sub download_variables_GET {
     my $params = $c->req->params;
     my @objs;
 
-    my $data_rs =
-      $c->model( exists $params->{region_id} ? 'DB::ViewDownloadVariablesRegion' : 'DB::DownloadVariable' )
-      ->search( { institute_id => $c->stash->{institute}->id },
+    my $data_rs = $c->model(
+        exists $params->{region_id}
+        ? 'DB::ViewDownloadVariablesRegion'
+        : 'DB::DownloadVariable'
+      )->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     if ( exists $params->{region_id} ) {
         my @ids = split /,/, $params->{region_id};
 
-        $self->status_bad_request( $c, message => 'invalid region_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid region_id' ),
+          $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
         $data_rs = $data_rs->search(
@@ -347,7 +371,8 @@ sub download_variables_GET {
     if ( exists $params->{user_id} ) {
         my @ids = split /,/, $params->{user_id};
 
-        $self->status_bad_request( $c, message => 'invalid user_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid user_id' ),
+          $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
         $data_rs = $data_rs->search(
@@ -360,7 +385,8 @@ sub download_variables_GET {
     if ( exists $params->{city_id} ) {
         my @ids = split /,/, $params->{city_id};
 
-        $self->status_bad_request( $c, message => 'invalid city_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid city_id' ),
+          $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
         $data_rs = $data_rs->search(
@@ -373,7 +399,8 @@ sub download_variables_GET {
     if ( exists $params->{variable_id} ) {
         my @ids = split /,/, $params->{variable_id};
 
-        $self->status_bad_request( $c, message => 'invalid variable_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid variable_id' ),
+          $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
         $data_rs = $data_rs->search(
@@ -386,7 +413,8 @@ sub download_variables_GET {
     if ( exists $params->{valid_from} ) {
         my @dates = split /,/, $params->{valid_from};
 
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ),
+          $c->detach
           unless Iota::Controller::Dados::date_validation( $self, @dates );
 
         $data_rs = $data_rs->search(
@@ -398,8 +426,10 @@ sub download_variables_GET {
 
     if ( exists $params->{valid_from_begin} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
-          unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_begin} );
+        $self->status_bad_request( $c, message => 'invalid date format' ),
+          $c->detach
+          unless Iota::Controller::Dados::date_validation( $self,
+            $params->{valid_from_begin} );
 
         $data_rs = $data_rs->search(
             {
@@ -410,8 +440,10 @@ sub download_variables_GET {
 
     if ( exists $params->{valid_from_end} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
-          unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_end} );
+        $self->status_bad_request( $c, message => 'invalid date format' ),
+          $c->detach
+          unless Iota::Controller::Dados::date_validation( $self,
+            $params->{valid_from_end} );
 
         $data_rs = $data_rs->search(
             {
@@ -434,7 +466,9 @@ sub download_variables_GET {
 ##################################################
 
 for my $chain (
-    qw/institute_load network_cidade cidade_regiao network_indicator home_network_indicator cidade_regiao_indicator/) {
+    qw/institute_load network_cidade cidade_regiao network_indicator home_network_indicator cidade_regiao_indicator/
+  )
+{
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('variaveis.$tipo') : CaptureArgs(0) {
@@ -459,5 +493,32 @@ for my $chain (
         " );
     }
 }
-1;
+for my $chain (
+    qw/institute_load network_cidade network_indicator home_network_indicator/)
+{
+    for my $tipo (qw/csv json xls xml/) {
+        eval( "
+            sub chain_${chain}_${tipo}_td : Chained('/$chain') : PathPart('todas-regioes/variaveis.$tipo') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo';
+                \$c->stash->{region} = 'all';
+            }
 
+            sub chain_${chain}_${tipo}_check_td : Chained('/$chain') : PathPart('todas-regioes/variaveis.$tipo.checksum') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo.check';
+            }
+
+            sub render_${chain}_${tipo}_td : Chained('chain_${chain}_${tipo}_td') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = \@_;
+                \$self->_download(\$c);
+            }
+
+            sub render_${chain}_${tipo}_check_td : Chained('chain_${chain}_${tipo}_check_td') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = @_;
+                \$self->_download(\$c);
+            }
+        " );
+    }
+}
+1;

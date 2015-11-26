@@ -56,16 +56,25 @@ sub _loc_str {
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
+    my $data_rs =
+      $c->model('DB::DownloadData')
+      ->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     my $network = $c->stash->{network};
-
-    my $file = $c->get_lang() . '_' . $network->name_url;
-    $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
+    my $file    = $c->get_lang() . '_' . $network->name_url;
+    $file .= '_'
+      . $c->stash->{pais} . '_'
+      . $c->stash->{estado} . '_'
+      . $c->stash->{cidade}
       if $c->stash->{cidade};
+
+    $c->stash->{all_region} = 1, delete $c->stash->{region}
+      if $c->stash->{region} eq "all";
+
     $file .= '_' . $c->stash->{region}->name_url
       if $c->stash->{region};
+
     $file .= '_' . $c->stash->{indicator}{name_url}
       if $c->stash->{indicator};
     $file .= '.' . $c->stash->{type};
@@ -96,14 +105,20 @@ sub _download {
     }
 
     if ( exists $c->stash->{indicator} ) {
-        $data_rs = $data_rs->search( { indicator_id => $c->stash->{indicator}{id} } );
+        $data_rs =
+          $data_rs->search( { indicator_id => $c->stash->{indicator}{id} } );
     }
 
     if ( exists $c->stash->{region} ) {
         $data_rs = $data_rs->search( { region_id => $c->stash->{region}->id } );
     }
     else {
-        $data_rs = $data_rs->search( { region_id => undef } );
+        if ( exists $c->stash->{all_region} ) {
+            $data_rs = $data_rs->search( { region_id => { "!=", undef } } );
+        }
+        else {
+            $data_rs = $data_rs->search( { region_id => undef } );
+        }
     }
 
     my @lines = (
@@ -160,7 +175,10 @@ sub _download {
             $self->_loc_str( $c, $data->{technical_information} ),
             $data->{region_name},
             ref $data->{sources} eq 'ARRAY'
-            ? ( join "\n", map { $self->_loc_str( $c, $_ ) } @{ $data->{sources} } )
+            ? (
+                join "\n",
+                map { $self->_loc_str( $c, $_ ) } @{ $data->{sources} }
+              )
             : '',
             $data->{formula},
         );
@@ -192,7 +210,8 @@ sub _period_pt {
 
 sub _add_variables {
     my ( $self, $c, $hash, $arr ) = @_;
-    my @rows = $c->model('DB')->resultset('Variable')->as_hashref->search( undef, { order_by => 'name' } )->all;
+    my @rows = $c->model('DB')->resultset('Variable')
+      ->as_hashref->search( undef, { order_by => 'name' } )->all;
     my $i = scalar @$arr;
     foreach my $var (@rows) {
         $hash->{ $var->{id} } = $i++;
@@ -315,7 +334,8 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
+    $c->response->headers->header(
+        'content-disposition' => "attachment;filename=" . basename($path) );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
@@ -323,7 +343,8 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_indicators : Chained('/institute_load') PathPart('download-indicators') Args(0) ActionClass('REST') {
+sub download_indicators : Chained('/institute_load')
+  PathPart('download-indicators') Args(0) ActionClass('REST') {
 
 }
 
@@ -332,13 +353,16 @@ sub download_indicators_GET {
     my $params = $c->req->params;
     my @objs;
 
-    my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
+    my $data_rs =
+      $c->model('DB::DownloadData')
+      ->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     if ( exists $params->{region_id} ) {
         my @ids = split /,/, $params->{region_id};
 
-        $self->status_bad_request( $c, message => 'invalid region_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid region_id' ),
+          $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -358,7 +382,8 @@ sub download_indicators_GET {
     if ( exists $params->{user_id} ) {
         my @ids = split /,/, $params->{user_id};
 
-        $self->status_bad_request( $c, message => 'invalid user_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid user_id' ),
+          $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -371,7 +396,8 @@ sub download_indicators_GET {
     if ( exists $params->{city_id} ) {
         my @ids = split /,/, $params->{city_id};
 
-        $self->status_bad_request( $c, message => 'invalid city_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid city_id' ),
+          $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -384,7 +410,8 @@ sub download_indicators_GET {
     if ( exists $params->{indicator_id} ) {
         my @ids = split /,/, $params->{indicator_id};
 
-        $self->status_bad_request( $c, message => 'invalid indicator_id' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid indicator_id' ),
+          $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -397,7 +424,8 @@ sub download_indicators_GET {
     if ( exists $params->{valid_from} ) {
         my @dates = split /,/, $params->{valid_from};
 
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ),
+          $c->detach
           unless $self->date_validation(@dates);
 
         $data_rs = $data_rs->search(
@@ -409,7 +437,8 @@ sub download_indicators_GET {
 
     if ( exists $params->{valid_from_begin} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ),
+          $c->detach
           unless $self->date_validation( $params->{valid_from_begin} );
 
         $data_rs = $data_rs->search(
@@ -421,7 +450,8 @@ sub download_indicators_GET {
 
     if ( exists $params->{valid_from_end} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ),
+          $c->detach
           unless $self->date_validation( $params->{valid_from_end} );
 
         $data_rs = $data_rs->search(
@@ -434,12 +464,12 @@ sub download_indicators_GET {
     }
 
     while ( my $row = $data_rs->next ) {
-        $row->{period}      = $self->_period_pt( $row->{period} );
-        $row->{valid_from}  = $self->ymd2dmy( $row->{valid_from} );
+        $row->{period}     = $self->_period_pt( $row->{period} );
+        $row->{valid_from} = $self->ymd2dmy( $row->{valid_from} );
 
-        my $q = encode('UTF-8', $row->{values_used});
+        my $q = encode( 'UTF-8', $row->{values_used} );
 
-        $row->{values_used} = eval { decode_json( $q ) };
+        $row->{values_used} = eval { decode_json($q) };
 
         push @objs, $row;
     }
@@ -498,7 +528,9 @@ for my $chain (qw/institute_load network_cidade cidade_regiao/) {
 
 #################
 
-for my $chain (qw/network_indicator home_network_indicator cidade_regiao_indicator/) {
+for my $chain (
+    qw/network_indicator home_network_indicator cidade_regiao_indicator/)
+{
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('dados.$tipo') : CaptureArgs(0) {
@@ -524,5 +556,86 @@ for my $chain (qw/network_indicator home_network_indicator cidade_regiao_indicat
     }
 }
 
-1;
+for my $chain (qw/institute_load network_cidade/) {
+    for my $tipo (qw/csv json xls xml/) {
+        eval( "
+            sub chain_${chain}_${tipo}_all : Chained('/$chain') : PathPart('todas-regioes/indicadores.$tipo') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo';
+                \$c->stash->{region} = 'all';
+            }
 
+            sub chain_${chain}_${tipo}_check_all : Chained('/$chain') : PathPart('todas-regioes/indicadores.$tipo.checksum') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo.check';
+            }
+
+            sub render_${chain}_${tipo}_all : Chained('chain_${chain}_${tipo}_all') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = \@_;
+                \$self->_download(\$c);
+            }
+
+            sub render_${chain}_${tipo}_check_all : Chained('chain_${chain}_${tipo}_check_all') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = @_;
+                \$self->_download(\$c);
+            }
+        " );
+    }
+}
+
+for my $chain (qw/network_indicator home_network_indicator/) {
+    for my $tipo (qw/csv json xls xml/) {
+        eval( "
+            sub chain_${chain}_${tipo}_var : Chained('/$chain') : PathPart('todas-regioes/dados.$tipo') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo';
+                \$c->stash->{region} = 'all';
+            }
+
+            sub chain_${chain}_${tipo}_check_var : Chained('/$chain') : PathPart('todas-regioes/dados.$tipo.checksum') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo.check';
+            }
+
+            sub render_${chain}_${tipo}_var : Chained('chain_${chain}_${tipo}_var') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = \@_;
+                \$self->_download(\$c);
+            }
+
+            sub render_${chain}_${tipo}_check_var : Chained('chain_${chain}_${tipo}_check_var') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = @_;
+                \$self->_download(\$c);
+            }
+        " );
+    }
+}
+
+for my $chain (
+    qw/network_indicator home_network_indicator cidade_regiao_indicator_todas/)
+{
+    for my $tipo (qw/csv json xls xml/) {
+        eval( "
+            sub chain_${chain}_${tipo}_ind : Chained('/$chain') : PathPart('dados.$tipo') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo';
+                \$c->stash->{region} = 'all';
+            }
+
+            sub chain_${chain}_${tipo}_check_ind : Chained('/$chain') : PathPart('dados.$tipo.checksum') : CaptureArgs(0) {
+                my ( \$self, \$c ) = \@_;
+                \$c->stash->{type} = '$tipo.check';
+            }
+
+            sub render_${chain}_${tipo}_ind : Chained('chain_${chain}_${tipo}_ind') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = \@_;
+                \$self->_download(\$c);
+            }
+
+            sub render_${chain}_${tipo}_check_ind : Chained('chain_${chain}_${tipo}_check_ind') : PathPart('') : Args(0) {
+                my ( \$self, \$c ) = @_;
+                \$self->_download(\$c);
+            }
+        " );
+    }
+}
+1;

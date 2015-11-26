@@ -116,6 +116,7 @@
         <label>[%l('Região')%]</label>
         <select name="region" class="form-control">
             <option value="" selected="selected">[%l('Nenhuma região, apenas a cidade')%]</option>
+            <option value="all">[%l('Todas')%]</option>
         </select>
     </div>
 </div>

@@ -43,13 +43,16 @@ var md = function () {
                 url = url + '/' + cidade;
             }
             if ((regiao == '') == false) {
-                url = url + '/regiao/' + regiao;
+				if (regiao == 'all'){
+                	url = url + '/todas-regioes';
+				}else{
+                	url = url + '/regiao/' + regiao;
+				}
             }
             if ((indi == '') == false) {
                 url = url + '/' + indi;
             }
             base_uri = 'http://' + window.location.host + url;
-
             url = base_uri + '/' + arquivo;
             $('#id_link').attr('href', url);
             $url.val(url);
@@ -77,7 +80,15 @@ var md = function () {
                             });
                         }
                     });
-                    $region.find('option').not('[value=""]').remove();
+					
+					
+                    $region.find('option').each(function(){
+						console.log($(this).val());
+						if ($(this).val() != "" && $(this).val() != "all"){
+							$(this).remove();
+						}
+				 //.not(  '[value=""]' | '[value="all"]' ).remove();
+					});
                     $region.append($(options));
                     if (options == '')
                         $region.parents('.regiao:first').addClass('hide');
