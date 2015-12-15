@@ -36,6 +36,7 @@ sub verifiers_specs {
                 results               => { required => 0, type => 'Str' },
                 contatcts             => { required => 0, type => 'Str' },
                 sources               => { required => 0, type => 'Str' },
+                repercussion          => { required => 0, type => 'Str' },
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
 
@@ -55,6 +56,7 @@ sub verifiers_specs {
                 results               => { required => 0, type => 'Str' },
                 contatcts             => { required => 0, type => 'Str' },
                 sources               => { required => 0, type => 'Str' },
+                repercussion          => { required => 0, type => 'Str' },
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
 
@@ -80,27 +82,37 @@ sub action_specs {
 
             $var->discard_changes;
 
-            if (exists $ENV{SEND_BEST_PRATICE_EMAIL_TO} &&
-                $ENV{SEND_BEST_PRATICE_EMAIL_TO}){
+            if ( exists $ENV{SEND_BEST_PRATICE_EMAIL_TO}
+                && $ENV{SEND_BEST_PRATICE_EMAIL_TO} )
+            {
                 my $user = $var->user;
 
                 my $net = $user->networks->first;
 
-                my $queue = $self->result_source->schema->resultset('EmailsQueue');
+                my $queue =
+                  $self->result_source->schema->resultset('EmailsQueue');
                 $queue->create(
                     {
                         to        => $ENV{SEND_BEST_PRATICE_EMAIL_TO},
                         subject   => 'Nova boa prática criada [% name %]',
                         template  => 'new_best_pratice.tt',
-                        variables => encode_json( {
-                            (map { $_ => $var->$_ } qw / id name name_url / ),
+                        variables => encode_json(
+                            {
+                                (
+                                    map { $_ => $var->$_ }
+                                      qw / id name name_url /
+                                ),
 
-                            network_domain => $net ? $net->domain_name : '',
+                                network_domain => $net ? $net->domain_name : '',
 
-                            city_url => (join '/', $user->city->pais, $user->city->uf, $user->city->name_uri),
+                                city_url => (
+                                    join '/',        $user->city->pais,
+                                    $user->city->uf, $user->city->name_uri
+                                ),
 
-                        }),
-                        sent      => 0
+                            }
+                        ),
+                        sent => 0
                     }
                 );
             }
@@ -113,7 +125,8 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            $values{name_url} = $text2uri->translate( $values{name} ) if exists $values{name} && $values{name};
+            $values{name_url} = $text2uri->translate( $values{name} )
+              if exists $values{name} && $values{name};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
@@ -124,4 +137,3 @@ sub action_specs {
 }
 
 1;
-

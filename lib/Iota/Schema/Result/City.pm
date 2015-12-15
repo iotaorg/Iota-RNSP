@@ -84,41 +84,49 @@ __PACKAGE__->table("city");
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 telefone_prefeitura
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 endereco_prefeitura
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 bairro_prefeitura
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 cep_prefeitura
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 email_prefeitura
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 nome_responsavel_prefeitura
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 summary
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 state_id
 
@@ -170,21 +178,53 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "name_uri",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "telefone_prefeitura",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "endereco_prefeitura",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "bairro_prefeitura",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "cep_prefeitura",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "email_prefeitura",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "nome_responsavel_prefeitura",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "summary",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "state_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "country_id",
@@ -311,8 +351,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:511t0Ihp3UujvkqYTt2o0Q
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S/jE7jh/kawcBUiI64RwIQ
 
 __PACKAGE__->has_many( "current_users", "Iota::Schema::Result::CityCurrentUser", { "foreign.city_id" => "self.id" }, );
 

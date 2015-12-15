@@ -57,16 +57,19 @@ __PACKAGE__->table("user_file");
   data_type: 'text'
   default_value: 'perfil'
   is_nullable: 0
+  original: {data_type => "varchar"}
 
 =head2 public_url
 
   data_type: 'text'
   is_nullable: 0
+  original: {data_type => "varchar"}
 
 =head2 private_path
 
   data_type: 'text'
   is_nullable: 0
+  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -85,11 +88,13 @@ __PACKAGE__->table("user_file");
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 public_name
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =cut
 
@@ -104,11 +109,24 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "class_name",
-  { data_type => "text", default_value => "perfil", is_nullable => 0 },
+  {
+    data_type     => "text",
+    default_value => "perfil",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
   "public_url",
-  { data_type => "text", is_nullable => 0 },
+  {
+    data_type   => "text",
+    is_nullable => 0,
+    original    => { data_type => "varchar" },
+  },
   "private_path",
-  { data_type => "text", is_nullable => 0 },
+  {
+    data_type   => "text",
+    is_nullable => 0,
+    original    => { data_type => "varchar" },
+  },
   "created_at",
   {
     data_type     => "timestamp",
@@ -119,9 +137,17 @@ __PACKAGE__->add_columns(
   "hide_listing",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "description",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "public_name",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -150,12 +176,12 @@ __PACKAGE__->belongs_to(
   "user",
   "Iota::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1VWwmLQj3O3vBGBK1fEujw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iCFLGGhefsG2H5gydHW+pQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

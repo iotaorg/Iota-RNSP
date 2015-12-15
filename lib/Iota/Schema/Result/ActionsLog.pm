@@ -41,7 +41,7 @@ __PACKAGE__->table("actions_log");
 
 =head2 id
 
-  data_type: 'integer'
+  data_type: 'bigint'
   is_auto_increment: 1
   is_nullable: 0
   sequence: 'actions_log_id_seq'
@@ -57,11 +57,11 @@ __PACKAGE__->table("actions_log");
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 user_id
 
   data_type: 'integer'
-  is_foreign_key: 1
   is_nullable: 1
 
 =head2 message
@@ -84,7 +84,7 @@ __PACKAGE__->table("actions_log");
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type         => "integer",
+    data_type         => "bigint",
     is_auto_increment => 1,
     is_nullable       => 0,
     sequence          => "actions_log_id_seq",
@@ -97,9 +97,13 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "url",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "user_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_nullable => 1 },
   "message",
   { data_type => "text", is_nullable => 1 },
   "ip",
@@ -120,31 +124,9 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
 
-=head2 user
-
-Type: belongs_to
-
-Related object: L<Iota::Schema::Result::User>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "user",
-  "Iota::Schema::Result::User",
-  { id => "user_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TV8fUxjU6+avUg/cZkRgDg
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IDfi88QnaWKumeoP651ORg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

@@ -98,10 +98,20 @@ __PACKAGE__->table("variable");
   default_value: false
   is_nullable: 1
 
+=head2 measurement_unit
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =head2 measurement_unit_id
 
   data_type: 'integer'
-  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 generated_by_compute
+
+  data_type: 'boolean'
   is_nullable: 1
 
 =head2 user_type
@@ -174,8 +184,16 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "is_basic",
   { data_type => "boolean", default_value => \"false", is_nullable => 1 },
+  "measurement_unit",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "measurement_unit_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_nullable => 1 },
+  "generated_by_compute",
+  { data_type => "boolean", is_nullable => 1 },
   "user_type",
   {
     data_type   => "text",
@@ -234,26 +252,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 measurement_unit
-
-Type: belongs_to
-
-Related object: L<Iota::Schema::Result::MeasurementUnit>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "measurement_unit",
-  "Iota::Schema::Result::MeasurementUnit",
-  { id => "measurement_unit_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
-);
-
 =head2 region_variable_values
 
 Type: has_many
@@ -281,7 +279,7 @@ __PACKAGE__->belongs_to(
   "user",
   "Iota::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 user_variable_configs
@@ -330,8 +328,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Em/coAPo6U6uSElUjMIZ4w
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:BZKZMtidGxz4bNMvAOwQHw
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

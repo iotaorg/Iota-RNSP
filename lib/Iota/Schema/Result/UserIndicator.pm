@@ -61,17 +61,19 @@ __PACKAGE__->table("user_indicator");
 =head2 valid_from
 
   data_type: 'date'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 goal
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 justification_of_missing_field
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -101,11 +103,19 @@ __PACKAGE__->add_columns(
   "indicator_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "valid_from",
-  { data_type => "date", is_nullable => 0 },
+  { data_type => "date", is_nullable => 1 },
   "goal",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "justification_of_missing_field",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "created_at",
   {
     data_type     => "timestamp",
@@ -143,7 +153,7 @@ __PACKAGE__->belongs_to(
   "indicator",
   "Iota::Schema::Result::Indicator",
   { id => "indicator_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 region
@@ -178,12 +188,12 @@ __PACKAGE__->belongs_to(
   "user",
   "Iota::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vJanbd1WO8smENRgPe0Mcw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:fnI3RXzJGKi/B+SKEw0O/g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

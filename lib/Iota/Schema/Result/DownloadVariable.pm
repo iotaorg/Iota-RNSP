@@ -86,6 +86,7 @@ __PACKAGE__->table("download_variable");
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 name
 
@@ -106,11 +107,13 @@ __PACKAGE__->table("download_variable");
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 source
 
   data_type: 'text'
   is_nullable: 1
+  original: {data_type => "varchar"}
 
 =head2 user_id
 
@@ -158,7 +161,11 @@ __PACKAGE__->add_columns(
   "is_basic",
   { data_type => "boolean", is_nullable => 1 },
   "measurement_unit_name",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "name",
   { data_type => "text", is_nullable => 1 },
   "valid_from",
@@ -166,9 +173,17 @@ __PACKAGE__->add_columns(
   "value",
   { data_type => "text", is_nullable => 1 },
   "observations",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "source",
-  { data_type => "text", is_nullable => 1 },
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
   "user_id",
   { data_type => "integer", is_nullable => 1 },
   "institute_id",
@@ -178,8 +193,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5hAzSjZBEj6hbNfXt/dJoA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/ddtVODNTszxpRbfG6DBFg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

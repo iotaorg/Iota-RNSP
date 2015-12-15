@@ -41,7 +41,7 @@ __PACKAGE__->table("indicator_variables_variations_value");
 
 =head2 id
 
-  data_type: 'integer'
+  data_type: 'bigint'
   is_auto_increment: 1
   is_nullable: 0
   sequence: 'indicator_variables_variations_value_id_seq'
@@ -71,7 +71,7 @@ __PACKAGE__->table("indicator_variables_variations_value");
 =head2 valid_from
 
   data_type: 'date'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 valid_until
 
@@ -118,7 +118,7 @@ __PACKAGE__->table("indicator_variables_variations_value");
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type         => "integer",
+    data_type         => "bigint",
     is_auto_increment => 1,
     is_nullable       => 0,
     sequence          => "indicator_variables_variations_value_id_seq",
@@ -132,7 +132,7 @@ __PACKAGE__->add_columns(
   "value_of_date",
   { data_type => "timestamp", is_nullable => 1 },
   "valid_from",
-  { data_type => "date", is_nullable => 0 },
+  { data_type => "date", is_nullable => 1 },
   "valid_until",
   { data_type => "date", is_nullable => 1 },
   "user_id",
@@ -219,8 +219,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-07-27 15:15:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S/bcgpBqJ79/ozZQVEyuOQ
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X2+IX7zjsfxPuT7T1ZbLkg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

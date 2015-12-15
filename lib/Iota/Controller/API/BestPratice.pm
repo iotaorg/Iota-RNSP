@@ -13,7 +13,8 @@ sub base : Chained('/api/base') : PathPart('best_pratice') : CaptureArgs(0) {
     $c->stash->{collection} = $c->model('DB::UserBestPratice');
 
     if ( $c->check_any_user_role(qw(user)) ) {
-        $c->stash->{collection} = $c->stash->{collection}->search( { 'me.user_id' => $c->user->id } );
+        $c->stash->{collection} =
+          $c->stash->{collection}->search( { 'me.user_id' => $c->user->id } );
     }
 
 }
@@ -23,7 +24,8 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     $self->status_bad_request( $c, message => 'invalid.argument' ), $c->detach
       unless $id =~ /^[0-9]+$/;
 
-    $c->stash->{object} = $c->stash->{collection}->search_rs( { 'me.id' => $id } );
+    $c->stash->{object} =
+      $c->stash->{collection}->search_rs( { 'me.id' => $id } );
 
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 
@@ -33,14 +35,18 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     }
 }
 
-sub best_pratice : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
+sub best_pratice : Chained('object') : PathPart('') : Args(0) :
+  ActionClass('REST') {
     my ( $self, $c ) = @_;
 
 }
 
 sub best_pratice_GET {
     my ( $self, $c ) = @_;
-    my $object_ref = $c->stash->{object}->search( undef, { prefetch => 'user_best_pratice_axes' } )->as_hashref->next;
+    my $object_ref =
+      $c->stash->{object}
+      ->search( undef, { prefetch => 'user_best_pratice_axes' } )
+      ->as_hashref->next;
 
     $self->status_ok(
         $c,
@@ -49,11 +55,13 @@ sub best_pratice_GET {
                 map { $_ => $object_ref->{$_} }
                   qw(
                   id user_id axis_id name description methodology goals
-                  schedule results institutions_involved contatcts sources
+                  schedule results institutions_involved contatcts sources repercussion
                   tags)
             ),
-            axis =>
-              [ map { +{ axis_id => $_->{axis_id}, id => $_->{id} } } @{ $object_ref->{user_best_pratice_axes} } ]
+            axis => [
+                map { +{ axis_id => $_->{axis_id}, id => $_->{id} } }
+                  @{ $object_ref->{user_best_pratice_axes} }
+              ]
 
         }
     );
@@ -65,18 +73,22 @@ sub best_pratice_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin user));
 
-    $c->req->params->{best_pratice}{update}{id} = $c->stash->{object}->first->id;
+    $c->req->params->{best_pratice}{update}{id} =
+      $c->stash->{object}->first->id;
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
+      $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('best_pratice.update');
 
     $self->status_accepted(
         $c,
-        location => $c->uri_for( $self->action_for('best_pratice'), [ $obj->id ] )->as_string,
+        location =>
+          $c->uri_for( $self->action_for('best_pratice'), [ $obj->id ] )
+          ->as_string,
         entity => { id => $obj->id }
       ),
       $c->detach
@@ -145,10 +157,11 @@ sub list_GET {
                 map { $_ => $obj->{$_} }
                   qw(id
                   user_id axis_id name description methodology goals
-                  schedule results institutions_involved contatcts sources
+                  schedule results institutions_involved contatcts sources repercussion
                   )
             ),
-            url => $c->uri_for_action( $self->action_for('best_pratice'), [ $obj->{id} ] )->as_string,
+            url => $c->uri_for_action( $self->action_for('best_pratice'),
+                [ $obj->{id} ] )->as_string,
         };
     }
 
@@ -167,17 +180,21 @@ sub list_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin user));
 
-    $c->req->params->{best_pratice}{create}{user_id} = $c->req->params->{user_id} || $c->user->id;
+    $c->req->params->{best_pratice}{create}{user_id} =
+      $c->req->params->{user_id} || $c->user->id;
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
+      $c->detach
       unless $dm->success;
     my $object = $dm->get_outcome_for('best_pratice.create');
 
     $self->status_created(
         $c,
-        location => $c->uri_for( $self->action_for('best_pratice'), [ $object->id ] )->as_string,
+        location =>
+          $c->uri_for( $self->action_for('best_pratice'), [ $object->id ] )
+          ->as_string,
         entity => {
 
             id => $object->id,
@@ -188,4 +205,3 @@ sub list_POST {
 
 with 'Iota::TraitFor::Controller::Search';
 1;
-
