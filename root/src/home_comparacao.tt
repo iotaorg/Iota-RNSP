@@ -43,7 +43,16 @@
 
         </div>
     </div>
-
+	[% IF topic_indicators.size > 0%]
+	<div class="row" id="premio">
+		<div class="col-md-12">
+            <h2>[%l('Prêmio - Indicadores')%]</h2>
+            <div lockfixed>
+            [% INCLUDE 'parts/menu_topic_indicators.tt'%]
+            </div>
+        </div>
+	</div>
+	[%END%]
     <div id="dados-abertos">
         <h2>[%l('Dados abertos')%]</h2>
 

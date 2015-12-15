@@ -45,7 +45,6 @@ it under the same terms as Perl itself.
 
 sub date4period {
     my ( $self, $c, $date, $period ) = @_;
-
     return Iota::IndicatorChart::PeriodAxis::get_label_of_period( $date,
         $period );
 }

@@ -183,6 +183,35 @@ $(document).ready(function () {
 
     function loadIndicadoresData() {
         var param = typeof regionID == "undefined" ? '' : '?region_id=' + regionID;
+		if (param){
+			if (location.search){
+			var date = location.search.split('valid_from_desc=')[1];
+			var date_parser = date.split("-"); 
+
+			date_parser[0] = parseInt(date_parser[0]) + 1; 
+
+			date = date_parser.join("-"); 
+
+			param = param + '&' + 'from_date='+date;
+			}
+			
+		}else{
+
+			if (location.search){
+				var date = location.search.split('valid_from_desc=')[1];
+				var date_parser = date.split("-"); 
+
+				date_parser[0] = parseInt(date_parser[0]) + 1; 
+				
+				date = date_parser.join("-"); 
+				param = "?valid_from_desc="+date;
+			}
+
+			param = param.replace("valid_from_desc", "from_date");
+			
+		}
+
+
         $.ajax({
             type: 'GET',
             dataType: 'json',
@@ -264,12 +293,10 @@ $(document).ready(function () {
             table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
                 eixo: eixo_index
             });
-
             var periods = eixo;
             $.each(periods, function (period_index, period) {
                 var datas = periods[period_index].datas;
                 var has_any_data = institute_info.hide_empty_indicators ? 0 : 1;
-
                 if (datas.length > 0) {
                     table_content += "<thead class='datas'><tr><th></th><th>Autor</th>";
                     $.each(datas, function (index, value) {
@@ -465,7 +492,6 @@ $(document).ready(function () {
             $(this).parent().find("ul.subregions").toggle("fast");
         });
     }
-
     if (ref == "cidade") {
         formataMenuRegioes();
         loadCidadeData();

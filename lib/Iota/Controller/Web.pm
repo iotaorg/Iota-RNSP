@@ -129,6 +129,10 @@ sub load_status_msgs : Private {
     }
 }
 
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
+
 sub institute_load : Chained('light_institute_load') PathPart('')
   CaptureArgs(0) {
     my ( $self, $c ) = @_;
@@ -152,24 +156,99 @@ sub institute_load : Chained('light_institute_load') PathPart('')
     }
 =cut
 
-    my @users = $c->stash->{network}->users->search(
+    my $cache_key = $c->stash->{network}->users->search(
         {
             active => 1,
-
-            #        @inner_page
         },
         {
-            prefetch => [ 'city', 'network_users' ]
+            select => [
+                \'md5( array_agg(me.user_id::text || me.network_id::text || coalesce("user".city_id::text, \'\')  ORDER BY me.user_id, me.network_id, "user".city_id )::text)'
+            ],
+            as           => ['md5'],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
-    )->all;
-    $c->stash->{current_all_users} = \@users;
+    )->next;
 
-    my @current_admins = grep { !$_->city_id } @users;
+    $cache_key = $cache_key->{md5};
+    $cache_key = "institute_load-$cache_key";
+
+    my $schema = $c->model('DB')->schema;
+    my $stash  = $redis->get($cache_key);
+
+    if ($stash) {
+        $stash = thaw($stash);
+        $_->result_source->schema($schema) for @{ $stash->{current_all_users} };
+        $_->result_source->schema($schema) for @{ $stash->{current_admins} };
+    }
+    else {
+
+        my @users = $c->stash->{network}->users->search(
+            {
+                active => 1,
+            },
+            {
+                prefetch => [ 'city', 'network_users' ]
+            }
+        )->all;
+
+        $stash->{current_all_users} = \@users;
+
+        my @cities =
+          sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
+          map  { $_->city }
+          grep { defined $_->city_id } @users;
+
+        $stash->{network_data} = {
+            states => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ }
+                      grep { defined } map { $_->state_id } @cities;
+                  }
+            ],
+            users_ids => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ }
+                      map { $_->id } grep { defined $_->city_id } @users;
+                  }
+            ],
+
+            # redes de todos os usuarios que estão na pagina.
+            network_ids => [
+                do {
+                    my %seen;
+                    grep { !$seen{$_}++ } map {
+                        map { $_->network_id }
+                          $_->network_users
+                    } grep { defined $_->city_id } @users;
+                  }
+            ],
+
+            # rede selecionada do idioma.
+            network_id => [ $c->stash->{network}->id ],
+            admins_ids =>
+              [ map { $_->id } grep { !defined $_->city_id } @users ],
+            cities => \@cities
+        };
+
+        $stash->{current_admins} = [ grep { !$_->city_id } @users ];
+
+        $redis->set( $cache_key, nfreeze($stash) );
+    }
+
+    my @current_admins = @{ $stash->{current_admins} };
     $c->detach( '/error_404', ['Nenhum admin de rede encontrado!'] )
       unless @current_admins;
     $c->detach( '/error_404',
         ['Mais de um admin de rede para o dominio encontrado!'] )
       if @current_admins > 1;
+
+    delete $stash->{current_admins};
+    $c->stash->{$_} = $stash->{$_} for keys %$stash;
+
+    # tem que ver pra nao ler do mesmo lugar?
+    $c->stash->{current_cities} = $c->stash->{network_data}{cities};
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
@@ -199,46 +278,6 @@ sub institute_load : Chained('light_institute_load') PathPart('')
     # utilizada para fazer filtro dos indicados
     # apenas para a cidade dele [o segundo parametro é ignorado]
     $c->stash->{current_city_user_id} = undef;
-
-    my @cities =
-      sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
-      map  { $_->city }
-      grep { defined $_->city_id } @users;
-
-    $c->stash->{current_cities} = \@cities;
-
-    $c->stash->{network_data} = {
-        states => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ }
-                  grep { defined } map { $_->state_id } @cities;
-              }
-        ],
-        users_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ }
-                  map { $_->id } grep { defined $_->city_id } @users;
-              }
-        ],
-
-        # redes de todos os usuarios que estão na pagina.
-        network_ids => [
-            do {
-                my %seen;
-                grep { !$seen{$_}++ } map {
-                    map { $_->network_id }
-                      $_->network_users
-                } grep { defined $_->city_id } @users;
-              }
-        ],
-
-        # rede selecionada do idioma.
-        network_id => [ $c->stash->{network}->id ],
-        admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
-        cities     => \@cities
-    };
 
     my $cur_lang =
       exists $c->req->cookies->{cur_lang}
@@ -340,14 +379,14 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     );
 }
 
-sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
-  Args(0) {
+sub topic_network : Chained('') PathPart('') Args(0) {
     my ( $self, $c, $no_template ) = @_;
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
     my $show_user_private_indicators =
       $c->stash->{show_user_private_indicators};
+
     my $network_ids = [
         do {
             my %seen;
@@ -360,25 +399,13 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
           }
     ];
 
-    my @indicators = $c->model('DB::Indicator')->filter_visibilities(
-
-        $show_user_private_indicators && keys %$show_user_private_indicators
-        ? (
-            users_ids    => [ keys %$show_user_private_indicators ],
-            networks_ids => $network_ids
-          )
-        : (
-            user_id      => $c->stash->{current_city_user_id},
-            networks_ids => $c->stash->{current_city_user_id}
-            ? $c->stash->{network_data}{network_ids}
-            : $c->stash->{network_data}{network_id},
-        )
-      )->search(
+    my @indicators = $c->model('DB::Indicator')->search(
         {
-            is_fake => 0
+            is_fake         => 0,
+            'network.topic' => 1,
         },
         {
-            join     => 'axis',
+            join => [ 'axis', { indicator_network_visibilities => 'network' } ],
             collapse => 1,
             order_by => 'me.name',
             columns  => [
@@ -394,7 +421,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
                   /
             ]
         }
-      )->as_hashref->all;
+    )->as_hashref->all;
 
     my $city = $c->stash->{city};
 
@@ -528,7 +555,202 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
               ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
         }
     }
+    $c->stash(
+        topic_groups       => $groups,
+        topic_active_group => $active_group,
+        topic_indicators   => \@indicators,
 
+    );
+
+    #$c->stash( template => 'list_indicators.tt' ) if !$no_template;
+}
+
+sub build_indicators_menu : Chained('institute_load') PathPart(':indicators')
+  Args(0) {
+    my ( $self, $c, $no_template ) = @_;
+
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my $show_user_private_indicators =
+      $c->stash->{show_user_private_indicators};
+    my $network_ids = [
+        do {
+            my %seen;
+            grep { !$seen{$_}++ } map {
+                map { $_->network_id }
+                  $_->network_users
+              } grep { defined $_->city_id }
+              grep   { $show_user_private_indicators->{ $_->id } }
+              @{ $c->stash->{current_all_users} };
+          }
+    ];
+    my @indicators = $c->model('DB::Indicator')->filter_visibilities(
+
+        $show_user_private_indicators && keys %$show_user_private_indicators
+        ? (
+            users_ids    => [ keys %$show_user_private_indicators ],
+            networks_ids => $network_ids
+          )
+        : (
+            user_id      => $c->stash->{current_city_user_id},
+            networks_ids => $c->stash->{current_city_user_id}
+            ? $c->stash->{network_data}{network_ids}
+            : $c->stash->{network_data}{network_id},
+        )
+      )->search(
+        {
+            is_fake => 0
+        },
+        {
+            join     => 'axis',
+            collapse => 1,
+            order_by => 'me.name',
+            columns  => [
+                qw/
+                  axis.id
+                  axis.name
+
+                  me.id
+                  me.name
+                  me.name_url
+                  me.period
+                  me.explanation
+                  /
+            ]
+        }
+      )->as_hashref->all;
+    my $city = $c->stash->{city};
+
+    my $user_id = $city && $c->stash->{user} ? $c->stash->{user}{id} : undef;
+
+    my $id_vs_group_name = {};
+    my $groups           = {};
+    my $group_id         = 0;
+
+    my @custom_axis =
+      $user_id
+      ? $c->model('DB::UserIndicatorAxis')->search(
+        {
+            user_id => $user_id
+        },
+        {
+            prefetch => 'user_indicator_axis_items'
+        }
+      )->as_hashref->all
+      : ();
+
+    if (@custom_axis) {
+        my $ind_vs_group = {};
+
+        foreach my $g (@custom_axis) {
+
+            foreach ( @{ $g->{user_indicator_axis_items} } ) {
+                push @{ $ind_vs_group->{ $_->{indicator_id} } }, $g->{name};
+            }
+        }
+
+        for my $i (@indicators) {
+            next if !exists $ind_vs_group->{ $i->{id} };
+
+            foreach my $group_name ( @{ $ind_vs_group->{ $i->{id} } } ) {
+                if ( !exists $groups->{$group_name} ) {
+                    $group_id++;
+
+                    $groups->{$group_name}         = $group_id;
+                    $id_vs_group_name->{$group_id} = $group_name;
+                }
+
+                push @{ $i->{groups} }, $groups->{$group_name};
+            }
+        }
+    }
+
+    my $region =
+      $c->stash->{region}
+      ? { $c->stash->{region}->get_inflated_columns }
+      : $c->stash->{region};
+
+    my $selected_indicator = $c->stash->{indicator};
+
+    my $active_group = {
+        name => 'Todos os indicadores',
+        id   => 0
+    };
+
+    my $institute = $c->stash->{institute};
+
+    my $count_used_groups = {};
+
+    for my $i (@indicators) {
+
+        if ( !exists $groups->{ $i->{axis}{name} } ) {
+            $group_id++;
+
+            $id_vs_group_name->{$group_id} = $i->{axis}{name};
+            $groups->{ $i->{axis}{name} } = $group_id;
+        }
+
+        my $group_id = $groups->{ $i->{axis}{name} };
+
+        # se ja tem algum grupo, entao nao verifica se precisa inserir
+        if ( $i->{groups} && @{ $i->{groups} } > 0 ) {
+            if ( !$institute->bypass_indicator_axis_if_custom ) {
+                push @{ $i->{groups} }, $group_id;
+                $count_used_groups->{$group_id}++;
+            }
+            else {
+                $count_used_groups->{$group_id} = 0
+                  if !exists $count_used_groups->{$group_id};
+            }
+        }
+        else {
+            push @{ $i->{groups} }, $group_id;
+
+            $count_used_groups->{$group_id}++;
+        }
+
+        if ( $selected_indicator && $selected_indicator->{id} == $i->{id} ) {
+            $i->{selected} = 1;
+
+            $active_group = {
+                name => $id_vs_group_name->{ $i->{groups}[0] },
+                id   => $i->{groups}[0]
+            };
+        }
+
+        if ($region) {
+
+            $i->{href} = join '/', '', $city->{pais}, $city->{uf},
+              $city->{name_uri}, 'regiao', $region->{name_url},
+              $i->{name_url};
+
+        }
+        elsif ($city) {
+
+            $i->{href} = join '/', '', $city->{pais}, $city->{uf},
+              $city->{name_uri}, $i->{name_url};
+
+        }
+        else {
+            $i->{href} = '/' . $i->{name_url};
+        }
+    }
+
+    # todos os $count_used_groups = 0 sao eixos (nao grupos), que nao
+    # foram usados em nenhum indicador.
+    while ( my ( $group_id, $count ) = each %$count_used_groups ) {
+        next unless $count == 0;
+
+        delete $groups->{ $id_vs_group_name->{$group_id} };
+        delete $id_vs_group_name->{$group_id};
+    }
+
+    if ( $active_group->{id} ) {
+        for my $i (@indicators) {
+            $i->{visible} =
+              ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
+        }
+    }
     $c->stash(
         groups       => $groups,
         active_group => $active_group,
@@ -624,8 +846,7 @@ sub load_region_names {
 
 sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
     my ( $self, $c ) = @_;
-    warn
-'LOLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL';
+
     $c->stash->{title} =
         $c->stash->{city}{name} . ', '
       . $c->stash->{city}{uf} . ' - '
@@ -652,8 +873,7 @@ sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1)
     my ( $self, $c, $regiao ) = @_;
     warn 'LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL2';
     $c->stash->{regiao_url} = $regiao;
-    use DDP;
-    p $regiao;
+
     $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] )
       if !$c->stash->{user}{regions_enabled};
 
@@ -663,7 +883,6 @@ sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1)
         $c->stash->{region}->name . ' - '
       . $c->stash->{city}{name} . ', '
       . $c->stash->{city}{uf};
-    p $c->stash->{title};
 }
 
 sub cidade_regiao_indicator : Chained('cidade_regiao') PathPart('')
@@ -755,7 +974,6 @@ sub stash_comparacao_distritos : Private {
             }
         }
         elsif ( $region->depth_level == 3 ) {
-
             foreach my $sub ( @{ $reg->{subregions} } ) {
                 $regs->{ $sub->{id} } =
                   { map { $_ => $sub->{$_} } qw/name name_url/ };
@@ -782,7 +1000,8 @@ sub stash_comparacao_distritos : Private {
         $r->{variation_name} ||= '';
 
         push @{ $por_ano->{ delete $r->{valid_from} }
-              { delete $r->{variation_name} } }, $r;
+              { delete $r->{variation_name} } },
+          $r;
     }
     my $freq = Iota::Statistics::Frequency->new();
 
@@ -877,10 +1096,6 @@ sub stash_comparacao_distritos : Private {
 
 sub cidade_regiao_indicator_render : Chained('cidade_regiao_indicator')
   PathPart('') Args(0) {
-}
-
-sub cidade_regiao_indicator_render_todas :
-  Chained('cidade_regiao_indicator_todas') PathPart('') Args(0) {
 }
 
 sub cidade_regiao_render : Chained('cidade_regiao') PathPart('') Args(0) {
@@ -1061,10 +1276,8 @@ sub home_network_indicator : Chained('institute_load') PathPart('')
     $self->stash_comparacao_cidades($c);
 
     $c->stash->{indicator} = { $c->stash->{indicator}->get_inflated_columns };
-
     $c->stash->{indicator}{created_at} =
       $c->stash->{indicator}{created_at}->datetime;
-
     $self->json_to_view( $c, indicator_json => $c->stash->{indicator} );
 
     if (   $c->stash->{current_part}
@@ -1352,25 +1565,35 @@ sub _add_default_periods {
         if ( $cont == 0 ) {
             $ant = "$i-01-01";
         }
+
         elsif ( $cont == $step - 1 ) {
-            push @periods,
-              [
-                $ant, "$i-01-01", [@loop],
-                $c->req->uri_with( { valid_from => $ant } )->as_string
-              ];
+            push @periods, [
+                $ant,
+                "$i-01-01",
+                [@loop],
+                $c->req->uri_with(
+                    { valid_from => $ant, valid_from_desc => undef }
+                  )->as_string,
+                $c->req->uri_with(
+                    {
+                        valid_from_desc => $i . "-01-01",
+                        valid_from      => undef
+                    }
+                  )->as_string,
+
+            ];
             undef @loop;
             $cont = -1;
         }
-
         $cont++;
     }
     $c->stash->{data_periods} = \@periods;
 
     $c->req->params->{valid_from} =
-      exists $c->req->params->{valid_from}
-      ? $c->req->params->{valid_from}
+         exists $c->req->params->{valid_from}
+      || exists $c->req->params->{valid_from_desc}
+      ? $c->req->params->{valid_from} || $c->req->params->{valid_from_desc}
       : $periods[-1][0];
-
     my $ativo = undef;
 
     my $i = 0;
@@ -1384,6 +1607,10 @@ sub _add_default_periods {
         }
         $i++;
     }
+    $c->req->params->{valid_from_desc} =
+      exists $c->req->params->{valid_from_desc}
+      ? $c->req->params->{valid_from_desc}
+      : $periods[-1][0];
 
     if ( defined $ativo ) {
         $c->req->params->{from}      = $periods[$ativo][0];
@@ -1446,6 +1673,8 @@ sub stash_tela_indicator : Private {
 
 sub stash_tela_cidade : Private {
     my ( $self, $c ) = @_;
+
+    $self->_add_default_periods($c);
 
     my $city = $c->model('DB::City')->search(
         {

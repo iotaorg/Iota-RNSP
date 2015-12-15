@@ -273,7 +273,7 @@ estados_sg.push(["Tocantins", "TO"]);
 
 var paises = [];
 
-paises["br"] = "Brasil";
+paises["br"] = "Brazil";
 
 
 var normalize = function (term) {
