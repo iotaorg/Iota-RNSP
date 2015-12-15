@@ -125,26 +125,22 @@ __PACKAGE__->table("indicator");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 observations
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 variety_name
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 indicator_type
 
   data_type: 'text'
   default_value: 'normal'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 all_variations_variables_are_required
 
@@ -157,19 +153,11 @@ __PACKAGE__->table("indicator");
   data_type: 'text'
   default_value: 'sum'
   is_nullable: 0
-  original: {data_type => "varchar"}
-
-=head2 indicator_roles
-
-  data_type: 'text'
-  is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 indicator_admins
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 dynamic_variations
 
@@ -185,25 +173,23 @@ __PACKAGE__->table("indicator");
 =head2 visibility_country_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 formula_human
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 period
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 variable_type
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 featured_in_home
 
@@ -280,75 +266,31 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "name_url",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "observations",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "variety_name",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "indicator_type",
-  {
-    data_type     => "text",
-    default_value => "normal",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "normal", is_nullable => 0 },
   "all_variations_variables_are_required",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "summarization_method",
-  {
-    data_type     => "text",
-    default_value => "sum",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
-  "indicator_roles",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "sum", is_nullable => 0 },
   "indicator_admins",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "dynamic_variations",
   { data_type => "boolean", is_nullable => 1 },
   "visibility_user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "visibility_country_id",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "formula_human",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "period",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "variable_type",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "featured_in_home",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "visibility_level",
@@ -391,7 +333,7 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
 
-=head2 C<indicator_name_url_key>
+=head2 C<indicator_name_url_key2>
 
 =over 4
 
@@ -401,7 +343,7 @@ __PACKAGE__->add_unique_constraint("indicator_cognomen_key", ["name"]);
 
 =cut
 
-__PACKAGE__->add_unique_constraint("indicator_name_url_key", ["name_url"]);
+__PACKAGE__->add_unique_constraint("indicator_name_url_key2", ["name_url"]);
 
 =head1 RELATIONS
 
@@ -417,7 +359,7 @@ __PACKAGE__->belongs_to(
   "axis",
   "Iota::Schema::Result::Axis",
   { id => "axis_id" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 =head2 end_user_indicator_users
@@ -555,21 +497,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 indicator_variations_2s
-
-Type: has_many
-
-Related object: L<Iota::Schema::Result::IndicatorVariation>
-
-=cut
-
-__PACKAGE__->has_many(
-  "indicator_variations_2s",
-  "Iota::Schema::Result::IndicatorVariation",
-  { "foreign.indicator_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 user
 
 Type: belongs_to
@@ -615,6 +542,26 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 visibility_country
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::Country>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "visibility_country",
+  "Iota::Schema::Result::Country",
+  { id => "visibility_country_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
 =head2 visibility_user
 
 Type: belongs_to
@@ -636,8 +583,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ZbVlv8xtH+HWoaZ1XqChzA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pn4V1DqcukOxV3NUrHRzEA
 
 __PACKAGE__->belongs_to(
     "owner",

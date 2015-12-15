@@ -56,12 +56,11 @@ __PACKAGE__->table("indicator_variables_variations");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 type
 
   data_type: 'enum'
-  default_value: 'num'
+  default_value: 'int'
   extra: {custom_type_name => "variable_type_enum",list => ["str","int","num"]}
   is_nullable: 0
 
@@ -69,7 +68,6 @@ __PACKAGE__->table("indicator_variables_variations");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 created_at
 
@@ -98,15 +96,11 @@ __PACKAGE__->add_columns(
   "indicator_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "type",
   {
     data_type => "enum",
-    default_value => "num",
+    default_value => "int",
     extra => {
       custom_type_name => "variable_type_enum",
       list => ["str", "int", "num"],
@@ -114,11 +108,7 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
   },
   "explanation",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "created_at",
   {
     data_type     => "timestamp",
@@ -180,8 +170,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:o3oiaO6PJIiugx+pQ7ySmw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KDcdRNFay/F4sT/m8e0i4g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

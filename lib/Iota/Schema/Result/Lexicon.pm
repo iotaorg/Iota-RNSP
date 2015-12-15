@@ -92,7 +92,6 @@ __PACKAGE__->table("lexicon");
   data_type: 'text'
   default_value: 'pt-br'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 translated_from_lexicon
 
@@ -139,12 +138,7 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "origin_lang",
-  {
-    data_type     => "text",
-    default_value => "pt-br",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "pt-br", is_nullable => 0 },
   "translated_from_lexicon",
   { data_type => "boolean", is_nullable => 1 },
 );
@@ -162,8 +156,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lmZRywm7KpgphTXZACpTBA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tN8WAISBu2y0h4JslfL6/g
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

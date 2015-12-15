@@ -55,6 +55,7 @@ __PACKAGE__->table("user_best_pratice");
 =head2 axis_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 name
@@ -118,7 +119,6 @@ __PACKAGE__->table("user_best_pratice");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 repercussion
 
@@ -138,7 +138,7 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "axis_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 0 },
   "description",
@@ -167,11 +167,7 @@ __PACKAGE__->add_columns(
     original      => { default_value => \"now()" },
   },
   "name_url",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "repercussion",
   { data_type => "text", is_nullable => 1 },
 );
@@ -189,6 +185,21 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
+
+=head2 axis
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::Axis>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "axis",
+  "Iota::Schema::Result::Axis",
+  { id => "axis_id" },
+  { is_deferrable => 1, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
 
 =head2 user
 
@@ -221,8 +232,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:eNqPAZFV8DkU+kRfC44MzA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1DVlB4q7viM0lDzvo5lLdQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

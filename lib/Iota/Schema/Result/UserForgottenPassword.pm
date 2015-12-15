@@ -147,12 +147,12 @@ __PACKAGE__->belongs_to(
   "id_user",
   "Iota::Schema::Result::User",
   { id => "id_user" },
-  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Kh21t0MVVUSLvOXSyKJ6xA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qpCMLN1Sgf8bfC//3xM2aw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

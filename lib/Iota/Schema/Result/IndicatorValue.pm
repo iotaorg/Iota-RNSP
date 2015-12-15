@@ -78,20 +78,19 @@ __PACKAGE__->table("indicator_value");
 =head2 region_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 1
 
 =head2 value
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 variation_name
 
   data_type: 'text'
   default_value: (empty string)
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 updated_at
 
@@ -137,20 +136,11 @@ __PACKAGE__->add_columns(
   "institute_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "region_id",
-  { data_type => "integer", is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "value",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "variation_name",
-  {
-    data_type     => "text",
-    default_value => "",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "", is_nullable => 0 },
   "updated_at",
   {
     data_type     => "timestamp",
@@ -234,6 +224,26 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 region
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::Region>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "region",
+  "Iota::Schema::Result::Region",
+  { id => "region_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
 =head2 user
 
 Type: belongs_to
@@ -250,8 +260,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tnw5ve0sjPrMEP1dhuZ94A
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Pc59n0pO2k43IsAWnPVxLg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

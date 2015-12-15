@@ -56,7 +56,6 @@ __PACKAGE__->table("user_indicator_axis");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 position
 
@@ -84,11 +83,7 @@ __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "position",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
   "created_at",
@@ -145,8 +140,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GyiOgc6xG3t5hpa6CdrnHA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7MFY/2FIJPyqaIxwxmQ9fQ
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

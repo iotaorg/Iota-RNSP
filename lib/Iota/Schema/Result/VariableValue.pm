@@ -78,7 +78,7 @@ __PACKAGE__->table("variable_value");
 =head2 valid_from
 
   data_type: 'date'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 valid_until
 
@@ -89,13 +89,11 @@ __PACKAGE__->table("variable_value");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 source
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 file_id
 
@@ -135,21 +133,13 @@ __PACKAGE__->add_columns(
   "value_of_date",
   { data_type => "timestamp", is_nullable => 1 },
   "valid_from",
-  { data_type => "date", is_nullable => 1 },
+  { data_type => "date", is_nullable => 0 },
   "valid_until",
   { data_type => "date", is_nullable => 1 },
   "observations",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "source",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "file_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "cloned_from_user",
@@ -170,7 +160,7 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<user_value_period_key>
+=head2 C<ix_variable_value>
 
 =over 4
 
@@ -184,10 +174,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint(
-  "user_value_period_key",
-  ["variable_id", "user_id", "valid_from"],
-);
+__PACKAGE__->add_unique_constraint("ix_variable_value", ["variable_id", "user_id", "valid_from"]);
 
 =head1 RELATIONS
 
@@ -243,7 +230,7 @@ __PACKAGE__->belongs_to(
   "user",
   "Iota::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 variable
@@ -262,8 +249,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:B6Q9vg2QQ9ZwFDC3U12yKw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:22
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KU/7/GHF+EFSrpmJX3D1AQ
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

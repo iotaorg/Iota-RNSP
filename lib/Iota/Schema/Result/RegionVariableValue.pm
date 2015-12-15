@@ -62,7 +62,6 @@ __PACKAGE__->table("region_variable_value");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 user_id
 
@@ -85,7 +84,7 @@ __PACKAGE__->table("region_variable_value");
 =head2 valid_from
 
   data_type: 'date'
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 valid_until
 
@@ -96,17 +95,20 @@ __PACKAGE__->table("region_variable_value");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 source
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 file_id
 
   data_type: 'integer'
+  is_nullable: 1
+
+=head2 generated_by_compute
+
+  data_type: 'boolean'
   is_nullable: 1
 
 =head2 active_value
@@ -119,11 +121,6 @@ __PACKAGE__->table("region_variable_value");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
-
-=head2 generated_by_compute
-
-  data_type: 'boolean'
   is_nullable: 1
 
 =head2 end_ts
@@ -147,11 +144,7 @@ __PACKAGE__->add_columns(
   "variable_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "value",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "created_at",
@@ -164,29 +157,21 @@ __PACKAGE__->add_columns(
   "value_of_date",
   { data_type => "timestamp", is_nullable => 1 },
   "valid_from",
-  { data_type => "date", is_nullable => 1 },
+  { data_type => "date", is_nullable => 0 },
   "valid_until",
   { data_type => "date", is_nullable => 1 },
   "observations",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "source",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "file_id",
   { data_type => "integer", is_nullable => 1 },
+  "generated_by_compute",
+  { data_type => "boolean", is_nullable => 1 },
   "active_value",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "cloned_from_user",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-  "generated_by_compute",
-  { data_type => "boolean", is_nullable => 1 },
   "end_ts",
   { data_type => "timestamp", default_value => "infinity", is_nullable => 0 },
 );
@@ -271,8 +256,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JpRV/lMCUEJeeFERTb//Jw
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RCC355KDdJee9bCwrVtyog
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

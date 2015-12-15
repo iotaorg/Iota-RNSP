@@ -50,19 +50,16 @@ __PACKAGE__->table("region");
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 name_url
 
   data_type: 'text'
   is_nullable: 0
-  original: {data_type => "varchar"}
 
 =head2 description
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 city_id
 
@@ -105,7 +102,6 @@ __PACKAGE__->table("region");
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 subregions_valid_after
 
@@ -123,23 +119,11 @@ __PACKAGE__->add_columns(
     sequence          => "region_id_seq",
   },
   "name",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "name_url",
-  {
-    data_type   => "text",
-    is_nullable => 0,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 0 },
   "description",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "city_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "upper_region",
@@ -158,11 +142,7 @@ __PACKAGE__->add_columns(
   "automatic_fill",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "polygon_path",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "subregions_valid_after",
   { data_type => "timestamp", is_nullable => 1 },
 );
@@ -178,22 +158,6 @@ __PACKAGE__->add_columns(
 =cut
 
 __PACKAGE__->set_primary_key("id");
-
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<region_city_id_name_url_key>
-
-=over 4
-
-=item * L</city_id>
-
-=item * L</name_url>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("region_city_id_name_url_key", ["city_id", "name_url"]);
 
 =head1 RELATIONS
 
@@ -225,6 +189,21 @@ __PACKAGE__->belongs_to(
   "Iota::Schema::Result::User",
   { id => "created_by" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+=head2 indicator_values
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::IndicatorValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "indicator_values",
+  "Iota::Schema::Result::IndicatorValue",
+  { "foreign.region_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 indicator_variables_variations_values
@@ -323,8 +302,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:soCYWut2/rdoVmqelEy0ow
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:elYr5wa/EG1//7KFe0G7FA
 
 __PACKAGE__->has_many(
   "subregions",

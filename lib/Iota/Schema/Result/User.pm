@@ -67,70 +67,55 @@ __PACKAGE__->table("user");
   data_type: 'text'
   is_nullable: 1
 
-=head2 password
+=head2 nome_responsavel_cadastro
 
   data_type: 'text'
-  is_nullable: 0
+  is_nullable: 1
 
 =head2 estado
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
-
-=head2 cidade
-
-  data_type: 'text'
-  is_nullable: 1
-  original: {data_type => "varchar"}
-
-=head2 bairro
-
-  data_type: 'text'
-  is_nullable: 1
-  original: {data_type => "varchar"}
-
-=head2 cep
-
-  data_type: 'text'
-  is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 telefone
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 email_contato
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 telefone_contato
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
-=head2 nome_responsavel_cadastro
+=head2 cidade
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
+
+=head2 bairro
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 cep
+
+  data_type: 'text'
+  is_nullable: 1
 
 =head2 endereco
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 city_summary
 
   data_type: 'text'
   is_nullable: 1
-  original: {data_type => "varchar"}
 
 =head2 active
 
@@ -156,7 +141,11 @@ __PACKAGE__->table("user");
   data_type: 'text'
   default_value: 'pt-br'
   is_nullable: 0
-  original: {data_type => "varchar"}
+
+=head2 password
+
+  data_type: 'text'
+  is_nullable: 0
 
 =head2 regions_enabled
 
@@ -169,12 +158,6 @@ __PACKAGE__->table("user");
   data_type: 'boolean'
   default_value: false
   is_nullable: 0
-
-=head2 _keep_password
-
-  data_type: 'text'
-  is_nullable: 1
-  original: {data_type => "varchar"}
 
 =cut
 
@@ -194,68 +177,26 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "api_key",
   { data_type => "text", is_nullable => 1 },
-  "password",
-  { data_type => "text", is_nullable => 0 },
-  "estado",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "cidade",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "bairro",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "cep",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "telefone",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "email_contato",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
-  "telefone_contato",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
   "nome_responsavel_cadastro",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
+  "estado",
+  { data_type => "text", is_nullable => 1 },
+  "telefone",
+  { data_type => "text", is_nullable => 1 },
+  "email_contato",
+  { data_type => "text", is_nullable => 1 },
+  "telefone_contato",
+  { data_type => "text", is_nullable => 1 },
+  "cidade",
+  { data_type => "text", is_nullable => 1 },
+  "bairro",
+  { data_type => "text", is_nullable => 1 },
+  "cep",
+  { data_type => "text", is_nullable => 1 },
   "endereco",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "city_summary",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
+  { data_type => "text", is_nullable => 1 },
   "active",
   { data_type => "boolean", default_value => \"true", is_nullable => 0 },
   "created_at",
@@ -268,22 +209,13 @@ __PACKAGE__->add_columns(
   "institute_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "cur_lang",
-  {
-    data_type     => "text",
-    default_value => "pt-br",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
-  },
+  { data_type => "text", default_value => "pt-br", is_nullable => 0 },
+  "password",
+  { data_type => "text", is_nullable => 0 },
   "regions_enabled",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "can_create_indicators",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
-  "_keep_password",
-  {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
-  },
 );
 
 =head1 PRIMARY KEY
@@ -313,6 +245,21 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("user_email_key", ["email"]);
 
 =head1 RELATIONS
+
+=head2 actions_logs
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::ActionsLog>
+
+=cut
+
+__PACKAGE__->has_many(
+  "actions_logs",
+  "Iota::Schema::Result::ActionsLog",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 
 =head2 city
 
@@ -785,8 +732,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-14 17:32:23
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CjeYuaFMS4vNYCFQeCfi4w
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Qh2aklGUrcAeVdks0l+fIw
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 
