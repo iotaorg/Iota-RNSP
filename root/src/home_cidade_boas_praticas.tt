@@ -49,6 +49,11 @@
         [%l(best_pratice.sources)|none%]
         [%END%]
 
+		[%IF best_pratice.repercussion%]
+        <h5>[%l('Repercussão, notícias e outras premiações')%]</h5>
+        [%l(best_pratice.repercussion)|none%]
+        [%END%]
+
         [%IF best_pratice.user_best_pratice_axes.size%]
         <h5>[%l('Eixos secundários')|none%]</h5>
         <ul>
