@@ -180,9 +180,7 @@ sub resumo_GET {
       ? $c->req->params->{number_of_periods}
       : 4;
     my $from_date = $c->req->params->{from_date};
-    use DDP;
-    p $from_date;
-    p $max_periodos;
+
 
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
