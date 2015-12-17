@@ -4,7 +4,7 @@
       "Thiago Rondon"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.15, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.14, CPAN::Meta::Converter version 2.150005",
    "license" : [
       "perl_5"
    ],
@@ -34,6 +34,7 @@
       },
       "runtime" : {
          "requires" : {
+            "App::Sqitch" : "0",
             "CSS::Minifier::XS" : "0",
             "Catalyst::Action::RenderView" : "0",
             "Catalyst::Authentication::Store::DBIx::Class" : "0",
@@ -84,6 +85,7 @@
             "HTML::Scrubber" : "0",
             "I18N::AcceptLanguage" : "0",
             "JSON" : "0",
+            "JSON::Any" : "0",
             "JSON::XS" : "0",
             "JavaScript::Minifier::XS" : "0",
             "List::MoreUtils" : "0",
@@ -91,19 +93,23 @@
             "Moose" : "0",
             "MooseX::Traits" : "0",
             "MooseX::Types::Email" : "0",
+            "MooseX::Types::JSON" : "0",
             "RDF::Endpoint" : "0",
             "RDF::Helper" : "0",
+            "Redis" : "0",
             "Spreadsheet::ParseExcel::Stream" : "0",
             "Spreadsheet::WriteExcel" : "0",
             "Spreadsheet::XLSX" : "0",
             "Statistics::Basic" : "0",
             "Statistics::Descriptive" : "0",
+            "Storable" : "0",
             "String::Random" : "0",
             "Template" : "0",
             "Template::AutoFilter" : "0",
             "Test::Deep" : "0",
             "Test::More" : "0.88",
             "Text2URI" : "0.4",
+            "Text::CSV" : "0",
             "Text::CSV_XS" : "0",
             "Text::Iconv" : "0",
             "XML::LibXML" : "0",
@@ -118,5 +124,6 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.01"
+   "version" : "0.01",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }

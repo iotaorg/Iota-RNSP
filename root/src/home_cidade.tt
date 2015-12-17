@@ -18,6 +18,12 @@
                             <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [%vv.variable.measurement_unit.short_name %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
                             [% END %]
 
+                        [%IF institute.id == 2 && city.name == 'Campinas' %]
+                            <dt>Relatório de sustentabilidade</dt>
+                            <dd><a href="/static/hardcoded/campinas-relatorio-sustentabilidade13-14.pdf" target="_blank">Visualizar 2013/2014</a>
+                        </dd>
+                        [%END%]
+
                         </dl></div>
                     </div>
                 </div>
@@ -105,7 +111,7 @@
                     </label>
                     [%END%]
 				</div>
-			
+
 			</div>
         [%END%]
     </div>

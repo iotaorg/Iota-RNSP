@@ -58,6 +58,7 @@ requires 'DateTime::Format::Duration';
 requires 'DateTimeX::Easy';
 requires 'DateTime::Format::Pg';
 requires 'Catalyst::View::TT';
+requires 'Date::Calc';
 
 requires 'Geo::Coder::Google';
 requires 'Text::Iconv';
