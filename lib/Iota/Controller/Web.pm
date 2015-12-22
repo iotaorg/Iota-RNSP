@@ -312,7 +312,8 @@ sub institute_load : Chained('light_institute_load') PathPart('')
     );
 
     $c->set_lang($cur_lang);
-
+=pod
+    so precisa setar a lingua quando entra no endpoint, se nao, usa a padrao mesmo..
     $c->response->cookies->{'cur_lang'} = {
         value   => $cur_lang,
         path    => '/',
@@ -320,7 +321,7 @@ sub institute_load : Chained('light_institute_load') PathPart('')
       }
       if !exists $c->req->cookies->{cur_lang}
       || $c->req->cookies->{cur_lang} ne $cur_lang;
-
+=cut
 }
 
 sub erro : Chained('institute_load') PathPart('erro') Args(0) {
