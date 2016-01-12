@@ -68,7 +68,7 @@ sub api_key_check : Private {
             {
                 api_key      => $api_key,
                 valid_until  => { '>=' => \'now()' },
-                valid_for_ip => $c->req->address
+                #valid_for_ip => $c->req->address
             }
         )->first;
         my $user = $user_session ? $c->find_user( { id => $user_session->user_id } ) : undef;
@@ -157,7 +157,7 @@ sub login_POST {
         my $item = $c->user->sessions->create(
             {
                 api_key      => sha1_hex( rand(time) ),
-                valid_for_ip => $c->req->address
+                #valid_for_ip => $c->req->address
             }
         );
 
