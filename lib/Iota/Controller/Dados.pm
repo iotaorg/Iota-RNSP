@@ -45,7 +45,6 @@ sub _loc_str {
 
     return $str if !defined $str || $str eq '';
     return $str unless $str =~ /[A-Za-z]/o;
-    return $str if $str =~ /CONCATENAR/o;
     return $str if $str =~ /^\s*$/o;
     return $str if $str =~ /:\/\//o;
 
@@ -161,14 +160,14 @@ sub _download {
             $self->_loc_str( $c, $data->{goal} ),
             $self->_loc_str( $c, $data->{goal_explanation} ),
             $self->_loc_str( $c, $data->{goal_source} ),
-            $self->_loc_str( $c, $data->{goal_operator} ),
+             $data->{goal_operator},
             $self->_loc_str( $c, $data->{explanation} ),
             $self->_loc_str( $c, $data->{tags} ),
             $self->_loc_str( $c, $data->{observations} ),
             $self->_loc_str( $c, $self->_period_pt( $data->{period} ) ),
             $self->_loc_str( $c, $data->{variation_name} ),
             $self->_loc_str( $c, $data->{variation_order} ),
-            $self->_loc_str( $c, $self->ymd2dmy( $data->{valid_from} ) ),
+             $self->ymd2dmy( $data->{valid_from} ) ,
             $self->_loc_str( $c, $data->{value} ),
             $self->_loc_str( $c, $data->{user_goal} ),
             $self->_loc_str( $c, $data->{justification_of_missing_field} ),

@@ -43,10 +43,7 @@ sub _download {
     my $network = $c->stash->{network};
 
     my $file = $c->get_lang() . 'variaveis.' . $network->name_url;
-    $file .= '_'
-      . $c->stash->{pais} . '_'
-      . $c->stash->{estado} . '_'
-      . $c->stash->{cidade}
+    $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
     $c->stash->{all_region} = 1, delete $c->stash->{region}
       if $c->stash->{region} eq 'all';
@@ -124,8 +121,7 @@ sub _download {
             { join => 'network_users' }
         )->next;
 
-        $data_rs =
-          $data_rs->search( { user_id => $user ? $user->{id} : -9012345 } );
+        $data_rs = $data_rs->search( { user_id => $user ? $user->{id} : -9012345 } );
     }
 
     if ( exists $c->stash->{indicator} ) {
@@ -135,16 +131,14 @@ sub _download {
                     'in' => [
                         (
                             map { $_->variable_id }
-                              $c->model('DB::IndicatorVariable')->search(
-                                { indicator_id => $c->stash->{indicator}{id} }
-                              )->all
+                              $c->model('DB::IndicatorVariable')
+                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
                         ),
 
                         (
                             map { -( $_->id ) }
-                              $c->model('DB::IndicatorVariation')->search(
-                                { indicator_id => $c->stash->{indicator}{id} }
-                              )->all
+                              $c->model('DB::IndicatorVariation')
+                              ->search( { indicator_id => $c->stash->{indicator}{id} } )->all
                         )
                     ]
                 }
@@ -162,33 +156,44 @@ sub _download {
         }
     }
 
+    my $yes_vs_no = {
+        'y'             => $self->_loc_str( $c, 'sim' ),
+        'n'             => $self->_loc_str( $c, 'não' ),
+        'Inteiro'       => $self->_loc_str( $c, 'Inteiro' ),
+        'Alfanumérico' => $self->_loc_str( $c, 'Alfanumérico' ),
+        'Valor'         => $self->_loc_str( $c, 'Valor' ),
+    };
+
     while ( my $data = $data_rs->next ) {
         my @this_row = (
             $data->{city_id},
-            $self->_loc_str( $c, $data->{city_name} ),
+            $data->{city_name},
             $data->{variable_id},
-            $self->_loc_str(
-                $c,
-                $data->{type} eq 'int'   ? 'Inteiro'
-                : $data->{type} eq 'str' ? 'Alfanumérico'
-                :                          'Valor'
+
+            (
+                  $data->{type} eq 'int' ? $yes_vs_no->{'Inteiro'}
+                : $data->{type} eq 'str' ? $yes_vs_no->{'Alfanumérico'}
+                : $yes_vs_no->{'Valor'}
             ),
+
             $self->_loc_str( $c, $data->{cognomen} ),
             $self->_loc_str( $c, $self->_period_pt( $data->{period} ) ),
 
-            $self->_loc_str( $c, $data->{is_basic} ? 'sim' : 'não' ),
+            ( $data->{is_basic} ? $yes_vs_no->{'y'} : $yes_vs_no->{'n'} ),
+
             $self->_loc_str( $c, $data->{measurement_unit_name} ),
             $self->_loc_str( $c, $data->{name} ),
+
             $self->ymd2dmy( $data->{valid_from} ),
+
             $self->_loc_str( $c, $data->{value} ),
             $self->_loc_str( $c, $data->{observations} ),
             $self->_loc_str( $c, $data->{source} ),
             $self->_loc_str( $c, $data->{region_name} ),
 
-            $self->_loc_str( $c, $data->{active_value} ? 'sim' : 'não' ),
-            $self->_loc_str(
-                $c, $data->{generated_by_compute} ? 'sim' : 'não'
-            ),
+            ( $data->{active_value} ? $yes_vs_no->{'y'} : $yes_vs_no->{'n'} ),
+
+            ( $data->{generated_by_compute} ? $yes_vs_no->{'y'} : $yes_vs_no->{'n'} ),
 
         );
         push @lines, \@this_row;
@@ -211,7 +216,7 @@ sub _loc_str {
 
     return $str if !defined $str || $str eq '';
     return $str unless $str =~ /[A-Za-z]/o;
-    return $str if $str =~ /CONCATENAR/o;
+
     return $str if $str =~ /^\s*$/o;
     return $str if $str =~ /:\/\//o;
 
@@ -328,8 +333,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header(
-        'content-disposition' => "attachment;filename=" . basename($path) );
+    $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
@@ -337,8 +341,7 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_variables : Chained('/institute_load')
-  PathPart('download-variables') Args(0) ActionClass('REST') {
+sub download_variables : Chained('/institute_load') PathPart('download-variables') Args(0) ActionClass('REST') {
 
 }
 
@@ -357,101 +360,62 @@ sub download_variables_GET {
     if ( exists $params->{region_id} ) {
         my @ids = split /,/, $params->{region_id};
 
-        $self->status_bad_request( $c, message => 'invalid region_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid region_id' ), $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search(
-            {
-                region_id => { 'in' => \@ids }
-            }
-        );
+        $data_rs = $data_rs->search( { region_id => { 'in' => \@ids } } );
     }
 
     if ( exists $params->{user_id} ) {
         my @ids = split /,/, $params->{user_id};
 
-        $self->status_bad_request( $c, message => 'invalid user_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid user_id' ), $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search(
-            {
-                user_id => { 'in' => \@ids }
-            }
-        );
+        $data_rs = $data_rs->search( { user_id => { 'in' => \@ids } } );
     }
 
     if ( exists $params->{city_id} ) {
         my @ids = split /,/, $params->{city_id};
 
-        $self->status_bad_request( $c, message => 'invalid city_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid city_id' ), $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search(
-            {
-                city_id => { 'in' => \@ids }
-            }
-        );
+        $data_rs = $data_rs->search( { city_id => { 'in' => \@ids } } );
     }
 
     if ( exists $params->{variable_id} ) {
         my @ids = split /,/, $params->{variable_id};
 
-        $self->status_bad_request( $c, message => 'invalid variable_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid variable_id' ), $c->detach
           unless Iota::Controller::Dados::int_validation( $self, @ids );
 
-        $data_rs = $data_rs->search(
-            {
-                variable_id => { 'in' => \@ids }
-            }
-        );
+        $data_rs = $data_rs->search( { variable_id => { 'in' => \@ids } } );
     }
 
     if ( exists $params->{valid_from} ) {
         my @dates = split /,/, $params->{valid_from};
 
-        $self->status_bad_request( $c, message => 'invalid date format' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
           unless Iota::Controller::Dados::date_validation( $self, @dates );
 
-        $data_rs = $data_rs->search(
-            {
-                valid_from => { 'in' => \@dates }
-            }
-        );
+        $data_rs = $data_rs->search( { valid_from => { 'in' => \@dates } } );
     }
 
     if ( exists $params->{valid_from_begin} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ),
-          $c->detach
-          unless Iota::Controller::Dados::date_validation( $self,
-            $params->{valid_from_begin} );
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+          unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_begin} );
 
-        $data_rs = $data_rs->search(
-            {
-                valid_from => { '>=' => $params->{valid_from_begin} }
-            }
-        );
+        $data_rs = $data_rs->search( { valid_from => { '>=' => $params->{valid_from_begin} } } );
     }
 
     if ( exists $params->{valid_from_end} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ),
-          $c->detach
-          unless Iota::Controller::Dados::date_validation( $self,
-            $params->{valid_from_end} );
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
+          unless Iota::Controller::Dados::date_validation( $self, $params->{valid_from_end} );
 
-        $data_rs = $data_rs->search(
-            {
-                '-and' => {
-                    valid_from => { '<=' => $params->{valid_from_end} }
-                }
-            }
-        );
+        $data_rs = $data_rs->search( { '-and' => { valid_from => { '<=' => $params->{valid_from_end} } } } );
     }
 
     while ( my $row = $data_rs->next ) {
@@ -466,9 +430,7 @@ sub download_variables_GET {
 ##################################################
 
 for my $chain (
-    qw/institute_load network_cidade cidade_regiao network_indicator home_network_indicator cidade_regiao_indicator/
-  )
-{
+    qw/institute_load network_cidade cidade_regiao network_indicator home_network_indicator cidade_regiao_indicator/) {
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('variaveis.$tipo') : CaptureArgs(0) {
@@ -493,9 +455,7 @@ for my $chain (
         " );
     }
 }
-for my $chain (
-    qw/institute_load network_cidade network_indicator home_network_indicator/)
-{
+for my $chain (qw/institute_load network_cidade network_indicator home_network_indicator/) {
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo}_td : Chained('/$chain') : PathPart('todas-regioes/variaveis.$tipo') : CaptureArgs(0) {
