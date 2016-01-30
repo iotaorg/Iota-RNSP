@@ -57,6 +57,7 @@ our $VERSION = '0.01';
 __PACKAGE__->config(
     name     => 'Iota',
     encoding => 'UTF-8',
+    using_frontend_proxy => 1,
 
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
