@@ -48,6 +48,7 @@ $schema->txn_do(
             goal_operator  => qr/goal_operator\b/,
             observations   => qr/observations\b/,
             sort_direction => qr/sort_direction\b/,
+            visibility_networks_id => qr/visibility_networks_id/
 
         );
 
@@ -141,7 +142,7 @@ $schema->txn_do(
                               $registro->{sort_direction},
 
                             'indicator.create.visibility_level' => 'network',
-                            'indicator.create.visibility_networks_id' => '9',
+                            'indicator.create.visibility_networks_id' => $registro->{visibility_networks_id},
                         ]
                     );
 
