@@ -39,11 +39,9 @@
                 <h3 class="panel-title">[%l('O que são Indicadores?')%]</h3>
             </div>
             <div class="panel-body">
-                <p>[%l('Segundo o dicionário de políticas públicas,')%]</p>
-
                 <blockquote class="pull-right">
                     <p>[%l('Um indicador social é uma medida em geral quantitativa dotada de significado social substantivo, usada para substituir, quantificar ou operacionalizar um conceito social abstrato, de interesse teórico (para pesquisa acadêmica) ou programático (para formulação de políticas)')%]</p>
-                    <small><cite title="Paulo de Martino Jannuzzi"><a href="http://dicionario.fundap.sp.gov.br/Verbete/141" rel="nofollow" target="_blank">http://dicionario.fundap.sp.gov.br/Verbete/141</a></cite></small>
+                    <small><cite title="Paulo de Martino Jannuzzi"><a href="http://www.cedeps.com.br/wp-content/uploads/2011/02/INDICADORES-SOCIAIS-JANUZZI.pdf" rel="nofollow" target="_blank">Paulo de Martino Jannuzzi, 2011</a></cite></small>
                 </blockquote>
 
                 <p>[%l('Dentro da plataforma Iota, um <strong>indicador</strong> é composto por uma ou mais <strong>variáveis</strong> agrupadas por operadores matemáticos.')|none%]</p>
