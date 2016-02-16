@@ -74,6 +74,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
                   me.name_url
                   me.ga_account
                   me.domain_name
+                  me.topic
 
                   institute.id
                   institute.name
