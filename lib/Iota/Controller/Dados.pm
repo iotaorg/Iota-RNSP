@@ -614,7 +614,7 @@ for my $chain (
 {
     for my $tipo (qw/csv json xls xml/) {
         eval( "
-            sub chain_${chain}_${tipo}_ind : Chained('/$chain') : PathPart('dados.$tipo') : CaptureArgs(0) {
+            sub chain_${chain}_${tipo}_ind : Chained('/$chain') : PathPart('todas-regioes/dados.$tipo') : CaptureArgs(0) {
                 my ( \$self, \$c ) = \@_;
                 \$c->stash->{type} = '$tipo';
                 \$c->stash->{region} = 'all';
