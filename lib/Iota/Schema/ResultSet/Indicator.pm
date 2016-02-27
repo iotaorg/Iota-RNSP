@@ -513,8 +513,8 @@ sub topic_filter_visibilities {
       if exists $filters{user_id}
       && $filters{user_id}
       && $filters{user_id} =~ /^[0-9]+$/;
-    use DDP;
-    p \@users_ids;
+
+
     return $self->search(
         {
             'me.id' => {
