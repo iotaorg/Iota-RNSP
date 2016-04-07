@@ -181,7 +181,6 @@ sub resumo_GET {
       : 4;
     my $from_date = $c->req->params->{from_date};
 
-
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
         my $institute = $c->stash->{user_obj}->institute;
@@ -206,12 +205,14 @@ sub resumo_GET {
               }
         ];
 
+
         my $rs = $c->model('DB::Indicator')->filter_visibilities(
             user_id      => $user_id,
             networks_ids => $network_ids,
           )->search(
             {
                 is_fake => 0,
+
 
 #'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],
                 'me.id' => { '-not_in' => \@hide_indicator }
