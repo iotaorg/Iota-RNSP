@@ -9,10 +9,6 @@
 <a href="/static/built/rdf/dump.iota.n3.gz">dump.iota.n3.gz</a> Import it into your favorite RDF/XML parser!
 
 
-<h2>SPARQL <small>updated each 2 hours</small></h2>
-
-A complete SPARQL 1.1 implementation is running on <a href="http://[%c.config.rdf_domain%]/sparql">http://[%c.config.rdf_domain%]/sparql</a>
-
 <h2>Available data</h2>
 
 <ul>
