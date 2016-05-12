@@ -121,10 +121,7 @@ where
 and u.city_id is not null
 
 and (
-            (
-                x.visibility_level='private' AND x.visibility_user_id = u.id
-            )
-            OR (
+           x.is_fake=false and (
                 x.visibility_level='network' AND x.id IN (
                     select indicator_id from indicator_network_visibility
                     where network_id = 1
@@ -133,4 +130,5 @@ and (
         )
 
 ) to '/tmp/qtde-indicadores-preenchidos.csv' csv header;
+
 
