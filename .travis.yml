@@ -4,10 +4,10 @@ perl:
 env:
   - PERL_CPANM_OPT="-v --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --mirror http://cpan.mirrors.travis-ci.org --cascade-search --notest --force --skip-satisfied --no-interactive"
 before_install:
-  - perlbrew list; perlbrew use perl-5.20.2;
+  - perlbrew list; perlbrew use perl-5.20;
   - sudo apt-get install postgresql libdbd-pg-perl
   - cpanm --quiet --notest App::Sqitch
-  - env; find  ~/ | grep sqitch | grep bin; 
+  - env; find  ~/ | grep sqitch | grep bin;
   - cpanm -n Module::Install Catalyst::Devel Text::CSV JSON::Any MooseX::Types::JSON
   - cpanm -n DBIx::Class
   - cpanm -n DBIx::Class::Optional::Dependencies
