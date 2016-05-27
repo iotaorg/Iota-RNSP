@@ -8,17 +8,17 @@ env:
 before_install:
   - sudo apt-get update -q
   - sudo apt-get install libdbd-pg-perl
+  - cpanm -n DBIx::Class DBD::Pg
+  - cpanm -n App::Sqitch
+  - sqitch --version
 
 install:
-  - cpanm --quiet --notest App::Sqitch
-  - env; find  ~/ | grep sqitch | grep bin;
   - cpanm -n Module::Install Catalyst::Devel Text::CSV JSON::Any MooseX::Types::JSON
-  - cpanm -n DBIx::Class
   - cpanm -n DBIx::Class::Optional::Dependencies
-  - cpanm -n Catalyst::Plugin::Assets
+  - cpanm -n --installdeps .
 before_script:
-  - psql -c 'create database iota_production;' -U postgres
-  - sqitch -d iota_production deploy
+  - psql -c 'create database iota_dev;' -U postgres
+  - sqitch deploy -t local
 notifications:
   irc:
     channels:
