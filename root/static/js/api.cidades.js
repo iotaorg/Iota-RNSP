@@ -182,33 +182,33 @@ $(document).ready(function () {
     }
 
     function loadIndicadoresData() {
-        var param = typeof regionID == "undefined" ? '' : '?region_id=' + regionID;
+        var param = typeof regionID == "undefined" ? '?without_topic=1' : '?without_topic=1&region_id=' + regionID;
 		if (param){
 			if (location.search){
 			var date = location.search.split('valid_from_desc=')[1];
-			var date_parser = date.split("-"); 
+			var date_parser = date.split("-");
 
-			date_parser[0] = parseInt(date_parser[0]) + 1; 
+			date_parser[0] = parseInt(date_parser[0]) + 1;
 
-			date = date_parser.join("-"); 
+			date = date_parser.join("-");
 
 			param = param + '&' + 'from_date='+date;
 			}
-			
+
 		}else{
 
 			if (location.search){
 				var date = location.search.split('valid_from_desc=')[1];
-				var date_parser = date.split("-"); 
+				var date_parser = date.split("-");
 
-				date_parser[0] = parseInt(date_parser[0]) + 1; 
-				
-				date = date_parser.join("-"); 
+				date_parser[0] = parseInt(date_parser[0]) + 1;
+
+				date = date_parser.join("-");
 				param = "?valid_from_desc="+date;
 			}
 
 			param = param.replace("valid_from_desc", "from_date");
-			
+
 		}
 
 
