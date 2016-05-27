@@ -1,11 +1,13 @@
 language: perl
 perl:
   - "5.18"
+addons:
+  postgresql: 9.3
 env:
   - PERL_CPANM_OPT="-v --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --mirror http://cpan.mirrors.travis-ci.org --cascade-search --notest --force --skip-satisfied --no-interactive"
 before_install:
   - sudo apt-get update -q
-  - sudo apt-get install postgresql libdbd-pg-perl
+  - sudo apt-get install libdbd-pg-perl
 
 install:
   - cpanm --quiet --notest App::Sqitch
