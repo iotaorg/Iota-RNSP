@@ -527,9 +527,10 @@ eval {
             is( $obj_public->{series}[3]{formula_value},        100, 'soma ok' );
             is( $obj_public->{series}[3]{variations}[0]{value}, 23,  'terceira variacao ok' );
 
-            ($res) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator' );
+            ($res) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator?from_date=2014-01-01' );
 
             my $obj_public_indicator = eval { decode_json( $res->content ) };
+
             is( $obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{variacoes}[0][0]{value},
                 '19', 'valor da primeira variacao ok' );
             is( $obj_public_indicator->{resumos}{$governanca}{yearly}{indicadores}[0]{valores}[0],

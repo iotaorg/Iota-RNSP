@@ -335,16 +335,16 @@ sub get_values {
 sub get_indicator {
     my ( $region, $year, ) = @_;
 
-    my ( $res, $c ) =
-      ctx_request( GET '/api/public/user/'
-          . $Iota::TestOnly::Mock::AuthUser::_id
-          . '/indicator?from_date='
-          . $year
-          . '-01-01&number_of_periods=1&region_id='
-          . $region->{id} );
-    is( $res->code, 200, 'list the values exists -- 200 Success' );
-    my $list = eval { from_json( $res->content ) };
-    $list = &get_the_key( &get_the_key( &get_the_key($list) ) )->{indicadores}[0]{valores};
+    my $list = [
+        map { $_->{value} } $schema->resultset('IndicatorValue')->search(
+            {
+
+                valid_from => ( $year . '-01-01' ),
+                ( $region ? ( region_id => $region->{id} ) : () )
+            },
+            { result_class => 'DBIx::Class::ResultClass::HashRefInflator', columns => ['value'] }
+        )->all
+    ];
 
     return $list;
 }

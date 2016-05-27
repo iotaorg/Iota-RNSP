@@ -455,7 +455,7 @@ eval {
             is( $obj_public->{series}[3]{formula_value},        100, 'soma ok' );
             is( $obj_public->{series}[3]{variations}[0]{value}, 23,  'terceira variacao ok' );
 
-            ($res) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator' );
+            ($res) = ctx_request( GET '/api/public/user/' . $Iota::TestOnly::Mock::AuthUser::_id . '/indicator?from_date=2014-01-01' );
 
             my $obj_public_indicator = eval { from_json( $res->content ) };
 

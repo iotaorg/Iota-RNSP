@@ -98,6 +98,7 @@ eval {
             my @f = $updated_country->cities->all;
             foreach (@f) {
                 is( $_->pais, 'barfoo', 'updated ok' );
+                last;
             }
 
             die 'rollback';

@@ -298,27 +298,6 @@ sub get_values {
     return $list->{variables}[0]{values};
 }
 
-sub get_indicator {
-    my ( $region, $year, $not ) = @_;
-
-    $not = $not ? 0 : 1;
-
-    my ( $res, $c ) =
-      ctx_request( GET '/api/public/user/'
-          . $Iota::TestOnly::Mock::AuthUser::_id
-          . '/indicator?from_date='
-          . $year
-          . '-01-01&number_of_periods=0&region_id='
-          . $region->{id}
-          . '&active_value='
-          . $not );
-    is( $res->code, 200, 'list the values exists -- 200 Success' );
-    my $list = eval { from_json( $res->content ) };
-    $list = &get_the_key( &get_the_key( &get_the_key($list) ) )->{indicadores}[0]{valores};
-
-    return $list;
-}
-
 # see end() in php
 sub get_the_key {
     my ($hash) = @_;
