@@ -3,6 +3,8 @@ perl:
   - "5.18"
 addons:
   postgresql: 9.3
+services:
+  - redis-server
 env:
   - PERL_CPANM_OPT="-v --mirror http://cpan.cpantesters.org/ --mirror http://search.cpan.org/CPAN --mirror http://cpan.mirrors.travis-ci.org --cascade-search --notest --force --skip-satisfied --no-interactive"
 before_install:
