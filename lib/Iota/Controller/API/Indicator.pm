@@ -318,6 +318,7 @@ sub indicator_DELETE {
             $obj->indicator_variations->delete;
 
             $obj->indicator_variables_variations->delete;
+$obj->indicator_network_visibilities->delete;
 
             $obj->user_indicators->delete;
             $obj->delete;
