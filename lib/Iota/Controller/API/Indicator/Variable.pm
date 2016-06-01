@@ -866,17 +866,20 @@ sub by_period_GET {
             my $value_table = $region_id ? 'region_variable_values' : 'values';
             my $active_value = exists $c->req->params->{active_value} ? $c->req->params->{active_value} : 1;
 
-            my $rsx = $row->$value_table->search(
+           my $rsx = $row->$value_table->search(
                 {
                     'me.valid_from' => $c->stash->{valid_from},
                     'me.user_id'    => $c->stash->{user_id} || $c->user->id,
                     (
                         'me.region_id'    => $region_id,
-                        'me.active_value' => $active_value
+                        'me.active_value' => $active_value,
+
+                        (!$active_value ? ( generated_by_compute => undef ) : ())
                     ) x !!$region_id
-                }
+                },
+                { order_by => {-desc => 'end_ts'}, rows => 1 }
             );
-            my $value = $rsx->first;
+            my $value = $rsx->next;
             if ($value) {
                 $rowx = {
                     %{$rowx},
