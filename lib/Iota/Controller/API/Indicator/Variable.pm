@@ -877,7 +877,7 @@ sub by_period_GET {
                         (!$active_value ? ( generated_by_compute => undef ) : ())
                     ) x !!$region_id
                 },
-                { order_by => {-desc => 'end_ts'}, rows => 1 }
+                 { ($region_id? ( order_by => {-desc => 'end_ts'})  : ()), rows => 1 }
             );
             my $value = $rsx->next;
             if ($value) {
