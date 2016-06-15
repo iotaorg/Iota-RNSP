@@ -10,7 +10,16 @@ sub process {
 
     my $file = $upload->tempname;
 
-    my $out = `docker run --rm -v $file:/tmp/arq.kml:ro iota/togeojson togeojson /tmp/arq.kml`;
+    my $out;
+
+    if ( exists $ENV{TOGEOJSON_BIN} ) {
+        die "Malfunctioning togeojson binary\n" unless -e $ENV{TOGEOJSON_BIN} && -x $ENV{TOGEOJSON_BIN};
+        $out = `$ENV{TOGEOJSON_BIN} $file`;
+    }
+    else {
+        $out = `docker run --rm -v $file:/tmp/arq.kml:ro iota/togeojson togeojson /tmp/arq.kml`;
+    }
+
     if ( $? == -1 ) {
         die("Unssuported KML $!\n");
     }
