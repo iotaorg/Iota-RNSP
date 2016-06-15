@@ -1,82 +1,95 @@
 package Iota::Model::KML;
 use Moose;
 use utf8;
-use JSON qw/encode_json/;
-use XML::Simple qw(:strict);
-
-use Iota::Model::KML::LineString;
-use Iota::Model::KML::Polygon;
-use Iota::Model::KML::LinearRing;
+use JSON qw/encode_json decode_json/;
 
 sub process {
     my ( $self, %param ) = @_;
 
     my $upload = $param{upload};
-    my $schema = $param{schema};
 
     my $file = $upload->tempname;
 
-    my $str_or_file = $self->remove_xsi($file);
-
-    my $kml = XMLin(
-        $str_or_file,
-        ForceArray => 1,
-        KeyAttr    => {},
-    );
-
-    my $parsed;
-
-    # keep that in order!
-    for my $mod (qw/LinearRing LineString Polygon/) {
-        my $class = "Iota::Model::KML::$mod";
-        my $test  = $class->new->parse($kml);
-        next unless defined $test;
-
-        $parsed = $test;
-        last;
+    my $out = `docker run --rm -v $file:/tmp/arq.kml:ro iota/togeojson togeojson /tmp/arq.kml`;
+    if ( $? == -1 ) {
+        die("Unssuported KML $!\n");
+    }
+    elsif ( $? & 127 ) {
+        die( sprintf "child died with signal %d, %s coredump\n", ( $? & 127 ), ( $? & 128 ) ? 'with' : 'without' );
     }
 
-    if ( defined $parsed ) {
+    my $struct = eval { decode_json $out};
+    die "Unssuported KML JSON $@\n" if $@;
 
-        return $parsed;
+    die "Unssuported KML: Missing FeatureCollection\n" unless $struct->{type} eq 'FeatureCollection';
 
-    }
-    else {
+    my @out;
+    foreach my $feature ( @{ $struct->{features} } ) {
+        next unless $feature->{type} eq 'Feature';
+        next if $feature->{geometry}{type} eq 'Point';
 
-        die("Unssuported KML\n");
-    }
+        if ( exists $feature->{geometry}{geometries} ) {
 
-}
+            foreach my $subfeature ( @{ $feature->{geometry}{geometries} } ) {
 
-sub remove_xsi {
-    my ( $self, $file ) = @_;
+                my @vec;
+                foreach my $geom ( @{ $subfeature->{coordinates} } ) {
 
-    # trata o erro Undeclared prefix: xsi
-    my $str =
-q{xsi:schemaLocation="http://www.opengis.net/kml/2.2 http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd http://www.google.com/kml/ext/2.2 http://code.google.com/apis/kml/schema/kml22gx.xsd"};
-    $str = quotemeta($str);
+                    # multy polygon?
+                    if ( ref $geom->[0] eq 'ARRAY' ) {
 
-    open( my $fh, '<:utf8', $file ) or die $!;
+                        foreach my $geom2 ( @{$geom} ) {
+                            my $num = scalar @$geom2;
+                            die "Unssuported KML\n" if $num == 1;
+                            push @vec, [ $geom2->[0], $geom2->[1] ];
+                        }
 
-    my $start_xml = '';
-    $start_xml .= <$fh> for ( 1 .. 4 );
+                    }
+                    else {
+                        my $num = scalar @$geom;
+                        die "Unssuported KML\n" if $num == 1;
+                        push @vec, [ $geom->[0], $geom->[1] ];
+                    }
 
-    if ( $start_xml =~ /$str/ ) {
+                }
 
-        # ok, read all and return the content
+                push @out, { name => $feature->{properties}{name}, latlng => \@vec } if @vec;
+            }
 
-        $start_xml =~ s/\s+$str//g;
+        }
+        else {
+            next unless ref $feature->{geometry}{coordinates} eq 'ARRAY';
 
-        while ( my $l = <$fh> ) {
-            $start_xml .= $l;
+            my @vec;
+            foreach my $geom ( @{ $feature->{geometry}{coordinates} } ) {
+
+                # multy polygon?
+                if ( ref $geom->[0] eq 'ARRAY' ) {
+
+                    foreach my $geom2 ( @{$geom} ) {
+                        my $num = scalar @$geom2;
+                        die "Unssuported KML\n" if $num == 1;
+                        push @vec, [ $geom2->[0], $geom2->[1] ];
+                    }
+
+                }
+                else {
+                    my $num = scalar @$geom;
+                    die "Unssuported KML\n" if $num == 1;
+                    push @vec, [ $geom->[0], $geom->[1] ];
+                }
+
+            }
+
+            push @out, { name => $feature->{properties}{name}, latlng => \@vec } if @vec;
         }
 
-        close $fh;
-        return $start_xml;
     }
 
-    close $fh;
-    return $file;    # return the filename
+    die "Unssuported KML\n" if scalar @out == 0;
+
+    return { vec => \@out };
+
 }
 
 1;

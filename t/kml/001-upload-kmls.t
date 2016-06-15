@@ -102,7 +102,6 @@ eval {
 
             is( @{ $ret1->{vec} }, 2, 'tem 2 vetores' );
             undef $ret1;
-
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
@@ -121,7 +120,7 @@ eval {
                 {
                     'vec' => [
                         {
-                            'latlng' => [ [ '-69.6214070', '-8.2150924' ], [ '-69.5869513', '-8.2445153' ] ],
+                            'latlng' => [ [ '-69.621407', '-8.2150924' ], [ '-69.5869513', '-8.2445153' ] ],
                             'name' => undef
                         },
                         {
@@ -144,6 +143,7 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             $ret2 = eval { from_json( $res->content ) };
+
             is( @{ $ret2->{vec} }, 2, 'tem 2 vetores' );
 
             is_deeply(
@@ -176,6 +176,7 @@ eval {
             $ret2 = eval { from_json( $res->content ) };
             is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
 
+
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
@@ -187,7 +188,8 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             $ret2 = eval { from_json( $res->content ) };
-            is( @{ $ret2->{vec} }, 289, 'tem 96 vetores' );
+            is( @{ $ret2->{vec} }, 289, 'tem 289 vetores' );
+
 
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
@@ -201,8 +203,8 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
             $ret2 = eval { from_json( $res->content ) };
-            is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
 
+            is( @{ $ret2->{vec} }, 96, 'tem 96 vetores' );
             ( $res, $c ) = ctx_request(
                 POST $user1_uri. '/kml',
                 'Content-Type' => 'form-data',
