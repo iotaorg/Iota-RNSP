@@ -3,6 +3,9 @@ use strict;
 use warnings;
 
 use Test::More;
+
+plan skip_all => 'TRAVIS DISABLED FOR THIS ' if exists $ENV{TRAVIS};
+
 use utf8;
 
 use FindBin qw($Bin);
