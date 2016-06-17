@@ -101,7 +101,6 @@
 
 </div>
 
-
 <script type="text/javascript">
     var userID = [% user.id %];
     var cityID = [% city.id %];
@@ -111,7 +110,15 @@
     var load_map = [{
         map_elm: '#mapa',
 
+        [% IF subregions.size %]
         polygons: [[%-FOR rr IN subregions -%]{name: '[%rr.name.replace('\\\\', '\\\\').replace("'", "\\'")%]',p:['[% rr.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]'],color:'#1E90FF'},[%-END-%]]
+
+        [%ELSE%]
+            polygons: [
+                { name: '[%region.name.replace('\\\\', '\\\\').replace("'", "\\'")%]', p : ['[% region.polygon_path.replace("'", "\\'").replace('\\\\', '\\\\') %]'], color: '#1E90FF' }
+            ]
+
+        [%END%]
     }];
 [%ELSE%]
     [%IF region.polygon_path%]
