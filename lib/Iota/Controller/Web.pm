@@ -817,7 +817,7 @@ sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(
 
 sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) {
     my ( $self, $c, $regiao ) = @_;
-    warn 'LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL2';
+
     $c->stash->{regiao_url} = $regiao;
 
     $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] )
@@ -895,13 +895,16 @@ sub stash_comparacao_distritos : Private {
 
     my $polys = {};
     my $regs  = {};
+
     foreach my $reg ( @{ $c->stash->{city}{regions} } ) {
-        next unless $reg->{subregions};
+        #next unless $reg->{subregions};
 
         if ( $region->depth_level == 2 ) {
             $regs->{ $reg->{id} } = { map { $_ => $reg->{$_} } qw/name name_url/ };
 
-            foreach my $sub ( @{ $reg->{subregions} } ) {
+            my $count = 0;
+            foreach my $sub ( @{ $reg->{subregions} ||[]} ) {
+                $count++;
 
                 delete $sub->{polygon_path}
                   if defined $sub->{polygon_path}
@@ -910,6 +913,8 @@ sub stash_comparacao_distritos : Private {
 
                 push @{ $polys->{ $reg->{id} } }, $sub->{polygon_path};
             }
+
+            push @{ $polys->{ $reg->{id} } }, $reg->{polygon_path} unless $count;
         }
         elsif ( $region->depth_level == 3 ) {
             foreach my $sub ( @{ $reg->{subregions} } ) {
@@ -987,6 +992,7 @@ sub stash_comparacao_distritos : Private {
             $out->{$ano}{$variacao} = { all => $distintos }
               unless exists $out->{$ano}{$variacao};
 
+use DDP; p $regs;
             foreach my $region_id ( keys %$regs ) {
 
                 unless ( exists $distintos_ref_id->{$region_id} ) {
@@ -1779,7 +1785,7 @@ sub stash_tela_regiao {
             city_id  => $c->stash->{city}{id}
         }
     )->next;
-    p $region;
+
     $c->detach('/error_404') unless $region;
     $c->stash(
         region   => $region,
