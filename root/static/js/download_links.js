@@ -42,16 +42,32 @@ var md = function () {
             if ((cidade == '') == false) {
                 url = url + '/' + cidade;
             }
-            if ((regiao == '') == false) {
-				if (regiao == 'all'){
-                	url = url + '/todas-regioes';
-				}else{
-                	url = url + '/regiao/' + regiao;
-				}
-            }
+
             if ((indi == '') == false) {
-                url = url + '/' + indi;
+
+                if ((regiao == '') == false) {
+                    if (regiao == 'all'){
+                        url = url + indi + '/todas-regioes';
+                    }else{
+                        url = url + '/' + indi;
+                        url = url + '/regiao/' + regiao;
+                    }
+                }else{
+                    url = url + '/' + indi;
+                }
+
+            }else{
+                if ((regiao == '') == false) {
+                    if (regiao == 'all'){
+                        url = url + '/todas-regioes';
+                    }else{
+                        url = url + '/regiao/' + regiao;
+                    }
+                }
+
             }
+
+
             base_uri = 'http://' + window.location.host + url;
             url = base_uri + '/' + arquivo;
             $('#id_link').attr('href', url);
@@ -80,8 +96,8 @@ var md = function () {
                             });
                         }
                     });
-					
-					
+
+
                     $region.find('option').each(function(){
 						console.log($(this).val());
 						if ($(this).val() != "" && $(this).val() != "all"){
