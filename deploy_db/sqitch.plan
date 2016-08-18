@@ -31,3 +31,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0064-topic-network [0063-fix-type] 2015-07-03T18:55:51Z Renan Carvalho <renan.carvalho@eokoe.com> # criando campo na tabela net para tema
 0065-0065-new-column-userbestpractice [0064-topic-network] 2015-12-14T14:27:39Z Renan Carvalho <renan.carvalho@eokoe.com> # nova coluna no boa pratica
 0066-fix-download-view [0065-0065-new-column-userbestpractice] 2016-01-30T18:07:10Z renatopc,,, <renato@oodcronpc> # download-var-view
+0067-region-trigger [0066-fix-download-view] 2016-06-17T20:14:52Z renatopc,,, <renato@oodcronpc> # region-trigger
