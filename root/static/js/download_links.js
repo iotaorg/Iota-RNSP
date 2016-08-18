@@ -47,7 +47,7 @@ var md = function () {
 
                 if ((regiao == '') == false) {
                     if (regiao == 'all'){
-                        url = url + indi + '/todas-regioes';
+                        url = url +'/'+ indi + '/todas-regioes';
                     }else{
                         url = url + '/' + indi;
                         url = url + '/regiao/' + regiao;
