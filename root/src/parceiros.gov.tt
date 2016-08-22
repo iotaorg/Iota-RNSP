@@ -149,14 +149,6 @@
 <div class="views-field views-field-path">        <span class="field-content">/parceiros/abema-0</span>  </div>
 <div class="views-field views-field-field-site">        <div class="field-content">http://www.abema.org.br/site/pt-br/home/home.php</div>  </div>  </div>
 
-
-<div class="logo-item">
-<div class="views-field views-field-title">        <span class="field-content">Instituto Cidade Democrática</span>  </div>
-<div class="views-field views-field-field-logo">        <div class="field-content"><span typeof="foaf:Image" class="spt-icd" width="55" height="55" alt="" /></div>  </div>
-<div class="views-field views-field-path">        <span class="field-content">/parceiros/icd</span>  </div>
-<div class="views-field views-field-field-site">        <div class="field-content">http://www.cidadedemocratica.org.br/</div>  </div> </div>
-
-
 <div class="logo-item">
 
 <div class="views-field views-field-title">        <span class="field-content">Afobras</span>  </div>
@@ -265,6 +257,14 @@
 <div class="views-field views-field-field-logo">        <div class="field-content"><span typeof="foaf:Image" class="spt-socioambiental" width="51" height="55" alt="" /></div>  </div>
 <div class="views-field views-field-path">        <span class="field-content">/parceiros/instituto-socioambiental</span>  </div>
 <div class="views-field views-field-field-site">        <div class="field-content">http://www.socioambiental.org/</div>  </div>  </div>
+
+<div class="logo-item">
+<div class="views-field views-field-title">        <span class="field-content">Instituto Cidade Democrática</span>  </div>
+<div class="views-field views-field-field-logo">        <div class="field-content"><span typeof="foaf:Image" class="spt-icd" width="55" height="55" alt="" /></div>  </div>
+<div class="views-field views-field-path">        <span class="field-content">/parceiros/icd</span>  </div>
+<div class="views-field views-field-field-site">        <div class="field-content">http://www.cidadedemocratica.org.br/</div>  </div> </div>
+
+
 <div class="logo-item">
 
 <div class="views-field views-field-title">        <span class="field-content">Mobilize</span>  </div>
