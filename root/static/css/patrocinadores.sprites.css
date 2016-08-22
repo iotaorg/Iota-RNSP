@@ -46,9 +46,9 @@
 }
 
 .spt-arapyau{
-    background-position: -4592px 0;
-    width: 73px;
-    height: 55px;
+    width: 120px;
+    background: url('http://www.cidadessustentaveis.org.br/sites/default/files/styles/logo_parceiros_thumbnail/public/arapyau.jpg?itok=790rU_ba');
+    height: 80px;
 }
 
 .spt-associacao-brasileira-dos-municipios-abm{
@@ -536,3 +536,4 @@
     width: 44px;
     height: 55px;
 }
+
