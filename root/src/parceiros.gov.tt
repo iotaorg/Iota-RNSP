@@ -362,13 +362,12 @@
 
 <div class="logo-item">
 <div class="views-field views-field-title">        <span class="field-content">Instituto Cidade Democrática</span>  </div>
-<div class="views-field views-field-field-logo">        <div class="field-content"><span typeof="foaf:Image" class="spt-icd"  height="96" alt="" /></div>  </div>
+<div class="views-field views-field-field-logo">        <div class="field-content"><span typeof="foaf:Image" class="spt-icd" width="55" height="55" alt="" /></div>  </div>
 <div class="views-field views-field-path">        <span class="field-content">/parceiros/icd</span>  </div>
-<div class="views-field views-field-field-site">        <div class="field-content">http://www.cidadedemocratica.org.br/</div>  </div>  </div>
+<div class="views-field views-field-field-site">        <div class="field-content">http://www.cidadedemocratica.org.br/</div>  </div>
 </div>
 
-
-
+</div>
 
 
 
