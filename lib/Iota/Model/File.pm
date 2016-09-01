@@ -55,6 +55,11 @@ sub process {
 
     my %reg_vs_id = map { $_->{id} => $_ } @regs_db;
 
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) =
+                                                localtime(time);
+    $year += 1900;
+
+
     # se tem menos variaveis no banco do que as enviadas
     if ( @vars_db < keys %varids ) {
         $status = '';
@@ -120,6 +125,13 @@ sub process {
 
                         #  die "invalid number";
                     }
+                    if ( $r->{date} >= $year ) {
+                        $status =
+"Ano '".$r->{date}."' recusada, envie dados anteriores à $year";
+
+                        #  die "invalid number";
+                    }
+                    
 
                     my $ref = {
                         do_not_calc => 1,
