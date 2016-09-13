@@ -67,7 +67,7 @@
             <div class="span3 col-sm-3">
                 <div >
                     <div class="iota-logo">
-                        <a href="http://eokoe.github.io/Iota/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><span class="spt-logo-96" title="Iota"></span></a>
+                        <a href="https://github.com/iotaorg/" target="_blank" title="[%l('Clique aqui para saber mais sobre o Iota')%]"><span class="spt-logo-96" title="Iota"></span></a>
                     </div>
                     <div class="opendata-logo">
                         <a href="http://www.opendefinition.org/okd/" target="_blank"><span class="spt-od_80x15_blue" title="OpenData"></span></a>
