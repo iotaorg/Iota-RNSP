@@ -8,7 +8,7 @@ Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira p
 [Consulte o site do Iota!](http://iotaorg.github.io/Iota-RNSP/)
 
 
-[![Build Status](https://secure.travis-ci.org/eokoe/Iota.png?branch=master)](https://travis-ci.org/eokoe/Iota)
+[![Build Status](https://secure.travis-ci.org/iotaorg/Iota-RNSP.png?branch=master)](https://travis-ci.org/iotaorg/Iota-RNSP)
 
 ## Wiki
 
