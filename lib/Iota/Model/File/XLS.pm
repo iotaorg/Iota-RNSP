@@ -5,13 +5,14 @@ use utf8;
 use DateTime;
 use DateTime::Format::Pg;
 
-use Spreadsheet::ParseExcel::Stream;
 use DateTime::Format::Excel;
 
 use Encode;
 
 sub parse {
     my ( $self, $file ) = @_;
+
+    require Spreadsheet::ParseExcel::Stream;
 
     my $xls = Spreadsheet::ParseExcel::Stream->new($file);
 
