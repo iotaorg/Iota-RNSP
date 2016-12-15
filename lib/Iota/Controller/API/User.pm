@@ -227,6 +227,8 @@ sub user_GET {
 
                         name => $user->institute->name,
                         id   => $user->institute->id,
+
+                        metadata =>  $user->institute->build_metadata
                     }
                   )
                 : ( institute => undef )
