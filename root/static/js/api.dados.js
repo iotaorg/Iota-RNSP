@@ -612,7 +612,7 @@ $(document).ready(function () {
             }
 
             legendas.push({
-                name: "Referência de Meta",
+                name: $('#ref_or_ods').text(),
                 color: color_meta,
                 meta: true
             });
