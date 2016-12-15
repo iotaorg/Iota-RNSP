@@ -33,7 +33,7 @@ sub process {
     $status .= 'Linhas aceitas: ' . $parse->{ok} . "\n";
     $status .= 'Linhas ignoradas: ' . $parse->{ignored} . "\n"
       if $parse->{ignored};
-    $status .= "Cabeçalho não encontrado!\n" unless $parse->{header_found};
+    $status .= "Cabe&ccedil;alho nao encontrado!\n" unless $parse->{header_found};
 
     my %varids = map { $_->{id} => 1 } @{ $parse->{rows} };
     my $file_id;

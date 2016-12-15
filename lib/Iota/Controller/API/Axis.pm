@@ -12,6 +12,9 @@ sub base : Chained('/api/base') : PathPart('axis') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     $c->stash->{collection} = $c->model('DB::Axis');
 
+    if ( $c->req->uri->host eq 'indicadores.cidadessustentaveis.org.br' ) {
+        $c->stash->{collection} = $c->stash->{collection}->search( { 'me.id' => { '<' => 100 } } );
+    }
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
