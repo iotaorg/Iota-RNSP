@@ -149,6 +149,12 @@ $(document).ready(function () {
                 }));
             }
 
+            if (typeof (user_files.prestacao_de_co) != "undefined") {
+                $tabela.append("<dd><a href='$$dado' target='_blank'>Prestação de contas</a></dd>".render({
+                    dado: user_files.prestacao_de_co
+                }));
+            }
+
             if (typeof (user_files.programa_metas) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Programa de Metas</a></dd>".render({
                     dado: user_files.programa_metas
