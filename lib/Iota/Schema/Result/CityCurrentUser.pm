@@ -37,6 +37,7 @@ __PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 =cut
 
 __PACKAGE__->table("city_current_user");
+__PACKAGE__->result_source_instance->view_definition(" SELECT c.id AS city_id,\n    u.id AS user_id\n   FROM (city c\n     JOIN \"user\" u ON ((u.city_id = c.id)))");
 
 =head1 ACCESSORS
 
@@ -60,8 +61,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2014-08-20 15:33:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:t3QI1FdfoMMlq4T0LKzQMQ
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2016-12-15 15:15:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9hUYuKv4vKg0aiP95uYIrQ
 
 __PACKAGE__->add_columns(
     "city_id", { data_type => "integer", is_nullable => 0 },

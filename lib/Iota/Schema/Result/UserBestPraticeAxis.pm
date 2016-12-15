@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::UserBestPraticeAxis;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<user_best_pratice_axis>
 
@@ -62,17 +61,17 @@ __PACKAGE__->table("user_best_pratice_axis");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "user_best_pratice_axis_id_seq",
-    },
-    "axis_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-    "user_best_pratice_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "user_best_pratice_axis_id_seq",
+  },
+  "axis_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "user_best_pratice_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -98,9 +97,10 @@ Related object: L<Iota::Schema::Result::Axis>
 =cut
 
 __PACKAGE__->belongs_to(
-    "axis", "Iota::Schema::Result::Axis",
-    { id            => "axis_id" },
-    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  "axis",
+  "Iota::Schema::Result::Axis",
+  { id => "axis_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user_best_pratice
@@ -112,14 +112,15 @@ Related object: L<Iota::Schema::Result::UserBestPratice>
 =cut
 
 __PACKAGE__->belongs_to(
-    "user_best_pratice",
-    "Iota::Schema::Result::UserBestPratice",
-    { id            => "user_best_pratice_id" },
-    { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+  "user_best_pratice",
+  "Iota::Schema::Result::UserBestPratice",
+  { id => "user_best_pratice_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-06-24 12:03:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QrruFp1DEecnB2X7xPIy/A
+
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2016-12-15 15:15:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X/nWvZjenLtIwtvM2wU8xA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

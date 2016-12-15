@@ -37,6 +37,7 @@ __PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 =cut
 
 __PACKAGE__->table("download_variable");
+__PACKAGE__->result_source_instance->view_definition(" SELECT c.id AS city_id,\n    c.name AS city_name,\n    v.id AS variable_id,\n    v.type,\n    v.cognomen,\n    (v.period)::character varying AS period,\n    v.source AS exp_source,\n    v.is_basic,\n    m.name AS measurement_unit_name,\n    v.name,\n    vv.valid_from,\n    vv.value,\n    vv.observations,\n    vv.source,\n    vv.user_id,\n    i.id AS institute_id,\n    vv.created_at AS updated_at\n   FROM (((((variable_value vv\n     JOIN variable v ON ((v.id = vv.variable_id)))\n     LEFT JOIN measurement_unit m ON ((m.id = v.measurement_unit_id)))\n     JOIN \"user\" u ON ((u.id = vv.user_id)))\n     JOIN institute i ON ((i.id = u.institute_id)))\n     JOIN city c ON ((c.id = u.city_id)))\nUNION ALL\n SELECT c.id AS city_id,\n    c.name AS city_name,\n    (- vvv.id) AS variable_id,\n    v.type,\n    v.name AS cognomen,\n    ix.period,\n    NULL::text AS exp_source,\n    NULL::boolean AS is_basic,\n    NULL::character varying AS measurement_unit_name,\n    ((vvv.name || ': '::text) || v.name) AS name,\n    vv.valid_from,\n    vv.value,\n    NULL::character varying AS observations,\n    NULL::character varying AS source,\n    vv.user_id,\n    i.id AS institute_id,\n    vv.created_at AS updated_at\n   FROM ((((((indicator_variables_variations_value vv\n     JOIN indicator_variations vvv ON ((vvv.id = vv.indicator_variation_id)))\n     JOIN indicator_variables_variations v ON ((v.id = vv.indicator_variables_variation_id)))\n     JOIN indicator ix ON ((ix.id = vvv.indicator_id)))\n     JOIN \"user\" u ON ((u.id = vv.user_id)))\n     JOIN institute i ON ((i.id = u.institute_id)))\n     JOIN city c ON ((c.id = u.city_id)))\n  WHERE (vv.active_value = true)");
 
 =head1 ACCESSORS
 
@@ -178,8 +179,8 @@ __PACKAGE__->add_columns(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JMpxFIEGzwpJttFJCbxOpA
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2016-12-15 15:15:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mbgzD/4xXvoQuYlCOo5LFA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

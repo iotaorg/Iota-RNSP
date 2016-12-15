@@ -1,5 +1,4 @@
 use utf8;
-
 package Iota::Schema::Result::State;
 
 # Created by DBIx::Class::Schema::Loader
@@ -30,7 +29,7 @@ use base 'DBIx::Class::Core';
 
 =cut
 
-__PACKAGE__->load_components( "InflateColumn::DateTime", "TimeStamp", "PassphraseColumn" );
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
 =head1 TABLE: C<state>
 
@@ -83,30 +82,30 @@ __PACKAGE__->table("state");
 =cut
 
 __PACKAGE__->add_columns(
-    "id",
-    {
-        data_type         => "integer",
-        is_auto_increment => 1,
-        is_nullable       => 0,
-        sequence          => "state_id_seq",
-    },
-    "name_url",
-    { data_type => "text", is_nullable => 1 },
-    "name",
-    { data_type => "text", is_nullable => 1 },
-    "created_at",
-    {
-        data_type     => "timestamp",
-        default_value => \"current_timestamp",
-        is_nullable   => 0,
-        original      => { default_value => \"now()" },
-    },
-    "created_by",
-    { data_type => "integer", is_nullable => 0 },
-    "country_id",
-    { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    "uf",
-    { data_type => "text", is_nullable => 0 },
+  "id",
+  {
+    data_type         => "integer",
+    is_auto_increment => 1,
+    is_nullable       => 0,
+    sequence          => "state_id_seq",
+  },
+  "name_url",
+  { data_type => "text", is_nullable => 1 },
+  "name",
+  { data_type => "text", is_nullable => 1 },
+  "created_at",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
+  "created_by",
+  { data_type => "integer", is_nullable => 0 },
+  "country_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "uf",
+  { data_type => "text", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -133,7 +132,7 @@ __PACKAGE__->set_primary_key("id");
 
 =cut
 
-__PACKAGE__->add_unique_constraint( "state_name_uri_key", ["name_url"] );
+__PACKAGE__->add_unique_constraint("state_name_uri_key", ["name_url"]);
 
 =head1 RELATIONS
 
@@ -146,9 +145,10 @@ Related object: L<Iota::Schema::Result::City>
 =cut
 
 __PACKAGE__->has_many(
-    "cities", "Iota::Schema::Result::City",
-    { "foreign.state_id" => "self.id" },
-    { cascade_copy       => 0, cascade_delete => 0 },
+  "cities",
+  "Iota::Schema::Result::City",
+  { "foreign.state_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
 );
 
 =head2 country
@@ -160,19 +160,20 @@ Related object: L<Iota::Schema::Result::Country>
 =cut
 
 __PACKAGE__->belongs_to(
-    "country",
-    "Iota::Schema::Result::Country",
-    { id => "country_id" },
-    {
-        is_deferrable => 0,
-        join_type     => "LEFT",
-        on_delete     => "NO ACTION",
-        on_update     => "NO ACTION",
-    },
+  "country",
+  "Iota::Schema::Result::Country",
+  { id => "country_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-04-26 08:59:49
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uPyNcS8+KsnNj48OCskKjg
+
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2016-12-15 15:15:31
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Op5gXQSe2R1ZoQua/Bse1w
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
