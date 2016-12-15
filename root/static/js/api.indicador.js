@@ -160,9 +160,11 @@ $(document).ready(function () {
             fonte_meta = indicador_data.goal_source;
         }
         if (indicador_data.goal_explanation) {
-            $(".tabela", $dados).append('<dt>Referência de Meta:</dt><dd>$$dado<blockquote><small><cite title="Fonte: $$fonte_meta">$$fonte_meta</cite></small></blockquote></dd>'.render({
+            $(".tabela", $dados).append('<dt>$$aa:</dt><dd>$$dado<blockquote><small><cite title="$$bb: $$fonte_meta">$$fonte_meta</cite></small></blockquote></dd>'.render({
                 dado: indicador_data.goal_explanation,
-                fonte_meta: fonte_meta
+                fonte_meta: fonte_meta,
+                aa: $('#ref_or_ods').text(),
+                bb: $('#font_or_ods').text(),
             }));
         }
     }
@@ -204,8 +206,9 @@ $(document).ready(function () {
                         goal_values = goal_values.replace("fonte:", "Fonte:");
                         goal_values = goal_values.replace("Fonte:", '<blockquote><small><cite title="Fonte da meta">') + "</cite></small></blockquote>";
                     }
-                    $(".tabela", $dados).append("<dt>Meta:</dt><dd>$$dado</dd>".render({
-                        dado: goal_values
+                    $(".tabela", $dados).append("<dt>$$aa:</dt><dd>$$dado</dd>".render({
+                        dado: goal_values,
+                        aa: $('#ref_or_ods').text()
                     }));
                 }
 
@@ -392,7 +395,7 @@ $(document).ready(function () {
                                 valoresxx = vv.variations_values;
                             }
                         });
-						
+
 
                         if (hvariado.length) {
 

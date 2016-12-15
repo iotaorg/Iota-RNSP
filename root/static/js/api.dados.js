@@ -588,6 +588,7 @@ $(document).ready(function () {
         var tooltips = [];
 
         var ymax, ymin, ymin_real, maxlength;
+        // quando ODS=true isso nao tem goal, entao beleza.
         if (indicadorDATA.goal) {
 
             var $maximo_linhas = dadosGrafico.labels.length;

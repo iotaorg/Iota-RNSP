@@ -65,7 +65,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my $net    = $c->model('DB::Network')->search(
         { domain_name => $domain },
         {
-            join     => 'institute',
+            prefetch => 'institute',
             collapse => 1,
             columns  => [
                 qw/
@@ -81,6 +81,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
                   institute.short_name
                   institute.bypass_indicator_axis_if_custom
                   institute.hide_empty_indicators
+                  institute.metadata
                   /
             ]
         }
@@ -102,7 +103,9 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{network} = $net;
 
-    $c->stash->{institute}  = $net->institute;
+    $c->stash->{institute}    = $net->institute;
+    $c->stash->{institute_metadata} = $c->stash->{institute}->build_metadata;
+
     $c->stash->{c_req_path} = $c->req->path;
 }
 
@@ -897,13 +900,14 @@ sub stash_comparacao_distritos : Private {
     my $regs  = {};
 
     foreach my $reg ( @{ $c->stash->{city}{regions} } ) {
+
         #next unless $reg->{subregions};
 
         if ( $region->depth_level == 2 ) {
             $regs->{ $reg->{id} } = { map { $_ => $reg->{$_} } qw/name name_url/ };
 
             my $count = 0;
-            foreach my $sub ( @{ $reg->{subregions} ||[]} ) {
+            foreach my $sub ( @{ $reg->{subregions} || [] } ) {
                 $count++;
 
                 delete $sub->{polygon_path}
@@ -992,7 +996,8 @@ sub stash_comparacao_distritos : Private {
             $out->{$ano}{$variacao} = { all => $distintos }
               unless exists $out->{$ano}{$variacao};
 
-use DDP; p $regs;
+            use DDP;
+            p $regs;
             foreach my $region_id ( keys %$regs ) {
 
                 unless ( exists $distintos_ref_id->{$region_id} ) {
