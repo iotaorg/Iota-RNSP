@@ -53,6 +53,9 @@ __PACKAGE__->config( default => 'application/json' );
 
 use Digest::SHA1 qw(sha1_hex);
 use Time::HiRes qw(time);
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
 
 sub api_key_check : Private {
     my ( $self, $c ) = @_;
@@ -64,21 +67,26 @@ sub api_key_check : Private {
         $self->status_forbidden( $c, message => "access denied" ), $c->detach
           unless defined $api_key;
 
-        my $user_session = $c->model('DB::UserSession')->search(
-            {
-                api_key      => $api_key,
-                valid_until  => { '>=' => \'now()' },
-                #valid_for_ip => $c->req->address
-            }
-        )->first;
+        my $cache_key    = "session-for-$api_key";
+        my $user_session = $redis->get($cache_key);
+        if ($user_session) {
+            $user_session = thaw($user_session);
+            $user_session->result_source->schema( $c->model('DB')->schema );
+        }
+        else {
+            $user_session = $c->model('DB::UserSession')->search(
+                {
+                    api_key     => $api_key,
+                    valid_until => { '>=' => \'now()' },
+                }
+            )->first;
+
+            $redis->setex( $cache_key, 60 * 5, $user_session ? nfreeze($user_session) : '' );
+        }
+
         my $user = $user_session ? $c->find_user( { id => $user_session->user_id } ) : undef;
 
-        $self->status_forbidden( $c, message => "access denied", ),
-
-          #$c->logx(
-          #'sys', "API_KEY invalida chave " . ( $api_key ? $api_key : '' )
-          #),
-          $c->detach
+        $self->status_forbidden( $c, message => "access denied", ), $c->detach
           unless defined $api_key && $user;
 
         $c->stash->{logged_user} = $user;
@@ -101,12 +109,7 @@ sub root : Chained('/') : PathPart('api') : CaptureArgs(0) {
 sub public_lexicons : Chained('root') PathPart('public/lexicons') Args(0) {
     my ( $self, $c ) = @_;
 
-    my $rs = $c->model('DB::Lexicon')->search(
-        undef,
-        {
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-        }
-    );
+    my $rs = $c->model('DB::Lexicon')->search( undef, { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     my $out = {};
     while ( my $r = $rs->next ) {
@@ -156,7 +159,8 @@ sub login_POST {
     if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
         my $item = $c->user->sessions->create(
             {
-                api_key      => sha1_hex( rand(time) ),
+                api_key => sha1_hex( rand(time) ),
+
                 #valid_for_ip => $c->req->address
             }
         );

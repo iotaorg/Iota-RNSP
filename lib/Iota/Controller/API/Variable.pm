@@ -267,7 +267,7 @@ sub list_GET {
         }
     )->next;
     $cache_key = $cache_key->{md5};
-    $cache_key = "variable-list_GET-$cache_key";
+    $cache_key = $cache_key ? "variable-list_GET-$cache_key" : rand . rand . rand;
 
     my $stash = $redis->get($cache_key);
 
