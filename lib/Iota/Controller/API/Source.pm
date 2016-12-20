@@ -135,22 +135,48 @@ Retorna:
 
 =cut
 
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
+
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my @list = $c->stash->{collection}->as_hashref->all;
-    my @objs;
+    my $cache_key = $c->stash->{collection}->search(
+        {},
+        {
+            select       => [ \'md5( array_agg(me.name order by me.name)::text)' ],
+            as           => ['md5'],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    )->next;
+    $cache_key = $cache_key->{md5};
+    $cache_key = "source-list_GET-$cache_key";
 
-    my $base = $c->uri_for_action( $self->action_for('source'), [':id:'] )->as_string;
-    foreach my $obj (@list) {
-        push @objs,
-          {
-            ( map { $_ => $obj->{$_} } qw(id name user_id) ),
-            url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/; $copy },
-          };
+    my $stash = $redis->get($cache_key);
+
+    if ($stash) {
+        $stash = thaw($stash);
+    }
+    else {
+        my @list = $c->stash->{collection}->as_hashref->all;
+        my @objs;
+
+        my $base = $c->uri_for_action( $self->action_for('source'), [':id:'] )->as_string;
+        foreach my $obj (@list) {
+            push @objs,
+              {
+                ( map { $_ => $obj->{$_} } qw(id name user_id) ),
+                url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/; $copy },
+              };
+        }
+
+        $stash = { sources => \@objs };
+        $redis->setex( $cache_key, 86400, nfreeze($stash) );
+
     }
 
-    $self->status_ok( $c, entity => { sources => \@objs } );
+    $self->status_ok( $c, entity => $stash );
 }
 
 =pod
