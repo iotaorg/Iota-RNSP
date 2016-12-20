@@ -198,11 +198,12 @@ sub user_GET {
         {
             select => [
                 \(
-                        "md5( array_agg(coalesce(me.city_id::text, 'null') || "
+                        "md5( array_agg(  user_files.public_url || coalesce(me.city_id::text, 'null') || "
                       . join( '||', map { "coalesce(me.${_}::text, 'null')" } @campos_cadastro_comp )
                       . ')::text)'
                 )
             ],
+            join => 'user_files',
             as           => ['md5'],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
