@@ -4,6 +4,9 @@ package Iota::Controller::API::Variable;
 use Moose;
 use JSON qw(encode_json);
 
+use Text2URI;
+my $t = Text2URI->new();
+
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
@@ -100,7 +103,6 @@ Retorna:
 
 
 =cut
-
 sub variable_POST {
     my ( $self, $c ) = @_;
 
@@ -109,6 +111,10 @@ sub variable_POST {
     unless ( $c->check_any_user_role('user') && $user->can_create_indicators ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
           unless $c->check_any_user_role(qw(admin superadmin));
+    }
+
+    if ( $c->user->obj->institute->build_metadata->{hide_cognomen} ) {
+        $c->req->params->{variable}{update}{cognomen} = $t->translate( $c->req->params->{variable}{update}{name}, '_' );
     }
 
     $c->req->params->{variable}{update}{id} = $c->stash->{variable}->id;
@@ -215,11 +221,7 @@ sub list_GET {
     my $is_user = $c->check_any_user_role('user');
 
     if ( $c->req->params->{use} eq 'edit' && $is_user ) {
-        $rs = $rs->search(
-            {
-                'me.user_id' => $c->user->id
-            }
-        );
+        $rs = $rs->search( { 'me.user_id' => $c->user->id } );
     }
 
     unless ( $c->req->params->{all_variables} ) {
@@ -233,11 +235,9 @@ sub list_GET {
                 users_ids    => \@user_ids,
             )->get_column('id')->as_query;
 
-            my $variables_id_rs = $c->model('DB::IndicatorVariable')->search(
-                {
-                    indicator_id => { 'in' => $indicators_rs }
-                }
-            )->get_column('variable_id')->as_query;
+            my $variables_id_rs =
+              $c->model('DB::IndicatorVariable')->search( { indicator_id => { 'in' => $indicators_rs } } )
+              ->get_column('variable_id')->as_query;
 
             $rs = $rs->search(
                 {
@@ -300,6 +300,10 @@ sub list_POST {
     unless ( $c->check_any_user_role('user') && $user->can_create_indicators ) {
         $self->status_forbidden( $c, message => "access denied", ), $c->detach
           unless $c->check_any_user_role(qw(admin superadmin));
+    }
+
+    if ( $c->user->obj->institute->build_metadata->{hide_cognomen} ) {
+        $c->req->params->{variable}{create}{cognomen} = $t->translate( $c->req->params->{variable}{create}{name}, '_' );
     }
 
     $c->req->params->{variable}{create}{user_id} = $c->user->id;
