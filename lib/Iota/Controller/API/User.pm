@@ -200,10 +200,10 @@ sub user_GET {
                 \(
                         "md5( array_agg(  user_files.public_url || coalesce(me.city_id::text, 'null') || "
                       . join( '||', map { "coalesce(me.${_}::text, 'null')" } @campos_cadastro_comp )
-                      . ')::text)'
+                      . ' order by user_files.id )::text)'
                 )
             ],
-            join => 'user_files',
+            join         => 'user_files',
             as           => ['md5'],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
