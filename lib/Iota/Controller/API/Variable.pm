@@ -213,6 +213,10 @@ Retorna:
 
 =cut
 
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
+
 sub list_GET {
     my ( $self, $c ) = @_;
 
@@ -227,6 +231,7 @@ sub list_GET {
 
     unless ( $c->req->params->{all_variables} ) {
         if ( $c->req->params->{use} eq 'list' && $is_user ) {
+
             my @user_ids = ( $c->user->id );
 
             my @networks = $c->user->networks ? $c->user->networks->all : ();
@@ -251,26 +256,50 @@ sub list_GET {
         }
     }
 
-    my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
-    my @objs;
-    my $base = $c->uri_for_action( $self->action_for('variable'), [':id:'] )->as_string;
+    my $cache_key = $rs->search(
+        {},
+        {
+            select => [
+                \'md5( array_agg(me.name || me.explanation || me.cognomen || me.is_basic::text || me.period::text order by me.id)::text)'
+            ],
+            as           => ['md5'],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    )->next;
+    $cache_key = $cache_key->{md5};
+    $cache_key = "variable-list_GET-$cache_key";
 
-    foreach my $obj (@list) {
-        push @objs, {
+    my $stash = $redis->get($cache_key);
 
-            created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
-
-            ( map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at) ),
-
-            url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/; $copy },
-
-            measurement_unit => $obj->{measurement_unit}
-            ? { ( map { $_ => $obj->{measurement_unit}{$_} } qw(name short_name id) ), }
-            : undef
-
-        };
+    if ($stash) {
+        $stash = thaw($stash);
     }
-    $self->status_ok( $c, entity => { variables => \@objs } );
+    else {
+        my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
+        my @objs;
+        my $base = $c->uri_for_action( $self->action_for('variable'), [':id:'] )->as_string;
+
+        foreach my $obj (@list) {
+            push @objs, {
+
+                created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
+
+                ( map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at) ),
+
+                url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/; $copy },
+
+                measurement_unit => $obj->{measurement_unit}
+                ? { ( map { $_ => $obj->{measurement_unit}{$_} } qw(name short_name id) ), }
+                : undef
+
+            };
+        }
+        $stash = { variables => \@objs };
+        $redis->setex( $cache_key, 86400, nfreeze($stash) );
+
+    }
+
+    $self->status_ok( $c, entity => $stash );
 }
 
 =pod
