@@ -260,7 +260,7 @@ sub list_GET {
         {},
         {
             select => [
-                \'md5( array_agg(me.name || me.explanation || me.cognomen || me.is_basic::text || me.period::text order by me.id)::text)'
+                \"md5( array_agg(me.name || me.explanation || me.cognomen || coalesce(me.is_basic::text, 'null') || me.period::text order by me.id)::text)"
             ],
             as           => ['md5'],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'

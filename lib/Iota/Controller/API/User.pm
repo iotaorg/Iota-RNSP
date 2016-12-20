@@ -166,15 +166,61 @@ sub _get_user_type {
     return 'none';
 }
 
+use Storable qw/nfreeze thaw/;
+use Redis;
+my $redis = Redis->new;
+
 sub user_GET {
     my ( $self, $c ) = @_;
 
-    my $user = $c->stash->{object}->search( undef, { prefetch => [ 'institute', 'user_files' ] } )->next;
+    my @campos_cadastro = qw/id
+      name
+      email
 
-    my %attrs = $user->get_inflated_columns;
-    $self->status_ok(
-        $c,
-        entity => {
+      nome_responsavel_cadastro
+      estado
+      telefone
+      email_contato
+      telefone_contato
+      cidade
+      bairro
+      cep
+      endereco
+      city_summary
+      active
+      cur_lang
+      regions_enabled
+      can_create_indicators/;
+    my @campos_cadastro_comp = ( @campos_cadastro, qw/telefone estado cidade institute_id/ );
+
+    my $cache_key = $c->stash->{object}->search(
+        undef,
+        {
+            select => [
+                \(
+                        "md5( array_agg(coalesce(me.city_id::text, 'null') || "
+                      . join( '||', map { "coalesce(me.${_}::text, 'null')" } @campos_cadastro_comp )
+                      . ')::text)'
+                )
+            ],
+            as           => ['md5'],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    )->next;
+    $cache_key = $cache_key->{md5};
+    $cache_key = "user-get-$cache_key";
+
+    my $stash = $redis->get($cache_key);
+
+    if ($stash) {
+        $stash = thaw($stash);
+    }
+    else {
+
+        my $user = $c->stash->{object}->search( undef, { prefetch => [ 'institute', 'user_files' ] } )->next;
+
+        my %attrs = $user->get_inflated_columns;
+        $stash = {
             roles     => [ map { $_->name } $user->roles ],
             user_type => $self->_get_user_type($user),
             files     => {
@@ -182,29 +228,7 @@ sub user_GET {
                   $user->user_files->search( undef, { order_by => 'created_at' } )
             },
 
-            (
-                map { $_ => $attrs{$_}, }
-                  qw(
-                  id
-                  name
-                  email
-
-                  nome_responsavel_cadastro
-                  estado
-                  telefone
-                  email_contato
-                  telefone_contato
-                  cidade
-                  bairro
-                  cep
-                  endereco
-                  city_summary
-                  active
-                  cur_lang
-                  regions_enabled
-                  can_create_indicators
-                  )
-            ),
+            ( map { $_ => $attrs{$_}, } @campos_cadastro ),
             created_at => $attrs{created_at}->datetime,
 
             (
@@ -228,7 +252,7 @@ sub user_GET {
                         name => $user->institute->name,
                         id   => $user->institute->id,
 
-                        metadata =>  $user->institute->build_metadata
+                        metadata => $user->institute->build_metadata
                     }
                   )
                 : ( institute => undef )
@@ -252,8 +276,11 @@ sub user_GET {
                 } $user->networks
             ],
 
-        }
-    );
+        };
+
+        $redis->setex( $cache_key, 86400, nfreeze($stash) );
+    }
+    $self->status_ok( $c, entity => $stash );
 }
 
 =pod
