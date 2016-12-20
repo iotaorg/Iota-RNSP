@@ -146,7 +146,7 @@ sub list_GET {
         push @objs,
           {
             ( map { $_ => $obj->{$_} } qw(id name user_id) ),
-            url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/;$copy },
+            url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/; $copy },
           };
     }
 

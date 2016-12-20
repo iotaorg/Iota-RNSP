@@ -103,6 +103,7 @@ Retorna:
 
 
 =cut
+
 sub variable_POST {
     my ( $self, $c ) = @_;
 
@@ -252,6 +253,7 @@ sub list_GET {
 
     my @list = $rs->search_rs( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->all;
     my @objs;
+    my $base = $c->uri_for_action( $self->action_for('variable'), [':id:'] )->as_string;
 
     foreach my $obj (@list) {
         push @objs, {
@@ -259,7 +261,8 @@ sub list_GET {
             created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
 
             ( map { $_ => $obj->{$_} } qw(id name type cognomen explanation source period is_basic created_at) ),
-            url => $c->uri_for_action( $self->action_for('variable'), [ $obj->{id} ] )->as_string,
+
+            url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/; $copy },
 
             measurement_unit => $obj->{measurement_unit}
             ? { ( map { $_ => $obj->{measurement_unit}{$_} } qw(name short_name id) ), }
