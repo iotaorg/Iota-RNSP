@@ -141,11 +141,12 @@ sub list_GET {
     my @list = $c->stash->{collection}->as_hashref->all;
     my @objs;
 
+    my $base = $c->uri_for_action( $self->action_for('source'), [':id:'] )->as_string;
     foreach my $obj (@list) {
         push @objs,
           {
             ( map { $_ => $obj->{$_} } qw(id name user_id) ),
-            url => $c->uri_for_action( $self->action_for('source'), [ $obj->{id} ] )->as_string,
+            url => do { my $copy = $base; $copy =~ s/:id:/$obj->{id}/;$copy },
           };
     }
 

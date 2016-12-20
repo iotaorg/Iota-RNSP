@@ -996,8 +996,7 @@ sub stash_comparacao_distritos : Private {
             $out->{$ano}{$variacao} = { all => $distintos }
               unless exists $out->{$ano}{$variacao};
 
-            use DDP;
-            p $regs;
+
             foreach my $region_id ( keys %$regs ) {
 
                 unless ( exists $distintos_ref_id->{$region_id} ) {
@@ -1782,8 +1781,7 @@ sub _load_menu {
 
 sub stash_tela_regiao {
     my ( $self, $c ) = @_;
-    use DDP;
-    p $c->stash->{regiao_url};
+
     my $region = $c->model('DB::Region')->search(
         {
             name_url => lc $c->stash->{regiao_url},
