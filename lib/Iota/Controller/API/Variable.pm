@@ -114,7 +114,7 @@ sub variable_POST {
           unless $c->check_any_user_role(qw(admin superadmin));
     }
 
-    if ( $c->user->obj->institute->build_metadata->{hide_cognomen} ) {
+    if ( $c->user->obj->institute && $c->user->obj->institute->build_metadata->{hide_cognomen} ) {
         $c->req->params->{variable}{update}{cognomen} = $t->translate( $c->req->params->{variable}{update}{name}, '_' );
     }
 
@@ -334,7 +334,7 @@ sub list_POST {
           unless $c->check_any_user_role(qw(admin superadmin));
     }
 
-    if ( $c->user->obj->institute->build_metadata->{hide_cognomen} ) {
+    if ( $c->user->obj->institute && $c->user->obj->institute->build_metadata->{hide_cognomen} ) {
         $c->req->params->{variable}{create}{cognomen} = $t->translate( $c->req->params->{variable}{create}{name}, '_' );
     }
 
