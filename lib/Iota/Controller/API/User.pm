@@ -198,7 +198,7 @@ sub user_GET {
         {
             select => [
                 \(
-                        "md5( array_agg(  user_files.public_url || coalesce(me.city_id::text, 'null') || "
+                        "md5( array_agg(  coalesce(user_files.public_url, 'null') || coalesce(me.city_id::text, 'null') || "
                       . join( '||', map { "coalesce(me.${_}::text, 'null')" } @campos_cadastro_comp )
                       . ' order by user_files.id )::text)'
                 )
