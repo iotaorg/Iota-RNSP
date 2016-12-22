@@ -109,6 +109,7 @@ sub verifiers_specs {
                 cep                       => { required => 0, type => 'Str' },
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
+                metadata                  => { required => 0, type => 'Str' },
 
                 can_create_indicators => { required => 0, type => 'Bool' },
                 regions_enabled       => { required => 0, type => 'Bool' },
@@ -126,6 +127,7 @@ sub verifiers_specs {
                     required => 0,
                     type     => 'Str',
                 },
+                metadata                  => { required => 0, type => 'Str' },
                 city_id => {
                     required   => 0,
                     type       => 'Int',
@@ -359,6 +361,7 @@ sub action_specs {
             my %values = shift->valid_values;
             delete $values{password_confirm};
             delete $values{cur_lang} unless $values{cur_lang};
+            delete $values{metadata} unless $values{metadata};
 
             do { delete $values{$_} unless defined $values{$_} }
               for qw/can_create_indicators regions_enabled/;
@@ -390,6 +393,7 @@ sub action_specs {
             delete $values{password} unless $values{password};
             delete $values{city_id}  unless $values{city_id};
             delete $values{cur_lang} unless $values{cur_lang};
+            delete $values{metadata} unless $values{metadata};
 
             delete $values{active} unless $values{active};
 

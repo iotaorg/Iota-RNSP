@@ -190,8 +190,9 @@ sub user_GET {
       active
       cur_lang
       regions_enabled
-      can_create_indicators/;
-    my @campos_cadastro_comp = ( @campos_cadastro, qw/telefone estado cidade institute_id/ );
+      can_create_indicators
+      /;
+    my @campos_cadastro_comp = ( @campos_cadastro, qw/institute_id metadata/ );
 
     my $cache_key = $c->stash->{object}->search(
         undef,
@@ -231,6 +232,7 @@ sub user_GET {
 
             ( map { $_ => $attrs{$_}, } @campos_cadastro ),
             created_at => $attrs{created_at}->datetime,
+            ( metadata => $user->build_metadata ),
 
             (
                 $user->institute && $user->institute

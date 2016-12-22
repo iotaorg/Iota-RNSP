@@ -759,5 +759,13 @@ __PACKAGE__->has_many(
     { cascade_copy      => 0, cascade_delete => 0 },
 );
 
+
+use JSON;
+sub build_metadata {
+    my ($self) = @_;
+
+    return eval{decode_json($self->metadata)} || {};
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
