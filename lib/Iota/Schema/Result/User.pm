@@ -159,6 +159,12 @@ __PACKAGE__->table("user");
   default_value: false
   is_nullable: 0
 
+=head2 metadata
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -216,6 +222,12 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "can_create_indicators",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "metadata",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -732,8 +744,8 @@ Composing rels: L</network_users> -> network
 __PACKAGE__->many_to_many("networks", "network_users", "network");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Qh2aklGUrcAeVdks0l+fIw
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2016-12-22 16:43:28
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qX3bGxWo6qzx60Y6zwQg0w
 
 __PACKAGE__->many_to_many( roles => user_roles => 'role' );
 

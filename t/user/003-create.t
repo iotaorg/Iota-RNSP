@@ -63,6 +63,7 @@ eval {
                     'user.create.password_confirm'          => 'foobarquux1',
                     'user.create.city_id'                   => $city->id,
                     'user.create.role'                      => 'user',
+                    'user.create.metadata'                      => '{"a":1}',
 
                     'user.create.city_summary' => 'testeteste'
                 ]
@@ -90,6 +91,8 @@ eval {
             ( $res, $c ) = ctx_request( GET $uri->path_query );
             ok( $res->is_success, 'user exists' );
             is( $res->code, 200, 'user exists -- 200 Success' );
+
+            is_deeply( from_json( $res->content )->{metadata}, {a => 1}, 'XX' );
 
             ( $res, $c ) = ctx_request(
                 POST $url_user . '/arquivo/perfil_XD',

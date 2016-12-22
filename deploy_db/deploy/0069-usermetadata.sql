@@ -3,6 +3,6 @@
 
 BEGIN;
 
-alter table "user" add column metadata;
+alter table "user" add column metadata varchar;
 
 COMMIT;
