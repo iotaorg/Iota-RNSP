@@ -77,7 +77,7 @@ eval {
             ok( $res->is_success, 'OK' );
             is( $res->code, 200, 'upload done!' );
 
-            like( $res->content, qr/Linhas aceitas: 2\\n"/, '2 linhas no XLS' );
+            like( $res->content, qr/Linhas aceitas: 2/, '2 linhas no XLS' );
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',

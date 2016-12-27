@@ -68,7 +68,7 @@ requires 'Spreadsheet::WriteExcel';
 requires 'Email::Sender::Transport::SMTP::TLS';
 requires 'Email::MIME';
 requires 'Spreadsheet::XLSX';
-requires 'Spreadsheet::ParseExcel::Stream';
+requires 'Spreadsheet::ParseExcel';
 requires 'DateTime::Format::Excel';
 requires 'Math::Expression::Evaluator';
 requires 'Template';

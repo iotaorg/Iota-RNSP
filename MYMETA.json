@@ -4,7 +4,7 @@
       "Thiago Rondon"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150005",
+   "generated_by" : "Module::Install version 1.17, CPAN::Meta::Converter version 2.150005",
    "license" : [
       "perl_5"
    ],
@@ -98,7 +98,7 @@
             "RDF::Endpoint" : "0",
             "RDF::Helper" : "0",
             "Redis" : "0",
-            "Spreadsheet::ParseExcel::Stream" : "0",
+            "Spreadsheet::ParseExcel" : "0",
             "Spreadsheet::WriteExcel" : "0",
             "Spreadsheet::XLSX" : "0",
             "Statistics::Basic" : "0",
