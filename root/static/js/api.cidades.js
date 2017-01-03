@@ -150,7 +150,7 @@ $(document).ready(function () {
             }
 
             if (typeof (user_files.prestacao_de_co) != "undefined") {
-                $tabela.append("<dd><a href='$$dado' target='_blank'>Prestação de contas</a></dd>".render({
+                $tabela.append("<dd><a href='$$dado' target='_blank'><img src='http://i.imgur.com/D4b26Xl.jpg' alt='Prestação de contas' /></a></dd>".render({
                     dado: user_files.prestacao_de_co
                 }));
             }
