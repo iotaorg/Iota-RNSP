@@ -150,8 +150,14 @@ $(document).ready(function () {
             }
 
             if (typeof (user_files.prestacao_de_co) != "undefined") {
-                $tabela.append("<dd><a href='$$dado' target='_blank'><img src='http://i.imgur.com/D4b26Xl.jpg' alt='Prestação de contas' /></a></dd>".render({
+                $tabela.append("<dd><a href='$$dado' target='_blank'>Prestação de contas</a></dd>".render({
                     dado: user_files.prestacao_de_co
+                }));
+            }
+
+            if (typeof (user_files.arq_lei) != "undefined") {
+                $tabela.append("<dd><a href='$$dado' target='_blank'><img src='http://icon-icons.com/icons2/775/PNG/512/bill_icon-icons.com_64622.png' width='26' alt='Arquivo de lei' /> Arquivo de lei</a></dd>".render({
+                    dado: user_files.arq_lei
                 }));
             }
 
