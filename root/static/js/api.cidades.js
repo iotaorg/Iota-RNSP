@@ -140,6 +140,8 @@ $(document).ready(function () {
         var user_files = cidade_data.usuario.files;
         if (
             typeof (user_files.carta_compromis) != "undefined" ||
+            typeof (user_files.arq_lei) != "undefined" ||
+            typeof (user_files.prestacao_de_co) != "undefined" ||
             typeof (user_files.programa_metas) != "undefined") {
             $tabela.append("<dt>Links:</dt>");
 
