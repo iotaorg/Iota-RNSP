@@ -156,7 +156,11 @@ sub login_POST {
     $self->status_bad_request( $c, message => 'Login invalid' ), $c->detach
       unless $dm->success;
 
-    if ( $c->authenticate( { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) } ) ) {
+      my $user_pass = { map { $_ => $c->req->param( 'user.login.' . $_ ) } qw(email password) };
+
+    if ( $c->authenticate(  ) )
+
+     {
         my $item = $c->user->sessions->create(
             {
                 api_key => sha1_hex( rand(time) ),
@@ -177,6 +181,9 @@ sub login_POST {
         $attrs{created_at} = $attrs{created_at}->datetime;
 
         $self->status_ok( $c, entity => \%attrs );
+        use DDP; p "passou aqui no logout";
+        # nao queremos ninguem logado no catalyst não... api key apenas
+        $c->logout;
     }
     else {
         $c->log->info( "Falha na tentativa do login de " . $c->req->param('user.login.email') . "." );
