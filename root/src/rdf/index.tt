@@ -6,7 +6,7 @@
 
 
 <h2>N-Triples Dump <small>updated each 2 hours</small></h2>
-<a href="/static/built/rdf/dump.iota.n3.gz">dump.iota.n3.gz</a> Import it into your favorite RDF/XML parser!
+<a href="/static/built/rdf/dump.iota.n3.gz?killcache=[% cur_time %]">dump.iota.n3.gz</a> Import it into your favorite RDF/XML parser!
 
 
 <h2>Available data</h2>
