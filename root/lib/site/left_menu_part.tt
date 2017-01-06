@@ -36,9 +36,12 @@
     [% END %]
 [% END %]
 [% END %]
+
+[% IF !city %]
 <li [% IF c_req_path == 'mapa-do-site' %]class="active"[%ELSE%]class="hidden-sm"[%END%]>
 <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
 </li>
+[% END %]
 
 <li [% IF !menu && c_req_path == 'dados-abertos' %]class="active"[%END%]>
 <a href="/dados-abertos">[%l('Dados abertos')%]</a>
@@ -48,8 +51,8 @@
 [% IF network.id == 1 && c.config.is_sp %]
     <li><a target="_blank" href="http://2013-2016.indicadores.cidadessustentaveis.org.br">Ir para indicadores da gestão 2013-2016</a></li>
 [% ELSIF network.id == 1 %]
-    <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
-    <li><a target="_blank" href="http://indicadores.cidadessustentaveis.org.br">Ir para 2017-2020</a></li>
+    <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos</a></li>
+    <li><a target="_blank" href="http://indicadores.cidadessustentaveis.org.br">Ir para indicadores da gestão 2017-2020</a></li>
 [% END %]
 
 
