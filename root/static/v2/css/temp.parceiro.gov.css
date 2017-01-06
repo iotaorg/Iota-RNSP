@@ -27,3 +27,7 @@ h1,h2{
     background-repeat: no-repeat;
     background-position: 95% 100%;
 }
+
+.page-header-sp {
+    background-image: url('/static/images/bg-top-gov-sp.png');
+}

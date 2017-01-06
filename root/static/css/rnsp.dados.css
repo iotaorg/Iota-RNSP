@@ -4,11 +4,17 @@ table{
 html {overflow-y: scroll;}
 @-ms-viewport { width: device-width; }
 page-header-right img {max-height: 86px}
+
 .page-header{
-	background-image: url('/static/images/bg-top-gov.png');
-	background-repeat: no-repeat;
-	background-position: 95% 100%;
+    background-image: url('/static/images/bg-top-gov.png');
+    background-repeat: no-repeat;
+    background-position: 95% 100%;
     min-height: 95px;
+}
+
+.page-header-sp {
+    background-image: url('/static/images/bg-top-gov-sp.png');
+    min-height: 106px;
 }
 
 

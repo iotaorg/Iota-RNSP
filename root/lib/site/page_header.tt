@@ -1,4 +1,4 @@
-<div class="page-header">
+<div class="page-header [% c.config.is_sp ? 'page-header' : '' %]">
     <div class="container">
         [%IF !v2%]<p class="logo">Iota</p>[%END%]
 
