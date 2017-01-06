@@ -44,16 +44,14 @@
 <a href="/dados-abertos">[%l('Dados abertos')%]</a>
 </li>
 
-[%- IF network.id == 1  -%]
-<li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
 
 [% IF network.id == 1 && c.config.is_sp %]
     <li><a target="_blank" href="http://2013-2016.indicadores.cidadessustentaveis.org.br">Ir para 2013-2016</a></li>
 [% ELSIF network.id == 1 %]
+    <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos e gerais</a></li>
     <li><a target="_blank" href="http://indicadores.cidadessustentaveis.org.br">Ir para 2017-2020</a></li>
 [% END %]
 
-[%-END-%]
 
 [%IF c_req_path == "rdf"%]
 <li [% IF c_req_path == "rdf" %]class="active"[%END%]>
