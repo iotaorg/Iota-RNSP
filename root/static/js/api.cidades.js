@@ -36,7 +36,7 @@ $(document).ready(function () {
                 showCidadeData();
             },
             error: function (data) {
-                console.log("erro ao carregar informações da cidade");
+                alert("erro ao carregar informações da cidade");
             }
         });
     }
@@ -237,7 +237,7 @@ $(document).ready(function () {
                 showIndicadoresData();
             },
             error: function (data) {
-                console.log("erro ao carregar indicadores da cidade");
+                alert("erro ao carregar indicadores da cidade");
             }
         });
     }
