@@ -13,10 +13,9 @@ page-header-right img {max-height: 86px}
 }
 
 .page-header-sp {
-    background-image: url('/static/images/bg-top-gov-sp.png');
-    min-height: 106px;
+    background-image: url('/static/images/bg-top-gov-sp.png') !important;
+    min-height: 126px !important;
 }
-
 
 .navbar-fixed-top .navbar-inner{
 	background: #20c1c1; /* Old browsers */

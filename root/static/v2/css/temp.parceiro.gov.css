@@ -30,4 +30,5 @@ h1,h2{
 
 .page-header-sp {
     background-image: url('/static/images/bg-top-gov-sp.png');
+    min-height: 106px !important;
 }
