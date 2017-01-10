@@ -98,6 +98,21 @@ eval {
             my @variables = $save_test->indicator_variables->all;
             is( $variables[0]->variable_id, $var1, 'variable saved in table' );
 
+
+            # update var
+            ( $res, $c ) = ctx_request(
+                POST '/api/variable/' . $var1,
+                [
+                    'variable.update.name'   => 'BarFoo',
+                    'variable.update.type'   => 'int',
+                    'variable.update.period' => 'weekly',
+                    'variable.update.source' => 'Lulu',
+                ]
+            );
+            ok( $res->is_success, 'var updated' );
+            is( $res->code, 202, 'var updated -- 202 Accepted' );
+
+
             $Iota::TestOnly::Mock::AuthUser::_id    = 4;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
 

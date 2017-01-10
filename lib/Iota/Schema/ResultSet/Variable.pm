@@ -92,6 +92,7 @@ sub verifiers_specs {
 
     };
 }
+use Iota::IndicatorFormula;
 
 sub action_specs {
     my $self = shift;
@@ -114,15 +115,30 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            # TODO atualizar o nomes la no indicador, se mudou.
-
-            my $var = $self->find( delete $values{id} );
+            my $var      = $self->find( delete $values{id} );
+            my $old_name = $var->name;
 
             if ( exists $values{summarization_method} && $var->summarization_method ne $values{summarization_method} ) {
                 $self->result_source->schema->f_compute_all_upper_regions();
             }
 
             $var->update( \%values );
+
+            if ( exists $values{name} && $values{name} ne $old_name ) {
+
+                for my $iv ( $var->indicator_variables->all ) {
+
+                    my $ind     = $iv->indicator;
+                    my $formula = Iota::IndicatorFormula->new(
+                        formula => $ind->formula,
+                        schema  => $self->result_source->schema
+                    );
+
+                    $ind->update( { formula_human => $formula->as_human } );
+                }
+
+            }
+
             $var->discard_changes;
             return $var;
         },
