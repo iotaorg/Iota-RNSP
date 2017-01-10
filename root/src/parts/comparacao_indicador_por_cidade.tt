@@ -15,6 +15,10 @@
                     [%IF indicator.goal_source%]<blockquote><small><cite title="[%  institute_metadata.ods ? l('ODS relacionados'): l('Fonte da meta')%]">[%l(indicator.goal_source)%]</cite></small></blockquote>[%END%]
                 </dd>
             [%END%]
+            [%IF indicator.observations %]
+                <dt>[%l('Observações')%]:</dt>
+                <dd>[%l(indicator.observations)%]</dd>
+            [%END%]
 
         </dl></div>
     </div>
