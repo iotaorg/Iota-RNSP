@@ -230,6 +230,8 @@ sub as_human {
     $formula =~ s/\s+$//;
     $formula =~ s/\s+/ /g;
 
+    $formula =~ s/^CONCATENAR //;
+
     return $formula;
 }
 
