@@ -12,7 +12,7 @@
         [%-l('Indicadores em destaque')-%]
         </div>
         [%FOREACH a IN topic_groups.keys.sort() %]
-        <div class="option" group-id="[%topic_groups.$a%]">
+        <div class="option" group-id="[%groups.$a%]" data-attrs="[% groups_attr.$a %]" >
             [%-l(a)-%]
         </div>
         [%END%]

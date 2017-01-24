@@ -4,12 +4,15 @@ $(document).ready(function() {
         $list = $('#indicators_list'),
         $search = $('#indicator-search'),
         $status = $('#search_status'),
+
         _select_caption = '',
         _current_group = $groups.find('.select').attr('selected-id'),
         $select = $groups.find('.select:first'),
         _on_menu_click = function (event) {
-
             var $me = $(event.target);
+            var $ods= $('#menu-ods');
+            $ods.html('');
+
             if (typeof $me.attr('group-id') !== "undefined") {
 
                 _select_caption = $me.text();
@@ -18,9 +21,26 @@ $(document).ready(function() {
                 // todo mundo
                 if (_current_group === '0') {
                     $list.find('.item').removeClass('hideimp');
+
+                    if ($ods){
+                        $ods.hide();
+                    }
+
                 } else {
                     $list.find('.item').addClass('hideimp');
                     $list.find('.item.g' + _current_group).removeClass('hideimp');
+
+                    if ($ods && $me.attr('data-attrs')){
+
+                        var $obj = $.parseJSON($me.attr('data-attrs'));
+                        var x = '';
+                        $.each($obj, function(i, o) {
+                            x += '<div class="bs-tooltip iods iods-'+o.code +'" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="'+o.props.name+'"></div>';
+                        });
+                        $ods.html(x).find('.bs-tooltip').tooltip();
+                        $ods.show();
+                    }
+
                 }
 
                 __old_search_val2 = '';
@@ -109,7 +129,6 @@ $(document).ready(function() {
         __old_search_val = '',
         _search_int = null,
         _search_status = function () {
-
             var $me = $(this),
                 val = $me.val().trim();
 
@@ -152,8 +171,29 @@ $(document).ready(function() {
         $list.css('overflow', 'auto');
     }
 
+    $groups.after('<div id="menu-ods"></div>');
     if ( $select.hasClass('open-me')){
         $groups.find('.option:first').click();
+    }else{
+
+
+        var $ods= $('#menu-ods'), $me = $('#group_list').find('.option[group-id="'+_current_group+'"]');
+        $ods.html('');
+
+        if ($ods && $me.attr('data-attrs')){
+
+            var $obj = $.parseJSON($me.attr('data-attrs'));
+            var x = '';
+            $.each($obj, function(i, o) {
+                x += '<div class="bs-tooltip iods iods-'+o.code +'" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="'+o.props.name+'"></div>';
+            });
+            $ods.html(x).find('.bs-tooltip').tooltip();
+            $ods.show();
+        }
+
+
+
     }
+
 
 });

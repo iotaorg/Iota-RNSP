@@ -58,6 +58,11 @@ __PACKAGE__->table("axis");
   is_nullable: 0
   original: {default_value => \"now()"}
 
+=head2 attrs
+
+  data_type: 'integer[]'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -77,6 +82,8 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { default_value => \"now()" },
   },
+  "attrs",
+  { data_type => "integer[]", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -139,8 +146,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EkFT5tIEnaPnXHJR9b0gsQ
+# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-01-23 15:23:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MKog8gGu0JKwvplDq+tH3w
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

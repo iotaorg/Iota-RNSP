@@ -52,7 +52,6 @@ $(document).ready(function() {
         _do_search = function () {
             var val = $search.val().trim();
 
-			console.log('lolllll');
             if (__old_search_val2 == val || val === '') {
                 return false;
             }
@@ -111,7 +110,6 @@ $(document).ready(function() {
         __old_search_val = '',
         _search_int = null,
         _search_status = function () {
-
             var $me = $(this),
                 val = $me.val().trim();
 
@@ -140,7 +138,7 @@ $(document).ready(function() {
     $list.find('.topic_item').tooltip();
 
     $status.click(_show_all);
-    $search.keyup(debounce(_search_status, 20));
+    $search.keyup(debounce(_search_status, 30));
 
     $groups.click(_on_menu_click);
     $select.disableSelection();

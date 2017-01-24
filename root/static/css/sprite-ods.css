@@ -1,0 +1,109 @@
+.iods {
+    background-image: url(/static/css/spritesheet.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.iods-1 {
+    width: 48px;
+    height: 48px;
+    background-position: -1px -1px;
+}
+
+.iods-10 {
+    width: 48px;
+    height: 48px;
+    background-position: -51px -1px;
+}
+
+.iods-11 {
+    width: 48px;
+    height: 48px;
+    background-position: -101px -1px;
+}
+
+.iods-12 {
+    width: 48px;
+    height: 48px;
+    background-position: -151px -1px;
+}
+
+.iods-13 {
+    width: 48px;
+    height: 48px;
+    background-position: -201px -1px;
+}
+
+.iods-14 {
+    width: 48px;
+    height: 48px;
+    background-position: -251px -1px;
+}
+
+.iods-15 {
+    width: 48px;
+    height: 48px;
+    background-position: -301px -1px;
+}
+
+.iods-16 {
+    width: 48px;
+    height: 48px;
+    background-position: -351px -1px;
+}
+
+.iods-17 {
+    width: 48px;
+    height: 48px;
+    background-position: -401px -1px;
+}
+
+.iods-2 {
+    width: 48px;
+    height: 48px;
+    background-position: -451px -1px;
+}
+
+.iods-3 {
+    width: 48px;
+    height: 48px;
+    background-position: -501px -1px;
+}
+
+.iods-4 {
+    width: 48px;
+    height: 48px;
+    background-position: -551px -1px;
+}
+
+.iods-5 {
+    width: 48px;
+    height: 48px;
+    background-position: -601px -1px;
+}
+
+.iods-6 {
+    width: 48px;
+    height: 48px;
+    background-position: -651px -1px;
+}
+
+.iods-7 {
+    width: 48px;
+    height: 48px;
+    background-position: -701px -1px;
+}
+
+.iods-8 {
+    width: 48px;
+    height: 48px;
+    background-position: -751px -1px;
+}
+
+.iods-9 {
+    width: 48px;
+    height: 48px;
+    background-position: -801px -1px;
+}
+

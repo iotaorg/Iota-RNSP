@@ -8,6 +8,7 @@ use JSON::XS;
 use Iota::Statistics::Frequency;
 use I18N::AcceptLanguage;
 use DateTime;
+use Encode qw(decode encode);
 
 #
 # Sets the actions in this controller to be registered with no prefix
@@ -103,7 +104,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{network} = $net;
 
-    $c->stash->{institute}    = $net->institute;
+    $c->stash->{institute}          = $net->institute;
     $c->stash->{institute_metadata} = $c->stash->{institute}->build_metadata;
 
     $c->stash->{c_req_path} = $c->req->path;
@@ -582,6 +583,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                 qw/
                   axis.id
                   axis.name
+                  axis.attrs
 
                   me.id
                   me.name
@@ -646,6 +648,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my $institute = $c->stash->{institute};
 
+    my $groups_attr       = {};
     my $count_used_groups = {};
 
     for my $i (@indicators) {
@@ -655,6 +658,8 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
             $id_vs_group_name->{$group_id} = $i->{axis}{name};
             $groups->{ $i->{axis}{name} } = $group_id;
+
+            $groups_attr->{ $i->{axis}{name} } = [ grep { !!$_ } @{ $i->{axis}{attrs} || [] } ];
         }
 
         my $group_id = $groups->{ $i->{axis}{name} };
@@ -716,11 +721,29 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             $i->{visible} = ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
         }
     }
+    my @load_proprs;
+    push @load_proprs, @$_ for values %{$groups_attr};
+
+    # bizarro, mas é assim mesmo que eu preciso disso
+    my $props = {
+        map {
+            $_->{props} = encode( 'UTF-8', $_->{props} );
+            $_->{props} = eval { decode_json( $_->{props} ) };
+            $_->{id} => $_
+          } $c->model('DB::AxisAttr')->search( { 'me.id' => { 'in' => \@load_proprs } },
+            { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->all
+    };
+
+    while ( my ( $key, $v ) = each %{$groups_attr} ) {
+        $_ = $props->{$_} for @$v;
+        $groups_attr->{$key} = JSON::XS->new->utf8(0)->encode($v);
+    }
+
     $c->stash(
         groups       => $groups,
+        groups_attr  => $groups_attr,
         active_group => $active_group,
         indicators   => \@indicators,
-
     );
 
     $c->stash( template => 'list_indicators.tt' ) if !$no_template;
@@ -995,7 +1018,6 @@ sub stash_comparacao_distritos : Private {
 
             $out->{$ano}{$variacao} = { all => $distintos }
               unless exists $out->{$ano}{$variacao};
-
 
             foreach my $region_id ( keys %$regs ) {
 
