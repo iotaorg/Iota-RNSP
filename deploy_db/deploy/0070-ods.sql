@@ -14,24 +14,25 @@ alter table axis add column attrs int[];
 
 /*
 
+truncate axis_attr;
 insert into axis_attr (code, props) values
-('1', '{"color":"#e5233b","img":1,"name":" erradicação da pobreza"}'),
-('2', '{"name":" fome zero e agricultura sustentável","img":2,"color":"#dca63a"}'),
-('3', '{"img":3,"name":" saúde e bem-estar","color":"#4c9e38"}'),
-('4', '{"color":"#c51a2d","img":4,"name":" educação de qualidade"}'),
-('5', '{"name":" igualdade de gênero","img":5,"color":"#ff3a20"}'),
-('6', '{"img":6,"name":" água potável e saneamento","color":"#25bde2"}'),
-('7', '{"color":"#fbc30a","img":7,"name":" energia limpa e acessível"}'),
-('8', '{"img":8,"name":" trabalho decente e crescimento econômico","color":"#a21a42"}'),
-('9', '{"img":9,"name":" indústria, inovação e infraestrutura","color":"#fe6925"}'),
-('10', '{"img":10,"name":"redução das desigualdade","color":"#dd1367"}'),
-('11', '{"name":"cidades e comunidades sustentáveis","img":11,"color":"#fd9d24"}'),
-('12', '{"name":"consumo e produção responsáveis","img":12,"color":"#c08b2f"}'),
-('13', '{"color":"#3f7e45","name":"ação contra a mudança global do clima","img":13}'),
-('14', '{"color":"#0997d9","img":14,"name":"vida na água"}'),
-('15', '{"color":"#56c02a","img":15,"name":"vida terrestre"}'),
-('16', '{"img":16,"name":"paz, justiça e instituições eficazes","color":"#00689d"}'),
-('17', '{"img":17,"name":"parcerias e meios de implementação","color":"#1a486a"}');
+('1', '{"color":"#e5233b","img":1,"name":"Erradicação da pobreza"}'),
+('2', '{"name":"Fome zero e agricultura sustentável","img":2,"color":"#dca63a"}'),
+('3', '{"img":3,"name":"Saúde e bem-estar","color":"#4c9e38"}'),
+('4', '{"color":"#c51a2d","img":4,"name":"Educação de qualidade"}'),
+('5', '{"name":"Igualdade de gênero","img":5,"color":"#ff3a20"}'),
+('6', '{"img":6,"name":"Água potável e saneamento","color":"#25bde2"}'),
+('7', '{"color":"#fbc30a","img":7,"name":"Energia limpa e acessível"}'),
+('8', '{"img":8,"name":"Trabalho decente e crescimento econômico","color":"#a21a42"}'),
+('9', '{"img":9,"name":"Indústria, inovação e infraestrutura","color":"#fe6925"}'),
+('10', '{"img":10,"name":"Redução das desigualdades","color":"#dd1367"}'),
+('11', '{"name":"Cidades e comunidades sustentáveis","img":11,"color":"#fd9d24"}'),
+('12', '{"name":"Consumo e produção responsáveis","img":12,"color":"#c08b2f"}'),
+('13', '{"color":"#3f7e45","name":"Ação contra a mudança global do clima","img":13}'),
+('14', '{"color":"#0997d9","img":14,"name":"Vida na água"}'),
+('15', '{"color":"#56c02a","img":15,"name":"Vida terrestre"}'),
+('16', '{"img":16,"name":"Paz, justiça e instituições eficazes","color":"#00689d"}'),
+('17', '{"img":17,"name":"Parcerias e meios de implementação","color":"#1a486a"}');
 
 
 update axis set attrs = array[  ( select id from axis_attr where code = '5' ), ( select id from axis_attr where code = '10' ), ( select id from axis_attr where code = '16' ) ] where id = 1;
