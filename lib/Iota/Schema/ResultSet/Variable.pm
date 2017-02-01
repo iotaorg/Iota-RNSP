@@ -115,6 +115,8 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            $values{is_basic} ||= 0;
+
             my $var      = $self->find( delete $values{id} );
             my $old_name = $var->name;
 
