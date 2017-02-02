@@ -359,6 +359,10 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         }
     )->all;
 
+    if ( $c->config->{is_sp} ) {
+        push @{ $c->stash->{network_data}{cities} }, { name => 'Brasília', uf => 'DF' };
+    }
+
     $c->stash(
         cities         => $c->stash->{network_data}{cities},
         indicators     => \@indicators,
