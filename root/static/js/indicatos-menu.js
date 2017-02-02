@@ -5,6 +5,7 @@ $(document).ready(function() {
         $search = $('#indicator-search'),
         $status = $('#search_status'),
 
+        _frase_inicial='<div>Em conformidade com os novos parâmetros de desenvolvimento da ONU, esse eixo do Programa Cidades Sustentáveis dialoga com os ODS:</div>',
         _select_caption = '',
         _current_group = $groups.find('.select').attr('selected-id'),
         $select = $groups.find('.select:first'),
@@ -33,7 +34,7 @@ $(document).ready(function() {
                     if ($ods && $me.attr('data-attrs')){
 
                         var $obj = $.parseJSON($me.attr('data-attrs'));
-                        var x = '';
+                        var x = _frase_inicial;
                         $.each($obj, function(i, o) {
                             x += '<div class="bs-tooltip iods iods-'+o.code +'" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="'+o.props.name+'"></div>';
                         });
@@ -183,7 +184,7 @@ $(document).ready(function() {
         if ($ods && $me.attr('data-attrs')){
 
             var $obj = $.parseJSON($me.attr('data-attrs'));
-            var x = '';
+            var x = _frase_inicial;
             $.each($obj, function(i, o) {
                 x += '<div class="bs-tooltip iods iods-'+o.code +'" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="'+o.props.name+'"></div>';
             });
