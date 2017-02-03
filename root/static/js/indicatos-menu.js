@@ -5,7 +5,7 @@ $(document).ready(function() {
         $search = $('#indicator-search'),
         $status = $('#search_status'),
 
-        _frase_inicial='<div>Em conformidade com os novos parâmetros de desenvolvimento da ONU, esse eixo do Programa Cidades Sustentáveis dialoga com os ODS:</div>',
+        _frase_inicial='<div class="text">Em conformidade com os novos parâmetros de desenvolvimento da ONU, esse eixo do Programa Cidades Sustentáveis dialoga com os ODS:</div>',
         _select_caption = '',
         _current_group = $groups.find('.select').attr('selected-id'),
         $select = $groups.find('.select:first'),

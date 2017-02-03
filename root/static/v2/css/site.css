@@ -270,8 +270,14 @@ body {
     width: 99.5%;
 }
 
-#indicators_list .item, #menu-ods{
+#indicators_list .item {
     font-size: 13px;
+}
+
+#menu-ods .text {
+    font-size: 13px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #indicators_list td.has-button{
