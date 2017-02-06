@@ -173,7 +173,7 @@ sub resumo_GET {
       exists $c->req->params->{number_of_periods} && $c->req->params->{number_of_periods} =~ /^[0-9]+$/
       ? $c->req->params->{number_of_periods}
       : 4;
-    my $from_date = $c->req->params->{from_date} || DateTime->now->add( { years => -1 } )->date;
+    my $from_date = $c->req->params->{from_date} || DateTime->now->date;
 
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
