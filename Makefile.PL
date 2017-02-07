@@ -100,6 +100,10 @@ requires 'Statistics::Descriptive';
 requires 'XML::Simple';
 requires 'App::Sqitch';
 
+# for backup
+requires 'LWP::Protocol::https';
+requires 'Amazon::S3';
+
 
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
