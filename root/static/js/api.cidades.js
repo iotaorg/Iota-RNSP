@@ -138,11 +138,13 @@ $(document).ready(function () {
 
         $tabela = $('dl.tabela');
         var user_files = cidade_data.usuario.files;
-        if (
+        if ( /*
             typeof (user_files.carta_compromis) != "undefined" ||
             typeof (user_files.arq_lei) != "undefined" ||
             typeof (user_files.prestacao_de_co) != "undefined" ||
-            typeof (user_files.programa_metas) != "undefined") {
+            typeof (user_files.programa_metas) != "undefined" */ 1 ) {
+
+            $tabela.append("<dt>Links</dt>");
 
             if (typeof (user_files.carta_compromis) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Carta compromisso</a></dd>".render({
@@ -164,8 +166,6 @@ $(document).ready(function () {
                 $tabela.append("<dd><a href='$$dado' target='_blank'><img src='http://icon-icons.com/icons2/775/PNG/512/bill_icon-icons.com_64622.png' width='26' alt='Arquivo de lei' /> Arquivo de lei</a></dd>".render({
                     dado: user_files.arq_lei
                 }));
-            }else{
-                $tabela.append("<dd>Arquivo de lei</dd>");
             }
 
             if (typeof (user_files.programa_metas) != "undefined") {
