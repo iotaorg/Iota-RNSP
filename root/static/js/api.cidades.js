@@ -143,30 +143,37 @@ $(document).ready(function () {
             typeof (user_files.arq_lei) != "undefined" ||
             typeof (user_files.prestacao_de_co) != "undefined" ||
             typeof (user_files.programa_metas) != "undefined") {
-            $tabela.append("<dt>Links:</dt>");
 
             if (typeof (user_files.carta_compromis) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Carta compromisso</a></dd>".render({
                     dado: user_files.carta_compromis
                 }));
+            }else{
+                $tabela.append("<dd>Carta compromisso</dd>");
             }
 
             if (typeof (user_files.prestacao_de_co) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Prestação de contas</a></dd>".render({
                     dado: user_files.prestacao_de_co
                 }));
+            }else{
+                $tabela.append("<dd>Prestação de contas</dd>");
             }
 
             if (typeof (user_files.arq_lei) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'><img src='http://icon-icons.com/icons2/775/PNG/512/bill_icon-icons.com_64622.png' width='26' alt='Arquivo de lei' /> Arquivo de lei</a></dd>".render({
                     dado: user_files.arq_lei
                 }));
+            }else{
+                $tabela.append("<dd>Arquivo de lei</dd>");
             }
 
             if (typeof (user_files.programa_metas) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Programa de Metas</a></dd>".render({
                     dado: user_files.programa_metas
                 }));
+            }else{
+                $tabela.append("<dd>Programa de Metas</dd>");
             }
 
         }
