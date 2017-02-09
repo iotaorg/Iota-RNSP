@@ -151,11 +151,11 @@ $(document).ready(function () {
             }
 
             if (typeof (user_files.prestacao_de_co) != "undefined") {
-                $tabela.append("<dd><a href='$$dado' target='_blank'>Prestação de contas</a></dd>".render({
+                $tabela.append("<dd><a href='$$dado' target='_blank'>Relatório de prestação de contas</a></dd>".render({
                     dado: user_files.prestacao_de_co
                 }));
             }else{
-                $tabela.append("<dd>Prestação de contas (não disponível)</dd>");
+                $tabela.append("<dd>Relatório de prestação de contas (não disponível)</dd>");
             }
 
             if (typeof (user_files.arq_lei) != "undefined") {
