@@ -214,7 +214,6 @@ sub _verify_variable_type {
     # e agora o inverso... usou , e depois um .
     elsif ( $value =~ /[0-9]{1,3}\,[0-9]{1,3}.[0-9]{1,9}$/ ) {
         $value =~ s/,//g;
-        $value =~ s/\./,/;
     }
 
     # se parece com numero ?
