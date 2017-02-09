@@ -138,20 +138,16 @@ $(document).ready(function () {
 
         $tabela = $('dl.tabela');
         var user_files = cidade_data.usuario.files;
-        if ( /*
-            typeof (user_files.carta_compromis) != "undefined" ||
-            typeof (user_files.arq_lei) != "undefined" ||
-            typeof (user_files.prestacao_de_co) != "undefined" ||
-            typeof (user_files.programa_metas) != "undefined" */ 1 ) {
+        if ( institute_short_name === 'gov' ) {
 
-            $tabela.append("<dt>Links</dt>");
+            $tabela.append("<dt>Documentos</dt>");
 
             if (typeof (user_files.carta_compromis) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Carta compromisso</a></dd>".render({
                     dado: user_files.carta_compromis
                 }));
             }else{
-                $tabela.append("<dd>Carta compromisso</dd>");
+                $tabela.append("<dd>Carta compromisso (não disponível)</dd>");
             }
 
             if (typeof (user_files.prestacao_de_co) != "undefined") {
@@ -159,7 +155,7 @@ $(document).ready(function () {
                     dado: user_files.prestacao_de_co
                 }));
             }else{
-                $tabela.append("<dd>Prestação de contas</dd>");
+                $tabela.append("<dd>Prestação de contas (não disponível)</dd>");
             }
 
             if (typeof (user_files.arq_lei) != "undefined") {
@@ -169,11 +165,11 @@ $(document).ready(function () {
             }
 
             if (typeof (user_files.programa_metas) != "undefined") {
-                $tabela.append("<dd><a href='$$dado' target='_blank'>Programa de Metas</a></dd>".render({
+                $tabela.append("<dd><a href='$$dado' target='_blank'>Plano de Metas</a></dd>".render({
                     dado: user_files.programa_metas
                 }));
             }else{
-                $tabela.append("<dd>Programa de Metas</dd>");
+                $tabela.append("<dd>Plano de Metas (não disponível)</dd>");
             }
 
         }
