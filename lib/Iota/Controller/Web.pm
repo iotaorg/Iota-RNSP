@@ -539,6 +539,7 @@ sub topic_network : Chained('') PathPart('') Args(0) {
             $i->{visible} = ( grep { /^$active_group->{id}$/ } @{ $i->{groups} } ) ? 1 : 0;
         }
     }
+
     $c->stash(
         topic_groups       => $groups,
         topic_active_group => $active_group,
@@ -743,8 +744,16 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         $groups_attr->{$key} = JSON::XS->new->utf8(0)->encode($v);
     }
 
+
     $c->stash(
-        groups       => $groups,
+        groups          => $groups,
+        groups_in_order => [
+            sort {
+                return -1 if $b eq 'Indicadores da cidade';
+                return 1  if $a eq 'Indicadores da cidade';
+                return $a cmp $b
+            } keys %$groups
+        ],
         groups_attr  => $groups_attr,
         active_group => $active_group,
         indicators   => \@indicators,
