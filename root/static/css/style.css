@@ -926,4 +926,15 @@ table.history tbody tr.selected{
 }
 
 
+#menu-ods .text {
+    font-size: 13px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+#menu-ods {
+    display: none;
+
+}
+
+
 

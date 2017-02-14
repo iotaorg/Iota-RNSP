@@ -285,8 +285,12 @@ $(document).ready(function () {
 		});
 
 		eixos_indicadores.sort(function (a, b) {
-			a = String(a.sort_field),
-			b = String(b.sort_field);
+            if (b.name === 'Indicadores da cidade') return -1;
+            if (a.name === 'Indicadores da cidade') return 1;
+
+            a = String(a.sort_field),
+            b = String(b.sort_field);
+
 			return a.localeCompare(b);
 		});
 

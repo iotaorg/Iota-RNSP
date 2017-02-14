@@ -116,5 +116,5 @@
         </div>
   </div>
 </footer>
-<span style="display:none" id="ref_or_ods">[% institute_metadata.ods ? l('Metas ODS'):  l('Referência de Meta')%]</span>
+<span style="display:none" id="ref_or_ods">[% institute_metadata.ods ? l('Meta ODS'):  l('Referência de Meta')%]</span>
 <span style="display:none" id="font_or_ods">[% institute_metadata.ods ? l('ODS relacionados'):  l('Fonte')%]</span>

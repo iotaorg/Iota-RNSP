@@ -10,7 +10,7 @@
             <dt>[%l('Fórmula')%]:</dt>
             <dd>[%l(indicator.formula_human)%]</dd>
             [%IF indicator.goal_explanation%]
-                <dt>[% institute_metadata.ods ? l('Metas ODS'):  l('Referência de Meta')%]:</dt>
+                <dt>[% institute_metadata.ods ? l('Meta ODS'):  l('Referência de Meta')%]:</dt>
                 <dd>[%l(indicator.goal_explanation)|none%]
                     [%IF indicator.goal_source%]<blockquote><small><cite title="[%  institute_metadata.ods ? l('ODS relacionados'): l('Fonte da meta')%]">[%l(indicator.goal_source)%]</cite></small></blockquote>[%END%]
                 </dd>

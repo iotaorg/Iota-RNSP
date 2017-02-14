@@ -35,6 +35,7 @@ sub _download {
 
     my $ignore_cache = 0;
 
+    my $eixos;
     if ( $c->req->params->{from_indicators} ) {
 
         # da muito trabalho cachear essas informações "per user"
@@ -52,17 +53,26 @@ sub _download {
             users_ids    => \@users_ids,
         )->get_column('id')->as_query;
 
-        my $variables_id_rs = $c->model('DB::IndicatorVariable')->search(
-            {
-                indicator_id => { 'in' => $indicators_rs }
-            }
-        )->get_column('variable_id')->as_query;
+        my $variables_id_rs =
+          $c->model('DB::IndicatorVariable')->search( { indicator_id => { 'in' => $indicators_rs } } )
+          ->get_column('variable_id')->as_query;
 
-        $rs = $rs->search(
-            {
-                'me.id' => { 'in' => $variables_id_rs }
-            }
-        );
+        $rs = $rs->search( { 'me.id' => { 'in' => $variables_id_rs } } );
+
+        $eixos = {
+            map { $_->{variable_id} => $_->{eixo} } $c->model('DB::IndicatorVariable')->search(
+                { indicator_id => { 'in' => $indicators_rs } },
+                {
+                    columns => [
+                        qw/variable_id/,
+                        { eixo => \'ARRAY(SELECT DISTINCT UNNEST( array_agg(axis.name))  ORDER BY 1) ' }
+                    ],
+                    join         => { 'indicator' => 'axis' },
+                    group_by     => \'1',
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                }
+            )->all
+        };
 
     }
 
@@ -84,13 +94,14 @@ sub _download {
     $rs = $rs->as_hashref;
 
     my @lines =
-      ( [ 'ID da variável', 'Nome', 'Data', 'Valor', 'fonte', 'observacao' ] );
+      ( [ 'ID da variável', 'Nome', 'Data', 'Valor', 'fonte', 'Observacao', ( defined $eixos ? 'Eixos' : () ) ] );
 
     while ( my $var = $rs->next ) {
         push @lines,
           [
             $var->{id}, $self->_loc_str( $c, $var->{name} ),
-            undef, undef, undef, undef
+            undef, undef, undef, undef,
+            ( defined $eixos ? exists $eixos->{ $var->{id} } ? join ", ", @{ $eixos->{ $var->{id} } } : '-' : () )
           ];
     }
 
@@ -172,8 +183,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header(
-            'content-disposition' => "attachment;filename="
+    $c->response->headers->header( 'content-disposition' => "attachment;filename="
           . "variaveis-exemplo-"
           . ( $custom ? 'dos-indicadores-' : 'completa-' )
           . $c->get_lang()
@@ -185,15 +195,13 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub doido_download_csv : Chained('/institute_load') :
-  PathPart('variaveis_exemplo.csv') : Args(0) {
+sub doido_download_csv : Chained('/institute_load') : PathPart('variaveis_exemplo.csv') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'csv';
     $self->_download($c);
 }
 
-sub download_xls : Chained('/institute_load') :
-  PathPart('variaveis_exemplo.xls') : Args(0) {
+sub download_xls : Chained('/institute_load') : PathPart('variaveis_exemplo.xls') : Args(0) {
     my ( $self, $c ) = @_;
     $c->stash->{type} = 'xls';
     $self->_download($c);
