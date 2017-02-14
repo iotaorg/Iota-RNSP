@@ -33,7 +33,7 @@
     <col class="col-xs-10 col-md-9"></col>
     <col class="col-xs-2 col-md-3"></col>
     <tbody >
-    [%-FOREACH i IN indicators.sort('name')-%]
+    [%-FOREACH i IN indicators.sort('name_url')-%]
     <tr class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]"  indicator-id="[%i.id%]">
     <td>
         [% l(i.name)%]

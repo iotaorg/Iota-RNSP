@@ -104,7 +104,7 @@
         <label>[%l('Cidades')%]</label>
         <select name="cidade" class="form-control">
             <option value="" selected="selected">[%l('Todas')%]</option>
-            [%FOREACH cc IN cities.sort('name') %]
+            [%FOREACH cc IN cities.sort('name_uri') %]
             <option value="br/[%cc.uf%]/[%cc.name_uri%]">[%cc.name%], [%cc.uf%]</option>
             [%END%]
         </select>
@@ -127,7 +127,7 @@
                 <label>[%l('Indicador')%]</label>
                 <select name="indicador" class="form-control">
                     <option value="" selected="selected">[%l('Todos')%]</option>
-                    [%FOREACH i IN indicators.sort('name') %]
+                    [%FOREACH i IN indicators.sort('name_url%') %]
                     <option value="[%i.name_url%]">[%l(i.name)%]</option>
                     [%END%]
                 </select>
