@@ -39,7 +39,7 @@
     <span class="label label-info hideimp" id="search_status" data-text="[%l('Mais __NUM__ indicadores em outros grupos encontrados')%]"></span>
 
     <div id="indicators_list" class="[%IF !v2%]auto-height[%END%] indicators indicators-home">
-    [%-FOREACH i IN indicators.sort('name')-%]
+    [%-FOREACH i IN indicators-%]
     <a class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="right" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="[%i.href%]">
     [%-l(i.name)-%]
     </a>
