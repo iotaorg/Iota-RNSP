@@ -31,7 +31,7 @@ $(document).ready(function() {
                     $list.find('.item').addClass('hideimp');
                     $list.find('.item.g' + _current_group).removeClass('hideimp');
 
-                    if ($ods && $me.attr('data-attrs')){
+                    if ($ods && $me.attr('data-attrs') && $me.attr('data-attrs').length > 2 ){
 
                         var $obj = $.parseJSON($me.attr('data-attrs'));
                         var x = _frase_inicial;
