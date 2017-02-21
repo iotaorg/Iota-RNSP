@@ -181,7 +181,7 @@ $(document).ready(function() {
         var $ods= $('#menu-ods'), $me = $('#group_list').find('.option[group-id="'+_current_group+'"]');
         $ods.html('');
 
-        if ($ods && $me.attr('data-attrs')){
+        if ($ods && $me.attr('data-attrs') && $me.attr('data-attrs').length > 2){
 
             var $obj = $.parseJSON($me.attr('data-attrs'));
             var x = _frase_inicial;
