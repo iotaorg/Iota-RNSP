@@ -35,9 +35,10 @@ var $google_visualization_countries = function (){
                 var $e = $(e);
                 ixindex.push($e);
                 //colors.push($e.css('borderLeftColor'));
+                //colors.push('red');
                 ivalue.push([
                     $e.text(),
-                    i,
+                    1,
                     $e.text()
                 ]);
             });
@@ -49,7 +50,7 @@ var $google_visualization_countries = function (){
                 colors.push($e.css('backgroundColor'));
                 ivalue.push([
                     $e.text(),
-                    i,
+                    1,
                     $e.text()
                 ]);
             });
@@ -57,6 +58,7 @@ var $google_visualization_countries = function (){
         data.addRows(ivalue);
 
         var stateHeatMap = new google.visualization.GeoChart($elm[0]);
+        console.log(colors);
         var _on_res_call = function(){
             stateHeatMap.draw(data, {
                 width: $elm.width(),
@@ -66,7 +68,7 @@ var $google_visualization_countries = function (){
 
                 datalessRegionColor: '#EEE',
                 backgroundColor: '#d9edff',
-                colorAxis: { colors: colors}
+                colorAxis: { colors: colors }
             });
         };
         _on_res_call();
