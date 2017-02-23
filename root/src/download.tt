@@ -405,24 +405,14 @@ ret = {
 ret = {
     "cities": [
         {
-            "state_id": "22",
-            "created_at": "2013-02-04 14:23:24.256487",
-            "country_id": "1",
+            "name_uri": "rio-branco",
             "summary": null,
-            "pais": "br",
-            "latitude": "-12.6938584",
-            "id": 150,
-            "endereco_prefeitura": "Rua Francisco Drumond, S/N",
-            "longitude": "-38.3228842",
-            "telefone_prefeitura": "(71) 3621 6666 ",
-            "bairro_prefeitura": "Centro Administrativo",
-            "name_uri": "camacari",
-            "name": "Camaçari",
-            "email_prefeitura": null,
-            "cep_prefeitura": "42.800-000",
-            "uf": "BA",
-            "automatic_fill": 0,
-            "nome_responsavel_prefeitura": null
+            "id": 546,
+            "longitude": "-67.824918",
+            "pais": "brasil",
+            "name": "Rio Branco",
+            "latitude": "-9.9753837",
+            "uf": "AC"
         }
     ]
 }</code></pre>
