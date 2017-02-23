@@ -50,7 +50,7 @@ var $google_visualization_countries = function (){
                 colors.push($e.css('backgroundColor'));
                 ivalue.push([
                     $e.text(),
-                    1,
+                    i,
                     $e.text()
                 ]);
             });
