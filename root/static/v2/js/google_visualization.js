@@ -33,13 +33,15 @@ var $google_visualization_countries = function (){
             region = 'BR';
             $('#states-container .list-state').each(function(i, e){
                 var $e = $(e);
+
+                var c = $($e.parent().attr('href').replace('#', '#id_')).next().find('a').size();
                 ixindex.push($e);
                 //colors.push($e.css('borderLeftColor'));
                 //colors.push('red');
                 ivalue.push([
                     $e.text(),
-                    1,
-                    $e.text()
+                    c,
+                    c + ' cidades participantes'
                 ]);
             });
 
