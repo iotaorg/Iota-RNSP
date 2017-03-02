@@ -386,8 +386,9 @@ $(document).ready(function () {
                                 table_content += "<td class='valor'>-</td>";
                             } else {
                                 if (item.variable_type == 'str') {
-                                    table_content += "<td class='valor'>$$valor</td>".render({
-                                        valor: item.valores[j] ? 'OK' : '-'
+                                    table_content += "<td title='$$again' class='valor'>$$valor</td>".render({
+                                        valor: item.valores[j] ? 'OK' : '-',
+                                        again: item.valores[j]
                                     });
                                     if (item.valores[j]) {
                                         have_data++;
