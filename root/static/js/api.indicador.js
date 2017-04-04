@@ -150,11 +150,11 @@ $(document).ready(function () {
             $(".tabela", $dados).empty();
 
         }
-        if (indicador_data.formula.indexOf("CONCATENAR") < 0) {
+        //if (indicador_data.formula.indexOf("CONCATENAR") < 0) {
             $(".tabela", $dados).append("<dt>Fórmula:</dt><dd>$$dado</dd>".render({
                 dado: formataFormula(indicador_data.formula, variaveis_data, data_vvariables)
             }));
-        }
+        //}
         var fonte_meta = "";
         if (indicador_data.goal_source) {
             fonte_meta = indicador_data.goal_source;
