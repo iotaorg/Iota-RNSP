@@ -129,7 +129,7 @@ $(document).ready(function () {
             });
         }
 
-        return new_formula;
+        return $.trim(new_formula);
     }
 
     function showIndicadorData() {
