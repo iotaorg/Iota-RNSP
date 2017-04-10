@@ -1,0 +1,51 @@
+<div id="topbackground">
+
+    <div class="container">
+
+
+        <div class="row top-row">
+
+
+            <div class="fundo-branco">
+
+                <div class="row">
+                    <div class="span12 col-md-12">
+                        <div class="text-right">
+                            LOGO GITHUB
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="span2 col-md-2">
+                        <img src="/static/infancia/logo.png">
+                    </div>
+
+                    <div class="span10 col-md-10">
+                        <div class="mynavbar-inner">
+
+                            <ul class="nav">
+                              <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
+                                    <a href="/pagina/sobre-o-projeto">[%l('O Projeto')%]</a>
+                                </li>
+                                <li [% IF c_req_path == 'indicadores' %]class="active"[%END%]>
+                                    <a href="/indicadores">[%l('Indicadores')%]</a>
+                                </li>
+                                <li [% IF !menu && c_req_path == 'dados-abertos' %]class="active"[%END%]>
+                                  <a href="/dados-abertos">[%l('Dados abertos')%]</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div> [%# md-8 %]
+      </div>[%# .top-row%]
+
+
+    </div> [%# container %]
+
+</div>[%# topbackground %]

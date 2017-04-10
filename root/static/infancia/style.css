@@ -1,0 +1,24 @@
+body {
+    padding-top: 0;
+}
+
+.fundo-branco {
+    background-color: white;
+}
+
+#topbackground {
+    color:red !important;
+    height: 400px;
+    background-image: url(https://s-media-cache-ak0.pinimg.com/736x/2a/e1/7e/2ae17eee05d683190d132c1faeef0680.jpg);
+    background-repeat: repeat-x;
+    background-position: 50% 0;
+}
+
+#iota-app-content {
+    background-color: white;
+    min-height: 400px
+}
+
+.mynavbar-inner ul {
+
+}

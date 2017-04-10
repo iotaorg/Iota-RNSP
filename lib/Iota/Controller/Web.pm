@@ -107,6 +107,11 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{institute}          = $net->institute;
     $c->stash->{institute_metadata} = $c->stash->{institute}->build_metadata;
 
+    $c->stash->{additional_template_paths} =
+      [ Iota->path_to( 'root', 'src', $c->stash->{institute_metadata}{template} ) ];
+
+    $c->stash->{is_infancia} = 1 if $c->stash->{institute_metadata}{template} eq 'infancia';
+
     $c->stash->{c_req_path} = $c->req->path;
 }
 
@@ -326,6 +331,19 @@ sub erro : Chained('institute_load') PathPart('erro') Args(0) {
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         template       => 'error.tt'
+    );
+}
+
+sub o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        template       => 'o_projeto.tt'
     );
 }
 
@@ -743,7 +761,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         $_ = $props->{$_} for @$v;
         $groups_attr->{$key} = JSON::XS->new->utf8(0)->encode($v);
     }
-
 
     $c->stash(
         groups          => $groups,

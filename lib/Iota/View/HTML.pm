@@ -9,13 +9,14 @@ __PACKAGE__->config(
         ENCODING           => 'UTF-8',
         DEFAULT_ENCODING   => 'UTF-8',
 
-        CLASS => 'Template::AutoFilter',
-        INCLUDE_PATH =>
-          [ Iota->path_to( 'root', 'src' ), Iota->path_to( 'root', 'lib' ) ],
-        WRAPPER    => 'site/wrapper',
-        ERROR      => 'error.tt',
-        TIMER      => 0,
-        render_die => 1,
+        CLASS        => 'Template::AutoFilter',
+        INCLUDE_PATH => [
+             Iota->path_to( 'root', 'src/default' ),
+         ],
+        WRAPPER      => 'site/wrapper',
+        ERROR        => 'error.tt',
+        TIMER        => 0,
+        render_die   => 1,
 
     }
 );
@@ -45,8 +46,7 @@ it under the same terms as Perl itself.
 
 sub date4period {
     my ( $self, $c, $date, $period ) = @_;
-    return Iota::IndicatorChart::PeriodAxis::get_label_of_period( $date,
-        $period );
+    return Iota::IndicatorChart::PeriodAxis::get_label_of_period( $date, $period );
 }
 
 sub value4human {
@@ -82,7 +82,7 @@ sub value4human {
     }
 
     if ( length($pre) > 3 ) {
-        $pre = reverse $pre;         # reverse the number's digits
+        $pre = reverse $pre;    # reverse the number's digits
         $pre =~ s/(\d{3})/$1\./g;    # insert dot every 3 digits, from beginning
         $pre = reverse $pre;         # Reverse the result
         $pre =~ s/^\.//;             # remove leading dot, if any
