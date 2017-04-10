@@ -150,7 +150,7 @@ sub list_GET {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
     )->next;
-    $cache_key = $cache_key->{md5};
+    $cache_key = $cache_key->{md5} || '';
     $cache_key = "source-list_GET-$cache_key";
 
     my $stash = $redis->get($cache_key);
