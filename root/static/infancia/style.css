@@ -1,17 +1,27 @@
 body {
     padding-top: 0;
+    color: #444;
+    font-weight: 100;
+    min-width: 375px;
 }
 
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: 'Roboto', sans-serif;
+}
 .fundo-branco {
     background-color: white;
+
+}
+.pad10 {
+    padding: 10px;
 }
 
 #topbackground {
-    color:red !important;
+    color: red;
     height: 400px;
-    background-image: url(https://s-media-cache-ak0.pinimg.com/736x/2a/e1/7e/2ae17eee05d683190d132c1faeef0680.jpg);
-    background-repeat: repeat-x;
-    background-position: 50% 0;
+    background-image: url(http://i.imgur.com/vXFXWvJ.png);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #iota-app-content {
@@ -20,5 +30,41 @@ body {
 }
 
 .mynavbar-inner ul {
+    margin-top : 139px
+}
 
+.mynavbar-inner li {
+    display: inline-block;
+    width: 20%;
+    max-width: 150px;
+}
+.mynavbar-inner li a {
+    font-size: 1.35em;
+    text-transform: lowercase;
+    text-align: center;
+    color: #444;
+}
+.agithub a {
+    color: #666;
+    font-size: 0.9em;
+    padding: 10px 10px 0px 0px;
+    display: inline-block;
+}
+
+h1 {
+    color: white;
+    font-weight: 100;
+    margin-top: 1em
+}
+/* Landscape phone to desktop  */
+
+@media (max-width: 990px) {
+    .mynavbar-inner ul {
+        margin-top : 0;
+    }
+    .mynavbar-inner li {
+
+        width: 150px;
+        min-width: 150px;
+    }
 }

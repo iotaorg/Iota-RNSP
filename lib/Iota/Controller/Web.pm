@@ -343,6 +343,7 @@ sub o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
+        title => 'o projeto',
         template       => 'o_projeto.tt'
     );
 }

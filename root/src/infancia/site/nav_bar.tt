@@ -1,51 +1,54 @@
 <div id="topbackground">
 
     <div class="container">
-
-
-        <div class="row top-row">
-
-
             <div class="fundo-branco">
 
                 <div class="row">
-                    <div class="span12 col-md-12">
-                        <div class="text-right">
-                            LOGO GITHUB
-                        </div>
+                    <div class="span12 col-md-12 text-right agithub hidden-phone hidden-xs" >
+                        <a href="https://github.com/iotaorg/Iota-RNSP" target="_blank">Siga o Iota no github <i class="glyphicon glyphicon-new-window icon-white"></i></a>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="span2 col-md-2">
-                        <img src="/static/infancia/logo.png">
+                <div class="row ">
+                    <div class="span2 col-md-2 text-center">
+                        <img height="199" width="118"  src="/static/infancia/logo.png" class="pad10">
                     </div>
 
                     <div class="span10 col-md-10">
                         <div class="mynavbar-inner">
 
                             <ul class="nav">
-                              <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
+                                <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
                                     <a href="/pagina/sobre-o-projeto">[%l('O Projeto')%]</a>
                                 </li>
                                 <li [% IF c_req_path == 'indicadores' %]class="active"[%END%]>
                                     <a href="/indicadores">[%l('Indicadores')%]</a>
                                 </li>
+                                <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
+                                    <a href="/pagina/sobre-o-projeto">[%l('boas práticas')%]</a>
+                                </li>
                                 <li [% IF !menu && c_req_path == 'dados-abertos' %]class="active"[%END%]>
                                   <a href="/dados-abertos">[%l('Dados abertos')%]</a>
+                                </li>
+                                <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
+                                    <a href="/pagina/contato">[%l('contato')%]</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
+            </div> [%# fundo-branco %]
 
 
 
-            </div> [%# md-8 %]
-      </div>[%# .top-row%]
-
+        <div class="row">
+            <div class="span12 col-md-12">
+                <h1>[% title %]</h1>
+            </div>
+        </div>
 
     </div> [%# container %]
+
 
 </div>[%# topbackground %]
