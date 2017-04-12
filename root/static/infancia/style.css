@@ -55,7 +55,7 @@ body.root_ h1 {
     max-width: 150px;
 }
 .mynavbar-inner li a {
-    font-size: 1.35em;
+    font-size: 18px;
     text-transform: lowercase;
     text-align: center;
     color: #444;
@@ -72,8 +72,9 @@ body.root_ h1 {
 
 h1 {
     color: white;
+    margin-top: 1em;
     font-weight: 100;
-    margin-top: 1em
+    font-size: 3em;
 }
 
 /* extra large-laptop */

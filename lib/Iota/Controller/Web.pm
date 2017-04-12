@@ -1261,6 +1261,8 @@ sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0)
     $self->_load_user_justification_of_missing_field($c);
 
     $c->stash( template => 'home_indicador.tt' );
+    $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
+
 }
 
 sub _load_user_justification_of_missing_field {
@@ -1737,6 +1739,7 @@ sub stash_tela_cidade : Private {
         user     => $user,
         template => 'home_cidade.tt',
     );
+    $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
 }
 
 sub _setup_regions_level {
