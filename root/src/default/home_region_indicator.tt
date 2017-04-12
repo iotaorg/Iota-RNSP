@@ -1,6 +1,6 @@
 <div id="content" class="content">
     <div class="row" id="cidades-dados">
-        <div class="span4">
+        <div class="span4 col-md-4">
             <div class=" ">
                 <div class="content-fill">
                     <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="span8">
+    <div class="span8 col-md-8">
         <div class="indicador-dados">
             <h1 class="title">[%l(indicator.name)%]</h1>
             <p class="explanation">[%l(indicator.explanation)%]</p>
@@ -68,12 +68,12 @@
 
 
     <div class="row" id="indicador-dados">
-        <div class="span4">
+        <div class="span4 col-md-4">
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
         </div>
-        <div class="span8">
+        <div class="span8 col-md-8">
 
 
 

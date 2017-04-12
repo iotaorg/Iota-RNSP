@@ -1,6 +1,6 @@
 <div id="content" class="content row">
 
-	<div class="span4" id="cidades-nav-left">
+	<div class="span4 col-md-4" id="cidades-nav-left">
 		<div id="regioes" lockfixed>
 			<h5>[%(region_classification_name.2)%]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores">[%l('visualizar indicadores por eixo')%]</a></small></h5>
 			<ul class="regions">
@@ -20,7 +20,7 @@
 		</div>
 	</div>
 
-	<div class="span8" id="cidades-nav-right">
+	<div class="span8 col-md-8" id="cidades-nav-right">
 
 
 

@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="span8">
+    <div class="span8 col-md-8">
         [% IF best_pratices %]
         <h1>[%l('Boas práticas')%]</h1>
         <p>[%l('Separadas por eixos')%]</p>

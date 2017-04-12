@@ -44,8 +44,8 @@
                     </tr>
                     [%FOREACH lex IN lexicons.${origin_lang}.${lang}.word%]
                     <tr>
-                        <th class="span4">[%lex.lex_key| html%]</th>
-                        <td class="span8"><input class="span8" type="text" name="lex_[%lex.id%]">
+                        <th class="span4 col-md-4">[%lex.lex_key| html%]</th>
+                        <td class="span8 col-md-8"><input class="span8 col-md-8" type="text" name="lex_[%lex.id%]">
                         </td>
                     </tr>
                     [%END%]
@@ -64,8 +64,8 @@
                     </tr>
                     [%FOREACH lex IN lexicons.${origin_lang}.${lang}.text%]
                     <tr>
-                        <th class="span4">[%lex.lex_key| html%]</th>
-                        <td class="span8"><textarea name="lex_[%lex.id%]" class="span8"></textarea>
+                        <th class="span4 col-md-4">[%lex.lex_key| html%]</th>
+                        <td class="span8 col-md-8"><textarea name="lex_[%lex.id%]" class="span8 col-md-8"></textarea>
                         </td>
                     </tr>
                     [%END%]
