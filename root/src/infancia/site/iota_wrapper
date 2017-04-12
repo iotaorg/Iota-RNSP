@@ -104,7 +104,6 @@
 </head>
 [%IF v2%]
 <body class="[%c_req_match%]"><div id="fb-root"></div>
-
 [%ELSE%]
 <body class="[%c_req_match%]" data-institute="[%institute_json|html%]"><script>var load_map=[];</script>
 [%END%]

@@ -111,3 +111,14 @@ h1 {
     display: inline-block;
 }
 
+.root_home_network_indicator_render .btn-group {
+    width: 90px;
+}
+.root_home_network_indicator_render .compare {
+    font-size: 0.8em;
+    padding-right: 7px;
+}
+.root_home_network_indicator_render  .btn.dropdown-toggle {
+    font-size: 0.8em;
+    padding-left: 0;
+}
