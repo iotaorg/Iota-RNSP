@@ -11,7 +11,7 @@
 
                 <div class="row ">
                     <div class="span2 col-md-2 text-center">
-                        <img height="199" width="118"  src="/static/infancia/logo.png" class="pad10">
+                        <a class="menulogo" title="Página Inicial" href="/"><img height="199" width="118" src="/static/infancia/logo.png" class="pad10"></a>
                     </div>
 
                     <div class="span10 col-md-10">
@@ -21,16 +21,16 @@
                                 <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
                                     <a href="/pagina/sobre-o-projeto">[%l('O Projeto')%]</a>
                                 </li>
-                                <li [% IF c_req_path == 'indicadores' %]class="active"[%END%]>
-                                    <a href="/indicadores">[%l('Indicadores')%]</a>
+                                <li [% IF c_req_path == 'pagina/indicadores' %]class="active"[%END%]>
+                                    <a href="/pagina/indicadores">[%l('Indicadores')%]</a>
                                 </li>
-                                <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
-                                    <a href="/pagina/sobre-o-projeto">[%l('boas práticas')%]</a>
+                                <li [% IF c_req_path == 'pagina/boas-praticas' %]class="active"[%END%]>
+                                    <a href="/pagina/boas-praticas">[%l('boas práticas')%]</a>
                                 </li>
-                                <li [% IF !menu && c_req_path == 'dados-abertos' %]class="active"[%END%]>
+                                <li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
                                   <a href="/dados-abertos">[%l('Dados abertos')%]</a>
                                 </li>
-                                <li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
+                                <li [% IF c_req_path == 'pagina/contato' %]class="active"[%END%]>
                                     <a href="/pagina/contato">[%l('contato')%]</a>
                                 </li>
                             </ul>

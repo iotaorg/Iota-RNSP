@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
 [%-END-%]
 </head>
-<body><div id="fb-root"></div>
+<body class="[%c_req_match%]"><div id="fb-root"></div>
 [%INCLUDE 'site/ie_message.tt'%]
 <div id="iota-app">
 

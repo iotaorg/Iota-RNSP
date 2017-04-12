@@ -1,0 +1,7 @@
+[% INCLUDE 'web/messages.tt' %]
+
+pagina indicadores
+
+ <div>
+    [% INCLUDE 'parts/menu_indicators.tt'%]
+</div>

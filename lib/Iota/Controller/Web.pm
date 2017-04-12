@@ -112,7 +112,11 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     $c->stash->{is_infancia} = 1 if $c->stash->{institute_metadata}{template} eq 'infancia';
 
-    $c->stash->{c_req_path} = $c->req->path;
+    $c->stash->{c_req_path}  = $c->req->path;
+    $c->stash->{c_req_match} = $c->req->match;
+    $c->stash->{c_req_match} =~ s/^\//root_/;
+    $c->stash->{c_req_match} =~ s/\//_/g;
+
 }
 
 sub load_status_msgs : Private {
@@ -334,7 +338,8 @@ sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     );
 }
 
-sub o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto') Args(0) {
+
+sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto') Args(0) {
     my ( $self, $c ) = @_;
 
     $c->detach( '/error_404', ['Página não existe neste dominio!'] )
@@ -343,8 +348,52 @@ sub o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
-        title => 'o projeto',
+        title          => 'O projeto',
         template       => 'o_projeto.tt'
+    );
+}
+sub pagina_boas_praticas : Chained('light_institute_load') PathPart('pagina/boas-praticas') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => 'Boas práticas',
+        template       => 'boas_praticas.tt'
+    );
+}
+
+sub pagina_contato : Chained('light_institute_load') PathPart('pagina/contato') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => 'Contato',
+        template       => 'contato.tt'
+    );
+}
+
+sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->forward( 'build_indicators_menu', [1] );
+    $c->forward('/load_status_msgs');
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => 'Indicadores',
+        template       => 'indicadores.tt'
     );
 }
 

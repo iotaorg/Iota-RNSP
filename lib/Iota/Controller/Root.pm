@@ -34,18 +34,33 @@ sub index : Path : Args(0) {
     $c->forward('root');
     $c->forward('institute_load');
 
-    $c->forward('web_load_country');
+    if ( $c->stash->{is_infancia} ) {
 
-    $c->stash(
-        template       => 'home_comparacao.tt',
-        custom_wrapper => 'site/iota_wrapper',
-        v2             => 1,
-        web_open_axis  => 1
-    );
-    $c->forward( 'build_indicators_menu', [1] );
-    $c->forward('/load_status_msgs');
+        $c->stash(
+            template       => 'home_infancia.tt',
+            custom_wrapper => 'site/iota_wrapper',
+            v2             => 1,
+            web_open_axis  => 1,
+            title => 'Indicadores para uma infância mais digna'
+        );
+        $c->forward( 'build_indicators_menu', [1] );
 
-    $c->forward('/topic_network') if $c->stash->{network}->topic;
+    }
+    else {
+
+        $c->forward('web_load_country');
+
+        $c->stash(
+            template       => 'home_comparacao.tt',
+            custom_wrapper => 'site/iota_wrapper',
+            v2             => 1,
+            web_open_axis  => 1
+        );
+        $c->forward( 'build_indicators_menu', [1] );
+        $c->forward('/load_status_msgs');
+
+        $c->forward('/topic_network') if $c->stash->{network}->topic;
+    }
 }
 
 sub root : Chained('/') PathPart('') CaptureArgs(0) {
@@ -92,9 +107,7 @@ sub error_404 : Private {
     if ( $foo && $foo =~ /Nenhuma rede/ ) {
         $c->stash->{networks} = [
             $c->model('DB::Network')->search(
-                {
-                    is_virtual => 0
-                },
+                { is_virtual => 0 },
                 {
                     columns      => ['domain_name'],
                     result_class => 'DBIx::Class::ResultClass::HashRefInflator'

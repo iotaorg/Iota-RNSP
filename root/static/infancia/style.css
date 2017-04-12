@@ -44,6 +44,9 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     text-align: center;
     color: #444;
 }
+.mynavbar-inner li.active a {
+    background-color: #eee;
+}
 .agithub a {
     color: #666;
     font-size: 0.9em;
@@ -67,4 +70,10 @@ h1 {
         width: 150px;
         min-width: 150px;
     }
+}
+.menulogo {
+    display: block;
+}
+.menulogo a {
+    display: inline-block;
 }
