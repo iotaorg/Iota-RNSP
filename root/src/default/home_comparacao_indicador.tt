@@ -1,11 +1,11 @@
 <div id="content" class="content">
     <div class="row" id="indicadores-dados">
-        <div class="span4">
+        <div class="span4 col-md-4">
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
         </div>
-        <div class="span8">
+        <div class="span8 col-md-8">
             <div class="data-right" lockfixed>
                 [%INCLUDE 'parts/comparacao_indicador_por_cidade.tt'%]
             </div>

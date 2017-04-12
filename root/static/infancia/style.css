@@ -39,7 +39,8 @@ body.root_ h1 {
 
 #iota-app-content {
     background-color: white;
-    min-height: 400px
+    min-height: 400px;
+    margin-top: 20px;
 }
 
 .mynavbar-inner ul {

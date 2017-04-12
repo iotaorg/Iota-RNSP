@@ -20,12 +20,14 @@
 
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,500" rel="stylesheet">
 
-[%IF v2%]
-[%-CALL assets.include("v2/css/bootstrap.min.css")%]
-[%-CALL assets.include("v2/css/bootstrap-theme.min.css")%]
+[%IF v2 || 1%]
+    [%-CALL assets.include("v2/css/bootstrap.min.css")%]
+    [%-CALL assets.include("v2/css/bootstrap-theme.min.css")%]
 [%ELSE%]
-[%-CALL assets.include("css/bootstrap.min.css")%]
+
+    [%-CALL assets.include("css/bootstrap.min.css")%]
 [%END%]
+[%-CALL assets.include("css/rnsp.dados.css")%]
 
 [%-CALL assets.include("v2/css/site.css")%]
 [%-CALL assets.include("v2/css/iota.css")%]
@@ -37,20 +39,58 @@
 [%-CALL assets.include("css/sprite-ods.css")%]
 
 
-[%-CALL assets.include("v2/js/bootstrap.min.js")%]
+[% IF v2 %]
 
-[%-CALL assets.include("v2/js/latinise.js")%]
-[%-CALL assets.include("v2/js/utils.js")%]
-[%-CALL assets.include("v2/js/events.js")%]
+    [%-CALL assets.include("v2/js/bootstrap.min.js")%]
 
-[%-CALL assets.include("v2/js/prism-javascript.js")%]
-[%-CALL assets.include("v2/js/jquery.isotope.min.js")%]
+    [%-CALL assets.include("v2/js/latinise.js")%]
+    [%-CALL assets.include("v2/js/utils.js")%]
+    [%-CALL assets.include("v2/js/events.js")%]
 
-[%-CALL assets.include("js/indicatos-menu.js")%]
-[%-CALL assets.include("js/indicators-topic-menu.js")%]
+    [%-CALL assets.include("v2/js/prism-javascript.js")%]
+    [%-CALL assets.include("v2/js/jquery.isotope.min.js")%]
+
+    [%-CALL assets.include("js/indicatos-menu.js")%]
+    [%-CALL assets.include("js/indicators-topic-menu.js")%]
 
 
-[%-CALL assets.include("js/stupidtable.min.js")%]
+    [%-CALL assets.include("js/stupidtable.min.js")%]
+[%ELSE%]
+
+
+    [%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
+    [%-CALL assets.include("css/jquery-ui-1.9.2.custom.min.css")%]
+
+
+    [%-CALL assets.include("js/jquery.history.js")%]
+
+    [%-CALL assets.include("js/jshashtable-2.1.js")%]
+    [%-CALL assets.include("js/jquery.numberformatter-1.2.3.min.js")%]
+
+    [%-CALL assets.include("js/jquery.ba-hashchange.js")%]
+
+    [%-CALL assets.include("js/infobox.js")%]
+    [%-CALL assets.include("js/api.home.js")%]
+    [%-CALL assets.include("js/api.common.js")%]
+    [%-CALL assets.include("js/api.dados.js")%]
+    [%-CALL assets.include("js/api.cidades.js")%]
+    [%-CALL assets.include("js/api.indicador.js")%]
+    [%-CALL assets.include("js/indicatos-menu.js")%]
+
+    [%-CALL assets.include("js/stupidtable.min.js")%]
+
+    [%-CALL assets.include("js/nprogress.js")%]
+
+
+    [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
+    [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
+    [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
+    [%-CALL assets.include("js/libraries/RGraph.line.js")%]
+    [%-CALL assets.include("js/bootstrap.min.js")-%]
+    [%-CALL assets.include("js/jquery-lockfixed-dynamic.js")-%]
+
+
+[% END %]
 
 
 [%-CALL assets.include("infancia/style.css")%]
@@ -62,7 +102,14 @@
     <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
 [%-END-%]
 </head>
+[%IF v2%]
 <body class="[%c_req_match%]"><div id="fb-root"></div>
+
+[%ELSE%]
+<body class="[%c_req_match%]" data-institute="[%institute_json|html%]"><script>var load_map=[];</script>
+[%END%]
+
+
 [%INCLUDE 'site/ie_message.tt'%]
 <div id="iota-app">
 
@@ -78,6 +125,10 @@
 
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+[%IF !v2%]
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry,visualization&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+[%END%]
 
 [% assets.export("js") |none%]
 

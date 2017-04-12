@@ -352,6 +352,7 @@ sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-
         template       => 'o_projeto.tt'
     );
 }
+
 sub pagina_boas_praticas : Chained('light_institute_load') PathPart('pagina/boas-praticas') Args(0) {
     my ( $self, $c ) = @_;
 
@@ -1306,6 +1307,9 @@ sub home_network_indicator : Chained('institute_load') PathPart('') CaptureArgs(
     }
 
     $c->forward( 'build_indicators_menu', [1] );
+
+    $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
+
 }
 
 sub home_network_indicator_render : Chained('home_network_indicator') PathPart('') Args(0) {
