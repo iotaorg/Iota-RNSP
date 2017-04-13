@@ -102,7 +102,7 @@ where origin_lang='pt-br' and lang='es' and lex_key in (select lex_value from le
 
 =cut
 
-sub _loc_nop { $@[1] }
+sub _loc_nop { $_[1] }
 
 sub loc {
     my ($c, $text) = @_;
