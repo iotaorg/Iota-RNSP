@@ -1,7 +1,7 @@
 body {
     padding-top: 0;
     color: #444;
-    font-weight: 100;
+    font-weight: 300;
     min-width: 375px;
 }
 
@@ -20,7 +20,6 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 #topbackground {
     color: red;
-    height: 400px;
     background-image: url(http://i.imgur.com/vXFXWvJ.png);
     background-repeat: no-repeat;
     background-size: cover;
@@ -29,13 +28,13 @@ body.root_ #topbackground {
     background-image: url(/static/infancia/img-crianca-crop_mini.jpeg);
     background-repeat: no-repeat;
     background-size: initial;
+    background-size: auto 100%;
     background-position: 40% 0;
-    height: 783px;
+}
+h1 {
+    font-weight: 100;
 }
 body.root_ h1 {
-    font-size: 4em;
-    margin-top: 6em;
-    font-weight: 100;
     width: 60%;
 }
 
@@ -63,7 +62,10 @@ body.root_ h1 {
 .mynavbar-inner li.active a {
     background-color: #eee;
 }
-.agithub a {
+.mygithub {
+    margin-bottom: -30px;
+}
+.mygithub a {
     color: #666;
     font-size: 0.9em;
     padding: 10px 10px 0px 0px;
@@ -72,39 +74,41 @@ body.root_ h1 {
 
 h1 {
     color: white;
-    margin-top: 1em;
-    font-weight: 100;
+    margin-top: 1.5em;
+    margin-bottom: 0.7em;
     font-size: 3em;
 }
 
-/* extra large-laptop */
-@media (max-width: 1440px) {
-    body.root_ h1 {
-        width: 80%;
-    }
+body.root_ .mytitlerow {
+    height: 537px;
 }
-/* phone to desktop  */
 
+/* phone to desktop  */
 @media (max-width: 990px) {
     .mynavbar-inner ul {
         margin-top : 0;
     }
     .mynavbar-inner li {
-
         width: 150px;
         min-width: 150px;
     }
     body.root_ h1 {
-        margin-top: 3em;
         width: 80%;
+    }
+    h1 {
+        margin-top: 1em;
+        margin-bottom: 0.3em;
+        font-size: 2.5em;
+    }
+    body.root_ .mytitlerow {
+        max-height: 200px
     }
 }
 /* phone to mobile-l */
 @media (max-width: 425px) {
     body.root_ h1 {
-        margin-top: 3em;
-        width: 80%;
-        font-size: 3.5em;
+        width: 100%;
+        font-size: 2em;
     }
 }
 .menulogo {
@@ -124,4 +128,55 @@ h1 {
 .root_home_network_indicator_render  .btn.dropdown-toggle {
     font-size: 0.8em;
     padding-left: 0;
+}
+
+.footer-menu {
+    background-color: #3366cc;
+    height: 335px;
+}
+
+.footer-menu ul a {
+    color:white;
+    font-size: 16px;
+}
+.footer-menu li a,.footer-menu li.active a {
+  background-color: transparent;
+}
+.footer-menu li:active a,
+.footer-menu li:hover a,
+.footer-menu li:focus a
+ {
+    background-color: transparent;
+    text-decoration: underline;
+}
+.footer-menu .mynavbar-inner {
+    margin-top: 150px;
+}
+.footer-menu .mynavbar-inner ul {
+    padding-top: 30px;
+}
+.footer-menu .mynavbar-inner li a {
+    text-align: left;
+}
+
+.footer-realizacao {
+    height: 415px;
+    background-color: #eee;
+    margin-bottom: -150px;
+    position: relative;
+    z-index: 999;
+}
+.mytitlerow {
+    display: table;
+    float: none;
+
+}
+.mytitle {
+    display: table-cell;
+    float: none;
+    vertical-align: bottom;
+}
+
+footer {
+    margin-top: 4em;
 }

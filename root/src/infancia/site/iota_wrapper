@@ -18,7 +18,7 @@
 <meta name="google-site-verification" content="W0scFeWasYZRtz6MYIohgpNuTzhWwAftmcFEUCk5jFM" />
 [%END%]
 
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,500" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300" rel="stylesheet">
 
 [%IF v2 || 1%]
     [%-CALL assets.include("v2/css/bootstrap.min.css")%]
@@ -120,6 +120,32 @@
         [% content|none%]
     </div>
 </div>
+
+<footer>
+
+    <div class="container" id="iota-footer">
+
+        <div class="footer-realizacao">
+            logos.. logos
+        </div>
+    </div>
+
+    <div class="footer-menu">
+        <div class="container">
+
+            <div class="mynavbar-inner">
+                <ul class="nav">
+                    [% INCLUDE site/nav_for_real.tt|none%]
+                    <li>
+                        <a href="/frontend/admin">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</footer>
 
 
 
