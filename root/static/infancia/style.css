@@ -1,3 +1,15 @@
+
+#cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title,
+#indicador-dados .data-right .title, h1, h2, h3, h4, h5, #indicadores-dados .data-right .title,
+#indicador-historico .title, #indicador-grafico .title, #dados-abertos .title,
+#indicador-historico .title span, #indicador-grafico .title span, #dados-abertos .title span,
+input.button-data:hover,input.button-data {
+    color: #36c
+}
+h3.panel-title {
+    color: white;
+    font-weight: bold;
+}
 body {
     padding-top: 0;
     color: #444;
@@ -29,7 +41,7 @@ body.root_ #topbackground {
     background-repeat: no-repeat;
     background-size: initial;
     background-size: auto 100%;
-    background-position: 40% 0;
+    background-position: calc(50% - 80px) 0;
 }
 h1 {
     font-weight: 100;
@@ -179,4 +191,79 @@ body.root_ .mytitlerow {
 
 footer {
     margin-top: 4em;
+}
+
+#infancia-menu-wrap {
+    background-image: url('//i.imgur.com/SyHVepV.png');
+    overflow: auto;
+    background-repeat: no-repeat;
+    background-position: 0 41px;
+    background-size: cover;
+    overflow: visible;
+    min-height: 450px;
+}
+
+#infancia-menu-indicadores {
+    background-color: #c5e8f9;
+    font-weight: 300;
+}
+
+#infancia-menu-indicadores input {
+    background-color: #dfeef7;
+}
+#menu-ods {
+    padding-top: 15px;
+}
+#menu-ods, #infancia-menu-indicadores .input-group {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#infancia-menu-indicadores .input-group-addon {
+    background-color: #c5e8f9;
+}
+#indicators_container, #menu-ods {
+    width: 50%;
+    margin-left: 50%;
+}
+
+#group_list {
+    background-color: #d7f2ff;
+    float: left;
+    width: 50%;
+}
+
+#infancia-menu-cidade{
+    width: 50%;
+    margin-left: calc(50% + 15px);
+}
+#group_list .option,#group_list .select {
+    font-size: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #a1dbf8;
+
+    border-radius: 0;
+    -moz-border-radius:0;
+    -webkit-border-radius:0;
+
+    padding: 8px;
+    padding-left: 18px;
+}
+#group_list .options {
+    background-color: #d7f2ff;
+    border-right: 0;
+}
+#group_list .option.active {
+    background-color: #c5e9fc;
+}
+#indicators_list a.item, #group_list .option {
+    color: #2c5885;
+}
+#indicators_list a.item {
+    font-size: 15px;
+    font-weight: bold;
+    border-bottom: none;
+    padding-left: 15px;
+}
+.indicators .item:hover {
+    background-color: transparent;
 }
