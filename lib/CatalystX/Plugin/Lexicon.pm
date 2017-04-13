@@ -102,10 +102,25 @@ where origin_lang='pt-br' and lang='es' and lex_key in (select lex_value from le
 
 =cut
 
+sub _loc_nop { $@[1] }
+
 sub loc {
+    my ($c, $text) = @_;
+
+    if ( !$ENV{HARNESS_ACTIVE_REMOVED} && ($c->config->{disable_lexicon} || exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} )) {
+
+        *loc = *_loc_nop;
+        return $text;
+    }
+
+    *loc = *_loc_old;
+    return &_loc_old(@_);
+}
+
+sub _loc_old {
     my ( $c, $text, $origin_lang, @conf ) = @_;
 
-    return $text if exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE};
+    return $text if ( exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} );
     return $text if ( !defined $text || $text =~ /^\s+$/ );
 
     $text =~ s/^\s+//;
