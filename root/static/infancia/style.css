@@ -38,31 +38,22 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 body.root_pagina_o_projeto #topbackground {
     background-image: url(/static/infancia/bg-oprojeto.jpg);
     background-repeat: no-repeat;
-    background-size: initial;
     background-size: auto 100%;
     background-color: #394a7e;
+    background-position: 50% 0;
 }
 
 body.root_pagina_boas_praticas #topbackground {
     background-image: url(/static/infancia/bg-boaspraticas.jpg);
     background-repeat: no-repeat;
-    background-size: initial;
     background-size: auto 100%;
     background-color: #161c32;
-}
-
-body.root_pagina_boas_praticas #topbackground {
-    background-image: url(/static/infancia/bg-boaspraticas.jpg);
-    background-repeat: no-repeat;
-    background-size: initial;
-    background-size: auto 100%;
-    background-color: #161c32;
+    background-position: 50% 0;
 }
 
 body.root_pagina_contato #topbackground {
     background-image: url(/static/infancia/bg-cidades.jpg);
     background-repeat: no-repeat;
-    background-size: initial;
     background-size: auto 100%;
     background-position: calc(50% - 80px) 0;
     background-color: #27355c;
@@ -71,7 +62,6 @@ body.root_pagina_contato #topbackground {
 body.root_ #topbackground {
     background-image: url(/static/infancia/img-crianca-crop.jpg);
     background-repeat: no-repeat;
-    background-size: initial;
     background-size: auto 100%;
     background-position: calc(50% - 80px) 0;
 }
@@ -108,7 +98,7 @@ body.root_ h1 {
     background-color: #eee;
 }
 .mygithub {
-    margin-bottom: -30px;
+    float: right;
 }
 .mygithub a {
     color: #666;
