@@ -351,3 +351,51 @@ footer {
 }
 
 #iota-app-content h1 {color: #000}
+
+
+/* pagina indicadores  */
+
+#indicador-historico, #indicador-grafico, #dados-abertos {
+    border: 0;
+}
+#indicador-historico .title, #indicador-grafico .title, #dados-abertos .title {
+    background-color: transparent;
+    border: none;
+    font-size: 36px !important;
+    font-weight: 300;
+}
+.download-links {
+    background-color: transparent;
+}
+#indicador-dados .profile  {
+    border: none;
+}
+
+
+.download-links a {
+    background-color: #3acbff;
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+}
+.download-links select{
+    display: inline-block;
+    margin-right: 5px;
+    padding: 0;
+    font-size: 17px;
+    border: none;
+    border-bottom: 1px solid #3acbff;
+    background-color: transparent;
+    height: 25px;
+}
+.download-links .label {
+    top: 0;
+}
+.download-links:after {
+    content: '';
+    display: table;
+    clear: both;;
+}
+.download-links > * {
+    float: left;
+}
