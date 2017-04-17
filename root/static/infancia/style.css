@@ -303,10 +303,11 @@ footer {
     color: #2c5885;
 }
 #indicators_list a.item {
-    font-size: 15px;
-    font-weight: bold;
-    border-bottom: none;
+    font-size: 16px;
+    font-weight: 300;
     padding-left: 15px;
+    border-bottom: 1px dotted #a1dbf8;
+    padding: 6px;
 }
 .indicators .item:hover {
     background-color: transparent;
@@ -349,3 +350,4 @@ footer {
     border-bottom: none;
 }
 
+#iota-app-content h1 {color: #000}

@@ -408,6 +408,10 @@ sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores'
       unless $c->stash->{is_infancia};
 
     $c->forward( 'build_indicators_menu', [1] );
+    $c->stash->{menu_indicators_prefix} =
+          defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+          ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+          : '';
     $c->forward('/load_status_msgs');
 
     $c->stash(
@@ -845,9 +849,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         groups_attr            => $groups_attr,
         active_group           => $active_group,
         indicators             => \@indicators,
-        menu_indicators_prefix => defined $c->stash->{institute_metadata}{menu_indicators_prefix}
-        ? $c->stash->{institute_metadata}{menu_indicators_prefix}
-        : ''
     );
 
     $c->stash( template => 'list_indicators.tt' ) if !$no_template;

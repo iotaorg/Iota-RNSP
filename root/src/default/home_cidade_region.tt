@@ -43,7 +43,7 @@
 								<dt>[%l('Cidade')%]: </dt>
 								<dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
 								<dt>[%l('Estado')%]: </dt>
-        <dd>[%city.state.name%]</dd>
+                                <dd>[%city.state.name%]</dd>
 
 								<dt>[%l('País')%]: </dt>
 								<dd>[%city.state.country.name%]</dd>

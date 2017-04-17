@@ -41,9 +41,14 @@ sub index : Path : Args(0) {
             custom_wrapper => 'site/iota_wrapper',
             v2             => 1,
             web_open_axis  => 1,
-            title => 'Indicadores para uma infância mais digna'
+            title          => 'Indicadores para uma infância mais digna'
         );
         $c->forward( 'build_indicators_menu', [1] );
+
+        $c->stash->{menu_indicators_prefix} =
+          defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+          ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+          : '';
 
     }
     else {

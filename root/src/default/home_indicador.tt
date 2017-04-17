@@ -1,3 +1,6 @@
+[%IF is_infancia %]
+[% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+[%END%]
 <div id="justifications" class="hide">
 [%IF justifications.size > 0 %]
 <div class="dados">
@@ -11,12 +14,16 @@
 </div>
 <div class="content" id="content">
     <div class="row" id="indicador-dados">
+        [%IF is_infancia %]
+        <div class="span12 col-md-12">
+        [%ELSE%]
         <div class="span4 col-md-4">
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
             </div>
         </div>
         <div class="span8 col-md-8">
+        [%END%]
             <div class="data-right">
                 <div class="content-fill">
                     <div class="profile">

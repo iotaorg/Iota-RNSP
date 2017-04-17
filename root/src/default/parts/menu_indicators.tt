@@ -1,12 +1,12 @@
 <div class="menu-left">
 
 [% IF is_infancia %]<div id="infancia-menu-cidade">
-    São Paulo
+    [% city.name || 'São Paulo' %]
 </div>[% END %]
 
 <div class="category" id="group_list">
     <div class="select [% is_infancia ? 'infancia' : '' %] [%IF web_open_axis%]open-me[%END%]" selected-id="[%active_group.id%]" data-select-title="[%l('Selecione um grupo para filtrar')%]">
-        [%-l( active_group.name )-%]
+        [%- is_infancia ? 'Conheça os indicadores' : l( active_group.name )-%]
     </div>
     <div class="options" style="display: none;">
         <div class="option" group-id="0">
@@ -25,7 +25,7 @@
 
 
 <div id="indicators_container">
-    [%IF v2%]
+    [%IF v2 || is_infancia %]
     <div class="input-group">
         <input type="text" class="form-control" placeholder="[%l('Pesquisar indicadores')%]" id="indicator-search" >
         <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
@@ -42,7 +42,7 @@
     [%END%]
     <span class="label label-info hideimp" id="search_status" data-text="[%l('Mais __NUM__ indicadores em outros grupos encontrados')%]"></span>
 
-    <div id="indicators_list" class="[%IF !v2%]auto-height[%END%] indicators indicators-home">
+    <div id="indicators_list" class="[%IF !(v2 || is_infancia )%]auto-height[%END%] indicators indicators-home">
     [%-FOREACH i IN indicators-%]
     <a class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="right" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="[% menu_indicators_prefix %][%i.href%]">
     [%-l(i.name)-%]
