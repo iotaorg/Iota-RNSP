@@ -1,0 +1,5 @@
+<div id="infancia-menu-wrap">
+    <div id="infancia-menu-indicadores">
+        [% INCLUDE 'parts/menu_indicators.tt'%]
+    </div>
+</div>

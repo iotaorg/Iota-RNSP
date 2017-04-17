@@ -5,7 +5,7 @@
     </div>
     <div class="options" style="display: none;">
         <div class="option" group-id="0">
-        [%-l( 'Todos os indicadores' )-%]
+        [%- is_infancia ? l('Conheça os indicadores'): l( 'Todos os indicadores' )-%]
         </div>
         <div class="option" group-id="f">
         [%-l('Indicadores em destaque')-%]

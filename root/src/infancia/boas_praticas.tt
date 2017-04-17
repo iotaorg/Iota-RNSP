@@ -1,3 +1,7 @@
 [% INCLUDE 'web/messages.tt' %]
 
-boas prtaicas
+<ul>
+    [%FOREACH bp IN best_pratices%]
+    <li><a href="/[%bp.user_url%]/boas-praticas">[% bp.city_name %] ([%bp.count%])</a></li>
+    [%END%]
+</ul>

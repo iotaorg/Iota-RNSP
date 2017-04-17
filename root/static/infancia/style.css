@@ -31,18 +31,51 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 #topbackground {
-    color: red;
-    background-image: url(http://i.imgur.com/vXFXWvJ.png);
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url(/static/infancia/bg-indicadores.jpg);
+    background-repeat: repeat-x;
 }
+
+body.root_pagina_o_projeto #topbackground {
+    background-image: url(/static/infancia/bg-oprojeto.jpg);
+    background-repeat: no-repeat;
+    background-size: initial;
+    background-size: auto 100%;
+    background-color: #394a7e;
+}
+
+body.root_pagina_boas_praticas #topbackground {
+    background-image: url(/static/infancia/bg-boaspraticas.jpg);
+    background-repeat: no-repeat;
+    background-size: initial;
+    background-size: auto 100%;
+    background-color: #161c32;
+}
+
+body.root_pagina_boas_praticas #topbackground {
+    background-image: url(/static/infancia/bg-boaspraticas.jpg);
+    background-repeat: no-repeat;
+    background-size: initial;
+    background-size: auto 100%;
+    background-color: #161c32;
+}
+
+body.root_pagina_contato #topbackground {
+    background-image: url(/static/infancia/bg-cidades.jpg);
+    background-repeat: no-repeat;
+    background-size: initial;
+    background-size: auto 100%;
+    background-position: calc(50% - 80px) 0;
+    background-color: #27355c;
+}
+
 body.root_ #topbackground {
-    background-image: url(/static/infancia/img-crianca-crop_mini.jpeg);
+    background-image: url(/static/infancia/img-crianca-crop.jpg);
     background-repeat: no-repeat;
     background-size: initial;
     background-size: auto 100%;
     background-position: calc(50% - 80px) 0;
 }
+
 h1 {
     font-weight: 100;
 }
@@ -187,6 +220,7 @@ body.root_ .mytitlerow {
     display: table-cell;
     float: none;
     vertical-align: bottom;
+    padding-bottom: 40px;
 }
 
 footer {
@@ -197,10 +231,11 @@ footer {
     background-image: url('//i.imgur.com/SyHVepV.png');
     overflow: auto;
     background-repeat: no-repeat;
-    background-position: 0 41px;
+    background-position: 0 85px;
     background-size: cover;
     overflow: visible;
     min-height: 450px;
+    margin-top: -60px;
 }
 
 #infancia-menu-indicadores {
@@ -211,9 +246,13 @@ footer {
 #infancia-menu-indicadores input {
     background-color: #dfeef7;
 }
+
 #menu-ods {
     padding-top: 15px;
+    margin-top: 1px;
+    margin-bottom: -10px;
 }
+
 #menu-ods, #infancia-menu-indicadores .input-group {
     padding-left: 15px;
     padding-right: 15px;
@@ -230,27 +269,42 @@ footer {
     background-color: #d7f2ff;
     float: left;
     width: 50%;
+    margin-bottom: 0;
 }
 
-#infancia-menu-cidade{
+#infancia-menu-cidade {
     width: 50%;
-    margin-left: calc(50% + 15px);
+    margin-left: 50%;
+    background-color: #3366cc;
+    height: 85px;
+    color: white;
+    float: right;
+
+
+    border-bottom: none;
+
+    font-size: 28px;
+    border: 0;
+    padding: 0;
+    padding-left: 1.5em;
+    font-weight: 300;
+    line-height: 85px;
 }
+
 #group_list .option,#group_list .select {
-    font-size: 15px;
-    font-weight: bold;
+    font-size: 16px;
     border-bottom: 1px solid #a1dbf8;
 
     border-radius: 0;
     -moz-border-radius:0;
     -webkit-border-radius:0;
 
-    padding: 8px;
-    padding-left: 18px;
+    padding: 12px;
+    padding-left: 36px;
 }
 #group_list .options {
     background-color: #d7f2ff;
-    border-right: 0;
+    border: none;
 }
 #group_list .option.active {
     background-color: #c5e9fc;
@@ -267,3 +321,41 @@ footer {
 .indicators .item:hover {
     background-color: transparent;
 }
+#iota-app-content img {max-width: 100%}
+
+#group_list .select,#group_list .select.open {
+    margin-bottom: 0
+}
+#group_list .select {
+    border-bottom: none;
+    background-color: #4dbaf2;
+    height: 85px;
+    color: white;
+    font-size: 28px;
+    border: 0;
+    padding: 0;
+    padding-left: 1.5em;
+    font-weight: 300;
+    line-height: 85px;
+    margin-top: -85px;
+    background-position: calc(100% - 1.5em) 39px;
+}
+
+
+#group_list .select:after {
+    display: none;
+}
+#group_list .select:hover {
+    background-color: #4dbaf2;
+}
+.menu-left {
+    overflow: auto;
+}
+#indicators_container .input-group {
+    margin-bottom: 0;
+    padding-top: 10px
+}
+#group_list .option:last-child {
+    border-bottom: none;
+}
+

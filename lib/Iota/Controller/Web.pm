@@ -338,7 +338,6 @@ sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     );
 }
 
-
 sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto') Args(0) {
     my ( $self, $c ) = @_;
 
@@ -353,13 +352,34 @@ sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-
     );
 }
 
-sub pagina_boas_praticas : Chained('light_institute_load') PathPart('pagina/boas-praticas') Args(0) {
+sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
     my ( $self, $c ) = @_;
 
     $c->detach( '/error_404', ['Página não existe neste dominio!'] )
       unless $c->stash->{is_infancia};
 
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my @good_pratices = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => \@users_ids }
+        },
+        {
+            select => [
+                \"city.pais || '/' || city.uf || '/' || city.name_uri as user_url", \'city.name as city_name',
+                \'count(1)'
+            ],
+            as       => [ 'user_url', 'city_name', 'count' ],
+            group_by => [ 'user_url', 'city_name' ],
+            join         => { 'user' => 'city' },
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => 'city_name'
+        }
+    )->all;
+
     $c->stash(
+        best_pratices  => \@good_pratices,
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         title          => 'Boas práticas',
@@ -716,7 +736,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     my $selected_indicator = $c->stash->{indicator};
 
     my $active_group = {
-        name => 'Todos os indicadores',
+        name => $c->stash->{is_infancia} ? 'Conhença os indicadores' : 'Todos os indicadores',
         id   => 0
     };
 
@@ -822,9 +842,12 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                 return $a cmp $b
             } keys %$groups
         ],
-        groups_attr  => $groups_attr,
-        active_group => $active_group,
-        indicators   => \@indicators,
+        groups_attr            => $groups_attr,
+        active_group           => $active_group,
+        indicators             => \@indicators,
+        menu_indicators_prefix => defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+        ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+        : ''
     );
 
     $c->stash( template => 'list_indicators.tt' ) if !$no_template;

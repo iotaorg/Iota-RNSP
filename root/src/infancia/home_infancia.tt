@@ -1,15 +1,3 @@
+[% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+
 [% INCLUDE 'web/messages.tt' %]
-
-
-home comparacao criança louca
-
-<div>
-    <div id="infancia-menu-wrap">
-        <div id="infancia-menu-indicadores">
-            [% INCLUDE 'parts/menu_indicators.tt'%]
-        </div>
-        <div id="infancia-menu-cidade">
-            São Paulo
-        </div>
-    </div>
-</div>
