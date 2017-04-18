@@ -32,10 +32,10 @@
             <div class="span8 col-md-8">
 
                 <div class="row">
-                    <div class="span8 col-md-8">
+                    <div class="span8 col-md-12">
                         <div class="image thumbnail">
-                            [%IF public.usuario.files.imagem_cidade%]
-                            <img src="[%public.usuario.files.imagem_cidade%]">
+                            [%IF imagem_cidade %]
+                            <img src="[% imagem_cidade %]">
                             [%END%]
                         </div>
                     </div>
@@ -43,13 +43,13 @@
 
                 <div class="row">
 
-                    <div class="span4 col-md-4">
+                    <div class="span4 col-md-6">
                         <div class="summary">
                             <div class="content-fill">[%l(public.usuario.city_summary)%]</div>
                         </div>
                     </div>
 
-                    <div class="span4 col-md-4">
+                    <div class="span4 col-md-6">
                         <div class="map" id="gmap">
                             <div class="content-fill">
                                 <div id="x-container">
@@ -69,12 +69,12 @@
 
         [% IF city.regions.size && city.regions.size>0 %]
 			<div class="row botoes-regioes">
-				<div class="span6 center">
+				<div class="span6 col-md-6 center">
 					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores" class="link-axis">
 						[%l('Indicadores separados por eixos')%]
 					</a>
 				</div>
-				<div class="span6 center">
+				<div class="span6  col-md-6 center">
 					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao" class="link-region">
 						[%l('Indicadores separados por região')%]
 					</a>

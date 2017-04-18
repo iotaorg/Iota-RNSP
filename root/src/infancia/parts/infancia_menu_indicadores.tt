@@ -1,5 +1,14 @@
 <div id="infancia-menu-wrap">
     <div id="infancia-menu-indicadores">
         [% INCLUDE 'parts/menu_indicators.tt'%]
+
+        [%IF imagem_cidade %]
+
+
+<img src="[%imagem_cidade%]" style="width:100%">
+
+        [%ELSIF menu_indicators_prefix%]
+        <img src="http://i.imgur.com/SyHVepV.png" style="width:100%" width="1015" height="359">
+        [%END%]
     </div>
 </div>

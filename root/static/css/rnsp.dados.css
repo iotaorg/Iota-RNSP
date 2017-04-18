@@ -1114,3 +1114,6 @@ a.link-region{
 
 .no-data, .no-have {display: none!important}
 
+a.link-axis, a.link-region {
+    display: inline-block;
+}

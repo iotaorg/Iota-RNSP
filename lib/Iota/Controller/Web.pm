@@ -263,9 +263,16 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
-    my @files = $admin->user_files->search( undef, { columns => [qw/created_at class_name private_path/] } )->all;
+    my @files = $admin->user_files->search(
+        { class_name => 'custom.css' },
+        {
+            columns  => [qw/private_path created_at class_name/],
+            rows     => 1,
+            order_by => 'created_at'
+        }
+    )->all;
 
-    foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
+    foreach my $file ( @files ) {
         if ( $file->class_name eq 'custom.css' ) {
             my $path      = $file->private_path;
             my $path_root = $c->path_to('root');
@@ -409,9 +416,9 @@ sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores'
 
     $c->forward( 'build_indicators_menu', [1] );
     $c->stash->{menu_indicators_prefix} =
-          defined $c->stash->{institute_metadata}{menu_indicators_prefix}
-          ? $c->stash->{institute_metadata}{menu_indicators_prefix}
-          : '';
+      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+      : '';
     $c->forward('/load_status_msgs');
 
     $c->stash(
@@ -741,7 +748,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my $active_group = {
         name => $c->stash->{is_infancia} ? 'Conhença os indicadores' : 'Todos os indicadores',
-        id   => 0
+        id => 0
     };
 
     my $institute = $c->stash->{institute};
@@ -846,9 +853,9 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                 return $a cmp $b
             } keys %$groups
         ],
-        groups_attr            => $groups_attr,
-        active_group           => $active_group,
-        indicators             => \@indicators,
+        groups_attr  => $groups_attr,
+        active_group => $active_group,
+        indicators   => \@indicators,
     );
 
     $c->stash( template => 'list_indicators.tt' ) if !$no_template;
@@ -1711,9 +1718,14 @@ sub stash_tela_cidade : Private {
         {
             city_id                    => $city->{id},
             'me.active'                => 1,
-            'network_users.network_id' => $c->stash->{network}->id
+            'network_users.network_id' => $c->stash->{network}->id,
         },
-        { join => 'network_users' }
+        {
+            join => 'network_users',
+            '+columns' => {
+                imagem_cidade => \"(select public_url from user_file x where x.user_id = me.id and class_name='imagem_cidade' order by id desc limit 1)"
+            }
+            }
     )->next;
     $c->detach('/error_404') unless $user;
 
@@ -1732,9 +1744,16 @@ sub stash_tela_cidade : Private {
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
     $c->stash( public => $public );
 
-    my @files = $user->user_files->search( undef, { columns => [qw/private_path created_at class_name/] } )->all;
+    my @files = $user->user_files->search(
+        { class_name => 'custom.css' },
+        {
+            columns  => [qw/private_path created_at class_name/],
+            rows     => 1,
+            order_by => 'created_at',
+        }
+    )->all;
 
-    foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
+    foreach my $file ( @files ) {
         if ( $file->class_name eq 'custom.css' ) {
 
             my $path      = $file->private_path;
@@ -1761,6 +1780,7 @@ sub stash_tela_cidade : Private {
     $c->stash(
         city     => $city,
         user     => $user,
+        imagem_cidade => $user->{imagem_cidade},
         template => 'home_cidade.tt',
     );
     $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};

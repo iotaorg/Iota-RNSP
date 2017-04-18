@@ -33,6 +33,7 @@ body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 #topbackground {
     background-image: url(/static/infancia/bg-indicadores.jpg);
     background-repeat: repeat-x;
+    background-color: #334170;
 }
 
 body.root_pagina_o_projeto #topbackground {
@@ -63,6 +64,7 @@ body.root_ #topbackground {
     background-image: url(/static/infancia/img-crianca-crop.jpg);
     background-repeat: no-repeat;
     background-size: auto 100%;
+    background-color: white;
     background-position: calc(50% - 80px) 0;
 }
 
@@ -218,18 +220,14 @@ footer {
 }
 
 #infancia-menu-wrap {
-    background-image: url('//i.imgur.com/SyHVepV.png');
     overflow: auto;
-    background-repeat: no-repeat;
-    background-position: 0 85px;
-    background-size: cover;
     overflow: visible;
-    min-height: 450px;
     margin-top: -60px;
 }
 
 #infancia-menu-indicadores {
-    background-color: #c5e8f9;
+    background-color: rgb(197, 232, 249);
+    background-color: rgba(197, 232, 249, 0.93);
     font-weight: 300;
 }
 
