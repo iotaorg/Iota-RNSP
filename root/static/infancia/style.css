@@ -269,7 +269,7 @@ footer {
     height: 85px;
     color: white;
     float: right;
-
+    display: block;
 
     border-bottom: none;
 
