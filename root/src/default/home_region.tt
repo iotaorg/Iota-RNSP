@@ -24,8 +24,8 @@
 
 
 
-		<div class="row-fluid" id="cidades-dados">
-			<div class="span5">
+		<div class="row-fluid row" id="cidades-dados">
+			<div class="span5 col-md-6">
 				<div class=" ">
 					<div class="content-fill">
 						<h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
@@ -62,7 +62,7 @@
 				</div><!-- " " -->
 			</div><!-- span6 -->
 
-			<div class="offset2 span5">
+			<div class="offset2 span5 col-md-6">
 				[%IF region.polygon_path || region.depth_level == 2 %]
 					<div class="map" id="gmap">
 						<div class="content-fill">
@@ -81,7 +81,7 @@
 
 		</div>
 
-		<div class="row-fluid" >
+		<div class="row-fluid row" >
 			<div class="span12">
 				<div id="cidades-indicadores">
 					<h5>[%l('Indicadores separados por eixos')%]</h5>
