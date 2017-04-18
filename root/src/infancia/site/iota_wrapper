@@ -18,7 +18,7 @@
 <meta name="google-site-verification" content="W0scFeWasYZRtz6MYIohgpNuTzhWwAftmcFEUCk5jFM" />
 [%END%]
 
-<link href="https://fonts.googleapis.com/css?family=Roboto:100,300" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,500" rel="stylesheet">
 
 [%IF v2 || 1%]
     [%-CALL assets.include("v2/css/bootstrap.min.css")%]

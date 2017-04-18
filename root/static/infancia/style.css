@@ -1,4 +1,9 @@
-
+dt {
+    font-weight: 500;
+}
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small {
+    font-weight: 300;
+}
 #cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title,
 #indicador-dados .data-right .title, h1, h2, h3, h4, h5, #indicadores-dados .data-right .title,
 #indicador-historico .title, #indicador-grafico .title, #dados-abertos .title,
@@ -8,7 +13,7 @@ input.button-data:hover,input.button-data {
 }
 h3.panel-title {
     color: white;
-    font-weight: bold;
+    font-weight: 500;
 }
 body {
     padding-top: 0;
@@ -279,14 +284,15 @@ footer {
     line-height: 85px;
 }
 
-#group_list .option,#group_list .select, {
+#group_list .option, #group_list .select {
     font-size: 16px;
+    font-weight: 500;
+
     border-bottom: 1px solid #a1dbf8;
 
     border-radius: 0;
     -moz-border-radius:0;
     -webkit-border-radius:0;
-
     padding: 12px;
     padding-left: 36px;
 }
@@ -373,7 +379,7 @@ footer {
 .download-links a {
     background-color: #3acbff;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 11px;
 }
 
@@ -434,7 +440,7 @@ dl.tabela blockquote small {
     padding: 2px 10px 2px 10px;
     background-color: #33ccff;
     color: white;
-    font-weight: bold;
+    font-weight: 500;
     margin-top: 12px;
     margin-left: 33px;
     font-size: 14px;
@@ -450,3 +456,46 @@ dl.tabela blockquote small {
 #indicadores-dados .data-title, #indicadores-dados .data-content {
     border: none;
 }
+
+#cidades-indicadores .table thead.eixos th {
+    color: #666;
+    background-color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+}
+#cidades-indicadores .table thead.eixos.collapsed th {
+    color: #666;
+    background-color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+}
+#cidades-indicadores .table thead.eixos th:hover {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+#cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title {
+    font-size: 20pt;
+    font-weight: 500;
+}
+
+#date-ruler {
+    border-bottom: 2px solid #33ccff;
+}
+
+#cidades-indicadores .table tr td, #cidades-indicadores .table tr th {
+    border-bottom: none;
+}
+#cidades-indicadores .table tbody > tr{
+    border-left: 23px solid red;
+}
+#cidades-indicadores .table tbody td {
+    padding: 8px 4px;
+}
+
+/*  kind worked.. but no!
+#cidades-indicadores .table tbody > tr:before, #cidades-indicadores .table tbody > tr:after{
+    content: '';
+    width: 15px;
+    display: table-cell;
+}*/
