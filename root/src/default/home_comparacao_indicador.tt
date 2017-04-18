@@ -1,5 +1,13 @@
 <div id="content" class="content">
     <div class="row" id="indicadores-dados">
+
+        [%  IF is_infancia %]
+
+            [% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+            [%INCLUDE 'parts/comparacao_indicador_por_cidade.tt'%]
+
+        [%ELSE%]
+
         <div class="span4 col-md-4">
             <div lockfixed>
             [% INCLUDE 'parts/menu_indicators.tt'%]
@@ -10,6 +18,7 @@
                 [%INCLUDE 'parts/comparacao_indicador_por_cidade.tt'%]
             </div>
         </div>
+        [%END%]
     </div>
 
 </div>

@@ -281,7 +281,7 @@ footer {
     line-height: 85px;
 }
 
-#group_list .option,#group_list .select {
+#group_list .option,#group_list .select, {
     font-size: 16px;
     border-bottom: 1px solid #a1dbf8;
 
@@ -358,7 +358,7 @@ footer {
 #indicador-historico, #indicador-grafico, #dados-abertos {
     border: 0;
 }
-#indicador-historico .title, #indicador-grafico .title, #dados-abertos .title {
+#indicador-historico .title, #indicador-grafico .title, #dados-abertos .title, #indicador-dados .data-right .title {
     background-color: transparent;
     border: none;
     font-size: 36px !important;
@@ -398,4 +398,46 @@ footer {
 }
 .download-links > * {
     float: left;
+}
+
+dl.tabela.dl-horizontal dt {
+    float: none;
+    text-align: left;
+}
+dl.tabela.dl-horizontal dd {
+    margin-left: 0
+}
+
+dl.tabela blockquote {
+    border: 0;
+    padding: 0;
+    color: #3366cc !important
+}
+
+dl.tabela blockquote small {
+    color: #3366cc;
+}
+.table thead>tr>th {
+    border-bottom: 2px solid #33ccff;
+}
+
+#indicador-grafico .title a.link {
+    padding: 2px 10px 2px 10px;
+    background-color: #33ccff;
+    color: white;
+    font-weight: bold;
+    margin-top: 12px;
+    margin-left: 33px;
+    font-size: 14px;
+}
+#indicador-grafico .title a.link:hover {
+    color: white;
+}
+#indicador-grafico .title > * {
+    float: left;
+}
+
+/* tela comparacao cidades */
+#indicadores-dados .data-title, #indicadores-dados .data-content {
+    border: none;
 }

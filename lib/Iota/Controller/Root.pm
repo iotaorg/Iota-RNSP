@@ -139,6 +139,8 @@ Attempt to render a view, if needed.
 sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
 
+    $c->log->info( " TEMPLATE: " . $c->stash->{template} );
+
 }
 
 =head1 AUTHOR

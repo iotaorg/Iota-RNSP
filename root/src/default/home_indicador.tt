@@ -28,7 +28,12 @@
                 <div class="content-fill">
                     <div class="profile">
                         <div class="content-fill">
+                            [% IF is_infancia %]
+                                <div class="title">[% indicator.name %]</div>
+                            [%ELSE%]
                             <h1 class="title">[% indicator.name %] - [%city.name%], [%city.uf%]</h1>
+                            [%END%]
+
                             <p class="explanation">[% indicator.explanation %]</p>
                             <div class="dados"><dl class="tabela dl-horizontal ">
                                 <dd>
@@ -52,7 +57,7 @@
                     </div>
 
                     <div id="indicador-grafico">
-                        <div class="title">Gráfico de <span class="cidade"></span> &nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a></div>
+                        <div class="title"><span>Gráfico de&nbsp;</span> <span class="cidade"></span> &nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a></div>
                         <div class="content-fill">
                             <div class="graph">
                                 <div class="content-fill">

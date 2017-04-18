@@ -1,7 +1,7 @@
 <div class="menu-left">
 
-[% IF is_infancia %]<a href="[% city.name_uri || menu_indicators_prefix || '#' %]" id="infancia-menu-cidade">
-    [% city.name || 'São Paulo' %]
+[% IF is_infancia %]<a href="[% city.pais ?  "/$city.pais/$city.uf/$city.name_uri" : menu_indicators_prefix || '#' %]" id="infancia-menu-cidade">
+    [% city.name || menu_indicators_prefix ? 'São Paulo' : '' %]
 </a>[% END %]
 
 <div class="category" id="group_list">
