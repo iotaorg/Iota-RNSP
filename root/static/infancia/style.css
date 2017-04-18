@@ -376,6 +376,17 @@ footer {
     font-weight: bold;
     font-size: 11px;
 }
+
+.download-links a.json {
+    color: black;
+    background-color: #efefef;
+}
+
+.download-links a.xls {
+    background-color: #20d800;
+    color: black;
+}
+
 .download-links select{
     display: inline-block;
     margin-right: 5px;
