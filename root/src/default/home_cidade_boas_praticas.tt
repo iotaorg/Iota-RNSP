@@ -4,7 +4,7 @@
 
 
         [%IF best_pratice.description%]
-        <h5>[%l('Descrição')%]</h5>
+        [% IF 0 %]<h5>[%l('Descrição')%]</h5>[%END%]
         [%l(best_pratice.description)|none%]
         [%END%]
 

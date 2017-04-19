@@ -1,7 +1,7 @@
 dt {
     font-weight: 500;
 }
-h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small {
+h5, h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small {
     font-weight: 300;
 }
 #cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title,
@@ -25,6 +25,11 @@ body {
 body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: 'Roboto', sans-serif !important;
     font-size: 16px;
+}
+h5 {
+    font-size: 36px;
+    padding-top: 30px;
+    padding-bottom: 20px;
 }
 
 .fundo-branco {
@@ -492,10 +497,24 @@ dl.tabela blockquote small {
 #cidades-indicadores .table tbody td {
     padding: 8px 4px;
 }
+body.root_best_pratice_render li {
+    color: #2c5885;
+    font-size: 16px;
+    font-weight: 300;
+}
+body.root_best_pratice_render li.nav-header {
 
-/*  kind worked.. but no!
-#cidades-indicadores .table tbody > tr:before, #cidades-indicadores .table tbody > tr:after{
-    content: '';
-    width: 15px;
-    display: table-cell;
-}*/
+    padding: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px dotted #a1dbf8;
+}
+body.root_best_pratice_render .nav>li>a {
+    padding: 8px 15px;
+}
+body.root_best_pratice_render .nav>li>a:hover, body.root_best_pratice_render .nav>li>a:focus{
+
+    background-color: transparent;
+    text-decoration: underline;
+
+}
