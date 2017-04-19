@@ -272,7 +272,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         }
     )->all;
 
-    foreach my $file ( @files ) {
+    foreach my $file (@files) {
         if ( $file->class_name eq 'custom.css' ) {
             my $path      = $file->private_path;
             my $path_root = $c->path_to('root');
@@ -358,7 +358,8 @@ sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-
         template       => 'o_projeto.tt'
     );
 }
-
+use HTML::Strip;
+my $hs = HTML::Strip->new();
 sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
     my ( $self, $c ) = @_;
 
@@ -373,17 +374,29 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
             'user.id'     => { '-in' => \@users_ids }
         },
         {
-            select => [
-                \"city.pais || '/' || city.uf || '/' || city.name_uri as user_url", \'city.name as city_name',
-                \'count(1)'
+            columns => [
+                { url    => \"city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || name_url " },
+                { name        => \'me.name' },
+                { description => \'me.description' },
             ],
-            as       => [ 'user_url', 'city_name', 'count' ],
-            group_by => [ 'user_url', 'city_name' ],
-            join         => { 'user' => 'city' },
+            join         =>  {'user'  => 'city'},
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            order_by     => 'city_name'
+            order_by     => 'me.name'
         }
     )->all;
+
+    foreach my $bp (@good_pratices){
+        $hs->eof;
+        $bp->{description} = $hs->parse($bp->{description});
+
+        $bp->{description} =~ s/^\s+//;
+        $bp->{description} =~ s/\s+$//;
+
+        $bp->{description} = substr($bp->{description}, 0, 250);
+    }
+    $hs->eof;
+
+    use DDP; p \@good_pratices;
 
     $c->stash(
         best_pratices  => \@good_pratices,
@@ -1721,11 +1734,12 @@ sub stash_tela_cidade : Private {
             'network_users.network_id' => $c->stash->{network}->id,
         },
         {
-            join => 'network_users',
+            join       => 'network_users',
             '+columns' => {
-                imagem_cidade => \"(select public_url from user_file x where x.user_id = me.id and class_name='imagem_cidade' order by id desc limit 1)"
+                imagem_cidade => \
+"(select public_url from user_file x where x.user_id = me.id and class_name='imagem_cidade' order by id desc limit 1)"
             }
-            }
+        }
     )->next;
     $c->detach('/error_404') unless $user;
 
@@ -1753,7 +1767,7 @@ sub stash_tela_cidade : Private {
         }
     )->all;
 
-    foreach my $file ( @files ) {
+    foreach my $file (@files) {
         if ( $file->class_name eq 'custom.css' ) {
 
             my $path      = $file->private_path;
@@ -1778,10 +1792,10 @@ sub stash_tela_cidade : Private {
 
     $user = { $user->get_inflated_columns };
     $c->stash(
-        city     => $city,
-        user     => $user,
+        city          => $city,
+        user          => $user,
         imagem_cidade => $user->{imagem_cidade},
-        template => 'home_cidade.tt',
+        template      => 'home_cidade.tt',
     );
     $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
 }

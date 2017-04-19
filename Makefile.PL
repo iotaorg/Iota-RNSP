@@ -89,7 +89,7 @@ requires 'Catalyst::Plugin::Session::Store::File';
 requires 'MooseX::Types::JSON';
 requires 'JSON::Any';
 requires 'Text::CSV';
-
+requires 'HTML::Strip';
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';

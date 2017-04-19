@@ -497,24 +497,44 @@ dl.tabela blockquote small {
 #cidades-indicadores .table tbody td {
     padding: 8px 4px;
 }
-body.root_best_pratice_render li {
+.boas-praticas li {
     color: #2c5885;
     font-size: 16px;
     font-weight: 300;
 }
-body.root_best_pratice_render li.nav-header {
+.boas-praticas li.nav-header {
 
     padding: 6px;
     font-size: 16px;
     font-weight: 500;
     border-bottom: 1px dotted #a1dbf8;
 }
-body.root_best_pratice_render .nav>li>a {
+.boas-praticas .nav>li>a {
     padding: 8px 15px;
 }
-body.root_best_pratice_render .nav>li>a:hover, body.root_best_pratice_render .nav>li>a:focus{
+.boas-praticas .nav>li>a:hover,
+.boas-praticas .nav>li>a:focus{
 
     background-color: transparent;
     text-decoration: underline;
 
+}
+#boapratica {
+    font-size: 0;
+    letter-spacing: -.31em;
+    letter-spacing: normal\9;
+    text-rendering: optimizespeed; /* Webkit: fixes text-rendering: optimizeLegibility */
+     word-spacing: -.43em\9;
+}
+#boapratica > div {
+    font-size: 12px;
+    display: inline-block;
+    width: 49%;
+    padding: 10px
+}
+#boapratica p, #boapratica a {
+}
+
+#boapratica a {
+    color: black
 }

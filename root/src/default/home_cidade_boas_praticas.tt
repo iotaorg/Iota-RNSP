@@ -68,7 +68,7 @@
 
 
     </div>
-    <div class="span4 col-md-4">
+    <div class="boas-praticas span4 col-md-4">
         [% IF best_pratices %]
         <h5>[%l('Boas práticas')%]</h5>
         <ul class="nav nav-list">
