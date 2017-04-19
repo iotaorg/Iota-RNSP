@@ -10,6 +10,8 @@ use I18N::AcceptLanguage;
 use DateTime;
 use Encode qw(decode encode);
 
+use HTML::Strip;
+my $hs = HTML::Strip->new();
 #
 # Sets the actions in this controller to be registered with no prefix
 # so they function identically to actions created in MyApp.pm
@@ -358,8 +360,7 @@ sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-
         template       => 'o_projeto.tt'
     );
 }
-use HTML::Strip;
-my $hs = HTML::Strip->new();
+
 sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
     my ( $self, $c ) = @_;
 
@@ -375,28 +376,29 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         },
         {
             columns => [
-                { url    => \"city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || name_url " },
+                {
+                    url => \
+"city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url "
+                },
                 { name        => \'me.name' },
                 { description => \'me.description' },
             ],
-            join         =>  {'user'  => 'city'},
+            join         => { 'user' => 'city' },
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
             order_by     => 'me.name'
         }
     )->all;
 
-    foreach my $bp (@good_pratices){
+    foreach my $bp (@good_pratices) {
         $hs->eof;
-        $bp->{description} = $hs->parse($bp->{description});
+        $bp->{description} = $hs->parse( $bp->{description} );
 
         $bp->{description} =~ s/^\s+//;
         $bp->{description} =~ s/\s+$//;
 
-        $bp->{description} = substr($bp->{description}, 0, 250);
+        $bp->{description} = substr( $bp->{description}, 0, 250 );
     }
     $hs->eof;
-
-    use DDP; p \@good_pratices;
 
     $c->stash(
         best_pratices  => \@good_pratices,
