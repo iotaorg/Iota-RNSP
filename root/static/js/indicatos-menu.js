@@ -4,6 +4,7 @@ $(document).ready(function() {
         $list = $('#indicators_list'),
         $search = $('#indicator-search'),
         $status = $('#search_status'),
+        $body = $('body:first'),
 
         _frase_inicial='<div class="text">Em conformidade com os novos parâmetros de desenvolvimento da ONU, esse eixo do Programa Cidades Sustentáveis dialoga com os ODS:</div>',
 
@@ -70,8 +71,11 @@ $(document).ready(function() {
                         $container.hide();
                         $ods.hide();
 
+                        $body.removeClass('indicators-menu-is-open');
+
                     }else{
 
+                        $body.addClass('indicators-menu-is-open');
                         $select.addClass('open');
 
                         $groups.find('.options:first').show();

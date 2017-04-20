@@ -538,3 +538,7 @@ dl.tabela blockquote small {
 #boapratica a {
     color: black
 }
+
+body.indicators-menu-is-open .hide-when-indicator-menu-is-open {
+    display: none;
+}
