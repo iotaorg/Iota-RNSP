@@ -94,6 +94,7 @@
 
 
 [%-CALL assets.include("infancia/style.css")%]
+[%-CALL assets.include("infancia/style-logo-sprites.css")%]
 
 
 [%- assets.export("css")|none -%]
@@ -126,7 +127,14 @@
     <div class="container" id="iota-footer">
 
         <div class="footer-realizacao">
-            logos.. logos
+            <i class="inflogo inflogo-logo-appcivico"></i>
+            <i class="inflogo inflogo-logo-appcivico-ov"></i>
+            <i class="inflogo inflogo-logo-bernard"></i>
+            <i class="inflogo inflogo-logo-bernard-ov"></i>
+            <i class="inflogo inflogo-logo-iota"></i>
+            <i class="inflogo inflogo-logo-iota-ov"></i>
+            <i class="inflogo inflogo-logo-rnsp"></i>
+            <i class="inflogo inflogo-logo-rnsp-ov"></i>
         </div>
     </div>
 
