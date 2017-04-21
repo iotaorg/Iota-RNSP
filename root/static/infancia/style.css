@@ -317,11 +317,11 @@ footer {
      margin-top: 0;
 }
 #indicators_list a.item {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 300;
-    padding-left: 15px;
+    padding-left: 10px;
     border-bottom: 1px dotted #a1dbf8;
-    padding: 6px;
+    padding: 3px;
 }
 .indicators .item:hover {
     background-color: transparent;
@@ -575,6 +575,11 @@ body.indicators-menu-is-open .hide-when-indicator-menu-is-open {
     #infancia-menu-cidade {
         width: 50%;
         margin-left: 50%;
+    }
+    #indicators_list a.item {
+        font-size: 16px;
+        padding-left: 15px;
+        padding: 6px;
     }
 }
 
