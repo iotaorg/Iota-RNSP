@@ -3,9 +3,8 @@
 <div>
 <div class="row isotope-container2" id="boapratica">
     [%FOREACH bp IN best_pratices%]
-    <div class="xcol-md-4 element" >
+    <div class="element">
         <a href="/[%bp.url%]">
-
             <h2>[% bp.name %]</h2>
             <p>[% bp.description %]...</p>
         </a>
