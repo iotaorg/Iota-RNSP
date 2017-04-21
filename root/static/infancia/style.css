@@ -19,7 +19,7 @@ body {
     padding-top: 0;
     color: #444;
     font-weight: 300;
-    min-width: 375px;
+    min-width: 360px;
 }
 
 body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -321,7 +321,11 @@ footer {
 .indicators .item:hover {
     background-color: transparent;
 }
-#iota-app-content img {max-width: 100%}
+#iota-app-content img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
 
 #group_list .select,#group_list .select.open {
     margin-bottom: 0
