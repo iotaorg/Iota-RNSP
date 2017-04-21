@@ -237,7 +237,6 @@ footer {
 
 #infancia-menu-indicadores {
     background-color: rgb(197, 232, 249);
-    background-color: rgba(197, 232, 249, 0.93);
     font-weight: 300;
 }
 
@@ -259,29 +258,28 @@ footer {
     background-color: #c5e8f9;
 }
 #indicators_container, #menu-ods {
-    width: 50%;
-    margin-left: 50%;
+    width: 70%;
+    margin-left: 30%;
 }
 
 #group_list {
     background-color: #d7f2ff;
     float: left;
-    width: 50%;
+    width: 30%;
     margin-bottom: 0;
 }
 
+
 #infancia-menu-cidade {
-    width: 50%;
-    margin-left: 50%;
+    width: 70%;
+    margin-left: 30%;
     background-color: #3366cc;
     height: 85px;
     color: white;
     float: right;
     display: block;
-
     border-bottom: none;
-
-    font-size: 28px;
+    font-size: 16px;
     border: 0;
     padding: 0;
     padding-left: 1.5em;
@@ -290,16 +288,16 @@ footer {
 }
 
 #group_list .option, #group_list .select {
-    font-size: 16px;
-    font-weight: 500;
-
     border-bottom: 1px solid #a1dbf8;
 
     border-radius: 0;
     -moz-border-radius:0;
     -webkit-border-radius:0;
-    padding: 12px;
-    padding-left: 36px;
+
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px;
+    padding-top: 4px;
 }
 #group_list .options {
     background-color: #d7f2ff;
@@ -310,6 +308,13 @@ footer {
 }
 #indicators_list a.item, #group_list .option {
     color: #2c5885;
+}
+#indicators_list {
+    overflow: auto;
+    height: auto;
+}
+.indicators {
+     margin-top: 0;
 }
 #indicators_list a.item {
     font-size: 16px;
@@ -335,14 +340,15 @@ footer {
     background-color: #4dbaf2;
     height: 85px;
     color: white;
-    font-size: 28px;
+    font-size: 16px;
     border: 0;
     padding: 0;
-    padding-left: 1.5em;
     font-weight: 300;
-    line-height: 85px;
+    padding-top: 15px;
+    padding-left: 10px;
+    line-height: 25px;
     margin-top: -85px;
-    background-position: calc(100% - 1.5em) 39px;
+    background-position: calc(100% - 15px) 39px;
 }
 
 
@@ -536,4 +542,57 @@ dl.tabela blockquote small {
 
 body.indicators-menu-is-open .hide-when-indicator-menu-is-open {
     display: none;
+}
+
+
+@media (min-width: 590px) {
+    #group_list .select {
+        font-size: 20px;
+        line-height: 85px;
+        padding: 0;
+        padding-left: 1.5em;
+        background-position: calc(100% - 1.5em) 39px;
+    }
+    #infancia-menu-cidade {
+        font-size: 20px;
+    }
+
+
+    #group_list .option {
+        padding: 12px;
+        padding-left: 36px;
+        font-size: 16px;
+    }
+
+
+    #indicators_container, #menu-ods {
+        width: 50%;
+        margin-left: 50%;
+    }
+    #group_list {
+        width: 50%;
+    }
+    #infancia-menu-cidade {
+        width: 50%;
+        margin-left: 50%;
+    }
+}
+
+@media (min-width: 990px) {
+    #group_list .select {
+        font-size: 28px;
+    }
+    #infancia-menu-cidade {
+        font-size: 28px;
+    }
+    #group_list .option {
+        padding: 12px;
+        padding-left: 36px;
+    }
+    #group_list .option {
+        padding: 12px;
+        padding-left: 36px;
+        font-size: 16px;
+    }
+
 }
