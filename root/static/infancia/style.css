@@ -601,3 +601,20 @@ body.indicators-menu-is-open .hide-when-indicator-menu-is-open {
     }
 
 }
+
+h2 {
+    font-size: 36px;
+    line-height: 2em;
+    font-weight: 300
+}
+.fullwidth{width: 100%;}
+.bigpadding {padding-top: 36px;padding-bottom: 36px;}
+.textocinza {
+    background-color:  white;
+    padding-top: 36px;padding-bottom: 36px;
+    font-size: 18px;
+    color: #999;
+}
+.css-two-columns {
+    column-count: 2;
+}
