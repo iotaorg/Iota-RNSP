@@ -602,7 +602,7 @@ body.indicators-menu-is-open .hide-when-indicator-menu-is-open {
 
 }
 
-h2 {
+body.root_ h2, body.root_pagina_indicadores h2, body.root_pagina_o_projeto h3 {
     font-size: 36px;
     line-height: 2em;
     font-weight: 300
