@@ -52,7 +52,11 @@ function debounce(fn, delay) {
 var _last_width = 0;
 
 function encodeHTML(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    if (typeof s == 'string'){
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    }else{
+        return s;
+    }
 }
 
 if (!String.prototype.render) {
