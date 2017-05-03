@@ -51,11 +51,19 @@ function debounce(fn, delay) {
 //var api_path = "http://rnsp.aware.com.br";
 var _last_width = 0;
 
+function encodeHTML(s) {
+    if (typeof s == 'string'){
+        return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    }else{
+        return s;
+    }
+}
+
 if (!String.prototype.render) {
     String.prototype.render = function (args) {
         var copy = this + '';
         for (var i in args) {
-            copy = copy.replace(RegExp('\\$\\$' + i, 'g'), args[i]);
+            copy = copy.replace(RegExp('\\$\\$' + i, 'g'), encodeHTML(args[i]) );
         }
         return copy;
     };
