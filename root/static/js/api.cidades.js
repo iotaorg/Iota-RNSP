@@ -386,7 +386,7 @@ $(document).ready(function () {
                                 table_content += "<td class='valor'>-</td>";
                             } else {
                                 if (item.variable_type == 'str') {
-                                    table_content += "<td title='$$again' class='valor'>$$valor</td>".render({
+                                    table_content += ('<td title="$$again" class="valor">$$valor</td>').render({
                                         valor: item.valores[j] ? '<i class="icon-ok"></i>' : '-',
                                         again: item.valores[j]
                                     });
