@@ -531,7 +531,7 @@ dl.tabela blockquote small {
 }
 #boapratica > div {
     font-size: 14px;
-    height: 390px;
+    height: 420px;
     padding-bottom: 15px;
 }
 #boapratica .item {
@@ -539,7 +539,12 @@ dl.tabela blockquote small {
     overflow: hidden;
     border: 1px solid #eee;
     padding: 10px;
-
+}
+#boapratica .header {
+    background-color: #f0f0f0;
+    color: #444;
+    padding: 2px 5px;
+    display: block;
 }
 #boapratica img {
     margin: 0 auto;

@@ -1,10 +1,45 @@
 [% INCLUDE 'web/messages.tt' %]
 
-<div>
+
+<div class="row" id="boapratica-search">
+    <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
+      <div class="form-group">
+        <select name="eixo" class="form-control">
+            <option value="">Em qualquer eixo</option>
+
+            [% FOREACH x IN available_axis %]
+            <option [% x.key == c.req.params.eixo ? 'selected' : ''  %] value="[%x.key%]">[%x.value%] ([%x.count%] boas práticas )</option>
+            [%END%]
+        </select>
+      </div>
+
+      <div class="form-group">
+        <select name="city_id" class="form-control">
+            <option value="">Em qualquer cidade</option>
+
+            [% FOREACH x IN available_citys %]
+            <option [% x.key == c.req.params.city_id ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%] boas práticas )</option>
+            [%END%]
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-default">Filtrar</button>
+    </form>
+
+</div>
+<br/>
+<div class="row" id="boapratica-search">
+    <div class="col-md-12">
+        Exibindo [%best_pratices.size%] resultados
+    </div>
+</div>
+<hr/>
+
 <div class="row" id="boapratica">
     [%FOREACH bp IN best_pratices%]
     <div class="col-md-4">
         <div class="item">
+            <span class="header">[% bp.header %]</span>
             <a href="/[%bp.url%]">
                 [%IF bp.image%]<img src="[% bp.image %]" />[%ELSE%]<img src="/static/infancia/boa-pratica-default.jpg" />[%END%]
                 <h2>[% bp.name %]</h2>
@@ -13,5 +48,4 @@
         </div>
     </div>
     [%END%]
-</div>
 </div>

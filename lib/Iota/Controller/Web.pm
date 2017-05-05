@@ -368,13 +368,48 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 
     $c->detach( '/error_404', ['Página não existe neste dominio!'] )
       unless $c->stash->{is_infancia};
-
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my @available_axis = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => \@users_ids },
+        },
+        {
+            columns => [         { key => \'me.axis_id' }, { value => \'axis.name' }, { count => \'count(1)' } ],
+            join    => [ 'user', 'axis' ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => 'axis.name',
+            group_by     => \'1, 2'
+        }
+    )->all;
+    my @available_citys = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => \@users_ids },
+        },
+        {
+            columns =>
+              [ { key => \"city.id" }, { value => \"city.uf || ', ' || city.name " }, { count => \'count(1)' } ],
+            join         => [ { 'user' => 'city' } ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => \'2',
+            group_by     => \'1, 2'
+        }
+    )->all;
+
+    my $eixo = $c->req->params->{eixo} && $c->req->params->{eixo} =~ /^[0-9]+$/ ? $c->req->params->{eixo} : undef;
+    my $cidade =
+      $c->req->params->{city_id} && $c->req->params->{city_id} =~ /^[0-9]+$/ ? $c->req->params->{city_id} : undef;
 
     my @good_pratices = $c->model('DB::UserBestPratice')->search(
         {
             'user.active' => 1,
-            'user.id'     => { '-in' => \@users_ids }
+            'user.id'     => { '-in' => \@users_ids },
+            ( $eixo ? ( 'me.axis_id' => $eixo ) : () ),
+
+            ( $cidade ? ( 'city.id' => $cidade ) : () ),
+
         },
         {
             columns => [
@@ -383,6 +418,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 "city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url "
                 },
                 { name        => \'me.name' },
+                { header      => \"city.uf || ', ' || city.name " },
                 { description => \'me.description' },
             ],
             join         => { 'user' => 'city' },
@@ -390,7 +426,6 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
             order_by     => 'me.name'
         }
     )->all;
-
 
     foreach my $bp (@good_pratices) {
         $hs->eof;
@@ -404,8 +439,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
             if ( $c->config->{imgix_password} ) {
 
                 $bp->{image} =
-                  uri_escape( $tst[1] )
-                  . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
+                  uri_escape( $tst[1] ) . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
 
                 $bp->{image} =
                     'https://'
@@ -426,11 +460,13 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
     $hs->eof;
 
     $c->stash(
-        best_pratices  => \@good_pratices,
-        custom_wrapper => 'site/iota_wrapper',
-        v2             => 1,
-        title          => 'Boas práticas',
-        template       => 'boas_praticas.tt'
+        best_pratices   => \@good_pratices,
+        available_axis  => \@available_axis,
+        available_citys => \@available_citys,
+        custom_wrapper  => 'site/iota_wrapper',
+        v2              => 1,
+        title           => 'Boas práticas',
+        template        => 'boas_praticas.tt'
     );
 }
 
