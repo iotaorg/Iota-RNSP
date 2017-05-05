@@ -421,7 +421,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         $bp->{description} =~ s/^\s+//;
         $bp->{description} =~ s/\s+$//;
 
-        $bp->{description} = substr( $bp->{description}, 0, 250 );
+        $bp->{description} = substr( $bp->{description}, 0, 230 );
     }
     $hs->eof;
 
