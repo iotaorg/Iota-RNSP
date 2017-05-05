@@ -532,8 +532,10 @@ dl.tabela blockquote small {
 #boapratica > div {
     font-size: 14px;
     height: 390px;
+    padding-bottom: 15px;
 }
 #boapratica .item {
+    height: 100%;
     overflow: hidden;
     border: 1px solid #eee;
     padding: 10px;
