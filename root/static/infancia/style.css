@@ -530,12 +530,18 @@ dl.tabela blockquote small {
 
 }
 #boapratica > div {
-    font-size: 12px;
-    width: 49%;
-    min-width: 360px;
-    padding: 10px
+    font-size: 14px;
+    height: 390px;
+    overflow: hidden;
 }
+#boapratica .item {
+    border: 1px solid #eee;
+    padding: 10px;
 
+}
+#boapratica img {
+    margin: 0 auto;
+}
 #boapratica a {
     color: black
 }

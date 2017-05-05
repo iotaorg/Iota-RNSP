@@ -389,8 +389,33 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         }
     )->all;
 
+    use URI::Encode qw(uri_encode);
+    use Digest::MD5 qw(md5_hex);
+
     foreach my $bp (@good_pratices) {
         $hs->eof;
+
+        my (@tst) = $bp->{description} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
+
+        if (@tst) {
+
+            $bp->{image} = $tst[1];
+
+            if ( $c->config->{imgix_password} ) {
+
+                $bp->{image} =
+                  uri_encode( $tst[1] )
+                  . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=360&max-h=202';
+
+                $bp->{image} =
+                    'https://'
+                  . $c->config->{imgix_domain} . '/'
+                  . $bp->{image} . '&s='
+                  . md5_hex( $c->config->{imgix_password} . '/' . $bp->{image} );
+
+            }
+        }
+
         $bp->{description} = $hs->parse( $bp->{description} );
 
         $bp->{description} =~ s/^\s+//;
