@@ -405,7 +405,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 
                 $bp->{image} =
                   uri_encode( $tst[1] )
-                  . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=360&max-h=202';
+                  . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
 
                 $bp->{image} =
                     'https://'
