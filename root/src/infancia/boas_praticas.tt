@@ -43,8 +43,13 @@
             <a href="/[%bp.url%]">
                 [%IF bp.image%]<img src="[% bp.image %]" />[%ELSE%]<img src="/static/infancia/boa-pratica-default.jpg" />[%END%]
                 <h2>[% bp.name %]</h2>
-                <p>[% bp.description %]...</p>
             </a>
+            [% IF bp.axis_attrs %]
+                [% FOREACH ods IN bp.axis_attrs %]
+                    <div class="bs-tooltip iods iods-[%ods.img%]" data-toggle="tooltip" data-placement="bottom" title="[%ods.name%]"></div>
+                [% END %]
+            [%END%]
+            <p>[% bp.description %]</p>
         </div>
     </div>
     [%END%]

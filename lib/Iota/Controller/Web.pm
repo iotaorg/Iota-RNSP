@@ -419,9 +419,10 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
                 },
                 { name        => \'me.name' },
                 { header      => \"city.uf || ', ' || city.name " },
+                { axis_attrs      => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
             ],
-            join         => { 'user' => 'city' },
+            join         => [{ 'user' => 'city' }, 'axis'],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
             order_by     => 'me.name'
         }
@@ -429,6 +430,14 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 
     foreach my $bp (@good_pratices) {
         $hs->eof;
+
+        my @axis_attrs;
+        foreach my $x (@{$bp->{axis_attrs}}) {
+
+            $x = encode( 'UTF-8', $x );
+            push @axis_attrs, eval { decode_json( $x ) };
+        }
+        $bp->{axis_attrs} = \@axis_attrs;
 
         my (@tst) = $bp->{description} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
 
@@ -455,7 +464,18 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         $bp->{description} =~ s/^\s+//;
         $bp->{description} =~ s/\s+$//;
 
-        $bp->{description} = substr( $bp->{description}, 0, 230 );
+        my $desc_size = scalar @axis_attrs > 6 ? 140 : scalar @axis_attrs == 0 ? 350 : 230;
+
+        if (length $bp->{description} > $desc_size){
+
+
+            $bp->{description} = substr( $bp->{description}, 0, $desc_size );
+
+            $bp->{description} =~ s/^\s+//;
+            $bp->{description} =~ s/\s+$//;
+            $bp->{description} .= '...';
+        }
+
     }
     $hs->eof;
 
