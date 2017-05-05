@@ -9,6 +9,8 @@ use Iota::Statistics::Frequency;
 use I18N::AcceptLanguage;
 use DateTime;
 use Encode qw(decode encode);
+use URI::Escape::XS qw(uri_escape);
+use Digest::MD5 qw(md5_hex);
 
 use HTML::Strip;
 my $hs = HTML::Strip->new();
@@ -389,8 +391,6 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         }
     )->all;
 
-    use URI::Encode qw(uri_encode);
-    use Digest::MD5 qw(md5_hex);
 
     foreach my $bp (@good_pratices) {
         $hs->eof;
@@ -404,7 +404,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
             if ( $c->config->{imgix_password} ) {
 
                 $bp->{image} =
-                  uri_encode( $tst[1] )
+                  uri_escape( $tst[1] )
                   . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
 
                 $bp->{image} =
