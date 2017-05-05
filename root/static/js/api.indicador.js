@@ -151,9 +151,7 @@ $(document).ready(function () {
 
         }
         //if (indicador_data.formula.indexOf("CONCATENAR") < 0) {
-            $(".tabela", $dados).append("<dt>Fórmula:</dt><dd>$$dado</dd>".render({
-                dado: formataFormula(indicador_data.formula, variaveis_data, data_vvariables)
-            }));
+            $(".tabela", $dados).append("<dt>Fórmula:</dt><dd>"+formataFormula(indicador_data.formula, variaveis_data, data_vvariables)+"</dd>");
         //}
         var fonte_meta = "";
         if (indicador_data.goal_source) {

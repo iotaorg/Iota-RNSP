@@ -63,7 +63,7 @@ if (!String.prototype.render) {
     String.prototype.render = function (args) {
         var copy = this + '';
         for (var i in args) {
-            copy = copy.replace(RegExp('\\$\\$' + i, 'g'), encodeHTML(args[i]) );
+            copy = copy.replace(RegExp('\\$\\$' + i, 'g'), /(valor|formula_valor|icone)/.test(i) ? args[i] : encodeHTML(args[i])  );
         }
         return copy;
     };
