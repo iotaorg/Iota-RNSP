@@ -213,6 +213,29 @@ body.root_ .mytitlerow {
     position: relative;
     z-index: 999;
 }
+.footer-realizacao .dummy {
+    padding: 50px;
+}
+footer h6 {
+    font-size: 24px;
+    color: #888;
+    font-weight: 100;
+}
+footer a {
+    overflow: auto;
+    display: inline-block;
+}
+footer a.fr{
+    min-height: 90px;
+}
+footer a.fr-a { padding-right: 110px; }
+footer a.fr-b { padding: 10px 30px 10px 0px}
+footer a.fr-c { padding: 10px 30px 10px 0px}
+footer a.fr-a>i {margin-top: 10px;}
+footer a.fr-c>i {margin-top: 15px;}
+footer div.fx { margin-top: 40px}
+
+
 .mytitlerow {
     display: table;
     float: none;
@@ -309,7 +332,7 @@ footer {
 #indicators_list a.item, #group_list .option {
     color: #2c5885;
 }
-#indicators_list {
+#indicators_lis7t {
     overflow: auto;
     height: auto;
 }
@@ -639,3 +662,4 @@ body.root_ h2, body.root_pagina_indicadores h2, body.root_pagina_o_projeto h3 {
 .css-two-columns {
     column-count: 2;
 }
+
