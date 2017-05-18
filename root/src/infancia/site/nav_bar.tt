@@ -9,7 +9,7 @@
 
                 <div class="row ">
                     <div class="span2 col-md-2 text-center">
-                        <a class="menulogo" title="Página Inicial" href="/"><img height="199" width="118" src="/static/infancia/logo.svg" class="pad10"></a>
+                        <a class="menulogo" title="Página Inicial" href="/"><img height="169" src="/static/infancia/logo.svg" class="pad10"></a>
                     </div>
 
                     <div class="span10 col-md-10">
