@@ -363,6 +363,32 @@ sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-
     );
 }
 
+sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-praticas') CaptureArgs(2) {
+    my ( $self, $c, $page_id, $url ) = @_;
+
+    $self->load_best_pratices($c);
+
+    my $page = $c->model('DB::UserBestPratice')->search(
+        {
+            'me.id' => $page_id,
+        },
+        { prefetch => [ 'axis', { user_best_pratice_axes => 'axis' } ] }
+    )->as_hashref->next;
+
+    $c->detach('/error_404') unless $page;
+    $c->stash->{best_pratice} = $page;
+
+    $c->stash(
+        template => 'home_cidade_boas_praticas.tt',
+        title    => $page->{name},
+
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+    );
+}
+
+sub pagina_boas_praticas_item_render : Chained('pagina_boas_praticas_item') PathPart('') Args(0) { }
+
 sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
     my ( $self, $c ) = @_;
 
@@ -402,10 +428,11 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
     my $cidade =
       $c->req->params->{city_id} && $c->req->params->{city_id} =~ /^[0-9]+$/ ? $c->req->params->{city_id} : undef;
 
+    # todas as boas praticas de cidades + a de admins
     my @good_pratices = $c->model('DB::UserBestPratice')->search(
         {
             'user.active' => 1,
-            'user.id'     => { '-in' => \@users_ids },
+            'user.id'     => { '-in' => [ @users_ids, @{ $c->stash->{network_data}{admins_ids} || [] } ] },
             ( $eixo ? ( 'me.axis_id' => $eixo ) : () ),
 
             ( $cidade ? ( 'city.id' => $cidade ) : () ),
@@ -414,15 +441,15 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         {
             columns => [
                 {
-                    url => \
-"city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url "
+                    url => \"case when city.id is null then 'boas-praticas/' || me.id || '/' || me.name_url
+else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url end"
                 },
-                { name        => \'me.name' },
-                { header      => \"city.uf || ', ' || city.name " },
-                { axis_attrs      => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
+                { name       => \'me.name' },
+                { header     => \"city.uf || ', ' || city.name " },
+                { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
             ],
-            join         => [{ 'user' => 'city' }, 'axis'],
+            join         => [ { 'user' => 'city' }, 'axis' ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
             order_by     => 'me.name'
         }
@@ -432,10 +459,10 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         $hs->eof;
 
         my @axis_attrs;
-        foreach my $x (@{$bp->{axis_attrs}}) {
+        foreach my $x ( @{ $bp->{axis_attrs} } ) {
 
             $x = encode( 'UTF-8', $x );
-            push @axis_attrs, eval { decode_json( $x ) };
+            push @axis_attrs, eval { decode_json($x) };
         }
         $bp->{axis_attrs} = \@axis_attrs;
 
@@ -466,8 +493,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 
         my $desc_size = scalar @axis_attrs > 6 ? 140 : scalar @axis_attrs == 0 ? 350 : 230;
 
-        if (length $bp->{description} > $desc_size){
-
+        if ( length $bp->{description} > $desc_size ) {
 
             $bp->{description} = substr( $bp->{description}, 0, $desc_size );
 
@@ -1318,9 +1344,14 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
 sub load_best_pratices {
     my ( $self, $c, %flags ) = @_;
 
-    my $rs =
-      $c->model('DB::UserBestPratice')->search( { user_id => $c->stash->{user}{id} }, { prefetch => 'axis' } )
-      ->as_hashref;
+    my $rs = $c->model('DB::UserBestPratice')->search(
+        {
+            user_id => $c->stash->{user}{id}
+            ? $c->stash->{user}{id}
+            : [ @{ $c->stash->{network_data}{admins_ids} || [] } ]
+        },
+        { prefetch => 'axis' }
+    )->as_hashref;
 
     return $rs->count if exists $flags{only_count};
 
@@ -1328,8 +1359,10 @@ sub load_best_pratices {
     while ( my $obj = $rs->next ) {
         push @{ $out->{ $obj->{axis}{name} } }, $obj;
 
-        $obj->{link} = $c->uri_for( $self->action_for('best_pratice_render'),
-            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] );
+        $obj->{link} = $c->stash->{user}{id}
+          ? $c->uri_for( $self->action_for('best_pratice_render'),
+            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] )
+          : join '/', '/boas-praticas', $obj->{id}, $obj->{name_url};
     }
     $c->stash->{best_pratices} = $out;
 }
