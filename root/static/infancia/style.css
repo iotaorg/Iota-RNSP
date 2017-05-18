@@ -207,7 +207,7 @@ body.root_ .mytitlerow {
 }
 
 .footer-realizacao {
-    height: 415px;
+    min-height: 415px;
     background-color: #eee;
     margin-bottom: -150px;
     position: relative;
