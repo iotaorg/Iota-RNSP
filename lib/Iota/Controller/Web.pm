@@ -445,7 +445,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url end"
                 },
                 { name       => \'me.name' },
-                { header     => \"city.uf || ', ' || city.name " },
+                { header     => \" case when city.id is null then 'Global' else city.uf || ', ' || city.name end" },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
             ],
