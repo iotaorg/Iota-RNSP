@@ -32,7 +32,7 @@ load_map.push( {
         <div class="row">
     <div class="span5 col-xs-6">
 
-<div lockfixed>
+<div [% IF !is_infancia %]lockfixed[%END%]>
 
 
         <h5>[%l('Classificação visual')%]</h5>
@@ -87,7 +87,7 @@ load_map.push( {
 
     </div>
 
-    <div class="span3 col-xs-6">
+    <div class="span3 col-xs-6" [%IF is_infancia%]style="overflow: auto; max-height: 900px"[%END%]>
         <h5>[%l('Classificação')%]</h5>
         <table class="table table-striped table-condensed table-xonde">
             <thead>
