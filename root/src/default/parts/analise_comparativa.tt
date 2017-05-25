@@ -87,19 +87,20 @@ load_map.push( {
 
     </div>
 
-    <div class="span3 col-xs-6" [%IF is_infancia%]style="overflow: auto; max-height: 900px"[%END%]>
+    <div class="span3 col-xs-6">
         <h5>[%l('Classificação')%]</h5>
-        <table class="table table-striped table-condensed table-xonde">
-            <thead>
-                <tr><th style="padding-left:1.5em">[%l(region_classification_name.${region.depth_level})%]</th><th>[%l('Valor')%]</th></tr>
-            </thead>
-            <tbody>
-                [%-FOR x IN ultima_analise.all -%]
-                <tr [%IF x.name_url == region.name_url%]class="active"[%END%]><td class="[%IF x.name_url == region.name_url%]active[%END%] x" style="border-left: 1.5em solid [%color_index.${x.i}%]"><a  href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td title="[%x.num%]">[% value4human(x.num, 'num') %]</td></tr>
-                [% END %]
-            </tbody>
-
-        </table>
+        <div [%IF is_infancia%]style="overflow: auto; max-height: 1100px"[%END%]>
+            <table class="table table-striped table-condensed table-xonde">
+                <thead>
+                    <tr><th style="padding-left:1.5em">[%l(region_classification_name.${region.depth_level})%]</th><th>[%l('Valor')%]</th></tr>
+                </thead>
+                <tbody>
+[%-FOR x IN ultima_analise.all -%]
+<tr [%IF x.name_url == region.name_url%]class="active"[%END%]><td class="[%IF x.name_url == region.name_url%]active[%END%] x" style="border-left: 1.5em solid [%color_index.${x.i}%]"><a  href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_indicator_render'), [city.pais, city.uf, city.name_uri, x.name_url, indicator.name_url]).as_string%]">[%x.name%]</a></td><td title="[%x.num%]">[% value4human(x.num, 'num') %]</td></tr>
+[% END %]
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
