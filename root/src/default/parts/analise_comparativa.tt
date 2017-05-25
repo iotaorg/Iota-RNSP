@@ -30,7 +30,7 @@ load_map.push( {
 </script>
 
         <div class="row">
-    <div class="span5">
+    <div class="span5 col-xs-6">
 
 <div [% IF !is_infancia %]lockfixed[%END%]>
 
@@ -87,7 +87,7 @@ load_map.push( {
 
     </div>
 
-    <div class="span3">
+    <div class="span3 col-xs-6">
         <h5>[%l('Classificação')%]</h5>
         <table class="table table-striped table-condensed table-xonde">
             <thead>
