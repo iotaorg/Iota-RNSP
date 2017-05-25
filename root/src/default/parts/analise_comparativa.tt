@@ -32,7 +32,7 @@ load_map.push( {
         <div class="row">
     <div class="span5">
 
-<div lockfixed>
+<div [% IF !is_infancia %]lockfixed[%END%]>
 
 
         <h5>[%l('Classificação visual')%]</h5>
