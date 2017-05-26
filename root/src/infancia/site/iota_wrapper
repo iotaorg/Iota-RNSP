@@ -156,7 +156,7 @@
                 <ul class="nav">
                     [% INCLUDE site/nav_for_real.tt|none%]
                     <li>
-                        <a href="/frontend/admin">Login</a>
+                        <a href="/frontend/admin">acesso</a>
                     </li>
                 </ul>
             </div>
