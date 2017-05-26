@@ -1,5 +1,5 @@
 [%SET voltar_link = '<small><a class="pull-right" data-animated-anchor href="#endpoints">voltar para endpoints</a></small>'%]
-<h1>[%l('Dados abertos')%]</h1>
+[%IF !is_infancia%]<h1>[%l('Dados abertos')%]</h1>[%END%]
 <div class="row">
     <div class="col-sm-2 hidden-sm hidden-xs text-center">
         <span style="font-size: 8em; margin-top: 0.4em; color: #428bca;" class="glyphicon glyphicon-folder-open"></span>
