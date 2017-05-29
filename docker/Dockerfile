@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     redis-server \
     npm nodejs-legacy \
+    postgresql-client \
  && rm -rf /var/lib/apt/lists/* && apt-get clean
 
 RUN npm install -g togeojson
