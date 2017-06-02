@@ -40,3 +40,6 @@ USER root
 
 RUN mkdir /etc/service/redis
 COPY redis.sh /etc/service/redis/run
+
+RUN mkdir /etc/service/iota
+COPY iota.sh /etc/service/iota/run
