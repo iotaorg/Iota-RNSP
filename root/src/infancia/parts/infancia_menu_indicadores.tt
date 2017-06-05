@@ -6,10 +6,7 @@
             [%IF imagem_cidade %]
                 <img src="[%imagem_cidade%]" style="width:100%">
             [%ELSIF  c_req_match == 'root_pagina_indicadores'  %]
-                <p class="textocinza">
-                     Praesent in mauris eu tortor porttitor accumsan. Mauris suscipit, ligula sit amet pharetra semper, nibh ante cursus purus, vel sagittis velit mauris vel metus. Aenean fermentum risus id tortor. Integer imperdiet lectus quis justo. Integer tempor. Vivamus ac urna vel leo pretium faucibus. Mauris elementum mauris vitae tortor. In dapibus augue non sapien. Aliquam ante. Curabitur bibendum justo non orci.
-
-                </p>
+                [%IF 0%]<p class="textocinza"></p>[%END%]
             [%ELSIF menu_indicators_prefix%]
                 <img src="http://i.imgur.com/SyHVepV.png" style="width:100%" width="1015" height="359">
             [%END%]
