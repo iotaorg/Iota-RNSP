@@ -129,18 +129,17 @@
         <div class="footer-realizacao">
             <div class="dummy">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-5">
                         <h6>Realização</h6>
                         <a class="fr fr-a" target="_blank" href="https://nossasaopaulo.org.br/"><i class="inflogo inflogo-logo-rnsp"></i></a>
                         <a class="fr" target="_blank" href="https://bernardvanleer.org/"><i class="inflogo inflogo-logo-bernard"></i></a>
                     </div>
-                </div>
-                <div class="row fx">
-                    <div class="col-md-6">
+
+                    <div class="col-md-3">
                         <h6>Plataforma Digital</h6>
                         <a class="fr-b" target="_blank" href="https://github.com/iotaorg/"><i class="inflogo inflogo-logo-iota"></i></a>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <h6>Desenvolvimento e hospedagem</h6>
                         <a class="fr-c" target="_blank" href="https://appcivico.com/pt/"><i class="inflogo inflogo-logo-appcivico"></i></a>
                     </div>

@@ -36,7 +36,7 @@ h5 {
     content: '';
     display: block;
     width: 100%;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255,255,255,0.85);
     height: 131px;
     position: relative;
     top: 188px;
@@ -214,7 +214,6 @@ body.root_ .mytitlerow {
 }
 
 .footer-realizacao {
-    min-height: 415px;
     background-color: #eee;
     margin-bottom: -150px;
     position: relative;
@@ -224,9 +223,9 @@ body.root_ .mytitlerow {
     padding: 50px;
 }
 footer h6 {
-    font-size: 24px;
+    font-size: 18px;
     color: #888;
-    font-weight: 100;
+    font-weight: 300;
 }
 footer a {
     overflow: auto;
@@ -235,7 +234,7 @@ footer a {
 footer a.fr{
     min-height: 90px;
 }
-footer a.fr-a { padding-right: 110px; }
+footer a.fr-a { padding-right: 40px; }
 footer a.fr-b { padding: 10px 30px 10px 0px}
 footer a.fr-c { padding: 10px 30px 10px 0px}
 footer a.fr-a>i {margin-top: 10px;}
