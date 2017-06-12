@@ -37,7 +37,7 @@ h5 {
     display: block;
     width: 100%;
     background-color: rgba(255,255,255,0.85);
-    height: 131px;
+    height: 121px;
     position: relative;
     top: 188px;
     margin-top: -120px;
@@ -99,7 +99,7 @@ body.root_ h1 {
 }
 
 .mynavbar-inner ul {
-    margin-top : 112px
+    margin-top : 96px
 }
 
 .mynavbar-inner li {
@@ -111,11 +111,13 @@ body.root_ h1 {
     font-size: 18px;
     text-transform: lowercase;
     text-align: center;
-    color: #444;
+    color: #666;
+    font-weight: 500;
 }
-.mynavbar-inner li.active a {
-    background-color: #FFF;
+#topbackground .mynavbar-inner li a:hover, .mynavbar-inner li.active a {
+    color: #5bc0de;
 }
+
 .mygithub {
     float: right;
 }
@@ -195,13 +197,15 @@ body.root_ .mytitlerow {
 }
 .footer-menu li a,.footer-menu li.active a {
   background-color: transparent;
+  font-weight: 300;
 }
 .footer-menu li:active a,
 .footer-menu li:hover a,
 .footer-menu li:focus a
  {
     background-color: transparent;
-    text-decoration: underline;
+    text-decoration: none;
+    color: #5bc0de;
 }
 .footer-menu .mynavbar-inner {
     margin-top: 150px;
@@ -213,6 +217,9 @@ body.root_ .mytitlerow {
     text-align: left;
 }
 
+.footer-menu li.active a {
+    color: white;
+}
 .footer-realizacao {
     background-color: #eee;
     margin-bottom: -150px;
@@ -669,3 +676,7 @@ body.root_ h2, body.root_pagina_indicadores h2, body.root_pagina_o_projeto h3 {
     column-count: 2;
 }
 
+
+.nav>li>a:hover, .nav>li>a:focus {
+    background-color: transparent;
+}
