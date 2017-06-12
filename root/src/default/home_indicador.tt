@@ -57,7 +57,7 @@
                     </div>
 
                     <div id="indicador-grafico">
-                        <div class="title"><span>Gráfico de&nbsp;</span> <span class="cidade"></span> &nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a></div>
+                        <div class="title"><span>Gráfico de&nbsp;</span> <span class="cidade"></span> [%IF !is_infancia %]&nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a>[%END%]</div>
                         <div class="content-fill">
                             <div class="graph">
                                 <div class="content-fill">
