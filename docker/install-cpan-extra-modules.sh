@@ -7,4 +7,4 @@ source /home/app/perl5/perlbrew/etc/bashrc
 
 cd /tmp/
 
-cpanm -n DBD::Pg Module::Install::Catalyst inc::Module::Install
+cpanm -n DBD::Pg Module::Install::Catalyst inc::Module::Install Furl

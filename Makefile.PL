@@ -99,6 +99,7 @@ requires 'DBD::Pg';
 requires 'Statistics::Descriptive';
 requires 'XML::Simple';
 requires 'App::Sqitch';
+requires 'Furl';
 
 # for backup
 requires 'LWP::Protocol::https';
