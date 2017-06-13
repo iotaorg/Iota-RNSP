@@ -219,8 +219,8 @@ $(document).ready(function () {
                         }
                     });
                     $(".tabela", $dados).append("<dt>Fontes do Indicador:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
-                        dado: source_values_unique.join("</li><li>")
-                    }));
+                        dado: source_values_unique.join("__885__")
+                    }).replace(/__885__/g, '</li><li>') ) ;
                 }
 
                 if ((observations_values) && $.trim(observations_values) !== "") {
@@ -232,14 +232,14 @@ $(document).ready(function () {
                     });
 
                     $(".tabela", $dados).append("<dt>Observações:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
-                        dado: observations_values_unique.join("</li><li>")
-                    }));
+                        dado: observations_values_unique.join("__885__")
+                    }).replace(/__885__/g, '</li><li>') );
                 }
 
                 if (indicador_data.user_indicator_config && indicador_data.user_indicator_config.technical_information) {
                     $(".tabela", $dados).append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
-                        dado: indicador_data.user_indicator_config.technical_information.replace(/\n/g, '<br/>')
-                    }));
+                        dado: indicador_data.user_indicator_config.technical_information
+                    }).replace(/\n/g, '<br/>') );
                 }
 
                 $(".tabela", $dados).append( $('#justifications').html() );
