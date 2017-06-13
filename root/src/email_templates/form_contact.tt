@@ -1,0 +1,14 @@
+<p>Nova mensagem enviada pelo site</p>
+<dl>
+    <dt>Nome</dt>
+    <dd>[% name %]</dd>
+
+    <dt>Email</dt>
+    <dd>[% email %]</dd>
+
+    <dt>Telefone</dt>
+    <dd>[% phone %]</dd>
+
+    <dt>Mensagem</dt>
+    <dd>[% comment %]</dd>
+</dl>

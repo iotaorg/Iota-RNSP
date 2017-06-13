@@ -551,7 +551,7 @@ sub pagina_contato_post : Chained('light_institute_load') PathPart('pagina/conta
 
         $c->model('DB::EmailsQueue')->create(
             {
-                to        => $ENV{CONTACT_EMAIL_TO},
+                to        => $c->config->{contact_email_to},
                 subject   => 'Novo contato primeira infancia',
                 template  => 'form_contact.tt',
                 variables => encode_json($misc_params),
