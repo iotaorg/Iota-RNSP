@@ -43,3 +43,6 @@ COPY redis.sh /etc/service/redis/run
 
 RUN mkdir /etc/service/iota
 COPY iota.sh /etc/service/iota/run
+
+RUN mkdir /etc/service/iota-email
+COPY iota-email.sh /etc/service/iota/run
