@@ -342,6 +342,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     my ( $self, $c ) = @_;
 
+    $c->forward('/load_status_msgs');
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
@@ -516,15 +517,71 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
     );
 }
 
+use Furl;
+
+sub pagina_contato_post : Chained('light_institute_load') PathPart('pagina/contato_post') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      if !$c->stash->{is_infancia} || !$ENV{CONTACT_EMAIL_TO} || !$c->req->method eq 'POST';
+
+    my $misc_params = $c->req->params;
+    $misc_params->{$_} ||= '' for qw/name phone comment email/;
+
+    $misc_params->{phone} =~ s/[^0-9]//go;
+    if (   length $misc_params->{name} <= 3
+        || length $misc_params->{phone} <= 10
+        || length $misc_params->{email} <= 8
+        || length $misc_params->{comment} <= 10 ) {
+        $c->stash->{error} = 'Preencha o formulário corretamente';
+        $c->detach( '/web/form/redirect_error', [] );
+    }
+
+    my $res = Furl->new->post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        [],
+        [
+            response => delete $misc_params->{'g-recaptcha-response'},
+            secret   => $ENV{RECAPTCHA_SECRET}
+        ],
+    );
+
+    if ( eval { decode_json( $res->content )->{success} } ) {
+        my $user = $c->model('DB::User')->search( { city_id => undef, }, { rows => 1 } )->next;
+
+        $c->model('DB::EmailsQueue')->create(
+            {
+                to        => $ENV{CONTACT_EMAIL_TO},
+                subject   => 'Novo contato primeira infancia',
+                template  => 'form_contact.tt',
+                variables => encode_json($misc_params),
+                sent      => 0
+            }
+        );
+
+        $c->detach( '/web/form/redirect_ok', [ '/pagina_contato', [], {}, 'Mensagem enviada com sucesso!' ] );
+    }
+    else {
+        $c->stash->{error} = 'Erro com o captcha!';
+        $c->detach( '/web/form/redirect_error', [] );
+    }
+
+    $c->stash->{error} = 'Erro desconhecido';
+    $c->detach( '/web/form/redirect_error', [] );
+}
+
 sub pagina_contato : Chained('light_institute_load') PathPart('pagina/contato') Args(0) {
     my ( $self, $c ) = @_;
 
     $c->detach( '/error_404', ['Página não existe neste dominio!'] )
       unless $c->stash->{is_infancia};
 
+    $c->forward('/load_status_msgs');
+
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
+        recaptcha      => 1,
         title          => 'Contato',
         template       => 'contato.tt'
     );
@@ -1359,7 +1416,8 @@ sub load_best_pratices {
     while ( my $obj = $rs->next ) {
         push @{ $out->{ $obj->{axis}{name} } }, $obj;
 
-        $obj->{link} = $c->stash->{user}{id}
+        $obj->{link} =
+          $c->stash->{user}{id}
           ? $c->uri_for( $self->action_for('best_pratice_render'),
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] )
           : join '/', '/boas-praticas', $obj->{id}, $obj->{name_url};

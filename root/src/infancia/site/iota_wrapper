@@ -102,6 +102,9 @@
 [%-IF custom_css-%]
     <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
 [%-END-%]
+[%-IF recaptcha -%]
+<script src='https://www.google.com/recaptcha/api.js'></script>
+[% END %]
 </head>
 [%IF v2%]
 <body class="[%c_req_match%]"><div id="fb-root"></div>

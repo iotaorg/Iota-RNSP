@@ -66,6 +66,7 @@ sub redirect_error : Private {
     my $host  = $c->req->uri->host;
     my $refer = $c->req->headers->referer;
 
+
     if ( !$refer || $refer !~ /^https?:\/\/$host/i ) {
         $refer = '/erro';
     }
@@ -74,7 +75,7 @@ sub redirect_error : Private {
     # se tirar, redirect-loop acontece!
 
     $refer = '/erro'
-      if !$c->user && $refer !~ /(login)(\?|$)/;
+      if !$c->user && $refer !~ /(login|pagina)/;
 
     my $mid = $c->set_error_msg(
         {

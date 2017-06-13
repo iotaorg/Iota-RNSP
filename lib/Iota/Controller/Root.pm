@@ -139,7 +139,7 @@ Attempt to render a view, if needed.
 sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
 
-    $c->log->info( " TEMPLATE: " . $c->stash->{template} );
+    $c->log->info( " TEMPLATE: " . $c->stash->{template} ) if $c->stash->{template};
 
 }
 
