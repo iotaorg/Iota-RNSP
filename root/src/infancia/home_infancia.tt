@@ -1,0 +1,20 @@
+[% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+
+[% INCLUDE 'web/messages.tt' %]
+
+<h2>Uma cidade acolhedora para crianças é boa para todos</h2>
+<div>
+
+<p>As experiências nos primeiros anos de vida são fundamentais para o desenvolvimento da criança e para a formação do indivíduo. Em nenhuma outra fase da vida somos capazes de aprender tanto quanto na primeira infância, o período que começa na gestação e vai até os 6 anos de idade. Estudos mostram que, a cada segundo, algumas regiões do cérebro de uma criança chegam a fazer de 700 a mil novas conexões. Essa formidável capacidade de aprendizagem se mostra ainda mais presente na chamada primeiríssima infância, um recorte que compreende o período do nascimento aos 3 anos de idade.</p>
+
+<p>Não por acaso, muitos especialistas defendem a importância de se criar e assegurar um ambiente propício para o desenvolvimento de bebês e crianças, ampliando assim as chances de uma vida com melhores condições no futuro. Essa orientação tem ganhado cada vez mais espaço e tornou-se pauta prioritária em diversos campos de atuação.</p>
+
+<p>Para tanto, é fundamental levar em conta aspectos como o vínculo, a interação e o estímulo ao aprendizado, bem como o planejamento familiar e de vida. Isso é essencial para o desenvolvimento integral dos pequenos. O direito ao brincar também. Precisamos garantir que meninos e meninas sejam acolhidos e atendidos em suas necessidades não só dentro de casa, mas também nas ruas, parques e demais espaços públicos da cidade. E aqui cabe uma pergunta importante: será que estamos conseguindo garantir essas condições favoráveis ao desenvolvimento infantil em nosso município? Afinal, que infância queremos para nossas crianças?</p>
+
+<img src="/static/infancia/img-home-menino.jpg" class="img-responsive fullwidth bigpaddingser" />
+</br>
+
+<p>É por isso que este observatório foi criado. Para ser uma iniciativa que se junta a várias outras com o propósito de contribuir com o movimento de colocar a criança no foco da gestão pública e do desenvolvimento urbano justo e sustentável. Afinal, uma cidade que acolhe as demandas da primeira infância promove a cidadania antes mesmo do nascimento. E contribui para a formação de adultos mais bem preparados para lidar com as demandas de um mundo cada vez mais complexo e dinâmico.</p>
+
+
+</div>

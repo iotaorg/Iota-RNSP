@@ -1,0 +1,90 @@
+#!/bin/bash -e
+
+
+export USER=app
+
+source /home/app/perl5/perlbrew/etc/bashrc
+
+cd /tmp/
+
+cpanm -n Catalyst::Plugin::Session::Store::File \
+ HTML::Strip \
+ Email::MIME \
+ Data::Manager \
+ CSS::Minifier::XS \
+ Color::Scheme \
+ Catalyst::Controller::REST \
+ Catalyst::Plugin::Session::State::Cookie \
+ Math::Expression::Evaluator \
+ Catalyst::Plugin::Static::Simple \
+ DateTimeX::Easy \
+ Data::Printer \
+ Geo::Coder::Google \
+ DateTime::Format::Excel \
+ DBIx::Class::TimeStamp \
+ Crypt::PasswdMD5 \
+ Catalyst::Model::DBIC::Schema \
+ Redis \
+ JSON \
+ JSON::XS \
+ JavaScript::Minifier::XS \
+ Email::Sender::Transport::SMTP::TLS \
+ Template::AutoFilter \
+ I18N::AcceptLanguage \
+ List::MoreUtils \
+ MooseX::Traits \
+ namespace::autoclean \
+ Text::Iconv \
+ Spreadsheet::XLSX \
+ Catalyst::Plugin::Params::Nested \
+ Catalyst::TraitFor::Controller::DBIC::DoesPaging \
+ Catalyst::Action::RenderView \
+ Catalyst::Plugin::ConfigLoader \
+ DateTime::Duration \
+ XML::Simple \
+ Spreadsheet::ParseExcel \
+ Config::General \
+ Catalyst::Component::InstancePerContext \
+ HTML::Scrubber \
+ Catalyst::Plugin::Authentication \
+ Catalyst::Authentication::Store::DBIx::Class \
+ DBIx::Class::PassphraseColumn \
+ Text::CSV_XS \
+ Data::Diver \
+ Test::Deep \
+ Catalyst::View::TT \
+ Statistics::Descriptive \
+ DateTime::Format::Pg \
+ Spreadsheet::WriteExcel \
+ Catalyst::Plugin::Authorization::Roles \
+ Statistics::Basic \
+ Catalyst::Plugin::StatusMessage \
+ RDF::Endpoint \
+ XML::LibXML \
+ Catalyst::Plugin::Assets \
+ MooseX::Types::Email \
+ LWP::Protocol::https \
+ JSON::Any \
+ MooseX::Types::JSON \
+ DateTime::Format::Duration \
+ Template \
+ Catalyst::Plugin::Session::DynamicExpiry \
+ Catalyst::Plugin::Unicode::Encoding \
+ Text2URI \
+ Geo::Google::PolylineEncoder \
+ Catalyst::Runtime \
+ String::Random \
+ HTML::HTML5::Writer \
+ Catalyst::Plugin::Session \
+ Email::Sender \
+ App::Sqitch \
+ RDF::Helper \
+ Date::Calc \
+ Graphics::Color::RGB \
+ Catalyst::Plugin::Session::PerUser \
+ Amazon::S3 \
+ Catalyst::Plugin::Session::Store::FastMmap \
+ Email::Sender::Simple \
+ URI::Escape::XS \
+ Text::CSV \
+ Moose

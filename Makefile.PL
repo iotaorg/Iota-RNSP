@@ -19,7 +19,7 @@ requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 
-
+requires 'URI::Escape::XS';
 requires 'XML::LibXML';
 requires 'HTML::HTML5::Writer';
 requires 'RDF::Helper';
@@ -89,7 +89,7 @@ requires 'Catalyst::Plugin::Session::Store::File';
 requires 'MooseX::Types::JSON';
 requires 'JSON::Any';
 requires 'Text::CSV';
-
+requires 'HTML::Strip';
 
 requires 'Text::CSV_XS';
 requires 'Digest::MD5';
@@ -99,6 +99,7 @@ requires 'DBD::Pg';
 requires 'Statistics::Descriptive';
 requires 'XML::Simple';
 requires 'App::Sqitch';
+requires 'Furl';
 
 # for backup
 requires 'LWP::Protocol::https';

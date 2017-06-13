@@ -9,7 +9,11 @@ use Iota::Statistics::Frequency;
 use I18N::AcceptLanguage;
 use DateTime;
 use Encode qw(decode encode);
+use URI::Escape::XS qw(uri_escape);
+use Digest::MD5 qw(md5_hex);
 
+use HTML::Strip;
+my $hs = HTML::Strip->new();
 #
 # Sets the actions in this controller to be registered with no prefix
 # so they function identically to actions created in MyApp.pm
@@ -107,7 +111,16 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{institute}          = $net->institute;
     $c->stash->{institute_metadata} = $c->stash->{institute}->build_metadata;
 
-    $c->stash->{c_req_path} = $c->req->path;
+    $c->stash->{additional_template_paths} =
+      [ Iota->path_to( 'root', 'src', $c->stash->{institute_metadata}{template} ) ];
+
+    $c->stash->{is_infancia} = 1 if $c->stash->{institute_metadata}{template} eq 'infancia';
+
+    $c->stash->{c_req_path}  = $c->req->path;
+    $c->stash->{c_req_match} = $c->req->match;
+    $c->stash->{c_req_match} =~ s/^\//root_/;
+    $c->stash->{c_req_match} =~ s/\//_/g;
+
 }
 
 sub load_status_msgs : Private {
@@ -254,9 +267,16 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     my $admin = $c->stash->{current_admin_user} = $current_admins[0];
 
-    my @files = $admin->user_files->search( undef, { columns => [qw/created_at class_name private_path/] } )->all;
+    my @files = $admin->user_files->search(
+        { class_name => 'custom.css' },
+        {
+            columns  => [qw/private_path created_at class_name/],
+            rows     => 1,
+            order_by => 'created_at'
+        }
+    )->all;
 
-    foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
+    foreach my $file (@files) {
         if ( $file->class_name eq 'custom.css' ) {
             my $path      = $file->private_path;
             my $path_root = $c->path_to('root');
@@ -322,10 +342,269 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     my ( $self, $c ) = @_;
 
+    $c->forward('/load_status_msgs');
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         template       => 'error.tt'
+    );
+}
+
+sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-projeto') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => 'O projeto',
+        template       => 'o_projeto.tt'
+    );
+}
+
+sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-praticas') CaptureArgs(2) {
+    my ( $self, $c, $page_id, $url ) = @_;
+
+    $self->load_best_pratices($c);
+
+    my $page = $c->model('DB::UserBestPratice')->search(
+        {
+            'me.id' => $page_id,
+        },
+        { prefetch => [ 'axis', { user_best_pratice_axes => 'axis' } ] }
+    )->as_hashref->next;
+
+    $c->detach('/error_404') unless $page;
+    $c->stash->{best_pratice} = $page;
+
+    $c->stash(
+        template => 'home_cidade_boas_praticas.tt',
+        title    => $page->{name},
+
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+    );
+}
+
+sub pagina_boas_praticas_item_render : Chained('pagina_boas_praticas_item') PathPart('') Args(0) { }
+
+sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+    my @users_ids = @{ $c->stash->{network_data}{users_ids} };
+
+    my @available_axis = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => \@users_ids },
+        },
+        {
+            columns => [         { key => \'me.axis_id' }, { value => \'axis.name' }, { count => \'count(1)' } ],
+            join    => [ 'user', 'axis' ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => 'axis.name',
+            group_by     => \'1, 2'
+        }
+    )->all;
+    my @available_citys = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => \@users_ids },
+        },
+        {
+            columns =>
+              [ { key => \"city.id" }, { value => \"city.uf || ', ' || city.name " }, { count => \'count(1)' } ],
+            join         => [ { 'user' => 'city' } ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => \'2',
+            group_by     => \'1, 2'
+        }
+    )->all;
+
+    my $eixo = $c->req->params->{eixo} && $c->req->params->{eixo} =~ /^[0-9]+$/ ? $c->req->params->{eixo} : undef;
+    my $cidade =
+      $c->req->params->{city_id} && $c->req->params->{city_id} =~ /^[0-9]+$/ ? $c->req->params->{city_id} : undef;
+
+    # todas as boas praticas de cidades + a de admins
+    my @good_pratices = $c->model('DB::UserBestPratice')->search(
+        {
+            'user.active' => 1,
+            'user.id'     => { '-in' => [ @users_ids, @{ $c->stash->{network_data}{admins_ids} || [] } ] },
+            ( $eixo ? ( 'me.axis_id' => $eixo ) : () ),
+
+            ( $cidade ? ( 'city.id' => $cidade ) : () ),
+
+        },
+        {
+            columns => [
+                {
+                    url => \"case when city.id is null then 'boas-praticas/' || me.id || '/' || me.name_url
+else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url end"
+                },
+                { name       => \'me.name' },
+                { header     => \" case when city.id is null then 'Global' else city.uf || ', ' || city.name end" },
+                { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
+                { description => \'me.description' },
+            ],
+            join         => [ { 'user' => 'city' }, 'axis' ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+            order_by     => 'me.name'
+        }
+    )->all;
+
+    foreach my $bp (@good_pratices) {
+        $hs->eof;
+
+        my @axis_attrs;
+        foreach my $x ( @{ $bp->{axis_attrs} } ) {
+
+            $x = encode( 'UTF-8', $x );
+            push @axis_attrs, eval { decode_json($x) };
+        }
+        $bp->{axis_attrs} = \@axis_attrs;
+
+        my (@tst) = $bp->{description} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
+
+        if (@tst) {
+
+            $bp->{image} = $tst[1];
+
+            if ( $c->config->{imgix_password} ) {
+
+                $bp->{image} =
+                  uri_escape( $tst[1] ) . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
+
+                $bp->{image} =
+                    'https://'
+                  . $c->config->{imgix_domain} . '/'
+                  . $bp->{image} . '&s='
+                  . md5_hex( $c->config->{imgix_password} . '/' . $bp->{image} );
+
+            }
+        }
+
+        $bp->{description} = $hs->parse( $bp->{description} );
+
+        $bp->{description} =~ s/^\s+//;
+        $bp->{description} =~ s/\s+$//;
+
+        my $desc_size = scalar @axis_attrs > 6 ? 140 : scalar @axis_attrs == 0 ? 350 : 230;
+
+        if ( length $bp->{description} > $desc_size ) {
+
+            $bp->{description} = substr( $bp->{description}, 0, $desc_size );
+
+            $bp->{description} =~ s/^\s+//;
+            $bp->{description} =~ s/\s+$//;
+            $bp->{description} .= '...';
+        }
+
+    }
+    $hs->eof;
+
+    $c->stash(
+        best_pratices   => \@good_pratices,
+        available_axis  => \@available_axis,
+        available_citys => \@available_citys,
+        custom_wrapper  => 'site/iota_wrapper',
+        v2              => 1,
+        title           => 'Boas práticas',
+        template        => 'boas_praticas.tt'
+    );
+}
+
+use Furl;
+
+sub pagina_contato_post : Chained('light_institute_load') PathPart('pagina/contato_post') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      if !$c->stash->{is_infancia} || !$c->config->{contact_email_to} || !$c->req->method eq 'POST';
+
+    my $misc_params = $c->req->params;
+    $misc_params->{$_} ||= '' for qw/name phone comment email/;
+
+    $misc_params->{phone} =~ s/[^0-9]//go;
+    if (   length $misc_params->{name} <= 3
+        || length $misc_params->{phone} <= 10
+        || length $misc_params->{email} <= 8
+        || length $misc_params->{comment} <= 10 ) {
+        $c->stash->{error} = 'Preencha o formulário corretamente';
+        $c->detach( '/web/form/redirect_error', [] );
+    }
+
+    my $res = Furl->new->post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        [],
+        [
+            response => delete $misc_params->{'g-recaptcha-response'},
+            secret   => $c->config->{recaptcha_secret}
+        ],
+    );
+
+    if ( eval { decode_json( $res->content )->{success} } ) {
+        my $user = $c->model('DB::User')->search( { city_id => undef, }, { rows => 1 } )->next;
+
+        $c->model('DB::EmailsQueue')->create(
+            {
+                to        => $c->config->{contact_email_to},
+                subject   => 'Novo contato primeira infancia',
+                template  => 'form_contact.tt',
+                variables => encode_json($misc_params),
+                sent      => 0
+            }
+        );
+
+        $c->detach( '/web/form/redirect_ok', [ '/pagina_contato', [], {}, 'Mensagem enviada com sucesso!' ] );
+    }
+    else {
+        $c->stash->{error} = 'Erro com o captcha!';
+        $c->detach( '/web/form/redirect_error', [] );
+    }
+
+    $c->stash->{error} = 'Erro desconhecido';
+    $c->detach( '/web/form/redirect_error', [] );
+}
+
+sub pagina_contato : Chained('light_institute_load') PathPart('pagina/contato') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->forward('/load_status_msgs');
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        recaptcha      => 1,
+        title          => 'Contato',
+        template       => 'contato.tt'
+    );
+}
+
+sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+
+    $c->forward( 'build_indicators_menu', [1] );
+    $c->stash->{menu_indicators_prefix} =
+      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+      : '';
+    $c->forward('/load_status_msgs');
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => 'Indicadores',
+        template       => 'indicadores.tt'
     );
 }
 
@@ -647,8 +926,8 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     my $selected_indicator = $c->stash->{indicator};
 
     my $active_group = {
-        name => 'Todos os indicadores',
-        id   => 0
+        name => $c->stash->{is_infancia} ? 'Conhença os indicadores' : 'Todos os indicadores',
+        id => 0
     };
 
     my $institute = $c->stash->{institute};
@@ -743,7 +1022,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         $_ = $props->{$_} for @$v;
         $groups_attr->{$key} = JSON::XS->new->utf8(0)->encode($v);
     }
-
 
     $c->stash(
         groups          => $groups,
@@ -1123,9 +1401,14 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
 sub load_best_pratices {
     my ( $self, $c, %flags ) = @_;
 
-    my $rs =
-      $c->model('DB::UserBestPratice')->search( { user_id => $c->stash->{user}{id} }, { prefetch => 'axis' } )
-      ->as_hashref;
+    my $rs = $c->model('DB::UserBestPratice')->search(
+        {
+            user_id => $c->stash->{user}{id}
+            ? $c->stash->{user}{id}
+            : [ @{ $c->stash->{network_data}{admins_ids} || [] } ]
+        },
+        { prefetch => 'axis' }
+    )->as_hashref;
 
     return $rs->count if exists $flags{only_count};
 
@@ -1133,8 +1416,11 @@ sub load_best_pratices {
     while ( my $obj = $rs->next ) {
         push @{ $out->{ $obj->{axis}{name} } }, $obj;
 
-        $obj->{link} = $c->uri_for( $self->action_for('best_pratice_render'),
-            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] );
+        $obj->{link} =
+          $c->stash->{user}{id}
+          ? $c->uri_for( $self->action_for('best_pratice_render'),
+            [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, $obj->{id}, $obj->{name_url}, ] )
+          : join '/', '/boas-praticas', $obj->{id}, $obj->{name_url};
     }
     $c->stash->{best_pratices} = $out;
 }
@@ -1193,6 +1479,8 @@ sub network_indicator_render : Chained('network_indicator') PathPart('') Args(0)
     $self->_load_user_justification_of_missing_field($c);
 
     $c->stash( template => 'home_indicador.tt' );
+    $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
+
 }
 
 sub _load_user_justification_of_missing_field {
@@ -1239,6 +1527,8 @@ sub home_network_indicator : Chained('institute_load') PathPart('') CaptureArgs(
     }
 
     $c->forward( 'build_indicators_menu', [1] );
+
+    $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
 }
 
 sub home_network_indicator_render : Chained('home_network_indicator') PathPart('') Args(0) {
@@ -1615,9 +1905,15 @@ sub stash_tela_cidade : Private {
         {
             city_id                    => $city->{id},
             'me.active'                => 1,
-            'network_users.network_id' => $c->stash->{network}->id
+            'network_users.network_id' => $c->stash->{network}->id,
         },
-        { join => 'network_users' }
+        {
+            join       => 'network_users',
+            '+columns' => {
+                imagem_cidade => \
+"(select public_url from user_file x where x.user_id = me.id and class_name='imagem_cidade' order by id desc limit 1)"
+            }
+        }
     )->next;
     $c->detach('/error_404') unless $user;
 
@@ -1636,9 +1932,16 @@ sub stash_tela_cidade : Private {
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
     $c->stash( public => $public );
 
-    my @files = $user->user_files->search( undef, { columns => [qw/private_path created_at class_name/] } )->all;
+    my @files = $user->user_files->search(
+        { class_name => 'custom.css' },
+        {
+            columns  => [qw/private_path created_at class_name/],
+            rows     => 1,
+            order_by => 'created_at',
+        }
+    )->all;
 
-    foreach my $file ( sort { $b->created_at->epoch <=> $a->created_at->epoch } @files ) {
+    foreach my $file (@files) {
         if ( $file->class_name eq 'custom.css' ) {
 
             my $path      = $file->private_path;
@@ -1663,10 +1966,12 @@ sub stash_tela_cidade : Private {
 
     $user = { $user->get_inflated_columns };
     $c->stash(
-        city     => $city,
-        user     => $user,
-        template => 'home_cidade.tt',
+        city          => $city,
+        user          => $user,
+        imagem_cidade => $user->{imagem_cidade},
+        template      => 'home_cidade.tt',
     );
+    $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
 }
 
 sub _setup_regions_level {

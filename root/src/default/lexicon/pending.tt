@@ -1,0 +1,86 @@
+<form method="get">
+    <input type="hidden" name="api_key" value="[%c.req.params.api_key%]"/>
+
+    <div class="input-group">
+    Tamanho minimo: <input class="form-control"  type="text" name="min_length" value="[%min_length%]"/>
+    </div>
+    <div class="input-group">
+    Tamanho máximo: <input class="form-control"  type="text" name="max_length" value="[%max_length%]"/>
+    </div>
+    <div class="input-group">
+    Contém palavra: <input class="form-control"  type="text" name="filter_like" value="[%filter_like%]"/>
+    </div>
+    <button class="btn btn-default" type="submit" >Filtrar</button>
+</form>
+
+[%IF lexicons.keys.size %]
+<h1><small>[%l('Há textos pedentes de tradução')%]</small></h1>
+<hr/>
+[%FOREACH origin_lang IN lexicons.keys %]
+    [%FOREACH lang IN lexicons.${origin_lang}.keys %]
+
+    <h2><small>[%l('De')%] [%lang_name.${origin_lang}%] [%l('para')%] [%lang_name.$lang%]</small></h2>
+    <dl>
+        <dt>textos curtos: </dt>
+        <dd>[%lexicons.${origin_lang}.${lang}.word.size%]</dd>
+        <dt>textos longos:</dt>
+        <dd>[%lexicons.${origin_lang}.${lang}.text.size%]</dd>
+    </dl>
+    [%END%]
+
+    [%IF message %]<div class="alert"><p>[%message%]</p></div>[%END%]
+
+    <form method="post">
+
+    [%FOREACH lang IN lexicons.${origin_lang}.keys %]
+
+        [%IF lexicons.${origin_lang}.${lang}.word%]
+            <h2>[% l('Textos curtos para traduzir para')%] [%lang_name.$lang%]</h2>
+            <div style="height: 500px; overflow: auto">
+                <table style="word-break: break-word" class="table table-hover">
+                    <tr>
+                        <th>[%lang_name.${origin_lang}%]</th>
+                        <th>[%lang_name.$lang%]</th>
+                    </tr>
+                    [%FOREACH lex IN lexicons.${origin_lang}.${lang}.word%]
+                    <tr>
+                        <th class="span4 col-md-4">[%lex.lex_key| html%]</th>
+                        <td class="span8 col-md-8"><input class="span8 col-md-8" type="text" name="lex_[%lex.id%]">
+                        </td>
+                    </tr>
+                    [%END%]
+                </table>
+            </div>
+        [%END%]
+
+        [%IF lexicons.${origin_lang}.${lang}.text%]
+            <h2>[%l('Textos longos para traduzir para')%] [%lang_name.$lang%]</h2>
+            <div style="height: 500px; overflow: auto">
+
+                <table class="table table-hover">
+                    <tr>
+                        <th>[%lang_name.${origin_lang}%]</th>
+                        <th>[%lang_name.$lang%]</th>
+                    </tr>
+                    [%FOREACH lex IN lexicons.${origin_lang}.${lang}.text%]
+                    <tr>
+                        <th class="span4 col-md-4">[%lex.lex_key| html%]</th>
+                        <td class="span8 col-md-8"><textarea name="lex_[%lex.id%]" class="span8 col-md-8"></textarea>
+                        </td>
+                    </tr>
+                    [%END%]
+                </table>
+            </div>
+        [%END%]
+
+    [%END%]
+
+        <hr/>
+    <div class="form-actions">
+    <button type="submit" class="btn btn-primary">[%l('Salvar')%]</button>
+    </div>
+</form>
+[%END%]
+[%ELSE%]
+<h1>[%l('Não há mais textos pedentes de tradução')%], [%l('nos critérios informados')%]!</h1>
+[%END%]

@@ -1,0 +1,38 @@
+<div id="topbackground">
+
+    <div class="container">
+            <div class="fundo-branco">
+
+                <div class="text-right mygithub hidden-phone hidden-xs">
+                    <a href="https://github.com/iotaorg/Iota-RNSP" target="_blank">Siga o Iota no github <i class="glyphicon glyphicon-new-window icon-white"></i></a>
+                </div>
+
+                <div class="row ">
+                    <div class="span2 col-md-2 text-center">
+                        <a class="menulogo" title="Página Inicial" href="/"><img style="margin-top: 10px;" height="159" src="/static/infancia/logo.svg" class="pad10"></a>
+                    </div>
+
+                    <div class="span10 col-md-10">
+                        <div class="mynavbar-inner">
+
+                            <ul class="nav">
+                                [% INCLUDE site/nav_for_real.tt|none%]
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div> [%# fundo-branco %]
+
+
+
+        <div class="mytitlerow">
+            <div class="mytitle">
+                <h1>[% title %]</h1>
+            </div>
+        </div>
+
+    </div> [%# container %]
+
+
+</div>[%# topbackground %]

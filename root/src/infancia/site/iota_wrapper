@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html><!--<![endif]-->
+<head>
+<link rel="icon"
+      type="image/png"
+      href="/static/images/favicon.png" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[% template.title or site.title or title %]</title>
+
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/static/js/excanvas/excanvas.js"></script>
+    <script src="/static/js/html5shiv.js"></script>
+    <script src="/static/js/respond.min.js"></script>
+<![endif]-->
+[% IF institute.short_name == 'gov' %]
+<meta name="google-site-verification" content="W0scFeWasYZRtz6MYIohgpNuTzhWwAftmcFEUCk5jFM" />
+[%END%]
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,500" rel="stylesheet">
+
+[%IF v2 || 1%]
+    [%-CALL assets.include("v2/css/bootstrap.min.css")%]
+    [%-CALL assets.include("v2/css/bootstrap-theme.min.css")%]
+[%ELSE%]
+
+    [%-CALL assets.include("css/bootstrap.min.css")%]
+[%END%]
+[%-CALL assets.include("css/rnsp.dados.css")%]
+
+[%-CALL assets.include("v2/css/site.css")%]
+[%-CALL assets.include("v2/css/iota.css")%]
+[%-CALL assets.include("v2/css/sprites.css")%]
+[%-CALL assets.include("css/patrocinadores.sprites.css")%]
+[%-CALL assets.include("v2/css/prism-javascript.css")%]
+[%-CALL assets.include("v2/css/isotope.css")%]
+
+[%-CALL assets.include("css/sprite-ods.css")%]
+
+[% IF v2 %]
+
+    [%-CALL assets.include("v2/js/bootstrap.min.js")%]
+
+    [%-CALL assets.include("v2/js/latinise.js")%]
+    [%-CALL assets.include("v2/js/utils.js")%]
+    [%-CALL assets.include("v2/js/events.js")%]
+
+    [%-CALL assets.include("v2/js/prism-javascript.js")%]
+    [%-CALL assets.include("v2/js/jquery.isotope.min.js")%]
+    [%-CALL assets.include("v2/js/load-isotope.js")%]
+
+    [%-CALL assets.include("js/indicatos-menu.js")%]
+    [%-CALL assets.include("js/indicators-topic-menu.js")%]
+
+
+    [%-CALL assets.include("js/stupidtable.min.js")%]
+[%ELSE%]
+
+
+    [%-CALL assets.include("js/jquery-ui-1.9.2.custom.min.js")%]
+    [%-CALL assets.include("css/jquery-ui-1.9.2.custom.min.css")%]
+
+
+    [%-CALL assets.include("js/jquery.history.js")%]
+
+    [%-CALL assets.include("js/jshashtable-2.1.js")%]
+    [%-CALL assets.include("js/jquery.numberformatter-1.2.3.min.js")%]
+
+    [%-CALL assets.include("js/jquery.ba-hashchange.js")%]
+
+    [%-CALL assets.include("js/infobox.js")%]
+    [%-CALL assets.include("js/api.home.js")%]
+    [%-CALL assets.include("js/api.common.js")%]
+    [%-CALL assets.include("js/api.dados.js")%]
+    [%-CALL assets.include("js/api.cidades.js")%]
+    [%-CALL assets.include("js/api.indicador.js")%]
+    [%-CALL assets.include("js/indicatos-menu.js")%]
+
+    [%-CALL assets.include("js/stupidtable.min.js")%]
+
+    [%-CALL assets.include("js/nprogress.js")%]
+
+
+    [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
+    [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
+    [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
+    [%-CALL assets.include("js/libraries/RGraph.line.js")%]
+    [%-CALL assets.include("js/bootstrap.min.js")-%]
+    [%-CALL assets.include("js/jquery-lockfixed-dynamic.js")-%]
+
+
+[% END %]
+
+
+[%-CALL assets.include("infancia/style.css")%]
+[%-CALL assets.include("infancia/style-logo-sprites.css")%]
+
+
+[%- assets.export("css")|none -%]
+
+[%-IF custom_css-%]
+    <link rel="stylesheet" href="[%custom_css%]" type="text/css"/>
+[%-END-%]
+[%-IF recaptcha -%]
+<script src='https://www.google.com/recaptcha/api.js'></script>
+[% END %]
+</head>
+[%IF v2%]
+<body class="[%c_req_match%]"><div id="fb-root"></div>
+[%ELSE%]
+<body class="[%c_req_match%]" data-institute="[%institute_json|html%]"><script>var load_map=[];</script>
+[%END%]
+
+
+[%INCLUDE 'site/ie_message.tt'%]
+<div id="iota-app">
+
+
+    [% INCLUDE site/nav_bar.tt|none%]
+
+
+    <div class="container" id="iota-app-content">
+        [% content|none%]
+    </div>
+</div>
+
+<footer>
+
+    <div class="container" id="iota-footer">
+
+        <div class="footer-realizacao">
+            <div class="dummy">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h6>Realização</h6>
+                        <a class="fr fr-a" target="_blank" href="https://nossasaopaulo.org.br/"><i class="inflogo inflogo-logo-rnsp"></i></a>
+                        <a class="fr" target="_blank" href="https://bernardvanleer.org/"><i class="inflogo inflogo-logo-bernard"></i></a>
+                    </div>
+
+                    <div class="col-md-3">
+                        <h6>Plataforma Digital</h6>
+                        <a class="fr-b" target="_blank" href="https://github.com/iotaorg/"><i class="inflogo inflogo-logo-iota"></i></a>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Desenvolvimento e hospedagem</h6>
+                        <a class="fr-c" target="_blank" href="https://appcivico.com/pt/"><i class="inflogo inflogo-logo-appcivico"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-menu">
+        <div class="container">
+
+            <div class="mynavbar-inner">
+                <ul class="nav">
+                    [% INCLUDE site/nav_for_real.tt|none%]
+                    <li>
+                        <a href="/frontend/admin">acesso</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+[%IF !v2%]
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&amp;libraries=geometry,visualization&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
+<script type='text/javascript' src='https://www.google.com/jsapi'></script>
+[%END%]
+
+[% assets.export("js") |none%]
+
+[% INCLUDE site/ga.tt%]
+<span style="display:none" id="ref_or_ods">[% institute_metadata.ods ? l('Meta ODS'):  l('Referência de Meta')%]</span>
+<span style="display:none" id="font_or_ods">[% institute_metadata.ods ? l('ODS relacionados'):  l('Fonte')%]</span>
+</body>
+</html>

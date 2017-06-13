@@ -20,6 +20,7 @@ my %config = new Config::General($file)->getall;
 # \%config;exit;
 use Email::MIME;
 use Email::Sender::Simple qw(sendmail);
+use Template::AutoFilter;
 
 my $transport_class = 'Email::Sender::Transport::' . $config{email}{transport}{class};
 eval("use $transport_class");
@@ -29,7 +30,6 @@ my $transport = $transport_class->new( %{ $config{email}{transport}{opts} } );
 
 use Iota;
 my $schema = Iota->model('DB');
-
 my $config_tt = {
     INCLUDE_PATH => $config{email}{template_path},
     INTERPOLATE  => 1,
@@ -39,7 +39,7 @@ my $config_tt = {
     ENCODING => 'utf8',
 
 };
-my $tt = Template->new($config_tt);
+my $tt = Template::AutoFilter->new($config_tt);
 
 while (1) {
     $schema->txn_do(

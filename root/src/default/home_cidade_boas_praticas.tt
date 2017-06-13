@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="span8 col-md-8">
+        [% IF !is_infancia %]<h1>[%l(best_pratice.name)%] [%IF city%]- <small>[% city.name%] / [%city.uf %]</small>[%END%]</h1>[%END%]
+
+
+        [%IF best_pratice.description%]
+        [% IF 0 %]<h5>[%l('Descrição')%]</h5>[%END%]
+        [%l(best_pratice.description)|none%]
+        [%END%]
+
+        [%IF best_pratice.axis%]
+        <h5>[%l('Eixo')%]</h5>
+        [%l(best_pratice.axis.name)|none%]
+        [%END%]
+
+
+        [%IF best_pratice.methodology%]
+        <h5>[%l('Metodologias')%]</h5>
+        [%l(best_pratice.methodology)|none%]
+        [%END%]
+
+        [%IF best_pratice.goals%]
+        <h5>[%l('Objetivos')%]</h5>
+        [%l(best_pratice.goals)|none%]
+        [%END%]
+
+        [%IF best_pratice.schedule%]
+        <h5>[%l('Cronograma')%]</h5>
+        [%l(best_pratice.schedule)|none%]
+        [%END%]
+
+        [%IF best_pratice.results%]
+        <h5>[%l('Resultados')%]</h5>
+        [%l(best_pratice.results)|none%]
+        [%END%]
+
+        [%IF best_pratice.institutions_involved%]
+        <h5>[%l('Instituições Envolvidas')%]</h5>
+        [%l(best_pratice.institutions_involved)|none%]
+        [%END%]
+
+        [%IF best_pratice.contatcts%]
+        <h5>[%l('Contatos')%]</h5>
+        [%l(best_pratice.contatcts)|none%]
+        [%END%]
+
+        [%IF best_pratice.sources%]
+        <h5>[%l('Fontes')%]</h5>
+        [%l(best_pratice.sources)|none%]
+        [%END%]
+
+		[%IF best_pratice.repercussion%]
+        <h5>[%l('Repercussão, notícias e outras premiações')%]</h5>
+        [%l(best_pratice.repercussion)|none%]
+        [%END%]
+
+        [%IF best_pratice.user_best_pratice_axes.size%]
+        <h5>[%l('Eixos secundários')|none%]</h5>
+        <ul>
+            [%FOREACH m IN best_pratice.user_best_pratice_axes%]
+            <li>[%l(m.axis.name)%]</li>
+            [%END%]
+        </ul>
+        [%END%]
+        [%IF best_pratice.tags%]
+        <h5>[%l('Tags')%]</h5>
+        [%l(best_pratice.tags)|none%][%END%]
+
+
+    </div>
+    <div class="boas-praticas span4 col-md-4">
+        [% IF best_pratices %]
+        <h5>[%l('Boas práticas')%]</h5>
+        <ul class="nav nav-list">
+            [% FOREACH m IN best_pratices.keys.sort %]
+                    <li class="nav-header">[%m%]</li>
+                        [% FOREACH x IN best_pratices.$m %]
+                            <li [%IF c.req.uri == x.link %]class="active"[% END%]><a href="[%x.link%]">[%l(x.name)%]</a></li>
+                        [% END %]
+                    </li>
+
+            [% END %]
+
+        </ul>
+        [% END %]
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    var userID = [% user.id %];
+    var ref = 'cidade_pagina';
+    [% PROCESS 'network_javascript.tt'%]
+</script>

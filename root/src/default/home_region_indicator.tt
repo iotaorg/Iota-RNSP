@@ -1,0 +1,175 @@
+[%IF is_infancia %]
+[% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+[%END%]
+<div id="content" class="content">
+    <div class="row" id="cidades-dados">
+        <div class="span4 col-md-4">
+            <div class=" ">
+                <div class="content-fill">
+                    <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
+                    <div class="variaveis"><dl class="tabela">
+
+[%IF region.upper_region %]
+    <dt>[%l(region_classification_name.2)%]</dt>
+    <dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>
+[%END%]
+<dt>[% region_classification_name.${region.depth_level}%]: </dt>
+<dd><a href="[%c.req.uri%]">[%region.name%]</a></dd>
+
+[%IF subregions.size %]
+    <dt>[% l(region_classification_name.3)%]: </dt>
+    <dd><ul  style="margin-bottom:0">
+    [%-FOR rr IN subregions -%]
+        <li><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, rr.name_url]).as_string%]">[%rr.name%]
+        </a></li>
+    [%END%]
+        </ul>
+    </dd>
+[%END%]
+
+<dt>[%l('Cidade')%]: </dt>
+<dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
+<dt>[%l('Estado')%]: </dt>
+<dd>[%city.state.name%]</dd>
+
+[% FOREACH vv IN basic_variables %]
+    <dt>[% l(vv.variable.name)%]: </dt>
+    <dd>[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %] [% l(vv.variable.measurement_unit.short_name) %] ([%date4period(vv.value_of_date, vv.variable.period)%])</dd>
+[% END %]
+                </dl></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="span8 col-md-8">
+        <div class="indicador-dados">
+            <h1 class="title">[%l(indicator.name)%]</h1>
+            <p class="explanation">[%l(indicator.explanation)%]</p>
+
+            <div class="dados"><dl class="tabela dl-horizontal ">
+                <dt>[%l('Fórmula')%]:</dt>
+                <dd>[% l(indicator.formula_human)%]</dd>
+                [%IF indicator.goal_explanation%]
+                    <dt>[% institute_metadata.ods ? l('Meta ODS'):  l('Referência de Meta')%]:</dt>
+                    <dd>[%l(indicator.goal_explanation) | none%]
+                        [%IF indicator.goal_source%]<blockquote><small><cite title="[%  institute_metadata.ods ? l('ODS relacionados'): l('Fonte da meta')%]">[%l(indicator.goal_source)%]</cite></small></blockquote>[%END%]
+                    </dd>
+                [%END%]
+
+            </dl></div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+    <div class="row" id="indicador-dados">
+
+        [%IF is_infancia %]
+        <div class="span12 col-md-12">
+        [%ELSE%]
+        <div class="span4 col-md-4">
+            <div lockfixed>
+            [% INCLUDE 'parts/menu_indicators.tt'%]
+            </div>
+        </div>
+        <div class="span8 col-md-8">
+        [%END%]
+
+
+
+            <div class="data-right">
+                <div class="content-fill">
+                    <div id="indicador-historico">
+                        <div class="title">[%l('Série Histórica de')%] <span class="cidade"></span></div>
+                        <div class="content-fill">
+
+                            <div class="table">
+                                <div class="content-fill">
+                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="indicador-grafico">
+                        <div class="title"><span>Gráfico de</span>&nbsp;<span class="cidade"></span> [%IF !is_infancia %]&nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a>[%END%] </div>
+                        <div class="content-fill">
+                            <div class="graph">
+                                <div class="content-fill">
+                                    <canvas id="main-graph" width='600' height='280'></canvas>
+                                    <div class="legend"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="dados-abertos">
+                        <div class="title">[%l('Dados abertos')%]</div>
+                        <div class="content-fill">
+                            <div class="dados-botoes">
+								<input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
+								<input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
+                            </div>
+                            <div class="download-links">
+                            </div>
+                            <div class="share-link">
+                                <input type="text" id="share-link" value="url" />
+								<!-- AddThis Button BEGIN -->
+								<div class="addthis_toolbox addthis_default_style ">
+								<a class="addthis_button_preferred_1"></a>
+								<a class="addthis_button_preferred_2"></a>
+								<a class="addthis_button_preferred_3"></a>
+								<a class="addthis_button_preferred_4"></a>
+								<a class="addthis_button_compact"></a>
+								<a class="addthis_counter addthis_bubble_style"></a>
+								</div>
+								<script type="text/javascript">var addthis_config = {"data_track_addressbar":false, "data_track_clickback":false};</script>
+								<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ed285338e6b8b3"></script>
+								<!-- AddThis Button END -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <div>
+            <h2>[%l('Fator de desigualdade')%]</h2>
+            [% INCLUDE parts/fator_desigualdade.tt %]
+        </div>
+
+
+        <div>
+            <h2>Análise comparativa</h2>
+            [% INCLUDE parts/analise_comparativa.tt %]
+        </div>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+<script type="text/javascript">
+    var userID = [% user.id %];
+    var cityID = [% city.id %];
+    var regionID = [% region.id %];
+    var indicadorID = [% indicator.id %];
+    var region_name_url = '[% region.name_url %]';
+
+    var ref = 'region_indicator';
+    [% PROCESS 'network_javascript.tt'%]
+
+
+
+</script>

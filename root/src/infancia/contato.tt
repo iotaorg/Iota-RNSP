@@ -1,0 +1,76 @@
+[% INCLUDE 'web/messages.tt' %]
+
+<div class="container">
+
+<form class=" form-horizontal" action="[%c.uri_for(c.controller('Web').action_for('pagina_contato_post')) %]" method="post"  id="contact_form">
+
+<fieldset>
+
+<legend>Entre em contato!</legend>
+
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Nome completo</label>
+  <div class="col-md-4 inputGroupContainer">
+  <div class="input-group">
+  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+  <input value="[%body.name%]"  name="name" placeholder="Digite seu nome" class="form-control"  type="text">
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label">E-Mail</label>
+    <div class="col-md-4 inputGroupContainer">
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+  <input value="[%body.email %]" name="email" placeholder="Endereço de E-Mail" class="form-control"  type="text">
+    </div>
+  </div>
+</div>
+
+
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Telefone ou cellar</label>
+    <div class="col-md-4 inputGroupContainer">
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+  <input value="[%body.phone %]" name="phone" placeholder="(11) 9999-9999" class="form-control" type="text">
+    </div>
+  </div>
+</div>
+
+
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Comentário</label>
+    <div class="col-md-4 inputGroupContainer">
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+            <textarea class="form-control" rows=5 name="comment" placeholder="Comentário">[%body.comment%]</textarea>
+  </div>
+  </div>
+</div>
+
+
+<div class="form-group">
+    <label class="col-md-4 control-label"></label>
+    <div class="col-md-4 ">
+        <div class="g-recaptcha" data-sitekey="6Lf2NSUUAAAAAIjt_CZWVJJepPpkp4r3jalDi1TL"></div>
+    </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label"></label>
+  <div class="col-md-4">
+    <button type="submit" class="btn btn-warning" >Enviar <span class="glyphicon glyphicon-send"></span></button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+</div>
+
+
+</div><!-- /.container -->

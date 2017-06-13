@@ -1,0 +1,28 @@
+<div class="row">
+
+    <div class="boas-praticas span8 col-md-8">
+        [% IF best_pratices %]
+        <h1>[%l('Boas práticas')%]</h1>
+        <p>[%l('Separadas por eixos')%]</p>
+        <ul class="nav nav-list">
+            [% FOREACH m IN best_pratices.keys.sort %]
+                    <li class="nav-header">[%m%]</li>
+                        [% FOREACH x IN best_pratices.$m %]
+                            <li [%IF c.req.uri == x.link %]class="active"[% END%]><a href="[%x.link%]">[%x.name%]</a></li>
+                        [% END %]
+                    </li>
+
+            [% END %]
+
+        </ul>
+        [% ELSE %]
+        <p>[%l('Sem boas praticas para essa cidade!')%]</p>
+        [% END %]
+    </div>
+</div>
+
+<script type="text/javascript">
+    var userID = [% user.id %];
+    var ref = 'cidade_pagina';
+    [% PROCESS 'network_javascript.tt'%]
+</script>

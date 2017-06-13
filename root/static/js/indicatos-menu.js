@@ -4,20 +4,27 @@ $(document).ready(function() {
         $list = $('#indicators_list'),
         $search = $('#indicator-search'),
         $status = $('#search_status'),
+        $body = $('body:first'),
 
         _frase_inicial='<div class="text">Em conformidade com os novos parâmetros de desenvolvimento da ONU, esse eixo do Programa Cidades Sustentáveis dialoga com os ODS:</div>',
+
         _select_caption = '',
         _current_group = $groups.find('.select').attr('selected-id'),
         $select = $groups.find('.select:first'),
+        is_infancia = $select.hasClass('infancia'),
         _on_menu_click = function (event) {
             var $me = $(event.target);
             var $ods= $('#menu-ods');
             $ods.html('');
 
+            $me.parent().find('.option.active').removeClass('active');
+
             if (typeof $me.attr('group-id') !== "undefined") {
 
                 _select_caption = $me.text();
                 _current_group = $me.attr('group-id');
+
+                $me.addClass('active');
 
                 // todo mundo
                 if (_current_group === '0') {
@@ -46,24 +53,58 @@ $(document).ready(function() {
 
                 __old_search_val2 = '';
                 _do_search();
+            }else{
+                _select_caption='';
             }
 
-            if ($groups.find('.options:first').is(':visible')) {
 
-                $select.text(_select_caption);
-                $select.removeClass('open');
+            if (is_infancia){
+                 // nao escolheu nenhum item
+                if (_select_caption == ''){
 
-                $groups.find('.options:first').hide();
+                    // clicou duas vezes no menu = fechar tudo
+                    if ($groups.find('.options:first').is(':visible')) {
 
-                $container.show();
+                        $select.removeClass('open');
 
-            } else {
-                _select_caption = $select.text();
-                $select.text($select.attr('data-select-title'));
-                $select.addClass('open');
+                        $groups.find('.options:first').hide();
+                        $container.hide();
+                        $ods.hide();
 
-                $container.hide();
-                $groups.find('.options:first').show();
+                        $body.removeClass('indicators-menu-is-open');
+
+                    }else{
+
+                        $body.addClass('indicators-menu-is-open');
+                        $select.addClass('open');
+
+                        $groups.find('.options:first').show();
+                    }
+
+
+                }else{
+
+                    $container.show();
+                }
+
+            }else{
+
+                if ($groups.find('.options:first').is(':visible')) {
+                    $select.text(_select_caption);
+                    $select.removeClass('open');
+
+                    $groups.find('.options:first').hide();
+
+                    $container.show();
+                } else {
+
+                    _select_caption = $select.text();
+                    $select.text($select.attr('data-select-title'));
+                    $select.addClass('open');
+
+                    $container.hide();
+                    $groups.find('.options:first').show();
+                }
             }
 
             return false;
@@ -173,7 +214,12 @@ $(document).ready(function() {
     }
 
     $groups.after('<div id="menu-ods"></div>');
-    if ( $select.hasClass('open-me')){
+
+    if ( is_infancia ){
+
+        $container.hide();
+
+    }else if ( $select.hasClass('open-me')){
         $groups.find('.option:first').click();
     }else{
 

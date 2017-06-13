@@ -1,0 +1,50 @@
+<div class="menu-left">
+
+<div class="category" id="topic_group_list">
+    <div class="topic_select [%IF web_open_axis%]open-me[%END%]" selected-id="[%topic_active_group.id%]" data-select-title="[%l('Selecione um grupo para filtrar')%]">
+        [%-l( topic_active_group.name )-%]
+    </div>
+    <div class="topic_options" style="display: none;">
+        <div class="option" group-id="0">
+        [%-l( 'Todos os indicadores' )-%] X
+        </div>
+        <div class="option" group-id="f">
+        [%-l('Indicadores em destaque')-%]
+        </div>
+        [%FOREACH a IN topic_groups.keys.sort() %]
+        <div class="option" group-id="[%groups.$a%]" data-attrs="[% groups_attr.$a %]" >
+            [%-l(a)-%]
+        </div>
+        [%END%]
+    </div>
+</div>
+
+
+<div id="topic_indicators_container">
+
+    [%IF v2%]
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="[%l('Pesquisar indicadores')%]" id="topic-indicator-search" >
+        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+    </div>
+    [%ELSE%]
+    <div class="control-group">
+        <div class="controls">
+            <div class="input-append">
+                <input name="topic-indicator-search" placeholder="[%l('Pesquisar indicadores')%]" id="topic-indicator-search" type="text">
+                <span class="add-on"><i class="icon-search"></i></span>
+            </div>
+        </div>
+    </div>
+    [%END%]
+    <span class="label label-info hideimp" id="topic_search_status" data-text="[%l('Mais __NUM__ indicadores em outros grupos encontrados')%]"></span>
+
+    <div id="topic_indicators_list" class="[%IF !v2%]auto-height[%END%] topic_indicators indicators-home">
+    [%-FOREACH i IN topic_indicators-%]
+    <a class="topic_item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="right" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="[%i.href%]">
+    [%-l(i.name)-%]
+    </a>
+    [%-END-%]
+    </div>
+</div>
+</div>

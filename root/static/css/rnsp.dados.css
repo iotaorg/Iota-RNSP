@@ -458,6 +458,7 @@ table .num{
 	border: 1px solid #e0e0e0;
 	margin-top: 10px;
 	padding: 2px;
+    overflow: auto;
 }
 
 
@@ -1114,3 +1115,6 @@ a.link-region{
 
 .no-data, .no-have {display: none!important}
 
+a.link-axis, a.link-region {
+    display: inline-block;
+}

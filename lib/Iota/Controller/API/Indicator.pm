@@ -24,17 +24,16 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
 
     my %roles = map { $_ => 1 } $c->user->roles;
 
-#my @roles;
-#push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
-#push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
+    #my @roles;
+    #push @roles, {indicator_roles => {like => '%_prefeitura%'} } if $roles{admin} || $roles{_prefeitura};
+    #push @roles, {indicator_roles => {like => '%_movimento%'}  } if $roles{admin} || $roles{_movimento};
 
     $c->stash->{object} = $c->stash->{object}->search(undef);
 
     $c->stash->{object}->count > 0 or $c->detach('/error_404');
 }
 
-sub all_variable : Chained('base') : PathPart('variable') : Args(0) :
-  ActionClass('REST') {
+sub all_variable : Chained('base') : PathPart('variable') : Args(0) : ActionClass('REST') {
     my ( $self, $c ) = @_;
 
 }
@@ -79,8 +78,7 @@ sub all_variable_GET {
     $self->status_ok( $c, entity => { variables => \@objs } );
 }
 
-sub indicator : Chained('object') : PathPart('') : Args(0) :
-  ActionClass('REST') {
+sub indicator : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
     my ( $self, $c ) = @_;
 
 }
@@ -119,14 +117,11 @@ sub indicator_GET {
     my ( $self, $c ) = @_;
 
     my $object_ref =
-      $c->stash->{object}->search( undef,
-        { prefetch => [ 'owner', 'axis', 'indicator_network_configs' ] } )
-      ->next;
+      $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'axis', 'indicator_network_configs' ] } )->next;
 
     my $where =
       $object_ref->dynamic_variations
-      ? { user_id =>
-          [ $object_ref->user_id, $c->stash->{user_id} || $c->user->id ] }
+      ? { user_id => [ $object_ref->user_id, $c->stash->{user_id} || $c->user->id ] }
       : { user_id => $object_ref->user_id };
 
     my $ret = {
@@ -135,28 +130,18 @@ sub indicator_GET {
         ? (
             variations => [
                 map { { id => $_->id, name => $_->name } }
-                  $object_ref->indicator_variations->search( $where,
-                    { order_by => 'order' } )->all
+                  $object_ref->indicator_variations->search( $where, { order_by => 'order' } )->all
             ]
           )
         : (),
 
         $object_ref->indicator_type eq 'varied'
-        ? (
-            variables => [
-                map { { id => $_->id, name => $_->name } }
-                  $object_ref->indicator_variables_variations
-            ]
-          )
+        ? ( variables => [ map { { id => $_->id, name => $_->name } } $object_ref->indicator_variables_variations ] )
         : (),
 
         network_configs => [
-            map {
-                {
-                    unfolded_in_home => $_->unfolded_in_home,
-                    network_id       => $_->network_id
-                }
-            } $object_ref->indicator_network_configs
+            map { { unfolded_in_home => $_->unfolded_in_home, network_id => $_->network_id } }
+              $object_ref->indicator_network_configs
         ],
 
         created_by => { map { $_ => $object_ref->owner->$_ } qw(name id) },
@@ -183,17 +168,11 @@ sub indicator_GET {
         ),
 
         $object_ref->visibility_level eq 'restrict'
-        ? ( restrict_to_users =>
-              [ map { $_->user_id } $object_ref->indicator_user_visibilities ] )
+        ? ( restrict_to_users => [ map { $_->user_id } $object_ref->indicator_user_visibilities ] )
         : (),
 
         $object_ref->visibility_level eq 'network'
-        ? (
-            restrict_to_networks => [
-                map { $_->network_id }
-                  $object_ref->indicator_network_visibilities
-            ]
-          )
+        ? ( restrict_to_networks => [ map { $_->network_id } $object_ref->indicator_network_visibilities ] )
         : (),
 
     };
@@ -242,12 +221,9 @@ sub indicator_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       if exists $roles{user} && $xx->user_id != $c->user->id;
 
-    if ( ( $c->req->params->{indicator}{update}{visibility_level} || '' ) eq
-        'private'
-        && ( $c->req->params->{indicator}{update}{visibility_user_id} || '' )
-        eq ''
-        && $c->check_any_user_role(qw(admin superadmin)) )
-    {
+    if (   ( $c->req->params->{indicator}{update}{visibility_level} || '' ) eq 'private'
+        && ( $c->req->params->{indicator}{update}{visibility_user_id} || '' ) eq ''
+        && $c->check_any_user_role(qw(admin superadmin)) ) {
         $c->req->params->{indicator}{update}{visibility_user_id} = $c->user->id;
     }
 
@@ -256,8 +232,7 @@ sub indicator_POST {
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
-      $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('indicator.update');
@@ -266,8 +241,7 @@ sub indicator_POST {
 
     $self->status_accepted(
         $c,
-        location => $c->uri_for( $self->action_for('indicator'), [ $obj->id ] )
-          ->as_string,
+        location => $c->uri_for( $self->action_for('indicator'), [ $obj->id ] )->as_string,
         entity => { name => $obj->name, id => $obj->id }
       ),
       $c->detach
@@ -299,10 +273,7 @@ sub indicator_DELETE {
 
             $c->model('DB::IndicatorVariablesVariationsValue')->search(
                 {
-                    indicator_variables_variation_id => [
-                        map { $_->id }
-                          $obj->indicator_variables_variations->all
-                    ]
+                    indicator_variables_variation_id => [ map { $_->id } $obj->indicator_variables_variations->all ]
                 }
             )->delete;
 
@@ -318,7 +289,10 @@ sub indicator_DELETE {
             $obj->indicator_variations->delete;
 
             $obj->indicator_variables_variations->delete;
-$obj->indicator_network_visibilities->delete;
+            $obj->indicator_network_visibilities->delete;
+
+            $obj->end_user_indicator_users->delete;
+            $obj->end_user_indicators->delete;
 
             $obj->user_indicators->delete;
             $obj->delete;
@@ -372,8 +346,7 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my $rs = $c->stash->{collection}
-      ->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
+    my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
 
     my %roles = map { $_ => 1 } $c->user->roles;
 
@@ -411,7 +384,7 @@ sub list_GET {
 
     if ( $c->req->params->{use} eq 'edit' ) {
 
-# se o uso dessa lista for para editar, entao temos que verificar algumas coisas a mais!
+        # se o uso dessa lista for para editar, entao temos que verificar algumas coisas a mais!
 
         $rs = $rs->search(
             {
@@ -422,8 +395,7 @@ sub list_GET {
     if ( $c->req->params->{network_id} ) {
         $rs = $rs->search(
             {
-                'indicator_network_visibilities.network_id' =>
-                  $c->req->params->{network_id}
+                'indicator_network_visibilities.network_id' => $c->req->params->{network_id}
             },
             { join => 'indicator_network_visibilities' }
         );
@@ -439,12 +411,8 @@ sub list_GET {
             axis       => { map { $_ => $obj->{axis}{$_} } qw(name id) },
 
             network_configs => [
-                map {
-                    {
-                        unfolded_in_home => $_->{unfolded_in_home},
-                        network_id       => $_->{network_id}
-                    }
-                } @{ $obj->{indicator_network_configs} }
+                map { { unfolded_in_home => $_->{unfolded_in_home}, network_id => $_->{network_id} } }
+                  @{ $obj->{indicator_network_configs} }
             ],
 
             (
@@ -462,8 +430,7 @@ sub list_GET {
 
                   created_at)
             ),
-            url => $c->uri_for_action( $self->action_for('indicator'),
-                [ $obj->{id} ] )->as_string,
+            url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
 
         };
     }
@@ -472,7 +439,7 @@ sub list_GET {
         my $rs = $c->model('DB::UserIndicatorConfig')->search(
             {
                 indicator_id => { 'in' => [ map { $_->{id} } @objs ] },
-                user_id => $c->req->params->{config_user_id}
+                user_id      => $c->req->params->{config_user_id}
             }
         )->as_hashref;
 
@@ -527,37 +494,30 @@ sub list_POST {
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       if exists $roles{user}
-      && ( $c->req->params->{indicator}{create}{visibility_level} || '' ) ne
-      'private';
+      && ( $c->req->params->{indicator}{create}{visibility_level} || '' ) ne 'private';
 
     if (
         (
-            ( $c->req->params->{indicator}{create}{visibility_level} || '' ) eq
-            'private'
+            ( $c->req->params->{indicator}{create}{visibility_level} || '' ) eq 'private'
             && ( $c->req->params->{indicator}{create}{visibility_user_id}
                 || '' ) eq ''
             && $c->check_any_user_role(qw(admin superadmin))
         )
         || exists $roles{user}
-      )
-    {
+      ) {
         $c->req->params->{indicator}{create}{visibility_user_id} = $c->user->id;
     }
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
-      $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
     my $object = $dm->get_outcome_for('indicator.create');
-    $c->logx( 'Adicionou indicador' . $object->name,
-        indicator_id => $object->id );
+    $c->logx( 'Adicionou indicador' . $object->name, indicator_id => $object->id );
 
     $self->status_created(
         $c,
-        location =>
-          $c->uri_for( $self->action_for('indicator'), [ $object->id ] )
-          ->as_string,
+        location => $c->uri_for( $self->action_for('indicator'), [ $object->id ] )->as_string,
         entity => {
             name => $object->name,
 

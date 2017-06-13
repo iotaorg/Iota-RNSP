@@ -105,10 +105,10 @@ sub action_specs {
 
                                 network_domain => $net ? $net->domain_name : '',
 
-                                city_url => (
+                                city_url => $user->city ? (
                                     join '/',        $user->city->pais,
                                     $user->city->uf, $user->city->name_uri
-                                ),
+                                ) : '-',
 
                             }
                         ),
