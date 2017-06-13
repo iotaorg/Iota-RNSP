@@ -523,7 +523,7 @@ sub pagina_contato_post : Chained('light_institute_load') PathPart('pagina/conta
     my ( $self, $c ) = @_;
 
     $c->detach( '/error_404', ['Página não existe neste dominio!'] )
-      if !$c->stash->{is_infancia} || !$ENV{CONTACT_EMAIL_TO} || !$c->req->method eq 'POST';
+      if !$c->stash->{is_infancia} || !$c->config->{contact_email_to} || !$c->req->method eq 'POST';
 
     my $misc_params = $c->req->params;
     $misc_params->{$_} ||= '' for qw/name phone comment email/;
@@ -542,7 +542,7 @@ sub pagina_contato_post : Chained('light_institute_load') PathPart('pagina/conta
         [],
         [
             response => delete $misc_params->{'g-recaptcha-response'},
-            secret   => $ENV{RECAPTCHA_SECRET}
+            secret   => $c->config->{recaptcha_secret}
         ],
     );
 
