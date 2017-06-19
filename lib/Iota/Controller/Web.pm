@@ -449,6 +449,7 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
                 { header     => \" case when city.id is null then 'Global' else city.uf || ', ' || city.name end" },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
+                { concat      => \'me.description || me.methodology || me.goals ||me.schedule||me.results' },
             ],
             join         => [ { 'user' => 'city' }, 'axis' ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -467,7 +468,7 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
         }
         $bp->{axis_attrs} = \@axis_attrs;
 
-        my (@tst) = $bp->{description} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
+        my (@tst) = $bp->{concat} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
 
         if (@tst) {
 
