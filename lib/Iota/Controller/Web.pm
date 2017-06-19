@@ -449,7 +449,7 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
                 { header     => \" case when city.id is null then 'Global' else city.uf || ', ' || city.name end" },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
-                { concat      => \'me.description || me.methodology || me.goals ||me.schedule||me.results' },
+                { concat      => \"coalesce(me.description,'') || coalesce(me.methodology,'') || coalesce(me.goals,'') || coalesce(me.schedule,'') || coalesce(me.results,'')" },
             ],
             join         => [ { 'user' => 'city' }, 'axis' ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
