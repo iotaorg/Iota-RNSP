@@ -13,10 +13,10 @@
         </select>
       </div>
 
-      [% IF available_citys %]
+      [% IF available_citys && available_citys.size>=1 %]
       <div class="form-group">
         <select name="city_id" class="form-control">
-            <option value="">Em qualquer cidade</option>
+            <option value="">Todas as cidades</option>
 
             [% FOREACH x IN available_citys %]
             <option [% x.key == c.req.params.city_id ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%] boas práticas )</option>
