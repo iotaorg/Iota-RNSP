@@ -400,7 +400,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
     my @available_axis = $c->model('DB::UserBestPratice')->search(
         {
             'user.active' => 1,
-            'user.id'     => { '-in' => \@users_ids },
+            'user.id'     => { '-in' => [ @users_ids, @{ $c->stash->{network_data}{admins_ids} || [] } ] },
         },
         {
             columns => [         { key => \'me.axis_id' }, { value => \'axis.name' }, { count => \'count(1)' } ],
@@ -410,6 +410,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
             group_by     => \'1, 2'
         }
     )->all;
+
     my @available_citys = $c->model('DB::UserBestPratice')->search(
         {
             'user.active' => 1,
