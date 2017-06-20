@@ -13,6 +13,7 @@
         </select>
       </div>
 
+      [% IF available_citys %]
       <div class="form-group">
         <select name="city_id" class="form-control">
             <option value="">Em qualquer cidade</option>
@@ -22,6 +23,7 @@
             [%END%]
         </select>
       </div>
+      [%END%]
 
       <button type="submit" class="btn btn-default">Filtrar</button>
     </form>
