@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec NOME_SEU_CONTAINER -u app /src/restart-services.sh
+docker exec -u app NOME_SEU_CONTAINER /src/restart-services.sh
