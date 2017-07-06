@@ -110,13 +110,13 @@ $(document).ready(function () {
         });
 
         $.each(operators_caption, function (index, value) {
-            new_formula = new_formula.replace(new RegExp( '[^\s\.]?\\'+ index+'[^\s\.]?', "g"), " " + value + ( is_string? "\n" : " "));
+            new_formula = new_formula.replace(index, " " + value + " ");
         });
 
         $.each(variables, function (index, value) {
             var pattern = "\\$" + variables[index].id;
             var re = new RegExp(pattern, "g");
-            new_formula = new_formula.replace(re, variables[index].name);
+            new_formula = new_formula.replace(re, variables[index].name) . ( is_string? "\n" : " ");
         });
 
 
@@ -127,7 +127,7 @@ $(document).ready(function () {
             $.each(vvariables, function (index, value) {
                 var pattern = "\\#" + vvariables[index].id;
                 var re = new RegExp(pattern, "g");
-                new_formula = new_formula.replace(re, vvariables[index].name);
+                new_formula = new_formula.replace(re, vvariables[index].name) . ( is_string? "\n" : " ");
             });
         }
 
