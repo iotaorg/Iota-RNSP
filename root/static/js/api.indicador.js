@@ -109,22 +109,23 @@ $(document).ready(function () {
             return b.id - a.id;
         });
 
+        $.each(operators_caption, function (index, value) {
+            new_formula = new_formula.replace(new RegExp( '\b?'+ index+'\b?', "g"), " " + value + ( is_string? "\n" : " "));
+        });
+
         $.each(variables, function (index, value) {
-            var pattern = "\\$" + variables[index].id;
+            var pattern = "\\$" + variables[index].id + '([^\d]|$)';
             var re = new RegExp(pattern, "g");
             new_formula = new_formula.replace(re, variables[index].name);
         });
 
-        $.each(operators_caption, function (index, value) {
-            new_formula = new_formula.replace(index, " " + value + ( is_string? "\n" : " "));
-        });
 
         if (vvariables) {
             vvariables.sort(function (a, b) {
                 return b.id - a.id;
             });
             $.each(vvariables, function (index, value) {
-                var pattern = "\\#" + vvariables[index].id;
+                var pattern = "\\#" + vvariables[index].id + '([^\d]|$)';;
                 var re = new RegExp(pattern, "g");
                 new_formula = new_formula.replace(re, vvariables[index].name);
             });
