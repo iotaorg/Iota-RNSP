@@ -16,7 +16,7 @@ my $schema = Iota->model('DB');
 
 use Iota::IndicatorFormula;
 
-my @indicadores = $schema->resultset('Indicator')->search({id=>692})->all;
+my @indicadores = $schema->resultset('Indicator')->all;
 
 foreach my $ind (@indicadores) {
 

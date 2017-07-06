@@ -8,7 +8,7 @@
 
         <div class="dados"><dl class="tabela dl-horizontal ">
             <dt>[%l('Fórmula')%]:</dt>
-            <dd>[%l(indicator.formula_human)%]</dd>
+            <dd class="white_space_pre_wrap">[%l(indicator.formula_human)%]</dd>
             [%IF indicator.goal_explanation%]
                 <dt>[% institute_metadata.ods ? l('Meta ODS'):  l('Referência de Meta')%]:</dt>
                 <dd>[%l(indicator.goal_explanation)|none%]

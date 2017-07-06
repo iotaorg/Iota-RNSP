@@ -680,3 +680,6 @@ body.root_ h2, body.root_pagina_indicadores h2, body.root_pagina_o_projeto h3 {
 .nav>li>a:hover, .nav>li>a:focus {
     background-color: transparent;
 }
+.white_space_pre_wrap {
+    white-space: pre-wrap;
+}
