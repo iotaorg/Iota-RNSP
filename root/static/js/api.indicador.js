@@ -102,7 +102,8 @@ $(document).ready(function () {
             "CONCATENAR": ""
         };
 
-        var new_formula = formula;
+        var new_formula = formula, is_string = /CONCATENAR/i.test(formula);
+
 
         variables.sort(function (a, b) {
             return b.id - a.id;
@@ -115,7 +116,7 @@ $(document).ready(function () {
         });
 
         $.each(operators_caption, function (index, value) {
-            new_formula = new_formula.replace(index, "&nbsp;" + value + "&nbsp;");
+            new_formula = new_formula.replace(index, " " + value + ( is_string? "\n" : " "));
         });
 
         if (vvariables) {
@@ -129,7 +130,11 @@ $(document).ready(function () {
             });
         }
 
-        return $.trim(new_formula);
+        new_formula = $.trim(new_formula);
+        new_formula.replace(/ +/g, ' ');
+        new_formula.replace(/ /g, '&nbsp;');
+
+        return new_formula;
     }
 
     function showIndicadorData() {
