@@ -204,15 +204,18 @@ sub as_human {
 
     my $formula = $self->formula;
 
-    my $sep = $formula =~ /CONCATENAR/i ? "\n" : '';
+    my $sep = $formula =~ /CONCATENAR/i ? "\n" : ' ';
+    $formula =~ s/CONCATENAR//i;
 
     if ( $formula =~ /\$/ ) {
         my @variables = $self->schema->resultset('Variable')->search( { id => [ $self->variables ] } )->all;
-
         foreach my $var (@variables) {
             my $name  = $var->name;
             my $varid = $var->id;
-            $formula =~ s/\$$varid([^\d]|$)/ $name $1$sep/g;
+
+            while ( $formula =~ /\$$varid([^\d]|$)/ ) {
+                $formula =~ s/\$$varid([^\d]|$)/$name$sep$1/;
+            }
         }
     }
 
@@ -224,15 +227,19 @@ sub as_human {
         foreach my $var (@var_variables) {
             my $name  = $var->name;
             my $varid = $var->id;
-            $formula =~ s/\#$varid([^\d]|$)/ $name $1$sep/g;
+            while ( $formula =~ /\#$varid([^\d]|$)/ ) {
+                $formula =~ s/\#$varid([^\d]|$)/$name$sep$1/;
+            }
         }
     }
+    $formula =~ s/\b?\+\b?/ + /g;
+    $formula =~ s/\b?\/\b?/ ÷ /g;
+    $formula =~ s/\b?\*\b?/ × /g;
+    $formula =~ s/\b?\-\b?/ - /g;
 
-    $formula =~ s/^\s+//;
-    $formula =~ s/\s+$//;
+    $formula =~ s/^\s+//g;
+    $formula =~ s/\s+$//g;
     $formula =~ s/ +/ /g;
-
-    $formula =~ s/^CONCATENAR //;
 
     return $formula;
 }

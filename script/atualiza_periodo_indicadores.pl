@@ -16,7 +16,7 @@ my $schema = Iota->model('DB');
 
 use Iota::IndicatorFormula;
 
-my @indicadores = $schema->resultset('Indicator')->all;
+my @indicadores = $schema->resultset('Indicator')->search({id=>692})->all;
 
 foreach my $ind (@indicadores) {
 
@@ -25,8 +25,8 @@ foreach my $ind (@indicadores) {
         schema  => $schema
     );
 
-    $ind->formula_human( $formula->as_human );
-
+    $ind->update( { formula_human => $formula->as_human} );
+=pod
     $ind->indicator_variables->delete;
     $ind->add_to_indicator_variables( { variable_id => $_ } ) for $formula->variables;
 
@@ -39,7 +39,8 @@ foreach my $ind (@indicadores) {
         $ind->period('yearly');
         $ind->variable_type('int');
     }
+=cut
 
-    $ind->update;
+
 }
 
