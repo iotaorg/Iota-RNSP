@@ -116,7 +116,7 @@ $(document).ready(function () {
         $.each(variables, function (index, value) {
             var pattern = "\\$" + variables[index].id;
             var re = new RegExp(pattern, "g");
-            new_formula = new_formula.replace(re, variables[index].name) . ( is_string? "\n" : " ");
+            new_formula = new_formula.replace(re, variables[index].name) + ( is_string? "\n" : " ");
         });
 
 
@@ -127,7 +127,7 @@ $(document).ready(function () {
             $.each(vvariables, function (index, value) {
                 var pattern = "\\#" + vvariables[index].id;
                 var re = new RegExp(pattern, "g");
-                new_formula = new_formula.replace(re, vvariables[index].name) . ( is_string? "\n" : " ");
+                new_formula = new_formula.replace(re, vvariables[index].name) + ( is_string? "\n" : " ");
             });
         }
 
