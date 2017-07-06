@@ -131,7 +131,6 @@ $(document).ready(function () {
             });
         }
 
-        console.log(is_string,  new_formula);
         new_formula = $.trim(new_formula);
         console.log(is_string,  new_formula);
         new_formula.replace(/ +/g, ' ');
