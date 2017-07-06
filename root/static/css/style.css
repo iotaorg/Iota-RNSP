@@ -936,5 +936,6 @@ table.history tbody tr.selected{
 
 }
 
-
-
+.white_space_pre_wrap {
+    white-space: pre-wrap;
+}
