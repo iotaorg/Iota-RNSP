@@ -204,13 +204,15 @@ sub as_human {
 
     my $formula = $self->formula;
 
+    my $sep = $formula =~ /CONCATENAR/i ? "\n" : '';
+
     if ( $formula =~ /\$/ ) {
         my @variables = $self->schema->resultset('Variable')->search( { id => [ $self->variables ] } )->all;
 
         foreach my $var (@variables) {
             my $name  = $var->name;
             my $varid = $var->id;
-            $formula =~ s/\$$varid([^\d]|$)/ $name $1/g;
+            $formula =~ s/\$$varid([^\d]|$)/ $name $1$sep/g;
         }
     }
 
@@ -222,13 +224,13 @@ sub as_human {
         foreach my $var (@var_variables) {
             my $name  = $var->name;
             my $varid = $var->id;
-            $formula =~ s/\#$varid([^\d]|$)/ $name $1/g;
+            $formula =~ s/\#$varid([^\d]|$)/ $name $1$sep/g;
         }
     }
 
     $formula =~ s/^\s+//;
     $formula =~ s/\s+$//;
-    $formula =~ s/\s+/ /g;
+    $formula =~ s/ +/ /g;
 
     $formula =~ s/^CONCATENAR //;
 
