@@ -110,7 +110,7 @@ $(document).ready(function () {
         });
 
         $.each(operators_caption, function (index, value) {
-            new_formula = new_formula.replace(new RegExp( '\\b?\\'+ index+'\\b?', "g"), " " + value + ( is_string? "\n" : " "));
+            new_formula = new_formula.replace(new RegExp( '[^\s\.]?\\'+ index+'[^\s\.]?', "g"), " " + value + ( is_string? "\n" : " "));
         });
 
         $.each(variables, function (index, value) {
