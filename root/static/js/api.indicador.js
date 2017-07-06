@@ -114,7 +114,7 @@ $(document).ready(function () {
         });
 
         $.each(variables, function (index, value) {
-            var pattern = "\\$" + variables[index].id + '([^\d]|$)';
+            var pattern = "\\$" + variables[index].id;
             var re = new RegExp(pattern, "g");
             new_formula = new_formula.replace(re, variables[index].name);
         });
@@ -125,7 +125,7 @@ $(document).ready(function () {
                 return b.id - a.id;
             });
             $.each(vvariables, function (index, value) {
-                var pattern = "\\#" + vvariables[index].id + '([^\d]|$)';;
+                var pattern = "\\#" + vvariables[index].id;
                 var re = new RegExp(pattern, "g");
                 new_formula = new_formula.replace(re, vvariables[index].name);
             });
