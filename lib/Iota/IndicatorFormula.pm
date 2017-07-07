@@ -1,5 +1,6 @@
 package Iota::IndicatorFormula;
 
+use utf8;
 use Moose;
 use Math::Expression::Evaluator;
 
