@@ -73,7 +73,7 @@ body.root_pagina_contato #topbackground {
     background-image: url(/static/infancia/bg-cidades.jpg);
     background-repeat: no-repeat;
     background-size: auto 100%;
-    background-position: calc(50% - 80px) 0;
+    background-position: 50%;
     background-color: #27355c;
 }
 
@@ -82,7 +82,7 @@ body.root_ #topbackground {
     background-repeat: no-repeat;
     background-size: auto 100%;
     background-color: white;
-    background-position: calc(50% - 80px) 0;
+    background-position: 50%;
 }
 
 h1 {
