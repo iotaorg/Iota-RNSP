@@ -122,10 +122,10 @@ sub process {
                     }
                     my $tmp_year = $r->{date};
                     ($tmp_year) = $tmp_year =~ /(\d{4})-/;
-                    if ( $tmp_year < $year ) {
+                    if ( $tmp_year >= $year ) {
                         $status = "Ano '" . $r->{date} . "' recusada, envie dados anteriores à $year";
 
-                        #  die "invalid number";
+                        die "invalid number";
                     }
 
                     my $ref = {
