@@ -3,9 +3,7 @@
         [% INCLUDE 'parts/menu_indicators.tt'%]
 
         <div class="hide-when-indicator-menu-is-open">
-            [%IF imagem_cidade %]
-                <img src="[%imagem_cidade%]" style="width:100%">
-            [%ELSIF  c_req_match == 'root_pagina_indicadores'  %]
+            [% IF  c_req_match == 'root_pagina_indicadores'  %]
                 [%IF 0%]<p class="textocinza"></p>[%END%]
             [%ELSIF menu_indicators_prefix%]
                 <img src="http://i.imgur.com/SyHVepV.png" style="width:100%" width="1015" height="359">

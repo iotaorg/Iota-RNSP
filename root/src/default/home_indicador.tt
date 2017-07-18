@@ -35,7 +35,7 @@
                             [%END%]
 
                             <p class="explanation">[% indicator.explanation %]</p>
-                            <div class="dados"><dl class="tabela dl-horizontal ">
+                            <div class="dados"><dl class="tabela [%IF !is_infancia %]dl-horizontal[%END%]">
                                 <dd>
                                 <div class="loading"><p>[%l('Carregando mais informações')%]...</p></div>
                                 <dd>
