@@ -1,8 +1,22 @@
 <div class="menu-left">
 
-[% IF is_infancia %]<a href="[% city.pais ?  "/$city.pais/$city.uf/$city.name_uri" : menu_indicators_prefix || '#' %]" id="infancia-menu-cidade">
-    [% city.name || menu_indicators_prefix ? 'São Paulo' : '' %]
-</a>[% END %]
+[% IF is_infancia %]
+
+<div id="infancia-menu-cidade">
+
+<span>[% city.name || menu_indicators_prefix ? 'São Paulo' : '' %]</span>
+
+<a class="city" href="[% city.pais ?  "/$city.pais/$city.uf/$city.name_uri" : menu_indicators_prefix || '#' %]">
+Cidade
+</a>
+
+<a class="regions" href="[% city.pais ?  "/$city.pais/$city.uf/$city.name_uri/regiao" : "$menu_indicators_prefix/regiao" || '#' %]">
+Região
+</a>
+
+</div>
+
+[% END %]
 
 <div class="category" id="group_list">
     <div class="select [% is_infancia ? 'infancia' : '' %] [%IF web_open_axis%]open-me[%END%]" selected-id="[%active_group.id%]" data-select-title="[%l('Selecione um grupo para filtrar')%]">
