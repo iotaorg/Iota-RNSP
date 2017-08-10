@@ -78,7 +78,7 @@ body.root_pagina_contato #topbackground {
 }
 
 body.root_ #topbackground {
-    background-image: url(/static/infancia/img-crianca-crop.jpg);
+    background-image: url(/static/infancia/img-crianca-crop.jpg?v=2);
     background-repeat: no-repeat;
     background-size: auto 100%;
     background-color: white;
@@ -136,7 +136,7 @@ h1 {
 }
 
 body.root_ .mytitlerow {
-    height: 537px;
+    height: 337px;
 }
 
 /* phone to desktop  */
