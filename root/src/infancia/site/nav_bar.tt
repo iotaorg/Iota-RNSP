@@ -1,13 +1,13 @@
 <div id="topbackground">
 
     <div class="container">
-            <div class="fundo-branco">
+            <div>
 
-                <div class="text-right mygithub hidden-phone hidden-xs">
+                <div class="text-right hidden-phone hidden-xs mygithub">
                     <a href="https://github.com/iotaorg/Iota-RNSP" target="_blank">Siga o Iota no github <i class="glyphicon glyphicon-new-window icon-white"></i></a>
                 </div>
 
-                <div class="row ">
+                <div class="row fundo-branco">
                     <div class="span2 col-md-2 text-center">
                         <a class="menulogo" title="Página Inicial" href="/"><img style="margin-top: 10px;" height="159" src="/static/infancia/logo.svg" class="pad10"></a>
                     </div>

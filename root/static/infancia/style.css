@@ -32,15 +32,9 @@ h5 {
     padding-bottom: 20px;
 }
 
-.fundo-branco:before {
-    content: '';
-    display: block;
-    width: 100%;
+.fundo-branco {
     background-color: rgba(255,255,255,0.85);
-    height: 121px;
-    position: relative;
-    top: 188px;
-    margin-top: -120px;
+    margin-top: 40px;
 }
 
 .pad10 {
@@ -99,7 +93,7 @@ body.root_ h1 {
 }
 
 .mynavbar-inner ul {
-    margin-top : 96px
+    margin-top : 45px
 }
 
 .mynavbar-inner li {
@@ -118,11 +112,9 @@ body.root_ h1 {
     color: #5bc0de;
 }
 
-.mygithub {
-    float: right;
-}
 .mygithub a {
-    color: #FFF;
+    color: black;
+    background-color: rgba(255,255,255,0.85);
     font-size: 0.8em;
     padding: 10px 10px 0px 0px;
     display: inline-block;
@@ -169,6 +161,7 @@ body.root_ .mytitlerow {
 }
 .menulogo {
     display: block;
+    margin-top: -69px;
 }
 .menulogo a {
     display: inline-block;
