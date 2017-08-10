@@ -590,11 +590,20 @@ dl.tabela blockquote small {
     color: black;
     text-decoration: none;
 }
+#infancia-menu-cidade a {
 
-body.indicators-menu-is-open .hide-when-indicator-menu-is-open {
-    display: none;
+    border: 2px solid red;
+    background-color: blue;
+    color: red;
+}
+#infancia-menu-wrap.no-indicators #infancia-menu-cidade {
+    margin-left: 0 !important;
+    width: 100% !important;
 }
 
+#cidades-dados {
+    margin-top: 20px
+}
 
 @media (min-width: 590px) {
     #group_list .select {

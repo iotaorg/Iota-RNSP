@@ -1,3 +1,7 @@
+[%  IF is_infancia %]
+    [% INCLUDE 'parts/menu_regioes.tt'%]
+[%END%]
+
     <div id="content" class="content">
         <div class="row" id="cidades-dados">
             <div class="span4 col-md-4">
@@ -64,7 +68,13 @@
         <div class="row" >
             <div class="span12">
                 <div id="cidades-indicadores">
+
+
+                    [%IF !is_infancia%]
                     <h5>[%l('Indicadores separados por eixos')%] [% IF city.regions.size>0 %]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao">[%l('visualizar indicadores por região')%]</a></small>[% END %]</h5>
+                    [%END%]
+
+
 					<div class="period">
 						<div id="date-ruler">
 							[%FOREACH d IN data_periods%]

@@ -2,12 +2,5 @@
     <div id="infancia-menu-indicadores">
         [% INCLUDE 'parts/menu_indicators.tt'%]
 
-        <div class="hide-when-indicator-menu-is-open">
-            [% IF  c_req_match == 'root_pagina_indicadores'  %]
-                [%IF 0%]<p class="textocinza"></p>[%END%]
-            [%ELSIF menu_indicators_prefix%]
-                <img src="http://i.imgur.com/SyHVepV.png" style="width:100%" width="1015" height="359">
-            [%END%]
-        </div>
     </div>
 </div>

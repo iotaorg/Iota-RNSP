@@ -1,21 +1,7 @@
 <div class="menu-left">
 
 [% IF is_infancia %]
-
-<div id="infancia-menu-cidade">
-
-<span>[% city.name || menu_indicators_prefix ? 'São Paulo' : '' %]</span>
-
-<a class="city" href="[% city.pais ?  "/$city.pais/$city.uf/$city.name_uri" : menu_indicators_prefix || '#' %]">
-Cidade
-</a>
-
-<a class="regions" href="[% city.pais ?  "/$city.pais/$city.uf/$city.name_uri/regiao" : "$menu_indicators_prefix/regiao" || '#' %]">
-Região
-</a>
-
-</div>
-
+[% INCLUDE 'parts/infancia_menu_cidade.tt'%]
 [% END %]
 
 <div class="category" id="group_list">

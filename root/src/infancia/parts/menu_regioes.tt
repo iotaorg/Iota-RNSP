@@ -1,0 +1,12 @@
+<div id="infancia-menu-wrap" class="no-indicators">
+    <div id="infancia-menu-indicadores">
+
+        <div class="menu-left">
+
+        [% INCLUDE 'parts/infancia_menu_cidade.tt'%]
+
+        </div>
+
+
+    </div>
+</div>
