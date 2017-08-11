@@ -38,6 +38,32 @@ eval {
             ok( !$res->is_success, 'invalid request' );
             is( $res->code, 400, 'invalid request' );
 
+            ( $res, $c ) = ctx_request(
+                POST '/api/axis-dim1',
+                [
+                    api_key                        => 'test',
+                    'axis_dim1.create.name'        => 'gravidas',
+                    'axis_dim1.create.description' => 'Descr',
+                ]
+            );
+
+            ok( $res->is_success, 'axis created!' );
+            is( $res->code, 201, 'created!' );
+            my $dim_id = decode_json $res->content;
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/axis-dim2',
+                [
+                    api_key                        => 'test',
+                    'axis_dim2.create.name'        => '0 a 5',
+                    'axis_dim2.create.description' => 'Descr',
+                ]
+            );
+
+            ok( $res->is_success, 'axis created!' );
+            is( $res->code, 201, 'created!' );
+            my $cat_id = decode_json $res->content;
+
             my $var1 = &new_var( 'int', 'weekly' );
 
             ( $res, $c ) = ctx_request(
@@ -47,6 +73,8 @@ eval {
                     'indicator.create.name'          => 'Divisão Modal',
                     'indicator.create.formula'       => '5 + $' . $var1,
                     'indicator.create.axis_id'       => '1',
+                    'indicator.create.axis_dim1_id'  => $dim_id->{id},
+                    'indicator.create.axis_dim2_id'  => $cat_id->{id},
                     'indicator.create.explanation'   => 'explanation',
                     'indicator.create.source'        => 'me',
                     'indicator.create.goal_source'   => '@fulano',
@@ -77,6 +105,9 @@ eval {
             is( $save_test->period,        'weekly',         'period ok' );
             is( $save_test->variable_type, 'int',            'variable_type ok' );
 
+            is( $save_test->axis_dim1_id, $dim_id->{id} );
+            is( $save_test->axis_dim2_id, $cat_id->{id});
+
             use URI;
             my $uri = URI->new( $res->header('Location') );
             $uri->query_form( api_key => 'test' );
@@ -98,7 +129,6 @@ eval {
             my @variables = $save_test->indicator_variables->all;
             is( $variables[0]->variable_id, $var1, 'variable saved in table' );
 
-
             # update var
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/' . $var1,
@@ -111,7 +141,6 @@ eval {
             );
             ok( $res->is_success, 'var updated' );
             is( $res->code, 202, 'var updated -- 202 Accepted' );
-
 
             $Iota::TestOnly::Mock::AuthUser::_id    = 4;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;

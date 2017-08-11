@@ -12,6 +12,7 @@ use Catalyst::Test q(Iota);
 use HTTP::Request::Common;
 use Package::Stash;
 
+use JSON;
 use Iota::TestOnly::Mock::AuthUser;
 
 my $schema = Iota->model('DB');
@@ -28,8 +29,21 @@ use JSON qw(from_json);
 eval {
     $schema->txn_do(
         sub {
-
             my ( $res, $c );
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/axis-dim1',
+                [
+                    api_key                        => 'test',
+                    'axis_dim1.create.name'        => 'gravidas',
+                    'axis_dim1.create.description' => 'Descr',
+                ]
+            );
+
+            ok( $res->is_success, 'axis created!' );
+            is( $res->code, 201, 'created!' );
+            my $dim_id = decode_json $res->content;
+
             ( $res, $c ) = ctx_request(
                 POST '/api/indicator',
                 [
@@ -38,7 +52,7 @@ eval {
                     'indicator.create.goal'    => '11',
                     'indicator.create.formula' => '5 / 2',
                     'indicator.create.axis_id' => '1',
-
+                    'indicator.create.axis_dim1_id'  => $dim_id->{id},
                     'indicator.create.visibility_level' => 'public',
                 ]
             );
@@ -85,11 +99,33 @@ eval {
                 POST $uri->path_query,
                 [
                     'indicator.update.goal' => '23',
+                    'indicator.update.axis_dim1_id' => '',
 
                     #'indicator.update.visibility_level' => 'private',
                 ]
             );
             ok( $res->is_success, 'indicator updated!' );
+            do {
+                ok( my $local = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
+                'indicator in DB' );
+
+                is( $local->axis_dim1_id, $dim_id->{id}, 'keep same dim' );
+            };
+            # again, but remove dim
+            ( $res, $c ) = ctx_request(
+                POST $uri->path_query,
+                [
+                    'indicator.update.goal' => '23',
+                    'indicator.update.axis_dim1_id' => '0',
+                ]
+            );
+            ok( $res->is_success, 'indicator updated!' );
+            do {
+                ok( my $local = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
+                'indicator in DB' );
+
+                is( $local->axis_dim1_id, undef, 'removed dimension' );
+            };
 
             ( $res, $c ) = ctx_request(
                 POST $uri->path_query,

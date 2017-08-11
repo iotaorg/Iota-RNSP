@@ -163,6 +163,8 @@ sub indicator_GET {
               variable_type
 
               formula_human
+              axis_dim1_id
+              axis_dim2_id
 
               )
         ),
@@ -427,6 +429,8 @@ sub list_GET {
                   visibility_country_id
 
                   featured_in_home
+                  axis_dim1_id
+                  axis_dim2_id
 
                   created_at)
             ),
