@@ -100,8 +100,6 @@ eval {
                 [
                     'indicator.update.goal' => '23',
                     'indicator.update.axis_dim1_id' => '',
-
-                    #'indicator.update.visibility_level' => 'private',
                 ]
             );
             ok( $res->is_success, 'indicator updated!' );

@@ -117,7 +117,9 @@ sub indicator_GET {
     my ( $self, $c ) = @_;
 
     my $object_ref =
-      $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'axis', 'indicator_network_configs' ] } )->next;
+      $c->stash->{object}
+      ->search( undef, { prefetch => [ 'owner', 'axis', 'axis_dim1', 'axis_dim2', 'indicator_network_configs' ] } )
+      ->next;
 
     my $where =
       $object_ref->dynamic_variations
@@ -146,6 +148,8 @@ sub indicator_GET {
 
         created_by => { map { $_ => $object_ref->owner->$_ } qw(name id) },
         axis       => { map { $_ => $object_ref->axis->$_ } qw(name id) },
+        axis_dim1 => $object_ref->axis_dim1_id ? { map { $_ => $object_ref->axis_dim1->$_ } qw(name id) } : undef,
+        axis_dim2 => $object_ref->axis_dim2_id ? { map { $_ => $object_ref->axis_dim2->$_ } qw(name id) } : undef,
 
         (
             map { $_ => $object_ref->$_ }
@@ -163,8 +167,6 @@ sub indicator_GET {
               variable_type
 
               formula_human
-              axis_dim1_id
-              axis_dim2_id
 
               )
         ),
@@ -348,7 +350,7 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
+    my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis', 'axis_dim1', 'axis_dim2' ] } );
 
     my %roles = map { $_ => 1 } $c->user->roles;
 
@@ -411,7 +413,8 @@ sub list_GET {
 
             created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
             axis       => { map { $_ => $obj->{axis}{$_} } qw(name id) },
-
+            axis_dim1 => $obj->{axis_dim1_id} ? { map { $_ => $obj->{axis_dim1}->{$_} } qw(name id) } : undef,
+            axis_dim2 => $obj->{axis_dim2_id} ? { map { $_ => $obj->{axis_dim2}->{$_} } qw(name id) } : undef,
             network_configs => [
                 map { { unfolded_in_home => $_->{unfolded_in_home}, network_id => $_->{network_id} } }
                   @{ $obj->{indicator_network_configs} }
@@ -429,9 +432,6 @@ sub list_GET {
                   visibility_country_id
 
                   featured_in_home
-                  axis_dim1_id
-                  axis_dim2_id
-
                   created_at)
             ),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,

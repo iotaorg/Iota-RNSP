@@ -106,7 +106,7 @@ eval {
             is( $save_test->variable_type, 'int',            'variable_type ok' );
 
             is( $save_test->axis_dim1_id, $dim_id->{id} );
-            is( $save_test->axis_dim2_id, $cat_id->{id});
+            is( $save_test->axis_dim2_id, $cat_id->{id} );
 
             use URI;
             my $uri = URI->new( $res->header('Location') );
@@ -119,7 +119,11 @@ eval {
             like( $res->content, qr/weekly/, 'periodo de alguma variavel' );
 
             my $indicator_res = eval { decode_json( $res->content ) };
+
             is( $indicator_res->{visibility_level}, 'restrict', 'visibility_level ok' );
+
+is( $indicator_res->{axis_dim1}{name},   'gravidas',    'dim1 ok' );
+            is( $indicator_res->{axis_dim2}{name},   '0 a 5',       'dim2 ok' );
 
             is_deeply( $indicator_res->{restrict_to_users}, [4], 'restrict_to_users ok' );
             is( $indicator_res->{name}, 'Divisão Modal', 'name ok' );
@@ -152,6 +156,8 @@ eval {
 
             my $list = eval { from_json( $res->content ) };
             is( $list->{indicators}[0]{explanation}, 'explanation', 'explanation present!' );
+            is( $list->{indicators}[0]{axis_dim1}{name},   'gravidas',    'dim1 ok' );
+            is( $list->{indicators}[0]{axis_dim2}{name},   '0 a 5',       'dim2 ok' );
 
             $Iota::TestOnly::Mock::AuthUser::_id    = 1;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
