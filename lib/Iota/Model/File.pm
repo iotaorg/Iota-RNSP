@@ -125,7 +125,7 @@ sub process {
                     if ( $tmp_year >= $year ) {
                         $status = "Ano '" . $r->{date} . "' recusada, envie dados anteriores à $year";
 
-                        die "invalid number";
+                        die "invalid number: $status\n";
                     }
 
                     my $ref = {
