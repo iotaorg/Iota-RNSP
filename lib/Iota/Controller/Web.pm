@@ -114,7 +114,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{additional_template_paths} =
       [ Iota->path_to( 'root', 'src', $c->stash->{institute_metadata}{template} ) ];
 
-    $c->stash->{is_infancia} = 1 if $c->stash->{institute_metadata}{template} eq 'infancia';
+    $c->stash->{is_infancia} = 1 if defined $c->stash->{institute_metadata}{template} && $c->stash->{institute_metadata}{template} eq 'infancia';
 
     $c->stash->{c_req_path}  = $c->req->path;
     $c->stash->{c_req_match} = $c->req->match;

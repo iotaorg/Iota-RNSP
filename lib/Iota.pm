@@ -81,6 +81,16 @@ __PACKAGE__->config(
 
 );
 
+before 'setup_components' => sub {
+    my $app = shift;
+
+    if ( $ENV{HARNESS_ACTIVE} || $0 =~ /forkprove/ ) {
+        $app->config->{'Model::DB'}{connect_info} = $app->config->{'Model::DB'}{testing_connect_info};
+    }
+
+};
+
+
 after 'setup_components' => sub {
     my $app = shift;
     for ( keys %{ $app->components } ) {

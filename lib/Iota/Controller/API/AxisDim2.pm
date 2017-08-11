@@ -1,5 +1,4 @@
-
-package Iota::Controller::API::Axis;
+package Iota::Controller::API::AxisDim2;
 
 use Moose;
 use JSON qw(encode_json);
@@ -8,13 +7,9 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
-sub base : Chained('/api/base') : PathPart('axis') : CaptureArgs(0) {
+sub base : Chained('/api/base') : PathPart('axis-dim2') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{collection} = $c->model('DB::Axis');
-
-    if ( $c->req->uri->host eq 'indicadores.cidadessustentaveis.org.br' ) {
-        $c->stash->{collection} = $c->stash->{collection}->search( { 'me.id' => { '<' => 100 } } );
-    }
+    $c->stash->{collection} = $c->model('DB::AxisDim2');
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -32,14 +27,12 @@ sub axis : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 }
 
-
 sub axis_GET {
     my ( $self, $c ) = @_;
     my $object_ref = $c->stash->{object}->as_hashref->next;
 
-    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(name  id created_at) ) } );
+    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(name description id created_at) ) } );
 }
-
 
 sub axis_POST {
     my ( $self, $c ) = @_;
@@ -47,14 +40,14 @@ sub axis_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin));
 
-    $c->req->params->{axis}{update}{id} = $c->stash->{object}->next->id;
+    $c->req->params->{axis_dim2}{update}{id} = $c->stash->{object}->next->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $obj = $dm->get_outcome_for('axis.update');
+    my $obj = $dm->get_outcome_for('axis_dim2.update');
 
     $self->status_accepted(
         $c,
@@ -64,7 +57,6 @@ sub axis_POST {
       $c->detach
       if $obj;
 }
-
 
 sub axis_DELETE {
     my ( $self, $c ) = @_;
@@ -83,7 +75,6 @@ sub axis_DELETE {
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
-
 sub list_GET {
     my ( $self, $c ) = @_;
 
@@ -93,7 +84,7 @@ sub list_GET {
     foreach my $obj (@list) {
         push @objs,
           {
-            ( map { $_ => $obj->{$_} } qw(id name ) ),
+            ( map { $_ => $obj->{$_} } qw(id name description) ),
             url => $c->uri_for_action( $self->action_for('axis'), [ $obj->{id} ] )->as_string,
           };
     }
@@ -101,18 +92,18 @@ sub list_GET {
     $self->status_ok( $c, entity => { axis => \@objs } );
 }
 
-
 sub list_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin));
 
+    $c->req->params->{axis_dim2}{create}{created_by} = $c->user->id;
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
-    my $object = $dm->get_outcome_for('axis.create');
+    my $object = $dm->get_outcome_for('axis_dim2.create');
 
     $self->status_created(
         $c,
@@ -125,6 +116,5 @@ sub list_POST {
 
 }
 
-with 'Iota::TraitFor::Controller::Search';
 1;
 
