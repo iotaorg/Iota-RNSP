@@ -115,6 +115,10 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
       [ Iota->path_to( 'root', 'src', $c->stash->{institute_metadata}{template} ) ];
 
     $c->stash->{is_infancia} = 1 if defined $c->stash->{institute_metadata}{template} && $c->stash->{institute_metadata}{template} eq 'infancia';
+    $c->stash->{menu_indicators_prefix} =
+      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+      : '';
 
     $c->stash->{c_req_path}  = $c->req->path;
     $c->stash->{c_req_match} = $c->req->match;
@@ -596,10 +600,7 @@ sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores'
       unless $c->stash->{is_infancia};
 
     $c->forward( 'build_indicators_menu', [1] );
-    $c->stash->{menu_indicators_prefix} =
-      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
-      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
-      : '';
+
     $c->forward('/load_status_msgs');
 
     $c->stash(

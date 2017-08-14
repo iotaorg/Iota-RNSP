@@ -52,7 +52,7 @@
         <h3>[%l('Indicadores')%]</h3>
         <ul class="css-two-columns">
         [%FOREACH i IN indicators %]
-            <li><a href="/[%i.name_url%]">[%l(i.name)%]</a></li>
+            <li><a href="[% menu_indicators_prefix %]/[%i.name_url%]">[%l(i.name)%]</a></li>
         [%END%]
         </ul>
     </div>
