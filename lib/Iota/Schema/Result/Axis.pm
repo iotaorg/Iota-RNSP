@@ -63,6 +63,12 @@ __PACKAGE__->table("axis");
   data_type: 'integer[]'
   is_nullable: 1
 
+=head2 description
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -84,6 +90,12 @@ __PACKAGE__->add_columns(
   },
   "attrs",
   { data_type => "integer[]", is_nullable => 1 },
+  "description",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -146,8 +158,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-01-23 15:23:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:MKog8gGu0JKwvplDq+tH3w
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-14 14:16:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LrDGv9LMaSibdOCZdgzAKA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

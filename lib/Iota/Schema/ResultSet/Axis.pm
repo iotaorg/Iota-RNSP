@@ -16,14 +16,20 @@ sub _build_verifier_scope_name { 'axis' }
 sub verifiers_specs {
     my $self = shift;
     return {
-        create =>
-          Data::Verifier->new( filters => [qw(trim)], profile => { name => { required => 1, type => 'Str' }, }, ),
+        create => Data::Verifier->new(
+            filters => [qw(trim)],
+            profile => {
+                name        => { required => 1, type => 'Str' },
+                description => { required => 0, type => 'Str' },
+            },
+        ),
 
         update => Data::Verifier->new(
             filters => [qw(trim)],
             profile => {
-                id   => { required => 1, type => 'Int' },
-                name => { required => 1, type => 'Str' },
+                id          => { required => 1, type => 'Int' },
+                name        => { required => 1, type => 'Str' },
+                description => { required => 0, type => 'Str' },
             },
         ),
 
@@ -51,6 +57,7 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+            $values{description} = undef unless exists $values{description};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

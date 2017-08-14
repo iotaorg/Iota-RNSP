@@ -37,7 +37,7 @@ sub axis_GET {
     my ( $self, $c ) = @_;
     my $object_ref = $c->stash->{object}->as_hashref->next;
 
-    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(name  id created_at) ) } );
+    $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(name description id created_at) ) } );
 }
 
 
@@ -93,7 +93,7 @@ sub list_GET {
     foreach my $obj (@list) {
         push @objs,
           {
-            ( map { $_ => $obj->{$_} } qw(id name ) ),
+            ( map { $_ => $obj->{$_} } qw(id name description) ),
             url => $c->uri_for_action( $self->action_for('axis'), [ $obj->{id} ] )->as_string,
           };
     }
