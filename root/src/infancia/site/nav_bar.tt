@@ -26,9 +26,9 @@
 
 
 
-        <div class="mytitlerow">
-            <div class="mytitle">
-                <h1>[% title %]</h1>
+        <div class="pvttitlerow">
+            <div class="pvttitle">
+                <h2>[% title %]</h2>
             </div>
         </div>
 

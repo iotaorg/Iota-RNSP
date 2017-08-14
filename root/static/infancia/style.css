@@ -79,9 +79,6 @@ body.root_ #topbackground {
     background-position: 50%;
 }
 
-h1 {
-    font-weight: 100;
-}
 body.root_ h1 {
     width: 60%;
 }
@@ -121,7 +118,8 @@ body.root_ h1 {
     display: inline-block;
 }
 
-h1 {
+h1, h2 {
+    font-weight: 100;
     color: white;
     margin-top: 1.5em;
     margin-bottom: 0.7em;
@@ -243,17 +241,18 @@ footer a.fr-c>i {margin-top: 15px;}
 footer div.fx { margin-top: 40px}
 
 
-.mytitlerow {
+.pvttitlerow {
     display: table;
     float: none;
 
 }
-.mytitle {
+.pvttitle {
     display: table-cell;
     float: none;
     vertical-align: bottom;
     padding-bottom: 40px;
 }
+
 
 footer {
     margin-top: 4em;
@@ -519,11 +518,6 @@ dl.tabela blockquote small {
     color: #666;
 }
 
-#cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title {
-    font-size: 20pt;
-    font-weight: 500;
-}
-
 #date-ruler {
     border-bottom: 2px solid #33ccff;
 }
@@ -685,4 +679,8 @@ body.root_ h2, body.root_pagina_indicadores h2, body.root_pagina_o_projeto h3 {
 }
 .white_space_pre_wrap {
     white-space: pre-wrap;
+}
+
+#cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title {
+    font-weight: 300;
 }

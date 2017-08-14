@@ -34,8 +34,12 @@
 			<div class="span5 col-md-6">
 				<div class=" ">
 					<div class="content-fill">
+                        [%  IF !is_infancia %]
 						<h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
+                        [%END%]
 						<div class="variaveis"><dl class="tabela">
+
+
 							[%IF region.upper_region %]
 								<dt>[%(region_classification_name.2)%]</dt>
 								<dd><a href="[%c.uri_for(c.controller('Web').action_for('cidade_regiao_render'), [city.pais, city.uf, city.name_uri, region.upper_region.name_url]).as_string%]">[%region.upper_region.name%]</a></dd>

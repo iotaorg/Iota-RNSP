@@ -114,11 +114,8 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{additional_template_paths} =
       [ Iota->path_to( 'root', 'src', $c->stash->{institute_metadata}{template} ) ];
 
-    $c->stash->{is_infancia} = 1 if defined $c->stash->{institute_metadata}{template} && $c->stash->{institute_metadata}{template} eq 'infancia';
-    $c->stash->{menu_indicators_prefix} =
-      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
-      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
-      : '';
+    $c->stash->{is_infancia} = 1
+      if defined $c->stash->{institute_metadata}{template} && $c->stash->{institute_metadata}{template} eq 'infancia';
 
     $c->stash->{c_req_path}  = $c->req->path;
     $c->stash->{c_req_match} = $c->req->match;
@@ -454,7 +451,10 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
                 { header     => \" case when city.id is null then 'Global' else city.uf || ', ' || city.name end" },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
-                { concat      => \"coalesce(me.description,'') || coalesce(me.methodology,'') || coalesce(me.goals,'') || coalesce(me.schedule,'') || coalesce(me.results,'')" },
+                {
+                    concat => \
+"coalesce(me.description,'') || coalesce(me.methodology,'') || coalesce(me.goals,'') || coalesce(me.schedule,'') || coalesce(me.results,'')"
+                },
             ],
             join         => [ { 'user' => 'city' }, 'axis' ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -600,7 +600,10 @@ sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores'
       unless $c->stash->{is_infancia};
 
     $c->forward( 'build_indicators_menu', [1] );
-
+    $c->stash->{menu_indicators_prefix} =
+      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+      : '';
     $c->forward('/load_status_msgs');
 
     $c->stash(
@@ -613,6 +616,11 @@ sub pagina_indicadores : Chained('institute_load') PathPart('pagina/indicadores'
 
 sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     my ( $self, $c ) = @_;
+
+    $c->stash->{menu_indicators_prefix} =
+      defined $c->stash->{institute_metadata}{menu_indicators_prefix}
+      ? $c->stash->{institute_metadata}{menu_indicators_prefix}
+      : '';
 
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
@@ -641,7 +649,7 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
         }
     )->all;
 
-    if ( $c->config->{is_sp} && !$c->stash->{is_infancia}) {
+    if ( $c->config->{is_sp} && !$c->stash->{is_infancia} ) {
         push @{ $c->stash->{network_data}{cities} }, { name => 'Brasília', uf => 'DF' };
     }
 

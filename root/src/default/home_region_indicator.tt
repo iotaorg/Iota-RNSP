@@ -1,5 +1,6 @@
 [%IF is_infancia %]
 [% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+[% title = "Série Histórica do Indicador por região" %]
 [%END%]
 <div id="content" class="content">
     <div class="row" id="cidades-dados">

@@ -1,4 +1,9 @@
+[%IF is_infancia %]
+[% title = "Mapa do site" %]
+[%ELSE%]
 <h1>[%l('Mapa do site')%]</h1>
+[%END%]
+
 <div class="row">
     <div class="col-md-3">
         <h3>[%l('Links')%]</h3>

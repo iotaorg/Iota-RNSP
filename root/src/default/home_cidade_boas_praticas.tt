@@ -1,6 +1,9 @@
+[% IF is_infancia %]
+[%title='Boas práticas'%]
+[% END %]
 <div class="row">
     <div class="span8 col-md-8">
-        [% IF !is_infancia %]<h1>[%l(best_pratice.name)%] [%IF city%]- <small>[% city.name%] / [%city.uf %]</small>[%END%]</h1>[%END%]
+        <h1>[%l(best_pratice.name)%] [%IF city%]- <small>[% city.name%] / [%city.uf %]</small>[%END%]</h1>
 
 
         [%IF best_pratice.description%]

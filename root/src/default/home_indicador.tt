@@ -1,5 +1,6 @@
 [%IF is_infancia %]
 [% INCLUDE 'parts/infancia_menu_indicadores.tt'%]
+[% SET title='Série Histórica do Indicador'%]
 [%END%]
 <div id="justifications" class="hide">
 [%IF justifications.size > 0 %]
