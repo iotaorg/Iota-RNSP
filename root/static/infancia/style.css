@@ -79,7 +79,7 @@ body.root_ #topbackground {
     background-position: 50%;
 }
 
-body.root_ h1 {
+body.root_ h6 {
     width: 60%;
 }
 
@@ -118,7 +118,7 @@ body.root_ h1 {
     display: inline-block;
 }
 
-h1, h2 {
+h1, h6 {
     font-weight: 100;
     color: white;
     margin-top: 1.5em;
@@ -139,10 +139,10 @@ body.root_ .mytitlerow {
         width: 150px;
         min-width: 150px;
     }
-    body.root_ h1 {
+    body.root_ h6 {
         width: 80%;
     }
-    h1 {
+    h6 {
         margin-top: 1em;
         margin-bottom: 0.3em;
         font-size: 2.5em;
@@ -153,7 +153,7 @@ body.root_ .mytitlerow {
 }
 /* phone to mobile-l */
 @media (max-width: 425px) {
-    body.root_ h1 {
+    body.root_ h6 {
         width: 100%;
         font-size: 2em;
     }
@@ -241,12 +241,12 @@ footer a.fr-c>i {margin-top: 15px;}
 footer div.fx { margin-top: 40px}
 
 
-.pvttitlerow {
+.mytitlerow {
     display: table;
     float: none;
 
 }
-.pvttitle {
+.mytitle {
     display: table-cell;
     float: none;
     vertical-align: bottom;
@@ -656,7 +656,7 @@ dl.tabela blockquote small {
 
 }
 
-body.root_ h2, body.root_pagina_indicadores h2, body.root_pagina_o_projeto h3 {
+body.root_ h2, body.root_pagina_o_projeto h3 {
     font-size: 36px;
     line-height: 2em;
     font-weight: 300
