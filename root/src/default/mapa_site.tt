@@ -3,37 +3,54 @@
     <div class="col-md-3">
         <h3>[%l('Links')%]</h3>
         <ul>
-            <li><a href="/">[%l('Lista de indicadores da')%] [%network.name%]</a></li>
-            <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
-            <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
-        </ul>
 
-        <h3>[%l('Boas práticas')%]</h3>
-        <ul>
-            [%FOREACH bp IN best_pratices%]
-            <li><a href="/[%bp.user_url%]/boas-praticas">[% bp.city_name %] ([%bp.count%])</a></li>
-            [%END%]
-        </ul>
-    </div>
+            [% IF !is_infancia %]
+                <li><a href="/">[%l('Lista de indicadores da')%] [%network.name%]</a></li>
+                <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
 
-    <div class="col-md-3">
-        <h3>[%l('Cidades')%]</h3>
-        <ul>
-        [%FOREACH city IN cities.sort('name') %]
-            [% IF c.config.is_sp && city.name == 'Brasília' %]
-                <li><a href="http://2013-2016.indicadores.cidadessustentaveis.org.br/br/DF/brasilia" target="_blank">[% city.name %] ([%city.uf%]) <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
+                <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
+
             [%ELSE%]
-            <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[% city.name %] ([%city.uf%])</a></li>
+                <li><a href="pagina/sobre-o-projeto">[%l('O Projeto')%]</a></li>
+
+                <li><a href="/pagina/boas-praticas">[%l('Boas práticas')%]</a></li>
+                <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
+                <li><a href="/pagina/contato">[%l('Contato')%]</a></li>
+
             [%END%]
-        [%END%]
-        [%city=undef%]
         </ul>
+
+        [% IF !is_infancia %]
+            <h3>[%l('Boas práticas')%]</h3>
+            <ul>
+                [%FOREACH bp IN best_pratices%]
+                <li><a href="/[%bp.user_url%]/boas-praticas">[% bp.city_name %] ([%bp.count%])</a></li>
+                [%END%]
+            </ul>
+        [%END%]
     </div>
 
-    <div class="col-md-6">
+    [% IF !is_infancia %]
+        <div class="col-md-3">
+            <h3>[%l('Cidades')%]</h3>
+            <ul>
+            [%FOREACH city IN cities.sort('name') %]
+                [% IF c.config.is_sp && city.name == 'Brasília' %]
+                    <li><a href="http://2013-2016.indicadores.cidadessustentaveis.org.br/br/DF/brasilia" target="_blank">[% city.name %] ([%city.uf%]) <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
+                [%ELSE%]
+                <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[% city.name %] ([%city.uf%])</a></li>
+                [%END%]
+            [%END%]
+            [%city=undef%]
+            </ul>
+        </div>
+    [%END%]
+
+
+    <div class="[% IF !is_infancia %]col-md-6[%ELSE%] col-md-9[%END%]">
 
         <h3>[%l('Indicadores')%]</h3>
-        <ul>
+        <ul class="css-two-columns">
         [%FOREACH i IN indicators %]
             <li><a href="/[%i.name_url%]">[%l(i.name)%]</a></li>
         [%END%]
