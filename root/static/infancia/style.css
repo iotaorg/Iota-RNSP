@@ -118,10 +118,17 @@ body.root_ h6 {
     display: inline-block;
 }
 
-h1, h6 {
+h6 {
     font-weight: 100;
     color: white;
     margin-top: 1.5em;
+    margin-bottom: 0.7em;
+    font-size: 3em;
+}
+h1 {
+    font-weight: 100;
+    color: white;
+
     margin-bottom: 0.7em;
     font-size: 3em;
 }

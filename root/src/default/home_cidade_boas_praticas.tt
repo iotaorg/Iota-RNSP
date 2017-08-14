@@ -92,7 +92,7 @@
 </div>
 
 <script type="text/javascript">
-    var userID = [% user.id %];
+    var userID = [% user.id || '0' %];
     var ref = 'cidade_pagina';
     [% PROCESS 'network_javascript.tt'%]
 </script>
