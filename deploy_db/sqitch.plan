@@ -37,3 +37,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0070-ods [0069-usermetadata] 2017-01-23T16:42:00Z renatopc,,, <renato@oodcronpc> # eixo-ods
 0071-new-tables [0070-ods] 2017-08-11T17:12:18Z renato,,, <renato@renato-MS-7A34> # more tables..
 0072-add_desc_eixo [0071-new-tables] 2017-08-14T17:16:16Z renato,,, <renato@renato-MS-7A34> # eixo_descr
+0073-axis_aux3 [0072-add_desc_eixo] 2017-08-14T17:29:40Z renato,,, <renato@renato-MS-7A34> # axis_aux3
