@@ -34,6 +34,8 @@ eval {
                 [
                     api_key            => 'test',
                     'axis.create.name' => 'FooBar',
+                    'axis.create.description' => '42scriptia',
+
                 ]
             );
 
@@ -49,6 +51,7 @@ eval {
             is( $res->code, 200, 'axis exists -- 200 Success' );
 
             like( $res->content, qr|FooBar|, 'FooBar ok' );
+            like( $res->content, qr|42scriptia|, 'description ok' );
 
             my $obj_uri = $uri->path_query;
             ( $res, $c ) = ctx_request( POST $obj_uri, [ 'axis.update.name' => 'BarFoo', ] );
@@ -59,6 +62,7 @@ eval {
             my $axis = eval { from_json( $res->content ) };
             ok( my $updated_axis = $schema->resultset('Axis')->find( { id => $axis->{id} } ), 'axis in DB' );
             is( $updated_axis->name, 'BarFoo', 'name ok' );
+            is( $updated_axis->description, undef, 'null ok' );
 
             ( $res, $c ) = ctx_request( GET '/api/axis?api_key=test' );
             ok( $res->is_success, 'listing ok!' );
