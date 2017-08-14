@@ -116,5 +116,6 @@ sub list_POST {
 
 }
 
+with 'Iota::TraitFor::Controller::Search';
 1;
 
