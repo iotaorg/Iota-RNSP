@@ -1,3 +1,4 @@
+
 # Iota - Uma plataforma para gerenciamento de indicadores
 
 O aplicativo é uma plataforma que permite a criação dos indicadores, com o objetivo de facilitar o compartilhamento dos dados para visualização, comparação e re-utilização deles através de padrões de tecnologias abertos.
@@ -23,6 +24,45 @@ Instituto Ethos de Empresas e Responsabilidade Social e Rede Social Brasileira p
 [E um grupo para os usuários](https://groups.google.com/forum/embed/?place=forum/iota-users&showsearch=true&showpopout=true&showtabs=false#!forum/iota-users)
 
 
+institute metaconfig options:
+
+```
+{
+  # se o upload de prestação de contas é pra ficar ou nao ligado
+  "prestar_contas": 1,
+
+  # se é pra renomear os campos de meta para ODS
+  "ods": 1,
+
+   # se é pra esconder o campo fonte do indicador
+  "hide_indicator_source": 1,
+
+  # se é pra esconder o campo fonte da variavel
+  "hide_variable_source": 1,
+
+  # se é pra esconder o apelido no admin, gerando a url sozinha
+  "hide_cognomen": 1,
+
+  # se tem programa de metas habilitado
+  "prog_meta": 1,
+
+  # nome template se for usar uma custom
+  "template": "infancia",
+
+  # se só tiver 1 cidade, colocar o prefixo
+  "menu_indicators_prefix": "/br/SP/sao-paulo",
+
+  "best_pratice_reference_city_enabled": 1,
+  "axis_aux1": "Urban95",
+  "bp_axis_aux1_enabled": 1,
+
+  "axis_aux2": "Categoria",
+  "bp_axis_aux2_enabled": 0,
+
+  "axis_aux3": "ODS",
+  "bp_axis_aux3_enabled": 1
+}
+```
 
 ## Programa Cidades Sustentaveis
 
