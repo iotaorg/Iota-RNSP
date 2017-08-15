@@ -8,10 +8,60 @@
             <option value="">Em qualquer eixo</option>
 
             [% FOREACH x IN available_axis %]
-            <option [% x.key == c.req.params.eixo ? 'selected' : ''  %] value="[%x.key%]">[%x.value%] ([%x.count%] boas práticas )</option>
+            <option [% x.key == c.req.params.eixo ? 'selected' : ''  %] value="[%x.key%]">[%x.value%] ([%x.count%])</option>
             [%END%]
         </select>
       </div>
+
+      [% IF axis_dim1 && axis_dim1.size>=1 %]
+      <div class="form-group">
+        <select name="axis_dim1" class="form-control">
+            <option value="">Em qualquer [%institute_metadata.axis_aux1%]</option>
+
+            [% FOREACH x IN axis_dim1 %]
+            <option [% x.key == c.req.params.axis_dim1 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%])</option>
+            [%END%]
+        </select>
+      </div>
+      [%END%]
+
+      [% IF axis_dim2 && axis_dim2.size>=1 %]
+      <div class="form-group">
+        <select name="axis_dim2" class="form-control">
+            <option value="">Em qualquer [%institute_metadata.axis_aux2%]</option>
+
+            [% FOREACH x IN axis_dim2 %]
+            <option [% x.key == c.req.params.axis_dim2 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%])</option>
+            [%END%]
+        </select>
+      </div>
+      [%END%]
+
+      [% IF axis_dim3 && axis_dim3.size>=1 %]
+      <div class="form-group">
+        <select name="axis_dim3" class="form-control">
+            <option value="">Em qualquer [%institute_metadata.axis_aux3%]</option>
+
+            [% FOREACH x IN axis_dim3 %]
+            <option [% x.key == c.req.params.axis_dim3 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%])</option>
+            [%END%]
+        </select>
+      </div>
+      [%END%]
+
+
+[% IF reference_city && reference_city.size>=1 %]
+      <div class="form-group">
+        <select name="reference_city" class="form-control">
+            <option value="">Todas as cidades</option>
+
+            [% FOREACH x IN reference_city %]
+            <option [% x.key == c.req.params.reference_city ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%])</option>
+            [%END%]
+        </select>
+      </div>
+      [%END%]
+
 
       [% IF available_citys && available_citys.size>=1 %]
       <div class="form-group">
@@ -19,7 +69,7 @@
             <option value="">Todas as cidades</option>
 
             [% FOREACH x IN available_citys %]
-            <option [% x.key == c.req.params.city_id ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%] boas práticas )</option>
+            <option [% x.key == c.req.params.city_id ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%])</option>
             [%END%]
         </select>
       </div>

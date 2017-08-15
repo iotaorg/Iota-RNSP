@@ -374,7 +374,7 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
         {
             'me.id' => $page_id,
         },
-        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2','axis_dim3' ] }
+        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3' ] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;
@@ -396,6 +396,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
 
     $c->detach( '/error_404', ['Página não existe neste dominio!'] )
       unless $c->stash->{is_infancia};
+    my %where;
     my @users_ids = @{ $c->stash->{network_data}{users_ids} };
 
     my @available_axis = $c->model('DB::UserBestPratice')->search(
@@ -412,20 +413,91 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
         }
     )->all;
 
-    my @available_citys = $c->model('DB::UserBestPratice')->search(
-        {
-            'user.active' => 1,
-            'user.id'     => { '-in' => \@users_ids },
-        },
-        {
-            columns =>
-              [ { key => \"city.id" }, { value => \"city.uf || ', ' || city.name " }, { count => \'count(1)' } ],
-            join         => [ { 'user' => 'city' } ],
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            order_by     => \'2',
-            group_by     => \'1, 2'
+    my @available_citys;
+    if ( $c->stash->{institute_metadata}{best_pratice_reference_city_enabled} ) {
+
+        my @refs = $c->model('DB::UserBestPratice')->search(
+            {
+                'user.active' => 1,
+                'user.id'     => { '-in' => [ @users_ids, @{ $c->stash->{network_data}{admins_ids} || [] } ] },
+            },
+            {
+                    columns => [
+                        { key   => \"coalesce(me.reference_city::text, '-')" },
+                        { value => \"coalesce(me.reference_city, 'Não preenchida')" },
+                        { count => \'count(1)' }
+                    ],
+                    join         => [ 'user' ],
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                    order_by     => \"me.reference_city nulls last",
+                    group_by     => \"1, 2, me.reference_city"
+                }
+        )->all;
+
+            $c->stash->{reference_city} = \@refs;
+
+            if ( $c->req->params->{reference_city} ) {
+
+                if ( $c->req->params->{reference_city} ne '-' ) {
+                    $where{"me.reference_city"} = $c->req->params->{reference_city};
+                }
+                elsif ( $c->req->params->{reference_city} eq '-' ) {
+                    $where{"me.reference_city"} = undef;
+                }
+            }
+    }else{
+        @available_citys = $c->model('DB::UserBestPratice')->search(
+            {
+                'user.active' => 1,
+                'user.id'     => { '-in' => \@users_ids },
+            },
+            {
+                columns =>
+                  [ { key => \"city.id" }, { value => \"city.uf || ', ' || city.name " }, { count => \'count(1)' } ],
+                join         => [ { 'user' => 'city' } ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                order_by     => \'2',
+                group_by     => \'1, 2'
+            }
+        )->all;
+    }
+
+    for my $num ( 1 .. 3 ) {
+
+        my $ref = "axis_dim$num";
+
+        if ( $c->stash->{institute_metadata}{"bp_axis_aux${num}_enabled"} ) {
+            my @axis_dim = $c->model("DB::UserBestPratice")->search(
+                {
+                    'user.active' => 1,
+                    'user.id'     => { '-in' => [ @users_ids, @{ $c->stash->{network_data}{admins_ids} || [] } ] },
+                },
+                {
+                    columns => [
+                        { key   => \"coalesce($ref.id::text, '-')" },
+                        { value => \"coalesce($ref.name, 'Não preenchido')" },
+                        { count => \'count(1)' }
+                    ],
+                    join         => [ 'user', $ref ],
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                    order_by     => \"$ref.name nulls last",
+                    group_by     => \"1, 2, $ref.name"
+                }
+            )->all;
+
+            $c->stash->{$ref} = \@axis_dim;
+
+            if ( exists $c->req->params->{$ref} ) {
+
+                if ( $c->req->params->{$ref} =~ /^[0-9]+$/ ) {
+                    $where{"me.${ref}_id"} = $c->req->params->{$ref};
+                }
+                elsif ( $c->req->params->{$ref} eq '-' ) {
+                    $where{"me.${ref}_id"} = undef;
+                }
+            }
         }
-    )->all;
+    }
 
     my $eixo = $c->req->params->{eixo} && $c->req->params->{eixo} =~ /^[0-9]+$/ ? $c->req->params->{eixo} : undef;
     my $cidade =
@@ -439,6 +511,7 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
             ( $eixo ? ( 'me.axis_id' => $eixo ) : () ),
 
             ( $cidade ? ( 'city.id' => $cidade ) : () ),
+            %where
 
         },
         {
@@ -447,8 +520,11 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
                     url => \"case when city.id is null then 'boas-praticas/' || me.id || '/' || me.name_url
 else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica' || '/' || me.id || '/' || me.name_url end"
                 },
-                { name       => \'me.name' },
-                { header     => \" case when city.id is null then case when reference_city is null then ' ' else reference_city end else city.uf || ', ' || city.name end" },
+                { name => \'me.name' },
+                {
+                    header => \
+" case when city.id is null then case when reference_city is null then ' ' else reference_city end else city.uf || ', ' || city.name end"
+                },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
                 {
@@ -1396,7 +1472,7 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
             'me.id'      => $page_id,
             'me.user_id' => $c->stash->{user}{id}
         },
-        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2','axis_dim3'] }
+        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3' ] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;
