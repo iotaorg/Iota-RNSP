@@ -368,8 +368,6 @@ sub pagina_o_projeto : Chained('light_institute_load') PathPart('pagina/sobre-o-
 sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-praticas') CaptureArgs(2) {
     my ( $self, $c, $page_id, $url ) = @_;
 
-    $self->load_best_pratices($c);
-
     my $page = $c->model('DB::UserBestPratice')->search(
         {
             'me.id' => $page_id,
@@ -379,6 +377,8 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
 
     $c->detach('/error_404') unless $page;
     $c->stash->{best_pratice} = $page;
+
+    $self->load_best_pratices($c);
 
     $c->stash(
         template => 'home_cidade_boas_praticas.tt',
@@ -1489,11 +1489,24 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
 sub load_best_pratices {
     my ( $self, $c, %flags ) = @_;
 
+    my %where;
+
+    if ( $c->stash->{best_pratice} ) {
+
+        $where{'me.axis_dim1_id'} = $c->stash->{best_pratice}->{axis_dim1_id} if $c->stash->{best_pratice}->{axis_dim1_id};
+        $where{'me.axis_dim2_id'} = $c->stash->{best_pratice}->{axis_dim2_id} if $c->stash->{best_pratice}->{axis_dim2_id};
+        $where{'me.axis_dim3_id'} = $c->stash->{best_pratice}->{axis_dim3_id} if $c->stash->{best_pratice}->{axis_dim3_id};
+        $where{'me.axis_id'}      = $c->stash->{best_pratice}->{axis_id}      if $c->stash->{best_pratice}->{axis_id};
+
+        $c->stash->{bp_related_only}= 1;
+    }
+
     my $rs = $c->model('DB::UserBestPratice')->search(
         {
             user_id => $c->stash->{user}{id}
             ? $c->stash->{user}{id}
-            : [ @{ $c->stash->{network_data}{admins_ids} || [] } ]
+            : [ @{ $c->stash->{network_data}{admins_ids} || [] } ],
+            %where
         },
         { prefetch => 'axis' }
     )->as_hashref;

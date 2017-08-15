@@ -3,7 +3,7 @@
 [% END %]
 <div class="row">
     <div class="span8 col-md-8">
-        <h1>[%l(best_pratice.name)%] [%IF city%]- <small>[% city.name%] / [%city.uf %]</small>[%END%]</h1>
+        <h1>[%l(best_pratice.name)%] [%IF city%]- <small>[% city.name%] / [%city.uf %]</small>[%END%] [%IF best_pratice.reference_city%] - [%best_pratice.reference_city%][%END%]</h1>
 
 
         [%IF best_pratice.description%]
@@ -94,7 +94,7 @@
     </div>
     <div class="boas-praticas span4 col-md-4">
         [% IF best_pratices %]
-        <h5>[%l('Boas práticas')%]</h5>
+        <h5>[% bp_related_only ? l('Boas práticas relacionadas') : l('Boas práticas')%]</h5>
         <ul class="nav nav-list">
             [% FOREACH m IN best_pratices.keys.sort %]
                     <li class="nav-header">[%m%]</li>
