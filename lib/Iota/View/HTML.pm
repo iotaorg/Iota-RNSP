@@ -3,6 +3,7 @@ package Iota::View::HTML;
 use strict;
 use base 'Catalyst::View::TT';
 use Template::AutoFilter;
+use JSON;
 __PACKAGE__->config(
     {
         TEMPLATE_EXTENSION => '.tt',
@@ -127,4 +128,13 @@ sub ymd_to_human {
     return substr( $str, 0, 10 + 6 );
 
 }
+
+
+sub parse_json {
+    my ( $self, $c, $str ) = @_;
+    return '' unless $str;
+
+    return eval{ decode_json( $str )};
+}
+
 1;

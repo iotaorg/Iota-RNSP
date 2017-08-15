@@ -374,7 +374,7 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
         {
             'me.id' => $page_id,
         },
-        { prefetch => [ 'axis', { user_best_pratice_axes => 'axis' } ] }
+        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2','axis_dim3' ] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;
@@ -1396,7 +1396,7 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
             'me.id'      => $page_id,
             'me.user_id' => $c->stash->{user}{id}
         },
-        { prefetch => [ 'axis', { user_best_pratice_axes => 'axis' } ] }
+        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2','axis_dim3'] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;

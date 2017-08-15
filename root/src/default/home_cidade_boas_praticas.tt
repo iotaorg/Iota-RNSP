@@ -16,6 +16,27 @@
         [%l(best_pratice.axis.name)|none%]
         [%END%]
 
+        [%IF best_pratice.axis_dim1 %]
+        <h5>[% institute_metadata.axis_aux1  %]</h5>
+        [%l(best_pratice.axis_dim1.name)|none%]
+        [%END%]
+        [%IF best_pratice.axis_dim2 %]
+        <h5>[% institute_metadata.axis_aux2  %]</h5>
+        [%l(best_pratice.axis_dim2.name)|none%]
+        [%END%]
+        [%IF best_pratice.axis_dim3 %]
+        <h5>[% institute_metadata.axis_aux3 %]</h5>
+
+        [% SET aa = parse_json(best_pratice.axis_dim3.metaconfig) %]
+        [% IF aa.icon %]
+            <div  class="iods iods-[%aa.icon%]"></div>
+        [% END %]
+
+        [%l(best_pratice.axis_dim3.name)|none%]
+
+        [%END%]
+
+
 
         [%IF best_pratice.methodology%]
         <h5>[%l('Metodologias')%]</h5>
