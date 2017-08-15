@@ -422,30 +422,31 @@ sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-prati
                 'user.id'     => { '-in' => [ @users_ids, @{ $c->stash->{network_data}{admins_ids} || [] } ] },
             },
             {
-                    columns => [
-                        { key   => \"coalesce(me.reference_city::text, '-')" },
-                        { value => \"coalesce(me.reference_city, 'Não preenchida')" },
-                        { count => \'count(1)' }
-                    ],
-                    join         => [ 'user' ],
-                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-                    order_by     => \"me.reference_city nulls last",
-                    group_by     => \"1, 2, me.reference_city"
-                }
+                columns => [
+                    { key   => \"coalesce(me.reference_city::text, '-')" },
+                    { value => \"coalesce(me.reference_city, 'Não preenchida')" },
+                    { count => \'count(1)' }
+                ],
+                join         => ['user'],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                order_by     => \"me.reference_city nulls last",
+                group_by     => \"1, 2, me.reference_city"
+            }
         )->all;
 
-            $c->stash->{reference_city} = \@refs;
+        $c->stash->{reference_city} = \@refs;
 
-            if ( $c->req->params->{reference_city} ) {
+        if ( $c->req->params->{reference_city} ) {
 
-                if ( $c->req->params->{reference_city} ne '-' ) {
-                    $where{"me.reference_city"} = $c->req->params->{reference_city};
-                }
-                elsif ( $c->req->params->{reference_city} eq '-' ) {
-                    $where{"me.reference_city"} = undef;
-                }
+            if ( $c->req->params->{reference_city} ne '-' ) {
+                $where{"me.reference_city"} = $c->req->params->{reference_city};
             }
-    }else{
+            elsif ( $c->req->params->{reference_city} eq '-' ) {
+                $where{"me.reference_city"} = undef;
+            }
+        }
+    }
+    else {
         @available_citys = $c->model('DB::UserBestPratice')->search(
             {
                 'user.active' => 1,

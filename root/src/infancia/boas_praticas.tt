@@ -50,7 +50,7 @@
       [%END%]
 
 
-[% IF reference_city && reference_city.size>=1 %]
+      [% IF reference_city && reference_city.size>=1 %]
       <div class="form-group">
         <select name="reference_city" class="form-control">
             <option value="">Todas as cidades</option>
