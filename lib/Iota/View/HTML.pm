@@ -134,7 +134,7 @@ sub parse_json {
     my ( $self, $c, $str ) = @_;
     return '' unless $str;
 
-    return eval{ decode_json( $str )};
+    return eval{ from_json( $str )};
 }
 
 1;

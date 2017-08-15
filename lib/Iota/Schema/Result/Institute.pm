@@ -313,7 +313,7 @@ use JSON;
 sub build_metadata {
     my ($self) = @_;
 
-    return eval{decode_json($self->metadata)} || {};
+    return eval{from_json($self->metadata)} || {};
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
