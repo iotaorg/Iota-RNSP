@@ -55,7 +55,7 @@ sub best_pratice_GET {
                 map { $_ => $object_ref->{$_} }
                   qw(
                   id user_id axis_id  name description methodology goals
-                  schedule results institutions_involved contatcts sources repercussion
+                  schedule results institutions_involved contatcts sources repercussion reference_city
                   tags)
             ),
 
@@ -161,7 +161,7 @@ sub list_GET {
                 map { $_ => $obj->{$_} }
                   qw(id
                   user_id axis_id name description methodology goals
-                  schedule results institutions_involved contatcts sources repercussion
+                  schedule results institutions_involved contatcts sources repercussion reference_city
                   )
             ),
             url => $c->uri_for_action( $self->action_for('best_pratice'),

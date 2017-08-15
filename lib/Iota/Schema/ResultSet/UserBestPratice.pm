@@ -39,6 +39,7 @@ sub verifiers_specs {
                 repercussion          => { required => 0, type => 'Str' },
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
+                reference_city        => { required => 0, type => 'Str' },
                 axis_dim1_id          => {
                     required   => 0,
                     type       => 'Int',
@@ -95,6 +96,7 @@ sub verifiers_specs {
                 repercussion          => { required => 0, type => 'Str' },
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
+                reference_city        => { required => 0, type => 'Str' },
                 axis_dim1_id          => {
                     required   => 0,
                     type       => 'Int',
@@ -198,6 +200,8 @@ sub action_specs {
             $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
             $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
             $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
+
+            $values{reference_city} = undef unless $values{reference_city};
 
             $values{name_url} = $text2uri->translate( $values{name} )
               if exists $values{name} && $values{name};
