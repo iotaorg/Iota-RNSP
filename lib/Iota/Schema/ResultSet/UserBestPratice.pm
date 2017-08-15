@@ -39,6 +39,42 @@ sub verifiers_specs {
                 repercussion          => { required => 0, type => 'Str' },
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
+                axis_dim1_id          => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim1_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim1')
+                          ->find( { id => $r->get_value('axis_dim1_id') } );
+                        return defined $axis;
+                    }
+                },
+                axis_dim2_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim2_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim2')
+                          ->find( { id => $r->get_value('axis_dim2_id') } );
+                        return defined $axis;
+                    }
+                },
+                axis_dim3_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim3_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim3')
+                          ->find( { id => $r->get_value('axis_dim3_id') } );
+                        return defined $axis;
+                    }
+                },
 
             },
         ),
@@ -59,6 +95,42 @@ sub verifiers_specs {
                 repercussion          => { required => 0, type => 'Str' },
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
+                axis_dim1_id          => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim1_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim1')
+                          ->find( { id => $r->get_value('axis_dim1_id') } );
+                        return defined $axis;
+                    }
+                },
+                axis_dim2_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim2_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim2')
+                          ->find( { id => $r->get_value('axis_dim2_id') } );
+                        return defined $axis;
+                    }
+                },
+                axis_dim3_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim3_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim3')
+                          ->find( { id => $r->get_value('axis_dim3_id') } );
+                        return defined $axis;
+                    }
+                },
 
             },
         ),
@@ -78,19 +150,21 @@ sub action_specs {
 
             $values{name_url} = $text2uri->translate( $values{name} );
 
+            $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
+            $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
+            $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
+
             my $var = $self->create( \%values );
 
             $var->discard_changes;
 
             if ( exists $ENV{SEND_BEST_PRATICE_EMAIL_TO}
-                && $ENV{SEND_BEST_PRATICE_EMAIL_TO} )
-            {
+                && $ENV{SEND_BEST_PRATICE_EMAIL_TO} ) {
                 my $user = $var->user;
 
                 my $net = $user->networks->first;
 
-                my $queue =
-                  $self->result_source->schema->resultset('EmailsQueue');
+                my $queue = $self->result_source->schema->resultset('EmailsQueue');
                 $queue->create(
                     {
                         to        => $ENV{SEND_BEST_PRATICE_EMAIL_TO},
@@ -98,17 +172,13 @@ sub action_specs {
                         template  => 'new_best_pratice.tt',
                         variables => encode_json(
                             {
-                                (
-                                    map { $_ => $var->$_ }
-                                      qw / id name name_url /
-                                ),
+                                ( map { $_ => $var->$_ } qw / id name name_url / ),
 
                                 network_domain => $net ? $net->domain_name : '',
 
-                                city_url => $user->city ? (
-                                    join '/',        $user->city->pais,
-                                    $user->city->uf, $user->city->name_uri
-                                ) : '-',
+                                city_url => $user->city
+                                ? ( join '/', $user->city->pais, $user->city->uf, $user->city->name_uri )
+                                : '-',
 
                             }
                         ),
@@ -124,6 +194,10 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
+            $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
+            $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
 
             $values{name_url} = $text2uri->translate( $values{name} )
               if exists $values{name} && $values{name};

@@ -125,6 +125,30 @@ __PACKAGE__->table("user_best_pratice");
   data_type: 'text'
   is_nullable: 1
 
+=head2 axis_dim1_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 axis_dim2_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 axis_dim3_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 reference_city
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -170,6 +194,18 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "repercussion",
   { data_type => "text", is_nullable => 1 },
+  "axis_dim1_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "axis_dim2_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "axis_dim3_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "reference_city",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -199,6 +235,66 @@ __PACKAGE__->belongs_to(
   "Iota::Schema::Result::Axis",
   { id => "axis_id" },
   { is_deferrable => 1, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+=head2 axis_dim1
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::AxisDim1>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "axis_dim1",
+  "Iota::Schema::Result::AxisDim1",
+  { id => "axis_dim1_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 axis_dim2
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::AxisDim2>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "axis_dim2",
+  "Iota::Schema::Result::AxisDim2",
+  { id => "axis_dim2_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 axis_dim3
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::AxisDim3>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "axis_dim3",
+  "Iota::Schema::Result::AxisDim3",
+  { id => "axis_dim3_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
 );
 
 =head2 user
@@ -232,8 +328,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1DVlB4q7viM0lDzvo5lLdQ
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-14 15:44:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IsCNZcQplNU6KLjZ/AucIg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

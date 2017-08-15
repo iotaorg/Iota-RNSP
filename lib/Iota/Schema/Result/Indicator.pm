@@ -222,6 +222,12 @@ __PACKAGE__->table("indicator");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 axis_dim3_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -321,6 +327,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "axis_dim2_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "axis_dim3_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -410,6 +418,26 @@ __PACKAGE__->belongs_to(
   "axis_dim2",
   "Iota::Schema::Result::AxisDim2",
   { id => "axis_dim2_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 axis_dim3
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::AxisDim1>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "axis_dim3",
+  "Iota::Schema::Result::AxisDim1",
+  { id => "axis_dim3_id" },
   {
     is_deferrable => 0,
     join_type     => "LEFT",
@@ -639,8 +667,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-11 15:23:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q0/uhw1XWgLDNs2aBy5ajg
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-14 15:44:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:S9KrJY/DawQ1voyUm6OLWw
 
 __PACKAGE__->belongs_to(
     "owner",

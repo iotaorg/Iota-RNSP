@@ -112,9 +112,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-14 14:32:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tV7XY0/uojlZAFjvq2juUw
+=head2 user_best_pratices
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPratice>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_best_pratices",
+  "Iota::Schema::Result::UserBestPratice",
+  { "foreign.axis_dim3_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-14 15:44:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tslTIGrnNI+3H+qym6eoxw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

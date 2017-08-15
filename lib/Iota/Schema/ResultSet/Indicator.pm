@@ -33,8 +33,7 @@ sub visibility_level_post_check {
 
     return 1
       if $lvl eq 'network'
-      && ( $r->get_value('visibility_networks_id') || '' ) =~
-      /^(?:(?:\d*,?)\d+)+$/;
+      && ( $r->get_value('visibility_networks_id') || '' ) =~ /^(?:(?:\d*,?)\d+)+$/;
 
     return 0;
 }
@@ -74,8 +73,8 @@ sub verifiers_specs {
                           eval { $text2uri->translate( $r->get_value('name') ) };
 
                         my $exists =
-                          $self->result_source->schema->resultset('Indicator')
-                          ->search( { name_url => $name_url } )->count;
+                          $self->result_source->schema->resultset('Indicator')->search( { name_url => $name_url } )
+                          ->count;
 
                         return $exists == 0;
                     },
@@ -102,8 +101,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         my $axis =
-                          $self->result_source->schema->resultset('Axis')
-                          ->find( { id => $r->get_value('axis_id') } );
+                          $self->result_source->schema->resultset('Axis')->find( { id => $r->get_value('axis_id') } );
                         return defined $axis;
                     }
                 },
@@ -120,7 +118,7 @@ sub verifiers_specs {
                     }
                 },
                 axis_dim2_id => {
-                  required   => 0,
+                    required   => 0,
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
@@ -128,6 +126,18 @@ sub verifiers_specs {
                         my $axis =
                           $self->result_source->schema->resultset('AxisDim2')
                           ->find( { id => $r->get_value('axis_dim2_id') } );
+                        return defined $axis;
+                    }
+                },
+                axis_dim3_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim3_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim3')
+                          ->find( { id => $r->get_value('axis_dim3_id') } );
                         return defined $axis;
                     }
                 },
@@ -150,17 +160,15 @@ sub verifiers_specs {
 
                 indicator_type => { required => 0, type => 'Str' },
 
-                all_variations_variables_are_required =>
-                  { required => 0, type => 'Bool' },
-                summarization_method => { required => 0, type => 'Str' },
+                all_variations_variables_are_required => { required => 0, type => 'Bool' },
+                summarization_method                  => { required => 0, type => 'Str' },
 
                 dynamic_variations => { required => 0, type => 'Bool' },
 
                 visibility_level => {
-                    required => 1,
-                    type     => VisibilityLevel,
-                    post_check =>
-                      sub { &visibility_level_post_check( $self, shift ) }
+                    required   => 1,
+                    type       => VisibilityLevel,
+                    post_check => sub { &visibility_level_post_check( $self, shift ) }
                 },
                 visibility_user_id     => { required => 0, type => 'Int' },
                 visibility_country_id  => { required => 0, type => 'Int' },
@@ -196,12 +204,11 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
                         my $axis =
-                          $self->result_source->schema->resultset('Axis')
-                          ->find( { id => $r->get_value('axis_id') } );
+                          $self->result_source->schema->resultset('Axis')->find( { id => $r->get_value('axis_id') } );
                         return defined $axis;
                     }
                 },
-                     axis_dim1_id => {
+                axis_dim1_id => {
                     required   => 0,
                     type       => 'Int',
                     post_check => sub {
@@ -214,7 +221,7 @@ sub verifiers_specs {
                     }
                 },
                 axis_dim2_id => {
-                  required   => 0,
+                    required   => 0,
                     type       => 'Int',
                     post_check => sub {
                         my $r = shift;
@@ -240,18 +247,16 @@ sub verifiers_specs {
                 variety_name   => { required => 0, type => 'Str' },
                 indicator_type => { required => 0, type => 'Str' },
 
-                all_variations_variables_are_required =>
-                  { required => 0, type => 'Bool' },
-                summarization_method => { required => 0, type => 'Str' },
+                all_variations_variables_are_required => { required => 0, type => 'Bool' },
+                summarization_method                  => { required => 0, type => 'Str' },
 
                 featured_in_home   => { required => 0, type => 'Bool' },
                 dynamic_variations => { required => 0, type => 'Bool' },
 
                 visibility_level => {
-                    required => 0,
-                    type     => VisibilityLevel,
-                    post_check =>
-                      sub { &visibility_level_post_check( $self, shift ) }
+                    required   => 0,
+                    type       => VisibilityLevel,
+                    post_check => sub { &visibility_level_post_check( $self, shift ) }
                 },
                 visibility_user_id     => { required => 0, type => 'Int' },
                 visibility_country_id  => { required => 0, type => 'Int' },
@@ -276,6 +281,7 @@ sub action_specs {
 
             $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
             $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
+            $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
 
             my $visibility_users_id = delete $values{visibility_users_id};
             my @visible_users =
@@ -301,8 +307,7 @@ sub action_specs {
             $values{formula_human} = $formula->as_human;
             my $var = $self->create( \%values );
 
-            $var->add_to_indicator_variables( { variable_id => $_ } )
-              for $formula->variables;
+            $var->add_to_indicator_variables( { variable_id => $_ } ) for $formula->variables;
 
             if ( $values{visibility_level} eq 'restrict' ) {
                 $var->add_to_indicator_user_visibilities(
@@ -331,9 +336,7 @@ sub action_specs {
                 ) if ( !$var->period || $var->period ne $anyvar->period );
             }
 
-            my $data =
-              Iota::IndicatorData->new(
-                schema => $self->result_source->schema );
+            my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             $data->upsert( indicators => [ $var->id ], );
 
@@ -342,7 +345,6 @@ sub action_specs {
         update => sub {
             my %values = shift->valid_values;
 
-
             $values{name_url} = $text2uri->translate( $values{name} )
               if exists $values{name} && $values{name};
             do { delete $values{$_} unless defined $values{$_} }
@@ -350,6 +352,7 @@ sub action_specs {
             return unless keys %values;
             $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
             $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
+            $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
 
             do { $values{$_} = undef unless exists $values{$_} }
               for qw/
@@ -373,8 +376,7 @@ sub action_specs {
             my $formula_changed = 0;
             if (   exists $values{formula}
                 && $values{formula}
-                && $values{formula} ne $var->formula )
-            {
+                && $values{formula} ne $var->formula ) {
                 $formula_changed++;
 
                 my $formula = Iota::IndicatorFormula->new(
@@ -384,8 +386,7 @@ sub action_specs {
                 $values{formula_human} = $formula->as_human;
 
                 $var->indicator_variables->delete;
-                $var->add_to_indicator_variables( { variable_id => $_ } )
-                  for $formula->variables;
+                $var->add_to_indicator_variables( { variable_id => $_ } ) for $formula->variables;
 
                 if ( $formula->_variable_count ) {
                     my $anyvar = $var->indicator_variables->next->variable;
@@ -435,23 +436,19 @@ sub action_specs {
             $var->discard_changes;
 
             if ($formula_changed) {
-                my $data =
-                  Iota::IndicatorData->new(
-                    schema => $self->result_source->schema );
+                my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
                 $data->upsert( indicators => [ $var->id ], );
 
                 # recalcula a regiao 3
                 my @ids =
-                  map { $_->{id} }
-                  $self->result_source->schema->resultset('Region')->search(
+                  map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
                     {
                         depth_level => 3
                     },
                     {
-                        columns => ['id'],
-                        result_class =>
-                          'DBIx::Class::ResultClass::HashRefInflator'
+                        columns      => ['id'],
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
                     }
                   )->all;
 
@@ -460,17 +457,15 @@ sub action_specs {
                     regions_id => \@ids
                 ) if scalar @ids;
 
-   # recalcula a regiao 2 que pode nao ter filha, logo nao recalculou a de cima.
+                # recalcula a regiao 2 que pode nao ter filha, logo nao recalculou a de cima.
                 @ids =
-                  map { $_->{id} }
-                  $self->result_source->schema->resultset('Region')->search(
+                  map { $_->{id} } $self->result_source->schema->resultset('Region')->search(
                     {
                         depth_level => 2
                     },
                     {
-                        columns => ['id'],
-                        result_class =>
-                          'DBIx::Class::ResultClass::HashRefInflator'
+                        columns      => ['id'],
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
                     }
                   )->all;
 
@@ -507,8 +502,7 @@ sub filter_visibilities {
     return $self->search(
         {
             'me.id' => {
-                'in' =>
-                  $self->result_source->schema->resultset('Indicator')->search(
+                'in' => $self->result_source->schema->resultset('Indicator')->search(
                     {
                         '-or' => [
                             { visibility_level => 'public' },
@@ -517,14 +511,12 @@ sub filter_visibilities {
                                 @users_ids
                                 ? (
                                     {
-                                        visibility_level => 'private',
-                                        visibility_user_id =>
-                                          { 'in' => \@users_ids }
+                                        visibility_level   => 'private',
+                                        visibility_user_id => { 'in' => \@users_ids }
                                     },
                                     {
-                                        visibility_level => 'restrict',
-                                        'indicator_user_visibilities.user_id'
-                                          => { 'in' => \@users_ids }
+                                        visibility_level                      => 'restrict',
+                                        'indicator_user_visibilities.user_id' => { 'in' => \@users_ids }
                                     },
                                   )
                                 : ()
@@ -533,9 +525,8 @@ sub filter_visibilities {
                                 @networks_ids
                                 ? (
                                     {
-                                        visibility_level => 'network',
-'indicator_network_visibilities.network_id'
-                                          => { 'in' => \@networks_ids }
+                                        visibility_level                            => 'network',
+                                        'indicator_network_visibilities.network_id' => { 'in' => \@networks_ids }
                                     },
                                   )
                                 : ()
@@ -543,12 +534,9 @@ sub filter_visibilities {
                         ]
                     },
                     {
-                        join => [
-                            'indicator_user_visibilities',
-                            'indicator_network_visibilities'
-                        ],
+                        join => [ 'indicator_user_visibilities', 'indicator_network_visibilities' ],
                     }
-                  )->get_column('id')->as_query
+                )->get_column('id')->as_query
             }
         }
     );
@@ -568,12 +556,10 @@ sub topic_filter_visibilities {
       && $filters{user_id}
       && $filters{user_id} =~ /^[0-9]+$/;
 
-
     return $self->search(
         {
             'me.id' => {
-                'in' =>
-                  $self->result_source->schema->resultset('Indicator')->search(
+                'in' => $self->result_source->schema->resultset('Indicator')->search(
                     {
                         '-or' => [
                             { visibility_level => 'public' },
@@ -582,14 +568,12 @@ sub topic_filter_visibilities {
                                 @users_ids
                                 ? (
                                     {
-                                        visibility_level => 'private',
-                                        visibility_user_id =>
-                                          { 'in' => \@users_ids }
+                                        visibility_level   => 'private',
+                                        visibility_user_id => { 'in' => \@users_ids }
                                     },
                                     {
-                                        visibility_level => 'restrict',
-                                        'indicator_user_visibilities.user_id'
-                                          => { 'in' => \@users_ids }
+                                        visibility_level                      => 'restrict',
+                                        'indicator_user_visibilities.user_id' => { 'in' => \@users_ids }
                                     },
                                   )
                                 : ()
@@ -599,7 +583,7 @@ sub topic_filter_visibilities {
                     {
                         join => [ 'indicator_user_visibilities', ],
                     }
-                  )->get_column('id')->as_query
+                )->get_column('id')->as_query
             }
         }
     );
