@@ -141,6 +141,18 @@ sub verifiers_specs {
                         return defined $axis;
                     }
                 },
+                axis_dim4_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim4_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim4')
+                          ->find( { id => $r->get_value('axis_dim4_id') } );
+                        return defined $axis;
+                    }
+                },
                 user_id      => { required => 1, type => 'Int' },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
@@ -232,6 +244,30 @@ sub verifiers_specs {
                         return defined $axis;
                     }
                 },
+                axis_dim3_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim3_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim3')
+                          ->find( { id => $r->get_value('axis_dim3_id') } );
+                        return defined $axis;
+                    }
+                },
+                axis_dim4_id => {
+                    required   => 0,
+                    type       => 'Int',
+                    post_check => sub {
+                        my $r = shift;
+                        return 1 if $r->get_value('axis_dim4_id') == '0';
+                        my $axis =
+                          $self->result_source->schema->resultset('AxisDim4')
+                          ->find( { id => $r->get_value('axis_dim4_id') } );
+                        return defined $axis;
+                    }
+                },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
                 observations => { required => 0, type => 'Str' },
@@ -282,6 +318,7 @@ sub action_specs {
             $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
             $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
             $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
+            $values{axis_dim4_id} = undef if defined $values{axis_dim4_id} && $values{axis_dim4_id} eq '0';
 
             my $visibility_users_id = delete $values{visibility_users_id};
             my @visible_users =
@@ -353,6 +390,7 @@ sub action_specs {
             $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
             $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
             $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
+            $values{axis_dim4_id} = undef if defined $values{axis_dim4_id} && $values{axis_dim4_id} eq '0';
 
             do { $values{$_} = undef unless exists $values{$_} }
               for qw/

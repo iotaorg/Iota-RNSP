@@ -4,6 +4,7 @@
 <div class="row" id="boapratica-search">
     <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
       <div class="form-group">
+        <label>Programa Cidades Sustentáveis</label>
         <select name="eixo" class="form-control">
             <option value="">Em qualquer eixo</option>
 
@@ -15,6 +16,7 @@
 
       [% IF axis_dim1 && axis_dim1.size>=1 %]
       <div class="form-group">
+        <label>[%institute_metadata.axis_aux1_header %]</label>
         <select name="axis_dim1" class="form-control">
             <option value="">Em qualquer [%institute_metadata.axis_aux1%]</option>
 
@@ -27,6 +29,7 @@
 
       [% IF axis_dim2 && axis_dim2.size>=1 %]
       <div class="form-group">
+        <label>[%institute_metadata.axis_aux2_header%]</label>
         <select name="axis_dim2" class="form-control">
             <option value="">Em qualquer [%institute_metadata.axis_aux2%]</option>
 
@@ -39,8 +42,9 @@
 
       [% IF axis_dim3 && axis_dim3.size>=1 %]
       <div class="form-group">
+        <label>[%institute_metadata.axis_aux3_header %]</label>
         <select name="axis_dim3" class="form-control">
-            <option value="">Em qualquer [%institute_metadata.axis_aux3%]</option>
+            <option value="">Em qualquer [%institute_metadata.axis_aux3 %]</option>
 
             [% FOREACH x IN axis_dim3 %]
             <option [% x.key == c.req.params.axis_dim3 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %] ([%x.count%])</option>
@@ -52,6 +56,7 @@
 
       [% IF reference_city && reference_city.size>=1 %]
       <div class="form-group">
+        <label>Cidades</label>
         <select name="reference_city" class="form-control">
             <option value="">Todas as cidades</option>
 
@@ -65,6 +70,7 @@
 
       [% IF available_citys && available_citys.size>=1 %]
       <div class="form-group">
+        <label>Cidades</label>
         <select name="city_id" class="form-control">
             <option value="">Todas as cidades</option>
 

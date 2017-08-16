@@ -1,12 +1,12 @@
 use utf8;
-package Iota::Schema::Result::AxisDim3;
+package Iota::Schema::Result::AxisDim4;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Iota::Schema::Result::AxisDim3
+Iota::Schema::Result::AxisDim4
 
 =cut
 
@@ -31,11 +31,11 @@ use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "PassphraseColumn");
 
-=head1 TABLE: C<axis_dim3>
+=head1 TABLE: C<axis_dim4>
 
 =cut
 
-__PACKAGE__->table("axis_dim3");
+__PACKAGE__->table("axis_dim4");
 
 =head1 ACCESSORS
 
@@ -44,7 +44,7 @@ __PACKAGE__->table("axis_dim3");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'axis_dim3_id_seq'
+  sequence: 'axis_dim4_id_seq'
 
 =head2 name
 
@@ -76,7 +76,7 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "axis_dim3_id_seq",
+    sequence          => "axis_dim4_id_seq",
   },
   "name",
   { data_type => "text", is_nullable => 0 },
@@ -118,28 +118,13 @@ Related object: L<Iota::Schema::Result::Indicator>
 __PACKAGE__->has_many(
   "indicators",
   "Iota::Schema::Result::Indicator",
-  { "foreign.axis_dim3_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 user_best_pratices
-
-Type: has_many
-
-Related object: L<Iota::Schema::Result::UserBestPratice>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_best_pratices",
-  "Iota::Schema::Result::UserBestPratice",
-  { "foreign.axis_dim3_id" => "self.id" },
+  { "foreign.axis_dim4_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-16 16:21:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Hz/TVChuxNU9BLdhB1tt2g
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-16 16:04:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6f7fmwUuJV1CSVu4EiQ2oA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

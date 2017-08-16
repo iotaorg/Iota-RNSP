@@ -64,6 +64,32 @@ eval {
             is( $res->code, 201, 'created!' );
             my $cat_id = decode_json $res->content;
 
+            ( $res, $c ) = ctx_request(
+                POST '/api/axis-dim3',
+                [
+                    api_key                        => 'test',
+                    'axis_dim3.create.name'        => '1',
+                    'axis_dim3.create.description' => 'acabar com fome',
+                ]
+            );
+
+            ok( $res->is_success, 'axis created!' );
+            is( $res->code, 201, 'created!' );
+            my $ods_id = decode_json $res->content;
+
+            ( $res, $c ) = ctx_request(
+                POST '/api/axis-dim4',
+                [
+                    api_key                        => 'test',
+                    'axis_dim4.create.name'        => '1.1',
+                    'axis_dim4.create.description' => 'ninguem pasando fome',
+                ]
+            );
+
+            ok( $res->is_success, 'axis created!' );
+            is( $res->code, 201, 'created!' );
+            my $ods_goal_id = decode_json $res->content;
+
             my $var1 = &new_var( 'int', 'weekly' );
 
             ( $res, $c ) = ctx_request(
@@ -75,6 +101,8 @@ eval {
                     'indicator.create.axis_id'       => '1',
                     'indicator.create.axis_dim1_id'  => $dim_id->{id},
                     'indicator.create.axis_dim2_id'  => $cat_id->{id},
+                    'indicator.create.axis_dim3_id'  => $ods_id->{id},
+                    'indicator.create.axis_dim4_id'  => $ods_goal_id->{id},
                     'indicator.create.explanation'   => 'explanation',
                     'indicator.create.source'        => 'me',
                     'indicator.create.goal_source'   => '@fulano',
@@ -91,7 +119,6 @@ eval {
 
             ok( $res->is_success, 'indicator created!' );
             is( $res->code, 201, 'created!' );
-
             my $indicator = eval { from_json( $res->content ) };
 
             ok( my $save_test = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
@@ -122,8 +149,10 @@ eval {
 
             is( $indicator_res->{visibility_level}, 'restrict', 'visibility_level ok' );
 
-is( $indicator_res->{axis_dim1}{name},   'gravidas',    'dim1 ok' );
-            is( $indicator_res->{axis_dim2}{name},   '0 a 5',       'dim2 ok' );
+            is( $indicator_res->{axis_dim1}{name}, 'gravidas', 'dim1 ok' );
+            is( $indicator_res->{axis_dim2}{name}, '0 a 5',    'dim2 ok' );
+            is( $indicator_res->{axis_dim3}{name}, '1',        'dim3 ok' );
+            is( $indicator_res->{axis_dim4}{name}, '1.1',      'dim4 ok' );
 
             is_deeply( $indicator_res->{restrict_to_users}, [4], 'restrict_to_users ok' );
             is( $indicator_res->{name}, 'Divisão Modal', 'name ok' );
@@ -156,8 +185,6 @@ is( $indicator_res->{axis_dim1}{name},   'gravidas',    'dim1 ok' );
 
             my $list = eval { from_json( $res->content ) };
             is( $list->{indicators}[0]{explanation}, 'explanation', 'explanation present!' );
-            is( $list->{indicators}[0]{axis_dim1}{name},   'gravidas',    'dim1 ok' );
-            is( $list->{indicators}[0]{axis_dim2}{name},   '0 a 5',       'dim2 ok' );
 
             $Iota::TestOnly::Mock::AuthUser::_id    = 1;
             @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;

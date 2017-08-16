@@ -1,4 +1,4 @@
-package Iota::Controller::API::AxisDim3;
+package Iota::Controller::API::AxisDim4;
 
 use Moose;
 use JSON qw(encode_json);
@@ -7,9 +7,9 @@ BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config( default => 'application/json' );
 
-sub base : Chained('/api/base') : PathPart('axis-dim3') : CaptureArgs(0) {
+sub base : Chained('/api/base') : PathPart('axis-dim4') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{collection} = $c->model('DB::AxisDim3');
+    $c->stash->{collection} = $c->model('DB::AxisDim4');
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -40,14 +40,14 @@ sub axis_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin));
 
-    $c->req->params->{axis_dim3}{update}{id} = $c->stash->{object}->next->id;
+    $c->req->params->{axis_dim4}{update}{id} = $c->stash->{object}->next->id;
 
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
-    my $obj = $dm->get_outcome_for('axis_dim3.update');
+    my $obj = $dm->get_outcome_for('axis_dim4.update');
 
     $self->status_accepted(
         $c,
@@ -98,12 +98,12 @@ sub list_POST {
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin));
 
-    $c->req->params->{axis_dim3}{create}{created_by} = $c->user->id;
+    $c->req->params->{axis_dim4}{create}{created_by} = $c->user->id;
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
-    my $object = $dm->get_outcome_for('axis_dim3.create');
+    my $object = $dm->get_outcome_for('axis_dim4.create');
 
     $self->status_created(
         $c,

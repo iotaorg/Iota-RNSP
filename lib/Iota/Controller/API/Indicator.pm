@@ -116,10 +116,13 @@ Retorna:
 sub indicator_GET {
     my ( $self, $c ) = @_;
 
-    my $object_ref =
-      $c->stash->{object}
-      ->search( undef, { prefetch => [ 'owner', 'axis', 'axis_dim1', 'axis_dim2','axis_dim3', 'indicator_network_configs' ] } )
-      ->next;
+    my $object_ref = $c->stash->{object}->search(
+        undef,
+        {
+            prefetch =>
+              [ 'owner', 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3', 'axis_dim4', 'indicator_network_configs' ]
+        }
+    )->next;
 
     my $where =
       $object_ref->dynamic_variations
@@ -151,6 +154,7 @@ sub indicator_GET {
         axis_dim1 => $object_ref->axis_dim1_id ? { map { $_ => $object_ref->axis_dim1->$_ } qw(name id) } : undef,
         axis_dim2 => $object_ref->axis_dim2_id ? { map { $_ => $object_ref->axis_dim2->$_ } qw(name id) } : undef,
         axis_dim3 => $object_ref->axis_dim3_id ? { map { $_ => $object_ref->axis_dim3->$_ } qw(name id) } : undef,
+        axis_dim4 => $object_ref->axis_dim4_id ? { map { $_ => $object_ref->axis_dim4->$_ } qw(name id) } : undef,
 
         (
             map { $_ => $object_ref->$_ }
@@ -351,7 +355,7 @@ Retorna:
 sub list_GET {
     my ( $self, $c ) = @_;
 
-    my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3' ] } );
+    my $rs = $c->stash->{collection}->search_rs( undef, { prefetch => [ 'owner', 'axis' ] } );
 
     my %roles = map { $_ => 1 } $c->user->roles;
 
@@ -412,11 +416,8 @@ sub list_GET {
           unless exists $obj->{indicator_network_configs};
         push @objs, {
 
-            created_by => { map { $_ => $obj->{owner}{$_} } qw(name id) },
-            axis       => { map { $_ => $obj->{axis}{$_} } qw(name id) },
-            axis_dim1 => $obj->{axis_dim1_id} ? { map { $_ => $obj->{axis_dim1}->{$_} } qw(name id) } : undef,
-            axis_dim2 => $obj->{axis_dim2_id} ? { map { $_ => $obj->{axis_dim2}->{$_} } qw(name id) } : undef,
-            axis_dim3 => $obj->{axis_dim3_id} ? { map { $_ => $obj->{axis_dim3}->{$_} } qw(name id) } : undef,
+            created_by      => { map { $_ => $obj->{owner}{$_} } qw(name id) },
+            axis            => { map { $_ => $obj->{axis}{$_} } qw(name id) },
             network_configs => [
                 map { { unfolded_in_home => $_->{unfolded_in_home}, network_id => $_->{network_id} } }
                   @{ $obj->{indicator_network_configs} }

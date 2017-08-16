@@ -129,12 +129,4 @@ sub ymd_to_human {
 
 }
 
-
-sub parse_json {
-    my ( $self, $c, $str ) = @_;
-    return '' unless $str;
-
-    return eval{ from_json( $str )};
-}
-
 1;

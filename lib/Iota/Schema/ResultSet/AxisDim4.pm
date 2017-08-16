@@ -1,4 +1,4 @@
-package Iota::Schema::ResultSet::AxisDim3;
+package Iota::Schema::ResultSet::AxisDim4;
 
 use namespace::autoclean;
 
@@ -11,7 +11,7 @@ with 'Iota::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
 
-sub _build_verifier_scope_name { 'axis_dim3' }
+sub _build_verifier_scope_name { 'axis_dim4' }
 
 sub verifiers_specs {
     my $self = shift;
@@ -21,7 +21,7 @@ sub verifiers_specs {
             profile => {
                 name        => { required => 1, type => 'Str' },
                 created_by  => { required => 1, type => 'Int' },
-                description => { required => 1, type => 'Str' },
+                description => { required => 0, type => 'Str' },
             }
         ),
 
