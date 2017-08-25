@@ -147,6 +147,15 @@
                         <a class="fr-c" target="_blank" href="https://appcivico.com/pt/"><i class="inflogo inflogo-logo-appcivico"></i></a>
                     </div>
                 </div>
+
+                 <div class="gtran">
+                    <div id="google_translate_element"></div><script type="text/javascript">
+                    function googleTranslateElementInit() {
+                      new google.translate.TranslateElement({pageLanguage: 'pt', layout: google.translate.TranslateElement.FloatPosition.BOTTOM_RIGHT}, 'google_translate_element');
+                    }
+                    </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                </div>
+
             </div>
         </div>
     </div>
@@ -161,14 +170,6 @@
                         <a href="/frontend/admin">acesso</a>
                     </li>
                 </ul>
-            </div>
-
-            <div class="a">
-                <div id="google_translate_element"></div><script type="text/javascript">
-                function googleTranslateElementInit() {
-                  new google.translate.TranslateElement({pageLanguage: 'pt', layout: google.translate.TranslateElement.FloatPosition.BOTTOM_RIGHT}, 'google_translate_element');
-                }
-                </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
             </div>
         </div>
 

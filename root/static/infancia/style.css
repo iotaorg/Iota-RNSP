@@ -691,3 +691,10 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
 #cidades-dados .profile .title, #indicador-dados .profile .title, #mapa-do-site-header .title {
     font-weight: 300;
 }
+
+.gtran {
+    border-top: 1px solid white;
+    padding: 15px;
+    text-align: right;
+    margin-bottom: -40px;
+}
