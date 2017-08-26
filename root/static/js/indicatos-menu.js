@@ -14,8 +14,9 @@ $(document).ready(function() {
         is_infancia = $select.hasClass('infancia'),
         _on_menu_click = function (event) {
             var $me = $(event.target);
-            if (!($me.hasClass('option') || $me.hasClass('select')) )
+            if (!($me.hasClass('option') || $me.hasClass('select') ) || $me.hasClass('open') )
                 return;
+
             var $ods= $('#menu-ods');
             $ods.html('');
 
