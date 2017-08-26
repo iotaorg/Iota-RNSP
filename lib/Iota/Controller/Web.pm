@@ -957,6 +957,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                   axis.name
                   axis.attrs
 
+                  axis_dim1.id
                   axis_dim1.name
                   axis_dim2.name
 
@@ -975,7 +976,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my $id_vs_group_name = {};
     my $groups           = {};
-    my $group_id         = 0;
+    my $group_id         = 150;
 
     my @custom_axis =
         $user_id
@@ -1021,23 +1022,34 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         id => 0
     };
 
-    my $institute = $c->stash->{institute};
+    my $headers = {
+        'A' => 'Pcs',
+        'B' => 'Urban95',
+        'C' => 'FooBar'
+    };
+    my $group_id_vs_dim = {};
 
+    my $institute         = $c->stash->{institute};
     my $groups_attr       = {};
     my $count_used_groups = {};
 
     for my $i (@indicators) {
 
-        if ( !exists $groups->{ $i->{axis}{name} } ) {
+        if ( !exists $groups->{ "axis" . $i->{axis}{id} } ) {
             $group_id++;
 
             $id_vs_group_name->{$group_id} = $i->{axis}{name};
-            $groups->{ $i->{axis}{name} } = $group_id;
+            $groups->{ "axis" . $i->{axis}{id} } = $group_id;
 
-            $groups_attr->{ $i->{axis}{name} } = [ grep { !!$_ } @{ $i->{axis}{attrs} || [] } ];
+            $groups_attr->{$group_id} = [ grep { !!$_ } @{ $i->{axis}{attrs} || [] } ];
         }
 
-        my $tmp_id = $groups->{ $i->{axis}{name} };
+        my $tmp_id = $groups->{ "axis" . $i->{axis}{id} };
+        $group_id_vs_dim->{$tmp_id} = 'B';
+
+        if ( $i->{axis}{name} eq 'Crianças Invisíveis' ) {
+            $group_id_vs_dim->{$tmp_id} = 'C';
+        }
 
         # se ja tem algum grupo, entao nao verifica se precisa inserir
         if ( $i->{groups} && @{ $i->{groups} } > 0 ) {
@@ -1058,15 +1070,16 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
         if ( $i->{axis_dim1}{name} ) {
 
-            if ( !exists $groups->{ $i->{axis_dim1}{name} } ) {
+            if ( !exists $groups->{ "dim1" . $i->{axis_dim1}{id} } ) {
                 $group_id++;
 
                 $id_vs_group_name->{$group_id} = $i->{axis_dim1}{name};
-                $groups->{ $i->{axis_dim1}{name} } = $group_id;
+                $groups->{ "dim1" . $i->{axis_dim1}{id} } = $group_id;
 
             }
 
-            $tmp_id = $groups->{ $i->{axis_dim1}{name} };
+            $tmp_id = $groups->{ "dim1" . $i->{axis_dim1}{id} };
+            $group_id_vs_dim->{$tmp_id} = 'A';
 
             # se ja tem algum grupo, entao nao verifica se precisa inserir
             if ( $i->{groups} && @{ $i->{groups} } > 0 ) {
@@ -1111,7 +1124,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     while ( my ( $group_id, $count ) = each %$count_used_groups ) {
         next unless $count == 0;
 
-        delete $groups->{ $id_vs_group_name->{$group_id} };
         delete $id_vs_group_name->{$group_id};
     }
 
@@ -1139,13 +1151,18 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     }
 
     $c->stash(
-        groups          => $groups,
-        groups_in_order => [
+        group_headers    => $headers,
+        id_vs_group_name => $id_vs_group_name,
+        group_id_vs_dim  => $group_id_vs_dim,
+        groups_in_order  => [
             sort {
-                return -1 if $b eq 'Indicadores da cidade';
-                return 1  if $a eq 'Indicadores da cidade';
-                return $a cmp $b
-            } keys %$groups
+                return -1 if $id_vs_group_name->{$b} eq 'Indicadores da cidade';
+                return 1  if $id_vs_group_name->{$a} eq 'Indicadores da cidade';
+                return
+                    $group_id_vs_dim->{$a}
+                  . $id_vs_group_name->{$a} cmp $group_id_vs_dim->{$b}
+                  . $id_vs_group_name->{$b}
+            } keys %$id_vs_group_name
         ],
         groups_attr  => $groups_attr,
         active_group => $active_group,
