@@ -14,10 +14,13 @@ $(document).ready(function() {
         is_infancia = $select.hasClass('infancia'),
         _on_menu_click = function (event) {
             var $me = $(event.target);
+            if (!($me.hasClass('option') || $me.hasClass('select')) )
+                return;
             var $ods= $('#menu-ods');
             $ods.html('');
 
             $me.parent().find('.option.active').removeClass('active');
+
 
             if (typeof $me.attr('group-id') !== "undefined") {
 

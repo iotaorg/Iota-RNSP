@@ -1022,11 +1022,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         id => 0
     };
 
-    my $headers = {
-        'A' => 'Pcs',
-        'B' => 'Urban95',
-        'C' => 'FooBar'
-    };
+    my $headers = $c->stash->{institute_metadata}{menu_headers};
     my $group_id_vs_dim = {};
 
     my $institute         = $c->stash->{institute};

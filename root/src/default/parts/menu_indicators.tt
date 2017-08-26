@@ -20,8 +20,10 @@
         [%- END -%]
         [%FOREACH a IN groups_in_order %]
         [%  fo = group_id_vs_dim.$a  %]
-        [% IF !headed.$fo %]
+        [% IF group_headers && !headed.$fo %]
+            <div class="header" >
             [% group_headers.$fo %]
+            </div>
             [% SET headed.$fo = 1 %]
         [% END %]
         <div class="option" group-id="[% a %]" data-attrs="[% groups_attr.$a %]" >
