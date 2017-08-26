@@ -399,8 +399,11 @@ footer {
 }
 #indicators_container .input-group {
     margin-bottom: 0;
-    padding-top: 10px
+    padding-top: 10px;
+    border-bottom: 1px solid #a1dbf8;
+    padding-bottom: 5px;
 }
+
 #group_list .option:last-child {
     border-bottom: none;
 }
