@@ -2,6 +2,7 @@ $(document).ready(function() {
     var $groups = $('#group_list'),
         $container = $('#indicators_container'),
         $list = $('#indicators_list'),
+        $list_wrap = $('#indicators_list_wrap'),
         $search = $('#indicator-search'),
         $status = $('#search_status'),
         $body = $('body:first'),
@@ -29,6 +30,7 @@ $(document).ready(function() {
                 _current_group = $me.attr('group-id');
 
                 $me.addClass('active');
+                $list_wrap.prop('class', '');
 
                 // todo mundo
                 if (_current_group === '0') {
@@ -41,6 +43,8 @@ $(document).ready(function() {
                 } else {
                     $list.find('.item').addClass('hideimp');
                     $list.find('.item.g' + _current_group).removeClass('hideimp');
+
+                    $list_wrap.prop('class', 'dim_' + $me.attr('data-dim'));
 
                     if ($ods && $me.attr('data-attrs') && $me.attr('data-attrs').length > 2 ){
 

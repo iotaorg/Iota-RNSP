@@ -264,7 +264,10 @@ footer div.fx { margin-top: 40px}
 footer {
     margin-top: 4em;
 }
-
+#indicators_list{
+    max-height: 728px!important;
+    height: 100%;
+}
 #infancia-menu-wrap {
     overflow: auto;
     overflow: visible;
@@ -646,6 +649,13 @@ dl.tabela blockquote small {
         padding: 6px;
     }
 }
+#indicators_list a.item {overflow: auto; clear: both}
+#indicators_list .badge {float: right; background-color: #315885}
+#indicators_list_wrap .badge { display: inline-block; }
+#indicators_list_wrap .badge:empty,
+#indicators_list_wrap.dim_B .badge,
+#indicators_list_wrap.dim_C .badge { display: none; }
+
 
 @media (min-width: 990px) {
     #group_list .select {
@@ -659,7 +669,7 @@ dl.tabela blockquote small {
         padding-left: 36px;
     }
     #group_list .option {
-        padding: 12px;
+        padding: 10px;
         padding-left: 36px;
         font-size: 16px;
     }

@@ -10,11 +10,11 @@
         [%- is_infancia ? 'Conheça os indicadores' : l( active_group.name )-%]
     </div>
     <div class="options" style="display: none;">
-        [% IF !group_headers %]
+
         <div class="option" group-id="0">
         [%- l( 'Todos os indicadores' )-%]
         </div>
-        [% END %]
+
         [%- IF 0 -%]
         <div class="option" group-id="f">
         [%-l('Indicadores em destaque')-%]
@@ -28,7 +28,7 @@
             </div>
             [% SET headed.$fo = 1 %]
         [% END %]
-        <div class="option" group-id="[% a %]" data-attrs="[% groups_attr.$a %]" >
+        <div class="option" group-id="[% a %]" data-attrs="[% groups_attr.$a %]" [% is_infancia ? "data-dim='$fo'" : ''%] >
             [%-l(id_vs_group_name.$a)-%]
         </div>
         [%END%]
@@ -55,11 +55,24 @@
     <span class="label label-info hideimp" id="search_status" data-text="[%l('Mais __NUM__ indicadores em outros grupos encontrados')%]"></span>
 
     <div id="indicators_list" class="[%IF !(v2 || is_infancia )%]auto-height[%END%] indicators indicators-home">
-    [%-FOREACH i IN indicators-%]
-    <a class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="right" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="[% menu_indicators_prefix %][%i.href%]">
-    [%-l(i.name)-%]
-    </a>
-    [%-END-%]
+<div id="indicators_list_wrap">
+
+    [% IF is_infancia %]
+        [%-FOREACH i IN indicators-%]
+        <a href="[% menu_indicators_prefix %][%i.href%]" data-toggle="tooltip" data-placement="left" data-original-title="[%i.explanation%]" class="item bs-tooltip [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" indicator-id="[%i.id%]" >
+        [%-l(i.name)-%]<span class="badge">[% i.axis_dim2.name %]</span>
+        </a>
+        [%-END-%]
+    [%ELSE%]
+        [%-FOREACH i IN indicators-%]
+        <a class="item [%IF i.visible==0%]hideimp[%END%] [%IF i.selected%]selected[%END%] bs-tooltip [%IF i.featured_in_home%]gf [%END%][%FOREACH g IN i.groups%]g[%g%] [%END%]" data-id="[%i.id%]" data-toggle="tooltip" data-placement="right" title="" data-original-title="[%i.explanation%]" indicator-id="[%i.id%]" href="[% menu_indicators_prefix %][%i.href%]">
+        [%-l(i.name)-%]
+        </a>
+        [%-END-%]
+    [% END %]
+
     </div>
+</div>
+
 </div>
 </div>

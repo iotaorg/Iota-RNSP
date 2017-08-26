@@ -285,7 +285,7 @@ body {
     padding-bottom: 0;
 }
 /* os links da home precisam ficar 'bonitos'    */
-#indicators_list a.item{
+#indicators_list .item{
     display: block!important;
     border-bottom: 1px solid #e0e0e0;
     padding: 5px;
