@@ -10,9 +10,11 @@
         [%- is_infancia ? 'Conheça os indicadores' : l( active_group.name )-%]
     </div>
     <div class="options" style="display: none;">
+        [% IF !group_headers %]
         <div class="option" group-id="0">
         [%- l( 'Todos os indicadores' )-%]
         </div>
+        [% END %]
         [%- IF 0 -%]
         <div class="option" group-id="f">
         [%-l('Indicadores em destaque')-%]
