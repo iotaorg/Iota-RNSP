@@ -948,7 +948,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
       )->search(
         { is_fake => 0 },
         {
-            join     => 'axis',
+            join     => [ 'axis', 'axis_dim1', 'axis_dim2' ],
             collapse => 1,
             order_by => 'me.name',
             columns  => [
@@ -956,6 +956,9 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                   axis.id
                   axis.name
                   axis.attrs
+
+                  axis_dim1.name
+                  axis_dim2.name
 
                   me.id
                   me.name
@@ -1034,23 +1037,47 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             $groups_attr->{ $i->{axis}{name} } = [ grep { !!$_ } @{ $i->{axis}{attrs} || [] } ];
         }
 
-        my $group_id = $groups->{ $i->{axis}{name} };
+        my $tmp_id = $groups->{ $i->{axis}{name} };
 
         # se ja tem algum grupo, entao nao verifica se precisa inserir
         if ( $i->{groups} && @{ $i->{groups} } > 0 ) {
             if ( !$institute->bypass_indicator_axis_if_custom ) {
-                push @{ $i->{groups} }, $group_id;
-                $count_used_groups->{$group_id}++;
+                push @{ $i->{groups} }, $tmp_id;
+                $count_used_groups->{$tmp_id}++;
             }
             else {
-                $count_used_groups->{$group_id} = 0
-                  if !exists $count_used_groups->{$group_id};
+                $count_used_groups->{$tmp_id} = 0
+                  if !exists $count_used_groups->{$tmp_id};
             }
         }
         else {
-            push @{ $i->{groups} }, $group_id;
+            push @{ $i->{groups} }, $tmp_id;
 
-            $count_used_groups->{$group_id}++;
+            $count_used_groups->{$tmp_id}++;
+        }
+
+        if ( $i->{axis_dim1}{name} ) {
+
+            if ( !exists $groups->{ $i->{axis_dim1}{name} } ) {
+                $group_id++;
+
+                $id_vs_group_name->{$group_id} = $i->{axis_dim1}{name};
+                $groups->{ $i->{axis_dim1}{name} } = $group_id;
+
+            }
+
+            $tmp_id = $groups->{ $i->{axis_dim1}{name} };
+
+            # se ja tem algum grupo, entao nao verifica se precisa inserir
+            if ( $i->{groups} && @{ $i->{groups} } > 0 ) {
+                push @{ $i->{groups} }, $tmp_id;
+                $count_used_groups->{$tmp_id}++;
+            }
+            else {
+                push @{ $i->{groups} }, $tmp_id;
+                $count_used_groups->{$tmp_id}++;
+            }
+
         }
 
         if ( $selected_indicator && $selected_indicator->{id} == $i->{id} ) {
@@ -1493,12 +1520,15 @@ sub load_best_pratices {
 
     if ( $c->stash->{best_pratice} ) {
 
-        $where{'me.axis_dim1_id'} = $c->stash->{best_pratice}->{axis_dim1_id} if $c->stash->{best_pratice}->{axis_dim1_id};
-        $where{'me.axis_dim2_id'} = $c->stash->{best_pratice}->{axis_dim2_id} if $c->stash->{best_pratice}->{axis_dim2_id};
-        $where{'me.axis_dim3_id'} = $c->stash->{best_pratice}->{axis_dim3_id} if $c->stash->{best_pratice}->{axis_dim3_id};
-        $where{'me.axis_id'}      = $c->stash->{best_pratice}->{axis_id}      if $c->stash->{best_pratice}->{axis_id};
+        $where{'me.axis_dim1_id'} = $c->stash->{best_pratice}->{axis_dim1_id}
+          if $c->stash->{best_pratice}->{axis_dim1_id};
+        $where{'me.axis_dim2_id'} = $c->stash->{best_pratice}->{axis_dim2_id}
+          if $c->stash->{best_pratice}->{axis_dim2_id};
+        $where{'me.axis_dim3_id'} = $c->stash->{best_pratice}->{axis_dim3_id}
+          if $c->stash->{best_pratice}->{axis_dim3_id};
+        $where{'me.axis_id'} = $c->stash->{best_pratice}->{axis_id} if $c->stash->{best_pratice}->{axis_id};
 
-        $c->stash->{bp_related_only}= 1;
+        $c->stash->{bp_related_only} = 1;
     }
 
     my $rs = $c->model('DB::UserBestPratice')->search(

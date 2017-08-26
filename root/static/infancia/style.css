@@ -698,3 +698,10 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
     text-align: right;
     margin-bottom: -40px;
 }
+
+.item-b {
+    padding: 5px;
+    font-size: 1.2em;
+    color: #3366cc;
+    padding-left: 15px!important;
+}
