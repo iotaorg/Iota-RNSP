@@ -1018,7 +1018,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     my $selected_indicator = $c->stash->{indicator};
 
     my $active_group = {
-        name => $c->stash->{is_infancia} ? 'Conhença os indicadores' : 'Todos os indicadores',
+        name => 'Todos os indicadores',
         id => 0
     };
 
