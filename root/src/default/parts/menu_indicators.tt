@@ -28,7 +28,7 @@
             </div>
             [% SET headed.$fo = 1 %]
         [% END %]
-        <div class="option" group-id="[% a %]" data-attrs="[% groups_attr.$a %]" [% is_infancia ? "data-dim='$fo'" : ''%] >
+        <div class="option" title="[%group_id_vs_description.$a%]" group-id="[% a %]" data-attrs="[% groups_attr.$a %]" [% is_infancia ? "data-dim='$fo'" : ''%] >
             [%-l(id_vs_group_name.$a)-%]
         </div>
         [%END%]

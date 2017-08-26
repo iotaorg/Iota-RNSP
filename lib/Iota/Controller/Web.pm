@@ -955,10 +955,12 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                 qw/
                   axis.id
                   axis.name
+                  axis.description
                   axis.attrs
 
                   axis_dim1.id
                   axis_dim1.name
+                  axis_dim1.description
                   axis_dim2.name
 
                   me.id
@@ -1024,6 +1026,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my $headers = $c->stash->{institute_metadata}{menu_headers};
     my $group_id_vs_dim = {};
+    my $group_id_vs_description = {};
 
     my $institute         = $c->stash->{institute};
     my $groups_attr       = {};
@@ -1038,6 +1041,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             $groups->{ "axis" . $i->{axis}{id} } = $group_id;
 
             $groups_attr->{$group_id} = [ grep { !!$_ } @{ $i->{axis}{attrs} || [] } ];
+            $group_id_vs_description->{$group_id} = $i->{axis}{description};
         }
 
         my $tmp_id = $groups->{ "axis" . $i->{axis}{id} };
@@ -1071,6 +1075,8 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
                 $id_vs_group_name->{$group_id} = $i->{axis_dim1}{name};
                 $groups->{ "dim1" . $i->{axis_dim1}{id} } = $group_id;
+
+                $group_id_vs_description->{$group_id} = $i->{axis_dim1}{description};
 
             }
 
@@ -1115,6 +1121,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         }
     }
 
+
     # todos os $count_used_groups = 0 sao eixos (nao grupos), que nao
     # foram usados em nenhum indicador.
     while ( my ( $group_id, $count ) = each %$count_used_groups ) {
@@ -1150,6 +1157,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         group_headers    => $headers,
         id_vs_group_name => $id_vs_group_name,
         group_id_vs_dim  => $group_id_vs_dim,
+        group_id_vs_description => $group_id_vs_description,
         groups_in_order  => [
             sort {
                 return -1 if $id_vs_group_name->{$b} eq 'Indicadores da cidade';
