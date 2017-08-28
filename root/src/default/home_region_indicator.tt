@@ -75,6 +75,21 @@
 
         [%IF is_infancia %]
         <div class="span12 col-md-12">
+
+            <div>
+                <h2>Análise comparativa</h2>
+                [% INCLUDE parts/analise_comparativa.tt %]
+            </div>
+
+            <div>
+                <h2>[%l('Fator de desigualdade')%]</h2>
+                [% INCLUDE parts/fator_desigualdade.tt %]
+            </div>
+
+            [% INCLUDE parts/regiao_serie_historica_grafico_download.tt %]
+
+        </div>
+
         [%ELSE%]
         <div class="span4 col-md-4">
             <div lockfixed>
@@ -82,80 +97,27 @@
             </div>
         </div>
         <div class="span8 col-md-8">
+
+            [% INCLUDE parts/regiao_serie_historica_grafico_download.tt %]
+
+            <div>
+                <h2>[%l('Fator de desigualdade')%]</h2>
+                [% INCLUDE parts/fator_desigualdade.tt %]
+            </div>
+
+
+            <div>
+                <h2>Análise comparativa</h2>
+                [% INCLUDE parts/analise_comparativa.tt %]
+            </div>
+        </div>
+
         [%END%]
 
 
 
-            <div class="data-right">
-                <div class="content-fill">
-                    <div id="indicador-historico">
-                        <div class="title">[%l('Série Histórica de')%] <span class="cidade"></span></div>
-                        <div class="content-fill">
-
-                            <div class="table">
-                                <div class="content-fill">
-                                    <div class="loading"><p>[%l('Carregando...')%]</p></div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div id="indicador-grafico">
-                        <div class="title"><span>Gráfico de</span>&nbsp;<span class="cidade"></span> [%IF !is_infancia %]&nbsp;<a href='#' class='link'>[%l('comparar com outras cidades')%]</a>[%END%] </div>
-                        <div class="content-fill">
-                            <div class="graph">
-                                <div class="content-fill">
-                                    <canvas id="main-graph" width='600' height='280'></canvas>
-                                    <div class="legend"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="dados-abertos">
-                        <div class="title">[%l('Dados abertos')%]</div>
-                        <div class="content-fill">
-                            <div class="dados-botoes">
-								<input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
-								<input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
-                            </div>
-                            <div class="download-links">
-                            </div>
-                            <div class="share-link">
-                                <input type="text" id="share-link" value="url" />
-								<!-- AddThis Button BEGIN -->
-								<div class="addthis_toolbox addthis_default_style ">
-								<a class="addthis_button_preferred_1"></a>
-								<a class="addthis_button_preferred_2"></a>
-								<a class="addthis_button_preferred_3"></a>
-								<a class="addthis_button_preferred_4"></a>
-								<a class="addthis_button_compact"></a>
-								<a class="addthis_counter addthis_bubble_style"></a>
-								</div>
-								<script type="text/javascript">var addthis_config = {"data_track_addressbar":false, "data_track_clickback":false};</script>
-								<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ed285338e6b8b3"></script>
-								<!-- AddThis Button END -->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        <div>
-            <h2>[%l('Fator de desigualdade')%]</h2>
-            [% INCLUDE parts/fator_desigualdade.tt %]
-        </div>
 
 
-        <div>
-            <h2>Análise comparativa</h2>
-            [% INCLUDE parts/analise_comparativa.tt %]
-        </div>
-
-
-        </div>
     </div>
 
 
