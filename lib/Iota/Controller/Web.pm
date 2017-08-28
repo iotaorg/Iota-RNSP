@@ -389,6 +389,49 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
     );
 }
 
+sub _add_indicators_filters {
+    my ($self, $c) = @_;
+
+    my $ref = "axis_dim1";
+
+    if ( $c->stash->{institute_metadata}{"axis_aux1"} ) {
+        my @axis_dim = $c->model("DB::AxisDim1")->search(
+            undef,
+            {
+                columns => [
+                    { key   => \"coalesce(me.id::text, '-')" },
+                    { value => \"coalesce(me.name, 'Não preenchido')" },
+                ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                order_by     => \"me.name nulls last"
+            }
+        )->all;
+
+        $c->stash->{$ref} = \@axis_dim;
+
+    }
+
+    $ref = "axis_dim3";
+    if ( $c->stash->{institute_metadata}{"axis_aux3"} ) {
+        my @axis_dim = $c->model("DB::AxisDim3")->search(
+            undef,
+            {
+                columns => [
+                    { key   => \"coalesce(me.id::text, '-')" },
+                    { value => \"coalesce(me.description, 'Não preenchido')" },
+                ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                order_by     => \"me.description nulls last"
+            }
+        )->all;
+
+        $c->stash->{$ref} = \@axis_dim;
+
+    }
+
+
+}
+
 sub pagina_boas_praticas_item_render : Chained('pagina_boas_praticas_item') PathPart('') Args(0) { }
 
 sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
@@ -2041,6 +2084,7 @@ sub stash_tela_cidade : Private {
     my ( $self, $c ) = @_;
 
     $self->_add_default_periods($c);
+    $self->_add_indicators_filters($c) if $c->stash->{is_infancia};
 
     my $city = $c->model('DB::City')->search(
         {

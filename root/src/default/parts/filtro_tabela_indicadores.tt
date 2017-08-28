@@ -1,3 +1,38 @@
+[%IF is_infancia %]
+<div class="row" id="boapratica-search">
+    <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
+
+      [% IF axis_dim1 && axis_dim1.size>=1 %]
+      <div class="form-group">
+        <label>[%institute_metadata.axis_aux1_header %]</label>
+        <select name="axis_dim1" class="form-control">
+            <option value="">Em qualquer [%institute_metadata.axis_aux1%]</option>
+
+            [% FOREACH x IN axis_dim1 %]
+            <option [% x.key == c.req.params.axis_dim1 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %]</option>
+            [%END%]
+        </select>
+      </div>
+      [%END%]
+
+      [% IF axis_dim3 && axis_dim3.size>=1 %]
+      <div class="form-group">
+        <label>[%institute_metadata.axis_aux3_header%]</label>
+        <select name="axis_dim3" class="form-control">
+            <option value="">Em qualquer [%institute_metadata.axis_aux3%]</option>
+
+            [% FOREACH x IN axis_dim3 %]
+            <option [% x.key == c.req.params.axis_dim3 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %]</option>
+            [%END%]
+        </select>
+      </div>
+      [%END%]
+        <button type="submit" class="btn btn-default btn-filter">Filtrar</button>
+    </form>
+
+</div>
+
+[% END %]
 <div class="period">
     <div id="date-ruler">
         [%FOREACH d IN data_periods%]

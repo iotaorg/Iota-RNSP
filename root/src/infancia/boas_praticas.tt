@@ -81,7 +81,7 @@
       </div>
       [%END%]
 
-      <button type="submit" class="btn btn-default">Filtrar</button>
+      <button type="submit" class="btn btn-default btn-filter">Filtrar</button>
     </form>
 
 </div>

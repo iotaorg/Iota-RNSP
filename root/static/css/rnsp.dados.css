@@ -1122,3 +1122,7 @@ a.link-axis, a.link-region {
 .white_space_pre_wrap {
     white-space: pre-wrap;
 }
+
+.btn-filter {
+    margin-top: 25px;
+}
