@@ -145,6 +145,7 @@
     [%END%]
 [%END-%]
     var ref = 'region';
-    var base_url = '';
+    var base_url = '[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao/[%region.name_url%]';
+
     [% PROCESS 'network_javascript.tt'%]
 </script>
