@@ -754,3 +754,17 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
     #boapratica-search .form-group.a, #boapratica-search .form-group.b { width: 100% }
 
 }
+#cidades-indicadores .form-group.a {
+    width: 43%;
+}
+#cidades-indicadores .form-group.b {
+    width: 43%;
+}
+@media (min-width: 768px) {
+    #cidades-indicadores .form-group.a {
+        width: 43%;
+    }
+    #cidades-indicadores .form-group.b {
+        width: 43%;
+    }
+}
