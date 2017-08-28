@@ -13,7 +13,7 @@ var dimensions_GO = {
 };
 
 var functions = {};
-$(document).ready(function () {
+$(document).ready(function() {
     institute_info = $.parseJSON($('body').attr('data-institute'));
 
     function loadCidadeData() {
@@ -31,11 +31,11 @@ $(document).ready(function () {
             url: api_path + '/api/public/user/$$id'.render({
                 id: userID
             }),
-            success: function (data, textStatus, jqXHR) {
+            success: function(data, textStatus, jqXHR) {
                 cidade_data = data;
                 showCidadeData();
             },
-            error: function (data) {
+            error: function(data) {
                 alert("erro ao carregar informações da cidade");
             }
         });
@@ -97,7 +97,7 @@ $(document).ready(function () {
 
         marker.__position = center;
 
-        google.maps.event.addListener(marker, 'mouseover', function (e) {
+        google.maps.event.addListener(marker, 'mouseover', function(e) {
             map.setCenter(marker.__position);
             if (map.getZoom() < zoom_padrao) {
                 map.setZoom(zoom_padrao);
@@ -138,44 +138,44 @@ $(document).ready(function () {
 
         $tabela = $('dl.tabela');
         var user_files = cidade_data.usuario.files;
-        if ( institute_short_name === 'gov' ) {
+        if (institute_short_name === 'gov') {
 
             $tabela.append("<dt>Documentos</dt>");
 
-            if (typeof (user_files.carta_compromis) != "undefined") {
+            if (typeof(user_files.carta_compromis) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Carta compromisso</a></dd>".render({
                     dado: user_files.carta_compromis
                 }));
-            }else{
+            } else {
                 $tabela.append("<dd>Carta compromisso (não disponível)</dd>");
             }
 
-            if (typeof (user_files.prestacao_de_co) != "undefined") {
+            if (typeof(user_files.prestacao_de_co) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Relatório de prestação de contas</a></dd>".render({
                     dado: user_files.prestacao_de_co
                 }));
-            }else{
+            } else {
                 $tabela.append("<dd>Relatório de prestação de contas (não disponível)</dd>");
             }
 
-            if (typeof (user_files.arq_lei) != "undefined") {
+            if (typeof(user_files.arq_lei) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'><img src='http://icon-icons.com/icons2/775/PNG/512/bill_icon-icons.com_64622.png' width='26' alt='Arquivo de lei' /> Arquivo de lei</a></dd>".render({
                     dado: user_files.arq_lei
                 }));
             }
 
-            if (typeof (user_files.programa_metas) != "undefined") {
+            if (typeof(user_files.programa_metas) != "undefined") {
                 $tabela.append("<dd><a href='$$dado' target='_blank'>Plano de Metas</a></dd>".render({
                     dado: user_files.programa_metas
                 }));
-            }else{
+            } else {
                 $tabela.append("<dd>Plano de Metas (não disponível)</dd>");
             }
 
         }
 
 
-        if (typeof (user_files.imagem_cidade) != "undefined") {
+        if (typeof(user_files.imagem_cidade) != "undefined") {
             $("#cidades-dados .image").html('<img/>');
             $("#cidades-dados .image img")[0].src = user_files.imagem_cidade;
         } else {
@@ -200,33 +200,33 @@ $(document).ready(function () {
 
     function loadIndicadoresData() {
         var param = typeof regionID == "undefined" ? '?without_topic=1' : '?without_topic=1&region_id=' + regionID;
-		if (param){
-			if (location.search){
-			var date = location.search.split('valid_from_desc=')[1];
-			var date_parser = date.split("-");
+        if (param) {
+            if (location.search) {
+                var date = location.search.split('valid_from_desc=')[1];
+                var date_parser = date.split("-");
 
-			date_parser[0] = parseInt(date_parser[0]) + 1;
+                date_parser[0] = parseInt(date_parser[0]) + 1;
 
-			date = date_parser.join("-");
+                date = date_parser.join("-");
 
-			param = param + '&' + 'from_date='+date;
-			}
+                param = param + '&' + 'from_date=' + date;
+            }
 
-		}else{
+        } else {
 
-			if (location.search){
-				var date = location.search.split('valid_from_desc=')[1];
-				var date_parser = date.split("-");
+            if (location.search) {
+                var date = location.search.split('valid_from_desc=')[1];
+                var date_parser = date.split("-");
 
-				date_parser[0] = parseInt(date_parser[0]) + 1;
+                date_parser[0] = parseInt(date_parser[0]) + 1;
 
-				date = date_parser.join("-");
-				param = "?valid_from_desc="+date;
-			}
+                date = date_parser.join("-");
+                param = "?valid_from_desc=" + date;
+            }
 
-			param = param.replace("valid_from_desc", "from_date");
+            param = param.replace("valid_from_desc", "from_date");
 
-		}
+        }
 
 
         $.ajax({
@@ -235,11 +235,11 @@ $(document).ready(function () {
             url: (api_path + '/api/public/user/$$id/indicator' + param).render({
                 id: userID
             }),
-            success: function (data, textStatus, jqXHR) {
+            success: function(data, textStatus, jqXHR) {
                 indicadores_data = data;
                 showIndicadoresData();
             },
-            error: function (data) {
+            error: function(data) {
                 alert("erro ao carregar indicadores da cidade");
             }
         });
@@ -258,69 +258,69 @@ $(document).ready(function () {
 
         var eixos_ordem = [];
 
-		var eixos_indicadores = [];
+        var eixos_indicadores = [];
 
-		var dimension_id;
+        var dimension_id;
 
-		$.each(indicadores_data.resumos, function (index, item) {
-			if (userID == 763){ //GOIANIA
-				if (["Bens Naturais Comuns","Consumo Responsável e Opções de Estilo de Vida","Do Local para o Global"].indexOf(index) > -1){
-					dimension_id = 1;
-				}else if (["Fiscal","Gestão Local para a Sustentabilidade","Governança"].indexOf(index) > -1){
-					dimension_id = 2;
-				}else if (["Ação Local para a Saúde","Cultura para a sustentabilidade","Economia Local, Dinâmica, Criativa e Sustentável","Educação para a Sustentabilidade e Qualidade de Vida","Equidade, Justiça Social e Cultura de Paz","Melhor Mobilidade, Menos Tráfego","Planejamento e Desenho Urbano"].indexOf(index) > -1){
-					dimension_id = 3;
-				}else{
-					dimension_id = 0;
-				}
-			}else{
-				dimension_id = 0;
-			}
-			var new_result = [];
-			new_result.dimension_id = dimension_id;
-			new_result.name = index;
-			new_result.resumo = item;
-			new_result.sort_field = dimension_id + index;
-			eixos_indicadores.push(new_result);
-		});
+        $.each(indicadores_data.resumos, function(index, item) {
+            if (userID == 763) { //GOIANIA
+                if (["Bens Naturais Comuns", "Consumo Responsável e Opções de Estilo de Vida", "Do Local para o Global"].indexOf(index) > -1) {
+                    dimension_id = 1;
+                } else if (["Fiscal", "Gestão Local para a Sustentabilidade", "Governança"].indexOf(index) > -1) {
+                    dimension_id = 2;
+                } else if (["Ação Local para a Saúde", "Cultura para a sustentabilidade", "Economia Local, Dinâmica, Criativa e Sustentável", "Educação para a Sustentabilidade e Qualidade de Vida", "Equidade, Justiça Social e Cultura de Paz", "Melhor Mobilidade, Menos Tráfego", "Planejamento e Desenho Urbano"].indexOf(index) > -1) {
+                    dimension_id = 3;
+                } else {
+                    dimension_id = 0;
+                }
+            } else {
+                dimension_id = 0;
+            }
+            var new_result = [];
+            new_result.dimension_id = dimension_id;
+            new_result.name = index;
+            new_result.resumo = item;
+            new_result.sort_field = dimension_id + index;
+            eixos_indicadores.push(new_result);
+        });
 
-		eixos_indicadores.sort(function (a, b) {
+        eixos_indicadores.sort(function(a, b) {
             if (b.name === 'Indicadores da cidade') return -1;
             if (a.name === 'Indicadores da cidade') return 1;
 
             a = String(a.sort_field),
-            b = String(b.sort_field);
+                b = String(b.sort_field);
 
-			return a.localeCompare(b);
-		});
+            return a.localeCompare(b);
+        });
 
-		$.each(eixos_indicadores, function (eixo_index, eixo) {
-			eixos_ordem.push(eixo.name);
-		});
+        $.each(eixos_indicadores, function(eixo_index, eixo) {
+            eixos_ordem.push(eixo.name);
+        });
 
-		var dimension_ant = 0;
+        var dimension_ant = 0;
 
-        $.each(eixos_ordem, function (ix, eixo_index) {
+        $.each(eixos_ordem, function(ix, eixo_index) {
             var eixo = eixos_indicadores[ix].resumo;
 
-			if (eixos_indicadores[ix].dimension_id != dimension_ant){
-				if (eixos_indicadores[ix].dimension_id != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])){
-					table_content += "<thead class='dimensions'><tr><th colspan='10'>$$dimension</th></thead>".render({
-						dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
-					});
-				}
-				dimension_ant = eixos_indicadores[ix].dimension_id;
-			}
+            if (eixos_indicadores[ix].dimension_id != dimension_ant) {
+                if (eixos_indicadores[ix].dimension_id != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])) {
+                    table_content += "<thead class='dimensions'><tr><th colspan='10'>$$dimension</th></thead>".render({
+                        dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
+                    });
+                }
+                dimension_ant = eixos_indicadores[ix].dimension_id;
+            }
             table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
                 eixo: eixo_index
             });
             var periods = eixo;
-            $.each(periods, function (period_index, period) {
+            $.each(periods, function(period_index, period) {
                 var datas = periods[period_index].datas;
                 var has_any_data = institute_info.hide_empty_indicators ? 0 : 1;
                 if (datas.length > 0) {
                     table_content += "<thead class='datas'><tr><th></th><th>Autor</th>";
-                    $.each(datas, function (index, value) {
+                    $.each(datas, function(index, value) {
                         table_content += "<th>$$data</th>".render({
                             data: (datas[index].nome) ? datas[index].nome : "Sem dados"
                         });
@@ -334,13 +334,13 @@ $(document).ready(function () {
                 table_content += "<tbody class='::nodata::'>";
 
                 var indicadores = periods[period_index].indicadores;
-				indicadores.sort(function (a, b) {
+                indicadores.sort(function(a, b) {
                     a = a.name;
                     b = b.name;
 
                     return a.localeCompare(b);
                 });
-                $.each(indicadores, function (i, item) {
+                $.each(indicadores, function(i, item) {
                     var tr_class;
                     if (item.network_config.unfolded_in_home == 1) {
                         tr_class = "unfolded";
@@ -354,30 +354,30 @@ $(document).ready(function () {
                         url: (base_url) ? (base_url + "/" + item.name_url) : ((window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url)
                     });
 
-					var icone = "",
-						icone_title = "";
-					if (item.source){
-						if (item.source == "[ICES]"){
-							icone = "<img src='/static/images/icon_ICES.png'>";
-							icone_title = "Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)";
-						}else if(item.source == "[PCS]"){
-							icone = "<img src='/static/images/icon_PCS.png'>";
-							icone_title = "Indicadores do Programa Cidades Sustentáveis";
-						}else if(item.source == "[REDE]"){
-							icone = "<img src='/static/images/icon_Rede.png'>";
-							icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
-						}
-						if (icone != ""){
-							table_content += "<td class='fonte'><div data-toggle='tooltip' data-placement='right' title data-original-title='$$title' class='bs-tooltip'>$$icone</div></td>".render({
-								icone: icone,
-								title: icone_title
-							});
-						}else{
-							table_content += "<td class='fonte'></td>";
-						}
-					}else{
-						table_content += "<td class='fonte'></td>";
-					}
+                    var icone = "",
+                        icone_title = "";
+                    if (item.source) {
+                        if (item.source == "[ICES]") {
+                            icone = "<img src='/static/images/icon_ICES.png'>";
+                            icone_title = "Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)";
+                        } else if (item.source == "[PCS]") {
+                            icone = "<img src='/static/images/icon_PCS.png'>";
+                            icone_title = "Indicadores do Programa Cidades Sustentáveis";
+                        } else if (item.source == "[REDE]") {
+                            icone = "<img src='/static/images/icon_Rede.png'>";
+                            icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
+                        }
+                        if (icone != "") {
+                            table_content += "<td class='fonte'><div data-toggle='tooltip' data-placement='right' title data-original-title='$$title' class='bs-tooltip'>$$icone</div></td>".render({
+                                icone: icone,
+                                title: icone_title
+                            });
+                        } else {
+                            table_content += "<td class='fonte'></td>";
+                        }
+                    } else {
+                        table_content += "<td class='fonte'></td>";
+                    }
                     if (item.valores.length > 0) {
 
                         var have_data = institute_info.hide_empty_indicators ? 0 : 1;
@@ -386,7 +386,7 @@ $(document).ready(function () {
                                 table_content += "<td class='valor'>-</td>";
                             } else {
                                 if (item.variable_type == 'str') {
-                                    table_content += ('<td title="$$again" class="valor">' + (item.valores[j] ? '<i class="icon-ok"></i>' : '-')  +'</td>').render({
+                                    table_content += ('<td title="$$again" class="valor">' + (item.valores[j] ? '<i class="icon-ok"></i>' : '-') + '</td>').render({
                                         again: item.valores[j]
                                     });
                                     if (item.valores[j]) {
@@ -439,7 +439,7 @@ $(document).ready(function () {
 
         $(".bs-tooltip").tooltip();
 
-        $("#cidades-indicadores thead.eixos").click(function () {
+        $("#cidades-indicadores thead.eixos").click(function() {
             $(this).toggleClass("collapsed");
             $(this).nextAll("thead.datas:first").toggle();
             var tbody = $(this).nextAll("tbody:first");
@@ -450,7 +450,7 @@ $(document).ready(function () {
         geraGraficos();
     }
 
-    $('#indicadores-hide-toggle').click(function () {
+    $('#indicadores-hide-toggle').click(function() {
 
 
         if (this.checked) {
@@ -475,10 +475,10 @@ $(document).ready(function () {
         for (i = 0; i < graficos.length; i++) {
             var ymin = 0;
 
-            $.each(graficos[i], function(index,item){
-                if (index == 0){
+            $.each(graficos[i], function(index, item) {
+                if (index == 0) {
                     ymin = item;
-                }else{
+                } else {
                     if (item && item < ymin) ymin = item;
                 }
             });
@@ -495,7 +495,7 @@ $(document).ready(function () {
             line.Set('chart.gutter.bottom', 0);
             line.Set('chart.colors', ['#b4b4b4']);
 
-            if (ymin< 0){
+            if (ymin < 0) {
                 line.Set('chart.xaxispos', 'center');
             }
 
@@ -504,12 +504,12 @@ $(document).ready(function () {
     }
 
     function formataMenuRegioes() {
-        $("#regioes ul.regions li.header").each(function (index, item) {
+        $("#regioes ul.regions li.header").each(function(index, item) {
             if ($(this).find("ul.subregions li.selected").length > 0) {
                 $(this).find("ul.subregions").fadeIn("fast");
             }
         });
-        $("#regioes ul.regions div.header").bind("click", function (e) {
+        $("#regioes ul.regions div.header").bind("click", function(e) {
             $(this).parent().find("ul.subregions").toggle("fast");
         });
     }
