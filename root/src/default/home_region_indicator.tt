@@ -48,7 +48,7 @@
             <h1 class="title">[%l(indicator.name)%]</h1>
             <p class="explanation">[%l(indicator.explanation)%]</p>
 
-            <div class="dados"><dl class="tabela dl-horizontal ">
+            <div class="dados"><dl class="tabela [% IF !is_infancia %]dl-horizontal[%END%]">
                 <dt>[%l('Fórmula')%]:</dt>
                 <dd>[% l(indicator.formula_human)%]</dd>
                 [%IF indicator.goal_explanation%]

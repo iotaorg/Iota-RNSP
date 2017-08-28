@@ -203,13 +203,16 @@ $(document).ready(function() {
         if (param) {
             if (location.search) {
                 var date = location.search.split('valid_from_desc=')[1];
-                var date_parser = date.split("-");
 
-                date_parser[0] = parseInt(date_parser[0]) + 1;
+                if (date){
+                    var date_parser = date.split("-");
 
-                date = date_parser.join("-");
+                    date_parser[0] = parseInt(date_parser[0]) + 1;
 
-                param = param + '&' + 'from_date=' + date;
+                    date = date_parser.join("-");
+
+                    param = param + '&' + 'from_date=' + date;
+                }
             }
 
         } else {

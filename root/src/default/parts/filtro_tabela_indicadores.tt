@@ -1,5 +1,5 @@
 [%IF is_infancia %]
-<div class="row" id="boapratica-search">
+<div class="row" id="indicadores-search">
     <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
 
       [% IF axis_dim1 && axis_dim1.size>=1 %]
