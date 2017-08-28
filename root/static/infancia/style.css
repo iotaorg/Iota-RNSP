@@ -768,3 +768,8 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
         width: 43%;
     }
 }
+#indicators_list .item.selected {
+    color: #355c85;
+    font-weight: 500;
+    background-color: #ffffff;
+}
