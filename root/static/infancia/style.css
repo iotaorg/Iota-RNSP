@@ -732,3 +732,25 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
     color: #3366cc;
     padding-left: 15px!important;
 }
+
+#boapratica-search label { white-space: nowrap; display: block; overflow: hidden; }
+#boapratica-search .form-group.a {
+    width: 30%;
+}
+
+#boapratica-search .form-group.b {
+    width: 20%;
+}
+@media (min-width: 768px) {
+    #boapratica-search .form-group.a {
+        width: 26%;
+    }
+
+    #boapratica-search .form-group.b {
+        width: 21%;
+    }
+}
+@media (max-width: 767px) {
+    #boapratica-search .form-group.a, #boapratica-search .form-group.b { width: 100% }
+
+}
