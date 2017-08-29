@@ -219,18 +219,25 @@ $(document).ready(function() {
 
             if (location.search) {
                 var date = location.search.split('valid_from_desc=')[1];
-                var date_parser = date.split("-");
+                if (date){
+                    var date_parser = date.split("-");
 
-                date_parser[0] = parseInt(date_parser[0]) + 1;
+                    date_parser[0] = parseInt(date_parser[0]) + 1;
 
-                date = date_parser.join("-");
-                param = "?valid_from_desc=" + date;
+                    date = date_parser.join("-");
+                    param = "?valid_from_desc=" + date;
+                }
             }
 
             param = param.replace("valid_from_desc", "from_date");
 
         }
 
+        if (param){
+            param += '&include_other_dims=1';
+        }else{
+            param += '?include_other_dims=1';
+        }
 
         $.ajax({
             type: 'GET',
@@ -265,7 +272,13 @@ $(document).ready(function() {
 
         var dimension_id;
 
+
+        if (indicadores_data.dimensions){
+            dimensions_GO = indicadores_data.dimensions;
+        }
+
         $.each(indicadores_data.resumos, function(index, item) {
+
             if (userID == 763) { //GOIANIA
                 if (["Bens Naturais Comuns", "Consumo Responsável e Opções de Estilo de Vida", "Do Local para o Global"].indexOf(index) > -1) {
                     dimension_id = 1;
@@ -279,11 +292,20 @@ $(document).ready(function() {
             } else {
                 dimension_id = 0;
             }
+
+            if (index.indexOf("\n\n") > -1){
+                var tmpa = index.split("\n\n");
+                dimension_id = tmpa[0]
+                index = tmpa[1]
+            }
+
+
             var new_result = [];
             new_result.dimension_id = dimension_id;
             new_result.name = index;
             new_result.resumo = item;
             new_result.sort_field = dimension_id + index;
+
             eixos_indicadores.push(new_result);
         });
 

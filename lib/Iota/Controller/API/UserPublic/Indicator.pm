@@ -1,5 +1,6 @@
 package Iota::Controller::API::UserPublic::Indicator;
 
+use utf8;
 use Moose;
 
 use Date::Calc qw/Add_Delta_YM/;
@@ -174,6 +175,12 @@ sub resumo_GET {
       ? $c->req->params->{number_of_periods}
       : 4;
     my $from_date = $c->req->params->{from_date} || DateTime->now->date;
+    my $other_dim = $c->req->params->{include_other_dims};
+
+    sub fix_name {
+        my $s = shift;
+        return $s eq 'Crianças Invisíveis' ? "C\n\n$s" : "B\n\n$s";
+    }
 
     eval {
         my $user_id   = $c->stash->{user_obj}->id;
@@ -233,25 +240,51 @@ sub resumo_GET {
 
             if ( !exists $periods_begin->{ $indicator->period } ) {
                 $periods_begin->{ $indicator->period } =
-                  $c->model('DB')
-                  ->schema->voltar_periodo( $from_date, $indicator->period, $max_periodos )->{voltar_periodo};
+                  $c->model('DB')->schema->voltar_periodo( $from_date, $indicator->period, $max_periodos )
+                  ->{voltar_periodo};
             }
         }
+
         while ( my ( $periodo, $from_this_date ) = each %$periods_begin ) {
 
-            my $custom_axis  = {};
-            my $user_axis_rs = $c->model('DB::UserIndicatorAxisItem')->search(
-                {
-                    'me.indicator_id'             => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
-                    'user_indicator_axis.user_id' => $user_id,
-                },
-                {
-                    prefetch => 'user_indicator_axis',
-                    order_by => [ 'me.indicator_id', 'me.position' ]
+            my $custom_axis = {};
+
+            do {
+                my $user_axis_rs = $c->model('DB::UserIndicatorAxisItem')->search(
+                    {
+                        'me.indicator_id'             => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
+                        'user_indicator_axis.user_id' => $user_id,
+                    },
+                    {
+                        prefetch => 'user_indicator_axis',
+                        order_by => [ 'me.indicator_id', 'me.position' ]
+                    }
+                );
+                while ( my $row = $user_axis_rs->next ) {
+                    push @{ $custom_axis->{ $row->indicator_id } },
+                      $other_dim
+                      ? &fix_name( $row->user_indicator_axis->name )
+                      : $row->user_indicator_axis->name;
                 }
-            );
-            while ( my $row = $user_axis_rs->next ) {
-                push @{ $custom_axis->{ $row->indicator_id } }, $row->user_indicator_axis->name;
+            };
+
+            if ( $c->stash->{institute_metadata}{axis_aux1} && $other_dim ) {
+                my $user_axis_rs = $c->model('DB::Indicator')->search(
+                    {
+                        'me.id'           => { 'in' => [ keys %{ $indicators->{$periodo} } ] },
+                        'me.axis_dim1_id' => { '!=' => undef }
+                    },
+                    {
+                        join         => 'axis_dim1',
+                        columns      => [ 'me.id', { 'name' => \'axis_dim1.name' } ],
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+                    }
+                );
+
+                while ( my $row = $user_axis_rs->next ) {
+                    push @{ $custom_axis->{ $row->{id} } }, "A\n\n" . $row->{name};
+                }
+
             }
 
             my $values_rs = $c->model('DB::IndicatorValue')->search(
@@ -321,13 +354,13 @@ sub resumo_GET {
 
                 my @group_list = ();
                 if ( exists $custom_axis->{$indicator_id} ) {
-                    push @group_list, $indicator->axis->name
+                    push @group_list, $other_dim ? &fix_name( $indicator->axis->name ) : $indicator->axis->name
                       unless $institute->bypass_indicator_axis_if_custom;
 
                     push @group_list, @{ $custom_axis->{$indicator_id} };
                 }
                 else {
-                    push @group_list, $indicator->axis->name;
+                    push @group_list, $other_dim ? &fix_name( $indicator->axis->name ) : $indicator->axis->name;
                 }
 
                 foreach my $axis (@group_list) {
@@ -480,6 +513,11 @@ sub resumo_GET {
         else {
             $new_ret = $ret;
         }
+
+        if ($other_dim) {
+            $new_ret->{dimensions} = $c->stash->{institute_metadata}{menu_headers};
+        }
+
         $self->status_ok( $c, entity => $new_ret );
     }
 }

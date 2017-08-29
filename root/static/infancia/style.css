@@ -773,3 +773,7 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
     font-weight: 500;
     background-color: #ffffff;
 }
+#cidades-indicadores .table thead.dimensions th {
+    background-color: #3366cc;
+    text-transform: none;
+}
