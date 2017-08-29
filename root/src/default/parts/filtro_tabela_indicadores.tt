@@ -2,14 +2,14 @@
 <div class="row" id="indicadores-search">
     <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
 
-      [% IF axis_dim1 && axis_dim1.size>=1 %]
+      [% IF axis_dim2 && axis_dim2.size>=1 %]
       <div class="form-group a">
-        <label>[%institute_metadata.axis_aux1_header %]</label>
-        <select name="axis_dim1" class="form-control">
-            <option value="">Em qualquer [%institute_metadata.axis_aux1%]</option>
+        <label>[%institute_metadata.axis_aux2_header %]</label>
+        <select name="axis_dim2" class="form-control">
+            <option value="">Em qualquer [%institute_metadata.axis_aux2%]</option>
 
-            [% FOREACH x IN axis_dim1 %]
-            <option [% x.key == c.req.params.axis_dim1 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %]</option>
+            [% FOREACH x IN axis_dim2 %]
+            <option [% x.key == c.req.params.axis_dim2 ? 'selected' : ''  %] value="[% x.key %]">[% x.value %]</option>
             [%END%]
         </select>
       </div>

@@ -392,10 +392,10 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
 sub _add_indicators_filters {
     my ($self, $c) = @_;
 
-    my $ref = "axis_dim1";
+    my $ref = "axis_dim2";
 
-    if ( $c->stash->{institute_metadata}{"axis_aux1"} ) {
-        my @axis_dim = $c->model("DB::AxisDim1")->search(
+    if ( $c->stash->{institute_metadata}{"axis_aux2"} ) {
+        my @axis_dim = $c->model("DB::AxisDim2")->search(
             undef,
             {
                 columns => [
