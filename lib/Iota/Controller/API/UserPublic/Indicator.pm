@@ -177,6 +177,15 @@ sub resumo_GET {
     my $from_date = $c->req->params->{from_date} || DateTime->now->date;
     my $other_dim = $c->req->params->{include_other_dims};
 
+    my %conds;
+
+    if ($c->req->params->{axis_dim2} && $c->req->params->{axis_dim2}=~/^[0-9]+$/){
+        $conds{'me.axis_dim2_id'} = $c->req->params->{axis_dim2};
+    }
+    if ($c->req->params->{axis_dim3} && $c->req->params->{axis_dim3}=~/^[0-9]+$/){
+        $conds{'me.axis_dim3_id'} = $c->req->params->{axis_dim3};
+    }
+
     sub fix_name {
         my $s = shift;
         return $s eq 'Crianças Invisíveis' ? "C\n\n$s" : "B\n\n$s";
@@ -208,6 +217,7 @@ sub resumo_GET {
             networks_ids => $network_ids,
           )->search(
             {
+                %conds,
                 is_fake => 0,
 
                 #'indicator_network_configs_one.network_id' => [ undef, map { $_->id } @{ $c->stash->{networks} } ],

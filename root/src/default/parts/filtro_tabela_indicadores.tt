@@ -2,6 +2,8 @@
 <div class="row" id="indicadores-search">
     <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
 
+        <input type="hidden" name="valid_from_desc" value="[%c.req.params.valid_from_desc%]"  />
+
       [% IF axis_dim2 && axis_dim2.size>=1 %]
       <div class="form-group a">
         <label>[%institute_metadata.axis_aux2_header %]</label>

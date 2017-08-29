@@ -1,2 +1,3 @@
 var network_id = '[%network.id%]';
 var institute_short_name = '[%institute.short_name%]';
+var is_infancia=[% is_infancia ? 'true' : 'false' %];

@@ -4,6 +4,7 @@ var boxText;
 var myOptions;
 var ib;
 var cidade_data;
+var is_infancia;
 var indicadores_data;
 var graficos = [];
 var dimensions_GO = {
@@ -199,45 +200,38 @@ $(document).ready(function() {
     }
 
     function loadIndicadoresData() {
-        var param = typeof regionID == "undefined" ? '?without_topic=1' : '?without_topic=1&region_id=' + regionID;
-        if (param) {
-            if (location.search) {
-                var date = location.search.split('valid_from_desc=')[1];
+        var param = typeof regionID == "undefined" ? '?without_topic=1' : '?without_topic=1&region_id=' + regionID,
 
-                if (date){
-                    var date_parser = date.split("-");
+        qparams = $.getUrlVars();
 
-                    date_parser[0] = parseInt(date_parser[0]) + 1;
+        console.log(qparams);
 
-                    date = date_parser.join("-");
+        if (qparams) {
+            var date = qparams.valid_from_desc;
 
-                    param = param + '&' + 'from_date=' + date;
-                }
+            if (date){
+                var date_parser = date.split("-");
+
+                date_parser[0] = parseInt(date_parser[0]) + 1;
+
+                date = date_parser.join("-");
+
+                param = param + '&' + 'from_date=' + date;
             }
 
-        } else {
-
-            if (location.search) {
-                var date = location.search.split('valid_from_desc=')[1];
-                if (date){
-                    var date_parser = date.split("-");
-
-                    date_parser[0] = parseInt(date_parser[0]) + 1;
-
-                    date = date_parser.join("-");
-                    param = "?valid_from_desc=" + date;
-                }
+            if (is_infancia){
+                param += '&include_other_dims=1';
             }
 
-            param = param.replace("valid_from_desc", "from_date");
+            if (qparams.axis_dim2){
+                param += '&axis_dim2=' + qparams.axis_dim2;
+            }
 
+            if (qparams.axis_dim3){
+                param += '&axis_dim3=' + qparams.axis_dim3;
+            }
         }
 
-        if (param){
-            param += '&include_other_dims=1';
-        }else{
-            param += '?include_other_dims=1';
-        }
 
         $.ajax({
             type: 'GET',
