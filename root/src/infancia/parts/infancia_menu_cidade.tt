@@ -3,11 +3,11 @@
         <span>[% city.name || menu_indicators_prefix ? 'São Paulo' : '' %]</span>
 
         <a class="city" href="[% indicator.name_url ? "/$city.pais/$city.uf/$city.name_uri/$indicator.name_url" : city.pais ?  "/$city.pais/$city.uf/$city.name_uri/indicadores" : "$menu_indicators_prefix/indicadores" || '#' %]">
-            Cidade
+            Cidade <img src="/static/img/ico-cidade.svg" style="height:24px;width:24px" />
         </a>
 
         <a class="regions" href="[%  indicator.name_url && region.name_url ? "/$city.pais/$city.uf/$city.name_uri/regiao/$region.name_url/$indicator.name_url" : city.pais ?  "/$city.pais/$city.uf/$city.name_uri/regiao" : "$menu_indicators_prefix/regiao" || '#' %]">
-            Região
+            Região <img src="/static/img/ico-regiao.svg" style="height:24px;width:24px" />
         </a>
 
     </div>

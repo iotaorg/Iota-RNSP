@@ -597,16 +597,12 @@ dl.tabela blockquote small {
     color: black;
     text-decoration: none;
 }
-#infancia-menu-cidade a:hover {
-    background-color: white;
-    color: #3366cc;
-}
+
 #infancia-menu-cidade a {
-    border: 2px solid white;
-    color: white;
+     color: #428bca;
+    background-color: #fff;
     padding: 3px 7px;
     margin-right: 10px;
-    border-radius: 16px;
     text-decoration: none;
 }
 #infancia-menu-wrap.no-indicators #infancia-menu-cidade {
@@ -777,3 +773,5 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
     background-color: #3366cc;
     text-transform: none;
 }
+
+#infancia-menu-cidade img { display: inline; margin-top: -6px}
