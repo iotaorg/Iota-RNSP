@@ -204,8 +204,6 @@ $(document).ready(function() {
 
         qparams = $.getUrlVars();
 
-        console.log(qparams);
-
         if (qparams) {
             var date = qparams.valid_from_desc;
 
@@ -379,9 +377,15 @@ $(document).ready(function() {
                         if (item.source == "[ICES]") {
                             icone = "<img src='/static/images/icon_ICES.png'>";
                             icone_title = "Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)";
-                        } else if (item.source == "[PCS]") {
+                        } else if (item.source == "[PCS]" || item.source == "pcs") {
                             icone = "<img src='/static/images/icon_PCS.png'>";
                             icone_title = "Indicadores do Programa Cidades Sustentáveis";
+                        } else if (item.source == "urban") {
+                            icone = "<img src='/static/images/icon_urban.png'>";
+                            icone_title = "Indicadores do Urban 95";
+                        } else if (item.source == "progmetas") {
+                            icone = "<img src='/static/images/icon_prog_metas.png'>";
+                            icone_title = "Indicadores do programa de metas";
                         } else if (item.source == "[REDE]") {
                             icone = "<img src='/static/images/icon_Rede.png'>";
                             icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
