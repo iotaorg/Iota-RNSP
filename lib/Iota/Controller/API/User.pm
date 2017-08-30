@@ -281,7 +281,7 @@ sub user_GET {
 
         };
 
-        $redis->setex( $cache_key, 86400, nfreeze($stash) );
+        $redis->setex( $cache_key, 360, nfreeze($stash) );
     }
     $self->status_ok( $c, entity => $stash );
 }
