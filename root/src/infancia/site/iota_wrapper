@@ -79,9 +79,6 @@
 
     [%-CALL assets.include("js/stupidtable.min.js")%]
 
-    [%-CALL assets.include("js/nprogress.js")%]
-
-
     [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
     [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
     [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]

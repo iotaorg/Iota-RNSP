@@ -41,7 +41,7 @@
 [%-CALL assets.include("css/patrocinadores.sprites.css")%]
 [%-CALL assets.include("js/stupidtable.min.js")%]
 
-[%-CALL assets.include("js/nprogress.js")%]
+
 
 
 [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
@@ -53,7 +53,7 @@
 
 
 [%-CALL assets.include("css/bootstrap.min.css")%]
-[%-CALL assets.include("css/nprogress.css")%]
+
 [%-CALL assets.include("css/bootstrap-responsive.min.css")%]
 
 [%-CALL assets.include("css/jquery-ui-1.9.2.custom.min.css")%]

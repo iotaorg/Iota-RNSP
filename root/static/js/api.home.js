@@ -75,11 +75,6 @@ $(document).ready(function () {
 
                                 markers.push(marker);
 
-                                google.maps.event.addListenerOnce(map, 'tilesloaded', function () {
-                                    NProgress.inc();
-                                    setTimeout('NProgress.done()', 250);
-                                });
-
                                 google.maps.event.addListener(marker, 'click', function (e) {
                                     $("#bubble-intro").fadeOut("slow");
                                     map.setCenter(marker.__position);
@@ -164,7 +159,6 @@ $(document).ready(function () {
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
 
-            NProgress.start();
             var map = new google.maps.Map(document.getElementById("mapa"), mapOptions);
             var boxText = document.createElement("div");
             boxText.style.cssText = "border: 2px solid #20c1c1; margin-top: 8px; background: white; padding: 0px;";
