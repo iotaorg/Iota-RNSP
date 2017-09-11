@@ -1,33 +1,45 @@
 var indicador_data;
+var reduced_requests;
 var historico_data;
+var cityID;
+var regionID;
 var variaveis_data = [];
 var data_vvariables = [];
 var cidade_uri;
 var cidade_data;
 var $dados;
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     var source_values = [];
     var goal_values;
     var observations_values;
 
-    var param = typeof regionID == "undefined" ? '' : '?region_id=' + regionID;
-    $.loadCidadeDataIndicador = function () {
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: (api_path + '/api/public/user/$$id' + param).render({
-                id: userID
-            }),
-            success: function (data, textStatus, jqXHR) {
-                cidade_data = data;
-                loadIndicadorData();
-            },
-            error: function (data) {
-                console.log("erro ao carregar informações da cidade");
-            }
-        });
+    var param = typeof regionID == "undefined" ? '?_=' : '?region_id=' + regionID;
+    $.loadCidadeDataIndicador = function() {
+
+        if (reduced_requests) {
+
+            loadIndicadorData();
+
+        } else {
+
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: (api_path + '/api/public/user/$$id' + param).render({
+                    id: userID
+                }),
+                success: function(data, textStatus, jqXHR) {
+                    cidade_data = data;
+                    loadIndicadorData();
+                },
+                error: function(data) {
+                    console.log("erro ao carregar informações da cidade");
+                }
+            });
+        }
+
     };
 
     function loadIndicadorData() {
@@ -35,114 +47,42 @@ $(document).ready(function () {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id' + param).render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id' + param + '&prefetch_city=$$xid&prefetch_region=$$xx').render({
                 id: userID,
+                xid: cityID,
+                xx: regionID,
                 indicator_id: indicadorID
             }),
-            success: function (data, textStatus, jqXHR) {
+            success: function(data, textStatus, jqXHR) {
                 indicador_data = data;
                 indicadorDATA = data;
-                loadVariaveisData();
-            },
-            error: function (data) {
-                console.log("erro ao carregar informações do indicador");
-            }
-        });
-    }
 
-    function loadVariaveisData() {
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: api_path + '/api/public/user/variable',
-            success: function (data, textStatus, jqXHR) {
-                $.each(data.variables, function (index, value) {
-                    variaveis_data.push({
-                        "id": data.variables[index].id,
-                        "name": data.variables[index].name
-                    });
-                });
-                loadVVariaveisData();
-            },
-            error: function (data) {
-                console.log("erro ao carregar informações do indicador");
-            }
-        });
-    }
+                if (reduced_requests) {
 
-    function loadVVariaveisData() {
+                    cidade_data = {
+                        region: regionID ? {} : data._prefetch.region,
+                        cidade: data._prefetch.cidade,
+                    };
 
-        data_vvariables = [];
-        $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: api_path + '/api/public/user/indicator/variable',
-            success: function (data, textStatus, jqXHR) {
-                $.each(data.variables, function (index, value) {
-                    data_vvariables.push({
-                        "id": data.variables[index].id,
-                        "name": data.variables[index].name
-                    });
-                });
+                }
+
+
                 showIndicadorData();
                 loadHistoricoData();
+            },
+            error: function(data) {
+                console.log("erro ao carregar informações do indicador");
             }
         });
-
-    }
-
-    function formataFormula(formula, variables, vvariables) {
-        var operators_caption = {
-            "+": "+",
-            "-": "-",
-            "(": "(",
-            ")": ")",
-            "/": "÷",
-            "*": "×",
-            "CONCATENAR": ""
-        };
-
-        var new_formula = formula, is_string = /CONCATENAR/i.test(formula);
-
-
-        variables.sort(function (a, b) {
-            return b.id - a.id;
-        });
-
-        $.each(operators_caption, function (index, value) {
-            new_formula = new_formula.replace(index, " " + value + " ");
-        });
-
-        $.each(variables, function (index, value) {
-            var pattern = "\\$" + variables[index].id;
-            var re = new RegExp(pattern, "g");
-            new_formula = new_formula.replace(re, variables[index].name + ( is_string? "\n" : " "));
-        });
-
-
-        if (vvariables) {
-            vvariables.sort(function (a, b) {
-                return b.id - a.id;
-            });
-            $.each(vvariables, function (index, value) {
-                var pattern = "\\#" + vvariables[index].id;
-                var re = new RegExp(pattern, "g");
-                new_formula = new_formula.replace(re, vvariables[index].name + ( is_string? "\n" : " "));
-            });
-        }
-
-        new_formula = $.trim(new_formula);
-        new_formula.replace(/ +/g, ' ');
-        new_formula.replace(/ /g, '&nbsp;');
-
-        return new_formula;
     }
 
     function showIndicadorData() {
 
         if (ref == 'indicador') {
             $("#indicador-dados .profile .title").html(indicador_data.name);
+
             $("h1").text(indicador_data.name + ' - ' + cidade_data.cidade.name + ', ' + cidade_data.cidade.uf);
+
 
             $("#indicador-dados .profile .explanation").html(indicador_data.explanation);
             $dados = $("#indicador-dados .profile .dados");
@@ -156,9 +96,9 @@ $(document).ready(function () {
             $(".tabela", $dados).empty();
 
         }
-        //if (indicador_data.formula.indexOf("CONCATENAR") < 0) {
-            $(".tabela", $dados).append("<dt>Fórmula:</dt><dd class='white_space_pre_wrap'>"+formataFormula(indicador_data.formula, variaveis_data, data_vvariables)+"</dd>");
-        //}
+
+        $(".tabela", $dados).append("<dt>Fórmula:</dt><dd class='white_space_pre_wrap'>" + indicador_data.formula_human + "</dd>");
+
         var fonte_meta = "";
         if (indicador_data.goal_source) {
             fonte_meta = indicador_data.goal_source;
@@ -177,21 +117,23 @@ $(document).ready(function () {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value' + (param ? param + '&indicator_value=1' : '?indicator_value=1' )).render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id/variable/value' + param + '&indicator_value=1').render({
                 id: userID,
                 indicator_id: indicadorID
             }),
-            success: function (data, textStatus, jqXHR) {
+            success: function(data, textStatus, jqXHR) {
                 historico_data = data;
+
                 $("#indicador-historico span.cidade").html(cidade_data.cidade.name + (cidade_data.region ? '/' + cidade_data.region.name : ''));
                 $("#indicador-grafico span.cidade").html(cidade_data.cidade.name + (cidade_data.region ? '/' + cidade_data.region.name : ''));
+
                 $("#indicador-grafico .title a.link").attr("href", "/" + indicador_data.name_url + "/?view=graph&graphs=" + userID);
 
                 $('#indicador-historico label').remove();
                 if (indicador_data.indicator_type == 'varied') {
                     var html_combo = '<label>Faixa: <select id="variation" class="span6" name="variation">';
 
-                    $.each(indicador_data.variations, function (i, v) {
+                    $.each(indicador_data.variations, function(i, v) {
                         html_combo = html_combo + '<option value="$$name">$$name</option>'.render({
                             name: v.name
                         });
@@ -219,19 +161,19 @@ $(document).ready(function () {
                 if (source_values.length > 0) {
 
                     var source_values_unique = [];
-                    $.each(source_values, function (i, el) {
+                    $.each(source_values, function(i, el) {
                         if ($.inArray(el, source_values_unique) === -1) {
                             source_values_unique.push(el);
                         }
                     });
                     $(".tabela", $dados).append("<dt>Fontes do Indicador:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
                         dado: source_values_unique.join("__885__")
-                    }).replace(/__885__/g, '</li><li>') ) ;
+                    }).replace(/__885__/g, '</li><li>'));
                 }
 
                 if ((observations_values) && $.trim(observations_values) !== "") {
                     var observations_values_unique = [];
-                    $.each(observations_values, function (i, el) {
+                    $.each(observations_values, function(i, el) {
                         if ($.inArray(el, observations_values_unique) === -1) {
                             observations_values_unique.push(el);
                         }
@@ -239,16 +181,16 @@ $(document).ready(function () {
 
                     $(".tabela", $dados).append("<dt>Observações:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
                         dado: observations_values_unique.join("__885__")
-                    }).replace(/__885__/g, '</li><li>') );
+                    }).replace(/__885__/g, '</li><li>'));
                 }
 
                 if (indicador_data.user_indicator_config && indicador_data.user_indicator_config.technical_information) {
                     $(".tabela", $dados).append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
                         dado: indicador_data.user_indicator_config.technical_information
-                    }).replace(/\n/g, '<br/>') );
+                    }).replace(/\n/g, '<br/>'));
                 }
 
-                $(".tabela", $dados).append( $('#justifications').html() );
+                $(".tabela", $dados).append($('#justifications').html());
 
                 if (!(indicador_data.variable_type == 'str')) {
 
@@ -260,7 +202,7 @@ $(document).ready(function () {
                 $(".indicators").removeClass("meloading");
 
             },
-            error: function (data) {
+            error: function(data) {
                 console.log("erro ao carregar série histórica");
                 $(".indicators").removeClass("meloading");
             }
@@ -282,11 +224,11 @@ $(document).ready(function () {
             var history_table = "<table class='history table table-striped table-condensed'><thead><tr><th>Período</th>";
 
             var headers = []; //corrige ordem do header
-            $.each(historico_data.header, function (titulo, index) {
+            $.each(historico_data.header, function(titulo, index) {
                 headers[index] = titulo;
             });
 
-            $.each(headers, function (index, value) {
+            $.each(headers, function(index, value) {
                 history_table += "<th class='variavel'>$$variavel</th>".render({
                     variavel: value
                 });
@@ -294,7 +236,7 @@ $(document).ready(function () {
             var hvariado = Array();
             if (historico_data.variables_variations) {
 
-                $.each(historico_data.variables_variations, function (index, tv) {
+                $.each(historico_data.variables_variations, function(index, tv) {
                     history_table += "<th class='variavel'>$$variavel</th>".render({
                         variavel: tv.name
                     });
@@ -322,7 +264,7 @@ $(document).ready(function () {
             var grafico_variado;
 
 
-            $.each(historico_data.rows, function (index, value) {
+            $.each(historico_data.rows, function(index, value) {
 
                 history_table += "<tr><td class='periodo'>$$periodo</td>".render({
                     periodo: convertDateToPeriod(historico_data.rows[index].valid_from, indicador_data.period)
@@ -331,7 +273,7 @@ $(document).ready(function () {
 
                 var cont = 0,
                     num_var = numKeys(historico_data.header);
-                $.each(historico_data.rows[index].valores, function (index2, value2) {
+                $.each(historico_data.rows[index].valores, function(index2, value2) {
                     var valor_linha = historico_data.rows[index].valores[index2];
                     cont++;
                     if (valor_linha !== null) {
@@ -384,7 +326,7 @@ $(document).ready(function () {
                         var valor = '';
                         var valoresxx;
 
-                        $.each(historico_data.rows[index].variations, function (i, vv) {
+                        $.each(historico_data.rows[index].variations, function(i, vv) {
                             if (grafico_variado[vv.name] == undefined) {
                                 grafico_variado[vv.name] = [];
                             }
@@ -403,7 +345,7 @@ $(document).ready(function () {
 
                         if (hvariado.length) {
 
-                            $.each(hvariado, function (index, id) {
+                            $.each(hvariado, function(index, id) {
 
                                 if (valoresxx == undefined || valoresxx[id] == undefined || valoresxx[id] === '' || valoresxx[id] == '-') {
                                     history_table += "<td class='formula_valor'>-</td>";
@@ -474,7 +416,7 @@ $(document).ready(function () {
                 history_table = history_table + '<div class="title">' + indicador_data.variety_name + '</div>' + "<table class='history table table-striped table-condensed'><thead><tr><th>Período</th><th>Soma das faixas</th>";
 
                 history_table += "</tr><tbody>";
-                $.each(historico_data.rows, function (index, value) {
+                $.each(historico_data.rows, function(index, value) {
 
                     history_table += "<tr><td class='periodo'>$$periodo</td>".render({
                         periodo: convertDateToPeriod(historico_data.rows[index].valid_from, indicador_data.period)
@@ -510,12 +452,12 @@ $(document).ready(function () {
 
                 var em_ordem = [];
 
-                $.each(grafico_variado, function (a, b) {
+                $.each(grafico_variado, function(a, b) {
                     em_ordem.push(a);
                 });
                 em_ordem.sort();
 
-                $.each(em_ordem, function (index, chave) {
+                $.each(em_ordem, function(index, chave) {
 
                     dadosGrafico.dados.push({
                         id: userID,

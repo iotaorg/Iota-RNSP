@@ -107,7 +107,9 @@
 <script type="text/javascript">
     [% PROCESS 'network_javascript.tt'%]
     var userID = [% user.id %];
+    var cityID = [% city.id %];
     var indicadorID = [% indicator.id %];
+    var reduced_requests = 1;
 
     var ref = 'indicador';
 </script>

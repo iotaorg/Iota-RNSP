@@ -188,6 +188,45 @@ sub indicator_GET {
     $ret->{created_at} = $object_ref->created_at->datetime;
     $c->stash->{indicator_ref} = $object_ref;
 
+    if ( defined $c->req->params->{prefetch_city} && $c->req->params->{prefetch_city} =~ /^[0-9]+$/ ) {
+
+        my $r = $c->model('DB::City')->search_rs( { 'id' => $c->req->params->{prefetch_city} } )->as_hashref->next;
+
+    use DDP; p $r;
+        if ($r) {
+
+            $ret->{_prefetch}->{cidade} = {
+                name                        => $r->{name},
+                uf                          => $r->{uf},
+                pais                        => $r->{pais},
+                latitude                    => $r->{latitude},
+                longitude                   => $r->{longitude},
+                telefone_prefeitura         => $r->{telefone_prefeitura},
+                endereco_prefeitura         => $r->{endereco_prefeitura},
+                bairro_prefeitura           => $r->{bairro_prefeitura},
+                cep_prefeitura              => $r->{cep_prefeitura},
+                nome_responsavel_prefeitura => $r->{nome_responsavel_prefeitura},
+                email_prefeitura            => $r->{email_prefeitura},
+            };
+        }
+
+    }
+
+
+    if ( defined $c->req->params->{prefetch_region} && $c->req->params->{prefetch_region} =~ /^[0-9]+$/ ) {
+
+        my $r = $c->model('DB::Region')->search_rs( { 'id' => $c->req->params->{prefetch_region} } )->as_hashref->next;
+
+        if ($r) {
+
+            $ret->{_prefetch}{region} = {
+                name     => $r->{name},
+                name_url => $r->{name_url}
+            };
+        }
+
+    }
+
     $self->status_ok( $c, entity => $ret );
 
 }
