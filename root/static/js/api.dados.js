@@ -2,6 +2,7 @@ var indicadores_list;
 var eixos_list = {
     "dados": []
 };
+var reduced_requests;
 var users_list;
 var indicadorID;
 var indicadorID_origin = indicadorID;
@@ -64,219 +65,11 @@ $(document).ready(function () {
                     }
                 });
 
-                carregaIndicadores();
             },
             error: function (data) {
                 console.log("erro ao carregar informações dos indicadores");
             }
         });
-    }
-
-    function carregaIndicadores() {
-        /*
-        $("#group_list").empty();
-
-        eixos_list.dados.sort(function (a, b) {
-            a = a.name,
-            b = b.name;
-
-            return a.localeCompare(b);
-        });
-
-        $(eixos_list.dados).each(function(index,value){
-            if (index === 0){
-                $("#group_list").append("<div class='select' axis-id='0'><div class='content-fill'>Categoria</div></div>");
-                $("#group_list").append("<div class='options'><div class='option' axis-id='0'>Categoria</div></div>");
-            }
-            $("#group_list .options").append("<div class='option' axis-id='$$id'>$$nome</div>".render({
-                            id: value.id,
-                            nome: value.name
-                }));
-        });
-
-        $("#group_list .select").click(function(){
-            $("#group_list .options").toggle();
-        });
-        $("#group_list .option").click(function(){
-            $("#group_list .select").attr("axis-id",$(this).attr("axis-id"));
-            $("#group_list .select .content-fill").html($(this).html());
-            $("#group_list .options").hide();
-            if ($(this).attr("axis-id") != 0){
-                $(".menu-left div.indicators .item").hide();
-                $(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $(this).attr("axis-id")})).show();
-            }else{
-                $(".menu-left div.indicators .item").show();
-            }
-            $("#indicator-search").val("");
-
-        });
-        $("#group_list .options").hover(function(){
-            if (typeof(t_categorias) != "undefined"){
-                if (t_categorias){
-                    clearTimeout(t_categorias);
-                }
-            }
-        },function(){
-            t_categorias = setTimeout(function(){
-                $("#group_list .options").hide();
-            },2000) ;
-        });
-
-        $("#indicator-search").keyup(function(){
-            if ($(this).val() != ""){
-                $(".indicators .item").hide();
-                var termo = $(this).val();
-                var matches = $('.indicators .item').filter(function() {
-                    var match = normalize(termo);
-
-                    var pattern = match;
-                    var re = new RegExp(pattern,'g');
-
-                    return re.test( normalize($(this).text()) );
-                });
-                if ($("#group_list .select").attr("axis-id") != 0 && $("#group_list .select").attr("axis-id") != ""){
-                    $(matches).each(function(index,element){
-                        if ($(this).attr("axis-id") == $("#group_list .select").attr("axis-id")){
-                            $(this).fadeIn();
-                        }
-                    });
-                }else{
-                    $(matches).fadeIn();
-                }
-            }else{
-                refreshIndicadores();
-            }
-        });
-
-        function refreshIndicadores(){
-            $("#group_list .options").hide();
-            if ($("#group_list .select").attr("axis-id") != 0){
-                $(".menu-left div.indicators .item").hide();
-                $(".menu-left div.indicators .item[axis-id='$$axis_id']".render({axis_id: $("#group_list .select").attr("axis-id")})).show();
-            }else{
-                $(".menu-left div.indicators .item").show();
-            }
-            if ($("#indicator-search").val() != ""){
-                $(".indicators .item").hide();
-                var termo = $("#indicator-search").val();
-                var matches = $('.indicators .item').filter(function() {
-                    var match = normalize(termo);
-
-                    var pattern = match;
-                    var re = new RegExp(pattern,'g');
-
-                    return re.test( normalize($(this).text()) );
-                });
-                if ($("#group_list .select").attr("axis-id") != 0 && $("#group_list .select").attr("axis-id") != ""){
-                    $(matches).find("[axis-id='$$axis_id']".render({axis_id: $("#group_list .select").attr("axis-id")})).fadeIn();
-                }else{
-                    $(matches).fadeIn();
-                }
-            }
-        }
-
-        $(".indicators").empty();
-        indicadores_list.sort(function (a, b) {
-            a = a.name,
-            b = b.name;
-
-            return a.localeCompare(b);
-        });
-        $.each(indicadores_list, function(i,item){
-            $(".indicators").append("<div class='item bs-tooltip' data-toggle='tooltip' data-placement='right' title data-original-title='$$explanation' indicator-id='$$id' axis-id='$$axis_id' name-uri='$$uri'>$$name</div>".render({
-                        id: item.id,
-                        name: item.name,
-                        axis_id: item.axis.id,
-                        uri: item.name_url,
-                        explanation: (item.explanation) ? item.explanation : ""
-                    }));
-        });
-        $("div.bs-tooltip").tooltip();
-        if (indicadorID == "" || indicadorID == undefined){
-            if (ref != "home"){
-                indicadorID = $(".indicators .item:first").attr("indicator-id");
-            }
-        }else{
-            selectAxis(indicadorID);
-        }
-
-
-
-        $(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).addClass("selected");
-        $.each(indicadores_list, function(i,item){
-            if (item.id == indicadorID){
-                indicadorDATA = indicadores_list[i];
-            }
-        });
-
-
-        $(".indicators .item").click( function (){
-
-            if ($(".indicators").hasClass("meloading")){
-                alert('Por favor, espere o indicador carregar.');
-                return;
-            }
-            if (ref == "home"){
-                window.location.href = "/" + $(this).attr("name-uri") + $.getUrlParams();
-                return;
-            }
-
-            if (indicadorID == $(this).attr("indicator-id")){
-                return;
-            }
-            indicadorID = $(this).attr("indicator-id");
-
-            $(indicadores_list).each(function(index,item){
-                if (item.id == indicadorID){
-                    indicadorDATA = item;
-                }
-            });
-
-            $(".indicators .item").removeClass("selected");
-            $(".indicators").addClass("meloading");
-            $(this).addClass("selected");
-
-            var title = $(".indicators .selected").text();
-
-            if ($(window).scrollTop() > 130){
-                $('html,body').animate({scrollTop: 130},'slow');
-            }
-
-            var url;
-            if (ref == "comparacao"){
-                url = "/" + $(this).attr("name-uri") + $.getUrlParams();
-
-                History.pushState(null, title, url);
-
-            }else if (ref == "indicador" ){
-                url = "/"+cidade_uri + "/" + $(this).attr("name-uri") + $.getUrlParams();
-                History.pushState({
-                    indicator_id: indicadorID
-                }, title, url);
-            }else if (ref == "region_indicator"){
-                url = "/"+cidade_uri + "/regiao/" +  region_name_url + "/" + $(this).attr("name-uri") + $.getUrlParams();
-                History.pushState({
-                    indicator_id : indicadorID
-                }, title, url);
-            }
-
-            ga('send', 'pageview', url);
-        });
-*/
-
-    }
-
-    function activeMenuOfIndicator(id) {
-        /*
-        indicadorID = id;
-        selectAxis(id);
-
-        $(".indicators .item").removeClass("selected");
-        $(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).addClass("selected");
-
-        $(".data-right .data-title .title").html($(".indicators .item[indicator-id='$$indicator_id']".render({indicator_id: indicadorID})).html());
-        $(".data-right .data-title .description").html((indicadorDATA.explanation) ? indicadorDATA.explanation : "");
-*/
     }
 
     function carregaDadosTabela() {
@@ -910,7 +703,7 @@ $(document).ready(function () {
 
     }
 
-    function setaDadosAbertos() {
+    function setDownloadButtons() {
 
         $("#button-download").unbind();
         $("#button-download").click(function () {
@@ -964,14 +757,18 @@ $(document).ready(function () {
 
             self.location = x + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
         });
+    $("#share-link").val(window.location.href);
 
     }
 
-    if (ref == "comparacao" || ref == "indicador" || ref == "home" || ref == "region_indicator") {
+    if (ref == "comparacao" || (ref == "indicador" && !reduced_requests) || ref == "home" || ref == "region_indicator") {
+        if (console){
+            console.log("doing ajax api.dados.js because ref=" + ref)
+        }
         carregaIndicadoresCidades();
-        setaDadosAbertos();
-        $("#share-link").val(window.location.href);
     }
+
+    setDownloadButtons();
 
     var History = window.History;
 
@@ -985,9 +782,7 @@ $(document).ready(function () {
             if (!State.data.indicator_id) {
                 State.data.indicator_id = indicadorID_origin;
             }
-
-            setaDadosAbertos();
-            $("#share-link").val(window.location.href);
+            setDownloadButtons();
 
             if (ref == "region_indicator" || ref == "indicador") {
 
