@@ -16,7 +16,7 @@ var carregaVariacoes = true;
 var ano_atual_dados;
 
 var dados_mapa;
-$(document).ready(function () {
+$(document).ready(function() {
 
 
     $.ajaxSetup({
@@ -33,12 +33,14 @@ $(document).ready(function () {
             url: api_path + '/api/public/network?user_id=$$user_id'.render({
                 user_id: userID
             }),
-            success: function (data, textStatus, jqXHR) {
+            success: function(data, textStatus, jqXHR) {
                 users_list = [];
                 indicadores_list = data.indicators;
 
-                $(data.users).each(function (index, item) {
-                    if (item.id == userID) {cidade_uri = "/" + item.city.pais + "/" + item.city.uf + "/" + item.city.name_uri;}
+                $(data.users).each(function(index, item) {
+                    if (item.id == userID) {
+                        cidade_uri = "/" + item.city.pais + "/" + item.city.uf + "/" + item.city.name_uri;
+                    }
                     users_list.push({
                         id: item.id,
                         nome: item.city.name,
@@ -49,14 +51,14 @@ $(document).ready(function () {
                     });
                 });
 
-                users_list.sort(function (a, b) {
+                users_list.sort(function(a, b) {
                     a = a.nome;
                     b = b.nome;
 
                     return a.localeCompare(b);
                 });
 
-                $(indicadores_list).each(function (index, value) {
+                $(indicadores_list).each(function(index, value) {
                     if (!findInJson(eixos_list.dados, "id", value.axis.id).found) {
                         eixos_list["dados"].push({
                             id: value.axis.id,
@@ -66,7 +68,7 @@ $(document).ready(function () {
                 });
 
             },
-            error: function (data) {
+            error: function(data) {
                 console.log("erro ao carregar informações dos indicadores");
             }
         });
@@ -114,7 +116,7 @@ $(document).ready(function () {
             var total_users = users_list.length;
             var users_ready = 0;
             var total_visible = 0;
-            $(users_list).each(function (index, item) {
+            $(users_list).each(function(index, item) {
 
                 $.ajax({
                     type: 'GET',
@@ -125,18 +127,18 @@ $(document).ready(function () {
                         from: ano_atual_dados,
                         to: ano_anterior + '-01-01'
                     }),
-                    success: function (data, textStatus, jqXHR) {
+                    success: function(data, textStatus, jqXHR) {
 
                         if (indicadorDATA.indicator_type == "varied") {
                             if ($("#variationFilter option").length <= 0) {
                                 if ((data.series) && data.series.length > 0) {
-                                    $.each(data.series[0].variations, function (index, item) {
+                                    $.each(data.series[0].variations, function(index, item) {
                                         $("#variationFilter").append("<option value='$$index'>$$name".render({
                                             index: index,
                                             name: item.name
                                         }));
                                     });
-                                    $("#variationFilter").change(function () {
+                                    $("#variationFilter").change(function() {
                                         carregouTabela = false;
                                         carregaVariacoes = false;
                                         carregaDadosTabela();
@@ -262,7 +264,7 @@ $(document).ready(function () {
 
 
                     },
-                    error: function (data) {
+                    error: function(data) {
                         console.log("erro ao carregar informações do indicador");
                     }
                 });
@@ -290,7 +292,7 @@ $(document).ready(function () {
 
         dados_mapa = $('#map').attr('data-json') ? $.parseJSON($('#map').attr('data-json')) : {};
         dadosGrafico = $('#graph').attr('data-json') ? $.parseJSON($('#graph').attr('data-json')) : {};
-        $('#mapa-filtro-periodo').change(function () {
+        $('#mapa-filtro-periodo').change(function() {
             var $me = $(this).val(),
                 $dados = dados_mapa[$me];
 
@@ -300,7 +302,7 @@ $(document).ready(function () {
             geraMapa($dados);
         });
 
-        $('a[href="#table"]').on('shown', function (e) {
+        $('a[href="#table"]').on('shown', function(e) {
             $.setUrl({
                 view: "table"
             }, {
@@ -308,7 +310,7 @@ $(document).ready(function () {
             });
         });
 
-        $('a[href="#map"]').on('shown', function (e) {
+        $('a[href="#map"]').on('shown', function(e) {
             $.setUrl({
                 view: "map"
             }, {
@@ -319,7 +321,7 @@ $(document).ready(function () {
             }
         });
 
-        $('a[href="#graph"]').on('shown', function (e) {
+        $('a[href="#graph"]').on('shown', function(e) {
             $.setUrl({
                 view: "graph"
             }, {
@@ -331,7 +333,7 @@ $(document).ready(function () {
         if (ref == 'comparacao') {
             indicadorDATA = $.parseJSON($('#indicador-dados').attr('data-json'));
 
-            $("td button.compare").on('click', function (e) {
+            $("td button.compare").on('click', function(e) {
                 var graphs;
                 if ($.getUrlVar("graphs")) {
                     graphs = $.getUrlVar("graphs").split("-");
@@ -366,7 +368,7 @@ $(document).ready(function () {
     reload_bind_content();
 
 
-    $.carregaGrafico = function (canvasId) {
+    $.carregaGrafico = function(canvasId) {
         _resize_canvas();
         RGraph.ObjectRegistry.Clear();
         var color_meta = '#ff0000';
@@ -386,7 +388,7 @@ $(document).ready(function () {
 
             var $maximo_linhas = dadosGrafico.labels.length;
 
-            $.each(dadosGrafico.dados, function (i, item) {
+            $.each(dadosGrafico.dados, function(i, item) {
                 if (item.show) {
                     if (item.valores.length > $maximo_linhas) {
                         $maximo_linhas = item.valores.length;
@@ -420,7 +422,7 @@ $(document).ready(function () {
         }
 
         var color_index = 0;
-        $.each(dadosGrafico.dados, function (i, item) {
+        $.each(dadosGrafico.dados, function(i, item) {
             if (item.show) {
                 linhas.push(item.valores);
                 legendas.push({
@@ -428,7 +430,7 @@ $(document).ready(function () {
                     color: colors[color_index],
                     id: item.id
                 });
-                $.each(item.valores, function (index, valor) {
+                $.each(item.valores, function(index, valor) {
                     if (valor != null) {
                         if (ymin === 0) ymin = parseFloat(valor);
                         if (parseFloat(valor) < ymin) ymin = parseFloat(valor);
@@ -449,12 +451,14 @@ $(document).ready(function () {
         });
 
 
-        if (maxlength < 10){ maxlength = 10;}
+        if (maxlength < 10) {
+            maxlength = 10;
+        }
 
         if ((ymin >= 0) && ((parseInt(ymin, 10) - 1) < 0)) {
             ymin = 0;
         } else {
-            ymin = parseInt(ymin,10) - 1;
+            ymin = parseInt(ymin, 10) - 1;
         }
 
         ymin = 0;
@@ -475,8 +479,8 @@ $(document).ready(function () {
         line.Set('chart.colors', colors);
         line.Set('chart.tickmarks', 'filledcircle');
 
-        if (ymin_real < 0){
-	        line.Set('chart.xaxispos', 'center');
+        if (ymin_real < 0) {
+            line.Set('chart.xaxispos', 'center');
         }
 
         line.Draw();
@@ -488,7 +492,7 @@ $(document).ready(function () {
     };
 
     function setGraphLine(id, status) {
-        $.each(dadosGrafico.dados, function (index, item) {
+        $.each(dadosGrafico.dados, function(index, item) {
             if (item.id == id) {
                 dadosGrafico.dados[index].show = status;
             }
@@ -496,7 +500,7 @@ $(document).ready(function () {
     }
 
     function clearGraphLines() {
-        $.each(dadosGrafico.dados, function (index, item) {
+        $.each(dadosGrafico.dados, function(index, item) {
             dadosGrafico.dados[index].show = false;
         });
     }
@@ -525,17 +529,17 @@ $(document).ready(function () {
 
         if (args.removable) {
 
-            $(".graph .legend .item").hover(function () {
+            $(".graph .legend .item").hover(function() {
                 if (!$(this).hasClass("meta")) {
                     $(this).find(".icon").fadeIn();
                 }
-            }, function () {
+            }, function() {
                 if (!$(this).hasClass("meta")) {
                     $(this).find(".icon").hide();
                 }
             });
 
-            $(".graph .legend .icon").click(function () {
+            $(".graph .legend .icon").click(function() {
                 if ($(this).attr("item-id")) {
                     var graphs;
                     if ($.getUrlVar("graphs")) {
@@ -565,7 +569,7 @@ $(document).ready(function () {
         if ($.getUrlVar("graphs")) {
             clearGraphLines();
             var graphs = $.getUrlVar("graphs").split("-");
-            $.each(graphs, function (index, value) {
+            $.each(graphs, function(index, value) {
                 setGraphLine(value, true);
             });
         } else {
@@ -576,15 +580,21 @@ $(document).ready(function () {
 
 
 
-    function on_resize(c,t){onresize=function(){clearTimeout(t);t=setTimeout(c,100)};return c};
+    function on_resize(c, t) {
+        onresize = function() {
+            clearTimeout(t);
+            t = setTimeout(c, 100)
+        };
+        return c
+    };
 
     function geraMapa($dados) {
 
-        if (typeof google.visualization == 'undefined'){
+        if (typeof google.visualization == 'undefined') {
             google.load(
                 'visualization', '1.1', {
                     packages: ['geochart'],
-                    callback: function(){
+                    callback: function() {
                         geraMapa($dados);
                     }
                 }
@@ -595,7 +605,7 @@ $(document).ready(function () {
 
         var markers = [];
 
-        $.each($dados, function (index, item) {
+        $.each($dados, function(index, item) {
             if (item.lng) {
 
                 var valor = parseFloat(item.val);
@@ -605,10 +615,13 @@ $(document).ready(function () {
                         parseFloat(item.lat),
                         parseFloat(item.lng),
                         item.nm,
-                        {v: valor, f: $.formatNumberCustom(valor, {
-                            format: "#,##0.##",
-                            locale: "br"
-                        }) }
+                        {
+                            v: valor,
+                            f: $.formatNumberCustom(valor, {
+                                format: "#,##0.##",
+                                locale: "br"
+                            })
+                        }
                     ]);
 
                 }
@@ -625,16 +638,19 @@ $(document).ready(function () {
 
         data.addRows(markers);
 
-        var $elm = $('#mapa'), region = 'BR';
+        var $elm = $('#mapa'),
+            region = 'BR';
         var stateHeatMap = new google.visualization.GeoChart($elm[0]);
-        var _on_res_call = function(){
+        var _on_res_call = function() {
             stateHeatMap.draw(data, {
                 region: region,
                 legend: {
                     numberFormat: "#.#"
                 },
                 displayMode: 'markers',
-                colorAxis: {colors: $elm.attr('data-colors').split(',')}
+                colorAxis: {
+                    colors: $elm.attr('data-colors').split(',')
+                }
             });
         };
         on_resize(_on_res_call)();
@@ -706,7 +722,7 @@ $(document).ready(function () {
     function setDownloadButtons() {
 
         $("#button-download").unbind();
-        $("#button-download").click(function () {
+        $("#button-download").click(function() {
             if ($(".share-link").is(":visible")) {
                 $(".share-link").toggle();
                 $("#button-share").toggleClass("down");
@@ -717,7 +733,7 @@ $(document).ready(function () {
 
 
         $("#button-share").unbind();
-        $("#button-share").click(function () {
+        $("#button-share").click(function() {
             if ($(".download-links").is(":visible")) {
                 $(".download-links").toggle();
                 $("#button-download").toggleClass("down");
@@ -726,14 +742,14 @@ $(document).ready(function () {
             $(this).toggleClass("down");
             $("#share-link").select();
         });
-        $("#share-link").focus(function () {
+        $("#share-link").focus(function() {
             $(this).select();
         });
         $("#share-link").unbind();
-        $("#share-link").click(function () {
+        $("#share-link").click(function() {
             $(this).select();
         });
-        $("#share-link").keypress(function (e) {
+        $("#share-link").keypress(function(e) {
             e.preventDefault();
         });
 
@@ -749,20 +765,21 @@ $(document).ready(function () {
         $(".download-links").append("<a href='#' class='botao json' formato='json'>JSON</a>");
 
         $(".download-links a.botao").unbind();
-        $(".download-links a.botao").click(function (e) {
+        $(".download-links a.botao").click(function(e) {
             e.preventDefault();
             var x = 'http://' + window.location.host + window.location.pathname;
-            if (x.substr(-1, 1) != '/'){
-                x = x + '/';}
+            if (x.substr(-1, 1) != '/') {
+                x = x + '/';
+            }
 
             self.location = x + $("#dados-abertos-tipo option:selected").val() + "." + $(this).attr("formato");
         });
-    $("#share-link").val(window.location.href);
+        $("#share-link").val(window.location.href);
 
     }
 
     if (ref == "comparacao" || (ref == "indicador" && !reduced_requests) || ref == "home" || ref == "region_indicator") {
-        if (console){
+        if (console) {
             console.log("doing ajax api.dados.js because ref=" + ref)
         }
         carregaIndicadoresCidades();
@@ -772,7 +789,7 @@ $(document).ready(function () {
 
     var History = window.History;
 
-    History.Adapter.bind(window, 'statechange', function () {
+    History.Adapter.bind(window, 'statechange', function() {
         var State = History.getState();
 
         State.data = State.data == null ? {} : State.data;
@@ -792,12 +809,13 @@ $(document).ready(function () {
             }
         }
 
-        if (typeof State.data.recontent == "undefined"){
-            State.data.recontent = true;}
+        if (typeof State.data.recontent == "undefined") {
+            State.data.recontent = true;
+        }
 
         if (State.data.recontent) {
             $(".indicators").addClass("meloading");
-            $('[data-part-onchange-location]').each(function (a, b) {
+            $('[data-part-onchange-location]').each(function(a, b) {
                 var $me = $(b),
                     part = $me.attr('data-part-onchange-location');
                 var newURL = updateURLParameter(window.location.href, 'part', part);
@@ -805,7 +823,7 @@ $(document).ready(function () {
                 $.ajax({
                     url: newURL,
                     cache: true
-                }).done(function (data) {
+                }).done(function(data) {
                     var $c = $(data);
 
                     $me.replaceWith($c);
@@ -846,19 +864,27 @@ $(document).ready(function () {
 
 
     function _bind_tables() {
-        $('[stupidsort]').each(function (x, rlm) {
+        $('[stupidsort]').each(function(x, rlm) {
             var table = $(rlm).stupidtable({
-                myfloat: function (x, y) {
-                    if (x == y) {return 0;}
-                    if (x == "") {return -1;}
-                    if (y == "") {return 1;}
+                myfloat: function(x, y) {
+                    if (x == y) {
+                        return 0;
+                    }
+                    if (x == "") {
+                        return -1;
+                    }
+                    if (y == "") {
+                        return 1;
+                    }
 
-                    if (parseFloat(x) > parseFloat(y)) {return 1;}
+                    if (parseFloat(x) > parseFloat(y)) {
+                        return 1;
+                    }
                     return -1;
                 }
             });
 
-            table.bind('aftertablesort', function (event, data) {
+            table.bind('aftertablesort', function(event, data) {
                 var th = $(this).find("th");
                 th.find(".arrow").remove();
                 var arrow = data.direction === "asc" ? "↑" : "↓";
@@ -873,7 +899,7 @@ $(document).ready(function () {
     }
 
     function _on_load() {
-        $('[lockfixed]').each(function (x, rlm) {
+        $('[lockfixed]').each(function(x, rlm) {
             $.lockfixed(rlm, {
                 offset: {
                     top: 47,
@@ -888,29 +914,29 @@ $(document).ready(function () {
         _bind_tables();
 
         $("#graph-search-user").autocomplete({
-            source: function (request, response) {
+            source: function(request, response) {
                 var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
-                response($.grep(users_list, function (value) {
+                response($.grep(users_list, function(value) {
                     value = value.label || value.value || value;
                     return matcher.test(value) || matcher.test(normalize(value));
                 }));
             },
-            focus: function (event, ui) {
+            focus: function(event, ui) {
                 $("#button-search-user").attr("disabled", true);
             },
-            select: function (event, ui) {
+            select: function(event, ui) {
                 $("#graph-user-selected").val(ui.item.id);
                 $("#button-search-user").attr("disabled", false);
             }
         });
 
-        $('#variation_checks input').on('change', function () {
+        $('#variation_checks input').on('change', function() {
             var $me = $(this);
             $('#table_cmp_user tr.varied[data-variation="' + $me.val() + '"]')[$me.is(':checked') ? 'addClass' : 'removeClass']('active');
         });
-        $("#button-search-user").click(function () {
+        $("#button-search-user").click(function() {
 
-            var graphs ;
+            var graphs;
             if ($.getUrlVar("graphs")) {
                 graphs = $.getUrlVar("graphs").split("-");
             } else {
