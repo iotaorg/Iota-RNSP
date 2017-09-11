@@ -505,8 +505,9 @@ dl.tabela blockquote small {
 #indicador-grafico .title a.link:hover {
     color: white;
 }
+
 #indicador-grafico .title > * {
-    float: left;
+/*     float: left; removendo pois acho que nao precisa! */
 }
 
 /* tela comparacao cidades */

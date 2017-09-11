@@ -58,12 +58,10 @@ $(document).ready(function() {
                 indicadorDATA = data;
 
                 if (reduced_requests) {
-
                     cidade_data = {
-                        region: regionID ? {} : data._prefetch.region,
+                        region: regionID ? data._prefetch.region : {},
                         cidade: data._prefetch.cidade,
                     };
-
                 }
 
 

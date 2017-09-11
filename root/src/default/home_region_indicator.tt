@@ -129,6 +129,7 @@
     var regionID = [% region.id %];
     var indicadorID = [% indicator.id %];
     var region_name_url = '[% region.name_url %]';
+    var reduced_requests = 1;
 
     var ref = 'region_indicator';
     [% PROCESS 'network_javascript.tt'%]

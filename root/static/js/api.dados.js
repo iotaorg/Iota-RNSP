@@ -778,7 +778,7 @@ $(document).ready(function() {
 
     }
 
-    if (ref == "comparacao" || (ref == "indicador" && !reduced_requests) || ref == "home" || ref == "region_indicator") {
+    if (ref == "comparacao" || (ref == "indicador" && !reduced_requests) || ref == "home" || (ref == "region_indicator" && !reduced_requests)) {
         if (console) {
             console.log("doing ajax api.dados.js because ref=" + ref)
         }
