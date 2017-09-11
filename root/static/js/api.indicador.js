@@ -59,7 +59,7 @@ $(document).ready(function() {
 
                 if (reduced_requests) {
                     cidade_data = {
-                        region: regionID ? data._prefetch.region : {},
+                        region: regionID ? data._prefetch.region : null,
                         cidade: data._prefetch.cidade,
                     };
                 }
