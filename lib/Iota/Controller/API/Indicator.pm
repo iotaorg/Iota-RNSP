@@ -192,7 +192,6 @@ sub indicator_GET {
 
         my $r = $c->model('DB::City')->search_rs( { 'id' => $c->req->params->{prefetch_city} } )->as_hashref->next;
 
-    use DDP; p $r;
         if ($r) {
 
             $ret->{_prefetch}->{cidade} = {
@@ -211,7 +210,6 @@ sub indicator_GET {
         }
 
     }
-
 
     if ( defined $c->req->params->{prefetch_region} && $c->req->params->{prefetch_region} =~ /^[0-9]+$/ ) {
 
