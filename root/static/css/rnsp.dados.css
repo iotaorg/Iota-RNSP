@@ -1126,3 +1126,5 @@ a.link-axis, a.link-region {
 .btn-filter {
     margin-top: 25px;
 }
+
+.forceinline img,.forceinline div {display: inline-block !important;}

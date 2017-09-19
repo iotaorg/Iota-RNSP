@@ -202,12 +202,12 @@ $(document).ready(function() {
     function loadIndicadoresData() {
         var param = typeof regionID == "undefined" ? '?without_topic=1' : '?without_topic=1&region_id=' + regionID,
 
-        qparams = $.getUrlVars();
+            qparams = $.getUrlVars();
 
         if (qparams) {
             var date = qparams.valid_from_desc;
 
-            if (date){
+            if (date) {
                 var date_parser = date.split("-");
 
                 date_parser[0] = parseInt(date_parser[0]) + 1;
@@ -217,15 +217,15 @@ $(document).ready(function() {
                 param = param + '&' + 'from_date=' + date;
             }
 
-            if (is_infancia){
+            if (is_infancia) {
                 param += '&include_other_dims=1';
             }
 
-            if (qparams.axis_dim2){
+            if (qparams.axis_dim2) {
                 param += '&axis_dim2=' + qparams.axis_dim2;
             }
 
-            if (qparams.axis_dim3){
+            if (qparams.axis_dim3) {
                 param += '&axis_dim3=' + qparams.axis_dim3;
             }
         }
@@ -265,7 +265,7 @@ $(document).ready(function() {
         var dimension_id;
 
 
-        if (indicadores_data.dimensions){
+        if (indicadores_data.dimensions) {
             dimensions_GO = indicadores_data.dimensions;
         }
 
@@ -285,7 +285,7 @@ $(document).ready(function() {
                 dimension_id = 0;
             }
 
-            if (index.indexOf("\n\n") > -1){
+            if (index.indexOf("\n\n") > -1) {
                 var tmpa = index.split("\n\n");
                 dimension_id = tmpa[0]
                 index = tmpa[1]
@@ -371,30 +371,47 @@ $(document).ready(function() {
                         url: (base_url) ? (base_url + "/" + item.name_url) : ((window.location.href.slice(-1) == "/") ? item.name_url : window.location.href + "/" + item.name_url)
                     });
 
-                    var icone = "",
-                        icone_title = "";
                     if (item.source) {
+
+                        var icone = [],
+                            icone_title = [];
+
                         if (item.source == "[ICES]") {
-                            icone = "<img src='/static/images/icon_ICES.png'>";
-                            icone_title = "Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)";
-                        } else if (item.source == "[PCS]" || item.source == "pcs") {
-                            icone = "<img src='/static/images/icon_PCS.png'>";
-                            icone_title = "Indicadores do Programa Cidades Sustentáveis";
-                        } else if (item.source == "urban") {
-                            icone = "<img src='/static/images/icon_urban.png'>";
-                            icone_title = "Indicadores do Urban 95";
-                        } else if (item.source == "progmetas") {
-                            icone = "<img src='/static/images/icon_prog_metas.png'>";
-                            icone_title = "Indicadores do programa de metas";
-                        } else if (item.source == "[REDE]") {
-                            icone = "<img src='/static/images/icon_Rede.png'>";
-                            icone_title = "Rede Social Brasileira por Cidades Justas e Sustentáveis";
+                            icone.push("<img src='/static/images/icon_ICES.png'>");
+                            icone_title.push("Indicador Metodologia Iniciativa Cidades Emergentes e Sustentáveis (ICES)");
                         }
-                        if (icone != "") {
-                            table_content += "<td class='fonte'><div data-toggle='tooltip' data-placement='right' title data-original-title='$$title' class='bs-tooltip'>$$icone</div></td>".render({
-                                icone: icone,
-                                title: icone_title
+                        if (item.source == "[PCS]" || new RegExp("pcs").test(item.source)) {
+                            icone.push("<img src='/static/images/icon_PCS.png'>");
+                            icone_title.push("Indicadores do Programa Cidades Sustentáveis");
+                        }
+                        if (new RegExp("urban").test(item.source)) {
+                            icone.push("<img src='/static/images/icon_urban.png'>");
+                            icone_title.push("Indicadores do Urban 95");
+                        }
+                        if (new RegExp("progmetas").test(item.source)) {
+                            icone.push("<img src='/static/images/icon_prog_metas.png'>");
+                            icone_title.push("Indicadores do programa de metas");
+                        } else if (item.source == "[REDE]") {
+                            icone.push("<img src='/static/images/icon_Rede.png'>");
+                            icone_title.push("Rede Social Brasileira por Cidades Justas e Sustentáveis");
+                        }
+
+
+                        if (icone.length > 0) {
+
+                            var innerstr = '';
+                            $.each(icone, function(idx) {
+                                innerstr += "<div data-toggle='tooltip' data-placement='left' title data-original-title='$$title' class='bs-tooltip'>$$icone</div>".render({
+                                    icone: icone[idx],
+                                    title: icone_title[idx]
+                                });
+
                             });
+
+
+                            table_content += ("<td class='fonte forceinline'>" + innerstr + "</td>");
+
+
                         } else {
                             table_content += "<td class='fonte'></td>";
                         }
