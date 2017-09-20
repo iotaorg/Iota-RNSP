@@ -47,7 +47,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id' + param + '&prefetch_city=$$xid&prefetch_region=$$xx').render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id' + param + '&prefetch_city=$$xid&prefetch_region=$$xx&prefetch_institute_metadata=1').render({
                 id: userID,
                 xid: cityID,
                 xx: regionID,
@@ -95,20 +95,62 @@ $(document).ready(function() {
 
         }
 
-        $(".tabela", $dados).append("<dt>Fórmula:</dt><dd class='white_space_pre_wrap'>" + indicador_data.formula_human + "</dd>");
+        $(".tabela", $dados).append("<dt>Fórmula:</dt><dd>" + indicador_data.formula_human + "</dd>");
 
-        var fonte_meta = "";
-        if (indicador_data.goal_source) {
-            fonte_meta = indicador_data.goal_source;
+        if (indicador_data.axis_id) {
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                dt: 'Eixo',
+                dd: indicador_data.axis.name
+            }));
         }
+
+        if (indicador_data.axis_dim1) { // urban
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                dt: indicador_data._prefetch.institute_metadata.axis_aux1_header,
+                dd: indicador_data.axis_dim1.name
+            }));
+        }
+
+        if (indicador_data.axis_dim4) { // ODS METRA
+
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                dt: indicador_data._prefetch.institute_metadata.axis_aux4,
+                dd: indicador_data.axis_dim4.description,
+            }));
+        }
+
+        if (indicador_data.axis_dim3) { // ODS
+
+            var innerCalc = indicador_data.axis_dim4.name;
+            innerCalc = innerCalc.match(/(\d+)/);
+
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div class="bs-tooltip iods iods-$$id"></div> $$dd</dd>'.render({
+                dt: indicador_data._prefetch.institute_metadata.axis_aux3_header,
+                dd: indicador_data.axis_dim3.description,
+                id: innerCalc[0]
+            }));
+        }
+
         if (indicador_data.goal_explanation) {
-            $(".tabela", $dados).append('<dt>$$aa:</dt><dd>$$dado<blockquote><small><cite title="$$bb: $$fonte_meta">$$fonte_meta</cite></small></blockquote></dd>'.render({
+            var fonte_meta = "";
+            if (indicador_data.goal_source) {
+                fonte_meta = indicador_data.goal_source;
+            }
+
+            var $affstr = '<dt>$$aa:</dt><dd>$$dado<blockquote><small><cite title="$$bb: $$fonte_meta">$$fonte_meta</cite></small></blockquote></dd>';
+
+            if (!fonte_meta)
+                $affstr = '<dt>$$aa:</dt><dd>$$dado</dd>';
+
+            $(".tabela", $dados).append($affstr.render({
                 dado: indicador_data.goal_explanation,
                 fonte_meta: fonte_meta,
                 aa: $('#ref_or_ods').text(),
                 bb: $('#font_or_ods').text(),
             }));
         }
+
+
     }
 
     function loadHistoricoData() {

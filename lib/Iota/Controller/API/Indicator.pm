@@ -153,8 +153,10 @@ sub indicator_GET {
         axis       => { map { $_ => $object_ref->axis->$_ } qw(name id) },
         axis_dim1 => $object_ref->axis_dim1_id ? { map { $_ => $object_ref->axis_dim1->$_ } qw(name id) } : undef,
         axis_dim2 => $object_ref->axis_dim2_id ? { map { $_ => $object_ref->axis_dim2->$_ } qw(name id) } : undef,
-        axis_dim3 => $object_ref->axis_dim3_id ? { map { $_ => $object_ref->axis_dim3->$_ } qw(name id) } : undef,
-        axis_dim4 => $object_ref->axis_dim4_id ? { map { $_ => $object_ref->axis_dim4->$_ } qw(name id) } : undef,
+        axis_dim3 => $object_ref->axis_dim3_id ? { map { $_ => $object_ref->axis_dim3->$_ } qw(name id description) } : undef,
+        axis_dim4 => $object_ref->axis_dim4_id
+        ? { map { $_ => $object_ref->axis_dim4->$_ } qw(name id description) }
+        : undef,
 
         (
             map { $_ => $object_ref->$_ }
@@ -208,6 +210,12 @@ sub indicator_GET {
                 email_prefeitura            => $r->{email_prefeitura},
             };
         }
+
+    }
+
+    if ( defined $c->req->params->{prefetch_institute_metadata} && $c->req->params->{prefetch_institute_metadata} ) {
+
+        $ret->{_prefetch}{institute_metadata} = $c->stash->{institute_metadata};
 
     }
 

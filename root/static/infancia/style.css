@@ -776,3 +776,8 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
 }
 
 #infancia-menu-cidade img { display: inline; margin-top: -6px}
+
+dl.tabela > *:nth-child(1n+11) {
+    font-size: 0.8em;
+    color:red
+}
