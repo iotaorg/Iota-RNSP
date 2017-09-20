@@ -111,23 +111,23 @@ $(document).ready(function() {
             }));
         }
 
-        if (indicador_data.axis_dim4) { // ODS METRA
-
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
-                dt: indicador_data._prefetch.institute_metadata.axis_aux4,
-                dd: indicador_data.axis_dim4.description,
-            }));
-        }
-
         if (indicador_data.axis_dim3) { // ODS
 
             var innerCalc = indicador_data.axis_dim4.name;
             innerCalc = innerCalc.match(/(\d+)/);
 
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div class="bs-tooltip iods iods-$$id"></div> $$dd</dd>'.render({
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div class="iods iods-$$id"></div> $$dd</dd>'.render({
                 dt: indicador_data._prefetch.institute_metadata.axis_aux3_header,
                 dd: indicador_data.axis_dim3.description,
                 id: innerCalc[0]
+            }));
+        }
+
+        if (indicador_data.axis_dim4) { // ODS METRA
+
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                dt: indicador_data._prefetch.institute_metadata.axis_aux4,
+                dd: indicador_data.axis_dim4.description,
             }));
         }
 
