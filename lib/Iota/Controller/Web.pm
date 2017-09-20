@@ -1088,10 +1088,10 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         }
 
         my $tmp_id = $groups->{ "axis" . $i->{axis}{id} };
-        $group_id_vs_dim->{$tmp_id} = 'B';
+        $group_id_vs_dim->{$tmp_id} = 'C';
 
         if ( $i->{axis}{name} eq 'Crianças Invisíveis' ) {
-            $group_id_vs_dim->{$tmp_id} = 'C';
+            $group_id_vs_dim->{$tmp_id} = 'A';
         }
 
         # se ja tem algum grupo, entao nao verifica se precisa inserir
@@ -1124,7 +1124,7 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
             }
 
             $tmp_id = $groups->{ "dim1" . $i->{axis_dim1}{id} };
-            $group_id_vs_dim->{$tmp_id} = 'A';
+            $group_id_vs_dim->{$tmp_id} = 'B';
 
             # se ja tem algum grupo, entao nao verifica se precisa inserir
             if ( $i->{groups} && @{ $i->{groups} } > 0 ) {

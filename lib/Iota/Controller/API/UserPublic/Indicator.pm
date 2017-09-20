@@ -188,7 +188,7 @@ sub resumo_GET {
 
     sub fix_name {
         my $s = shift;
-        return $s eq 'Crianças Invisíveis' ? "C\n\n$s" : "B\n\n$s";
+        return $s eq 'Crianças Invisíveis' ? "A\n\n$s" : "C\n\n$s";
     }
 
     eval {
@@ -292,7 +292,7 @@ sub resumo_GET {
                 );
 
                 while ( my $row = $user_axis_rs->next ) {
-                    push @{ $custom_axis->{ $row->{id} } }, "A\n\n" . $row->{name};
+                    push @{ $custom_axis->{ $row->{id} } }, "B\n\n" . $row->{name};
                 }
 
             }

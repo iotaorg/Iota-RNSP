@@ -322,9 +322,13 @@ $(document).ready(function() {
 
             if (eixos_indicadores[ix].dimension_id != dimension_ant) {
                 if (eixos_indicadores[ix].dimension_id != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])) {
-                    table_content += "<thead class='dimensions'><tr><th colspan='10'>$$dimension</th></thead>".render({
-                        dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
-                    });
+
+                    if (dimensions_GO[eixos_indicadores[ix].dimension_id] != '__HIDE__') {
+                        table_content += "<thead class='dimensions'><tr><th colspan='10'>$$dimension</th></thead>".render({
+                            dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
+                        });
+                    }
+
                 }
                 dimension_ant = eixos_indicadores[ix].dimension_id;
             }

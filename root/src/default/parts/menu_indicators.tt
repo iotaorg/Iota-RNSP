@@ -4,7 +4,7 @@
 [% INCLUDE 'parts/infancia_menu_cidade.tt'%]
 [% END %]
 
-[% SET headed = {} %]
+[% SET headed = { A => 1 } %]
 <div class="category" id="group_list">
     <div class="select [% is_infancia ? 'infancia' : '' %] [%IF web_open_axis%]open-me[%END%]" selected-id="[%active_group.id%]" data-select-title="[%l('Selecione um grupo para filtrar')%]">
         [%- is_infancia ? 'Conheça os indicadores' : l( active_group.name )-%]
