@@ -153,9 +153,9 @@ sub indicator_GET {
         axis       => { map { $_ => $object_ref->axis->$_ } qw(name id) },
         axis_dim1 => $object_ref->axis_dim1_id ? { map { $_ => $object_ref->axis_dim1->$_ } qw(name id) } : undef,
         axis_dim2 => $object_ref->axis_dim2_id ? { map { $_ => $object_ref->axis_dim2->$_ } qw(name id) } : undef,
-        axis_dim3 => $object_ref->axis_dim3_id ? { map { $_ => $object_ref->axis_dim3->$_ } qw(name id description) } : undef,
-        axis_dim4 => $object_ref->axis_dim4_id
-        ? { map { $_ => $object_ref->axis_dim4->$_ } qw(name id description) }
+        axis_dim3 => $object_ref->axis_dim3_id ? { map { $_ => $object_ref->axis_dim3->$_ } qw(name id description) }
+        : undef,
+        axis_dim4 => $object_ref->axis_dim4_id ? { map { $_ => $object_ref->axis_dim4->$_ } qw(name id description) }
         : undef,
 
         (
@@ -230,6 +230,24 @@ sub indicator_GET {
                 name_url => $r->{name_url}
             };
         }
+
+    }
+
+    if ( defined $c->req->params->{with_indicator_availability} && $c->req->params->{with_indicator_availability} ) {
+
+        my $indicator_availability = $c->model('DB::ViewIndicatorAvailability')->search(
+            {},
+            {
+                bind => [ ( $c->stash->{indicator_ref}->id ) x 5 ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+            }
+        )->next;
+
+        $ret->{indicator_availability} = $indicator_availability;
+
+        $c->forward('/load_region_names');
+
+        $ret->{_prefetch}{region_classification_name} = $c->stash->{region_classification_name};
 
     }
 

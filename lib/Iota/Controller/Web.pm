@@ -1280,7 +1280,7 @@ sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
 
 }
 
-sub load_region_names {
+sub load_region_names : Private {
     my ( $self, $c ) = @_;
 
     my $rs = $c->model('DB::UserRegion')->search( { user_id => $c->stash->{user}{id} } )->as_hashref;

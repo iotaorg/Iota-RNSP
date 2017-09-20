@@ -47,7 +47,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'GET',
             dataType: 'json',
-            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id' + param + '&prefetch_city=$$xid&prefetch_region=$$xx&prefetch_institute_metadata=1').render({
+            url: (api_path + '/api/public/user/$$id/indicator/$$indicator_id' + param + '&prefetch_city=$$xid&prefetch_region=$$xx&prefetch_institute_metadata=1&with_indicator_availability=1').render({
                 id: userID,
                 xid: cityID,
                 xx: regionID,
@@ -128,6 +128,25 @@ $(document).ready(function() {
             $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
                 dt: indicador_data._prefetch.institute_metadata.axis_aux4,
                 dd: indicador_data.axis_dim4.description,
+            }));
+        }
+
+        if (indicador_data.indicator_availability) { // ODS METRA
+
+            var disponibilidade = [];
+
+            if (indicador_data.indicator_availability.region_1)
+                disponibilidade.push('Cidade');
+
+            if (indicador_data.indicator_availability.region_2)
+                disponibilidade.push(indicador_data._prefetch.region_classification_name['2']);
+
+            if (indicador_data.indicator_availability.region_3)
+                disponibilidade.push(indicador_data._prefetch.region_classification_name['3']);
+
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                dt: 'Disponibilidade de dados',
+                dd: disponibilidade.length == 0 ? 'Nenhum dados preenchido' : disponibilidade.join(', '),
             }));
         }
 
