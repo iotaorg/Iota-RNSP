@@ -8,7 +8,7 @@
             <div class=" ">
                 <div class="content-fill">
                     <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
-                    <div class="variaveis"><dl class="tabela">
+                    <div class="variaveis"><dl class="tabela tabela_regiao">
 
 [%IF region.upper_region %]
     <dt>[%l(region_classification_name.2)%]</dt>
@@ -48,7 +48,7 @@
             <h1 class="title">[%l(indicator.name)%]</h1>
             <p class="explanation">[%l(indicator.explanation)%]</p>
 
-            <div class="dados"><dl class="tabela [% IF !is_infancia %]dl-horizontal[%END%]">
+            <div class="dados"><dl class="tabela tabela_indicadores [% IF !is_infancia %]dl-horizontal[%END%]">
                 <dt>[%l('Fórmula')%]:</dt>
                 <dd>[% l(indicator.formula_human)%]</dd>
                 [%IF indicator.goal_explanation%]

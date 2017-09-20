@@ -37,7 +37,7 @@
                         [%  IF !is_infancia %]
 						<h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
                         [%END%]
-						<div class="variaveis"><dl class="tabela">
+						<div class="variaveis"><dl class="tabela tabela_regiao">
 
 
 							[%IF region.upper_region %]

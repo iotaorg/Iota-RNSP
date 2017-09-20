@@ -46,7 +46,7 @@
 					<div class="profile">
 						<div class="content-fill">
 							[%IF !is_infancia%]<h1 class="title">[% city.name %], [%city.uf%]</h1>[%END%]
-							<div class="variaveis"><dl class="tabela">
+							<div class="variaveis"><dl class="tabela tabela_cidade">
 								<dt>[%l('Cidade')%]: </dt>
 								<dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
 								<dt>[%l('Estado')%]: </dt>
