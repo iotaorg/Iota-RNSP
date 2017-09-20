@@ -131,7 +131,7 @@ $(document).ready(function() {
             }));
         }
 
-        if (indicador_data.indicator_availability) { // ODS METRA
+        if (indicador_data.indicator_availability) {
 
             var disponibilidade = [];
 
