@@ -11,10 +11,19 @@ h5, h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 s
 input.button-data:hover,input.button-data {
     color: #36c
 }
-h3.panel-title {
-    color: white;
+h3..panel-title {
     font-weight: 500;
 }
+.panel-primary .panel-title {
+    color: white;
+}
+.panel-success .panel-title {
+    color: rgb(70, 136, 71);}
+}
+.panel-info .panel-title {
+    color: rgb(58, 135, 173);
+}
+
 body {
     padding-top: 0;
     color: #444;
@@ -781,6 +790,6 @@ dl.tabela_indicadores > *:nth-child(1n+11) {
     font-size: 0.8em;
 }
 
-b, strong, label {
+b, strong, label, th {
     font-weight: 500;
 }
