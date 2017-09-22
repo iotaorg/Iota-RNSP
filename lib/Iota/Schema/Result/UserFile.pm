@@ -183,9 +183,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_pages
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 08:20:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KKpBXyOvQbfFJovsNal3PA
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserPage>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_pages",
+  "Iota::Schema::Result::UserPage",
+  { "foreign.image_user_file_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 16:03:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JR1QCXp3aDxUHRC8BdUe0Q
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

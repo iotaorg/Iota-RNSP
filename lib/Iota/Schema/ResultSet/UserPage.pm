@@ -18,6 +18,21 @@ sub _build_verifier_scope_name { 'page' }
 
 sub verifiers_specs {
     my $self = shift;
+
+    my @duplicated_fields = (
+        image_user_file_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('image_user_file_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('UserFile')
+                  ->find( { id => $r->get_value('image_user_file_id') } );
+                return defined $axis;
+            }
+        },
+    );
     return {
         create => Data::Verifier->new(
             filters => [qw(trim)],
@@ -27,6 +42,7 @@ sub verifiers_specs {
                 title        => { required => 1, type => 'Str' },
                 title_url    => { required => 0, type => 'Str' },
                 content      => { required => 1, type => 'Str' },
+                @duplicated_fields
             },
         ),
 
@@ -39,6 +55,7 @@ sub verifiers_specs {
                 title        => { required => 1, type => 'Str' },
                 title_url    => { required => 0, type => 'Str' },
                 content      => { required => 1, type => 'Str' },
+                @duplicated_fields
             },
         ),
 
@@ -55,6 +72,9 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            for my $field (qw/ image_user_file_id /) {
+                $values{$field} = undef if defined $values{$field} && $values{$field} eq '0';
+            }
             $values{title_url} = $text2uri->translate( $values{title} ) unless $values{title_url};
 
             my $var = $self->create( \%values );
@@ -68,6 +88,12 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            for my $field (qw/ image_user_file_id /) {
+                $values{$field} = undef if defined $values{$field} && $values{$field} eq '0';
+            }
+
+            $values{title_url} = $text2uri->translate( $values{title} ) unless $values{title_url};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
