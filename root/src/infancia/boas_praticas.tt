@@ -1,7 +1,7 @@
 [% INCLUDE 'web/messages.tt' %]
 
 <div class="text-right">
-  <a href="[%c.uri_for(c.controller('Web').action_for('sugestao_bp')) %]"> Sugirir boa prática</a>
+  <a href="[%c.uri_for(c.controller('Web').action_for('sugestao_bp')) %]"> Sugerir boa prática</a>
   <span class="label label-success">➕</span>
 </div>
 

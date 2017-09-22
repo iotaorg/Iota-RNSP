@@ -723,10 +723,8 @@ sub sugestao_bp_post : Chained('light_institute_load') PathPart('pagina/contato-
       if !$c->stash->{is_infancia} || !$c->config->{contact_email_to} || !$c->req->method eq 'POST';
 
     my $misc_params = $c->req->params;
-    $misc_params->{$_} ||= '' for qw/name comment email/;
+    $misc_params->{$_} ||= '' for qw/name comment cidade email/;
 
-    use DDP;
-    p $misc_params;
     if (   length $misc_params->{name} <= 3
         || length $misc_params->{email} <= 8
         || length $misc_params->{comment} <= 10 ) {

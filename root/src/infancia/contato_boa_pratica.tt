@@ -32,7 +32,17 @@
 </div>
 
 <div class="form-group">
-  <label class="col-md-4 control-label">Boa prátia</label>
+  <label class="col-md-4 control-label">Cidade</label>
+    <div class="col-md-4 inputGroupContainer">
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+  <input value="[% body.cidade %]" name="cidade" placeholder="De qual cidade é a boa prática" class="form-control" type="text">
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-md-4 control-label">Boa prática</label>
     <div class="col-md-4 inputGroupContainer">
     <div class="input-group">
         <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
