@@ -13,6 +13,3 @@
 <li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
     <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
 </li>
-<li [% IF c_req_path == 'pagina/contato' %]class="active"[%END%]>
-    <a href="/pagina/contato">[%l('contato')%]</a>
-</li>
