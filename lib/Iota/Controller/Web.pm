@@ -1321,18 +1321,10 @@ sub network_page : Chained('institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 }
 
-sub network_pais : Chained('network_page') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $sigla ) = @_;
+sub network_cidade : Chained('network_page') PathPart('') CaptureArgs(3) {
+    my ( $self, $c, $sigla,$estado, $cidade ) = @_;
     $c->stash->{pais} = $sigla;
-}
-
-sub network_estado : Chained('network_pais') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $estado ) = @_;
     $c->stash->{estado} = $estado;
-}
-
-sub network_cidade : Chained('network_estado') PathPart('') CaptureArgs(1) {
-    my ( $self, $c, $cidade ) = @_;
     $c->stash->{cidade} = $cidade;
 
     $c->forward('stash_tela_cidade');
