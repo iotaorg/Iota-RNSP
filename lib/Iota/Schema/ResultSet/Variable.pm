@@ -19,6 +19,24 @@ sub _build_verifier_scope_name { 'variable' }
 
 sub verifiers_specs {
     my $self = shift;
+
+    my @multiple_fields = (
+        short_name         => { required => 0, type => 'Str' },
+        display_order      => { required => 0, type => 'Int' },
+        image_user_file_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('image_user_file_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('UserFile')
+                  ->find( { id => $r->get_value('image_user_file_id') } );
+                return defined $axis;
+            }
+        },
+    );
+
     return {
         create => Data::Verifier->new(
             filters => [qw(trim)],
@@ -32,7 +50,7 @@ sub verifiers_specs {
                         my $r = shift;
                         return $r->get_value('cognomen') =~ /^[A-Z](?:[A-Z0-9_\.])+$/i
                           && $self->search( { cognomen => $r->get_value('cognomen') } )->count == 0;
-                      }
+                    }
                 },
                 type                => { required => 1, type => VariableType },
                 user_id             => { required => 1, type => 'Int' },
@@ -47,10 +65,12 @@ sub verifiers_specs {
                         return
                           defined $self->result_source->schema->resultset('MeasurementUnit')
                           ->find( { id => $r->get_value('measurement_unit_id') } );
-                      }
+                    }
                 },
                 is_basic             => { required => 0, type => 'Bool' },
                 summarization_method => { required => 0, type => 'Str' },
+                @multiple_fields
+
             },
         ),
 
@@ -67,9 +87,9 @@ sub verifiers_specs {
                         my $r = shift;
                         return $r->get_value('cognomen') =~ /^[A-Z](?:[A-Z0-9_\.])+$/i
                           && $self->search(
-                            { cognomen => $r->get_value('cognomen'), id => { '!=' => $r->get_value('id') } } )->count ==
-                          0;
-                      }
+                            { cognomen => $r->get_value('cognomen'), id => { '!=' => $r->get_value('id') } } )
+                          ->count == 0;
+                    }
                 },
                 type                => { required => 0, type => VariableType },
                 source              => { required => 0, type => 'Str' },
@@ -82,10 +102,11 @@ sub verifiers_specs {
                         return
                           defined $self->result_source->schema->resultset('MeasurementUnit')
                           ->find( { id => $r->get_value('measurement_unit_id') } );
-                      }
+                    }
                 },
                 is_basic             => { required => 0, type => 'Bool' },
                 summarization_method => { required => 0, type => 'Str' },
+                @multiple_fields
 
             },
         ),
@@ -103,6 +124,10 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            for my $field (qw/ image_user_file_id /) {
+                $values{$field} = undef if defined $values{$field} && $values{$field} eq '0';
+            }
+
             my $var = $self->create( \%values );
 
             $var->discard_changes;
@@ -115,6 +140,12 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            for my $field (qw/ image_user_file_id /) {
+                $values{$field} = undef if defined $values{$field} && $values{$field} eq '0';
+            }
+
+            $values{short_name} = undef if !$values{short_name};
+            $values{display_order} = undef unless defined $values{display_order};
             $values{is_basic} ||= 0;
 
             my $var      = $self->find( delete $values{id} );

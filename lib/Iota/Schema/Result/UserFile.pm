@@ -198,9 +198,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 variables
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 16:03:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JR1QCXp3aDxUHRC8BdUe0Q
+Type: has_many
+
+Related object: L<Iota::Schema::Result::Variable>
+
+=cut
+
+__PACKAGE__->has_many(
+  "variables",
+  "Iota::Schema::Result::Variable",
+  { "foreign.image_user_file_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 18:20:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:QEoz9XPeGYWJU40thLfQpA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

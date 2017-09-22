@@ -117,6 +117,23 @@ __PACKAGE__->table("variable");
   is_nullable: 0
   original: {data_type => "varchar"}
 
+=head2 image_user_file_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 display_order
+
+  data_type: 'integer'
+  is_nullable: 1
+
+=head2 short_name
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -189,6 +206,16 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { data_type => "varchar" },
   },
+  "image_user_file_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "display_order",
+  { data_type => "integer", is_nullable => 1 },
+  "short_name",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -218,6 +245,26 @@ __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("variable_cognomen_key", ["cognomen"]);
 
 =head1 RELATIONS
+
+=head2 image_user_file
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::UserFile>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "image_user_file",
+  "Iota::Schema::Result::UserFile",
+  { id => "image_user_file_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
 
 =head2 indicator_variables
 
@@ -330,8 +377,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:h2J62hY+E808pHYaSbHdFQ
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 18:20:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rZ0U1xD3/kGWTBvGeIwBQw
 
 __PACKAGE__->belongs_to(
     "owner", "Iota::Schema::Result::User",

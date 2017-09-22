@@ -43,3 +43,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0076-DownloadData [0075-axis4] 2017-09-22T06:13:51Z renato,,, <renato@renato-MS-7A34> # DownloadData
 0077-bp_img_fields [0076-DownloadData] 2017-09-22T11:19:07Z renato,,, <renato@renato-MS-7A34> # bmp
 0078-page.image [0077-bp_img_fields] 2017-09-22T19:03:08Z renato,,, <renato@renato-MS-7A34> # page-images
+0079-variable_image [0078-page.image] 2017-09-22T21:18:03Z renato,,, <renato@renato-MS-7A34> # variable_image

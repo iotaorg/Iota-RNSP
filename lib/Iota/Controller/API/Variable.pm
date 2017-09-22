@@ -68,13 +68,22 @@ Retorna:
 sub variable_GET {
     my ( $self, $c ) = @_;
     my $object_ref =
-      $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'measurement_unit' ] } )->as_hashref->next;
+      $c->stash->{object}->search( undef, { prefetch => [ 'owner', 'measurement_unit', 'image_user_file' ] } )
+      ->as_hashref->next;
 
     $self->status_ok(
         $c,
         entity => {
             created_by => { map { $_ => $object_ref->{owner}{$_} } qw(name id) },
-            ( map { $_ => $object_ref->{$_} } qw(name type cognomen explanation source period is_basic created_at) ),
+
+            image_user_file => $object_ref->{image_user_file}
+            ? { map { $_ => $object_ref->{image_user_file}->{$_} } qw(public_url id) }
+            : undef,
+
+            (
+                map { $_ => $object_ref->{$_} }
+                  qw(name type cognomen explanation source period is_basic short_name display_order created_at)
+            ),
 
             measurement_unit => $object_ref->{measurement_unit}
             ? { ( map { $_ => $object_ref->{measurement_unit}{$_} } qw(name short_name id) ), }
