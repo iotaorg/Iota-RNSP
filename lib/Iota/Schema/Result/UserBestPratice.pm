@@ -149,6 +149,18 @@ __PACKAGE__->table("user_best_pratice");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 image_user_file_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
+=head2 thumbnail_user_file_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -206,6 +218,10 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "image_user_file_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "thumbnail_user_file_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -297,6 +313,46 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 image_user_file
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::UserFile>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "image_user_file",
+  "Iota::Schema::Result::UserFile",
+  { id => "image_user_file_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 thumbnail_user_file
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::UserFile>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "thumbnail_user_file",
+  "Iota::Schema::Result::UserFile",
+  { id => "thumbnail_user_file_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
 =head2 user
 
 Type: belongs_to
@@ -328,8 +384,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-14 15:44:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IsCNZcQplNU6KLjZ/AucIg
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 08:20:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FMBtv/2LWRf2Du3K9drKwg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

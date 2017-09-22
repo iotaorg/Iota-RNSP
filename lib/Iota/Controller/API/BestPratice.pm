@@ -45,7 +45,7 @@ sub best_pratice_GET {
     my ( $self, $c ) = @_;
     my $object_ref =
       $c->stash->{object}
-      ->search( undef, { prefetch => ['user_best_pratice_axes','axis_dim1', 'axis_dim2','axis_dim3'] } )
+      ->search( undef, { prefetch => ['user_best_pratice_axes','axis_dim1', 'axis_dim2','axis_dim3', 'image_user_file', 'thumbnail_user_file'] } )
       ->as_hashref->next;
 
     $self->status_ok(
@@ -62,6 +62,8 @@ sub best_pratice_GET {
             axis_dim1 => $object_ref->{axis_dim1_id} ? { map { $_ => $object_ref->{axis_dim1}->{$_} } qw(name id) } : undef,
             axis_dim2 => $object_ref->{axis_dim2_id} ? { map { $_ => $object_ref->{axis_dim2}->{$_} } qw(name id) } : undef,
             axis_dim3 => $object_ref->{axis_dim3_id} ? { map { $_ => $object_ref->{axis_dim3}->{$_} } qw(name id) } : undef,
+            image_user_file => $object_ref->{image_user_file} ? { map { $_ => $object_ref->{image_user_file}->{$_} } qw(public_url id) } : undef,
+            thumbnail_user_file => $object_ref->{thumbnail_user_file} ? { map { $_ => $object_ref->{thumbnail_user_file}->{$_} } qw(public_url id) } : undef,
             axis => [
                 map { +{ axis_id => $_->{axis_id}, id => $_->{id} } }
                   @{ $object_ref->{user_best_pratice_axes} }

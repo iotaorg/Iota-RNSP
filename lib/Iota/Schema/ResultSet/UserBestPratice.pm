@@ -20,7 +20,68 @@ use JSON::XS;
 use utf8;
 
 sub verifiers_specs {
-    my $self = shift;
+    my $self              = shift;
+    my @duplicated_fields = (
+        axis_dim1_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('axis_dim1_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('AxisDim1')->find( { id => $r->get_value('axis_dim1_id') } );
+                return defined $axis;
+            }
+        },
+        axis_dim2_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('axis_dim2_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('AxisDim2')->find( { id => $r->get_value('axis_dim2_id') } );
+                return defined $axis;
+            }
+        },
+        axis_dim3_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('axis_dim3_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('AxisDim3')->find( { id => $r->get_value('axis_dim3_id') } );
+                return defined $axis;
+            }
+        },
+
+        image_user_file_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('image_user_file_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('UserFile')
+                  ->find( { id => $r->get_value('image_user_file_id') } );
+                return defined $axis;
+            }
+        },
+        thumbnail_user_file_id => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('thumbnail_user_file_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('UserFile')
+                  ->find( { id => $r->get_value('thumbnail_user_file_id') } );
+                return defined $axis;
+            }
+        }
+    );
+
     return {
         create => Data::Verifier->new(
             filters => [qw(trim)],
@@ -40,43 +101,7 @@ sub verifiers_specs {
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
                 reference_city        => { required => 0, type => 'Str' },
-                axis_dim1_id          => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        return 1 if $r->get_value('axis_dim1_id') == '0';
-                        my $axis =
-                          $self->result_source->schema->resultset('AxisDim1')
-                          ->find( { id => $r->get_value('axis_dim1_id') } );
-                        return defined $axis;
-                    }
-                },
-                axis_dim2_id => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        return 1 if $r->get_value('axis_dim2_id') == '0';
-                        my $axis =
-                          $self->result_source->schema->resultset('AxisDim2')
-                          ->find( { id => $r->get_value('axis_dim2_id') } );
-                        return defined $axis;
-                    }
-                },
-                axis_dim3_id => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        return 1 if $r->get_value('axis_dim3_id') == '0';
-                        my $axis =
-                          $self->result_source->schema->resultset('AxisDim3')
-                          ->find( { id => $r->get_value('axis_dim3_id') } );
-                        return defined $axis;
-                    }
-                },
-
+                @duplicated_fields
             },
         ),
 
@@ -97,42 +122,7 @@ sub verifiers_specs {
                 tags                  => { required => 0, type => 'Str' },
                 institutions_involved => { required => 0, type => 'Str' },
                 reference_city        => { required => 0, type => 'Str' },
-                axis_dim1_id          => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        return 1 if $r->get_value('axis_dim1_id') == '0';
-                        my $axis =
-                          $self->result_source->schema->resultset('AxisDim1')
-                          ->find( { id => $r->get_value('axis_dim1_id') } );
-                        return defined $axis;
-                    }
-                },
-                axis_dim2_id => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        return 1 if $r->get_value('axis_dim2_id') == '0';
-                        my $axis =
-                          $self->result_source->schema->resultset('AxisDim2')
-                          ->find( { id => $r->get_value('axis_dim2_id') } );
-                        return defined $axis;
-                    }
-                },
-                axis_dim3_id => {
-                    required   => 0,
-                    type       => 'Int',
-                    post_check => sub {
-                        my $r = shift;
-                        return 1 if $r->get_value('axis_dim3_id') == '0';
-                        my $axis =
-                          $self->result_source->schema->resultset('AxisDim3')
-                          ->find( { id => $r->get_value('axis_dim3_id') } );
-                        return defined $axis;
-                    }
-                },
+                @duplicated_fields
 
             },
         ),
@@ -152,9 +142,9 @@ sub action_specs {
 
             $values{name_url} = $text2uri->translate( $values{name} );
 
-            $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
-            $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
-            $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
+            for my $field (qw/ axis_dim1_id axis_dim2_id axis_dim3_id  image_user_file_id thumbnail_user_file_id/) {
+                $values{$field} = undef if defined $values{$field} && $values{$field} eq '0';
+            }
 
             my $var = $self->create( \%values );
 
@@ -197,9 +187,9 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
-            $values{axis_dim1_id} = undef if defined $values{axis_dim1_id} && $values{axis_dim1_id} eq '0';
-            $values{axis_dim2_id} = undef if defined $values{axis_dim2_id} && $values{axis_dim2_id} eq '0';
-            $values{axis_dim3_id} = undef if defined $values{axis_dim3_id} && $values{axis_dim3_id} eq '0';
+            for my $field (qw/ axis_dim1_id axis_dim2_id axis_dim3_id  image_user_file_id thumbnail_user_file_id/) {
+                $values{$field} = undef if defined $values{$field} && $values{$field} eq '0';
+            }
 
             $values{reference_city} = undef unless $values{reference_city};
 

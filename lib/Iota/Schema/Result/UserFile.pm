@@ -153,9 +153,39 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 user_best_pratice_image_user_files
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-12-15 14:24:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2dbfE4pq0aUekmx/FfQrDw
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPratice>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_best_pratice_image_user_files",
+  "Iota::Schema::Result::UserBestPratice",
+  { "foreign.image_user_file_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user_best_pratice_thumbnail_user_files
+
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserBestPratice>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_best_pratice_thumbnail_user_files",
+  "Iota::Schema::Result::UserBestPratice",
+  { "foreign.thumbnail_user_file_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 08:20:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KKpBXyOvQbfFJovsNal3PA
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
