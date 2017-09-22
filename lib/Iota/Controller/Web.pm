@@ -2150,6 +2150,9 @@ sub stash_tela_indicator : Private {
 sub stash_tela_cidade : Private {
     my ( $self, $c ) = @_;
 
+    return if $c->stash->{stash_tela_cidade};
+    $c->stash->{stash_tela_cidade} = 1;
+
     $self->_add_default_periods($c);
     $self->_add_indicators_filters($c) if $c->stash->{is_infancia};
 
