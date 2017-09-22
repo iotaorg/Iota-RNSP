@@ -132,6 +132,40 @@ around 'apply_default_middlewares' => sub {
     };
 };
 
+
+sub resize_to_720p {
+    my ($c, $self, $private_path) = @_;
+
+    eval ('require Imager');
+    return if $@;
+
+    my $img = Imager->new( file => $private_path )
+      or $self->status_bad_request( $c, message => Imager->errstr() ), $c->detach;
+
+    my $ratio = $img->getwidth() / $img->getheight();
+
+    if ( $ratio > 1 ) {
+        if ( $img->getwidth() > 1280 ) {
+            $img = $img->scale( xpixels => 1280 );
+        }
+        if ( $img->getheight() > 720 ) {
+            $img = $img->scale( ypixels => 720 );
+        }
+    }
+    else {
+        if ( $img->getwidth() > 720 ) {
+            $img = $img->scale( xpixels => 720 );
+        }
+
+        if ( $img->getheight() > 1280 ) {
+            $img = $img->scale( ypixels => 1280 );
+        }
+    }
+
+    $img->write( file => $private_path, type => $private_path =~ /.png$/ ? 'png' : 'jpeg' )
+      or $self->status_bad_request( $c, message => Imager->errstr() ), $c->detach;
+}
+
 # Start the application
 __PACKAGE__->setup();
 

@@ -5,6 +5,7 @@ use String::Random;
 use JSON qw (encode_json);
 BEGIN { extends 'Catalyst::Controller::REST' }
 use Path::Class qw(dir);
+use Imager;
 
 __PACKAGE__->config( default => 'application/json' );
 
@@ -123,6 +124,30 @@ sub list_POST {
 
         my $foo = String::Random->new;
 
+        my $need_resize = 0;
+        my $exiv        = `which exiv2 2>&1`;
+        chomp($exiv);
+
+        if ( `which 2>&1` eq '' && $exiv ) {
+            my $x   = $upload->tempname;
+            my $ret = `$exiv $x 2>&1`;
+
+            if ( $ret =~ /Image size/ ) {
+
+                my ( $width, $height ) = $ret =~ /Image size\s+:\s(\d+) x (\d+)/;
+
+                ( $width, $height ) = ( $height, $width ) if $height > $width;
+
+                if ( $width > 1280 || $height > 720 ) {
+
+                    $need_resize = 1;
+                }
+
+                $need_resize = 1 if $x =~ /.bmp/;
+
+            }
+        }
+
         my $user_id  = $c->stash->{user}->id;
         my $t        = new Text2URI();
         my $filename = sprintf(
@@ -141,6 +166,10 @@ sub list_POST {
           unless ( $upload->copy_to($private_path) );
 
         chmod 0644, $private_path;
+
+        if ($need_resize) {
+            $c->resize_to_720p($self, $private_path);
+        }
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
 

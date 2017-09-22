@@ -64,7 +64,9 @@ sub user_file_POST {
 
     if ($upload) {
 
-        if ( $classe =~ /(imagem_cidade|logo_movimento|perfil_xd)/ ) {
+        my $need_resize = 0;
+
+        if ( $classe =~ /^(imagem_cidade|logo_movimento|perfil_xd|imagem)/ ) {
 
             my $exiv = `which exiv2 2>&1`;
             chomp($exiv);
@@ -76,6 +78,19 @@ sub user_file_POST {
                 if ( $ret !~ /Image size/ ) {
                     $c->res->body( to_json( { error => 'not an image' } ) );
                     $c->detach;
+                }
+                else {
+                    my ( $width, $height ) = $ret =~ /Image size\s+:\s(\d+) x (\d+)/;
+
+                    ( $width, $height ) = ( $height, $width ) if $height > $width;
+
+                    if ( $width > 1280 || $height > 720 ) {
+
+                        $need_resize = 1;
+                    }
+
+                    $need_resize = 1 if $x =~ /.bmp/;
+
                 }
             }
         }
@@ -94,6 +109,10 @@ sub user_file_POST {
             $c->detach;
         }
         chmod 0644, $private_path;
+
+        if ($need_resize) {
+            $c->resize_to_720p( $self, $private_path );
+        }
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
 
@@ -199,7 +218,7 @@ sub user_GET {
         {
             select => [
                 \(
-                        "md5( array_agg(  coalesce(user_files.public_url, 'null') || coalesce(me.city_id::text, 'null') || "
+                    "md5( array_agg(  coalesce(user_files.public_url, 'null') || coalesce(me.city_id::text, 'null') || "
                       . join( '||', map { "coalesce(me.${_}::text, 'null')" } @campos_cadastro_comp )
                       . ' order by user_files.id )::text)'
                 )

@@ -60,6 +60,11 @@ requires 'DateTime::Format::Pg';
 requires 'Catalyst::View::TT';
 requires 'Date::Calc';
 
+requires 'Imager';
+requires 'Imager::File::JPEG';
+requires 'Imager::File::GIF';
+requires 'Imager::File::PNG';
+
 requires 'Geo::Coder::Google';
 requires 'Text::Iconv';
 requires 'Email::Sender';
