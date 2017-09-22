@@ -35,18 +35,22 @@ sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
     }
 }
 
-sub best_pratice : Chained('object') : PathPart('') : Args(0) :
-  ActionClass('REST') {
+sub best_pratice : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
     my ( $self, $c ) = @_;
 
 }
 
 sub best_pratice_GET {
     my ( $self, $c ) = @_;
-    my $object_ref =
-      $c->stash->{object}
-      ->search( undef, { prefetch => ['user_best_pratice_axes','axis_dim1', 'axis_dim2','axis_dim3', 'image_user_file', 'thumbnail_user_file'] } )
-      ->as_hashref->next;
+    my $object_ref = $c->stash->{object}->search(
+        undef,
+        {
+            prefetch => [
+                'user_best_pratice_axes', 'axis_dim1', 'axis_dim2', 'axis_dim3',
+                'image_user_file',        'thumbnail_user_file'
+            ]
+        }
+    )->as_hashref->next;
 
     $self->status_ok(
         $c,
@@ -59,15 +63,20 @@ sub best_pratice_GET {
                   tags)
             ),
 
-            axis_dim1 => $object_ref->{axis_dim1_id} ? { map { $_ => $object_ref->{axis_dim1}->{$_} } qw(name id) } : undef,
-            axis_dim2 => $object_ref->{axis_dim2_id} ? { map { $_ => $object_ref->{axis_dim2}->{$_} } qw(name id) } : undef,
-            axis_dim3 => $object_ref->{axis_dim3_id} ? { map { $_ => $object_ref->{axis_dim3}->{$_} } qw(name id) } : undef,
-            image_user_file => $object_ref->{image_user_file} ? { map { $_ => $object_ref->{image_user_file}->{$_} } qw(public_url id) } : undef,
-            thumbnail_user_file => $object_ref->{thumbnail_user_file} ? { map { $_ => $object_ref->{thumbnail_user_file}->{$_} } qw(public_url id) } : undef,
-            axis => [
-                map { +{ axis_id => $_->{axis_id}, id => $_->{id} } }
-                  @{ $object_ref->{user_best_pratice_axes} }
-              ]
+            axis_dim1 => $object_ref->{axis_dim1_id} ? { map { $_ => $object_ref->{axis_dim1}->{$_} } qw(name id) }
+            : undef,
+            axis_dim2 => $object_ref->{axis_dim2_id} ? { map { $_ => $object_ref->{axis_dim2}->{$_} } qw(name id) }
+            : undef,
+            axis_dim3 => $object_ref->{axis_dim3_id} ? { map { $_ => $object_ref->{axis_dim3}->{$_} } qw(name id) }
+            : undef,
+            image_user_file => $object_ref->{image_user_file}
+            ? { map { $_ => $object_ref->{image_user_file}->{$_} } qw(public_url id) }
+            : undef,
+            thumbnail_user_file => $object_ref->{thumbnail_user_file}
+            ? { map { $_ => $object_ref->{thumbnail_user_file}->{$_} } qw(public_url id) }
+            : undef,
+            axis =>
+              [ map { +{ axis_id => $_->{axis_id}, id => $_->{id} } } @{ $object_ref->{user_best_pratice_axes} } ]
 
         }
     );
@@ -84,17 +93,14 @@ sub best_pratice_POST {
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
-      $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
 
     my $obj = $dm->get_outcome_for('best_pratice.update');
 
     $self->status_accepted(
         $c,
-        location =>
-          $c->uri_for( $self->action_for('best_pratice'), [ $obj->id ] )
-          ->as_string,
+        location => $c->uri_for( $self->action_for('best_pratice'), [ $obj->id ] )->as_string,
         entity => { id => $obj->id }
       ),
       $c->detach
@@ -166,8 +172,7 @@ sub list_GET {
                   schedule results institutions_involved contatcts sources repercussion reference_city
                   )
             ),
-            url => $c->uri_for_action( $self->action_for('best_pratice'),
-                [ $obj->{id} ] )->as_string,
+            url => $c->uri_for_action( $self->action_for('best_pratice'), [ $obj->{id} ] )->as_string,
         };
     }
 
@@ -191,16 +196,13 @@ sub list_POST {
 
     my $dm = $c->model('DataManager');
 
-    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ),
-      $c->detach
+    $self->status_bad_request( $c, message => encode_json( $dm->errors ) ), $c->detach
       unless $dm->success;
     my $object = $dm->get_outcome_for('best_pratice.create');
 
     $self->status_created(
         $c,
-        location =>
-          $c->uri_for( $self->action_for('best_pratice'), [ $object->id ] )
-          ->as_string,
+        location => $c->uri_for( $self->action_for('best_pratice'), [ $object->id ] )->as_string,
         entity => {
 
             id => $object->id,
