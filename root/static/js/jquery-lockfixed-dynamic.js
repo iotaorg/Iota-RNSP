@@ -54,7 +54,7 @@
                     if (e.type != 'scroll') {
                         var restore_default = false;
 
-                        if (pai.width() < el_width || $(window).width() < 768) {
+                        if (pai.width() < el_width || $(window).width() < 990) {
                             restore_default = true;
                         }
 
