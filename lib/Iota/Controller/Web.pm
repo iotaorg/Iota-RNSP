@@ -1317,11 +1317,7 @@ sub download_api : Chained('institute_load') PathPart('dados-abertos/api') Args(
 
 }
 
-sub network_page : Chained('institute_load') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-}
-
-sub network_cidade : Chained('network_page') PathPart('') CaptureArgs(3) {
+sub network_cidade : Chained('institute_load') PathPart('') CaptureArgs(3) {
     my ( $self, $c, $sigla,$estado, $cidade ) = @_;
     $c->stash->{pais} = $sigla;
     $c->stash->{estado} = $estado;
