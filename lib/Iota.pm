@@ -55,13 +55,13 @@ our $VERSION = '0.01';
 # local deployment.
 
 __PACKAGE__->config(
-    name     => 'Iota',
-    encoding => 'UTF-8',
+    name                 => 'Iota',
+    encoding             => 'UTF-8',
     using_frontend_proxy => 1,
 
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
-    enable_catalyst_header                      => 1,   # Send X-Catalyst header
+    enable_catalyst_header                      => 1,    # Send X-Catalyst header
 
     private_path => 'root/static/user',
     public_url   => '/static/user',
@@ -89,7 +89,6 @@ before 'setup_components' => sub {
     }
 
 };
-
 
 after 'setup_components' => sub {
     my $app = shift;
@@ -132,11 +131,13 @@ around 'apply_default_middlewares' => sub {
     };
 };
 
+sub resize_image {
+    my ( $c, $self, $private_path, $scale, $output_path ) = @_;
 
-sub resize_to_720p {
-    my ($c, $self, $private_path) = @_;
+    $scale = $scale ? $scale : 1;
+    $output_path = $output_path ? $output_path : $private_path;
 
-    eval ('require Imager');
+    eval('require Imager');
     return if $@;
 
     my $img = Imager->new( file => $private_path )
@@ -145,24 +146,24 @@ sub resize_to_720p {
     my $ratio = $img->getwidth() / $img->getheight();
 
     if ( $ratio > 1 ) {
-        if ( $img->getwidth() > 1280 ) {
-            $img = $img->scale( xpixels => 1280 );
+        if ( $img->getwidth() > 1280 * $scale ) {
+            $img = $img->scale( xpixels => 1280 * $scale );
         }
-        if ( $img->getheight() > 720 ) {
-            $img = $img->scale( ypixels => 720 );
+        if ( $img->getheight() > 720 * $scale ) {
+            $img = $img->scale( ypixels => 720 * $scale );
         }
     }
     else {
-        if ( $img->getwidth() > 720 ) {
-            $img = $img->scale( xpixels => 720 );
+        if ( $img->getwidth() > 720 * $scale ) {
+            $img = $img->scale( xpixels => 720 * $scale );
         }
 
-        if ( $img->getheight() > 1280 ) {
-            $img = $img->scale( ypixels => 1280 );
+        if ( $img->getheight() > 1280 * $scale ) {
+            $img = $img->scale( ypixels => 1280 * $scale );
         }
     }
 
-    $img->write( file => $private_path, type => $private_path =~ /.png$/ ? 'png' : 'jpeg' )
+    $img->write( file => $output_path, type => $private_path =~ /.png$/ ? 'png' : 'jpeg' )
       or $self->status_bad_request( $c, message => Imager->errstr() ), $c->detach;
 }
 

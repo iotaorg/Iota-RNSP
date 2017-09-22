@@ -168,7 +168,7 @@ sub list_POST {
         chmod 0644, $private_path;
 
         if ($need_resize) {
-            $c->resize_to_720p($self, $private_path);
+            $c->resize_image($self, $private_path);
         }
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;

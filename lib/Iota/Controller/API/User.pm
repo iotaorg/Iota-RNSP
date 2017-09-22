@@ -67,6 +67,9 @@ sub user_file_POST {
         my $need_resize = 0;
         $need_resize = 1 if $upload->tempname =~ /.bmp/;
 
+        my $add_thumb = 0;
+        my %thumb;
+
         if ( $classe =~ /^(imagem_cidade|logo_movimento|perfil_xd|imagem)/ ) {
 
             my $exiv = `which exiv2 2>&1`;
@@ -104,6 +107,10 @@ sub user_file_POST {
 
         }
 
+        if ( $classe eq 'imagem_bp' ) {
+            $add_thumb = 1;
+        }
+
         my $user_id = $c->stash->{object}->next->id;
         my $filename =
           sprintf( 'user_%i_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename ), 0, 200 ) );
@@ -120,7 +127,7 @@ sub user_file_POST {
         chmod 0644, $private_path;
 
         if ($need_resize) {
-            $c->resize_to_720p( $self, $private_path );
+            $c->resize_image( $self, $private_path );
         }
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
@@ -134,7 +141,41 @@ sub user_file_POST {
             }
         );
 
-        $c->res->body( to_json( { class_name => $classe, id => $file->id, location => $public_url } ) );
+        if ($add_thumb) {
+
+            my $private_path2 =
+              $c->config->{private_path} =~ /^\//o
+              ? dir( $c->config->{private_path} )->resolve . '/thumb-' . $filename
+              : Iota->path_to( $c->config->{private_path}, 'thumb-' . $filename );
+
+            $c->resize_image( $self, $private_path, 0.3, $private_path2 );
+
+            my $public_url2 = $c->uri_for( $c->config->{public_url} . '/thumb-' . $filename )->as_string;
+
+            my $file2 = $c->model('DB::User')->find($user_id)->add_to_user_files(
+                {
+                    class_name   => "thumb_$classe",
+                    public_url   => $public_url2,
+                    private_path => $private_path2
+                }
+            );
+            $thumb{thumb} = {
+                id         => $file2->id,
+                location   => $public_url2,
+                class_name => $file2->class_name,
+            };
+        }
+
+        $c->res->body(
+            to_json(
+                {
+                    class_name => $classe,
+                    id         => $file->id,
+                    location   => $public_url,
+                    %thumb
+                }
+            )
+        );
 
     }
     else {
