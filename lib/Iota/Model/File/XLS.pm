@@ -86,7 +86,7 @@ next unless $worksheet;
                     $value =~ s/^\s+//;
                     $value =~ s/\s+$//;
 
-                    $value = decode( 'iso-8859-15', $value );
+                    eval{$value = decode( 'iso-8859-15', $value )};
                     $registro->{$header_name} = $value;
                 }
 

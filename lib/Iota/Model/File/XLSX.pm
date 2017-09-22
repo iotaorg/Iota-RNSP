@@ -47,7 +47,7 @@ sub parse {
 
                     foreach my $header_name ( keys %expected_header ) {
                         my $cell_Value = $cell->value();
-                        utf8::decode($cell_Value);
+                        eval{utf8::decode($cell_Value)};
 
                         if ( $cell_Value =~ $expected_header{$header_name} ) {
                             $header_found++;
@@ -70,7 +70,7 @@ sub parse {
                     next unless $cell;
 
                     my $value = $cell->value();
-                    utf8::decode($value);
+                    eval{utf8::decode($value)};
 
                     # aqui é uma regra que você escolhe, pois as vezes o valor da célula pode ser nulo
                     next if !defined $value || $value =~ /^\s*$/;
