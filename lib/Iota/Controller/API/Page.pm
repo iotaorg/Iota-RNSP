@@ -14,7 +14,6 @@ sub base : Chained('/api/base') : PathPart('page') : CaptureArgs(0) {
 
     $c->stash->{collection} = $c->stash->{collection}->search( { 'me.user_id' => $c->user->id } );
 
-
 }
 
 sub object : Chained('base') : PathPart('') : CaptureArgs(1) {
@@ -39,11 +38,27 @@ sub page : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 sub page_GET {
     my ( $self, $c ) = @_;
-    my $object_ref = $c->stash->{object}->as_hashref->next;
+    my $object_ref = $c->stash->{object}->search(
+        undef,
+        {
+            prefetch => 'image_user_file'
+        }
+    )->as_hashref->next;
 
-    $self->status_ok( $c,
-        entity =>
-          { ( map { $_ => $object_ref->{$_} } qw(id user_id created_at published_at title title_url content) ) } );
+    $self->status_ok(
+        $c,
+        entity => {
+            ( map { $_ => $object_ref->{$_} } qw(id user_id created_at published_at title title_url content ) ),
+
+            image_user_file => defined $object_ref->{image_user_file}{id}
+            ? {
+                ( map { $_ => $object_ref->{image_user_file}{$_} } qw(id public_url ) ),
+              }
+            : undef
+
+        },
+
+    );
 }
 
 sub page_POST {
