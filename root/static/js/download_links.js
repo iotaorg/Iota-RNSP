@@ -1,13 +1,13 @@
-var md = function () {
+var md = function() {
     var
 
-    $cidade = $('select[name="cidade"]:first'),
+        $cidade = $('select[name="cidade"]:first'),
         $region = $('select[name="region"]:first'),
         $indi = $('select[name="indicador"]:first'),
         $formato = $('select[name="formato"]:first'),
         $url = $('input[name="url"]:first'),
         $url2 = $('input[name="url2"]:first'),
-        _run = function () {
+        _run = function() {
 
 
             $cidade.change(_redo_url);
@@ -17,10 +17,10 @@ var md = function () {
 
             _redo_url();
         },
-        _redo_url = function () {
+        _redo_url = function() {
 
             var
-            formato = $formato.val(),
+                formato = $formato.val(),
                 cidade = $cidade.val(),
                 indi = $indi.val(),
                 regiao = $region.val();
@@ -46,21 +46,21 @@ var md = function () {
             if ((indi == '') == false) {
 
                 if ((regiao == '') == false) {
-                    if (regiao == 'all'){
-                        url = url +'/'+ indi + '/todas-regioes';
-                    }else{
+                    if (regiao == 'all') {
+                        url = url + '/' + indi + '/todas-regioes';
+                    } else {
                         url = url + '/' + indi;
                         url = url + '/regiao/' + regiao;
                     }
-                }else{
+                } else {
                     url = url + '/' + indi;
                 }
 
-            }else{
+            } else {
                 if ((regiao == '') == false) {
-                    if (regiao == 'all'){
+                    if (regiao == 'all') {
                         url = url + '/todas-regioes';
-                    }else{
+                    } else {
                         url = url + '/regiao/' + regiao;
                     }
                 }
@@ -80,37 +80,35 @@ var md = function () {
 
 
         },
-        _load_regions = function (for_city) {
+        _load_regions = function(for_city) {
 
             $.ajax({
                 type: 'GET',
                 dataType: 'json',
                 url: '/api/regions/' + for_city,
-                success: function (data, textStatus, jqXHR) {
+                success: function(data, textStatus, jqXHR) {
                     var options = '';
-                    $.each(data.regions, function (index, value) {
+                    $.each(data.regions, function(index, value) {
                         options = options + '<option value="' + value.name_url + '">' + value.name + '</option>';
                         if (value.subregions) {
-                            $.each(value.subregions, function (index, value) {
+                            $.each(value.subregions, function(index, value) {
                                 options = options + '<option value="' + value.name_url + '">&nbsp;&nbsp; ' + value.name + '</option>';
                             });
                         }
                     });
 
 
-                    $region.find('option').each(function(){
-						console.log($(this).val());
-						if ($(this).val() != "" && $(this).val() != "all"){
-							$(this).remove();
-						}
-				 //.not(  '[value=""]' | '[value="all"]' ).remove();
-					});
+                    $region.find('option').each(function() {
+                        if ($(this).val() != "" && $(this).val() != "all") {
+                            $(this).remove();
+                        }
+                    });
                     $region.append($(options));
                     if (options == '')
                         $region.parents('.regiao:first').addClass('hide');
                     $region.removeAttr("disabled");
                 },
-                error: function (data) {
+                error: function(data) {
                     alert("erro ao carregar regioes");
                     $region.removeAttr("disabled");
                 }
@@ -122,6 +120,6 @@ var md = function () {
     };
 }();
 
-$(function () {
+$(function() {
     md.run();
 });
