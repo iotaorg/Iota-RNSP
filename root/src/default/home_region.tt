@@ -31,7 +31,7 @@
 
 
 		<div class="row-fluid" id="cidades-dados">
-			<div class="span5 col-md-6">
+			<div class="span5 col-md-8">
 				<div class=" ">
 					<div class="content-fill">
                         [%  IF !is_infancia %]
@@ -61,7 +61,7 @@
 							<dt>Cidade: </dt>
 							<dd><a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]">[%city.name%]</a></dd>
 							<dt>Estado: </dt>
-       <dd>[%city.state.name%]</dd>
+                            <dd>[%city.state.name%]</dd>
 
 							[% FOREACH vv IN basic_variables %]
 								<dt>[%vv.variable.name%]: </dt>
@@ -72,7 +72,7 @@
 				</div><!-- " " -->
 			</div><!-- span6 -->
 
-			<div class="offset2 span5 col-md-6">
+			<div class="offset2 span5 col-md-4">
 				[%IF region.polygon_path || region.depth_level == 2 %]
 					<div class="map" id="gmap">
 						<div class="content-fill">
@@ -90,9 +90,9 @@
 			</div>
 
 		</div>
-
+        <span class="clearfix"></span>
 		<div class="row-fluid" >
-			<div class="span12">
+			<div class="span12 col-sm-12">
 				<div id="cidades-indicadores">
 
 					<h5>[%l('Indicadores separados por eixos')%]</h5>

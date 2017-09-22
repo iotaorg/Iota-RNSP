@@ -793,3 +793,25 @@ dl.tabela_indicadores > *:nth-child(1n+11) {
 b, strong, label, th {
     font-weight: 500;
 }
+
+#indicador-dados div.profile > div.content-fill {
+    margin-top: 15px;
+}
+#cidades-dados div.indicador-dados {
+    padding: 10px;
+}
+.dados-box-regiao {
+    float: right;
+    padding-left: 0
+}
+.dados-box-regiao > div {
+    padding: 10px;
+}
+
+#indicador-dados div.profile > div.content-fill,
+#cidades-dados div.indicador-dados,
+.table .table,
+.dados-box-regiao > div {
+    border: 1px solid #e0e0e0;
+}
+

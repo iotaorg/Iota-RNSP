@@ -4,10 +4,10 @@
 [%END%]
 <div id="content" class="content">
     <div class="row" id="cidades-dados">
-        <div class="span4 col-md-4">
-            <div class=" ">
+        <div class="span4 col-md-4 dados-box-regiao">
+            <div>
                 <div class="content-fill">
-                    <h1 class="title">[%region.name%] - [% city.name %], [%city.uf%]</h1>
+                    <h1 class="title">[%region.name%][%IF !is_infancia%] - [% city.name %], [%city.uf%][%END%]</h1>
                     <div class="variaveis"><dl class="tabela tabela_regiao">
 
 [%IF region.upper_region %]
@@ -81,7 +81,7 @@
                 [% INCLUDE parts/analise_comparativa.tt %]
             </div>
 
-            <div>
+            <div class="table">
                 <h2>[%l('Fator de desigualdade')%]</h2>
                 [% INCLUDE parts/fator_desigualdade.tt %]
             </div>
@@ -100,7 +100,7 @@
 
             [% INCLUDE parts/regiao_serie_historica_grafico_download.tt %]
 
-            <div>
+            <div class="table">
                 <h2>[%l('Fator de desigualdade')%]</h2>
                 [% INCLUDE parts/fator_desigualdade.tt %]
             </div>
