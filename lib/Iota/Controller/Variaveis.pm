@@ -211,12 +211,25 @@ sub _download {
     $self->_download_and_detach( $c, $path );
 }
 
+sub _loc_nop { $_[2] || '' }
+
 sub _loc_str {
+    my ($self, $c, $text) = @_;
+
+    if ( !$ENV{HARNESS_ACTIVE_REMOVED} && ($c->config->{disable_lexicon} || exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} )) {
+        *_loc_str = *_loc_nop;
+        return $text;
+    }
+
+    *_loc_str = *_loc_str_old;
+    return &_loc_str_old(@_);
+}
+
+sub _loc_str_old {
     my ( $self, $c, $str ) = @_;
 
     return $str if !defined $str || $str eq '';
     return $str unless $str =~ /[A-Za-z]/o;
-
     return $str if $str =~ /^\s*$/o;
     return $str if $str =~ /:\/\//o;
 

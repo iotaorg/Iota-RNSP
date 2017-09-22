@@ -94,7 +94,7 @@
 
 
 
-<h1><span class="glyphicon glyphicon-floppy-save"></span> [%l('Baixar arquivos')%]</h1>
+<h1><span class="glyphicon glyphicon-floppy-save"></span> [%l('Baixar dados')%]</h1>
 
 <form role="form">
 
@@ -139,8 +139,8 @@
             <label>[%l('Formato')%]</label>
 
             <select name="formato" class="form-control">
-                <option value="csv" selected="selected">[%l('CSV')%]</option>
-                <option value="xls">[%l('XLS')%]</option>
+                <option value="xls" selected="selected">[%l('XLS')%] / Microsoft Excel </option>
+                <option value="csv">[%l('CSV')%]</option>
                 <option value="xml">[%l('XML')%]</option>
                 <option value="json">[%l('JSON')%]</option>
             </select>
@@ -148,37 +148,15 @@
     </div>
 </div>
 
-<legend>[%l('Links')%]</legend>
-
-    <h4>[%l('Arquivo de indicadores')%]</h4>
-    <p>
-    <div class="row">
-        <div class="col-md-9 col-sm-7">
-            <input type="text" onclick="this.focus();this.select()" name="url" readonly="readonly" style="background-color: #d6e9c6" class="form-control"/>
-        </div>
-        <div class="col-md-3 col-sm-5">
-            <a target="_blank" id="id_link" class="btn form-control btn-success"  href="">[%l('Efetuar download dos indicadores')%] <span class="glyphicon glyphicon-download"></span></a>
-        </div>
-    </div>
-    </p>
-
-    <p>
-    <h4>[%l('Arquivo de variáveis')%]</h4>
-    <div class="row">
-        <div class="col-md-9 col-sm-7">
-            <input type="text" onclick="this.focus();this.select()" name="url2" readonly="readonly" class="form-control"  style="background-color: #d6e9c6"/>
-        </div>
-        <div class="col-md-3 col-sm-5">
-            <a target="_blank" id="id_link2" class="btn form-control btn-success"  href="">[%l('Efetuar download das variáveis')%] <span class="glyphicon glyphicon-download"></span></a>
-        </div>
-    </div>
-    </p>
-
 <legend>[%l('Informações contidas nos arquivos')%]</legend>
 
     <div class="row" >
         <div class="col-sm-6">
-            <h4>[%l('Arquivo de indicadores')%]</h4>
+        <h4>[%l('Arquivo de indicadores')%]</h4>
+
+        <center>
+            <a target="_blank" id="id_link" style="width: 200px;" class="btn form-control btn-success"  href="">[%l('Download')%] <span class="glyphicon glyphicon-download"></span></a>
+        </center>
             <ul>
                 <li><strong>[%l('Nome da cidade')%]</strong></li>
                 <li><strong>[%l('Nome do indicador')%]</strong></li>
@@ -206,6 +184,10 @@
         </div>
         <div class="col-sm-6">
             <h4>[%l('Arquivo de variáveis')%]</h4>
+
+            <center>
+                <a target="_blank" id="id_link2" style="width: 200px;" class="btn form-control btn-success"  href="">[%l('Download')%] <span class="glyphicon glyphicon-download"></span></a>
+            </center>
 
             <ul>
                 <li><strong>[%l('Nome da cidade')%]</strong></li>
