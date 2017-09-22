@@ -65,6 +65,7 @@ sub user_file_POST {
     if ($upload) {
 
         my $need_resize = 0;
+        $need_resize = 1 if $upload->tempname =~ /.bmp/;
 
         if ( $classe =~ /^(imagem_cidade|logo_movimento|perfil_xd|imagem)/ ) {
 
@@ -88,11 +89,19 @@ sub user_file_POST {
 
                         $need_resize = 1;
                     }
-
-                    $need_resize = 1 if $x =~ /.bmp/;
-
                 }
             }
+
+        }
+        elsif ( $classe eq 'custom.css' ) {
+            my $x = $upload->tempname;
+
+            # -B check for "binary"
+            if ( -B $x ) {
+                $c->res->body( to_json( { error => 'Do not looks like an CSS file' } ) );
+                $c->detach;
+            }
+
         }
 
         my $user_id = $c->stash->{object}->next->id;
