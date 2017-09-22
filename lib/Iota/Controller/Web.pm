@@ -372,7 +372,7 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
         {
             'me.id' => $page_id,
         },
-        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3' ] }
+        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3', 'image_user_file' ] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;
@@ -390,7 +390,7 @@ sub pagina_boas_praticas_item : Chained('institute_load') PathPart('boas-pratica
 }
 
 sub _add_indicators_filters {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
     my $ref = "axis_dim2";
 
@@ -398,10 +398,8 @@ sub _add_indicators_filters {
         my @axis_dim = $c->model("DB::AxisDim2")->search(
             undef,
             {
-                columns => [
-                    { key   => \"coalesce(me.id::text, '-')" },
-                    { value => \"coalesce(me.name, 'Não preenchido')" },
-                ],
+                columns =>
+                  [ { key => \"coalesce(me.id::text, '-')" }, { value => \"coalesce(me.name, 'Não preenchido')" }, ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator',
                 order_by     => \"me.name nulls last"
             }
@@ -428,7 +426,6 @@ sub _add_indicators_filters {
         $c->stash->{$ref} = \@axis_dim;
 
     }
-
 
 }
 
@@ -573,10 +570,11 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
                 { description => \'me.description' },
                 {
                     concat => \
-"coalesce(me.description,'') || coalesce(me.methodology,'') || coalesce(me.goals,'') || coalesce(me.schedule,'') || coalesce(me.results,'')"
+"case when thumbnail_user_file_id is null then coalesce(me.description,'') || coalesce(me.methodology,'') || coalesce(me.goals,'') || coalesce(me.schedule,'') || coalesce(me.results,'') else '' end"
                 },
+                'thumbnail_user_file.public_url'
             ],
-            join         => [ { 'user' => 'city' }, 'axis' ],
+            join => [ { 'user' => 'city' }, 'axis', 'thumbnail_user_file' ],
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
             order_by     => 'me.name'
         }
@@ -593,24 +591,30 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
         }
         $bp->{axis_attrs} = \@axis_attrs;
 
-        my (@tst) = $bp->{concat} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
+        if ( $bp->{concat} ) {
+            my (@tst) = $bp->{concat} =~ /<\s*?img\s+[^>]*?\s*src\s*=\s*(["'])((\\?+.)*?)\1[^>]*?>/;
 
-        if (@tst) {
+            if (@tst) {
 
-            $bp->{image} = $tst[1];
+                $bp->{image} = $tst[1];
 
-            if ( $c->config->{imgix_password} ) {
+                if ( $c->config->{imgix_password} ) {
 
-                $bp->{image} =
-                  uri_escape( $tst[1] ) . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
+                    $bp->{image} =
+                      uri_escape( $tst[1] ) . '?fit=crop&auto=compress,enhance&crop=faces,edges&max-w=338&max-h=189';
 
-                $bp->{image} =
-                    'https://'
-                  . $c->config->{imgix_domain} . '/'
-                  . $bp->{image} . '&s='
-                  . md5_hex( $c->config->{imgix_password} . '/' . $bp->{image} );
+                    $bp->{image} =
+                        'https://'
+                      . $c->config->{imgix_domain} . '/'
+                      . $bp->{image} . '&s='
+                      . md5_hex( $c->config->{imgix_password} . '/' . $bp->{image} );
 
+                }
             }
+        }
+        else {
+
+            $bp->{image} = $bp->{thumbnail_user_file}{public_url};
         }
 
         $bp->{description} = $hs->parse( $bp->{description} );
@@ -721,7 +725,8 @@ sub sugestao_bp_post : Chained('light_institute_load') PathPart('pagina/contato-
     my $misc_params = $c->req->params;
     $misc_params->{$_} ||= '' for qw/name comment email/;
 
-use DDP; p $misc_params;
+    use DDP;
+    p $misc_params;
     if (   length $misc_params->{name} <= 3
         || length $misc_params->{email} <= 8
         || length $misc_params->{comment} <= 10 ) {
@@ -1129,11 +1134,11 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
 
     my $active_group = {
         name => 'Todos os indicadores',
-        id => 0
+        id   => 0
     };
 
-    my $headers = $c->stash->{institute_metadata}{menu_headers};
-    my $group_id_vs_dim = {};
+    my $headers                 = $c->stash->{institute_metadata}{menu_headers};
+    my $group_id_vs_dim         = {};
     my $group_id_vs_description = {};
 
     my $institute         = $c->stash->{institute};
@@ -1229,7 +1234,6 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
         }
     }
 
-
     # todos os $count_used_groups = 0 sao eixos (nao grupos), que nao
     # foram usados em nenhum indicador.
     while ( my ( $group_id, $count ) = each %$count_used_groups ) {
@@ -1262,14 +1266,15 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
     }
 
     $c->stash(
-        group_headers    => $headers,
-        id_vs_group_name => $id_vs_group_name,
-        group_id_vs_dim  => $group_id_vs_dim,
+        group_headers           => $headers,
+        id_vs_group_name        => $id_vs_group_name,
+        group_id_vs_dim         => $group_id_vs_dim,
         group_id_vs_description => $group_id_vs_description,
-        groups_in_order  => [
+        groups_in_order         => [
             sort {
-                return -1 if $id_vs_group_name->{$b} eq 'Indicadores da cidade';
-                return 1  if $id_vs_group_name->{$a} eq 'Indicadores da cidade';
+                return -1
+                  if $id_vs_group_name->{$b} eq 'Indicadores da cidade';
+                return 1 if $id_vs_group_name->{$a} eq 'Indicadores da cidade';
                 return
                     $group_id_vs_dim->{$a}
                   . $id_vs_group_name->{$a} cmp $group_id_vs_dim->{$b}
@@ -1318,8 +1323,8 @@ sub download_api : Chained('institute_load') PathPart('dados-abertos/api') Args(
 }
 
 sub network_cidade : Chained('institute_load') PathPart('') CaptureArgs(3) {
-    my ( $self, $c, $sigla,$estado, $cidade ) = @_;
-    $c->stash->{pais} = $sigla;
+    my ( $self, $c, $sigla, $estado, $cidade ) = @_;
+    $c->stash->{pais}   = $sigla;
     $c->stash->{estado} = $estado;
     $c->stash->{cidade} = $cidade;
 

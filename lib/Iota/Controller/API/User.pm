@@ -148,7 +148,7 @@ sub user_file_POST {
               ? dir( $c->config->{private_path} )->resolve . '/thumb-' . $filename
               : Iota->path_to( $c->config->{private_path}, 'thumb-' . $filename );
 
-            $c->resize_image( $self, $private_path, 0.3, $private_path2 );
+            $c->resize_image( $self, $private_path, 0.28125, $private_path2 );
 
             my $public_url2 = $c->uri_for( $c->config->{public_url} . '/thumb-' . $filename )->as_string;
 

@@ -6,6 +6,11 @@
         <h1>[%l(best_pratice.name)%] [%IF city%]- <small>[% city.name%] / [%city.uf %]</small>[%END%] [%IF best_pratice.reference_city%] - [%best_pratice.reference_city%][%END%]</h1>
 
 
+        [%IF best_pratice.image_user_file %]
+        <img src="[%l(best_pratice.image_user_file.public_url)|none%]" />
+        [%END%]
+
+
         [%IF best_pratice.description%]
         [% IF 0 %]<h5>[%l('Descrição')%]</h5>[%END%]
         [%l(best_pratice.description)|none%]
