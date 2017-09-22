@@ -815,3 +815,8 @@ b, strong, label, th {
     border: 1px solid #e0e0e0;
 }
 
+body.root_mapa_site ul {
+    border: 1px solid #eee;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
