@@ -1,5 +1,9 @@
 [% INCLUDE 'web/messages.tt' %]
 
+<div class="text-right">
+  <a href="[%c.uri_for(c.controller('Web').action_for('sugestao_bp')) %]"> Sugirir boa prática</a>
+  <span class="label label-success">➕</span>
+</div>
 
 <div class="row" id="boapratica-search">
     <form class="navbar-form navbar-left" role="search" method="get" url="/pagina/boas-praticas">
@@ -92,6 +96,7 @@
     </div>
 </div>
 <hr/>
+
 
 <div class="row" id="boapratica">
     [%FOREACH bp IN best_pratices%]

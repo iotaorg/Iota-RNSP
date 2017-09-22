@@ -2,11 +2,13 @@
 
 <div class="container">
 
-<form class=" form-horizontal" action="[%c.uri_for(c.controller('Web').action_for('pagina_contato_post')) %]" method="post"  id="contact_form">
+<form class=" form-horizontal" action="[%c.uri_for(c.controller('Web').action_for('sugestao_bp_post')) %]" method="post"  id="contact_form">
 
 <fieldset>
 
-<legend>Entre em contato!</legend>
+<legend>Sugira uma boa prática!</legend>
+
+<center><p>Conte para qual cidade e qual a boa prática!</p></center>
 
 
 <div class="form-group">
@@ -24,27 +26,13 @@
     <div class="col-md-4 inputGroupContainer">
     <div class="input-group">
         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-  <input value="[%body.email %]" name="email" placeholder="Endereço de E-mail" class="form-control"  type="text">
+  <input value="[%body.email %]" name="email" placeholder="Endereço de E-Mail" class="form-control"  type="text">
     </div>
   </div>
 </div>
 
-
-
 <div class="form-group">
-  <label class="col-md-4 control-label">Telefone ou celular</label>
-    <div class="col-md-4 inputGroupContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-  <input value="[%body.phone %]" name="phone" placeholder="(11) 9999-9999" class="form-control" type="text">
-    </div>
-  </div>
-</div>
-
-
-
-<div class="form-group">
-  <label class="col-md-4 control-label">Comentário</label>
+  <label class="col-md-4 control-label">Boa prátia</label>
     <div class="col-md-4 inputGroupContainer">
     <div class="input-group">
         <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>

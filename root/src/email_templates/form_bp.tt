@@ -1,0 +1,11 @@
+<p>Nova boa prática enviada pelo site</p>
+<dl>
+    <dt>Nome</dt>
+    <dd>[% name %]</dd>
+
+    <dt>Email</dt>
+    <dd>[% email %]</dd>
+
+    <dt>Mensagem</dt>
+    <dd>[% comment %]</dd>
+</dl>
