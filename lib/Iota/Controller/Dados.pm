@@ -40,13 +40,13 @@ use XML::Simple qw(:strict);
 use Digest::MD5;
 use DateTime::Format::Pg;
 
-
 sub _loc_nop { $_[2] || '' }
 
 sub _loc_str {
-    my ($self, $c, $text) = @_;
+    my ( $self, $c, $text ) = @_;
 
-    if ( !$ENV{HARNESS_ACTIVE_REMOVED} && ($c->config->{disable_lexicon} || exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} )) {
+    if ( !$ENV{HARNESS_ACTIVE_REMOVED}
+        && ( $c->config->{disable_lexicon} || exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} ) ) {
         *_loc_str = *_loc_nop;
         return $text;
     }
@@ -70,17 +70,12 @@ sub _loc_str_old {
 sub _download {
     my ( $self, $c ) = @_;
 
-    my $data_rs =
-      $c->model('DB::DownloadData')
-      ->search( { institute_id => $c->stash->{institute}->id },
+    my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     my $network = $c->stash->{network};
     my $file    = $c->get_lang() . '_' . $network->name_url;
-    $file .= '_'
-      . $c->stash->{pais} . '_'
-      . $c->stash->{estado} . '_'
-      . $c->stash->{cidade}
+    $file .= '_' . $c->stash->{pais} . '_' . $c->stash->{estado} . '_' . $c->stash->{cidade}
       if $c->stash->{cidade};
 
     $c->stash->{all_region} = 1, delete $c->stash->{region}
@@ -164,38 +159,46 @@ sub _download {
         ]
     );
 
+    my @extra_fields;
+
+    push @extra_fields, 'axis_aux1' if ( $c->stash->{institute_metadata}{axis_aux1_header} );
+    push @extra_fields, 'axis_aux2' if ( $c->stash->{institute_metadata}{axis_aux2_header} );
+    push @extra_fields, 'axis_aux3' if ( $c->stash->{institute_metadata}{axis_aux3_header} );
+
+    push @{ $lines[0] }, $c->loc( $c->stash->{institute_metadata}{"${_}_header"} ) for @extra_fields;
+
     while ( my $data = $data_rs->next ) {
         my @this_row = (
             $data->{city_id},
             $data->{city_name},
-            $self->_loc_str( $c, $data->{axis_name} ),
+            $c->loc( $data->{axis_name} ),
             $data->{indicator_id},
-            $self->_loc_str( $c, $data->{indicator_name} ),
-            $self->_loc_str( $c, $data->{formula_human} ),
+            $c->loc( $data->{indicator_name} ),
+            $c->loc( $data->{formula_human} ),
             $self->_loc_str( $c, $data->{goal} ),
             $self->_loc_str( $c, $data->{goal_explanation} ),
             $self->_loc_str( $c, $data->{goal_source} ),
-             $data->{goal_operator},
+            $data->{goal_operator},
             $self->_loc_str( $c, $data->{explanation} ),
             $self->_loc_str( $c, $data->{tags} ),
             $self->_loc_str( $c, $data->{observations} ),
             $self->_loc_str( $c, $self->_period_pt( $data->{period} ) ),
             $self->_loc_str( $c, $data->{variation_name} ),
             $self->_loc_str( $c, $data->{variation_order} ),
-             $self->ymd2dmy( $data->{valid_from} ) ,
-            $self->_loc_str( $c, $data->{value} ),
+            $self->ymd2dmy( $data->{valid_from} ),
+            $data->{value},
             $self->_loc_str( $c, $data->{user_goal} ),
             $self->_loc_str( $c, $data->{justification_of_missing_field} ),
             $self->_loc_str( $c, $data->{technical_information} ),
             $data->{region_name},
             ref $data->{sources} eq 'ARRAY'
-            ? (
-                join "\n",
-                map { $self->_loc_str( $c, $_ ) } @{ $data->{sources} }
-              )
+            ? ( join "\n", map { $c->loc($_) } @{ $data->{sources} } )
             : '',
             $data->{formula},
         );
+
+        push @this_row, $self->_loc_str( $c, $data->{$_} ) for @extra_fields;
+
         push @lines, \@this_row;
     }
 
@@ -224,8 +227,7 @@ sub _period_pt {
 
 sub _add_variables {
     my ( $self, $c, $hash, $arr ) = @_;
-    my @rows = $c->model('DB')->resultset('Variable')
-      ->as_hashref->search( undef, { order_by => 'name' } )->all;
+    my @rows = $c->model('DB')->resultset('Variable')->as_hashref->search( undef, { order_by => 'name' } )->all;
     my $i = scalar @$arr;
     foreach my $var (@rows) {
         $hash->{ $var->{id} } = $i++;
@@ -348,8 +350,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
-    $c->response->headers->header(
-        'content-disposition' => "attachment;filename=" . basename($path) );
+    $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
@@ -357,8 +358,7 @@ sub _download_and_detach {
     $c->detach;
 }
 
-sub download_indicators : Chained('/institute_load')
-  PathPart('download-indicators') Args(0) ActionClass('REST') {
+sub download_indicators : Chained('/institute_load') PathPart('download-indicators') Args(0) ActionClass('REST') {
 
 }
 
@@ -367,16 +367,13 @@ sub download_indicators_GET {
     my $params = $c->req->params;
     my @objs;
 
-    my $data_rs =
-      $c->model('DB::DownloadData')
-      ->search( { institute_id => $c->stash->{institute}->id },
+    my $data_rs = $c->model('DB::DownloadData')->search( { institute_id => $c->stash->{institute}->id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } );
 
     if ( exists $params->{region_id} ) {
         my @ids = split /,/, $params->{region_id};
 
-        $self->status_bad_request( $c, message => 'invalid region_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid region_id' ), $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -396,8 +393,7 @@ sub download_indicators_GET {
     if ( exists $params->{user_id} ) {
         my @ids = split /,/, $params->{user_id};
 
-        $self->status_bad_request( $c, message => 'invalid user_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid user_id' ), $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -410,8 +406,7 @@ sub download_indicators_GET {
     if ( exists $params->{city_id} ) {
         my @ids = split /,/, $params->{city_id};
 
-        $self->status_bad_request( $c, message => 'invalid city_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid city_id' ), $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -424,8 +419,7 @@ sub download_indicators_GET {
     if ( exists $params->{indicator_id} ) {
         my @ids = split /,/, $params->{indicator_id};
 
-        $self->status_bad_request( $c, message => 'invalid indicator_id' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid indicator_id' ), $c->detach
           unless $self->int_validation(@ids);
 
         $data_rs = $data_rs->search(
@@ -438,8 +432,7 @@ sub download_indicators_GET {
     if ( exists $params->{valid_from} ) {
         my @dates = split /,/, $params->{valid_from};
 
-        $self->status_bad_request( $c, message => 'invalid date format' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
           unless $self->date_validation(@dates);
 
         $data_rs = $data_rs->search(
@@ -451,8 +444,7 @@ sub download_indicators_GET {
 
     if ( exists $params->{valid_from_begin} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
           unless $self->date_validation( $params->{valid_from_begin} );
 
         $data_rs = $data_rs->search(
@@ -464,8 +456,7 @@ sub download_indicators_GET {
 
     if ( exists $params->{valid_from_end} ) {
 
-        $self->status_bad_request( $c, message => 'invalid date format' ),
-          $c->detach
+        $self->status_bad_request( $c, message => 'invalid date format' ), $c->detach
           unless $self->date_validation( $params->{valid_from_end} );
 
         $data_rs = $data_rs->search(
@@ -542,9 +533,7 @@ for my $chain (qw/institute_load network_cidade cidade_regiao/) {
 
 #################
 
-for my $chain (
-    qw/network_indicator home_network_indicator cidade_regiao_indicator/)
-{
+for my $chain (qw/network_indicator home_network_indicator cidade_regiao_indicator/) {
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo} : Chained('/$chain') : PathPart('dados.$tipo') : CaptureArgs(0) {
@@ -624,9 +613,7 @@ for my $chain (qw/network_indicator home_network_indicator/) {
     }
 }
 
-for my $chain (
-    qw/network_indicator home_network_indicator cidade_regiao_indicator_todas/)
-{
+for my $chain (qw/network_indicator home_network_indicator cidade_regiao_indicator_todas/) {
     for my $tipo (qw/csv json xls xml/) {
         eval( "
             sub chain_${chain}_${tipo}_ind : Chained('/$chain') : PathPart('todas-regioes/dados.$tipo') : CaptureArgs(0) {

@@ -179,6 +179,10 @@
                 <li>[%l('Justificativa do valor não preenchido')%]</li>
                 <li>[%l('Região')%], [%l('se existir')%]</li>
                 <li>[%l('Fontes')%]</li>
+
+                [% IF institute_metadata.axis_aux1_header%] <li> [%institute_metadata.axis_aux1_header %] </li> [%END%]
+                [% IF institute_metadata.axis_aux2_header%] <li> [%institute_metadata.axis_aux2_header %] </li> [%END%]
+                [% IF institute_metadata.axis_aux3_header%] <li> [%institute_metadata.axis_aux3_header %] </li> [%END%]
             </ul>
 
         </div>
