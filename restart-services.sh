@@ -9,6 +9,7 @@ fi
 cd /src;
 source /home/app/perl5/perlbrew/etc/bashrc
 
+cpanm --installdeps . -n
 sqitch deploy -t local
 
 # email daemon
