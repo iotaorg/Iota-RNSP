@@ -780,3 +780,7 @@ body.root_ h2, body.root_pagina_o_projeto h3 {
 dl.tabela_indicadores > *:nth-child(1n+11) {
     font-size: 0.8em;
 }
+
+b, strong, label {
+    font-weight: 500;
+}
