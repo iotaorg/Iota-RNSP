@@ -25,7 +25,9 @@ sub base : Chained('/') PathPart('rdf') CaptureArgs(0) {
       : 'turtle';
 
     if ( $c->config->{rdf_domain} eq 'dynamic' ) {
-        $c->config->{rdf_domain} = $c->model('DB::Network')->search( { rdf_identifier => 1 } )->next->domain_name;
+        $c->config->{rdf_domain} = eval{$c->model('DB::Network')->search( { rdf_identifier => 1 } )->next->domain_name};
+
+        $c->config->{rdf_domain} ||= $c->model('DB::Network')->next->domain_name;
     }
 
 }

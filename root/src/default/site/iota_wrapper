@@ -25,7 +25,6 @@
 [%-CALL assets.include("v2/css/iota.css")%]
 [%-CALL assets.include("v2/css/sprites.css")%]
 [%-CALL assets.include("css/patrocinadores.sprites.css")%]
-[%-CALL assets.include("v2/css/prism-javascript.css")%]
 [%-CALL assets.include("v2/css/isotope.css")%]
 
 [%-CALL assets.include("css/sprite-ods.css")%]
@@ -37,7 +36,6 @@
 [%-CALL assets.include("v2/js/utils.js")%]
 [%-CALL assets.include("v2/js/events.js")%]
 
-[%-CALL assets.include("v2/js/prism-javascript.js")%]
 [%-CALL assets.include("v2/js/jquery.isotope.min.js")%]
 
 [%-CALL assets.include("js/indicatos-menu.js")%]

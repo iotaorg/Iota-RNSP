@@ -1303,6 +1303,20 @@ sub download : Chained('institute_load') PathPart('dados-abertos') Args(0) {
 
 }
 
+sub download_api : Chained('institute_load') PathPart('dados-abertos/api') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $self->mapa_site($c);
+
+    $c->stash(
+        title          => 'API - Dados abertos',
+        template       => 'download_api.tt',
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+    );
+
+}
+
 sub network_page : Chained('institute_load') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 }
