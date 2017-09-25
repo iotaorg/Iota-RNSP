@@ -60,6 +60,7 @@ requires 'DateTime::Format::Pg';
 requires 'Catalyst::View::TT';
 requires 'Date::Calc';
 
+requires 'HTML::Entities';
 requires 'Imager';
 requires 'Imager::File::JPEG';
 requires 'Imager::File::GIF';

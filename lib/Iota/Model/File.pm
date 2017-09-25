@@ -6,6 +6,7 @@ use JSON qw/encode_json/;
 use Iota::Model::File::XLSX;
 use Iota::Model::File::XLS;
 use Iota::Model::File::CSV;
+use HTML::Entities;
 
 sub process {
     my ( $self, %param ) = @_;
@@ -115,8 +116,9 @@ sub process {
                     $r->{value} = $self->_verify_variable_type( $r->{value}, $type );
 
                     if ( !defined $r->{value} ) {
-                        $status =
-"Valor '$old_value' não é um número válido [registro número $c]. Por favor, envie formatado corretamente.";
+                        my $vv = $r->{id};
+                        $status .=
+"\nValor '$old_value' não é um valor válido para a váriavel $vv [registro número $c].";
 
                         #  die "invalid number";
                     }
@@ -186,11 +188,12 @@ sub process {
     }
 
     return {
-        status  => $status,
+        status  => encode_entities( $status, '^\n\x20-\x25\x27-\x7e'),
         file_id => $file_id
     };
 
 }
+
 
 sub _verify_variable_type {
     my ( $self, $value, $type ) = @_;

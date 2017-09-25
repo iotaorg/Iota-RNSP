@@ -2,6 +2,7 @@
 package Iota::Schema::ResultSet::RegionVariableValue;
 
 use namespace::autoclean;
+use utf8;
 
 use Moose;
 extends 'DBIx::Class::ResultSet';
@@ -248,12 +249,7 @@ sub action_specs {
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             if ( exists $values{source} && $values{source} ) {
-                my $source =
-                  $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
-                if ( !$source->in_storage ) {
-                    $source->user_id( $values{user_id} );
-                    $source->insert;
-                }
+                $self->result_source->schema->source_find_or_new( $values{source}, $values{user_id} );
             }
             $data->upsert(
                 indicators => [ $data->indicators_from_variables( variables => [ $varvalue->variable_id ] ) ],
@@ -281,12 +277,7 @@ sub action_specs {
             my $data = Iota::IndicatorData->new( schema => $self->result_source->schema );
 
             if ( exists $values{source} && $values{source} ) {
-                my $source =
-                  $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
-                if ( !$source->in_storage ) {
-                    $source->user_id( $values{user_id} );
-                    $source->insert;
-                }
+                $self->result_source->schema->source_find_or_new( $values{source}, $values{user_id} );
             }
 
             $data->upsert(
@@ -429,11 +420,9 @@ sub _put {
     }
 
     if ( exists $values{source} && $values{source} ) {
-        my $source = $self->result_source->schema->resultset('Source')->find_or_new( { name => $values{source} } );
-        if ( !$source->in_storage ) {
-            $source->user_id( $values{user_id} );
-            $source->insert;
-        }
+
+        $self->result_source->schema->source_find_or_new( $values{source}, $values{user_id} );
+
     }
 
     if ( !$dont_calc ) {

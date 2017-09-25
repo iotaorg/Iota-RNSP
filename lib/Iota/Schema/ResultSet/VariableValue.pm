@@ -231,13 +231,7 @@ sub action_specs {
             $varvalue->discard_changes;
 
             if ( exists $values{source} && $values{source} ) {
-                my $source =
-                  $self->result_source->schema->resultset('Source')
-                  ->find_or_new( { name => $values{source} } );
-                if ( !$source->in_storage ) {
-                    $source->user_id( $values{user_id} );
-                    $source->insert;
-                }
+                $self->result_source->schema->source_find_or_new( $values{source}, $values{user_id} );
             }
 
             my $data =
@@ -274,13 +268,7 @@ sub action_specs {
             $var->discard_changes;
 
             if ( exists $values{source} && $values{source} ) {
-                my $source =
-                  $self->result_source->schema->resultset('Source')
-                  ->find_or_new( { name => $values{source} } );
-                if ( !$source->in_storage ) {
-                    $source->user_id( $values{user_id} );
-                    $source->insert;
-                }
+                $self->result_source->schema->source_find_or_new( $values{source}, $values{user_id} );
             }
 
             my $data =
@@ -377,14 +365,7 @@ sub _put {
     }
 
     if ( exists $values{source} && $values{source} ) {
-        my $source = $self->result_source->schema->resultset('Source');
-        my $source_available =
-          $source->search( { name => { ilike => "%$values{source}%" } }, )
-          ->next;
-        if ( !$source_available ) {
-            $source->create(
-                { name => $values{source}, user_id => $values{user_id} } );
-        }
+        $self->result_source->schema->source_find_or_new( $values{source}, $values{user_id} );
     }
 
     if ( !$dont_calc ) {
