@@ -67,6 +67,7 @@ sub user_file_POST {
         my $need_resize = 0;
         $need_resize = 1 if $upload->tempname =~ /.bmp/;
 
+        my $scale_size = 1;
         my $add_thumb = 0;
         my %thumb;
 
@@ -105,10 +106,10 @@ sub user_file_POST {
                 $c->detach;
             }
 
-        }
-
-        if ( $classe eq 'imagem_bp' ) {
+        }elsif ( $classe eq 'imagem_bp' ) {
             $add_thumb = 1;
+        }elsif ( $classe eq 'imagem_variavel' ) {
+            $scale_size = 0.3;
         }
 
         my $user_id = $c->stash->{object}->next->id;
@@ -127,7 +128,7 @@ sub user_file_POST {
         chmod 0644, $private_path;
 
         if ($need_resize) {
-            $c->resize_image( $self, $private_path );
+            $c->resize_image( $self, $private_path, $scale_size );
         }
 
         my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
