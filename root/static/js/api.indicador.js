@@ -144,7 +144,7 @@ $(document).ready(function() {
             if (indicador_data.indicator_availability.region_3)
                 disponibilidade.push(indicador_data._prefetch.region_classification_name['3']);
 
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+            $(".tabela", $dados).append('<dt class="small">$$dt:</dt><dd class="small">$$dd</dd>'.render({
                 dt: 'Disponibilidade de dados',
                 dd: disponibilidade.length == 0 ? 'Nenhum dados preenchido' : disponibilidade.join(', '),
             }));
@@ -225,7 +225,7 @@ $(document).ready(function() {
                             source_values_unique.push(el);
                         }
                     });
-                    $(".tabela", $dados).append("<dt>Fontes do Indicador:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
+                    $(".tabela", $dados).append("<dt class='small'>Fontes do Indicador:</dt><dd class='small'><ul><li>$$dado</li></ul></dd>".render({
                         dado: source_values_unique.join("__885__")
                     }).replace(/__885__/g, '</li><li>'));
                 }
@@ -238,13 +238,13 @@ $(document).ready(function() {
                         }
                     });
 
-                    $(".tabela", $dados).append("<dt>Observações:</dt><dd><ul><li>$$dado</li></ul></dd>".render({
+                    $(".tabela", $dados).append("<dt class='small'>Observações:</dt><dd class='small'><ul><li>$$dado</li></ul></dd>".render({
                         dado: observations_values_unique.join("__885__")
                     }).replace(/__885__/g, '</li><li>'));
                 }
 
                 if (indicador_data.user_indicator_config && indicador_data.user_indicator_config.technical_information) {
-                    $(".tabela", $dados).append("<dt>Informações Técnicas:</dt><dd>$$dado</dd>".render({
+                    $(".tabela", $dados).append("<dt class='small'>Informações Técnicas:</dt><dd  class='small'>$$dado</dd>".render({
                         dado: indicador_data.user_indicator_config.technical_information
                     }).replace(/\n/g, '<br/>'));
                 }

@@ -786,7 +786,7 @@ body.root_ h2, body.root_pagina_generica_render h3 {
 
 #infancia-menu-cidade img { display: inline; margin-top: -6px}
 
-dl.tabela_indicadores > *:nth-child(1n+11) {
+dl.tabela_indicadores > *.small {
     font-size: 0.8em;
 }
 
