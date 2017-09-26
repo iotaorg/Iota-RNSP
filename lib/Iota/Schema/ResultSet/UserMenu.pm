@@ -54,6 +54,9 @@ sub action_specs {
               for keys %values;
             return unless keys %values;
 
+            $values{menu_id} ||= undef;
+
+
             my $var = $self->create( \%values );
 
             $var->discard_changes;
@@ -65,6 +68,9 @@ sub action_specs {
             do { delete $values{$_} unless defined $values{$_} }
               for keys %values;
             return unless keys %values;
+
+            $values{menu_id} ||= undef;
+            $values{menu_id} = undef if $values{menu_id} eq $values{id};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;

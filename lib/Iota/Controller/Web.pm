@@ -325,6 +325,25 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         }
     );
 
+    if ( $c->stash->{is_infancia} && $c->stash->{institute_metadata}{include_fixed_menu}{id} ) {
+
+        $c->stash->{fixed_menu_pages} = [
+            $c->model('DB::UserMenu')->search(
+                {
+                    menu_id  => undef,
+                    page_id  => { '!=' => undef },
+                    position => $c->stash->{institute_metadata}{include_fixed_menu}{id},
+                },
+                {
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                    join => 'page',
+                    columns => ['me.title', 'page.title_url']
+                }
+            )->all
+        ];
+
+    }
+
     $c->set_lang($cur_lang);
 
 =pod
