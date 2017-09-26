@@ -122,6 +122,26 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     $c->stash->{c_req_match} =~ s/^\//root_/;
     $c->stash->{c_req_match} =~ s/\//_/g;
 
+    if ( $c->stash->{is_infancia} && $c->stash->{institute_metadata}{include_fixed_menu_id} ) {
+
+        $c->stash->{fixed_menu_pages} = [
+            map {
+                my $r = $_;
+                +{ title => $r->{title}, url => 'pagina/' . $r->{page}{id} . '/' . $r->{page}{title_url} }
+              } $c->model('DB::UserMenu')->search(
+                {
+                    page_id => { '!=' => undef },
+                    menu_id => $c->stash->{institute_metadata}{include_fixed_menu_id},
+                },
+                {
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                    join         => 'page',
+                    columns      => [ 'me.title', 'page.title_url', 'page.id' ]
+                }
+              )->all
+        ];
+    }
+
 }
 
 sub load_status_msgs : Private {
@@ -159,19 +179,6 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
     $c->forward('light_institute_load') if !exists $c->stash->{c_req_path};
-
-=pod
-    my @inner_page;
-
-    if (exists $c->stash->{user_obj} && ref $c->stash->{user_obj}  eq 'Iota::Model::DB::User'){
-        @inner_page = (
-            '-or' => [
-                { 'user.city_id' => undef },
-                { 'user.id' => $c->stash->{user_obj}->id }
-            ]
-        );
-    }
-=cut
 
     my $without_topic = $c->req->params->{without_topic} ? '1' : '0';
     my $cache_key = $c->stash->{network}->users->search(
@@ -325,37 +332,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         }
     );
 
-    if ( $c->stash->{is_infancia} && $c->stash->{institute_metadata}{include_fixed_menu_id} ) {
-
-        $c->stash->{fixed_menu_pages} = [
-            $c->model('DB::UserMenu')->search(
-                {
-                    page_id  => { '!=' => undef },
-                    menu_id => $c->stash->{institute_metadata}{include_fixed_menu_id},
-                },
-                {
-                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-                    join => 'page',
-                    columns => ['me.title', 'page.title_url']
-                }
-            )->all
-        ];
-        #use DDP; p $c->stash->{fixed_menu_pages};
-
-    }
-
     $c->set_lang($cur_lang);
-
-=pod
-    so precisa setar a lingua quando entra no endpoint, se nao, usa a padrao mesmo..
-    $c->response->cookies->{'cur_lang'} = {
-        value   => $cur_lang,
-        path    => '/',
-        expires => '+3600h',
-      }
-      if !exists $c->req->cookies->{cur_lang}
-      || $c->req->cookies->{cur_lang} ne $cur_lang;
-=cut
 
 }
 
@@ -367,6 +344,36 @@ sub erro : Chained('institute_load') PathPart('erro') Args(0) {
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         template       => 'error.tt'
+    );
+}
+
+sub pagina_generica_load : Chained('light_institute_load') PathPart('pagina') CaptureArgs(2) {
+    my ( $self, $c, $page_id, $title ) = @_;
+
+    $c->detach( '/error_404', ['Página não existe neste dominio!'] )
+      unless $c->stash->{is_infancia};
+    $c->detach( '/error_404', ['id invalid'] )
+      unless $page_id =~ /^[0-9]+$/;
+
+    my $page = $c->model('DB::UserPage')->search(
+        {
+            id => $page_id
+        }
+    )->as_hashref->next;
+
+    $c->detach('/error_404') unless $page;
+    $c->stash->{page} = $page;
+
+}
+
+sub pagina_generica_render : Chained('pagina_generica_load') PathPart('') Args(0) {
+    my ( $self, $c  ) = @_;
+
+    $c->stash(
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => $c->stash->{page}{title},
+        template       => 'pagina_generica.tt'
     );
 }
 
