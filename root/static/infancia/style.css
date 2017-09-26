@@ -99,7 +99,7 @@ body.root_ h6 {
 }
 
 .mynavbar-inner ul {
-    margin-top : 45px
+    margin-top : 5px
 }
 
 .mynavbar-inner li {
@@ -219,7 +219,7 @@ body.root_ .mytitlerow {
     margin-top: 150px;
 }
 .footer-menu .mynavbar-inner ul {
-    padding-top: 5px;
+    padding-top: 30px;
 }
 .footer-menu .mynavbar-inner li a {
     text-align: left;
