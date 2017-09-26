@@ -136,7 +136,8 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
                 {
                     result_class => 'DBIx::Class::ResultClass::HashRefInflator',
                     join         => 'page',
-                    columns      => [ 'me.title', 'page.title_url', 'page.id' ]
+                    columns      => [ 'me.title', 'page.title_url', 'page.id' ],
+                    order_by     => 'me.position'
                 }
               )->all
         ];
@@ -367,7 +368,7 @@ sub pagina_generica_load : Chained('light_institute_load') PathPart('pagina') Ca
 }
 
 sub pagina_generica_render : Chained('pagina_generica_load') PathPart('') Args(0) {
-    my ( $self, $c  ) = @_;
+    my ( $self, $c ) = @_;
 
     $c->stash(
         custom_wrapper => 'site/iota_wrapper',
