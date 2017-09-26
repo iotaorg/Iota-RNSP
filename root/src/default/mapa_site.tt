@@ -16,8 +16,9 @@
                 <li><a target="_blank" href="mailto:contato@cidadessustentaveis.org.br">[%l('Contato')%]</a></li>
 
             [%ELSE%]
-                <li><a href="pagina/sobre-o-projeto">[%l('O Projeto')%]</a></li>
-
+                [% FOREACH am IN fixed_menu_pages %]
+                    <li><a href="/[% am.url %]">[%l( am.title )%]</a></li>
+                [% END %]
                 <li><a href="/pagina/boas-praticas">[%l('Boas práticas')%]</a></li>
                 <li><a href="/dados-abertos">[%l('Dados abertos')%] - [%l('Download')%]</a></li>
                 <li><a href="/pagina/contato">[%l('Contato')%]</a></li>
