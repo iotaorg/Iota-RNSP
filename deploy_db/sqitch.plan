@@ -45,3 +45,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0078-page.image [0077-bp_img_fields] 2017-09-22T19:03:08Z renato,,, <renato@renato-MS-7A34> # page-images
 0079-variable_image [0078-page.image] 2017-09-22T21:18:03Z renato,,, <renato@renato-MS-7A34> # variable_image
 0080-fix-source-insertion [0079-variable_image] 2017-09-25T21:18:38Z renato,,, <renato@renato-MS-7A34> # fix-unique-source
+0081-menu-cascade-delete [0080-fix-source-insertion] 2017-09-26T17:47:12Z renato,,, <renato@renato-MS-7A34> # menu-cascade-delete
