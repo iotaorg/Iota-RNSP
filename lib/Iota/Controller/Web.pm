@@ -325,14 +325,13 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
         }
     );
 
-    if ( $c->stash->{is_infancia} && $c->stash->{institute_metadata}{include_fixed_menu}{id} ) {
+    if ( $c->stash->{is_infancia} && $c->stash->{institute_metadata}{include_fixed_menu_id} ) {
 
         $c->stash->{fixed_menu_pages} = [
             $c->model('DB::UserMenu')->search(
                 {
-                    menu_id  => undef,
                     page_id  => { '!=' => undef },
-                    position => $c->stash->{institute_metadata}{include_fixed_menu}{id},
+                    menu_id => $c->stash->{institute_metadata}{include_fixed_menu_id},
                 },
                 {
                     result_class => 'DBIx::Class::ResultClass::HashRefInflator',
@@ -341,6 +340,7 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
                 }
             )->all
         ];
+        #use DDP; p $c->stash->{fixed_menu_pages};
 
     }
 
