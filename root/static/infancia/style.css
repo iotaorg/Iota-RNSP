@@ -104,8 +104,8 @@ body.root_ h6 {
 
 .mynavbar-inner li {
     display: inline-block;
-    width: 20%;
-    max-width: 150px;
+    width: 24%;
+    max-width: 228px;
 }
 .mynavbar-inner li a {
     font-size: 18px;
@@ -152,8 +152,8 @@ body.root_ .mytitlerow {
         margin-top : 0;
     }
     .mynavbar-inner li {
-        width: 150px;
-        min-width: 150px;
+        width: 100%;
+        min-width: 178px;
     }
     body.root_ h6 {
         width: 80%;
