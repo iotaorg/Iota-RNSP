@@ -50,6 +50,16 @@ sub index : Path : Args(0) {
           ? $c->stash->{institute_metadata}{menu_indicators_prefix}
           : '';
 
+        if ( $c->stash->{institute_metadata}{home_infancia_page_id} ) {
+            my $page = $c->model('DB::UserPage')->search(
+                {
+                    id => $c->stash->{institute_metadata}{home_infancia_page_id}
+                }
+            )->as_hashref->next;
+
+            $c->stash->{home_content} = $page->{content};
+        }
+
     }
     else {
 
