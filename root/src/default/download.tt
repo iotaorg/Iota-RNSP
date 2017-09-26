@@ -1,98 +1,4 @@
 [%IF !is_infancia%]<h1>[%l('Dados abertos')%]</h1>[%END%]
-<div class="row">
-    <div class="col-sm-2 hidden-sm hidden-xs text-center">
-        <span style="font-size: 8em; margin-top: 0.4em; color: #428bca;" class="glyphicon glyphicon-folder-open"></span>
-    </div>
-
-
-    <div class="col-md-10 col-sm-12 hidden-xs">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">[%l('O que são dados abertos?')%]</h3>
-            </div>
-            <div class="panel-body">
-                <p>[%l('Segundo a definição da Open Knowledge Foundation, em suma,')%]</p>
-
-                <blockquote class="pull-right">
-                    <p>dados são abertos quando qualquer pessoa pode livremente usá-los, reutilizá-los e redistribuí-los, estando sujeito a, no máximo, a exigência de creditar a sua autoria e compartilhar pela mesma licença.</p>
-                    <small><cite title="Open Knowledge Foundation"><a href="http://opendatahandbook.org/pt_BR/what-is-open-data/index.html" rel="nofollow" target="_blank">Open Knowledge Foundation</a></cite></small>
-                </blockquote>
-
-                <p>[%l('Você pode saber mais sobre o assunto acessando')%] <a href="http://dados.gov.br/dados-abertos/" target="_blank" rel="nofollow">[%l('o Portal de dados abertos do Brasil')%]</a>.</p>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<div class="row">
-    <div class="col-sm-2 hidden-sm hidden-xs text-center">
-        <span style="font-size: 8em; margin-top: 1.15em; color: #468847;" class="glyphicon glyphicon-eye-open"></span>
-    </div>
-
-
-    <div class="col-md-10 col-sm-12">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">[%l('O que são Indicadores?')%]</h3>
-            </div>
-            <div class="panel-body">
-                <blockquote class="pull-right">
-                    <p>[%l('Um indicador social é uma medida em geral quantitativa dotada de significado social substantivo, usada para substituir, quantificar ou operacionalizar um conceito social abstrato, de interesse teórico (para pesquisa acadêmica) ou programático (para formulação de políticas)')%]</p>
-                    <small><cite title="Paulo de Martino Jannuzzi"><a href="http://www.cedeps.com.br/wp-content/uploads/2011/02/INDICADORES-SOCIAIS-JANUZZI.pdf" rel="nofollow" target="_blank">Paulo de Martino Jannuzzi, 2011</a></cite></small>
-                </blockquote>
-
-                <p>[%l('Dentro da plataforma Iota, um <strong>indicador</strong> é composto por uma ou mais <strong>variáveis</strong> agrupadas por operadores matemáticos.')|none%]</p>
-                <p>[%l('Cada <strong>variável</strong> tem um período de atualização, por exemplo, <i>diariamente</i>, <i>semanalmente</i>, <i>mensalmente</i> ou <i>anualmente</i>.')|none%]</p>
-                <p>[%l('Quandos os dados são inseridos no Iota, a entrada contém qual <strong>variável</strong>, qual <strong>a data</strong> e qual a <strong>fonte</strong> daquela entrada.')|none%]</p>
-                <p>[%l('Com isso, os <strong>indicadores</strong> que utilizam daquela <strong>variável</strong> são atualizados automaticamente e geram um novo número, chamado de <strong>valor do indicador</strong>.')|none%]</p>
-
-                <p>[%l('Você pode fazer o download de maneira simples e aberta dos dados de <strong>valores dos indicadores</strong> ou <v>valores das variáveis</strong>.')|none%]</p>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-<div class="row">
-    <div class="col-sm-2 hidden-sm hidden-xs text-center">
-        <span style="font-size: 5em; margin-top: 0.4em; color: #3a87ad;" class="glyphicon glyphicon glyphicon-transfer"></span>
-    </div>
-
-
-    <div class="col-md-5 col-sm-6 hidden-xs">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">API [%l('para desenvolvedores')%]</h3>
-            </div>
-            <div class="panel-body">
-                <p>[%l('Você também pode consultar os dados que estão armazenados no Iota via API')%].</p>
-
-                <p>[%l('Para saber mais, navegue até a seção <a href="/dados-abertos/api">API</a>')|none%].</p>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-5 col-sm-6 hidden-xs">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">RDF [%l('para desenvolvedores')%]</h3>
-            </div>
-            <div class="panel-body">
-                <p>[%l('Você pode consultar as variaveis e indicadores utilizando RDF')%].</p>
-
-                <p>[%l('Para saber mais, navegue até a seção <a data-animated-anchor href="#api">API</a>').
-                replace('<a data-animated-anchor href="#api">API</a>', '<a href="/rdf">RDF</a>')|none%].</p>
-
-            </div>
-        </div>
-    </div>
-
-</div>
-
-
 
 <h1><span class="glyphicon glyphicon-floppy-save"></span> [%l('Baixar dados')%]</h1>
 
@@ -214,6 +120,98 @@
 </form>
 
 
+<div class="row">
+    <div class="col-sm-2 hidden-sm hidden-xs text-center">
+        <span style="font-size: 8em; margin-top: 0.4em; color: #428bca;" class="glyphicon glyphicon-folder-open"></span>
+    </div>
+
+
+    <div class="col-md-10 col-sm-12 hidden-xs">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">[%l('O que são dados abertos?')%]</h3>
+            </div>
+            <div class="panel-body">
+                <p>[%l('Segundo a definição da Open Knowledge Foundation, em suma,')%]</p>
+
+                <blockquote class="pull-right">
+                    <p>dados são abertos quando qualquer pessoa pode livremente usá-los, reutilizá-los e redistribuí-los, estando sujeito a, no máximo, a exigência de creditar a sua autoria e compartilhar pela mesma licença.</p>
+                    <small><cite title="Open Knowledge Foundation"><a href="http://opendatahandbook.org/pt_BR/what-is-open-data/index.html" rel="nofollow" target="_blank">Open Knowledge Foundation</a></cite></small>
+                </blockquote>
+
+                <p>[%l('Você pode saber mais sobre o assunto acessando')%] <a href="http://dados.gov.br/dados-abertos/" target="_blank" rel="nofollow">[%l('o Portal de dados abertos do Brasil')%]</a>.</p>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-2 hidden-sm hidden-xs text-center">
+        <span style="font-size: 8em; margin-top: 1.15em; color: #468847;" class="glyphicon glyphicon-eye-open"></span>
+    </div>
+
+
+    <div class="col-md-10 col-sm-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">[%l('O que são Indicadores?')%]</h3>
+            </div>
+            <div class="panel-body">
+                <blockquote class="pull-right">
+                    <p>[%l('Um indicador social é uma medida em geral quantitativa dotada de significado social substantivo, usada para substituir, quantificar ou operacionalizar um conceito social abstrato, de interesse teórico (para pesquisa acadêmica) ou programático (para formulação de políticas)')%]</p>
+                    <small><cite title="Paulo de Martino Jannuzzi"><a href="http://www.cedeps.com.br/wp-content/uploads/2011/02/INDICADORES-SOCIAIS-JANUZZI.pdf" rel="nofollow" target="_blank">Paulo de Martino Jannuzzi, 2011</a></cite></small>
+                </blockquote>
+
+                <p>[%l('Dentro da plataforma Iota, um <strong>indicador</strong> é composto por uma ou mais <strong>variáveis</strong> agrupadas por operadores matemáticos.')|none%]</p>
+                <p>[%l('Cada <strong>variável</strong> tem um período de atualização, por exemplo, <i>diariamente</i>, <i>semanalmente</i>, <i>mensalmente</i> ou <i>anualmente</i>.')|none%]</p>
+                <p>[%l('Quandos os dados são inseridos no Iota, a entrada contém qual <strong>variável</strong>, qual <strong>a data</strong> e qual a <strong>fonte</strong> daquela entrada.')|none%]</p>
+                <p>[%l('Com isso, os <strong>indicadores</strong> que utilizam daquela <strong>variável</strong> são atualizados automaticamente e geram um novo número, chamado de <strong>valor do indicador</strong>.')|none%]</p>
+
+                <p>[%l('Você pode fazer o download de maneira simples e aberta dos dados de <strong>valores dos indicadores</strong> ou <v>valores das variáveis</strong>.')|none%]</p>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-2 hidden-sm hidden-xs text-center">
+        <span style="font-size: 5em; margin-top: 0.4em; color: #3a87ad;" class="glyphicon glyphicon glyphicon-transfer"></span>
+    </div>
+
+
+    <div class="col-md-5 col-sm-6 hidden-xs">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">API [%l('para desenvolvedores')%]</h3>
+            </div>
+            <div class="panel-body">
+                <p>[%l('Você também pode consultar os dados que estão armazenados no Iota via API')%].</p>
+
+                <p>[%l('Para saber mais, navegue até a seção <a href="/dados-abertos/api">API</a>')|none%].</p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5 col-sm-6 hidden-xs">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">RDF [%l('para desenvolvedores')%]</h3>
+            </div>
+            <div class="panel-body">
+                <p>[%l('Você pode consultar as variaveis e indicadores utilizando RDF')%].</p>
+
+                <p>[%l('Para saber mais, navegue até a seção <a data-animated-anchor href="#api">API</a>').
+                replace('<a data-animated-anchor href="#api">API</a>', '<a href="/rdf">RDF</a>')|none%].</p>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 [%-CALL assets.include("/static/js/download_links.js", 999)%]
