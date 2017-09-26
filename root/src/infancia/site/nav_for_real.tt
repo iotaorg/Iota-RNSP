@@ -1,10 +1,3 @@
-<li [% IF c_req_path == 'pagina/sobre-o-projeto' %]class="active"[%END%]>
-    <a href="/pagina/sobre-o-projeto">[%l('O Projeto')%]</a>
-</li>
-<li [% IF c_req_path == 'pagina/indicadores' %]class="active"[%END%]>
-    <a href="/pagina/indicadores">[%l('Indicadores')%]</a>
-</li>
-
 [% FOREACH am IN fixed_menu_pages %]
     <li [% IF c_req_path == am.url %]class="active"[%END%]>
         <a href="/[% am.url %]">[%l( am.title )%]</a>

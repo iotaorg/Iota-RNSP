@@ -1,3 +1,5 @@
+[%IF page.title_url == 'indicadores'%][% INCLUDE 'parts/infancia_menu_indicadores.tt'%] [% END %]
+
 <div class="row">
     <div class="col-sm-12">
         [% page.content | none %]
