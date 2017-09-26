@@ -696,11 +696,12 @@ dl.tabela blockquote small {
 
 }
 
-body.root_ h2, body.root_pagina_o_projeto h3 {
+body.root_ h2, body.root_pagina_generica_render h3 {
     font-size: 36px;
     line-height: 2em;
     font-weight: 300
 }
+
 .fullwidth{width: 100%;}
 .bigpadding {padding-top: 36px;padding-bottom: 36px;}
 .textocinza {
