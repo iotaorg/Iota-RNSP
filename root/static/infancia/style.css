@@ -51,20 +51,6 @@ h5 {
 }
 
 #topbackground {
-    background-image: url(/static/infancia/bg-indicadores.jpg);
-    background-repeat: repeat-x;
-    background-color: #334170;
-}
-
-body.root_pagina_o_projeto #topbackground {
-    background-image: url(/static/infancia/bg-oprojeto.jpg);
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-    background-color: #394a7e;
-    background-position: 50% 0;
-}
-
-body.root_pagina_boas_praticas #topbackground {
     background-image: url(/static/infancia/bg-boaspraticas.jpg);
     background-repeat: no-repeat;
     background-size: auto 100%;
@@ -72,7 +58,7 @@ body.root_pagina_boas_praticas #topbackground {
     background-position: 50% 0;
 }
 
-body.root_pagina_contato #topbackground {
+body.root_pagina_contato #topbackground, body.root_sugestao_bp #topbackground {
     background-image: url(/static/infancia/bg-cidades.jpg);
     background-repeat: no-repeat;
     background-size: auto 100%;
