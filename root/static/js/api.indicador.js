@@ -111,24 +111,39 @@ $(document).ready(function() {
             }));
         }
 
-        if (indicador_data.axis_dim3) { // ODS
+        if (indicador_data.axis_dim4 && indicador_data.axis_dim3) { // ODS && ODS METRA juntos
 
             var innerCalc = indicador_data.axis_dim4.name;
-            innerCalc = innerCalc.match(/(\d+)/);
+                innerCalc = innerCalc.match(/(\d+)/);
 
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div class="iods iods-$$id"></div> $$dd</dd>'.render({
-                dt: indicador_data._prefetch.institute_metadata.axis_aux3_header,
-                dd: indicador_data.axis_dim3.description,
-                id: innerCalc[0]
-            }));
-        }
-
-        if (indicador_data.axis_dim4) { // ODS METRA
-
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div> <span class="iods iods-$$numero" title="$$dd"></span> $$meta</div></dd>'.render({
                 dt: indicador_data._prefetch.institute_metadata.axis_aux4,
-                dd: indicador_data.axis_dim4.description,
+                dd: indicador_data.axis_dim3.description,
+                numero: innerCalc[0],
+                meta: indicador_data.axis_dim4.description,
             }));
+
+
+        }else{
+            if (indicador_data.axis_dim3) { // ODS
+
+                var innerCalc = indicador_data.axis_dim4.name;
+                innerCalc = innerCalc.match(/(\d+)/);
+
+                $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div class="iods iods-$$id"></div> $$dd</dd>'.render({
+                    dt: indicador_data._prefetch.institute_metadata.axis_aux3_header,
+                    dd: indicador_data.axis_dim3.description,
+                    id: innerCalc[0]
+                }));
+            }
+
+            if (indicador_data.axis_dim4) { // ODS METRA
+
+                $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                    dt: indicador_data._prefetch.institute_metadata.axis_aux4,
+                    dd: indicador_data.axis_dim4.description,
+                }));
+            }
         }
 
         if (indicador_data.indicator_availability) {
