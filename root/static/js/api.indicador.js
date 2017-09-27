@@ -116,7 +116,7 @@ $(document).ready(function() {
             var innerCalc = indicador_data.axis_dim4.name;
                 innerCalc = innerCalc.match(/(\d+)/);
 
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><div> <span class="iods iods-$$numero" title="$$dd"></span> $$meta</div></dd>'.render({
+            $(".tabela", $dados).append('<dt>$$dt:</dt><dd><table> <tr> <td> <span class="iods iods-$$numero" title="$$dd"></span> </td><td>$$meta</td></tr></table></dd>'.render({
                 dt: indicador_data._prefetch.institute_metadata.axis_aux4,
                 dd: indicador_data.axis_dim3.description,
                 numero: innerCalc[0],
