@@ -130,6 +130,8 @@ sub _download {
         }
     }
 
+    my $ods = !!$c->stash->{institute_metadata}{ods};
+
     my @lines = (
         [
             map { $self->_loc_str( $c, $_ ) } 'ID da cidade',
@@ -139,9 +141,9 @@ sub _download {
             'Nome do indicador',
             'Formula do indicador',
             'Meta do indicador',
-            'Descrição da meta do indicador',
-            'Fonte da meta do indicador',
-            'Operação da meta do indicador',
+            $ods ? 'Meta ODS' : 'Referência de Meta',
+            $ods ? 'ODS relacionados' : 'Fonte da meta',
+            'Operação da meta',
             'Descrição do indicador',
             'Tags do indicador',
             'Observações do indicador',
