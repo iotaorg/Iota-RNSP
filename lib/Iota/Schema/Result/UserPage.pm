@@ -87,6 +87,19 @@ __PACKAGE__->table("user_page");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 type
+
+  data_type: 'text'
+  default_value: 'html'
+  is_nullable: 0
+  original: {data_type => "varchar"}
+
+=head2 template_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -121,6 +134,15 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "image_user_file_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "type",
+  {
+    data_type     => "text",
+    default_value => "html",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
+  "template_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -149,6 +171,26 @@ __PACKAGE__->belongs_to(
   "image_user_file",
   "Iota::Schema::Result::UserFile",
   { id => "image_user_file_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
+=head2 template
+
+Type: belongs_to
+
+Related object: L<Iota::Schema::Result::UserPage>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "template",
+  "Iota::Schema::Result::UserPage",
+  { id => "template_id" },
   {
     is_deferrable => 0,
     join_type     => "LEFT",
@@ -187,9 +229,24 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_pages
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 16:03:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Px31eKd6JugEIKeXT3iBXg
+Type: has_many
+
+Related object: L<Iota::Schema::Result::UserPage>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_pages",
+  "Iota::Schema::Result::UserPage",
+  { "foreign.template_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-28 06:17:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:KjKgv/3MUr4ZB0zOg8zLYw
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

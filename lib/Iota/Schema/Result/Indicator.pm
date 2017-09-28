@@ -438,13 +438,13 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<Iota::Schema::Result::AxisDim3>
+Related object: L<Iota::Schema::Result::AxisDim1>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "axis_dim3",
-  "Iota::Schema::Result::AxisDim3",
+  "Iota::Schema::Result::AxisDim1",
   { id => "axis_dim3_id" },
   {
     is_deferrable => 0,
@@ -695,8 +695,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-08-16 16:21:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9EXe2A9K28VipnFgKj7kbA
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-28 06:17:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:b+eXTAwjzrhwYvx6waG0gg
 
 __PACKAGE__->belongs_to(
     "owner",

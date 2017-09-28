@@ -32,6 +32,20 @@ sub verifiers_specs {
                 return defined $axis;
             }
         },
+
+        template_id  => {
+            required   => 0,
+            type       => 'Int',
+            post_check => sub {
+                my $r = shift;
+                return 1 if $r->get_value('template_id') == '0';
+                my $axis =
+                  $self->result_source->schema->resultset('UserPage')
+                  ->find( { id => $r->get_value('template_id'), type => 'template' } );
+                return defined $axis;
+            }
+        },
+        type => {required => 0, type => 'Str'},
     );
     return {
         create => Data::Verifier->new(

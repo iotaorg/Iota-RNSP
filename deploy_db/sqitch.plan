@@ -47,3 +47,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0080-fix-source-insertion [0079-variable_image] 2017-09-25T21:18:38Z renato,,, <renato@renato-MS-7A34> # fix-unique-source
 0081-menu-cascade-delete [0080-fix-source-insertion] 2017-09-26T17:47:12Z renato,,, <renato@renato-MS-7A34> # menu-cascade-delete
 0082-fix-menu-equal-parent [0081-menu-cascade-delete] 2017-09-26T18:32:02Z renato,,, <renato@renato-MS-7A34> # fix-parent-menu
+0083-page-type [0082-fix-menu-equal-parent] 2017-09-28T09:15:33Z renato,,, <renato@renato-MS-7A34> # page-type

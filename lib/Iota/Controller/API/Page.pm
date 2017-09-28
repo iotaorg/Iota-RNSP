@@ -48,7 +48,7 @@ sub page_GET {
     $self->status_ok(
         $c,
         entity => {
-            ( map { $_ => $object_ref->{$_} } qw(id user_id created_at published_at title title_url content ) ),
+            ( map { $_ => $object_ref->{$_} } qw(id user_id created_at published_at title title_url content type template_id ) ),
 
             image_user_file => defined $object_ref->{image_user_file}{id}
             ? {
