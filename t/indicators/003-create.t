@@ -151,7 +151,7 @@ eval {
 
             is( $indicator_res->{axis_dim1}{name}, 'gravidas', 'dim1 ok' );
             is( $indicator_res->{axis_dim2}{name}, '0 a 5',    'dim2 ok' );
-            is( $indicator_res->{axis_dim3}{name}, 'gravidas',        'dim3 ok' );
+            is( $indicator_res->{axis_dim3}{name}, '1',        'dim3 ok' );
             is( $indicator_res->{axis_dim4}{name}, '1.1',      'dim4 ok' );
 
             is_deeply( $indicator_res->{restrict_to_users}, [4], 'restrict_to_users ok' );

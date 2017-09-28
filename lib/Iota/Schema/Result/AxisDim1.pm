@@ -107,21 +107,6 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
-=head2 indicator_axis_dim3s
-
-Type: has_many
-
-Related object: L<Iota::Schema::Result::Indicator>
-
-=cut
-
-__PACKAGE__->has_many(
-  "indicator_axis_dim3s",
-  "Iota::Schema::Result::Indicator",
-  { "foreign.axis_dim3_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 indicators
 
 Type: has_many
@@ -153,8 +138,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-28 06:17:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lvJzrveaquVAOOCRz7rQ3Q
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-28 08:16:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3lwAqmB1Z2MTSO4/G7QNug
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
