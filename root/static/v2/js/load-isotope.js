@@ -31,6 +31,6 @@ $(document).ready(function() {
 
 setTimeout($recalc_isotope, 1000);
 setTimeout($recalc_isotope, 5000);
-setTimeout($recalc_isotope, 15000);
+setInterval($recalc_isotope, 15000);
 
 $(window).smartresize($recalc_isotope);
