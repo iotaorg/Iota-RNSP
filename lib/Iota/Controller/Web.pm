@@ -11,6 +11,8 @@ use DateTime;
 use Encode qw(decode encode);
 use URI::Escape::XS qw(uri_escape);
 use Digest::MD5 qw(md5_hex);
+use YAML::Tiny qw//;
+use Template;
 
 use HTML::Strip;
 my $hs = HTML::Strip->new();
@@ -348,6 +350,7 @@ sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     );
 }
 
+
 sub pagina_generica_load : Chained('institute_load') PathPart('pagina') CaptureArgs(2) {
     my ( $self, $c, $page_id, $title ) = @_;
 
@@ -365,12 +368,30 @@ sub pagina_generica_load : Chained('institute_load') PathPart('pagina') CaptureA
     $c->detach('/error_404') unless $page;
     $c->stash->{page} = $page;
 
-    if ($page->{title_url} eq 'indicadores'){
+    if ( $page->{title_url} eq 'indicadores' ) {
         $c->forward( 'build_indicators_menu', [1] );
         $c->stash->{menu_indicators_prefix} =
           defined $c->stash->{institute_metadata}{menu_indicators_prefix}
           ? $c->stash->{institute_metadata}{menu_indicators_prefix}
           : '';
+    }
+
+    if ( $page->{template_id} && $page->{type} eq 'yaml' ) {
+
+        my $template = Template->new( { EVAL_PERL => 0, } );
+        my $input = $c->model('DB::UserPage')->search(
+            {
+                id => $page->{template_id}
+            }
+        )->as_hashref->next->{content};
+
+        my $vars = YAML::Tiny::Load( $page->{content} );
+
+        my $output = '';
+        $template->process( \$input, $vars, \$output ) || die $template->error();
+
+        $page->{content} = $output;
+
     }
 
 }

@@ -94,6 +94,7 @@ requires 'Catalyst::Plugin::Session::PerUser';
 requires 'Catalyst::Plugin::Session::Store::File';
 requires 'MooseX::Types::JSON';
 requires 'JSON::Any';
+requires 'YAML::Tiny';
 requires 'Text::CSV';
 requires 'HTML::Strip';
 
