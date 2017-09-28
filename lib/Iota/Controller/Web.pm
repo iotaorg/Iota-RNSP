@@ -350,7 +350,6 @@ sub erro : Chained('institute_load') PathPart('erro') Args(0) {
     );
 }
 
-
 sub pagina_generica_load : Chained('institute_load') PathPart('pagina') CaptureArgs(2) {
     my ( $self, $c, $page_id, $title ) = @_;
 
@@ -385,7 +384,13 @@ sub pagina_generica_load : Chained('institute_load') PathPart('pagina') CaptureA
             }
         )->as_hashref->next->{content};
 
-        my $vars = YAML::Tiny::Load( $page->{content} );
+        my $vars = $page->{content} =~ /^\s*{/
+          ? do {
+            my $x = $page->{content};
+            $x = encode( 'UTF-8', $x );
+            decode_json($x)
+          }
+          : YAML::Tiny::Load( $page->{content} );
 
         my $output = '';
         $template->process( \$input, $vars, \$output ) || die $template->error();
