@@ -388,7 +388,7 @@ sub pagina_generica_load : Chained('institute_load') PathPart('pagina') CaptureA
           ? do {
             my $x = $page->{content};
             $x = encode( 'UTF-8', $x );
-            decode_json($x)
+            decode_json($x);
           }
           : YAML::Tiny::Load( $page->{content} );
 
@@ -1300,9 +1300,9 @@ sub build_indicators_menu : Chained('institute_load') PathPart(':indicators') Ar
                   if $id_vs_group_name->{$b} eq 'Indicadores da cidade';
                 return 1 if $id_vs_group_name->{$a} eq 'Indicadores da cidade';
                 return
-                    $group_id_vs_dim->{$a}
-                  . $id_vs_group_name->{$a} cmp $group_id_vs_dim->{$b}
-                  . $id_vs_group_name->{$b}
+                    ( $group_id_vs_dim->{$a} || '' )
+                  . ( $id_vs_group_name->{$a} || '' ) cmp( $group_id_vs_dim->{$b} || '' )
+                  . ( $id_vs_group_name->{$b} || '' )
             } keys %$id_vs_group_name
         ],
         groups_attr  => $groups_attr,
