@@ -1,3 +1,4 @@
+[%-CALL assets.include("/static/js/download_links.js", 999)%]
 [%IF !is_infancia%]<h1>[%l('Dados abertos')%]</h1>[%END%]
 
 <h1><span class="glyphicon glyphicon-floppy-save"></span> [%l('Baixar dados')%]</h1>
@@ -215,5 +216,4 @@
 </div>
 
 
-[%-CALL assets.include("/static/js/download_links.js", 999)%]
 

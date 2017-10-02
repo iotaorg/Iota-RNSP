@@ -1,3 +1,5 @@
+[%-CALL assets.include("/static/js/pagina_comparacao_distrito.js", 999)%]
+
 <form role="form">
 
 <div class="row">
@@ -29,10 +31,10 @@
         <div class="form-group">
             <div class="grupo">
                 <label>[%l('Indicador')%]</label>
-                <select name="indicador" class="form-control">
+                <select name="indicador" class="form-control" data-max-selected-indicators="5">
                     <option value="" selected="selected">[%l('Escolher indicadores')%]</option>
                     [%FOREACH i IN indicators.sort('name_url%') %]
-                    <option value="[%i.name_url%]">[%l(i.name)%]</option>
+                    <option value="[%i.id%]">[%l(i.name)%]</option>
                     [%END%]
                 </select>
             </div>
@@ -41,7 +43,7 @@
 
     <div class="form-group col-xs-3">
         <div class="form-group">
-            <button class="btn btn-success btn-in-form" disabled type="button">+ [%l('adicionar')%]</button>
+            <button class="btn btn-success btn-in-form button-add-indicator" disabled type="button">+ [%l('adicionar')%]</button>
         </div>
     </div>
 </div>
@@ -49,7 +51,7 @@
 <div class="row">
     <div class="col-sm-12">
 
-        <input type="hidden" name="indicators" />
+        <input type="xhidden" name="selected_indicators" />
 
         <div id="table-container">[%l('Escolha os indicadores')%]</div>
 
