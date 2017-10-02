@@ -13,3 +13,6 @@
 <li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
     <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
 </li>
+<li [% IF c_req_path == 'comparacao-entre-distritos' %]class="active"[%END%]>
+    <a href="/comparacao-entre-distritos">[%l('Comparar distritos')%]</a>
+</li>

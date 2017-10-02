@@ -476,6 +476,24 @@ sub _add_indicators_filters {
 
 }
 
+
+sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-entre-distritos') Args(0) {
+    my ($self, $c) = @_;
+
+
+    $self->mapa_site($c);
+    $self->_add_default_periods($c);
+
+    use DDP; p $c->stash->{data_periods};
+
+    $c->stash(
+        custom_wrapper  => 'site/iota_wrapper',
+        v2              => 1,
+        title           => 'Comparar distritos',
+        template        => 'pagina_comparacao_distrito.tt'
+    );
+}
+
 sub pagina_boas_praticas_item_render : Chained('pagina_boas_praticas_item') PathPart('') Args(0) { }
 
 sub pagina_boas_praticas : Chained('institute_load') PathPart('pagina/boas-praticas') Args(0) {
@@ -1649,6 +1667,8 @@ sub user_page : Chained('network_cidade') PathPart('pagina') CaptureArgs(2) {
 sub user_page_render : Chained('user_page') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 }
+
+
 
 sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs(2) {
     my ( $self, $c, $page_id, $title ) = @_;
