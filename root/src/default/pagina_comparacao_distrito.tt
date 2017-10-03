@@ -88,19 +88,18 @@
 
 <div class="row comparacao-results" >
 
-    <div class="col-xs-12">
-
-        <div class="row">
-            <div class="col-sm-offset-10 col-sm-2">
-              <button type="submit" class="btn btn-default button-change-params">&#128269; Mudar parâmetros</button>
-            </div>
-        </div>
-
-
+    <div class="col-sm-offset-10 col-sm-2">
+      <button type="submit" class="btn btn-default button-change-params">&#128269; Mudar parâmetros</button>
     </div>
 
     <hr/>
 
+    <div data-search-params="[% query_params %]">
+
+        [% query_params%]
+
+
+    </div>
 
 
 </div>

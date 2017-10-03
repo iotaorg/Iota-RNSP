@@ -500,9 +500,43 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
         use DDP; p $c->stash->{choosen_periods};
 
 
-          use DDP; p \@ids;
-
         $c->stash->{has_results} = 1;
+
+        my @inds = $c->model('DB::Indicator')->search(
+            {
+
+                'me.id'     => { '-in' => [ @ids ] },
+            },
+            {
+                columns => [ 'me.id', 'me.name' ],
+                result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                order_by     => 'me.name'
+            }
+        )->all;
+
+
+        my %dups;
+        my @indicators;
+        foreach my $ind (@inds){
+            $ind->{apel} = join '', map { length$_ > 2 ? substr ($_, 0, 1) : '' } split / /, uc $ind->{name};
+
+            $ind->{apel} =~ s/[^A-Z]//go;
+            if ($dups{$ind->{apel}}++){
+                $ind->{apel} .= $dups{$ind->{apel}};
+            }
+
+            push @indicators, $ind->{id} . ':' . $ind->{apel};
+        }
+
+        use DDP; p \@inds;
+
+
+        $c->stash->{query_params} = encode_json( {
+
+            periods => (join ',', @{$c->stash->{choosen_periods}[2]}),
+            indicators => join ' ', @indicators,
+            city_id => $c->req->params->{cidade}
+        } );
 
     }
 
