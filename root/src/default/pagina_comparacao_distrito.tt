@@ -80,7 +80,7 @@
     <tbody>
         <tr>
             <td class="indname"></td>
-            <td class="xbtn"> <span type="button" class="btn btn-danger btn-xs">[%l('remover')%]</button> </td>
+            <td class="xbtn"> <span class="btn btn-danger btn-xs button-del">[%l('remover')%]</button> </td>
         </tr>
     </tbody>
 </table>

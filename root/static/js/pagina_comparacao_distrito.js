@@ -18,7 +18,7 @@ var pcd = function() {
 
             $btn_add.click(_onclick_btn_add);
 
-            $table_container.on('click', '.xbtn', _onclick_btn_remove);
+            $table_container.on('click', '.xbtn .button-del', _onclick_btn_remove);
 
 
 
