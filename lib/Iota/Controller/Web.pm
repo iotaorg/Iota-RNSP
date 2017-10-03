@@ -497,8 +497,6 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
         $c->detach('/error_404', ['Dados inválidos!'] ) unless $self->int_validation(@ids);
 
-        use DDP; p $c->stash->{choosen_periods};
-
 
         $c->stash->{has_results} = 1;
 
@@ -527,9 +525,6 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
             push @indicators, $ind->{id} . ':' . $ind->{apel};
         }
-
-        use DDP; p \@inds;
-
 
         $c->stash->{query_params} = encode_json( {
 
