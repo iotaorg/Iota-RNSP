@@ -22,6 +22,7 @@ var pcd = function() {
 
 
 
+            $cidade.change(_recalc_submit_prop);
             $indi.change(_recalc_btn_add_prop);
 
             // se só tem uma cidade, escolhe sozinho ela
@@ -87,9 +88,13 @@ var pcd = function() {
 
 
         },
+        _recalc_submit_prop = function() {
+
+            $submit.prop('disabled', selected_indicators_count == 0 || $cidade.val() == '');
+        },
         _indicators_changed = function() {
 
-            $submit.prop('disabled', selected_indicators_count == 0);
+            _recalc_submit_prop();
 
             if (selected_indicators_count > 0) {
 
