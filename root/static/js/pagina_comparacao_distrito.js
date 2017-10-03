@@ -5,6 +5,7 @@ var pcd = function() {
         $cidade = $('select[name="cidade"]:first'),
         $period = $('select[name="period"]:first'),
         $indi = $('select[data-name="indicador"]:first'),
+        $form= $('form:first'),
         $indicadors_input = $('input[name="selected_indicators"]:first'),
         $btn_add = $('.button-add-indicator:first'),
 
@@ -28,6 +29,11 @@ var pcd = function() {
 
             $cidade.change(_recalc_submit_prop);
             $indi.change(_recalc_btn_add_prop);
+
+            $form.submit(function(){
+                $submit.prop('disabled', true);
+                return true;
+            });
 
             // se só tem uma cidade, escolhe sozinho ela
             if ($cidade[0].length == 2) {
