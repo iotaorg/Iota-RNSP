@@ -2,10 +2,7 @@ sudo: false
 language: perl
 cache:
   directories:
-  - perl_modules
-before_install:
-- cpanm -n local::lib
-- eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+  - $HOME/perl5/perlbrew
 perl:
   - "5.18"
 addons:
