@@ -476,21 +476,41 @@ sub _add_indicators_filters {
 
 }
 
+sub int_validation {
+    my ( $self, @ids ) = @_;
+
+    do { return 0 unless /^[0-9]+$/ }
+      for @ids;
+
+    return 1;
+}
 
 sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-entre-distritos') Args(0) {
-    my ($self, $c) = @_;
-
+    my ( $self, $c ) = @_;
 
     $self->mapa_site($c);
     $self->_add_default_periods($c);
 
-    use DDP; p $c->stash->{data_periods};
+    if ( $c->req->params->{selected_indicators} && $c->req->params->{cidade} && $c->stash->{choosen_periods} ) {
+
+        my @ids = split /,/, $c->req->params->{selected_indicators};
+
+        $c->detach('/error_404', ['Dados inválidos!'] ) unless $self->int_validation(@ids);
+
+        use DDP; p $c->stash->{choosen_periods};
+
+
+          use DDP; p \@ids;
+
+        $c->stash->{has_results} = 1;
+
+    }
 
     $c->stash(
-        custom_wrapper  => 'site/iota_wrapper',
-        v2              => 1,
-        title           => 'Comparar distritos',
-        template        => 'pagina_comparacao_distrito.tt'
+        custom_wrapper => 'site/iota_wrapper',
+        v2             => 1,
+        title          => 'Comparar distritos',
+        template       => 'pagina_comparacao_distrito.tt'
     );
 }
 
@@ -1667,8 +1687,6 @@ sub user_page : Chained('network_cidade') PathPart('pagina') CaptureArgs(2) {
 sub user_page_render : Chained('user_page') PathPart('') Args(0) {
     my ( $self, $c ) = @_;
 }
-
-
 
 sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs(2) {
     my ( $self, $c, $page_id, $title ) = @_;

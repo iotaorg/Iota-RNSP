@@ -4,7 +4,7 @@ var pcd = function() {
         $submit = $('button[type=submit]:first'),
         $cidade = $('select[name="cidade"]:first'),
         $period = $('select[name="period"]:first'),
-        $indi = $('select[name="indicador"]:first'),
+        $indi = $('select[data-name="indicador"]:first'),
         $indicadors_input = $('input[name="selected_indicators"]:first'),
         $btn_add = $('.button-add-indicator:first'),
 
@@ -21,6 +21,10 @@ var pcd = function() {
             $table_container.on('click', '.xbtn .button-del', _onclick_btn_remove);
 
 
+            $('.button-change-params:first').click(function(){
+                $('.changeparam').removeClass('hide');
+                $('.comparacao-results').addClass('hide');
+            });
 
             $cidade.change(_recalc_submit_prop);
             $indi.change(_recalc_btn_add_prop);
