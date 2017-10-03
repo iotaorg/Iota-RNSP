@@ -1129,11 +1129,15 @@ a.link-axis, a.link-region {
 
 .forceinline img,.forceinline div {display: inline-block !important;}
 
-.btn-in-form {
-    margin-top: 26px;
-    margin-left: -20px;
-}
 .table-selected-indicators td.xbtn {
     text-align: right;
     width: 20%
+}
+
+.table-selected-indicators .is-full {display: none}
+.table-selected-indicators.is-full .is-full {display: inline-block; color: red}
+.button-add-indicator {
+    margin-top: 26px;
+    width: 100%;
+    text-align: center;
 }

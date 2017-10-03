@@ -3,22 +3,22 @@
 <form role="form">
 
 <div class="row">
-    <div class="form-group col-sm-6 ">
+    <div class="form-group col-sm-10">
         <label>[%l('Cidade')%]</label>
         <select name="cidade" class="form-control">
-            <option value="" selected="selected">[%l('Escolher')%]</option>
+            <option value="" >[%l('Escolher')%]</option>
             [%FOREACH cc IN cities.sort('name_uri') %]
-            <option value="[%cc.id %]">[%cc.name%], [%cc.uf%]</option>
+            <option [% c.req.params.cidade == cc.id ? 'selected' : '' %] value="[%cc.id %]">[%cc.name%], [%cc.uf%]</option>
             [%END%]
         </select>
     </div>
 
-    <div class="form-group col-sm-3">
+    <div class="form-group col-sm-2">
         <label>[%l('Período')%]</label>
-        <select name="valid_from" class="form-control">
+        <select name="valid_from" class="form-control text-center">
 
             [%FOREACH i IN data_periods.reverse %]
-                <option value="[% i.0 %]">[% date4period(i.0, 'yearly') %] - [% date4period(i.1, 'yearly') %]</option>
+                <option [% c.req.params.valid_from == i.0 ? 'selected' : '' %] value="[% i.0 %]">[% date4period(i.0, 'yearly') %] - [% date4period(i.1, 'yearly') %]</option>
             [%END%]
 
         </select>
@@ -26,13 +26,13 @@
 </div>
 
 <div class="row">
-    <div class="form-group col-xs-9">
+    <div class="form-group col-xs-10">
 
         <div class="form-group">
             <div class="grupo">
                 <label>[%l('Indicador')%]</label>
                 <select name="indicador" class="form-control" data-max-selected-indicators="5">
-                    <option value="" selected="selected">[%l('Escolher indicadores')%]</option>
+                    <option selected value="">[%l('Escolher indicadores')%]</option>
                     [%FOREACH i IN indicators.sort('name_url%') %]
                     <option value="[%i.id%]">[%l(i.name)%]</option>
                     [%END%]
@@ -41,9 +41,9 @@
         </div>
     </div>
 
-    <div class="form-group col-xs-3">
+    <div class="form-group col-xs-2">
         <div class="form-group">
-            <button class="btn btn-success btn-in-form button-add-indicator" disabled type="button">+ [%l('adicionar')%]</button>
+            <button class="btn btn-success button-add-indicator" disabled type="button">+ [%l('adicionar')%]</button>
         </div>
     </div>
 </div>
@@ -51,7 +51,7 @@
 <div class="row">
     <div class="col-sm-12">
 
-        <input type="xhidden" name="selected_indicators" />
+        <input type="hidden" value="[% c.req.params.selected_indicators %]" name="selected_indicators" />
 
         <div id="table-container">[%l('Escolha os indicadores')%]</div>
 
@@ -83,7 +83,7 @@
     </thead>
     <tbody>
         <tr>
-            <td></td>
+            <td class="indname"></td>
             <td class="xbtn"> <span type="button" class="btn btn-danger btn-xs">[%l('remover')%]</button> </td>
         </tr>
     </tbody>
