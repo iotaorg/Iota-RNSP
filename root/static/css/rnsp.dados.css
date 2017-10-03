@@ -1135,7 +1135,11 @@ a.link-axis, a.link-region {
 }
 
 .table-selected-indicators .is-full {display: none}
-.table-selected-indicators.is-full .is-full {display: inline-block; color: red}
+.table-selected-indicators .is-full span { color: red}
+.table-selected-indicators.is-full .is-full {display: inline-block; }
+.button-search-indicator {
+    width: 100%;
+}
 .button-add-indicator {
     margin-top: 26px;
     width: 100%;

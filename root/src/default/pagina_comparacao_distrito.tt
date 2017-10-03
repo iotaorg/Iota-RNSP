@@ -31,7 +31,7 @@
         <div class="form-group">
             <div class="grupo">
                 <label>[%l('Indicador')%]</label>
-                <select name="indicador" class="form-control" data-max-selected-indicators="5">
+                <select name="indicador" class="form-control" data-max-selected-indicators="5" data-already-exists="[%l('Este indicador já foi selecionado!')%]">
                     <option selected value="">[%l('Escolher indicadores')%]</option>
                     [%FOREACH i IN indicators.sort('name_url%') %]
                     <option value="[%i.id%]">[%l(i.name)%]</option>
@@ -58,15 +58,11 @@
     </div>
 </div>
 
+<hr/>
 
 <div class="row">
-    <div class="col-xs-12">
-        <hr/>
-
-        <div class="col-sm-offset-10 col-sm-2">
-          <button type="submit" class="btn btn-default" disabled>Pesquisar</button>
-        </div>
-
+    <div class="col-sm-offset-10 col-sm-2">
+      <button type="submit" class="btn button-search-indicator btn-default" disabled>Pesquisar</button>
     </div>
 </div>
 
@@ -78,7 +74,7 @@
 <table class="hide table table-striped table-condensed table-selected-indicators">
     <thead>
         <tr>
-            <th colspan="2"><span>__NUM__</span> [%l('indicadores selecionados')%] <span class="is-full"> - [%l('limite atingido')%]</span> </th>
+            <th colspan="2"><span>__NUM__</span> [%l('indicadores selecionados')%] <div class="is-full"> - <span>[%l('limite atingido')%]</span></div> </th>
         </tr>
     </thead>
     <tbody>

@@ -9,7 +9,7 @@ var pcd = function() {
         $btn_add = $('.button-add-indicator:first'),
 
         $table_container = $('#table-container'),
-        container_original_html =$table_container.html(),
+        container_original_html = $table_container.html(),
         table_template = $('.table-selected-indicators:first').clone().wrap('<div></div>').parent().html(),
 
         max_selected_indicators = $indi.attr('data-max-selected-indicators') * 1,
@@ -22,11 +22,7 @@ var pcd = function() {
 
 
 
-            // botao só ativo se tiver valor no indicador e quatidade de indicadores nao passou do limite
-            $indi.change(function() {
-                var xbool = $indi.val() != '' && selected_indicators_count < max_selected_indicators;
-                $btn_add.prop('disabled', !xbool);
-            });
+            $indi.change(_recalc_btn_add_prop);
 
             // se só tem uma cidade, escolhe sozinho ela
             if ($cidade[0].length == 2) {
@@ -35,6 +31,11 @@ var pcd = function() {
 
             // força um desenho da tabela
             _indicators_changed();
+        },
+        _recalc_btn_add_prop = function() {
+            // botao só ativo se tiver valor no indicador e quatidade de indicadores nao passou do limite
+            var xbool = $indi.val() != '' && selected_indicators_count < max_selected_indicators;
+            $btn_add.prop('disabled', !xbool);
         },
         _onclick_btn_add = function() {
 
@@ -51,32 +52,37 @@ var pcd = function() {
                 $indi.change();
 
                 _indicators_changed();
+            } else {
+                alert($indi.attr('data-already-exists'))
             }
 
 
         },
-        _onclick_btn_remove = function(e){
+        _onclick_btn_remove = function(e) {
 
             var $tr = $(this).parents('tr:first'),
-            indicator = $tr.attr('data-id');
+                indicator = $tr.attr('data-id');
 
             var current_indicators_str = ',' + $indicadors_input.val() + ',';
 
             if (current_indicators_str.indexOf(',' + indicator + ',') != -1) {
 
                 var new_val = [];
-                $.each( $indicadors_input.val().split(','), function (i, v) {
-                    if (v != indicator){
+                $.each($indicadors_input.val().split(','), function(i, v) {
+                    if (v != indicator) {
                         new_val.push(v);
                     }
                 });
 
 
-                $indicadors_input.val( new_val.join(','));
+                $indicadors_input.val(new_val.join(','));
 
                 selected_indicators_count--;
 
+                _recalc_btn_add_prop();
+
                 _indicators_changed();
+
             }
 
 
@@ -84,7 +90,6 @@ var pcd = function() {
         _indicators_changed = function() {
 
             $submit.prop('disabled', selected_indicators_count == 0);
-
 
             if (selected_indicators_count > 0) {
 
@@ -110,8 +115,8 @@ var pcd = function() {
 
                 $table_container.html($elm);
 
-            }else{
-                $table_container.html( container_original_html );
+            } else {
+                $table_container.html(container_original_html);
 
             }
 
