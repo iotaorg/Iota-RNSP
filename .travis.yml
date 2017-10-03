@@ -15,7 +15,7 @@ before_install:
   - sudo apt-get update -q
   - sudo apt-get install libdbd-pg-perl libjpeg-dev  libpng-dev libgif-dev
   - cpanm -n DBIx::Class DBD::Pg
-  - cpanm -n App::Sqitch
+  - cpanm -n App::Sqitch App::ForkProve
   - sqitch --version
 
 install:
@@ -25,6 +25,9 @@ install:
 before_script:
   - psql -c 'create database iota_dev;' -U postgres
   - sqitch deploy -t local
+script:
+  - forkprove -MIota -j 2 -lr t/
+
 notifications:
   irc:
     channels:
