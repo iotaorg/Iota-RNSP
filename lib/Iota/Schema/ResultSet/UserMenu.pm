@@ -70,7 +70,7 @@ sub action_specs {
             return unless keys %values;
 
             $values{menu_id} ||= undef;
-            $values{menu_id} = undef if $values{menu_id} eq $values{id};
+            $values{menu_id} = undef if $values{menu_id} && $values{menu_id} eq $values{id};
 
             my $var = $self->find( delete $values{id} )->update( \%values );
             $var->discard_changes;
