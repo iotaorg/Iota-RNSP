@@ -13,7 +13,7 @@ addons:
 services:
   - redis-server
 env:
-  - PERL_CPANM_OPT="-v --mirror http://cpan.metacpan.org --cascade-search --notest --force --skip-satisfied --no-interactive"
+  - PERL_CPANM_OPT="--mirror http://cpan.metacpan.org --notest --force --skip-satisfied --no-interactive"
 before_install:
   - sudo apt-get update -q
   - sudo apt-get install libdbd-pg-perl libjpeg-dev  libpng-dev libgif-dev
