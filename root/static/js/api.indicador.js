@@ -125,7 +125,7 @@ $(document).ready(function() {
 
 
         }else{
-            if (indicador_data.axis_dim3) { // ODS
+            if (indicador_data.axis_dim3 && indicador_data.axis_dim4) { // ODS
 
                 var innerCalc = indicador_data.axis_dim4.name;
                 innerCalc = innerCalc.match(/(\d+)/);
