@@ -533,6 +533,8 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
             city_id => $c->req->params->{cidade}
         } );
 
+    }else{
+        $c->req->params->{valid_from} = $c->stash->{fixed_years}[0];
     }
 
     $c->stash(
