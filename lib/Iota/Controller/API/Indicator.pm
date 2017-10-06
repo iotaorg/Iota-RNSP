@@ -245,6 +245,7 @@ sub indicator_GET {
 
         $ret->{indicator_availability} = $indicator_availability;
 
+        $c->stash->{user}{id} = $c->stash->{user_id};
         $c->forward('/load_region_names');
 
         $ret->{_prefetch}{region_classification_name} = $c->stash->{region_classification_name};
