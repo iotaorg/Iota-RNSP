@@ -35,6 +35,7 @@ sub do_GET {
     $self->error( $c, 'missing user' ) unless $user_id;
 
     $indicators = { map { split /:/ } split / /, $indicators };
+    my $indicators_apels = { %{$indicators} };
     $periods = [ split /,/, $periods ];
 
     my @shapes = $c->model('DB::Region')->search(
@@ -46,11 +47,12 @@ sub do_GET {
         {
             join         => 'upper_region',
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            columns      => [ 'id', 'name', 'polygon_path', 'upper_region.name' ]
+            columns      => [ 'id', 'name', 'polygon_path', 'upper_region.name' ],
+            order_by     => 'me.name',
         }
     )->all;
 
-    my @indicators__ = $c->model('DB::Indicator')->search(
+    my @indicators_in_order = $c->model('DB::Indicator')->search(
         {
             id            => { 'in' => [ keys %$indicators ] },
             variable_type => { 'in' => [qw/int num/] }
@@ -58,10 +60,11 @@ sub do_GET {
         {
 
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            columns      => [ 'id', 'name', 'sort_direction' ]
+            columns      => [ 'id', 'name', 'sort_direction' ],
+            order_by     => 'name'
         }
     )->all;
-    $indicators = { map { $_->{id} => $_ } @indicators__ };
+    $indicators = { map { $_->{id} => $_ } @indicators_in_order };
 
     my @values = $c->model('DB::IndicatorValue')->search(
         {
@@ -145,6 +148,12 @@ sub do_GET {
     my $rotated = {};
     my %variations;
 
+    sub fmt_year {
+        my $y = shift;
+        $y =~ s/-.+$//o;
+        $y;
+    }
+
     while ( my ( $indicator_id, $by_year ) = each %$sup ) {
 
         while ( my ( $year, $variations ) = each %$by_year ) {
@@ -153,7 +162,9 @@ sub do_GET {
                 $variations{$variation} = 1 unless exists $variations{$variation};
 
                 foreach ( @{ $regions_list->{all} } ) {
-                    $rotated->{$variation}{ delete $_->{region_id} }{$year} = $_;
+                    $_->{rnum} = Iota::View::HTML::value4human( undef, $c, $_->{num}, 'num' );
+
+                    $rotated->{$variation}{ delete $_->{region_id} }{ fmt_year($year) }{$indicator_id} = $_;
                 }
             }
         }
@@ -162,10 +173,15 @@ sub do_GET {
     $self->status_ok(
         $c,
         entity => {
-            values     => $rotated,
-            regions    => { map { $_->{id} => $_ } @shapes },
-            indicators => $indicators,
-            variations => [keys %variations],
+            values           => $rotated,
+            regions          => { map { $_->{id} => $_ } @shapes },
+            indicators       => $indicators,
+            variations       => [ keys %variations ],
+            indicators_apels => $indicators_apels,
+
+            indicators_in_order => [ map { $_->{id} } @indicators_in_order ],
+            regions_in_order    => [ map { $_->{id} } @shapes ],
+
         }
     );
 }

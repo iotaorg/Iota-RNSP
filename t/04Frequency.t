@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use utf8;
 
 use Test::More;
 use Test::Deep;
@@ -45,159 +46,159 @@ my $input = [
 $test->iterate($input);
 my $var = [
     {
-        'num'  => '1.69',
         'name' => 'Pinheiros  ',
+        'num'  => '1.69',
         'i'    => 0
     },
     {
         'num'  => '2.96',
-        'name' => 'Vila Mariana   ',
-        'i'    => 0
+        'i'    => 0,
+        'name' => 'Vila Mariana   '
     },
     {
         'num'  => '5.95',
-        'name' => 'Lapa   ',
-        'i'    => 0
+        'i'    => 1,
+        'name' => 'Lapa   '
     },
     {
-        'num'  => '6.42',
         'name' => 'Santo Amaro',
-        'i'    => 0
+        'num'  => '6.42',
+        'i'    => 1
     },
     {
+        'name' => "S\x{e9} ",
         'num'  => '8.03',
-        'name' => 'Sé ',
-        'i'    => 0
+        'i'    => 1
     },
     {
         'num'  => '8.49',
-        'name' => 'Santana/Tucuruvi   ',
-        'i'    => 0
+        'i'    => 1,
+        'name' => 'Santana/Tucuruvi   '
     },
     {
         'num'  => '8.66',
-        'name' => 'Mooca  ',
-        'i'    => 0
+        'i'    => 1,
+        'name' => 'Mooca  '
     },
     {
-        'num'  => '10.07',
         'name' => 'Aricanduva ',
-        'i'    => 0
+        'num'  => '10.07',
+        'i'    => 2
     },
     {
-        'num'  => '11.04',
         'name' => 'Ipiranga   ',
-        'i'    => 1
+        'i'    => 2,
+        'num'  => '11.04'
     },
     {
         'num'  => '11.63',
-        'name' => 'Penha  ',
-        'i'    => 1
+        'i'    => 2,
+        'name' => 'Penha  '
     },
     {
+        'i'    => 2,
         'num'  => '11.83',
-        'name' => 'Butantã',
-        'i'    => 2
+        'name' => "Butant\x{e3}"
     },
     {
+        'i'    => 3,
         'num'  => '12.97',
-        'name' => 'Ermelino Matarazzo ',
-        'i'    => 2
+        'name' => 'Ermelino Matarazzo '
     },
     {
+        'i'    => 3,
         'num'  => '13.03',
-        'name' => 'Jabaquara  ',
-        'i'    => 2
+        'name' => 'Jabaquara  '
     },
     {
-        'num'  => '13.07',
         'name' => 'Vila Prudente/Sapopemba',
-        'i'    => 2
+        'i'    => 3,
+        'num'  => '13.07'
     },
     {
-        'num'  => '13.15',
         'name' => 'Vila Maria/Vila Guilherme  ',
-        'i'    => 2
+        'i'    => 3,
+        'num'  => '13.15'
     },
     {
         'num'  => '13.18',
-        'name' => 'Itaquera   ',
-        'i'    => 2
+        'i'    => 3,
+        'name' => 'Itaquera   '
     },
     {
         'num'  => '13.34',
-        'name' => 'Casa Verde/Cachoeirinha',
-        'i'    => 3
+        'i'    => 3,
+        'name' => 'Casa Verde/Cachoeirinha'
     },
     {
         'num'  => '13.72',
-        'name' => 'Pirituba   ',
+        'i'    => 3,
+        'name' => 'Pirituba   '
+    },
+    {
+        'name' => 'Campo Limpo',
+        'i'    => 3,
+        'num'  => '14.91'
+    },
+    {
+        'name' => "Ja\x{e7}an\x{e3} / Trememb\x{e9}  ",
+        'num'  => '14.99',
         'i'    => 3
     },
     {
-        'num'  => '14.91',
-        'name' => 'Campo Limpo',
-        'i'    => 4
-    },
-    {
-        'num'  => '14.99',
-        'name' => 'Jaçanã / Tremembé  ',
-        'i'    => 4
-    },
-    {
+        'name' => "M\x{b4}Boi Mirim",
         'num'  => '15.93',
-        'name' => 'M´Boi Mirim',
         'i'    => 4
     },
     {
-        'num'  => '15.93',
         'name' => 'Capela do Socorro  ',
+        'num'  => '15.93',
         'i'    => 4
     },
     {
+        'i'    => 4,
         'num'  => '16.01',
-        'name' => 'Cidade Ademar  ',
-        'i'    => 4
+        'name' => 'Cidade Ademar  '
     },
     {
+        'i'    => 4,
         'num'  => '16.38',
-        'name' => 'São Miguel ',
-        'i'    => 4
+        'name' => "S\x{e3}o Miguel "
     },
     {
         'num'  => '16.47',
-        'name' => 'Freguesia/Brasilândia  ',
-        'i'    => 4
+        'i'    => 4,
+        'name' => "Freguesia/Brasil\x{e2}ndia  "
     },
     {
-        'num'  => '17.29',
         'name' => 'Guaianases ',
+        'num'  => '17.29',
         'i'    => 4
     },
     {
-        'num'  => '17.42',
         'name' => 'Itaim Paulista ',
+        'num'  => '17.42',
         'i'    => 4
     },
     {
+        'i'    => 4,
         'num'  => '17.51',
-        'name' => 'Perus  ',
-        'i'    => 4
+        'name' => 'Perus  '
     },
     {
+        'name' => "S\x{e3}o Mateus ",
         'num'  => '17.65',
-        'name' => 'São Mateus ',
         'i'    => 4
     },
     {
-        'num'  => '19.08',
         'name' => 'Cidade Tiradentes  ',
-        'i'    => 4
+        'i'    => 4,
+        'num'  => '19.08'
     },
     {
-        'num'  => '19.12',
         'name' => 'Parelheiros',
-        'i'    => 4
+        'i'    => 4,
+        'num'  => '19.12'
     }
 ];
 

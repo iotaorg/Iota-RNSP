@@ -5,7 +5,7 @@ var pcd = function() {
         $cidade = $('select[name="cidade"]:first'),
         $period = $('select[name="period"]:first'),
         $indi = $('select[data-name="indicador"]:first'),
-        $form= $('form:first'),
+        $form = $('form:first'),
         $indicadors_input = $('input[name="selected_indicators"]:first'),
         $btn_add = $('.button-add-indicator:first'),
 
@@ -22,7 +22,7 @@ var pcd = function() {
             $table_container.on('click', '.xbtn .button-del', _onclick_btn_remove);
 
 
-            $('.button-change-params:first').click(function(){
+            $('.button-change-params:first').click(function() {
                 $('.changeparam').removeClass('hide');
                 $('.comparacao-results').addClass('hide');
             });
@@ -30,7 +30,7 @@ var pcd = function() {
             $cidade.change(_recalc_submit_prop);
             $indi.change(_recalc_btn_add_prop);
 
-            $form.submit(function(){
+            $form.submit(function() {
                 $submit.prop('disabled', true);
                 return true;
             });
@@ -108,13 +108,13 @@ var pcd = function() {
 
             if (selected_indicators_count > 0) {
 
-                var $elm = $(table_template.replace('__NUM__', selected_indicators_count)),
-                    row_base = $elm.find('tbody>tr');
-                $elm.find('tbody>tr').remove();
-                $elm.removeClass('hide');
+                var $new_table = $(table_template.replace('__NUM__', selected_indicators_count)),
+                    row_base = $new_table.find('tbody>tr');
+                $new_table.find('tbody>tr').remove();
+                $new_table.removeClass('hide');
 
                 if (selected_indicators_count == max_selected_indicators)
-                    $elm.addClass('is-full');
+                    $new_table.addClass('is-full');
 
                 $.each($indicadors_input.val().split(','), function(i, v) {
 
@@ -124,11 +124,11 @@ var pcd = function() {
                     $row.find('td.indname').text(name);
                     $row.attr('data-id', v);
 
-                    $elm.find('tbody').append($row);
+                    $new_table.find('tbody').append($row);
 
                 });
 
-                $table_container.html($elm);
+                $table_container.html($new_table);
 
             } else {
                 $table_container.html(container_original_html);
@@ -144,25 +144,116 @@ var pcd = function() {
 var pdc_results = function() {
     var
 
-        $rc = $('div.results-container:first'),
-
+        $table_container = $('div.results-container:first'),
+        response,
+        active_variation,
+        table_template,
+        indicators_apels,
 
         _init = function() {
 
-            var params = $rc.attr('data-search-params');
-
+            var params = $table_container.attr('data-search-params');
             if (!params) return;
+            params = jQuery.parseJSON(params);
 
-                params = jQuery.parseJSON(params) ;
+            table_template = $('.table-results-indicators:first').clone().wrap('<div></div>').parent().html()
 
-                $.get( "/api/public/compare-by-region", params, _on_results, 'json');
-
-
+            $.get("/api/public/compare-by-region", params, _on_results, 'json');
 
 
-        },_on_results =function (data) {
-            console.log(data);
-        } ;
+        },
+        _on_results = function(data) {
+
+            if (!data.values || !data.regions || !data.indicators) {
+                $table_container.text("Erro com o resultado");
+                return;
+            }
+
+            response = data;
+
+            active_variation = response.variations['0'];
+
+            if (!(active_variation == undefined)) {
+                redraw_results();
+            } else {
+
+                $table_container.text("Nenhum dado encontrado....");
+            }
+
+        },
+        _td = function(e, str, title) {
+            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + '>' + str + '</td>'
+        },
+        _th = function(e, str, title) {
+            return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + '>' + str + '</th>'
+        },
+        redraw_results = function() {
+
+            var $new_table = $(table_template);
+            $new_table.removeClass('hide');
+
+
+            var indicators_in_order = response.indicators_in_order;
+            var regions_in_order = response.regions_in_order;
+
+            $.each(indicators_in_order, function(idx, indicator_id) {
+                $new_table.find('thead>tr').append(_th('', response.indicators_apels[indicator_id], response.indicators[indicator_id].name))
+            })
+
+
+            var tbody = '';
+
+            var vregions = response.values[active_variation];
+
+            $.each( regions_in_order , function(idx, region_id) {
+
+                var years = vregions[region_id];
+
+                if (!years)
+                    return true;
+
+                $.each(years, function(year, indicators) {
+
+
+                    var row = '<tr>';
+                    row = _td(row, response.regions[region_id].name);
+                    row = _td(row, year);
+
+
+                    $.each(indicators_in_order, function(idx, indicator_id) {
+
+
+                        if (indicators[indicator_id] == undefined) {
+
+                            row = _td(row, '-');
+
+                        } else {
+
+                            row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num);
+
+                        }
+                        //row = _td(row, values.num );
+
+
+                    });
+
+                    tbody += row + '</tr>';
+
+
+
+
+                });
+
+
+
+            });
+
+            $new_table.find('tbody').append(tbody);
+
+            $table_container.html($new_table);
+
+
+        };
     return {
         run: _init
     };

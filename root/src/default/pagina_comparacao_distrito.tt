@@ -111,11 +111,22 @@
             </tr>
             [% END %]
         </tbody>
-
     </table>
 
-
 </div>
+
+
+<table class="hide table table-striped table-condensed table-results-indicators">
+    <thead>
+        <tr>
+            <th>[%l('Região')%]</th>
+            <th>[%l('Ano')%]</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
 
 
 [% END %]
