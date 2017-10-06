@@ -25,13 +25,12 @@ sub iterate {
 
         my (@mid);
         foreach (@numbers) {
-            if ( !( $_ - $stddev > $meio ) && $_ + $stddev > $meio ) {
-                push @mid, $_;
-            }
+            push @mid, $_;
         }
         $stat->add_data( sort { $a <=> $b } @mid );
 
         my %f = $stat->frequency_distribution(5);
+
         my @order = sort { $a <=> $b } keys %f;
 
         foreach my $r (@$rows) {
