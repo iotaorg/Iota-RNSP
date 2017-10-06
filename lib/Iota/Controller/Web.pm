@@ -514,7 +514,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
 
         my %dups;
-        my @indicators;
+        my @indicators_ref;
         foreach my $ind (@inds){
             $ind->{apel} = join '', map { length$_ > 2 ? substr ($_, 0, 1) : '' } split / /, uc $ind->{name};
 
@@ -523,13 +523,15 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
                 $ind->{apel} .= $dups{$ind->{apel}};
             }
 
-            push @indicators, $ind->{id} . ':' . $ind->{apel};
+            push @indicators_ref, $ind->{id} . ':' . $ind->{apel};
         }
+
+        $c->stash->{indicators_table} = \@inds;
 
         $c->stash->{query_params} = encode_json( {
 
             periods => (join ',', @{$c->stash->{choosen_periods}[2]}),
-            indicators => join ' ', @indicators,
+            indicators => (join ' ', @indicators_ref),
             city_id => $c->req->params->{cidade}
         } );
 

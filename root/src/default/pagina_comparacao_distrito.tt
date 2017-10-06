@@ -94,12 +94,25 @@
 
     <hr/>
 
-    <div data-search-params="[% query_params %]">
+    <div class="results-container" data-search-params="[% query_params %]">
 
-        [% query_params%]
-
+        <div class="loading"><p>[%l('Carregando...')%]</p></div>
 
     </div>
+
+    <h3>[%l('Referências dos indicadores')%]</h3>
+    <table class="table table-condensed" style="font-size: 0.8em">
+        <tbody>
+            [% FOREACH i IN indicators_table %]
+            <tr>
+                <th style="width:1px;text-align:right">[% i.apel %]</th>
+                <td>[% i.name %]</td>
+
+            </tr>
+            [% END %]
+        </tbody>
+
+    </table>
 
 
 </div>

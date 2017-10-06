@@ -141,6 +141,35 @@ var pcd = function() {
     };
 }();
 
+var pdc_results = function() {
+    var
+
+        $rc = $('div.results-container:first'),
+
+
+        _init = function() {
+
+            var params = $rc.attr('data-search-params');
+
+            if (!params) return;
+
+                params = jQuery.parseJSON(params) ;
+
+                $.get( "/api/public/compare-by-region", params, _on_results, 'json');
+
+
+
+
+        },_on_results =function (data) {
+            console.log(data);
+        } ;
+    return {
+        run: _init
+    };
+}();
+
+
 $(function() {
     pcd.run();
+    pdc_results.run();
 });
