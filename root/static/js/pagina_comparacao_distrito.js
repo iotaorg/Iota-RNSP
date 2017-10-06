@@ -158,8 +158,9 @@ var pdc_results = function() {
 
             table_template = $('.table-results-indicators:first').clone().wrap('<div></div>').parent().html()
 
-            $.get("/api/public/compare-by-region", params, _on_results, 'json');
-
+            $.get("/api/public/compare-by-region", params, _on_results, 'json').fail(function(e) {
+                $table_container.text("ERRO: " + e.responseText);
+            });
 
         },
         _on_results = function(data) {
@@ -181,11 +182,11 @@ var pdc_results = function() {
             }
 
         },
-        _td = function(e, str, title) {
-            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + '>' + str + '</td>'
+        _td = function(e, str, title, cx) {
+            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</td>'
         },
-        _th = function(e, str, title) {
-            return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + '>' + str + '</th>'
+        _th = function(e, str, title, cx) {
+            return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '')+ '>' + str + '</th>'
         },
         redraw_results = function() {
 
@@ -197,7 +198,7 @@ var pdc_results = function() {
             var regions_in_order = response.regions_in_order;
 
             $.each(indicators_in_order, function(idx, indicator_id) {
-                $new_table.find('thead>tr').append(_th('', response.indicators_apels[indicator_id], response.indicators[indicator_id].name))
+                $new_table.find('thead>tr').append(_th('', response.indicators[indicator_id].name, response.indicators_apels[indicator_id], ))
             })
 
 
@@ -216,8 +217,8 @@ var pdc_results = function() {
 
 
                     var row = '<tr>';
-                    row = _td(row, response.regions[region_id].name);
-                    row = _td(row, year);
+                    row = _td(row, response.regions[region_id].name, '', 'tright minwidth2');
+                    row = _td(row, year, '', 'minwidth');
 
 
                     $.each(indicators_in_order, function(idx, indicator_id) {
@@ -225,11 +226,11 @@ var pdc_results = function() {
 
                         if (indicators[indicator_id] == undefined) {
 
-                            row = _td(row, '-');
+                            row = _td(row, '-', '', 'tcenter');
 
                         } else {
 
-                            row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num);
+                            row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
 
                         }
                         //row = _td(row, values.num );

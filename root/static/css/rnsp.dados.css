@@ -1145,3 +1145,20 @@ a.link-axis, a.link-region {
     width: 100%;
     text-align: center;
 }
+.table-results-indicators {
+    font-size: 0.8em;
+}
+.table-results-indicators td.minwidth {
+    width: 1px
+}
+.table-results-indicators td.minwidth2 {
+    width: 130px
+}
+
+.table-results-indicators .tright {
+    text-align: right;
+    }
+    .table-results-indicators .tcenter {
+    text-align: center;
+    }
+

@@ -497,9 +497,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
         $c->detach('/error_404', ['Dados inválidos!'] ) unless $self->int_validation(@ids);
 
-
         $c->stash->{has_results} = 1;
-
         my @inds = $c->model('DB::Indicator')->search(
             {
 
@@ -2134,12 +2132,16 @@ sub json_to_view {
 sub _add_default_periods {
     my ( $self, $c ) = @_;
 
+
+
     my $data_atual   = DateTime->now;
     my $ano_anterior = $data_atual->year() - 1;
 
     my $grupos      = 4;
     my $step        = 4;
     my $ano_inicial = $ano_anterior - ( $grupos * $step ) + 1;
+
+    $c->stash->{fixed_years} = [ reverse (2000 .. $ano_anterior)];
 
     my @periods;
 
@@ -2173,37 +2175,50 @@ sub _add_default_periods {
     }
     $c->stash->{data_periods} = \@periods;
 
+
     $c->req->params->{valid_from} =
       exists $c->req->params->{valid_from} || exists $c->req->params->{valid_from_desc}
       ? $c->req->params->{valid_from} || $c->req->params->{valid_from_desc}
       : $periods[-1][0];
+
     my $ativo = undef;
 
-    my $i = 0;
-  PROCURA: foreach my $grupo (@periods) {
+    if ($c->req->params->{valid_from} =~ /^[0-9]{4}$/){
 
-        foreach my $periodo ( @{ $grupo->[2] } ) {
-            if ( $periodo eq $c->req->params->{valid_from} ) {
-                $ativo = $i;
-                last PROCURA;
+        my $it = $c->req->params->{valid_from};
+        $c->stash->{choosen_periods} = [
+            $it,
+            $it,
+            [$it]
+        ];
+    }else{
+
+        my $i = 0;
+      PROCURA: foreach my $grupo (@periods) {
+
+            foreach my $periodo ( @{ $grupo->[2] } ) {
+                if ( $periodo eq $c->req->params->{valid_from} ) {
+                    $ativo = $i;
+                    last PROCURA;
+                }
             }
+            $i++;
         }
-        $i++;
-    }
-    $c->req->params->{valid_from_desc} =
-      exists $c->req->params->{valid_from_desc}
-      ? $c->req->params->{valid_from_desc}
-      : $periods[-1][0];
+        $c->req->params->{valid_from_desc} =
+          exists $c->req->params->{valid_from_desc}
+          ? $c->req->params->{valid_from_desc}
+          : $periods[-1][0];
 
-    if ( defined $ativo ) {
-        $c->req->params->{from}      = $periods[$ativo][0];
-        $c->req->params->{to}        = $periods[$ativo][1];
-        $c->stash->{choosen_periods} = $periods[$ativo];
-    }
-    else {
-        $c->req->params->{from}      = $periods[-1][0];
-        $c->req->params->{to}        = $periods[-1][1];
-        $c->stash->{choosen_periods} = $periods[-1];
+        if ( defined $ativo ) {
+            $c->req->params->{from}      = $periods[$ativo][0];
+            $c->req->params->{to}        = $periods[$ativo][1];
+            $c->stash->{choosen_periods} = $periods[$ativo];
+        }
+        else {
+            $c->req->params->{from}      = $periods[-1][0];
+            $c->req->params->{to}        = $periods[-1][1];
+            $c->stash->{choosen_periods} = $periods[-1];
+        }
     }
 
 }

@@ -17,9 +17,14 @@
         <label>[%l('Período')%]</label>
         <select name="valid_from" class="form-control text-center">
 
+            [%FOREACH i IN fixed_years %]
+                <option [% c.req.params.valid_from == i ? 'selected' : '' %] value="[% i %]">[% i %]</option>
+            [%END%]
+
             [%FOREACH i IN data_periods.reverse %]
                 <option [% c.req.params.valid_from == i.0 ? 'selected' : '' %] value="[% i.0 %]">[% date4period(i.0, 'yearly') %] - [% date4period(i.1, 'yearly') %]</option>
             [%END%]
+
 
         </select>
     </div>
@@ -116,7 +121,7 @@
 </div>
 
 
-<table class="hide table table-striped table-condensed table-results-indicators">
+<table class="hide table table-hover table-striped table-condensed table-results-indicators">
     <thead>
         <tr>
             <th>[%l('Região')%]</th>

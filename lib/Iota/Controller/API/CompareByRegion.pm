@@ -15,16 +15,23 @@ sub do : Chained('/light_institute_load') : PathPart('api/public/compare-by-regi
 sub do_GET {
     my ( $self, $c ) = @_;
 
-    my $city_id = $c->req->params->{city_id};
+    my $city_id = $c->req->params->{city_id} || '';
     $self->error( $c, 'invalid city_id' ) unless $city_id =~ /^[0-9]+$/;
 
-    my $indicators = $c->req->params->{indicators};
+    my $indicators = $c->req->params->{indicators} || '';
     $self->error( $c, 'invalid indicators' ) unless $indicators =~ /^([0-9]+:[A-Z0-9]+\s?)+$/i;
     $indicators =~ s/ $//;
 
-    my $periods = $c->req->params->{periods};
-    $self->error( $c, 'invalid periods' ) unless $periods =~ /^([0-9]{4}-[0-9]{2}-[0-9]{2},?)+$/;
-    $indicators =~ s/,$//;
+    my $periods = $c->req->params->{periods} || '';
+
+    if ( $periods =~ /^[0-9]{4}$/ ) {
+        $periods = [ "$periods-01-01"];
+    }
+    else {
+        $self->error( $c, 'invalid periods' ) unless $periods =~ /^([0-9]{4}-[0-9]{2}-[0-9]{2},?)+$/;
+        $periods =~ s/,$//;
+        $periods = [ split /,/, $periods ];
+    }
 
     my $user_id = $c->model('DB::User')->search(
         {
@@ -36,7 +43,6 @@ sub do_GET {
 
     $indicators = { map { split /:/ } split / /, $indicators };
     my $indicators_apels = { %{$indicators} };
-    $periods = [ split /,/, $periods ];
 
     my @shapes = $c->model('DB::Region')->search(
         {
