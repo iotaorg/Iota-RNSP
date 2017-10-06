@@ -143,8 +143,6 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
                 }
               )->all
         ];
-
-        use DDP; p $c->stash->{fixed_menu_pages};
     }
 
 }
