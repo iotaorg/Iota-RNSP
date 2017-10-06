@@ -1,6 +1,6 @@
 [% FOREACH am IN fixed_menu_pages %]
     <li [% IF c_req_path == am.url %]class="active"[%END%]>
-        <a href="/[% am.url %]">[%l( am.title )%]</a>
+        <a href="/[% am.url %]">[% am.url %] [%l( am.title )%]</a>
     </li>
 [% END %]
 
