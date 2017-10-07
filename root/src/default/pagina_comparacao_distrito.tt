@@ -160,5 +160,19 @@
     </tbody>
 </table>
 
+<div class="infopop hide">
+
+    <h3>__NAME__</h3>
+    <table class="table table-hover table-striped table-condensed table-popinfo-indicators">
+        <thead>
+            <tr>
+                <th>[%l('Ano')%]</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 
 [% END %]

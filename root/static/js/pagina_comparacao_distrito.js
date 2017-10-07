@@ -166,11 +166,61 @@ var pdc_results = function() {
         });
     };
 
+    var infowindow;
+    var _show_info_name = function (event) {
+
+        var region_id = this._data.region_id;
+        var yregions = response.values[active_variation][region_id];
+
+        if (yregions == undefined) return;
+
+        var $new_table = $(infopop_template.replace('__NAME__', response.regions[region_id].name));
+        $new_table.removeClass('hide');
+
+        var indicators_in_order = response.indicators_in_order;
+
+        $.each(indicators_in_order, function(idx, indicator_id) {
+            $new_table.find('thead>tr').append(_th('', response.indicators_apels[indicator_id], response.indicators[indicator_id].name ))
+        })
+
+        var tbody = '';
+        $.each( yregions , function(year, indicators) {
+            var row = '<tr>';
+
+            row = _td(row, year, '', 'minwidth');
+
+            $.each(indicators_in_order, function(idx, indicator_id) {
+
+
+                if (indicators[indicator_id] == undefined) {
+
+                    row = _td(row, '-', '', 'tcenter');
+
+                } else {
+
+                    row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
+
+                }
+
+            });
+
+            tbody += row + '</tr>';
+
+        });
+        $new_table.find('tbody').append(tbody);
+
+        infowindow.setContent( $new_table[0]  );
+        infowindow.setPosition(event.latLng);
+
+        infowindow.open(this._data.map);
+    };
+
     var
         $table_container = $('div.results-container:first'),
         response,
         active_variation,
         table_template,
+        infopop_template,
         map_template,
         indicators_apels,
 
@@ -182,6 +232,7 @@ var pdc_results = function() {
 
             table_template = $('.table-results-indicators:first').clone().wrap('<div></div>').parent().html();
             map_template = $('#map_container').clone().wrap('<div></div>').parent().html();
+            infopop_template = $('.infopop:first').clone().wrap('<div></div>').parent().html();
 
             $.get("/api/public/compare-by-region", params, _on_results, 'json').fail(function(e) {
                 $table_container.text("ERRO: " + e.responseText);
@@ -263,6 +314,9 @@ var pdc_results = function() {
                     return bounds;
                 };
             }
+            if (!infowindow) {
+                infowindow = new google.maps.InfoWindow();
+            }
 
             var $elm = $(map_elm);
 
@@ -285,6 +339,7 @@ var pdc_results = function() {
 
                     var elm = region;
                     elm.list = Array();
+                    elm.region_id = region_id;
 
                     $.each([region.polygon_path], function(aa, elm2) {
 
@@ -319,7 +374,7 @@ var pdc_results = function() {
                         zoo.polygon._data.map = map;
 
                         zoo.polygon.setMap(map);
-                        google.maps.event.addListener(zoo.polygon, 'click', function() {});
+                        google.maps.event.addListener(zoo.polygon, 'click', _show_info_name);
                         google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
                         google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
 
@@ -352,8 +407,8 @@ var pdc_results = function() {
         redraw_results = function() {
 
             var $new_div = $('<div></div>'),
-
                 $new_map = $(map_template.replace('REPLACE_MAP_ID', 'mapa'));
+
             $new_map.removeClass('hide');
 
             $new_div.append($new_map);
