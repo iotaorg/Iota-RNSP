@@ -145,9 +145,9 @@ var map;
 
 
 var pdc_results = function() {
-    var _change_colors = function (event) {
+    var _change_colors = function(event) {
 
-        $.each(this._data.list, function (a, b) {
+        $.each(this._data.list, function(a, b) {
             b.setOptions({
                 strokeColor: '#15d400',
                 strokeOpacity: 0.8,
@@ -155,9 +155,9 @@ var pdc_results = function() {
             });
         });
     };
-    var _restore_change_colors = function (event) {
+    var _restore_change_colors = function(event) {
 
-        $.each(this._data.list, function (a, b) {
+        $.each(this._data.list, function(a, b) {
             b.setOptions({
                 strokeColor: '#333',
                 strokeOpacity: 0.6,
@@ -212,6 +212,37 @@ var pdc_results = function() {
         },
         _th = function(e, str, title, cx) {
             return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</th>'
+        },
+        _get_color = function(region_id) {
+
+            var color = '#333';
+
+            var yregions = response.values[active_variation][region_id];
+
+            if (yregions == undefined) return color;
+
+            var good_count = 0,
+                bad_count = 0,
+                total = 0;
+
+            $.each(yregions, function(year, indicators) {
+                $.each(indicators, function(id_id, vv) {
+                    total++;
+                    if (vv.i == 0) good_count++;
+                    if (vv.i > 0) bad_count++;
+                });
+            });
+
+            if (good_count == total) {
+                color = '#d7e7ff';
+            } else if (bad_count == total) {
+                color = '#cc0314';
+            } else {
+                color = '#cca203'
+            };
+
+            return color;
+
         },
         _load_map = function(map_elm) {
 
@@ -269,12 +300,14 @@ var pdc_results = function() {
                             return true;
                         }
 
+                        var thecolor = _get_color(region_id);
+
                         zoo.polygon = new google.maps.Polygon({
                             paths: zoo.coords,
                             strokeColor: '#333',
                             strokeOpacity: 0.6,
                             strokeWeight: 2,
-                            fillColor: '#333',
+                            fillColor: thecolor,
                             fillOpacity: 0.8
                         });
 
