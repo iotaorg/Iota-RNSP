@@ -91,22 +91,27 @@
 
 [% IF has_results %]
 
-<div class="row comparacao-results" >
 
-    <div class="col-sm-offset-10 col-sm-2">
-      <button type="submit" class="btn btn-default button-change-params">&#128269; Mudar parâmetros</button>
+<div class="row hide" id="map_container">
+
+    <div class="col-sm-8 col-xs-6">
+        <div class="map" id="gmap">
+            <div class="content-fill">
+                <div id="x-container">
+                    <div class="x-dummy"></div>
+                    <div class="x-element">
+                        <div id="REPLACE_MAP_ID" class="mapa"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <hr/>
 
-    <div class="results-container" data-search-params="[% query_params %]">
+    <div class="col-sm-4 col-xs-6">
 
-        <div class="loading"><p>[%l('Carregando...')%]</p></div>
-
-    </div>
-
-    <h3>[%l('Referências dos indicadores')%]</h3>
-    <table class="table table-condensed" style="font-size: 0.8em">
+        <h3>[%l('Referências dos indicadores')%]</h3>
+        <table class="table table-condensed" style="font-size: 0.8em">
         <tbody>
             [% FOREACH i IN indicators_table %]
             <tr>
@@ -116,7 +121,29 @@
             </tr>
             [% END %]
         </tbody>
-    </table>
+        </table>
+
+    </div>
+
+</div>
+
+<div class="comparacao-results " >
+
+    <div class="row">
+        <div class="col-md-offset-10 col-md-2">
+            <button type="submit" class="btn btn-default button-change-params">&#128269; Mudar parâmetros</button>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="results-container" data-search-params="[% query_params %]">
+            <div class="loading"><p>[%l('Carregando...')%]</p></div>
+        </div>
+    </div>
+
+
 
 </div>
 

@@ -141,13 +141,37 @@ var pcd = function() {
     };
 }();
 
-var pdc_results = function() {
-    var
+var map;
 
+
+var pdc_results = function() {
+    var _change_colors = function (event) {
+
+        $.each(this._data.list, function (a, b) {
+            b.setOptions({
+                strokeColor: '#15d400',
+                strokeOpacity: 0.8,
+                strokeWeight: 4
+            });
+        });
+    };
+    var _restore_change_colors = function (event) {
+
+        $.each(this._data.list, function (a, b) {
+            b.setOptions({
+                strokeColor: '#333',
+                strokeOpacity: 0.6,
+                strokeWeight: 2
+            });
+        });
+    };
+
+    var
         $table_container = $('div.results-container:first'),
         response,
         active_variation,
         table_template,
+        map_template,
         indicators_apels,
 
         _init = function() {
@@ -156,7 +180,8 @@ var pdc_results = function() {
             if (!params) return;
             params = jQuery.parseJSON(params);
 
-            table_template = $('.table-results-indicators:first').clone().wrap('<div></div>').parent().html()
+            table_template = $('.table-results-indicators:first').clone().wrap('<div></div>').parent().html();
+            map_template = $('#map_container').clone().wrap('<div></div>').parent().html();
 
             $.get("/api/public/compare-by-region", params, _on_results, 'json').fail(function(e) {
                 $table_container.text("ERRO: " + e.responseText);
@@ -186,13 +211,122 @@ var pdc_results = function() {
             return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</td>'
         },
         _th = function(e, str, title, cx) {
-            return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '')+ '>' + str + '</th>'
+            return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</th>'
+        },
+        _load_map = function(map_elm) {
+
+            if (!google.maps.Polygon.prototype.getBounds) {
+                google.maps.Polygon.prototype.getBounds = function(latLng) {
+
+                    var bounds = new google.maps.LatLngBounds();
+                    var paths = this.getPaths();
+                    var path;
+
+                    for (var p = 0; p < paths.getLength(); p++) {
+                        path = paths.getAt(p);
+                        for (var i = 0; i < path.getLength(); i++) {
+                            bounds.extend(path.getAt(i));
+                        }
+                    }
+
+                    return bounds;
+                };
+            }
+
+            var $elm = $(map_elm);
+
+            var mapDefaultLocation = new google.maps.LatLng(-23.5486, -46.6392);
+
+            var mapOptions = {
+                center: mapDefaultLocation,
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map($elm[0], mapOptions);
+
+
+            google.maps.event.addListenerOnce(map, 'idle', function() {
+
+
+                var full_polys = Array();
+
+                $.each(response.regions, function(region_id, region) {
+
+                    var elm = region;
+                    elm.list = Array();
+
+                    $.each([region.polygon_path], function(aa, elm2) {
+
+                        if (elm2 === null) {
+                            return true;
+                        }
+
+                        var zoo = {
+                            coords: google.maps.geometry.encoding.decodePath(elm2)
+                        };
+
+                        if (zoo.coords == null || zoo.coords == undefined) {
+                            return true;
+                        }
+
+                        zoo.polygon = new google.maps.Polygon({
+                            paths: zoo.coords,
+                            strokeColor: '#333',
+                            strokeOpacity: 0.6,
+                            strokeWeight: 2,
+                            fillColor: '#333',
+                            fillOpacity: 0.8
+                        });
+
+
+
+                        elm.list.push(zoo.polygon);
+
+                        zoo.polygon._data = elm;
+                        zoo.polygon._data.map = map;
+
+                        zoo.polygon.setMap(map);
+                        google.maps.event.addListener(zoo.polygon, 'click', function() {});
+                        google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
+                        google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
+
+                        full_polys.push(zoo)
+
+                        return true;
+                    });
+                });
+
+                var super_bound = null;
+                $.each(full_polys, function(a, elm) {
+
+                    if (super_bound === null) {
+                        super_bound = elm.polygon.getBounds();
+                        return true;
+                    }
+
+                    super_bound = super_bound.union(elm.polygon.getBounds());
+                    return true;
+                });
+
+                if (!(super_bound === null)) {
+                    map.fitBounds(super_bound);
+                }
+
+            });
+
+
         },
         redraw_results = function() {
 
-            var $new_table = $(table_template);
-            $new_table.removeClass('hide');
+            var $new_div = $('<div></div>'),
 
+                $new_map = $(map_template.replace('REPLACE_MAP_ID', 'mapa'));
+            $new_map.removeClass('hide');
+
+            $new_div.append($new_map);
+
+            $new_table = $(table_template);
+            $new_table.removeClass('hide');
 
             var indicators_in_order = response.indicators_in_order;
             var regions_in_order = response.regions_in_order;
@@ -206,7 +340,7 @@ var pdc_results = function() {
 
             var vregions = response.values[active_variation];
 
-            $.each( regions_in_order , function(idx, region_id) {
+            $.each(regions_in_order, function(idx, region_id) {
 
                 var years = vregions[region_id];
 
@@ -233,25 +367,33 @@ var pdc_results = function() {
                             row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
 
                         }
-                        //row = _td(row, values.num );
-
 
                     });
 
                     tbody += row + '</tr>';
 
-
-
-
                 });
-
-
 
             });
 
             $new_table.find('tbody').append(tbody);
 
-            $table_container.html($new_table);
+            $new_div.append($new_table);
+
+            $table_container.html($new_div);
+
+
+
+            if (map) {
+                _load_map($new_map.find('#mapa'))
+
+            } else {
+
+                google.maps.event.addDomListener(window, 'load', function() {
+                    _load_map($new_map.find('#mapa'))
+                });
+            }
+
 
 
         };

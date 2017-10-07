@@ -179,10 +179,10 @@
 </footer>
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
-[%IF !v2%]
+
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?libraries=geometry,visualization&amp;key=AIzaSyB0ip7QhECY9SaUHjXfCEfbTV-ZH8q7wRI"></script>
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-[%END%]
+
 
 [% assets.export("js") |none%]
 

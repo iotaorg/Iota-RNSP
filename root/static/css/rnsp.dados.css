@@ -1157,8 +1157,13 @@ a.link-axis, a.link-region {
 
 .table-results-indicators .tright {
     text-align: right;
-    }
-    .table-results-indicators .tcenter {
+}
+.table-results-indicators .tcenter {
     text-align: center;
-    }
+}
 
+#x-container .mapa {
+    min-height: 150px;
+    max-height: 900px;
+    height: 100%;
+}
