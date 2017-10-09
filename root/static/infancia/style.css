@@ -68,10 +68,10 @@ body.root_pagina_contato #topbackground, body.root_sugestao_bp #topbackground {
 */
 
 body.root_ #topbackground {
-    /*background-image: url(/static/infancia/img-crianca-crop.jpg?v=2);
+    background-image: url(/static/infancia/img-crianca-crop.jpg?v=2);
     background-position: 50%;
     background-repeat: no-repeat;
-    background-size: auto 100%;*/
+    background-size: auto 100%;
     background-color: white;
 }
 
