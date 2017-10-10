@@ -97,11 +97,16 @@ $(document).ready(function() {
 
         $(".tabela", $dados).append("<dt>Fórmula:</dt><dd>" + indicador_data.formula_human + "</dd>");
 
-        if (indicador_data.axis_id) {
-            $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
-                dt: 'Eixo',
-                dd: indicador_data.axis.name
-            }));
+        if (indicador_data._prefetch
+            && indicador_data._prefetch.institute_metadata
+            && indicador_data._prefetch.institute_metadata.show_axis_on_indicator_data_js){
+
+            if (indicador_data.axis_id) {
+                $(".tabela", $dados).append('<dt>$$dt:</dt><dd>$$dd</dd>'.render({
+                    dt: 'Eixo',
+                    dd: indicador_data.axis.name
+                }));
+            }
         }
 
         if (indicador_data.axis_dim1) { // urban
