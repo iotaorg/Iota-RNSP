@@ -162,7 +162,7 @@
 
             <div class="mynavbar-inner">
                 <ul class="nav">
-                    [% INCLUDE site/nav_for_real.tt|none%]
+                    [% INCLUDE site/nav_for_real.tt c_req_match='disabled' | none %]
                     <li [% IF c_req_path == 'pagina/contato' %]class="active"[%END%]>
                         <a href="/pagina/contato">[%l('contato')%]</a>
                     </li>

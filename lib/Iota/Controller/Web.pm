@@ -133,14 +133,13 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
         }
 
         $c->stash->{fixed_menu_pages} = [
-            grep { !$is_home || $allowed_pages_on_home{ $_->{pid} } }
 
               map {
                 my $r = $_;
                 +{
+                    hidden => !(!$is_home || $allowed_pages_on_home{ $r->{page}{id} }),
                     title => $r->{title},
                     url   => 'pagina/' . $r->{page}{id} . '/' . $r->{page}{title_url},
-                    pid   => $r->{page}{id}
                   }
               } $c->model('DB::UserMenu')->search(
                 {
