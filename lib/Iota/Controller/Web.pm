@@ -126,10 +126,22 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
     if ( $c->stash->{is_infancia} && $c->stash->{institute_metadata}{include_fixed_menu_id} ) {
 
+        my %allowed_pages_on_home;
+        my $is_home = $c->stash->{c_req_match} eq 'root_';
+        if ($is_home) {
+            %allowed_pages_on_home = map { $_ => 1 } @{ $c->stash->{institute_metadata}{allowed_pages_on_home} || [] };
+        }
+
         $c->stash->{fixed_menu_pages} = [
-            map {
+            grep { !$is_home || $allowed_pages_on_home{ $_->{pid} } }
+
+              map {
                 my $r = $_;
-                +{ title => $r->{title}, url => 'pagina/' . $r->{page}{id} . '/' . $r->{page}{title_url} }
+                +{
+                    title => $r->{title},
+                    url   => 'pagina/' . $r->{page}{id} . '/' . $r->{page}{title_url},
+                    pid   => $r->{page}{id}
+                  }
               } $c->model('DB::UserMenu')->search(
                 {
                     page_id => { '!=' => undef },
@@ -495,30 +507,29 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
         my @ids = split /,/, $c->req->params->{selected_indicators};
 
-        $c->detach('/error_404', ['Dados inválidos!'] ) unless $self->int_validation(@ids);
+        $c->detach( '/error_404', ['Dados inválidos!'] ) unless $self->int_validation(@ids);
 
         $c->stash->{has_results} = 1;
         my @inds = $c->model('DB::Indicator')->search(
             {
 
-                'me.id'     => { '-in' => [ @ids ] },
+                'me.id' => { '-in' => [@ids] },
             },
             {
-                columns => [ 'me.id', 'me.name' ],
+                columns      => [ 'me.id', 'me.name' ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator',
                 order_by     => 'me.name'
             }
         )->all;
 
-
         my %dups;
         my @indicators_ref;
-        foreach my $ind (@inds){
-            $ind->{apel} = join '', map { length$_ > 2 ? substr ($_, 0, 1) : '' } split / /, uc $ind->{name};
+        foreach my $ind (@inds) {
+            $ind->{apel} = join '', map { length $_ > 2 ? substr( $_, 0, 1 ) : '' } split / /, uc $ind->{name};
 
             $ind->{apel} =~ s/[^A-Z]//go;
-            if ($dups{$ind->{apel}}++){
-                $ind->{apel} .= $dups{$ind->{apel}};
+            if ( $dups{ $ind->{apel} }++ ) {
+                $ind->{apel} .= $dups{ $ind->{apel} };
             }
 
             push @indicators_ref, $ind->{id} . ':' . $ind->{apel};
@@ -526,14 +537,17 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
         $c->stash->{indicators_table} = \@inds;
 
-        $c->stash->{query_params} = encode_json( {
+        $c->stash->{query_params} = encode_json(
+            {
 
-            periods => (join ',', @{$c->stash->{choosen_periods}[2]}),
-            indicators => (join ' ', @indicators_ref),
-            city_id => $c->req->params->{cidade}
-        } );
+                periods    => ( join ',', @{ $c->stash->{choosen_periods}[2] } ),
+                indicators => ( join ' ', @indicators_ref ),
+                city_id    => $c->req->params->{cidade}
+            }
+        );
 
-    }else{
+    }
+    else {
         $c->req->params->{valid_from} = $c->stash->{fixed_years}[0];
     }
 
@@ -2134,8 +2148,6 @@ sub json_to_view {
 sub _add_default_periods {
     my ( $self, $c ) = @_;
 
-
-
     my $data_atual   = DateTime->now;
     my $ano_anterior = $data_atual->year() - 1;
 
@@ -2143,7 +2155,7 @@ sub _add_default_periods {
     my $step        = 4;
     my $ano_inicial = $ano_anterior - ( $grupos * $step ) + 1;
 
-    $c->stash->{fixed_years} = [ reverse (2000 .. $ano_anterior)];
+    $c->stash->{fixed_years} = [ reverse( 2000 .. $ano_anterior ) ];
 
     my @periods;
 
@@ -2177,7 +2189,6 @@ sub _add_default_periods {
     }
     $c->stash->{data_periods} = \@periods;
 
-
     $c->req->params->{valid_from} =
       exists $c->req->params->{valid_from} || exists $c->req->params->{valid_from_desc}
       ? $c->req->params->{valid_from} || $c->req->params->{valid_from_desc}
@@ -2185,15 +2196,12 @@ sub _add_default_periods {
 
     my $ativo = undef;
 
-    if ($c->req->params->{valid_from} =~ /^[0-9]{4}$/){
+    if ( $c->req->params->{valid_from} =~ /^[0-9]{4}$/ ) {
 
         my $it = $c->req->params->{valid_from};
-        $c->stash->{choosen_periods} = [
-            $it,
-            $it,
-            [$it]
-        ];
-    }else{
+        $c->stash->{choosen_periods} = [ $it, $it, [$it] ];
+    }
+    else {
 
         my $i = 0;
       PROCURA: foreach my $grupo (@periods) {
