@@ -6,6 +6,10 @@
     </li>
 [% END %]
 
+<li [% IF c_req_path == 'pagina/boas-praticas' %]class="active"[%END%]>
+    <a href="/pagina/boas-praticas">[%l('boas práticas')%]</a>
+</li>
+
 <li [% IF c_req_path == 'comparacao-entre-distritos' %]class="active"[%END%]>
     <a href="/comparacao-entre-distritos">[%l('Comparar distritos')%]</a>
 </li>
