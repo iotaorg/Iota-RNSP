@@ -1,16 +1,14 @@
-
-use strict;
-use warnings;
-
-use Test::More;
-
+use common::sense;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
+use Iota::Test::Further;
+use DDP;
+
+use Test::More;
 use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common qw(GET POST DELETE PUT);
-
 use Package::Stash;
 
 use Iota::TestOnly::Mock::AuthUser;
@@ -25,69 +23,77 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 1;
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 
-eval {
-    $schema->txn_do(
-        sub {
-            my ( $res, $c );
-            ( $res, $c ) = ctx_request(
-                POST '/api/axis',
-                [
-                    api_key            => 'test',
-                    'axis.create.name' => 'FooBar',
-                    'axis.create.description' => '42scriptia',
+db_transaction {
 
-                ]
-            );
+    rest_post "/api/axis",
+      name   => "Axis Created",
+      stash  => "l1",
+      code   => 201,
+      params => [
+        api_key                   => "test",
+        'axis.create.name'        => "FooBar",
+        'axis.create.description' => "42scriptia",
+      ],
+      ;
 
-            ok( $res->is_success, 'axis created!' );
-            is( $res->code, 201, 'created!' );
+    rest_get stash('l1.url'),
+      name  => "Axis Exists",
+      stash => "l2",
+      code  => 200;
 
-            use URI;
-            my $uri = URI->new( $res->header('Location') );
-            $uri->query_form( api_key => 'test' );
+    stash_test 'l2' => sub {
+        my $res = shift;
 
-            ( $res, $c ) = ctx_request( GET $uri->path_query );
-            ok( $res->is_success, 'axis exists' );
-            is( $res->code, 200, 'axis exists -- 200 Success' );
+        like( $res->{name},        qr|FooBar|,     'Name = Foobar' );
+        like( $res->{description}, qr|42scriptia|, 'Description = 42' );
+    };
 
-            like( $res->content, qr|FooBar|, 'FooBar ok' );
-            like( $res->content, qr|42scriptia|, 'description ok' );
+    rest_post stash("l1.url") . "?api_key=test",
+      name   => "Post 202 - Sucess",
+      stash  => "l1",
+      code   => 202,
+      params => [ 'axis.update.name' => 'BarFoo', ],
 
-            my $obj_uri = $uri->path_query;
-            ( $res, $c ) = ctx_request( POST $obj_uri, [ 'axis.update.name' => 'BarFoo', ] );
-            ok( $res->is_success, 'axis updated' );
-            is( $res->code, 202, 'axis updated -- 202 Accepted' );
+      ;
 
-            use JSON qw(from_json);
-            my $axis = eval { from_json( $res->content ) };
-            ok( my $updated_axis = $schema->resultset('Axis')->find( { id => $axis->{id} } ), 'axis in DB' );
-            is( $updated_axis->name, 'BarFoo', 'name ok' );
-            is( $updated_axis->description, undef, 'null ok' );
-
-            ( $res, $c ) = ctx_request( GET '/api/axis?api_key=test' );
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
-
-            my $list = eval { from_json( $res->content ) };
-            is( $list->{axis}[13]{name}, 'BarFoo', 'name from list ok' );
-
-            ( $res, $c ) = ctx_request( DELETE $obj_uri );
-            ok( $res->is_success, 'axis deleted' );
-            is( $res->code, 204, 'axis deleted -- 204' );
-
-            ( $res, $c ) = ctx_request( GET '/api/axis?api_key=test' );
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
-
-            $list = eval { from_json( $res->content ) };
-            is( @{ $list->{axis} }, '13', 'default list' );
-
-            die 'rollback';
-        }
+    my $axis = stash 'l1';
+    ok(
+        $schema->resultset("Axis")->find(
+            {
+                id => $axis->{id},
+            }
+        ),
+        'Axis in DB',
     );
 
-};
+    stash_test 'l1' => sub {
+        my $res = shift;
 
-die $@ unless $@ =~ /rollback/;
+        like( $res->{name}, qr|BarFoo|, 'NameUpdate = BarFoo' );
+        is( $res->{description}, undef, 'Description = Undef' );
+    };
+
+    rest_get '/api/axis?api_key=test',
+      name  => "Get 200 - Listing OK",
+      stash => "l1",
+      code  => 200;
+
+    my $list = stash 'l1';
+    is( $list->{axis}[13]{name}, 'BarFoo', 'Name from list OK' );
+
+    rest_delete stash("l1.url") . "?api_key=test",
+      name  => "Get 204 - Axis Deleted",
+      stash => "l1",
+      code  => 204;
+
+    rest_get '/api/axis?api_key=test',
+      name  => "Get 200 - Listing OK",
+      stash => "l1",
+      code  => 200;
+
+    $list = stash 'l1';
+    is( @{ $list->{axis} }, '13', 'Default List' );
+
+};
 
 done_testing;
