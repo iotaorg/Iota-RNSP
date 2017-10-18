@@ -1,13 +1,11 @@
 use common::sense;
+
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
-
 use Iota::Test::Further;
-use DDP;
-
 use Test::More;
-use Catalyst::Test q(Iota);
 
+use Catalyst::Test q(Iota);
 use HTTP::Request::Common qw(GET POST DELETE PUT);
 use Package::Stash;
 
@@ -44,8 +42,8 @@ db_transaction {
     stash_test 'l2' => sub {
         my $res = shift;
 
-        like( $res->{name},        qr|FooBar|,     'Name = Foobar' );
-        like( $res->{description}, qr|42scriptia|, 'Description = 42' );
+        is( $res->{name},        'FooBar',     'Name = Foobar' );
+        is( $res->{description}, '42scriptia', 'Description = 42' );
     };
 
     rest_post stash("l1.url") . "?api_key=test",
@@ -69,8 +67,8 @@ db_transaction {
     stash_test 'l1' => sub {
         my $res = shift;
 
-        like( $res->{name}, qr|BarFoo|, 'NameUpdate = BarFoo' );
-        is( $res->{description}, undef, 'Description = Undef' );
+        is( $res->{name},        'BarFoo', 'NameUpdate = BarFoo' );
+        is( $res->{description}, undef,    'Description = Undef' );
     };
 
     rest_get '/api/axis?api_key=test',

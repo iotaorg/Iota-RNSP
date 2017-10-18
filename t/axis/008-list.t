@@ -1,13 +1,8 @@
 
-use strict;
-use warnings;
-
-use Test::More;
-
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Catalyst::Test q(Iota);
+use Test::More use Catalyst::Test q(Iota);
 
 use HTTP::Request::Common qw /GET POST DELETE/;
 use Package::Stash;
