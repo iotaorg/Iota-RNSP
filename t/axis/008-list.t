@@ -1,9 +1,10 @@
+use common::sense;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
+use Iota::Test::Further;
 
-use Test::More use Catalyst::Test q(Iota);
-
+use Catalyst::Test q(Iota);
 use HTTP::Request::Common qw /GET POST DELETE/;
 use Package::Stash;
 
@@ -19,28 +20,21 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 1;
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 
-eval {
-    $schema->txn_do(
-        sub {
-            my ( $res, $c );
+db_transaction {
 
-            # GET
-            ( $res, $c ) = ctx_request( GET '/api/axis?api_key=test' );
-            ok( $res->is_success, 'axis list ok' );
-            is( $res->code, 200, '200 Success' );
+    rest_get "/api/axis",
+      name   => "Axis List OK",
+      stash  => "l1",
+      code   => 200,
+      params => [ api_key => "test" ],
+      ;
 
-            use JSON qw(from_json);
-            my $axis = eval { from_json( $res->content ) };
+    stash_test 'l1' => sub {
+        my $ref = shift;
 
-            is( ref $axis->{axis}, ref [], 'axis is array' );
-            ok( $axis->{axis}[0]{name}, 'defined name' );
-
-            die 'rollback';
-        }
-    );
-
+        is( ref $ref->{axis}, ref [], 'Axis is Array' );
+        ok( $ref->{axis}[0]{name}, 'Defined Name' );
+    };
 };
-
-die $@ unless $@ =~ /rollback/;
 
 done_testing;

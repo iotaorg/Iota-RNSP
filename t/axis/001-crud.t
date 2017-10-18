@@ -3,7 +3,6 @@ use common::sense;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 use Iota::Test::Further;
-use Test::More;
 
 use Catalyst::Test q(Iota);
 use HTTP::Request::Common qw(GET POST DELETE PUT);
@@ -35,7 +34,7 @@ db_transaction {
       ;
 
     rest_get stash('l1.url'),
-      name  => "Axis Exists",
+      name  => "Sucess",
       stash => "l2",
       code  => 200;
 
@@ -47,50 +46,46 @@ db_transaction {
     };
 
     rest_post stash("l1.url") . "?api_key=test",
-      name   => "Post 202 - Sucess",
+      name   => "Axis Exists",
       stash  => "l1",
       code   => 202,
-      params => [ 'axis.update.name' => 'BarFoo', ],
-
+      params => [ 'axis.update.name' => 'BarFoo' ],
       ;
-
-    my $axis = stash 'l1';
-    ok(
-        $schema->resultset("Axis")->find(
-            {
-                id => $axis->{id},
-            }
-        ),
-        'Axis in DB',
-    );
 
     stash_test 'l1' => sub {
         my $res = shift;
 
         is( $res->{name},        'BarFoo', 'NameUpdate = BarFoo' );
         is( $res->{description}, undef,    'Description = Undef' );
+        ok( $schema->resultset("Axis")->find( stash 'l1.id' ), 'Axis in DB', );
     };
 
-    rest_get '/api/axis?api_key=test',
-      name  => "Get 200 - Listing OK",
-      stash => "l1",
-      code  => 200;
+    rest_get '/api/axis',
+      name   => "Listing OK",
+      stash  => "l1",
+      params => [ api_key => 'test' ],
+      code   => 200;
 
-    my $list = stash 'l1';
-    is( $list->{axis}[13]{name}, 'BarFoo', 'Name from list OK' );
+    stash_test 'l1' => sub {
+        my $res = shift;
+        is( $res->{axis}[13]{name}, 'BarFoo', 'Name from list OK' );
+    };
 
     rest_delete stash("l1.url") . "?api_key=test",
-      name  => "Get 204 - Axis Deleted",
+      name  => "Axis Deleted",
       stash => "l1",
       code  => 204;
 
-    rest_get '/api/axis?api_key=test',
-      name  => "Get 200 - Listing OK",
-      stash => "l1",
-      code  => 200;
+    rest_get '/api/axis',
+      name   => "Listing OK",
+      stash  => "l1",
+      params => [ api_key => 'test' ],
+      code   => 200;
 
-    $list = stash 'l1';
-    is( @{ $list->{axis} }, '13', 'Default List' );
+    stash_test 'l1' => sub {
+        my $res = shift;
+        is( @{ $res->{axis} }, '13', 'Default List' );
+    };
 
 };
 
