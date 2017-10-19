@@ -50,6 +50,7 @@ my $obj = CatalystX::Eta::Test::REST->new(
 );
 
 for (qw/rest_get rest_put rest_head rest_delete rest_post rest_reload rest_reload_list/) {
+
     eval( 'sub ' . $_ . ' { return $obj->' . $_ . '(@_) }' );
 }
 
@@ -104,5 +105,5 @@ sub new_var {
         die( 'fail to create new var: ' . $res2->code );
     }
 }
-
+ 
 1;
