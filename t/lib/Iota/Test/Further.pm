@@ -7,8 +7,11 @@ use Test::More;
 use Catalyst::Test q(Iota);
 use CatalystX::Eta::Test::REST;
 
+use HTTP::Request::Common;
 use Data::Printer;
 use JSON::MaybeXS;
+
+my $seq = 0;
 
 # ugly hack
 sub import {
@@ -46,10 +49,7 @@ my $obj = CatalystX::Eta::Test::REST->new(
     }
 );
 
-for (
-    qw/rest_get rest_put rest_head rest_delete rest_post rest_reload rest_reload_list/
-  )
-{
+for (qw/rest_get rest_put rest_head rest_delete rest_post rest_reload rest_reload_list/) {
     eval( 'sub ' . $_ . ' { return $obj->' . $_ . '(@_) }' );
 }
 
@@ -77,6 +77,32 @@ sub db_transaction (&) {
         );
     };
     die $@ unless $@ =~ /rollback/;
+}
+
+sub new_var {
+    my $type   = shift;
+    my $period = shift;
+    my $res2;
+    my $c;
+    ( $res2, $c ) = ctx_request(
+        POST '/api/variable',
+        [
+            api_key                       => 'test',
+            'variable.create.name'        => 'Foo Bar' . $seq++,
+            'variable.create.cognomen'    => 'foobar' . $seq++,
+            'variable.create.explanation' => 'a foo with bar' . $seq++,
+            'variable.create.type'        => $type,
+            'variable.create.period'      => $period || 'week',
+            'variable.create.source'      => 'God',
+        ]
+    );
+    if ( $res2->code == 201 ) {
+        my $xx = decode_json( $res2->content );
+        return $xx->{id};
+    }
+    else {
+        die( 'fail to create new var: ' . $res2->code );
+    }
 }
 
 1;
