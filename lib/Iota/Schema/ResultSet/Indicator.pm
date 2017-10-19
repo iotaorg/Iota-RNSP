@@ -103,7 +103,7 @@ sub verifiers_specs {
                         my $axis =
                           $self->result_source->schema->resultset('Axis')->find( { id => $r->get_value('axis_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim1_id => {
                     required   => 0,
@@ -115,7 +115,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim1')
                           ->find( { id => $r->get_value('axis_dim1_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim2_id => {
                     required   => 0,
@@ -127,7 +127,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim2')
                           ->find( { id => $r->get_value('axis_dim2_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim3_id => {
                     required   => 0,
@@ -139,7 +139,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim3')
                           ->find( { id => $r->get_value('axis_dim3_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim4_id => {
                     required   => 0,
@@ -151,7 +151,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim4')
                           ->find( { id => $r->get_value('axis_dim4_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 user_id      => { required => 1, type => 'Int' },
                 source       => { required => 0, type => 'Str' },
@@ -218,7 +218,7 @@ sub verifiers_specs {
                         my $axis =
                           $self->result_source->schema->resultset('Axis')->find( { id => $r->get_value('axis_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim1_id => {
                     required   => 0,
@@ -230,7 +230,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim1')
                           ->find( { id => $r->get_value('axis_dim1_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim2_id => {
                     required   => 0,
@@ -242,7 +242,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim2')
                           ->find( { id => $r->get_value('axis_dim2_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim3_id => {
                     required   => 0,
@@ -254,7 +254,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim3')
                           ->find( { id => $r->get_value('axis_dim3_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 axis_dim4_id => {
                     required   => 0,
@@ -266,7 +266,7 @@ sub verifiers_specs {
                           $self->result_source->schema->resultset('AxisDim4')
                           ->find( { id => $r->get_value('axis_dim4_id') } );
                         return defined $axis;
-                    }
+                      }
                 },
                 source       => { required => 0, type => 'Str' },
                 explanation  => { required => 0, type => 'Str' },
