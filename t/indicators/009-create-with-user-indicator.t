@@ -1,17 +1,11 @@
-
-use strict;
-use warnings;
-
-use Test::More;
+use common::sense;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
+use Iota::Test::Further;
 
-use JSON qw(from_json);
 use Catalyst::Test q(Iota);
-
-use HTTP::Request::Common qw(GET POST DELETE PUT);
-
+use HTTP::Request::Common;
 use Package::Stash;
 
 use Iota::TestOnly::Mock::AuthUser;
@@ -25,151 +19,144 @@ my $uid = $Iota::TestOnly::Mock::AuthUser::_id = 2;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
-my $seq = 0;
-eval {
-    $schema->txn_do(
-        sub {
-            my ( $res, $c );
-            ( $res, $c ) = ctx_request(
-                POST '/api/indicator',
-                [
-                    api_key                 => 'test',
-                    'indicator.create.name' => 'FooBar',
-                ]
-            );
-            ok( !$res->is_success, 'invalid request' );
-            is( $res->code, 400, 'invalid request' );
 
-            my $var1 = &new_var( 'int', 'weekly' );
+db_transaction {
 
-            ( $res, $c ) = ctx_request(
-                POST '/api/indicator',
-                [
-                    api_key                          => 'test',
-                    'indicator.create.name'          => 'Foo Bar',
-                    'indicator.create.formula'       => '5 + $' . $var1,
-                    'indicator.create.axis_id'       => '1',
-                    'indicator.create.explanation'   => 'explanation',
-                    'indicator.create.source'        => 'me',
-                    'indicator.create.goal_source'   => '@fulano',
-                    'indicator.create.chart_name'    => 'pie',
-                    'indicator.create.goal_operator' => '>=',
-                    'indicator.create.tags'          => 'you,me,she',
-                    'indicator.create.observations'  => 'lala',
+    rest_post 'api/indicator',
+      name    => "Invalid Request",
+      stash   => "ind",
+      code    => 400,
+      is_fail => 1,
+      params  => [
+        api_key                 => 'test',
+        'indicator.create.name' => 'FooBar',
+      ],
+      ;
 
-                    'indicator.create.visibility_level' => 'public',
+    my $var1 = &new_var( 'int', 'weekly' );
 
-                ]
-            );
-            ok( $res->is_success, 'indicator created!' );
-            is( $res->code, 201, 'created!' );
-            my $ind = eval { from_json( $res->content ) };
+    rest_post '/api/indicator',
+      name   => "Indicator Created",
+      stash  => "ind",
+      code   => 201,
+      params => [
+        api_key                          => 'test',
+        'indicator.create.name'          => 'Foo Bar',
+        'indicator.create.formula'       => '5 + $' . $var1,
+        'indicator.create.axis_id'       => '1',
+        'indicator.create.explanation'   => 'explanation',
+        'indicator.create.source'        => 'me',
+        'indicator.create.goal_source'   => '@fulano',
+        'indicator.create.chart_name'    => 'pie',
+        'indicator.create.goal_operator' => '>=',
+        'indicator.create.tags'          => 'you,me,she',
 
-            ( $res, $c ) = ctx_request(
-                POST "/api/user/$uid/indicator",
-                [
-                    api_key                              => 'test',
-                    'user.indicator.create.goal'         => 'bass down low',
-                    'user.indicator.create.indicator_id' => $ind->{id},
-                    'user.indicator.create.valid_from'   => '2012-11-21'
-                ]
-            );
-            use URI;
-            my $uri = URI->new( $res->header('Location') );
+        'indicator.create.observations'     => 'lala',
+        'indicator.create.visibility_level' => 'public',
+      ],
+      ;
 
-            ( $res, $c ) = ctx_request( GET $uri->path_query );
-            is( $res->code, 200, 'GET OK!!' );
+    rest_post "/api/user/$uid/indicator",
+      name   => "UID/indicator",
+      stash  => "uid",
+      code   => 201,
+      params => [
+        api_key                              => 'test',
+        'user.indicator.create.goal'         => 'bass down low',
+        'user.indicator.create.indicator_id' => stash "ind.id",
+        'user.indicator.create.valid_from'   => '2012-11-21',
+      ],
+      ;
 
-            my $dados = eval { from_json( $res->content ) };
+    rest_get stash "uid.url",
+      name   => "GET OK!!",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-            is( $dados->{goal},         'bass down low', 'goal ok' );
-            is( $dados->{valid_from},   '2012-11-18',    'start week ok' );
-            is( $dados->{valid_from},   '2012-11-18',    'start week ok' );
-            is( $dados->{indicator_id}, $ind->{id},      'indicator ok' );
-            is( $dados->{justification_of_missing_field} || '', '', 'empty justification_of_missing_field' );
+    stash_test "list" => sub {
+        my $dados = shift;
 
-            ( $res, $c ) = ctx_request(
-                POST $uri->path_query,
-                [
-                    api_key                                                => 'test',
-                    'user.indicator.update.justification_of_missing_field' => 'escape'
-                ]
-            );
-            is( $res->code, 202, 'Updated OK!!' );
+        is( $dados->{goal},         'bass down low', 'Goal ok' );
+        is( $dados->{valid_from},   '2012-11-18',    'Start week ok' );
+        is( $dados->{valid_from},   '2012-11-18',    'Start week ok' );
+        is( $dados->{indicator_id}, stash "ind.id",  'Indicator ok' );
+        is( $dados->{justification_of_missing_field} || '', '', 'Empty justification_of_missing_field' );
 
-            ( $res, $c ) = ctx_request( GET $uri->path_query );
-            is( $res->code, 200, 'GET OK!!' );
+    };
 
-            $dados = eval { from_json( $res->content ) };
-            is( $dados->{justification_of_missing_field}, 'escape', 'justification ok' );
+    rest_post stash "uid.url",
+      name   => "Updated OK!!",
+      stash  => "uid",
+      code   => 202,
+      params => [
+        api_key                                                => 'test',
+        'user.indicator.update.justification_of_missing_field' => 'escape'
+      ],
+      ;
 
-            # ok nova data
-            ( $res, $c ) = ctx_request(
-                POST "/api/user/$uid/indicator",
-                [
-                    api_key                              => 'test',
-                    'user.indicator.create.goal'         => 'bass down low',
-                    'user.indicator.create.indicator_id' => $ind->{id},
-                    'user.indicator.create.valid_from'   => '2012-11-25'
-                ]
-            );
-            is( $res->code, 201, 'created com nova data!' );
+    rest_get stash "uid.url",
+      name   => "GET OK!!",
+      stash  => "uri",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-            # apagar
-            ( $res, $c ) = ctx_request( DELETE $uri->path_query );
-            is( $res->code, 204, '204 / no content!!' );
+    stash_test "uri" => sub {
+        my $dados = shift;
 
-            ( $res, $c ) = ctx_request( DELETE $uri->path_query );
-            is( $res->code, 404, '404 / not found!!' );
+        is( $dados->{justification_of_missing_field}, 'escape', 'justification ok' );
+    };
 
-            # data duplicada
-            ( $res, $c ) = ctx_request(
-                POST "/api/user/$uid/indicator",
-                [
-                    api_key                              => 'test',
-                    'user.indicator.create.goal'         => 'my world ft giovanca',
-                    'user.indicator.create.indicator_id' => $ind->{id},
-                    'user.indicator.create.valid_from'   => '2012-11-26'
-                ]
-            );
+    # ok nova data
 
-            is( $res->code, 400, '400 bad request!!' );
-            $dados = eval { from_json( $res->content ) };
+    rest_post "/api/user/$uid/indicator",
+      name   => "Created com nova data!",
+      stash  => "uri",
+      code   => 201,
+      params => [
+        api_key                              => 'test',
+        'user.indicator.create.goal'         => 'bass down low',
+        'user.indicator.create.indicator_id' => stash "ind.id",
+        'user.indicator.create.valid_from'   => '2012-11-25'
+      ],
+      ;
 
-            # TODO garibuh, esqueci de perguntar... mas porque usar um JSON dentro do json?!
-            is( $dados->{error}, '{"user.indicator.create.valid_from.invalid":1}', 'campo valid_from invalido' );
+    # apagar
+    rest_delete stash "uid.url",
+      name  => "204 / no content!!",
+      stash => "uri",
+      code  => 204,
+      ;
 
-            die 'rollback';
-        }
-    );
+    rest_delete stash "uid.url",
+      name    => "404 / not found!!",
+      stash   => "uri",
+      code    => 404,
+      is_fail => 1,
+      ;
 
+    # data duplicada
+
+    rest_post "/api/user/$uid/indicator",
+      name    => "400 bad request!!",
+      stash   => "uri",
+      code    => 400,
+      is_fail => 1,
+      params  => [
+        api_key                              => 'test',
+        'user.indicator.create.goal'         => 'my world ft giovanca',
+        'user.indicator.create.indicator_id' => stash "ind.id",
+        'user.indicator.create.valid_from'   => '2012-11-26'
+      ],
+      ;
+
+    stash_test "uri" => sub {
+        my $dados = shift;
+
+        is( $dados->{error}, '{"user.indicator.create.valid_from.invalid":1}', 'campo valid_from invalido' );
+    };
 };
 
-die $@ unless $@ =~ /rollback/;
-
 done_testing;
-
-sub new_var {
-    my $type   = shift;
-    my $period = shift;
-    my ( $res, $c ) = ctx_request(
-        POST '/api/variable',
-        [
-            api_key                       => 'test',
-            'variable.create.name'        => 'Foo Bar' . $seq++,
-            'variable.create.cognomen'    => 'foobar' . $seq++,
-            'variable.create.explanation' => 'a foo with bar' . $seq++,
-            'variable.create.type'        => $type,
-            'variable.create.period'      => $period || 'weekly',
-            'variable.create.source'      => 'God',
-        ]
-    );
-    if ( $res->code == 201 ) {
-        my $xx = eval { from_json( $res->content ) };
-        return $xx->{id};
-    }
-    else {
-        die( 'fail to create new var: ' . $res->code );
-    }
-}
-

@@ -88,6 +88,10 @@ before 'setup_components' => sub {
         $app->config->{'Model::DB'}{connect_info} = $app->config->{'Model::DB'}{testing_connect_info};
     }
 
+    if ( $ENV{CATALYST_ENV} && $ENV{CATALYST_ENV} eq 'development' ) {
+        $app->config->{'Model::DB'}{connect_info} = $app->config->{'Model::DB'}{development_connect_info};
+    }
+
 };
 
 after 'setup_components' => sub {
@@ -134,7 +138,7 @@ around 'apply_default_middlewares' => sub {
 sub resize_image {
     my ( $c, $self, $private_path, $scale, $output_path ) = @_;
 
-    $scale = $scale ? $scale : 1;
+    $scale       = $scale       ? $scale       : 1;
     $output_path = $output_path ? $output_path : $private_path;
 
     eval('require Imager');

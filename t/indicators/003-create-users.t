@@ -1,15 +1,12 @@
-
-use strict;
-use warnings;
-
-use Test::More;
+use common::sense;
 
 #plan skip_all => 'teste comentado temporariamente pois nao existe indicadores com "roles"';
+
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
+use Iota::Test::Further;
 
 use Catalyst::Test q(Iota);
-
 use HTTP::Request::Common;
 use Package::Stash;
 
@@ -24,173 +21,174 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 1;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
-my $seq = 0;
-eval {
-    $schema->txn_do(
-        sub {
-            my ( $res, $c );
-            ( $res, $c ) = ctx_request(
-                POST '/api/indicator',
-                [
-                    api_key                 => 'test',
-                    'indicator.create.name' => 'FooBar',
-                ]
-            );
-            ok( !$res->is_success, 'invalid request' );
-            is( $res->code, 400, 'invalid request' );
 
-            my $var1 = &new_var( 'int', 'weekly' );
+db_transaction {
 
-            ( $res, $c ) = ctx_request(
-                POST '/api/indicator',
-                [
-                    api_key                          => 'test',
-                    'indicator.create.name'          => 'Foo Bar',
-                    'indicator.create.formula'       => '5 + $' . $var1,
-                    'indicator.create.axis_id'       => '1',
-                    'indicator.create.explanation'   => 'explanation',
-                    'indicator.create.source'        => 'me',
-                    'indicator.create.goal_source'   => '@fulano',
-                    'indicator.create.chart_name'    => 'pie',
-                    'indicator.create.goal_operator' => '>=',
-                    'indicator.create.tags'          => 'you,me,she',
+    rest_post 'api/indicator',
+      name    => "Invalid Request",
+      stash   => "ind",
+      code    => 400,
+      is_fail => 1,
+      params  => [
+        api_key                 => 'test',
+        'indicator.create.name' => 'FooBar',
+      ],
+      ;
 
-                    'indicator.create.observations'     => 'lala',
-                    'indicator.create.visibility_level' => 'public',
+    my $var1 = &new_var( 'int', 'weekly' );
 
-                ]
-            );
-            ok( $res->is_success, 'indicator created!' );
-            is( $res->code, 201, 'created!' );
-            use JSON qw(from_json);
-            my $indicator = eval { from_json( $res->content ) };
-            ok( my $save_test = $schema->resultset('Indicator')->find( { id => $indicator->{id} } ),
-                'indicator in DB' );
-            is( $save_test->name,         'Foo Bar',     'name ok' );
-            is( $save_test->explanation,  'explanation', 'explanation ok' );
-            is( $save_test->source,       'me',          'source ok' );
-            is( $save_test->observations, 'lala',        'observations ok' );
-            is( $save_test->chart_name,   'pie',         'chart_name ok' );
+    rest_post '/api/indicator',
+      name   => "Indicator Created",
+      stash  => "ind",
+      code   => 201,
+      params => [
+        api_key                          => 'test',
+        'indicator.create.name'          => 'Foo Bar',
+        'indicator.create.formula'       => '5 + $' . $var1,
+        'indicator.create.axis_id'       => '1',
+        'indicator.create.explanation'   => 'explanation',
+        'indicator.create.source'        => 'me',
+        'indicator.create.goal_source'   => '@fulano',
+        'indicator.create.chart_name'    => 'pie',
+        'indicator.create.goal_operator' => '>=',
+        'indicator.create.tags'          => 'you,me,she',
 
-            use URI;
-            my $uri = URI->new( $res->header('Location') );
-            $uri->query_form( api_key => 'test' );
+        'indicator.create.observations'     => 'lala',
+        'indicator.create.visibility_level' => 'public',
+      ],
+      ;
 
-            ( $res, $c ) = ctx_request( GET $uri->path_query );
-            ok( $res->is_success, 'indicator exists' );
-            is( $res->code, 200, 'indicator exists -- 200 Success' );
+    stash_test "ind" => sub {
+        ok( my $save_test = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
 
-            like( $res->content, qr/weekly/, 'periodo de alguma variavel' );
+        is( $save_test->name,         'Foo Bar',     'Name ok' );
+        is( $save_test->explanation,  'explanation', 'Explanation ok' );
+        is( $save_test->source,       'me',          'Source ok' );
+        is( $save_test->observations, 'lala',        'Observations ok' );
+        is( $save_test->chart_name,   'pie',         'Chart_name ok' );
+    };
 
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
+    rest_get stash "ind.url",
+      name  => 'Indicator exists',
+      stash => 'indica',
+      code  => 200,
+      ;
 
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
+    stash_test 'indica' => sub {
+        my $res = shift;
 
-            my $inds = eval { from_json( $res->content ) };
-            is( @{ $inds->{indicators} }, 1, 'roles admin ok' );
+        like( $res->{period}, qr/weekly/, 'Period of some variable' );
+    };
 
-            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
+    rest_get '/api/indicator',
+      name   => "Listing OK",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
+    stash_test 'list' => sub {
+        my $inds = shift;
 
-            $inds = eval { from_json( $res->content ) };
+        is( @{ $inds->{indicators} }, 1, 'Roles Admin ok' );
+    };
 
-            #is(@{$inds->{indicators}}, 1, 'roles movimento ok');
+    @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
 
-            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
+    rest_get '/api/indicator',
+      name   => "Listing OK",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
-            $inds = eval { from_json( $res->content ) };
+    stash_test 'list' => sub {
+        my $inds = shift;
 
-            #is(@{$inds->{indicators}}, 0, 'roles movimento ok');
+        #is(@{$inds->{indicators}}, 1, 'Roles Prefeitura ok');
+    };
 
-            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+    @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
 
-            ( $res, $c ) = ctx_request(
-                POST '/api/indicator',
-                [
-                    api_key                             => 'test',
-                    'indicator.create.name'             => 'xxFoo Bar',
-                    'indicator.create.formula'          => '5 + $' . $var1,
-                    'indicator.create.axis_id'          => '1',
-                    'indicator.create.explanation'      => 'explanation',
-                    'indicator.create.source'           => 'me',
-                    'indicator.create.goal_source'      => '@fulano',
-                    'indicator.create.chart_name'       => 'pie',
-                    'indicator.create.goal_operator'    => '>=',
-                    'indicator.create.tags'             => 'you,me,she',
-                    'indicator.create.visibility_level' => 'public',
-                    'indicator.create.observations'     => 'lala'
+    rest_get '/api/indicator',
+      name   => "Listing OK",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-                ]
-            );
-            ok( $res->is_success, 'indicator created!' );
+    stash_test 'list' => sub {
+        my $inds = shift;
 
-            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
+        #is(@{$inds->{indicators}}, 0, 'Roles Movimento ok');
+    };
 
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
-            $inds = eval { from_json( $res->content ) };
+    @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
-            #is(@{$inds->{indicators}}, 1, 'roles movimento ok');
+    rest_post '/api/indicator',
+      name   => 'Indicator Created!',
+      stash  => 'Indicator',
+      code   => 201,
+      params => [
+        api_key                             => 'test',
+        'indicator.create.name'             => 'xxFoo Bar',
+        'indicator.create.formula'          => '5 + $' . $var1,
+        'indicator.create.axis_id'          => '1',
+        'indicator.create.explanation'      => 'explanation',
+        'indicator.create.source'           => 'me',
+        'indicator.create.goal_source'      => '@fulano',
+        'indicator.create.chart_name'       => 'pie',
+        'indicator.create.goal_operator'    => '>=',
+        'indicator.create.tags'             => 'you,me,she',
+        'indicator.create.visibility_level' => 'public',
+        'indicator.create.observations'     => 'lala'
+      ],
+      ;
 
-            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
+    @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _movimento /;
 
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
-            $inds = eval { from_json( $res->content ) };
+    rest_get '/api/indicator',
+      name   => "Listing OK",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-            #is(@{$inds->{indicators}}, 2, 'roles movimento ok');
+    stash_test 'list' => sub {
+        my $inds = shift;
 
-            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
+        #is(@{$inds->{indicators}}, 1, 'Roles Movimento ok');
+    };
 
-            ( $res, $c ) = ctx_request( GET '/api/indicator?api_key=test' );
-            ok( $res->is_success, 'listing ok!' );
-            is( $res->code, 200, 'list 200' );
-            $inds = eval { from_json( $res->content ) };
+    @Iota::TestOnly::Mock::AuthUser::_roles = qw/ admin /;
 
-            #is(@{$inds->{indicators}}, 1, 'roles prefeitura ok');
+    rest_get '/api/indicator',
+      name   => "Listing OK",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
 
-            die 'rollback';
-        }
-    );
+    stash_test 'list' => sub {
+        my $inds = shift;
 
+        #is(@{$inds->{indicators}}, 2, 'Roles Admin ok');
+    };
+
+    @Iota::TestOnly::Mock::AuthUser::_roles = qw/ _prefeitura /;
+
+    rest_get '/api/indicator',
+      name   => "Listing OK",
+      stash  => "list",
+      params => [ api_key => 'test' ],
+      code   => 200,
+      ;
+
+    stash_test 'list' => sub {
+        my $inds = shift;
+
+        #    is( @{ $inds->{indicators} }, 1, 'Roles Prefeitura ok' );
+    };
 };
 
-die $@ unless $@ =~ /rollback/;
-
 done_testing;
-
-use JSON qw(from_json);
-
-sub new_var {
-    my $type   = shift;
-    my $period = shift;
-    my ( $res, $c ) = ctx_request(
-        POST '/api/variable',
-        [
-            api_key                       => 'test',
-            'variable.create.name'        => 'Foo Bar' . $seq++,
-            'variable.create.cognomen'    => 'foobar' . $seq++,
-            'variable.create.explanation' => 'a foo with bar' . $seq++,
-            'variable.create.type'        => $type,
-            'variable.create.period'      => $period || 'week',
-            'variable.create.source'      => 'God',
-        ]
-    );
-    if ( $res->code == 201 ) {
-        my $xx = eval { from_json( $res->content ) };
-        return $xx->{id};
-    }
-    else {
-        die( 'fail to create new var: ' . $res->code );
-    }
-}
-

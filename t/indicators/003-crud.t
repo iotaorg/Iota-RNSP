@@ -5,8 +5,6 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 use Iota::Test::Further;
 
-use DDP;
-
 use Catalyst::Test q(Iota);
 use HTTP::Request::Common;
 use Package::Stash;
@@ -22,7 +20,6 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 1;
 
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
-my $seq = 0;
 
 db_transaction {
 
@@ -319,7 +316,7 @@ db_transaction {
 
     };
 
-    # Fracasso é esperado aqui?
+    # Fracasso é esperado aqui
     rest_post stash("ind.url"),
       name    => "Indicator Updated",
       stash   => "ind",
