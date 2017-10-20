@@ -155,10 +155,7 @@ db_transaction {
     stash_test "uri" => sub {
         my $dados = shift;
 
-        # TODO garibuh, esqueci de perguntar... mas porque usar um JSON dentro do json?!
-
         is( $dados->{error}, '{"user.indicator.create.valid_from.invalid":1}', 'campo valid_from invalido' );
-
     };
 };
 
