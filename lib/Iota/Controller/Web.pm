@@ -499,7 +499,7 @@ sub int_validation {
 sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-entre-distritos') Args(0) {
     my ( $self, $c ) = @_;
 
-    $self->mapa_site($c);
+    #$self->mapa_site($c);
     $self->_add_default_periods($c);
 
     if ( $c->req->params->{selected_indicators} && $c->req->params->{cidade} && $c->stash->{choosen_periods} ) {
@@ -509,6 +509,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
         $c->detach( '/error_404', ['Dados inválidos!'] ) unless $self->int_validation(@ids);
 
         $c->stash->{has_results} = 1;
+
         my @inds = $c->model('DB::Indicator')->search(
             {
 
@@ -551,6 +552,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
     }
 
     $c->stash(
+        cities         => $c->stash->{network_data}{cities},
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         title          => 'Comparar distritos',
