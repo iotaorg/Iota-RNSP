@@ -111,13 +111,24 @@
     <div class="col-sm-4 col-xs-6">
 
         <h3>[%l('Referências dos indicadores')%]</h3>
-        <table class="table table-condensed" style="font-size: 0.8em">
+        <table id="ref_ind" class="table table-condensed" style="font-size: 0.8em">
         <tbody>
             [% FOREACH i IN indicators_table %]
             <tr>
                 <th style="width:1px;text-align:right">[% i.apel %]</th>
-                <td>[% i.name %]</td>
+                <td data-id="[%i.id%]">[% i.name %]</td>
+            </tr>
+            [% END %]
+        </tbody>
+        </table>
 
+        <h3>[%l('Referências dos indicadores')%]</h3>
+        <table id="ref_ind" class="table table-condensed" style="font-size: 0.8em">
+        <tbody>
+            [% FOREACH i IN indicators_table %]
+            <tr>
+                <th style="width:1px;text-align:right">[% i.apel %]</th>
+                <td data-id="[%i.id%]">[% i.name %]</td>
             </tr>
             [% END %]
         </tbody>

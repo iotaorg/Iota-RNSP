@@ -535,6 +535,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
         }
 
         $c->stash->{indicators_table} = \@inds;
+        use DDP; p $c->stash->{indicators_table};
 
         $c->stash->{query_params} = encode_json(
             {

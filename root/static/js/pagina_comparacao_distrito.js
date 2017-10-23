@@ -161,7 +161,7 @@ var pcd = function() {
 
                 $.each($indicadors_input.val().split(','), function(i, v) {
 
-                    var name = $indi.find('option[value=' + v + ']:first').text(),
+                    var name = $indi.find('option[value=' + v + ']:first').text() || $('#ref_ind').find('td[data-id=' + v + ']:first').text(),
                         $row = row_base.clone(false);
 
                     $row.find('td.indname').text(name);
