@@ -1,9 +1,17 @@
 var pcd = function() {
+    function encodeHTML(s) {
+        if (typeof s == 'string') {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+        } else {
+            return s;
+        }
+    }
+
     var
 
         $submit = $('button[type=submit]:first'),
         $cidade = $('select[name="cidade"]:first'),
-        $period = $('select[name="period"]:first'),
+        $period = $('select[name="valid_from"]:first'),
         $indi = $('select[data-name="indicador"]:first'),
         $form = $('form:first'),
         $indicadors_input = $('input[name="selected_indicators"]:first'),
@@ -12,9 +20,11 @@ var pcd = function() {
         $table_container = $('#table-container'),
         container_original_html = $table_container.html(),
         table_template = $('.table-selected-indicators:first').clone().wrap('<div></div>').parent().html(),
+        indicator_template = $indi.html(),
 
         max_selected_indicators = $indi.attr('data-max-selected-indicators') * 1,
         selected_indicators_count = $indicadors_input.val().length >= 1 ? $indicadors_input.val().split(',').length : 0,
+
         _init = function() {
 
             $btn_add.click(_onclick_btn_add);
@@ -30,6 +40,9 @@ var pcd = function() {
             $cidade.change(_recalc_submit_prop);
             $indi.change(_recalc_btn_add_prop);
 
+            $period.change(_refresh_indicators);
+            $cidade.change(_refresh_indicators);
+
             $form.submit(function() {
                 $submit.prop('disabled', true);
                 return true;
@@ -42,11 +55,41 @@ var pcd = function() {
 
             // força um desenho da tabela
             _indicators_changed();
+
+            _refresh_indicators();
         },
         _recalc_btn_add_prop = function() {
             // botao só ativo se tiver valor no indicador e quatidade de indicadores nao passou do limite
             var xbool = $indi.val() != '' && selected_indicators_count < max_selected_indicators;
             $btn_add.prop('disabled', !xbool);
+        },
+        _refresh_indicators = function() {
+            var city_id = $cidade.val(),
+                period = $period.val();
+
+            if (!city_id) return;
+            if (!period) return;
+
+            $.get("/api/public/indicator-availability-city-year", {
+                city_id: city_id,
+                depth_level: 3,
+                periods: period
+            }, function(o) {
+
+                var options = indicator_template;
+
+                $.each(o.indicators, function(idx, ind) {
+                    options = options + '<option value="' + ind.id + '">' + encodeHTML(ind.name) + '</option>';
+
+                });
+
+                $indi.html(options);
+
+            }, 'json').fail(function(e) {
+                $table_container.text("ERRO: " + e.responseText);
+            });
+
+
         },
         _onclick_btn_add = function() {
 
@@ -167,7 +210,7 @@ var pdc_results = function() {
     };
 
     var infowindow;
-    var _show_info_name = function (event) {
+    var _show_info_name = function(event) {
 
         var region_id = this._data.region_id;
         var yregions = response.values[active_variation][region_id];
@@ -180,11 +223,11 @@ var pdc_results = function() {
         var indicators_in_order = response.indicators_in_order;
 
         $.each(indicators_in_order, function(idx, indicator_id) {
-            $new_table.find('thead>tr').append(_th('', response.indicators_apels[indicator_id], response.indicators[indicator_id].name ))
+            $new_table.find('thead>tr').append(_th('', response.indicators_apels[indicator_id], response.indicators[indicator_id].name))
         })
 
         var tbody = '';
-        $.each( yregions , function(year, indicators) {
+        $.each(yregions, function(year, indicators) {
             var row = '<tr>';
 
             row = _td(row, year, '', 'minwidth');
@@ -209,7 +252,7 @@ var pdc_results = function() {
         });
         $new_table.find('tbody').append(tbody);
 
-        infowindow.setContent( $new_table[0]  );
+        infowindow.setContent($new_table[0]);
         infowindow.setPosition(event.latLng);
 
         infowindow.open(this._data.map);
