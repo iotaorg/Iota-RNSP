@@ -135,7 +135,7 @@
         <ol class="unstyled">
             <li style="border-left: 1.5em solid [% graph_color_index.0 %]; padding-left: 0.5em">[%l('Todos acima média')%]</li>
             <li style="border-left: 1.5em solid [% graph_color_index.1 %]; padding-left: 0.5em">[%l('Todos abaixo média')%]</li>
-            <li style="border-left: 1.5em solid [% graph_color_index.2 %]; padding-left: 0.5em">[%l('Valores mistos')%]</li>
+            <li style="border-left: 1.5em solid [% graph_color_index.2 %]; padding-left: 0.5em">[%l('Valores mistos ou todos na média')%]</li>
         </ol>
 
 

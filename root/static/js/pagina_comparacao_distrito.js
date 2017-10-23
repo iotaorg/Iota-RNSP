@@ -241,9 +241,7 @@ var pdc_results = function() {
 
                 } else {
 
-                    //    row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
                     row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter', indicators[indicator_id].i);
-
 
                 }
 
@@ -308,15 +306,14 @@ var pdc_results = function() {
             return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</td>'
         },
         _td_with_color = function(e, str, title, cx, region_cor) {
-            var cor = _cor5(region_cor);
-            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '> <div class="square" style="background-color: __COR__;"></div>'.replace('__COR__', cor) + str + '</td>'
+            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + color_square(region_cor) + ' ' + str + '</td>'
         },
 
         _th = function(e, str, title, cx) {
             return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</th>'
         },
-        _cor5 = function(idx) {
-            return color_idx[idx]
+        color_square = function(idx) {
+            return '<div class="square" style="background-color: __COR__;"></div>'.replace('__COR__', color_idx[idx])
         },
         _get_color = function(region_id) {
 
@@ -507,7 +504,7 @@ var pdc_results = function() {
 
                         } else {
 
-                            row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
+                            row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter', indicators[indicator_id].i);
 
                         }
 
