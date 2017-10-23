@@ -241,7 +241,9 @@ var pdc_results = function() {
 
                 } else {
 
-                    row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
+                    //    row = _td(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter');
+                    row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter', indicators[indicator_id].i);
+
 
                 }
 
@@ -304,10 +306,20 @@ var pdc_results = function() {
         _td = function(e, str, title, cx) {
             return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</td>'
         },
+        _td_with_color = function(e, str, title, cx, region_cor) {
+            var cor = _cor5(region_cor);
+            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</td><td><div class="square" style="Background-color:__COR__; height: 15px; width: 15px;"></div></td>'.replace('__COR__', cor)
+        },
+
         _th = function(e, str, title, cx) {
             return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</th>'
         },
-        _get_color = function(region_id) {
+        _cor5 = function(idx) {
+            var cores = ['#D4E7FE', '#9FDFF5', '#4E9CE3', '#0045AF', '#1C0C77'];
+            return cores[idx]
+        };
+
+    _get_color = function(region_id) {
 
             var color = '#333';
 
@@ -338,6 +350,7 @@ var pdc_results = function() {
             return color;
 
         },
+
         _load_map = function(map_elm) {
 
             if (!google.maps.Polygon.prototype.getBounds) {
