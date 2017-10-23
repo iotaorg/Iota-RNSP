@@ -21,6 +21,7 @@ $Iota::TestOnly::Mock::AuthUser::_id    = 1;
 $stash->add_symbol( '&user',  sub { return $user } );
 $stash->add_symbol( '&_user', sub { return $user } );
 
+my $updated_indicator;
 db_transaction {
 
     # 003-create.t
@@ -257,7 +258,7 @@ db_transaction {
       ;
 
     stash_test "ind" => sub {
-        ok( my $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
+        ok( $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
 
         is( $updated_indicator->name, 'Foo Bar', 'Name not changed!' );
         is( $updated_indicator->goal, '22',      'Goal updated ok' );
@@ -275,7 +276,7 @@ db_transaction {
         'indicator.update.visibility_user_id' => '4',
       ];
 
-    ok( my $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
+    ok( $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
     is( $updated_indicator->goal,               '23', 'goal updated ok' );
     is( $updated_indicator->visibility_user_id, '4',  'visibility_user_id ok' );
 
@@ -345,7 +346,7 @@ db_transaction {
       ],
       ;
 
-    ok( my $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
+    ok( $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
     is( $updated_indicator->goal,                                  '25', 'Goal updated ok' );
     is( $updated_indicator->indicator_network_visibilities->count, '2',  'Visibility_networks ok' );
 
@@ -360,7 +361,7 @@ db_transaction {
       ],
       ;
 
-    ok( my $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
+    ok( $updated_indicator = $schema->resultset('Indicator')->find( stash 'ind.id' ), 'Indicator in DB' );
     is( $updated_indicator->goal, '26', 'Goal updated ok' );
     is_deeply(
         [ sort map { $_->user_id } $updated_indicator->indicator_user_visibilities ],
