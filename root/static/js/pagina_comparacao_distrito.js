@@ -192,7 +192,7 @@ var pdc_results = function() {
 
         $.each(this._data.list, function(a, b) {
             b.setOptions({
-                strokeColor: '#15d400',
+                strokeColor: '#FFF',
                 strokeOpacity: 0.8,
                 strokeWeight: 4
             });
@@ -308,7 +308,7 @@ var pdc_results = function() {
         },
         _td_with_color = function(e, str, title, cx, region_cor) {
             var cor = _cor5(region_cor);
-            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</td><td><div class="square" style="Background-color:__COR__; height: 15px; width: 15px;"></div></td>'.replace('__COR__', cor)
+            return e + '<td' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '> <div class="square" style="background-color: __COR__;"></div>'.replace('__COR__', cor) + str + '</td>'
         },
 
         _th = function(e, str, title, cx) {
@@ -317,9 +317,8 @@ var pdc_results = function() {
         _cor5 = function(idx) {
             var cores = ['#D4E7FE', '#9FDFF5', '#4E9CE3', '#0045AF', '#1C0C77'];
             return cores[idx]
-        };
-
-    _get_color = function(region_id) {
+        },
+        _get_color = function(region_id) {
 
             var color = '#333';
 
@@ -334,17 +333,17 @@ var pdc_results = function() {
             $.each(yregions, function(year, indicators) {
                 $.each(indicators, function(id_id, vv) {
                     total++;
-                    if (vv.i == 0) good_count++;
-                    if (vv.i > 0) bad_count++;
+                    if (vv.i <= 1) good_count++;
+                    if (vv.i > 1) bad_count++;
                 });
             });
 
             if (good_count == total) {
-                color = '#d7e7ff';
+                color = '#11b23f';
             } else if (bad_count == total) {
                 color = '#cc0314';
             } else {
-                color = '#cca203'
+                color = '#fc7100'
             };
 
             return color;
