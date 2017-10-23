@@ -78,7 +78,7 @@ sub parse {
                 $ok++;
 
                 die 'invalid variable id' unless $registro->{id} =~ /^\d+$/;
-                die 'invalid region id' if $registro->{region_id} && $registro->{region_id} !~ /^\d+$/;
+                die 'invalid region id' if defined $registro->{region_id} && $registro->{region_id} !~ /^\d+$/;
 
                 push @rows, $registro;
 
