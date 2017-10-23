@@ -117,7 +117,8 @@ sub list_POST {
 
     my $classe = $param->{class_name};
 
-    $c->res->content_type('application/json; charset=utf8');
+    $c->res->content_type('application/json');
+    $c->res->header('charset','utf8');
 
     my $upload = $c->req->upload('arquivo');
     if ($upload) {

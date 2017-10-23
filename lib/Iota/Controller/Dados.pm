@@ -341,7 +341,8 @@ sub _download_and_detach {
     my ( $self, $c, $path ) = @_;
 
     if ( $c->stash->{type} =~ /(json)/ ) {
-        $c->response->content_type('application/json; charset=UTF-8');
+        $c->res->content_type('application/json');
+        $c->res->header('charset','utf8');
     }
     elsif ( $c->stash->{type} =~ /(xml)/ ) {
         $c->response->content_type('text/xml');

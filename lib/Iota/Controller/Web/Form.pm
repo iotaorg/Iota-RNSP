@@ -34,7 +34,8 @@ sub redirect_ok : Private {
 sub as_json : Private {
     my ( $self, $c, $data ) = @_;
 
-    $c->res->header( 'Content-type', 'application/json; charset=utf-8' );
+    $c->res->content_type('application/json');
+    $c->res->header('charset','utf8');
 
     $c->res->body( encode_json($data) );
 

@@ -58,7 +58,8 @@ sub user_file_POST {
     $classe = $t->translate( substr( $classe, 0, 15 ) );
     $classe ||= 'perfil';
 
-    $c->res->content_type('application/json; charset=utf8');
+    $c->res->content_type('application/json');
+    $c->res->header('charset','utf8');
 
     my $upload = $c->req->upload('arquivo');
 
