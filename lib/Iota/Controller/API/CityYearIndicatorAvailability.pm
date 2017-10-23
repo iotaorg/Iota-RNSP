@@ -9,7 +9,7 @@ use utf8;
 use JSON::XS;
 use Encode qw(encode);
 
-sub do : Chained('/light_institute_load') : PathPart('api/public/city-year-indicator-availability') : Args(0) :
+sub do : Chained('/light_institute_load') : PathPart('api/public/indicator-availability-city-year') : Args(0) :
   ActionClass('REST') {
 }
 
