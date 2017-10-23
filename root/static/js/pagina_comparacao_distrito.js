@@ -266,8 +266,8 @@ var pdc_results = function() {
         infopop_template,
         map_template,
         indicators_apels,
-        color_idx = $.parseJSON($('[data-color-index]').attr('data-color-index')),
-        color_idx_other = $.parseJSON($('[data-graph-color-index]').attr('data-graph-color-index')),
+        color_idx,
+        color_idx_other,
         _init = function() {
 
             var params = $table_container.attr('data-search-params');
@@ -277,6 +277,9 @@ var pdc_results = function() {
             table_template = $('.table-results-indicators:first').clone().wrap('<div></div>').parent().html();
             map_template = $('#map_container').clone().wrap('<div></div>').parent().html();
             infopop_template = $('.infopop:first').clone().wrap('<div></div>').parent().html();
+
+            color_idx = $.parseJSON($('[data-color-index]').attr('data-color-index'));
+            color_idx_other = $.parseJSON($('[data-graph-color-index]').attr('data-graph-color-index'));
 
             $.get("/api/public/compare-by-region", params, _on_results, 'json').fail(function(e) {
                 $table_container.text("ERRO: " + e.responseText);
