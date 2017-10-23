@@ -74,7 +74,7 @@ __PACKAGE__->config(
         stash_var   => 'assets'
     },
 
-    'View::HTML' => { expose_methods => [ 'date4period', 'value4human', 'l' ] },
+    'View::HTML' => { expose_methods => [ 'date4period', 'value4human', 'l', 'to_json' ] },
 
     # cache geral, carregado do banco quando recebe o valor de dynamic
     rdf_domain => 'dynamic'

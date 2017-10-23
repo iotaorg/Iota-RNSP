@@ -122,17 +122,22 @@
         </tbody>
         </table>
 
-        <h3>[%l('Referências dos indicadores')%]</h3>
-        <table id="ref_ind" class="table table-condensed" style="font-size: 0.8em">
-        <tbody>
-            [% FOREACH i IN indicators_table %]
-            <tr>
-                <th style="width:1px;text-align:right">[% i.apel %]</th>
-                <td data-id="[%i.id%]">[% i.name %]</td>
-            </tr>
-            [% END %]
-        </tbody>
-        </table>
+        <h3 data-color-index="[% to_json(color_index) %]">[%l('Classificação visual no valor')%]</h3>
+        <ol class="unstyled">
+            <li style="border-left: 1.5em solid [% color_index.0 %]; padding-left: 0.5em">[%l('Alta / Melhor')%]</li>
+            <li style="border-left: 1.5em solid [% color_index.1 %]; padding-left: 0.5em">[%l('Acima da média')%]</li>
+            <li style="border-left: 1.5em solid [% color_index.2 %]; padding-left: 0.5em">[%l('Média')%]</li>
+            <li style="border-left: 1.5em solid [% color_index.3 %]; padding-left: 0.5em">[%l('Abaixo da média')%]</li>
+            <li style="border-left: 1.5em solid [% color_index.4 %]; padding-left: 0.5em">[%l('Baixa / Pior')%]</li>
+        </ol>
+
+        <h3 data-graph-color-index="[% to_json(graph_color_index) %]">[%l('Classificação visual no mapa')%]</h3>
+        <ol class="unstyled">
+            <li style="border-left: 1.5em solid [% graph_color_index.0 %]; padding-left: 0.5em">[%l('Todos acima média')%]</li>
+            <li style="border-left: 1.5em solid [% graph_color_index.1 %]; padding-left: 0.5em">[%l('Todos abaixo média')%]</li>
+            <li style="border-left: 1.5em solid [% graph_color_index.2 %]; padding-left: 0.5em">[%l('Valores mistos')%]</li>
+        </ol>
+
 
     </div>
 

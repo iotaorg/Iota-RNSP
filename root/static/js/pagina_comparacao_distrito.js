@@ -268,7 +268,8 @@ var pdc_results = function() {
         infopop_template,
         map_template,
         indicators_apels,
-
+        color_idx = $.parseJSON($('[data-color-index]').attr('data-color-index')),
+        color_idx_other = $.parseJSON($('[data-graph-color-index]').attr('data-graph-color-index')),
         _init = function() {
 
             var params = $table_container.attr('data-search-params');
@@ -315,8 +316,7 @@ var pdc_results = function() {
             return e + '<th' + (title ? ' title="' + title.replace('"', "'") + '"' : '') + (cx ? ' class="' + cx + '"' : '') + '>' + str + '</th>'
         },
         _cor5 = function(idx) {
-            var cores = ['#D4E7FE', '#9FDFF5', '#4E9CE3', '#0045AF', '#1C0C77'];
-            return cores[idx]
+            return color_idx[idx]
         },
         _get_color = function(region_id) {
 
@@ -339,11 +339,11 @@ var pdc_results = function() {
             });
 
             if (good_count == total) {
-                color = '#11b23f';
+                color = color_idx_other[0];
             } else if (bad_count == total) {
-                color = '#cc0314';
+                color = color_idx_other[1];
             } else {
-                color = '#fc7100'
+                color = color_idx_other[2]
             };
 
             return color;

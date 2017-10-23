@@ -4,6 +4,7 @@ use strict;
 use base 'Catalyst::View::TT';
 use Template::AutoFilter;
 use JSON;
+
 __PACKAGE__->config(
     {
         TEMPLATE_EXTENSION => '.tt',
@@ -11,9 +12,7 @@ __PACKAGE__->config(
         DEFAULT_ENCODING   => 'UTF-8',
 
         CLASS        => 'Template::AutoFilter',
-        INCLUDE_PATH => [
-             Iota->path_to( 'root', 'src/default' ),
-         ],
+        INCLUDE_PATH => [ Iota->path_to( 'root', 'src/default' ), ],
         WRAPPER      => 'site/wrapper',
         ERROR        => 'error.tt',
         TIMER        => 0,
@@ -83,7 +82,7 @@ sub value4human {
     }
 
     if ( length($pre) > 3 ) {
-        $pre = reverse $pre;    # reverse the number's digits
+        $pre = reverse $pre;         # reverse the number's digits
         $pre =~ s/(\d{3})/$1\./g;    # insert dot every 3 digits, from beginning
         $pre = reverse $pre;         # Reverse the result
         $pre =~ s/^\.//;             # remove leading dot, if any
@@ -127,6 +126,10 @@ sub ymd_to_human {
 
     return substr( $str, 0, 10 + 6 );
 
+}
+
+sub to_json {
+    encode_json($_[2]);
 }
 
 1;

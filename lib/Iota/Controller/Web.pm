@@ -61,6 +61,9 @@ sub change_lang_redir : Chained('change_lang') PathPart('') Args(0) {
 sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
+    $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
+    $c->stash->{graph_color_index} = [ '#11b23f', '#cc0314', '#fc7100' ];
+
     # se veio ?part, guarda na stash e remove ele da req para nao atrapalhar novas geracoes de URLs
     $c->stash->{current_part} = delete $c->req->params->{part};
     if ( $c->stash->{current_part} ) {
@@ -134,12 +137,12 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
 
         $c->stash->{fixed_menu_pages} = [
 
-              map {
+            map {
                 my $r = $_;
                 +{
-                    hidden => !(!$is_home || $allowed_pages_on_home{ $r->{page}{id} }),
+                    hidden => !( !$is_home || $allowed_pages_on_home{ $r->{page}{id} } ),
                     title => $r->{title},
-                    url   => 'pagina/' . $r->{page}{id} . '/' . $r->{page}{title_url},
+                    url => 'pagina/' . $r->{page}{id} . '/' . $r->{page}{title_url},
                   }
               } $c->model('DB::UserMenu')->search(
                 {
@@ -535,7 +538,8 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
         }
 
         $c->stash->{indicators_table} = \@inds;
-        use DDP; p $c->stash->{indicators_table};
+        use DDP;
+        p $c->stash->{indicators_table};
 
         $c->stash->{query_params} = encode_json(
             {
@@ -1566,8 +1570,6 @@ sub stash_comparacao_distritos : Private {
     my $region    = $c->stash->{region};
     my $indicator = $c->stash->{indicator};
     my $user      = $c->stash->{user};
-
-    $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
 
     my $polys = {};
     my $regs  = {};

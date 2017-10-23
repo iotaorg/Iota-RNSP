@@ -1167,3 +1167,5 @@ a.link-axis, a.link-region {
     max-height: 900px;
     height: 100%;
 }
+
+ol.unstyled {list-style: none; padding: 0}
