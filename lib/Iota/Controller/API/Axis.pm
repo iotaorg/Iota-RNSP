@@ -32,12 +32,14 @@ sub axis : Chained('object') : PathPart('') : Args(0) : ActionClass('REST') {
 
 }
 
+
 sub axis_GET {
     my ( $self, $c ) = @_;
     my $object_ref = $c->stash->{object}->as_hashref->next;
 
     $self->status_ok( $c, entity => { ( map { $_ => $object_ref->{$_} } qw(name description id created_at) ) } );
 }
+
 
 sub axis_POST {
     my ( $self, $c ) = @_;
@@ -63,6 +65,7 @@ sub axis_POST {
       if $obj;
 }
 
+
 sub axis_DELETE {
     my ( $self, $c ) = @_;
 
@@ -80,6 +83,7 @@ sub axis_DELETE {
 sub list : Chained('base') : PathPart('') : Args(0) : ActionClass('REST') {
 }
 
+
 sub list_GET {
     my ( $self, $c ) = @_;
 
@@ -96,6 +100,7 @@ sub list_GET {
 
     $self->status_ok( $c, entity => { axis => \@objs } );
 }
+
 
 sub list_POST {
     my ( $self, $c ) = @_;
@@ -122,3 +127,4 @@ sub list_POST {
 
 with 'Iota::TraitFor::Controller::Search';
 1;
+
