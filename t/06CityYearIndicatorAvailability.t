@@ -121,7 +121,7 @@ db_transaction {
     stash_test 'ins2' => sub {
         my $me = shift;
 
-        isnt( $me->{indicators}[0]{id}, stash 'ind.id', 'Falha - indicador com dado DEPTH = 3' );
+        is_deeply( $me->{indicators}, [], 'Nenhum dado DEPTH = 3' );
     };
 
 };
