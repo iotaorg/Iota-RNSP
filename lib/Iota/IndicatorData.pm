@@ -415,6 +415,9 @@ sub _merge_regions_values {
         }
     }
 
+    #  use DDP;
+    #  p \%conf;
+
     #use DDP; p $conf{inputed}{0} if $DEBUG;
     # percorre os inputados falsos, trasnforma em 1 e nao tem região.
     while ( my ( $region_id, $users ) = each %{ $conf{inputed}{0} } ) {
@@ -769,8 +772,12 @@ sub _get_indicator_values {
                             );
                             my $valor = $formula->evaluate_with_alias(@calcvars);
 
-                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} =
-                              [ $valor, [ keys %sources ], decode('UTF-8', encode_json( {@calcvars} )), [ keys %observations ] ];
+                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} = [
+                                $valor,
+                                [ keys %sources ],
+                                decode( 'UTF-8', encode_json( {@calcvars} ) ),
+                                [ keys %observations ]
+                            ];
                         }
 
                     }
@@ -778,8 +785,12 @@ sub _get_indicator_values {
                         my $valor = $formula->evaluate(%values);
 
                         # '' = variacao
-                        $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} =
-                          [ $valor, [ keys %sources ], decode('UTF-8', encode_json( \%values )), [ keys %observations ] ];
+                        $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} = [
+                            $valor,
+                            [ keys %sources ],
+                            decode( 'UTF-8', encode_json( \%values ) ),
+                            [ keys %observations ]
+                        ];
                     }
 
                 }
