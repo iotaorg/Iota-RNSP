@@ -116,7 +116,7 @@
             [% FOREACH i IN indicators_table %]
             <tr>
                 <th style="width:1px;text-align:right">[% i.apel %]</th>
-                <td data-id="[%i.id%]">[% i.name %]</td>
+                <td data-id="[%i.id%]" title="[%i.explanation %]">[% i.name %]</td>
             </tr>
             [% END %]
         </tbody>

@@ -518,7 +518,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
                 'me.id' => { '-in' => [@ids] },
             },
             {
-                columns      => [ 'me.id', 'me.name' ],
+                columns      => [ 'me.id', 'me.name', 'me.explanation' ],
                 result_class => 'DBIx::Class::ResultClass::HashRefInflator',
                 order_by     => 'me.name'
             }
