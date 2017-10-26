@@ -207,6 +207,8 @@ sub as_human {
 
     my $sep = $formula =~ /CONCATENAR/i ? "\n" : ' ';
     $formula =~ s/CONCATENAR//i;
+    $formula =~ s/\b?\/\b?/ ÷ /g;
+    $formula =~ s/\b?\*\b?/ × /g;
 
     if ( $formula =~ /\$/ ) {
         my @variables = $self->schema->resultset('Variable')->search( { id => [ $self->variables ] } )->all;
@@ -234,8 +236,6 @@ sub as_human {
         }
     }
     $formula =~ s/\b?\+\b?/ + /g;
-    $formula =~ s/\b?\/\b?/ ÷ /g;
-    $formula =~ s/\b?\*\b?/ × /g;
     $formula =~ s/\b?\-\b?/ - /g;
 
     $formula =~ s/^\s+//g;
