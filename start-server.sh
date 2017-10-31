@@ -11,6 +11,7 @@ cd /src;
 source /home/app/perl5/perlbrew/etc/bashrc
 mkdir -p /data/envdir
 
+cpanm --installdeps . -n
 sqitch deploy -t local
 
 CATALYST_CONFIG=/src/iota.conf start_server \
