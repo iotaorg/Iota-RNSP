@@ -57,6 +57,10 @@ sub process {
     my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) = localtime(time);
     $year += 1900;
 
+    if (exists $ENV{MAX_YEAR_VALUE_FOR_UPLOADED_FILES} && $ENV{MAX_YEAR_VALUE_FOR_UPLOADED_FILES} =~ /^[0-9]+$/){
+        $year = $ENV{MAX_YEAR_VALUE_FOR_UPLOADED_FILES};
+    }
+
     # se tem menos variaveis no banco do que as enviadas
     if ( @vars_db < keys %varids ) {
         $status = '';
