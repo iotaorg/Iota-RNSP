@@ -1,8 +1,8 @@
 [%SET voltar_link = '<small><a class="pull-right" data-animated-anchor href="#endpoints">voltar para endpoints</a></small>'%]
 [%IF !is_infancia%]<h1>[%l('Dados abertos')%]</h1>[%END%]
 
-<link type="text/css" href="http://172.17.0.2/static/v2/css/prism-javascript.css" rel="stylesheet"/>
-<script src="http://172.17.0.2/static/v2/js/prism-javascript.js" type="text/javascript"></script>
+<link type="text/css" href="/static/v2/css/prism-javascript.css" rel="stylesheet"/>
+<script src="/static/v2/js/prism-javascript.js" type="text/javascript"></script>
 
 <div class="panel panel-info">
     <div class="panel-heading" id="id_api" data-animated-anchor-offset="-60">
