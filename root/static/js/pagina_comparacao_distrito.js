@@ -237,11 +237,11 @@ var pdc_results = function() {
 
                 if (indicators[indicator_id] == undefined) {
 
-                    row = _td(row, '-', '', 'tcenter');
+                    row = _td(row, '-', '', 'lcenter');
 
                 } else {
 
-                    row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter', indicators[indicator_id].i);
+                    row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'lcenter', indicators[indicator_id].i);
 
                 }
 
@@ -558,11 +558,11 @@ todos na media - amarelo
 
                         if (indicators[indicator_id] == undefined) {
 
-                            row = _td(row, '-', '', 'tcenter');
+                            row = _td(row, '-', '', 'lcenter');
 
                         } else {
 
-                            row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'tcenter', indicators[indicator_id].i);
+                            row = _td_with_color(row, indicators[indicator_id].rnum, indicators[indicator_id].num, 'lcenter', indicators[indicator_id].i);
 
                         }
 
