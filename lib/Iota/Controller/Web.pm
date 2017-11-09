@@ -559,7 +559,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
         cities         => $c->stash->{network_data}{cities},
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
-        title          => 'Comparar distritos',
+        title          => 'Mapa interativo',
         template       => 'pagina_comparacao_distrito.tt'
     );
 }
