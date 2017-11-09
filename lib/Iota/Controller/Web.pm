@@ -1627,45 +1627,56 @@ sub stash_comparacao_distritos : Private {
         while ( my ( $variacao, $distintos ) = each %$variacoes ) {
 
             my $distintos_ref_id = { map { $_->{id} => $_ } @$distintos };
+            my $definidos;
 
-            my $stat = $freq->iterate($distintos);
+            if ( $indicator->{is_sort_direction_meanless} ) {
 
-            my $definidos = [ grep { defined $_->{num} } @$distintos ];
+                $definidos = [ grep { defined $_->{num} } @$distintos ];
+                $_->{i} = 5 for @$definidos;
 
-            # melhor = mais alto, entao inverte as cores
-            if (  !$indicator->{sort_direction}
-                || $indicator->{sort_direction} eq 'greater value' ) {
-                $_->{i} = 4 - $_->{i} for @$definidos;
-                $distintos =
-                  [ ( reverse grep { defined $_->{num} } @$distintos ), grep { !defined $_->{num} } @$distintos ];
-                $definidos = [ reverse @$definidos ];
-            }
-
-            if ($stat) {
-                $out->{$ano}{$variacao} = {
-                    all    => $distintos,
-                    top3   => [ $definidos->[0], $definidos->[1], $definidos->[2], ],
-                    lower3 => [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
-                    mean   => $stat->mean()
-                };
-            }
-            elsif ( @$definidos == 4 ) {
-                $definidos->[0]{i} = 0;    # Alta / Melhor
-                $definidos->[1]{i} = 1;    # acima media
-                $definidos->[2]{i} = 3;    # abaixo da media
-                $definidos->[3]{i} = 4;    # Baixa / Pior
-            }
-            elsif ( @$definidos == 3 ) {
-                $definidos->[0]{i} = 0;    # Alta / Melhor
-                $definidos->[1]{i} = 2;    # média
-                $definidos->[2]{i} = 4;    # Baixa / Pior
-            }
-            elsif ( @$definidos == 2 ) {
-                $definidos->[0]{i} = 0;    # Alta / Melhor
-                $definidos->[1]{i} = 4;    # Baixa / Pior
             }
             else {
-                $_->{i} = 5 for @$definidos;
+
+                my $stat = $freq->iterate($distintos);
+
+                $definidos = [ grep { defined $_->{num} } @$distintos ];
+
+                # melhor = mais alto, entao inverte as cores
+                if (  !$indicator->{sort_direction}
+                    || $indicator->{sort_direction} eq 'greater value' ) {
+                    $_->{i} = 4 - $_->{i} for @$definidos;
+                    $distintos =
+                      [ ( reverse grep { defined $_->{num} } @$distintos ), grep { !defined $_->{num} } @$distintos ];
+                    $definidos = [ reverse @$definidos ];
+                }
+
+                if ($stat) {
+                    $out->{$ano}{$variacao} = {
+                        all    => $distintos,
+                        top3   => [ $definidos->[0], $definidos->[1], $definidos->[2], ],
+                        lower3 => [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
+                        mean   => $stat->mean()
+                    };
+                }
+                elsif ( @$definidos == 4 ) {
+                    $definidos->[0]{i} = 0;    # Alta / Melhor
+                    $definidos->[1]{i} = 1;    # acima media
+                    $definidos->[2]{i} = 3;    # abaixo da media
+                    $definidos->[3]{i} = 4;    # Baixa / Pior
+                }
+                elsif ( @$definidos == 3 ) {
+                    $definidos->[0]{i} = 0;    # Alta / Melhor
+                    $definidos->[1]{i} = 2;    # média
+                    $definidos->[2]{i} = 4;    # Baixa / Pior
+                }
+                elsif ( @$definidos == 2 ) {
+                    $definidos->[0]{i} = 0;    # Alta / Melhor
+                    $definidos->[1]{i} = 4;    # Baixa / Pior
+                }
+                else {
+                    $_->{i} = 5 for @$definidos;
+                }
+
             }
 
             $out->{$ano}{$variacao} = { all => $distintos }
@@ -1689,6 +1700,7 @@ sub stash_comparacao_distritos : Private {
                 $_->{num} = 'n/d';
             }
             push @$definidos, @nao_definidos;
+
         }
     }
 

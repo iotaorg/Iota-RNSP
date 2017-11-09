@@ -128,7 +128,7 @@ sub ymd_to_human {
 
 }
 
-sub to_json {
+sub to_json_tpl {
     encode_json($_[2]);
 }
 

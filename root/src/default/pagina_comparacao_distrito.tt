@@ -124,7 +124,7 @@
         </tbody>
         </table>
 
-        <h3 data-color-index="[% to_json(color_index) %]">[%l('Classificação visual no valor')%]</h3>
+        <h3 data-color-index="[% to_json_tpl(color_index) %]">[%l('Classificação visual no valor')%]</h3>
         <ol class="unstyled">
             <li style="border-left: 1.5em solid [% color_index.0 %]; padding-left: 0.5em">[%l('Alta / Melhor')%]</li>
             <li style="border-left: 1.5em solid [% color_index.1 %]; padding-left: 0.5em">[%l('Acima da média')%]</li>
@@ -133,7 +133,7 @@
             <li style="border-left: 1.5em solid [% color_index.4 %]; padding-left: 0.5em">[%l('Baixa / Pior')%]</li>
         </ol>
 
-        <h3 data-graph-color-index="[% to_json(graph_color_index) %]">[%l('Legenda no mapa')%]</h3>
+        <h3 data-graph-color-index="[% to_json_tpl(graph_color_index) %]">[%l('Legenda no mapa')%]</h3>
         <ol class="unstyled">
             <li style="border-left: 1.5em solid [% graph_color_index.0 %]; padding-left: 0.5em">[%l('Maioria acima média')%]</li>
             <li style="border-left: 1.5em solid [% graph_color_index.1 %]; padding-left: 0.5em">[%l('Maioria abaixo média')%]</li>
