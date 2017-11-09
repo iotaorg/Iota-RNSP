@@ -25,7 +25,7 @@ sub do_GET {
     my $periods = $c->req->params->{periods} || '';
 
     if ( $periods =~ /^[0-9]{4}$/ ) {
-        $periods = [ "$periods-01-01"];
+        $periods = ["$periods-01-01"];
     }
     else {
         $self->error( $c, 'invalid periods' ) unless $periods =~ /^([0-9]{4}-[0-9]{2}-[0-9]{2},?)+$/;
@@ -66,7 +66,7 @@ sub do_GET {
         {
 
             result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            columns      => [ 'id', 'name', 'sort_direction' ],
+            columns      => [ 'id', 'name', 'sort_direction', 'is_sort_direction_meanless' ],
             order_by     => 'name'
         }
     )->all;
@@ -104,42 +104,52 @@ sub do_GET {
             while ( my ( $variacao, $regions_list ) = each %$variacoes ) {
 
                 my $indicator = $indicators->{$id_id};
+                my $regions;
 
-                my $regions = [ map { $regions_list->{$_} } keys %$regions_list ];
+                if ( $indicator->{is_sort_direction_meanless} ) {
 
-                my $stat = $freq->iterate($regions);
+                    $regions = [ map { $regions_list->{$_} } keys %$regions_list ];
+                    $_->{i} = 2 for @$regions;
 
-                my $defined_regions = [ grep { defined $_->{num} } @$regions ];
-
-                # melhor = mais alto, entao inverte as cores
-                if (  !$indicator->{sort_direction}
-                    || $indicator->{sort_direction} eq 'greater value' ) {
-                    $_->{i} = 4 - $_->{i} for @$defined_regions;
-                    $regions =
-                      [ ( reverse grep { defined $_->{num} } @$regions ), grep { !defined $_->{num} } @$regions ];
-                    $defined_regions = [ reverse @$defined_regions ];
-                }
-
-                if ($stat) {
-                    $out->{$ano}{$variacao} = { all => $regions, };
-                }
-                elsif ( @$defined_regions == 4 ) {
-                    $defined_regions->[0]{i} = 0;    # Alta / Melhor
-                    $defined_regions->[1]{i} = 1;    # acima media
-                    $defined_regions->[2]{i} = 3;    # abaixo da media
-                    $defined_regions->[3]{i} = 4;    # Baixa / Pior
-                }
-                elsif ( @$defined_regions == 3 ) {
-                    $defined_regions->[0]{i} = 0;    # Alta / Melhor
-                    $defined_regions->[1]{i} = 2;    # média
-                    $defined_regions->[2]{i} = 4;    # Baixa / Pior
-                }
-                elsif ( @$defined_regions == 2 ) {
-                    $defined_regions->[0]{i} = 0;    # Alta / Melhor
-                    $defined_regions->[1]{i} = 4;    # Baixa / Pior
                 }
                 else {
-                    $_->{i} = 5 for @$defined_regions;
+
+                    $regions = [ map { $regions_list->{$_} } keys %$regions_list ];
+
+                    my $stat = $freq->iterate($regions);
+
+                    my $defined_regions = [ grep { defined $_->{num} } @$regions ];
+
+                    # melhor = mais alto, entao inverte as cores
+                    if (  !$indicator->{sort_direction}
+                        || $indicator->{sort_direction} eq 'greater value' ) {
+                        $_->{i} = 4 - $_->{i} for @$defined_regions;
+                        $regions =
+                          [ ( reverse grep { defined $_->{num} } @$regions ), grep { !defined $_->{num} } @$regions ];
+                        $defined_regions = [ reverse @$defined_regions ];
+                    }
+
+                    if ($stat) {
+                        $out->{$ano}{$variacao} = { all => $regions, };
+                    }
+                    elsif ( @$defined_regions == 4 ) {
+                        $defined_regions->[0]{i} = 0;    # Alta / Melhor
+                        $defined_regions->[1]{i} = 1;    # acima media
+                        $defined_regions->[2]{i} = 3;    # abaixo da media
+                        $defined_regions->[3]{i} = 4;    # Baixa / Pior
+                    }
+                    elsif ( @$defined_regions == 3 ) {
+                        $defined_regions->[0]{i} = 0;    # Alta / Melhor
+                        $defined_regions->[1]{i} = 2;    # média
+                        $defined_regions->[2]{i} = 4;    # Baixa / Pior
+                    }
+                    elsif ( @$defined_regions == 2 ) {
+                        $defined_regions->[0]{i} = 0;    # Alta / Melhor
+                        $defined_regions->[1]{i} = 4;    # Baixa / Pior
+                    }
+                    else {
+                        $_->{i} = 5 for @$defined_regions;
+                    }
                 }
 
                 $out->{$ano}{$variacao} = { all => $regions }
