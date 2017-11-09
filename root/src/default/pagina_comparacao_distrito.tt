@@ -2,6 +2,8 @@
 <style>.square { height: 15px; width: 15px; display: inline-block; vertical-align: middle; border-radius: 10px; margin-right: 5px}  div.infopop {margin-left: 20px} </style>
 <form role="form" class="[% has_results ? 'hide changeparam' : '' %]">
 
+<p>Escolha até 5 indicadores e compare a qualidade de vida das crianças nos diferentes distritos da cidade.</p>
+
 <div class="row">
     <div class="form-group col-sm-10">
         <label>[%l('Cidade')%]</label>
