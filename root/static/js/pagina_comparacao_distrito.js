@@ -320,6 +320,25 @@ var pdc_results = function() {
         },
         _get_color = function(region_id) {
 
+            /* com 5 selecionados:
+acima de 4 indicadores acima da media - verde
+abaixo de 4 indicadores abaixo da media - vermelho
+todos na media - amarelo
+3 ou 2 para cima ou para baixo - laranja
+
+com 4 selecionados:
+acima de 3 indicadores acima da media - verde
+abaixo de 3 indicadores abaixo da media - vermelho
+todos na media - amarelo
+2 ou 1 para cima ou para baixo - laranja
+
+(com 3...)
+
+com 1, 2 selecionados:
+acima de 2 indicadores acima da media - verde
+abaixo de 2 indicadores abaixo da media - vermelho
+todos na media - amarelo
+*/
             var color = '#333';
 
             var yregions = response.values[active_variation][region_id];
@@ -328,23 +347,59 @@ var pdc_results = function() {
 
             var good_count = 0,
                 bad_count = 0,
-                total = 0;
+                total = 0,
+                avg_count = 0,
+                seen_indicators = {},
+                indicators_count = 0,
+                GREEN = color_idx_other[0],
+                RED = color_idx_other[1],
+                YELLOW = color_idx_other[2],
+                ORANGE = color_idx_other[3];
 
             $.each(yregions, function(year, indicators) {
                 $.each(indicators, function(id_id, vv) {
+                    if (!seen_indicators[id_id]){
+                        seen_indicators[id_id]=1;
+                        indicators_count++;
+                    }
                     total++;
+                    // i vai de 0 até 4
+                    // 0 1 abaixo da media
+                    //   2 na media
+                    // 3 4 acima da media
                     if (vv.i <= 1) good_count++;
-                    if (vv.i > 1) bad_count++;
+                    if (vv.i > 2) bad_count++;
+                    if (vv.i == 2) avg_count++;
                 });
             });
 
-            if (good_count == total) {
-                color = color_idx_other[0];
-            } else if (bad_count == total) {
-                color = color_idx_other[1];
-            } else {
-                color = color_idx_other[2]
-            };
+            if ( indicators_count <= 2 ){
+
+                if (good_count == total) {
+                    color = GREEN;
+                } else if (bad_count == total) {
+                    color = RED;
+                } else if (avg_count == total) {
+                    color = YELLOW;
+                } else {
+                    color = ORANGE
+                };
+            }else{
+
+                var min_total = indicators_count - 1;
+
+                if (good_count >= min_total) {
+                    color = GREEN;
+                } else if (bad_count >= min_total) {
+                    color = RED;
+                } else if (avg_count == total) {
+                    color = YELLOW;
+                } else {
+                    color = ORANGE
+                };
+
+
+            }
 
             return color;
 

@@ -62,7 +62,7 @@ sub light_institute_load : Chained('root') PathPart('') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     $c->stash->{color_index} = [ '#D7E7FF', '#A5DFF7', '#5A9CE8', '#0041B5', '#20007B', '#F1F174' ];
-    $c->stash->{graph_color_index} = [ '#11b23f', '#cc0314', '#fc7100' ];
+    $c->stash->{graph_color_index} = [ '#11b23f', '#cc0314', '#ffe732', '#fc7100' ];
 
     # se veio ?part, guarda na stash e remove ele da req para nao atrapalhar novas geracoes de URLs
     $c->stash->{current_part} = delete $c->req->params->{part};
