@@ -234,6 +234,12 @@ __PACKAGE__->table("indicator");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 is_sort_direction_meanless
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -337,6 +343,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "axis_dim4_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "is_sort_direction_meanless",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -695,8 +703,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-28 08:16:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0sWeaWR5W0Nj/Ec3iXGlyQ
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-11-09 19:02:56
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ruv5dzh/GgHZWL5aJ9PLQA
 
 __PACKAGE__->belongs_to(
     "owner",
