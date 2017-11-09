@@ -812,3 +812,5 @@ body.root_mapa_site #iota-app-content ul {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+.footer-menu .mynavbar-inner li { width: 18%;}
+.footer-menu .container { background-color: #3366cc }
