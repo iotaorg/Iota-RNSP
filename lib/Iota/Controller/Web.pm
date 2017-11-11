@@ -13,7 +13,7 @@ use URI::Escape::XS qw(uri_escape);
 use Digest::MD5 qw(md5_hex);
 use YAML::Tiny qw//;
 use Template;
-
+use Path::Class qw(dir);
 use Text2URI;
 use String::Random;
 use HTML::Strip;
