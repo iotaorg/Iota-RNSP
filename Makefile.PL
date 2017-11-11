@@ -108,6 +108,7 @@ requires 'Statistics::Descriptive';
 requires 'XML::Simple';
 requires 'App::Sqitch';
 requires 'Furl';
+requires 'Sort::Naturally';
 
 # for backup
 requires 'LWP::Protocol::https';

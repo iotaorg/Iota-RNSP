@@ -14,7 +14,11 @@ use Digest::MD5 qw(md5_hex);
 use YAML::Tiny qw//;
 use Template;
 
+use Text2URI;
+use String::Random;
 use HTML::Strip;
+use Sort::Naturally;
+
 my $hs = HTML::Strip->new();
 #
 # Sets the actions in this controller to be registered with no prefix
@@ -858,13 +862,32 @@ sub sugestao_bp_post : Chained('light_institute_load') PathPart('pagina/contato-
       if !$c->stash->{is_infancia} || !$c->config->{contact_email_to} || !$c->req->method eq 'POST';
 
     my $misc_params = $c->req->params;
-    $misc_params->{$_} ||= '' for qw/name comment cidade email/;
 
-    if (   length $misc_params->{name} <= 3
-        || length $misc_params->{email} <= 8
-        || length $misc_params->{comment} <= 10 ) {
-        $c->stash->{error} = 'Preencha o formulário corretamente';
-        $c->detach( '/web/form/redirect_error', [] );
+    my $vars = {};
+    for my $fn ( nsort keys %$misc_params ) {
+        next unless $fn =~ /^c/;
+
+        my $ft = $fn;
+        $ft =~ s/^c/t/;
+
+        if ( length $misc_params->{$fn} <= 1 ) {
+            $c->stash->{error} = 'Preencha o formulário corretamente? Faltando valor para campo ' . $fn;
+            $c->detach( '/web/form/redirect_error', [] );
+        }
+
+        if ( !$misc_params->{$ft} ) {
+            $c->stash->{error} = 'Preencha o formulário corretamente? faltando index ' . $ft;
+            $c->detach( '/web/form/redirect_error', [] );
+        }
+
+        my $upload = $c->req->uploads->{ $fn };
+        next if $upload;
+
+        push @{ $vars->{fields} },
+          {
+            name  => $misc_params->{$ft},
+            value => $misc_params->{$fn},
+          };
     }
 
     my $res = Furl->new->post(
@@ -877,24 +900,59 @@ sub sugestao_bp_post : Chained('light_institute_load') PathPart('pagina/contato-
     );
 
     if ( eval { decode_json( $res->content )->{success} } ) {
+        my $foo = String::Random->new;
+        my $t   = Text2URI->new();
+        foreach my $upload_k ( keys %{ $c->req->uploads } ) {
+
+            my $ft = $upload_k;
+            $ft =~ s/^c/t/;
+
+            my $upload = $c->req->uploads->{$upload_k};
+
+            my $filename =
+                'tmp_bp_email_'
+              . $foo->randpattern('cccccccc') . '_'
+              . substr( $t->translate( $upload->basename ), 0, 200 );
+
+            my $private_path =
+              $c->config->{private_path} =~ /^\//o
+              ? dir( $c->config->{private_path} )->resolve . '/' . $filename
+              : Iota->path_to( $c->config->{private_path}, $filename );
+
+            unless ( $upload->copy_to($private_path) ) {
+                $c->res->body( to_json( { error => "Copy failed: $!" } ) );
+                $c->detach;
+            }
+            chmod 0644, $private_path;
+
+            my $public_url = $c->uri_for( $c->config->{public_url} . '/' . $filename )->as_string;
+
+            push @{ $vars->{fields} },
+              {
+                name  => $misc_params->{$ft},
+                value => $public_url,
+              };
+
+        }
+
 
         $c->model('DB::EmailsQueue')->create(
             {
                 to        => $c->config->{contact_email_to},
                 subject   => 'Nova sugestão de boa prática primeira infancia',
                 template  => 'form_bp.tt',
-                variables => encode_json($misc_params),
+                variables => encode_json($vars),
                 sent      => 0
             }
         );
 
         $c->detach( '/web/form/redirect_ok', [ '/sugestao_bp', [], {}, 'Mensagem enviada com sucesso!' ] );
+
     }
     else {
         $c->stash->{error} = 'Erro com o captcha!';
         $c->detach( '/web/form/redirect_error', [] );
     }
-
     $c->stash->{error} = 'Erro desconhecido';
     $c->detach( '/web/form/redirect_error', [] );
 }

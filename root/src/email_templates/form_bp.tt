@@ -1,14 +1,9 @@
-<p>Nova boa prática enviada pelo site</p>
+<p>Sugestão de boa prática enviada pelo site</p>
 <dl>
-    <dt>Nome</dt>
-    <dd>[% name %]</dd>
 
-    <dt>Email</dt>
-    <dd>[% email %]</dd>
+    [% FOREACH p IN fields %]
+    <dt>[% p.name %]</dt>
+    <dd>[% p.value %]</dd>
+    [% END %]
 
-    <dt>Cidade</dt>
-    <dd>[% cidade %]</dd>
-
-    <dt>Mensagem</dt>
-    <dd>[% comment %]</dd>
 </dl>

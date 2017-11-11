@@ -1,55 +1,124 @@
 [% INCLUDE 'web/messages.tt' %]
+[% INCLUDE 'web/macros.tt' %]
 
 <div class="container">
 
-<form class=" form-horizontal" action="[%c.uri_for(c.controller('Web').action_for('sugestao_bp_post')) %]" method="post"  id="contact_form">
-
-<fieldset>
-
-<legend>Sugira uma boa prática!</legend>
-
-<center><p>Conte para qual cidade e qual a boa prática!</p></center>
+<form class=" form-horizontal" action="[%c.uri_for(c.controller('Web').action_for('sugestao_bp_post')) %]" method="post" enctype="multipart/form-data" id="contact_form">
 
 
-<div class="form-group">
-  <label class="col-md-4 control-label">Nome completo</label>
-  <div class="col-md-4 inputGroupContainer">
-  <div class="input-group">
-  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-  <input value="[%body.name%]"  name="name" placeholder="Digite seu nome" class="form-control"  type="text">
-    </div>
-  </div>
+
+[%~
+    SET form_fields = [
+{ req => 1, type => 'topic', title => 'Cadastre sua Boa Prática' },
+{ req => 1, type => 'text', title => 'Nome da Boa Prática' },
+{ req => 1, type => 'text', title => 'Organização responsável' },
+{ req => 1, type => 'select', title => 'Público-alvo' , options => ['Gestantes', 'Crianças entre 0-3', 'Crianças entre 4 - 6', 'Outros'] },
+{ req => 1, type => 'select', title => 'Tempo de funcionamento', options => ['1 ano' ,'2 anos' ,'mais de 2 anos'] },
+{ req => 1, type => 'textarea', title => 'Descrição', placeholder  => 'quais são as atividades realizadas?' },
+{ req => 1, type => 'textarea', title => 'Objetivos', placeholder  => 'O que se pretende desenvolver a partir da iniciativa?' },
+{ req => 1, type => 'textarea', title => 'Resultados', placeholder  => 'os objetivos foram alcançados? ' },
+{ req => 1, type => 'textarea', title => 'Avaliação de Impacto?', placeholder  => "Há dados de monitoramento ou avaliação da iniciativa?\nEm caso positivo, quem fez? Quais os instrumentos e/ou metodologias de avaliação usados?" },
+{ req => 1, type => 'topic', title => 'Instituições Envolvidas' },
+{ req => 1, type => 'text', title => 'organizações parceiras' },
+{ req => 1, type => 'text', title => 'organizações beneficiadas' },
+{ req => 1, type => 'text', title => 'Fontes', placeholder => 'onde estão disponíveis as informações sobre a iniciativa?' },
+{ req => 1, type => 'select', title => 'Abrangência geográfica', options => ['local', 'nacional', 'global'] },
+{ req => 1, type => 'checkbox', title=>'checkbox', name => 'Critérios', placeholder => 'informe quais critérios são atendidos por esta iniciativa',
+    options => [
+        ['Espaço Público', 'Transformar espaços físicos existentes para que as crianças mais novas possam explorar a natureza e brincar sem perigo, e seus cuidadores possam se encontrar e descansar. '],
+        ['Mobilidade', 'que cuidadores e crianças mais novas possam caminhar ou pedalar até serviços de saúde e atendimento infantil, a lugares seguros para brincar, e a locais com oferta de alimentos saudáveis.'],
+        ['Gestão', 'Coletar dados agrupados por bairro de crianças pequenas e seus cuidadores, e usá-los para melhor gerir os recursos e facilitar a coordenação intersetorial.'],
+        ['Formação de pais', 'Fornecer às mães, aos pais e a outros cuidadores informações sobre desenvolvimento durante a primeira infância através dos serviços e estruturas existentes'],
+        ['Atender aos fundamentos básicos da sustentabilidade', 'Ambiental, Social, Econômico, Cultural e Político.'],
+    ]
+},
+{ req => 1, type => 'topic', title => 'Contatos' },
+{ req => 1, type => 'text', title => 'Nome do responsável' },
+{ req => 1, type => 'text', title => 'Telefone' },
+{ req => 1, type => 'email', title => 'E-mail' },
+{ req => 1, type => 'file', title => 'Inclua uma fotografia da iniciativa aqui' },
+{ req => 1, type => 'topic', title => 'Localização' },
+{ req => 1, type => 'text', title => 'Pais' },
+{ req => 1, type => 'text', title => 'Estado' },
+{ req => 1, type => 'text', title => 'Cidade' },
+{ req => 1, type => 'text', title => 'Bairro' },
+]
+~%]
+
+
+    [% FOREACH f IN form_fields %]
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+
+        [% SET outerloop_idx = loop.index %]
+        [% SET field_id = "c$outerloop_idx" %]
+
+        <input type="hidden" name="[% "t$outerloop_idx" %]" value="[% f.title %]"/>
+
+        [% IF f.type == 'topic' %]
+         <div class="form-group">
+            <h2>[% f.title %]</h2>
+        </div>
+        [% ELSIF f.type == 'select' %]
+             <div class="form-group">
+              <label for="[% field_id %]">[% f.title %]</label>
+              <select [% f.req ? 'required' : '' %] id="[% field_id %]" class="form-control">
+
+                <option value="">Por favor selecione uma opção</option>
+                [% FOREACH x IN f.options %]
+                    <option value="[% x %]">[% x %]</option>
+                [% END %]
+
+              </select>
+            </div>
+        [% ELSIF f.type == 'checkbox' %]
+             <div class="form-group">
+                <h2>[% f.name %]</h2>
+                <div style="padding: 10px; border-radius: 10px; border: 1px solid #888">
+                [% FOREACH x IN f.options %]
+
+                    [% SET iname="${field_id}_$loop.index" %]
+                    <input type="hidden" name="[% "t${outerloop_idx}_$loop.index" %]" value="[%x.0%]"/>
+
+                  <div class="checkbox">
+                    <h3>[%x.0%]</h3>
+                    <label>
+                      <input [%body.$iname ? 'checked' : ''%]  type="checkbox" [% f.req ? 'required' : '' %] name="[% iname %]" value="[% x.1 %]">[%x.1%]
+                    </label>
+                  </div>
+                [% END %]
+                </div>
+
+              </select>
+            </div>
+        [% ELSIF f.type == 'text' %]
+            <div class="form-group">
+              <label for="[% field_id %]">[% f.title %]</label>
+              <input id="[% field_id%]" [% f.req ? 'required' : '' %] value="[% body.$field_id %]"  name="[% field_id %]" placeholder="[% f.placeholder %]" class="form-control" type="text"/>
+            </div>
+        [% ELSIF f.type == 'email' %]
+            <div class="form-group">
+              <label for="[% field_id %]">[% f.title %]</label>
+              <input id="[% field_id%]" [% f.req ? 'required' : '' %] value="[% body.$field_id %]"  name="[% field_id %]" placeholder="[% f.placeholder %]" class="form-control" type="email"/>
+            </div>
+        [% ELSIF f.type == 'textarea' %]
+            <div class="form-group">
+              <label for="[% field_id %]">[% f.title %]</label>
+              <textarea id="[% field_id%]" [% f.req ? 'required' : '' %] name="[% field_id %]" placeholder="[% f.placeholder %]" class="form-control" type="text"/>[% body.$field_id %]</textarea>
+            </div>
+        [% ELSIF f.type == 'file' %]
+            <div class="form-group">
+              <label for="[% field_id %]">[% f.title %]</label>
+              <input id="[% field_id%]" value="[% body.$field_id %]" [% f.req ? 'required' : '' %] name="[% field_id %]" placeholder="[% f.placeholder %]" class="form-control" type="file"/>
+            </div>
+        [%ELSE%]
+            Faltando tipo [% f.type %]
+        [% END %]
+
+</div>
 </div>
 
-<div class="form-group">
-  <label class="col-md-4 control-label">E-mail</label>
-    <div class="col-md-4 inputGroupContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-  <input value="[%body.email %]" name="email" placeholder="Endereço de E-Mail" class="form-control"  type="text">
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-md-4 control-label">Cidade</label>
-    <div class="col-md-4 inputGroupContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-  <input value="[% body.cidade %]" name="cidade" placeholder="De qual cidade é a boa prática" class="form-control" type="text">
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-md-4 control-label">Boa prática</label>
-    <div class="col-md-4 inputGroupContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-            <textarea class="form-control" rows=5 name="comment" placeholder="Comentário">[%body.comment%]</textarea>
-  </div>
-  </div>
-</div>
+    [% END %]
 
 
 <div class="form-group">
@@ -66,7 +135,7 @@
   </div>
 </div>
 
-</fieldset>
+
 </form>
 </div>
 
