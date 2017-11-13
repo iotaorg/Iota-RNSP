@@ -135,10 +135,12 @@
 
         <h3 data-graph-color-index="[% to_json_tpl(graph_color_index) %]">[%l('Legenda no mapa')%]</h3>
         <ol class="unstyled">
-            <li style="border-left: 1.5em solid [% graph_color_index.0 %]; padding-left: 0.5em">[%l('Maioria acima média')%]</li>
-            <li style="border-left: 1.5em solid [% graph_color_index.1 %]; padding-left: 0.5em">[%l('Maioria abaixo média')%]</li>
-            <li style="border-left: 1.5em solid [% graph_color_index.2 %]; padding-left: 0.5em">[%l('Todos na média')%]</li>
-            <li style="border-left: 1.5em solid [% graph_color_index.3 %]; padding-left: 0.5em">[%l('Valores mistos')%]</li>
+                [% SET yx = indicators_table.size - 1 %]
+            [% SET x = indicators_table.size > 2 ? "Mais de $yx" : 'Todos' %]
+            <li style="border-left: 1.5em solid [% graph_color_index.0 %]; padding-left: 0.5em">[%("$x indicadores acima média")%]</li>
+            <li style="border-left: 1.5em solid [% graph_color_index.1 %]; padding-left: 0.5em">[%("$x indicadores abaixo média")%]</li>
+            <li style="border-left: 1.5em solid [% graph_color_index.2 %]; padding-left: 0.5em">[%('Todos indicadores na média')%]</li>
+            <li style="border-left: 1.5em solid [% graph_color_index.3 %]; padding-left: 0.5em">[%('Valores mistos')%]</li>
         </ol>
 
 
