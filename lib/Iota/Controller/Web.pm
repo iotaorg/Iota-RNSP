@@ -542,8 +542,6 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
         }
 
         $c->stash->{indicators_table} = \@inds;
-        use DDP;
-        p $c->stash->{indicators_table};
 
         $c->stash->{query_params} = encode_json(
             {
@@ -2519,8 +2517,6 @@ sub _load_variables {
 
     @variables =
       sort { $order->{ $a->variable_id } <=> $order->{ $b->variable_id } } @variables;
-
-      use DDP; p [ map {$_->variable->image_user_file} @variables];
 
     $c->stash( user_basic_variables => \@variables );
 }
