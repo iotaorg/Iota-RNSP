@@ -2505,7 +2505,7 @@ sub _load_variables {
         { variable_id => { 'in' => [ keys %$show ] }, },
         {
             order_by => [            { -desc => 'valid_from' } ],
-            prefetch => { 'variable' => 'measurement_unit' }
+            prefetch => { 'variable' => ['measurement_unit', 'image_user_file'] }
         }
     );
 
@@ -2519,6 +2519,8 @@ sub _load_variables {
 
     @variables =
       sort { $order->{ $a->variable_id } <=> $order->{ $b->variable_id } } @variables;
+
+      use DDP; p [ map {$_->variable->image_user_file} @variables];
 
     $c->stash( user_basic_variables => \@variables );
 }
