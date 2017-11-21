@@ -842,8 +842,9 @@ form h3 {margin-top: 0}
 }
 #new-cidades-dados td.img {width: 50%}
 #new-cidades-dados .item .year {
-    font-weight: 100;
-    color: #FFF;
+    font-weight: 500;
+    color: #33ccff;
+    font-size: 14px;
 }
 #new-cidades-dados .item .num {
     color: #FFF;
