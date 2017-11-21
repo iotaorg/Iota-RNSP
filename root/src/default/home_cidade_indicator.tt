@@ -25,7 +25,7 @@
                         [%IF vv.variable.measurement_unit.short_name%]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
 
 
-                        <span class="varname">[%vv.variable.name%]</span>
+                        <span class="varname">[% vv.variable.short_name || vv.variable.name %]</span>
                         <span class="year">([%date4period(vv.value_of_date, vv.variable.period)%])</span>
                     </td>
                 </tr>

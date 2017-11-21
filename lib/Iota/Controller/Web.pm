@@ -878,7 +878,7 @@ sub sugestao_bp_post : Chained('light_institute_load') PathPart('pagina/contato-
             $c->detach( '/web/form/redirect_error', [] );
         }
 
-        my $upload = $c->req->uploads->{ $fn };
+        my $upload = $c->req->uploads->{$fn};
         next if $upload;
 
         push @{ $vars->{fields} },
@@ -932,7 +932,6 @@ sub sugestao_bp_post : Chained('light_institute_load') PathPart('pagina/contato-
               };
 
         }
-
 
         $c->model('DB::EmailsQueue')->create(
             {
@@ -2502,8 +2501,8 @@ sub _load_variables {
     my $values = $user->variable_values->search(
         { variable_id => { 'in' => [ keys %$show ] }, },
         {
-            order_by => [            { -desc => 'valid_from' } ],
-            prefetch => { 'variable' => ['measurement_unit', 'image_user_file'] }
+            order_by => [ { -desc => 'valid_from' } ],
+            prefetch => { 'variable' => [ 'measurement_unit', 'image_user_file' ] }
         }
     );
 
@@ -2516,7 +2515,10 @@ sub _load_variables {
     }
 
     @variables =
-      sort { $order->{ $a->variable_id } <=> $order->{ $b->variable_id } } @variables;
+      sort {
+        ( $a->variable->display_order || $order->{ $a->variable_id } )
+          <=> ( $b->variable->display_order || $order->{ $b->variable_id } )
+      } @variables;
 
     $c->stash( user_basic_variables => \@variables );
 }
