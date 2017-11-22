@@ -841,14 +841,13 @@ form h3 {margin-top: 0}
     color: #EEE;
 }
 #new-cidades-dados td.img {width: 40%}
- #new-cidades-dados .item .unit {
-    display: block;
-    text-align: right;
- }
 #new-cidades-dados .item .unit, #new-cidades-dados .item .year {
     font-weight: 500;
     color: #FFF;
     font-size: 14px;
+}
+#new-cidades-dados .vtop {
+    vertical-align: text-top;
 }
 #new-cidades-dados .item .num {
     color: #FFF;
