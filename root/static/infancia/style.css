@@ -840,8 +840,13 @@ form h3 {margin-top: 0}
     font-size: 16px;
     color: #EEE;
 }
-#new-cidades-dados .trnum {text-align: center;}
-#new-cidades-dados td.img {width: 40%}
+#new-cidades-dados .trnum {
+    text-align: center;
+}
+#new-cidades-dados td.img {
+    width: 40%;
+    vertical-align: middle;
+}
 #new-cidades-dados .item .unit {
     padding-left: 5px;
 }
