@@ -15,10 +15,13 @@
 
                 <table>
 
-                <tr class="trnum" colspan=2>
-                    <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
-                    [%IF vv.variable.measurement_unit.short_name%]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
+                <tr class="trnum">
+                    <td colspan="2">
+                        <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
+                        [%IF vv.variable.measurement_unit.short_name%]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
+                    </td>
                 </tr>
+
                 <tr class="vtop">
                     <td class="img">
                         <img src="[% vv.variable.image_user_file.public_url %]"/>
