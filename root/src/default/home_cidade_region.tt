@@ -2,7 +2,6 @@
     [% INCLUDE 'parts/menu_regioes.tt'%]
 [%END%]
 
-xx
 
     <div id="content" class="content">
 	  <div class="row" id="cidades-dados">
@@ -30,6 +29,11 @@ xx
 		</div>
 
 		<div class="span8 col-md-8">
+
+
+            [%IF is_infancia%]
+                [% INCLUDE 'mapa_distritos_de_sp.svg' %]
+            [% ELSE %]
 
 			<div class="row">
 				<div class="span8 col-md-12">
@@ -87,6 +91,7 @@ xx
 				</div>
 			</div>
 
+            [% END %]
 		</div>
       </div>
     </div>

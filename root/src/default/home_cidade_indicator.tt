@@ -15,16 +15,16 @@
 
                 <table>
 
+                <tr colspan=2>
+                    <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
+                </tr>
                 <tr>
                     <td class="img">
                         <img src="[% vv.variable.image_user_file.public_url %]"/>
                     </td>
 
                     <td>
-                        <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
                         [%IF vv.variable.measurement_unit.short_name%]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
-
-
                         <span class="varname">[% vv.variable.short_name || vv.variable.name %]</span>
                         <span class="year">([%date4period(vv.value_of_date, vv.variable.period)%])</span>
                     </td>
