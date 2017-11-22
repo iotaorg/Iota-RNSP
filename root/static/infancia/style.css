@@ -843,6 +843,9 @@ form h3 {margin-top: 0}
 #new-cidades-dados .trnum {
     text-align: center;
 }
+#new-cidades-dados td.trvarname {
+    vertical-align: text-top;
+}
 #new-cidades-dados td.img {
     width: 40%;
     vertical-align: middle;
