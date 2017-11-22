@@ -851,7 +851,7 @@ form h3 {margin-top: 0}
     vertical-align: middle;
 }
 #new-cidades-dados .item .unit {
-    padding-left: 5px;
+    text-align: right;
 }
 #new-cidades-dados .item .unit, #new-cidades-dados .item .year {
     font-weight: 500;
