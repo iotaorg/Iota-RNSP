@@ -867,3 +867,8 @@ form h3 {margin-top: 0}
     font-weight: 500;
     font-size: 36px;
 }
+
+#iota-app polygon:hover, #iota-app path:hover {
+    fill: #7dbdf2;
+    cursor: pointer;
+}
