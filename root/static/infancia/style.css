@@ -868,7 +868,7 @@ form h3 {margin-top: 0}
     font-size: 36px;
 }
 
-#iota-app polygon:hover, #iota-app path:hover {
-    fill: #7dbdf2;
+#svg_regions polygon[onclick]:hover, #svg_regions path[onclick]:hover {
+    fill: #7dbdf2!important;
     cursor: pointer;
 }
