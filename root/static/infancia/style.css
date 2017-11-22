@@ -868,6 +868,10 @@ form h3 {margin-top: 0}
     font-size: 36px;
 }
 
+#svg_regions>svg{
+    display: block;
+    margin: 0 auto;
+}
 #svg_regions polygon[onclick]:hover, #svg_regions path[onclick]:hover {
     fill: #7dbdf2!important;
     cursor: pointer;
