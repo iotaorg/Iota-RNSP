@@ -840,7 +840,11 @@ form h3 {margin-top: 0}
     font-size: 16px;
     color: #EEE;
 }
+#new-cidades-dados .trnum {text-align: center;}
 #new-cidades-dados td.img {width: 40%}
+#new-cidades-dados .item .unit {
+    padding-left: 5px;
+}
 #new-cidades-dados .item .unit, #new-cidades-dados .item .year {
     font-weight: 500;
     color: #FFF;
@@ -853,6 +857,4 @@ form h3 {margin-top: 0}
     color: #FFF;
     font-weight: 500;
     font-size: 36px;
-    display: block;
-    text-align: center;
 }
