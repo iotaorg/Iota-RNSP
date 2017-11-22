@@ -13,18 +13,14 @@
 
             <div class="item">
                 <table>
-                    <tr class="trnum">
-                        <td class="tdnum" colspan="2">
-                            <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
-                            [%IF vv.variable.measurement_unit.short_name%]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
-                        </td>
-                    </tr>
                     <tr>
                         <td class="img">
                             <img src="[% vv.variable.image_user_file.public_url %]"/>
                         </td>
                         <td class="trvarname">
+                            <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
                             <span class="varname">[% vv.variable.short_name || vv.variable.name %]</span>
+                            [%IF vv.variable.measurement_unit.short_name%]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
                             <span class="year">([%date4period(vv.value_of_date, vv.variable.period)%])</span>
                         </td>
                     </tr>
