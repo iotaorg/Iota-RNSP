@@ -156,7 +156,15 @@ $(document).ready(function () {
             var mapOptions = {
                 center: mapDefaultLocation,
                 zoom: 4,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                draggable: false,
+                scrollwheel: false,
+                navigationControl: false,
+                mapTypeControl: false,
+                scaleControl: false,
+                zoomControl: false,
+                streetViewControl: false,
+                fullscreenControl: false,
             };
 
             var map = new google.maps.Map(document.getElementById("mapa"), mapOptions);

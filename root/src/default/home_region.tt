@@ -4,8 +4,8 @@
 
 <div id="content" class="content row">
 
-	<div class="span4 col-md-4" id="cidades-nav-left">
-		<div id="regioes" lockfixed>
+	<div class="span4 col-md-4 col-sm-4" id="cidades-nav-left">
+		<div id="regioes" [% is_infancia ? '' : 'lockfixed' %]>
             [%IF !is_infancia%]
 			<h5>[%(region_classification_name.2)%]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores">[%l('visualizar indicadores por eixo')%]</a></small></h5>
             [%END%]
@@ -26,7 +26,12 @@
 		</div>
 	</div>
 
-	<div class="span8 col-md-8" id="cidades-nav-right">
+	<div class="span8 col-md-8 col-sm-8" id="cidades-nav-right">
+
+
+        [%IF is_infancia%]
+        <div id="map_canvas" data-regions="[%regions_to_draw%]"></div>
+        [% ELSE %]
 
 
 
@@ -90,30 +95,30 @@
 			</div>
 
 		</div>
-        <span class="clearfix"></span>
-		<div class="row-fluid" >
-			<div class="span12 col-sm-12">
-				<div id="cidades-indicadores">
 
-					<h5>[%l('Indicadores separados por eixos')%]</h5>
+        [% END %]
 
-                    [% INCLUDE parts/filtro_tabela_indicadores.tt %]
 
-					<div class="table">
-						<div class="loading"><p>[%l('Carregando...')%]</p></div>
-					</div>
-				</div>
-				[%IF institute.hide_empty_indicators%]
-                    <label class="checkbox">
-                        <input id="indicadores-hide-toggle" type="checkbox"> [%l('Exibir indicadores sem dados')%]
-                    </label>
-                    [%END%]
-			</div>
-		</div>
+        [% IF !is_infancia %]
+        [% INCLUDE 'parts/tabela_indicadores.tt' %]
+        [% END %]
 
 	</div>
 
 </div>
+
+[% IF is_infancia %]
+
+<dl>
+    <dt>[% region_classification_name.2 %]</dt>
+    <dd> [%region.upper_region.name%] </dd>
+
+    <dt>[% region_classification_name.3 %]</dt>
+    <dd>[% region.name %]</dd>
+</dl>
+
+[% INCLUDE 'parts/tabela_indicadores.tt' %]
+[% END %]
 
 <script type="text/javascript">
     var userID = [% user.id %];

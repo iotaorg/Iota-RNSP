@@ -1,0 +1,21 @@
+<span class="clearfix"></span>
+<div class="row-fluid" >
+
+    <div class="span12 col-sm-12">
+        <div id="cidades-indicadores">
+
+            <h5>[%l('Indicadores separados por eixos')%]</h5>
+
+            [% INCLUDE parts/filtro_tabela_indicadores.tt %]
+
+            <div class="table">
+                <div class="loading"><p>[%l('Carregando...')%]</p></div>
+            </div>
+        </div>
+        [%IF institute.hide_empty_indicators%]
+        <label class="checkbox">
+            <input id="indicadores-hide-toggle" type="checkbox"> [%l('Exibir indicadores sem dados')%]
+        </label>
+        [%END%]
+    </div>
+</div>

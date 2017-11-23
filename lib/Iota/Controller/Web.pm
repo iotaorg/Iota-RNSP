@@ -1517,6 +1517,8 @@ sub network_cidade : Chained('institute_load') PathPart('') CaptureArgs(3) {
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
 
+
+
 }
 
 sub load_region_names : Private {
@@ -1541,6 +1543,9 @@ sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
 
     $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] )
       if !$c->stash->{user}{regions_enabled};
+
+
+    $self->stash_mapa_sp_primeira_infancia($c);
 }
 
 sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(0) {
@@ -1559,6 +1564,7 @@ sub cidade_regiao : Chained('network_cidade') PathPart('regiao') CaptureArgs(1) 
       if !$c->stash->{user}{regions_enabled};
 
     $self->stash_tela_regiao($c);
+    $self->stash_mapa_sp_primeira_infancia($c);
 
     $c->stash->{title} = $c->stash->{region}->name . ' - ' . $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf};
 }
@@ -1616,6 +1622,28 @@ sub stash_distritos : Private {
             without_wrapper => 1
         );
     }
+}
+
+sub stash_mapa_sp_primeira_infancia {
+    my ($self, $c) = @_;
+    return 1 unless $c->stash->{is_infancia};
+     my @regions_to_draw;
+
+    foreach my $region ( @{ $c->stash->{city}{regions }}){
+
+        foreach my $subregion ( @{$region->{subregions}||[]}){
+
+            push @regions_to_draw, {
+                    p => $subregion->{polygon_path},
+                    url => $subregion->{url},
+                    name => $subregion->{name},
+                    upper_name => $region->{name},
+                };
+        }
+
+    }
+
+    $c->stash->{regions_to_draw} = encode_json(\@regions_to_draw);
 }
 
 sub stash_comparacao_distritos : Private {

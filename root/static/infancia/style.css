@@ -867,12 +867,12 @@ form h3 {margin-top: 0}
     font-weight: 500;
     font-size: 36px;
 }
-
-#svg_regions>svg{
-    display: block;
-    margin: 0 auto;
+#map_canvas {
+    width: 100%;
+    min-height: 620px;
+    min-width: 500px;
 }
-#svg_regions polygon[onclick]:hover, #svg_regions path[onclick]:hover {
-    fill: #7dbdf2!important;
-    cursor: pointer;
+#regioes {
+    max-height: 650px;
+    overflow: auto;
 }

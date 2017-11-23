@@ -30,12 +30,9 @@
 
 		<div class="span8 col-md-8">
 
-
-        <div id="svg_regions">
             [%IF is_infancia%]
-                [% INCLUDE 'mapa_distritos_de_sp.svg' %]
+            <div id="map_canvas" data-regions="[%regions_to_draw%]"></div>
             [% ELSE %]
-        </div>
 
 			<div class="row">
 				<div class="span8 col-md-12">
