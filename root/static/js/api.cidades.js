@@ -535,6 +535,7 @@ $(document).ready(function() {
 
     });
 
+    var infowindow;
     var _change_colors = function(event) {
 
         $.each(this._data.list, function(a, b) {
@@ -544,6 +545,12 @@ $(document).ready(function() {
                 strokeWeight: 4
             });
         });
+
+        infowindow.setContent( "<b>Distrito: </b>" + this._data.name );
+        infowindow.setPosition(event.latLng);
+
+        infowindow.open(this._data.map);
+
     };
 
     var _restore_change_colors = function(event) {
@@ -556,6 +563,7 @@ $(document).ready(function() {
             });
         });
     };
+
     function geraGraficos() {
 
 
@@ -656,7 +664,9 @@ $(document).ready(function() {
         }
 
         var the_regions = $.parseJSON( $('#map_canvas').attr('data-regions'));
-
+        if (!infowindow) {
+            infowindow = new google.maps.InfoWindow();
+        }
         google.maps.event.addListenerOnce(map, 'idle', function() {
 
                 var full_polys = Array();

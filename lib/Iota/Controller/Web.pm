@@ -19,6 +19,7 @@ use String::Random;
 use HTML::Strip;
 use Sort::Naturally;
 
+use JSON qw/to_json/;
 my $hs = HTML::Strip->new();
 #
 # Sets the actions in this controller to be registered with no prefix
@@ -1643,7 +1644,7 @@ sub stash_mapa_sp_primeira_infancia {
 
     }
 
-    $c->stash->{regions_to_draw} = encode_json(\@regions_to_draw);
+    $c->stash->{regions_to_draw} = to_json(\@regions_to_draw);
 }
 
 sub stash_comparacao_distritos : Private {
