@@ -535,6 +535,27 @@ $(document).ready(function() {
 
     });
 
+    var _change_colors = function(event) {
+
+        $.each(this._data.list, function(a, b) {
+            b.setOptions({
+                strokeColor: '#EEE',
+                strokeOpacity: 1,
+                strokeWeight: 4
+            });
+        });
+    };
+
+    var _restore_change_colors = function(event) {
+
+        $.each(this._data.list, function(a, b) {
+            b.setOptions({
+                strokeColor: '#333',
+                strokeOpacity: 0.6,
+                strokeWeight: 2
+            });
+        });
+    };
     function geraGraficos() {
 
 
@@ -679,10 +700,10 @@ $(document).ready(function() {
 
                         zoo.polygon.setMap(map);
                         google.maps.event.addListener(zoo.polygon, 'click', _go_to_page);
-                        /*
+
                         google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
                         google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
-*/
+
                         full_polys.push(zoo)
 
                         return true;
