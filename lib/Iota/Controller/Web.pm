@@ -1638,7 +1638,9 @@ sub stash_mapa_sp_primeira_infancia {
                     p => $subregion->{polygon_path},
                     url => $subregion->{url},
                     name => $subregion->{name},
+
                     upper_name => $region->{name},
+                    upper_id => $region->{id},
                 };
         }
 

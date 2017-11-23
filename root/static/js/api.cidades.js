@@ -44,12 +44,12 @@ $(document).ready(function() {
 
     function loadMap() {
 
-        if (document.getElementById("map_canvas")){
+        if (document.getElementById("map_canvas")) {
             loadMapInfancia();
             return 1;
         }
 
-        if (!document.getElementById("mapa")){
+        if (!document.getElementById("mapa")) {
             return 0;
         }
 
@@ -102,7 +102,7 @@ $(document).ready(function() {
     }
 
     function setMap(lat, lng) {
-        if (document.getElementById("map_canvas")){
+        if (document.getElementById("map_canvas")) {
             return 0;
         }
         if (!map) return 0;
@@ -546,11 +546,10 @@ $(document).ready(function() {
             });
         });
 
-        infowindow.setContent( "<b>Distrito: </b>" + this._data.name );
+        infowindow.setContent('<p><b>Prefeitura regional: </b>' + this._data.upper_name + '</p>' + "<b>Distrito: </b>" + this._data.name);
         infowindow.setPosition(event.latLng);
 
         infowindow.open(this._data.map);
-
     };
 
     var _restore_change_colors = function(event) {
@@ -618,12 +617,148 @@ $(document).ready(function() {
         loadMapInfancia();
     }
 
-    function _go_to_page (){
+    function _go_to_page() {
         window.location.href = this._data.url;
     }
 
+    function _color(id) {
+        var confi = {
+            '288': '#8559c1',
+            '291': '#8559c1',
+            '289': '#8559c1',
+            '292': '#8559c1',
+            '295': '#8559c1',
+            '287': '#8559c1',
+            '290': '#8559c1',
+            '293': '#8559c1',
+            '294': '#8559c1',
+            '192': '#4f6e53',
+            '191': '#4f6e53',
+            '194': '#4f6e53',
+            '193': '#4f6e53',
+            '205': '#638f6a',
+            '203': '#638f6a',
+            '204': '#638f6a',
+            '217': '#80b589',
+            '216': '#80b589',
+            '218': '#94cd9d',
+            '220': '#94cd9d',
+            '221': '#94cd9d',
+            '219': '#94cd9d',
+            '222': '#afd9b6',
+            '224': '#afd9b6',
+            '225': '#afd9b6',
+            '223': '#afd9b6',
+            '226': '#afd9b6',
+            '227': '#c5e6cb',
+            '229': '#c5e6cb',
+            '230': '#c5e6cb',
+            '228': '#c5e6cb',
+            '231': '#c5e6cb',
+            '242': '#4e8e59',
+            '243': '#4e8e59',
+            '241': '#4e8e59',
+            '284': '#498a53',
+            '286': '#498a53',
+            '285': '#498a53',
+            '283': '#498a53',
+            '298': '#5db76c',
+            '296': '#5db76c',
+            '302': '#5db76c',
+            '301': '#5db76c',
+            '297': '#5db76c',
+            '300': '#5db76c',
+            '299': '#5db76c',
+            '303': '#7fbc89',
+            '304': '#7fbc89',
+            '306': '#7fbc89',
+            '309': '#809683',
+            '308': '#809683',
+            '307': '#809683',
+            '354': '#83b98c',
+            '305': '#83b98c',
+            '195': '#d12626',
+            '196': '#d12626',
+            '197': '#d12626',
+            '198': '#d12626',
+            '200': '#d64141',
+            '201': '#d64141',
+            '202': '#d64141',
+            '199': '#d64141',
+            '208': '#b24545',
+            '209': '#b24545',
+            '206': '#b24545',
+            '207': '#b24545',
+            '245': '#c26363',
+            '244': '#c26363',
+            '246': '#c26363',
+            '247': '#c46262',
+            '249': '#c46262',
+            '250': '#c46262',
+            '248': '#c46262',
+            '310': '#dc8282',
+            '312': '#dc8282',
+            '311': '#dc8282',
+            '315': '#dc8282',
+            '313': '#dc8282',
+            '314': '#dc8282',
+            '210': '#2f2f5a',
+            '211': '#2f2f5a',
+            '213': '#2f2f5a',
+            '214': '#2f2f5a',
+            '212': '#2f2f5a',
+            '232': '#2f2f8a',
+            '234': '#2f2f8a',
+            '235': '#2f2f8a',
+            '233': '#2f2f8a',
+            '236': '#2f2f8a',
+            '237': '#2f2f8a',
+            '270': '#6767b3',
+            '268': '#6767b3',
+            '266': '#6767b3',
+            '265': '#6767b3',
+            '267': '#6767b3',
+            '264': '#6767b3',
+            '269': '#6767b3',
+            '215': '#ed9613',
+            '353': '#ed9613',
+            '352': '#ed9613',
+            '240': '#e3951e',
+            '239': '#e3951e',
+            '238': '#e3951e',
+            '253': '#d18f2c',
+            '252': '#d18f2c',
+            '251': '#d18f2c',
+            '255': '#d69a3e',
+            '254': '#d69a3e',
+            '256': '#d1a055',
+            '258': '#d1a055',
+            '259': '#d1a055',
+            '257': '#d1a055',
+            '263': '#dbb06d',
+            '260': '#dbb06d',
+            '261': '#dbb06d',
+            '262': '#dbb06d',
+            '273': '#f0c789',
+            '274': '#f0c789',
+            '271': '#f0c789',
+            '272': '#f0c789',
+            '277': '#bd8c41',
+            '275': '#bd8c41',
+            '276': '#bd8c41',
+            '278': '#bd8c41',
+            '281': '#d0a058',
+            '279': '#d0a058',
+            '280': '#d0a058',
+            '282': '#d0a058'
+        };
 
-    function loadMapInfancia(){
+        return confi[id]
+
+
+    }
+
+    function loadMapInfancia() {
 
         var mapDefaultLocation = new google.maps.LatLng(-14.2350040, -51.9252800);
         var geocoder = new google.maps.Geocoder();
@@ -640,7 +775,153 @@ $(document).ready(function() {
             zoomControl: false,
             streetViewControl: false,
             fullscreenControl: false,
-            styles: [{"elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"elementType":"labels","stylers":[{"visibility":"off"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]},{"featureType":"administrative.land_parcel","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative.neighborhood","stylers":[{"visibility":"off"}]},{"featureType":"poi","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#eeeeee"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"featureType":"road","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"featureType":"transit.station","elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#ffffff"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]}],
+            styles: [{
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "elementType": "labels",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "elementType": "labels.icon",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "elementType": "labels.text.stroke",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "administrative",
+                "elementType": "geometry",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "administrative.land_parcel",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "administrative.land_parcel",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "administrative.neighborhood",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "poi",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "poi",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#eeeeee"
+                }]
+            }, {
+                "featureType": "poi",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "poi.park",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "road",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "road",
+                "elementType": "labels.icon",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "road.arterial",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "road.highway",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "road.local",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "transit",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            }, {
+                "featureType": "transit.line",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "transit.station",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }, {
+                "featureType": "water",
+                "elementType": "labels.text.fill",
+                "stylers": [{
+                    "color": "#ffffff"
+                }]
+            }],
         };
 
 
@@ -663,80 +944,81 @@ $(document).ready(function() {
             };
         }
 
-        var the_regions = $.parseJSON( $('#map_canvas').attr('data-regions'));
+        var the_regions = $.parseJSON($('#map_canvas').attr('data-regions'));
         if (!infowindow) {
             infowindow = new google.maps.InfoWindow();
         }
+
         google.maps.event.addListenerOnce(map, 'idle', function() {
 
-                var full_polys = Array();
+            var full_polys = Array();
 
-                $.each(the_regions, function(i, region) {
+            $.each(the_regions, function(i, region) {
 
-                    var elm = region;
-                    elm.list = Array();
+                var elm = region;
+                elm.list = Array();
 
-                    $.each([region.p], function(aa, elm2) {
+                $.each([region.p], function(aa, elm2) {
 
-                        if (elm2 === null) {
-                            return true;
-                        }
-
-                        var zoo = {
-                            coords: google.maps.geometry.encoding.decodePath(elm2)
-                        };
-
-                        if (zoo.coords == null || zoo.coords == undefined) {
-                            return true;
-                        }
-
-                        var thecolor = '#F0F';//_get_color(region_id);
-
-                        zoo.polygon = new google.maps.Polygon({
-                            paths: zoo.coords,
-                            strokeColor: '#333',
-                            strokeOpacity: 0.6,
-                            strokeWeight: 2,
-                            fillColor: thecolor,
-                            fillOpacity: 0.8
-                        });
-
-
-
-                        elm.list.push(zoo.polygon);
-
-                        zoo.polygon._data = elm;
-                        zoo.polygon._data.map = map;
-
-                        zoo.polygon.setMap(map);
-                        google.maps.event.addListener(zoo.polygon, 'click', _go_to_page);
-
-                        google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
-                        google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
-
-                        full_polys.push(zoo)
-
-                        return true;
-                    });
-                });
-
-                var super_bound = null;
-                $.each(full_polys, function(a, elm) {
-
-                    if (super_bound === null) {
-                        super_bound = elm.polygon.getBounds();
+                    if (elm2 === null) {
                         return true;
                     }
 
-                    super_bound = super_bound.union(elm.polygon.getBounds());
+                    var zoo = {
+                        coords: google.maps.geometry.encoding.decodePath(elm2)
+                    };
+
+                    if (zoo.coords == null || zoo.coords == undefined) {
+                        return true;
+                    }
+
+                    var thecolor = _color(region.upper_id);
+
+                    zoo.polygon = new google.maps.Polygon({
+                        paths: zoo.coords,
+                        strokeColor: '#333',
+                        strokeOpacity: 0.6,
+                        strokeWeight: 2,
+                        fillColor: thecolor,
+                        fillOpacity: 0.8
+                    });
+
+
+
+                    elm.list.push(zoo.polygon);
+
+                    zoo.polygon._data = elm;
+                    zoo.polygon._data.map = map;
+
+                    zoo.polygon.setMap(map);
+                    google.maps.event.addListener(zoo.polygon, 'click', _go_to_page);
+
+                    google.maps.event.addListener(zoo.polygon, 'mouseover', _change_colors);
+                    google.maps.event.addListener(zoo.polygon, 'mouseout', _restore_change_colors);
+
+                    full_polys.push(zoo)
+
                     return true;
                 });
+            });
 
-                if (!(super_bound === null)) {
-                    map.fitBounds(super_bound);
+            var super_bound = null;
+            $.each(full_polys, function(a, elm) {
+
+                if (super_bound === null) {
+                    super_bound = elm.polygon.getBounds();
+                    return true;
                 }
 
+                super_bound = super_bound.union(elm.polygon.getBounds());
+                return true;
             });
+
+            if (!(super_bound === null)) {
+                map.fitBounds(super_bound);
+            }
+
+        });
 
 
     }
