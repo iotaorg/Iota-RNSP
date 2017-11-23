@@ -553,7 +553,7 @@ $(document).ready(function() {
     };
 
     var _restore_change_colors = function(event) {
-
+        infowindow.close(this._data.map);
         $.each(this._data.list, function(a, b) {
             b.setOptions({
                 strokeColor: '#333',
@@ -946,7 +946,10 @@ $(document).ready(function() {
 
         var the_regions = $.parseJSON($('#map_canvas').attr('data-regions'));
         if (!infowindow) {
-            infowindow = new google.maps.InfoWindow();
+            infowindow = new google.maps.InfoWindow({
+                pixelOffset: new google.maps.Size(-5,-5)
+
+            });
         }
 
         google.maps.event.addListenerOnce(map, 'idle', function() {
