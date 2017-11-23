@@ -108,16 +108,25 @@
 </div>
 
 [% IF is_infancia %]
+<div class="row-fluid" style="border-top: 2px solid #3366cc;">
+<div class="span12 col-sm-12">
 
-<dl>
-    <dt>[% region_classification_name.2 %]</dt>
-    <dd> [%region.upper_region.name%] </dd>
+    <dl>
+        [% IF region.upper_region.name %]
+            <dt> [% region_classification_name.2 %]</dt>
+            <dd> [% region.upper_region.name %] </dd>
+        [%END%]
 
-    <dt>[% region_classification_name.3 %]</dt>
-    <dd>[% region.name %]</dd>
-</dl>
+        <dt>[% region_classification_name.3 %]</dt>
+        <dd>[% region.name %]</dd>
+    </dl>
+</div>
+</div>
 
+<div class="is_infancia">
 [% INCLUDE 'parts/tabela_indicadores.tt' %]
+</div>
+
 [% END %]
 
 <script type="text/javascript">

@@ -876,3 +876,12 @@ form h3 {margin-top: 0}
     max-height: 650px;
     overflow: auto;
 }
+
+div.is_infancia {
+    margin-top: -20px;
+}
+div.is_infancia h5 {
+    font-size: 24px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
