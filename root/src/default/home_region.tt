@@ -115,10 +115,15 @@
         [% IF region.upper_region.name %]
             <dt> [% region_classification_name.2 %]</dt>
             <dd> [% region.upper_region.name %] </dd>
+
+            <dt>[% region_classification_name.3 %]</dt>
+            <dd>[% region.name %]</dd>
+        [% ELSE %]
+            <dt>[% region_classification_name.2 %]</dt>
+            <dd>[% region.name %]</dd>
         [%END%]
 
-        <dt>[% region_classification_name.3 %]</dt>
-        <dd>[% region.name %]</dd>
+
     </dl>
 </div>
 </div>
