@@ -411,7 +411,7 @@ $(document).ready(function() {
                             icone_title.push("Indicadores do Programa Cidades Sustentáveis");
                         }
                         if (new RegExp("urban").test(item.source)) {
-                            icone.push("<img src='/static/images/icon_urban.png'>");
+                            icone.push("<img src='/static/images/icon_house.png'>");
                             icone_title.push("Indicadores do Urban95");
                         }
                         if (new RegExp("progmetas").test(item.source)) {
