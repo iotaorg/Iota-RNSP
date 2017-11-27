@@ -51,8 +51,9 @@ load_map.push( {
 
         [%ELSE%]
         <p>[%l('Sem mapa da região')%]</p>
-        [%END%]
-
+        [%END%
+        ]
+[% UNLESS indicator.is_sort_direction_meanless %]
         <ol class="unstyled">
             <li style="border-left: 1.5em solid [%color_index.0%]; padding-left: 0.5em">[%l('Alta / Melhor')%]</li>
             <li style="border-left: 1.5em solid [%color_index.1%]; padding-left: 0.5em">[%l('Acima da média')%]</li>
@@ -82,6 +83,7 @@ load_map.push( {
             </tbody>
         </table>
         <small>¹ [%l('Média com base na soma dos números das')%] [%IF region.depth_level == 2%][%l('regiões')%][%ELSE%][%l('subregiões')%][%END%]</small>
+[%END%]
 
 </div>
 

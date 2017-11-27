@@ -81,10 +81,12 @@
                 [% INCLUDE parts/analise_comparativa.tt %]
             </div>
 
+            [% UNLESS indicator.is_sort_direction_meanless %]
             <div class="table">
                 <h2>[%l('Fator de desigualdade')%]</h2>
                 [% INCLUDE parts/fator_desigualdade.tt %]
             </div>
+            [%END%]
 
             [% INCLUDE parts/regiao_serie_historica_grafico_download.tt %]
 
