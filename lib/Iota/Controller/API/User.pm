@@ -107,7 +107,9 @@ sub user_file_POST {
                 $c->detach;
             }
 
-        }elsif ( $classe eq 'imagem_bp' ) {
+        }
+
+        if ( $classe eq 'imagem_bp' ) {
             $add_thumb = 1;
         }elsif ( $classe eq 'imagem_variavel' ) {
             $scale_size = 0.3;
