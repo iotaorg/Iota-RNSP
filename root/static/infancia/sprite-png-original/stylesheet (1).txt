@@ -4,50 +4,62 @@
     display: block;
 }
 
+.iods-cidades {
+    width: 251px;
+    height: 86px;
+    background-position: -2px -2px;
+}
+
+.iods-cidades-pb {
+    width: 251px;
+    height: 86px;
+    background-position: -2px -92px;
+}
+
 .iods-logo-appcivico {
     width: 226px;
     height: 37px;
-    background-position: -1px -1px;
+    background-position: -2px -182px;
 }
 
 .iods-logo-appcivico-ov {
     width: 226px;
     height: 37px;
-    background-position: -1px -40px;
+    background-position: -2px -223px;
 }
 
 .iods-logo-bernard {
     width: 158px;
     height: 84px;
-    background-position: -1px -79px;
+    background-position: -257px -2px;
 }
 
 .iods-logo-bernard-ov {
     width: 158px;
     height: 84px;
-    background-position: -1px -165px;
+    background-position: -257px -90px;
 }
 
 .iods-logo-iota {
     width: 80px;
     height: 53px;
-    background-position: -161px -79px;
+    background-position: -419px -2px;
 }
 
 .iods-logo-iota-ov {
     width: 80px;
     height: 53px;
-    background-position: -161px -134px;
+    background-position: -419px -59px;
 }
 
 .iods-logo-rnsp {
     width: 105px;
     height: 66px;
-    background-position: -229px -1px;
+    background-position: -257px -178px;
 }
 
 .iods-logo-rnsp-ov {
     width: 105px;
     height: 66px;
-    background-position: -243px -69px;
+    background-position: -366px -178px;
 }
