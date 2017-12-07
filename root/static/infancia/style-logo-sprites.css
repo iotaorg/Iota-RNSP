@@ -1,5 +1,5 @@
 .inflogo {
-    background-image: url(/static/infancia/sprites-logos.png);
+    background-image: url(/static/infancia/sprites-logos.png?x);
     background-repeat: no-repeat;
     display: inline-block;
 }
