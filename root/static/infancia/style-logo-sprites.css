@@ -1,65 +1,66 @@
 .inflogo {
-    background-image: url(/static/infancia/sprites-logos.png?x);
+    background-image: url(/static/infancia/sprites-logos.png?yz);
     background-repeat: no-repeat;
     display: inline-block;
 }
 
 a:hover .inflogo-cidades-pb {
-    width: 251px;
-    height: 86px;
+    width: 140px;
+    height: 48px;
     background-position: -2px -2px;
 }
 
 .inflogo-cidades-pb {
-    width: 251px;
-    height: 86px;
-    background-position: -2px -92px;
+    width: 140px;
+    height: 48px;
+    background-position: -146px -2px;
 }
 
 .inflogo-logo-appcivico {
     width: 226px;
     height: 37px;
-    background-position: -2px -182px;
+    background-position: -2px -54px;
 }
 
 a:hover .inflogo-logo-appcivico {
     width: 226px;
     height: 37px;
-    background-position: -2px -223px;
+    background-position: -2px -95px;
 }
 
 .inflogo-logo-bernard {
     width: 158px;
     height: 84px;
-    background-position: -257px -2px;
+    background-position: -2px -136px;
 }
 
 a:hover .inflogo-logo-bernard {
     width: 158px;
     height: 84px;
-    background-position: -257px -90px;
+    background-position: -290px -2px;
 }
 
 .inflogo-logo-iota {
     width: 80px;
     height: 53px;
-    background-position: -419px -2px;
+    background-position: -232px -90px;
 }
 
 a:hover .inflogo-logo-iota {
     width: 80px;
     height: 53px;
-    background-position: -419px -59px;
+    background-position: -316px -90px;
 }
 
 .inflogo-logo-rnsp {
     width: 105px;
     height: 66px;
-    background-position: -257px -178px;
+    background-position: -164px -147px;
 }
 
 a:hover .inflogo-logo-rnsp {
     width: 105px;
     height: 66px;
-    background-position: -366px -178px;
+    background-position: -273px -147px;
 }
+
