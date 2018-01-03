@@ -569,7 +569,7 @@ dl.tabela blockquote small {
 }
 #boapratica > div {
     font-size: 14px;
-    height: 455px;
+    height: 465px;
     padding-bottom: 15px;
 }
 #boapratica .item {
@@ -805,6 +805,9 @@ b, strong, label, th {
 .table .table,
 .dados-box-regiao > div {
     border: 1px solid #e0e0e0;
+}
+.dados-box-regiao h1 {
+    font-size: 28px;
 }
 
 body.root_mapa_site #iota-app-content ul {
