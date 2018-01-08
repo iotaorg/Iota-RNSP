@@ -56,6 +56,12 @@ sub verifiers_specs {
             }
         },
 
+        image_caption => {
+            required   => 0,
+            max_length => 500,
+            type       => 'Str',
+        },
+
         image_user_file_id => {
             required   => 0,
             type       => 'Int',

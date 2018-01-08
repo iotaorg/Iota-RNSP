@@ -50,3 +50,4 @@ end-users-mail-queue [end-users-by-network] 2014-07-08T14:02:35Z cron <renato.cr
 0083-page-type [0082-fix-menu-equal-parent] 2017-09-28T09:15:33Z renato,,, <renato@renato-MS-7A34> # page-type
 0084-fix-rel [0083-page-type] 2017-09-28T11:15:32Z renato,,, <renato@renato-MS-7A34> # fix-rel
 0085-disable_sort_direction [0084-fix-rel] 2017-11-09T20:58:43Z renato,,, <renato@renato-MS-7A34> # sort_direction
+0086-bp-alt [0085-disable_sort_direction] 2018-01-08T16:27:31Z renato,,, <renato@renato-MS-7A34> # bp-alt

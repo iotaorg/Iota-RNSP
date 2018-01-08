@@ -104,7 +104,7 @@
         <div class="item">
             <span class="header">[% bp.header %]</span>
             <a href="/[%bp.url%]">
-                [%IF bp.image%]<img src="[% bp.image %]" />[%ELSE%]<img src="/static/infancia/boa-pratica-default.jpg" />[%END%]
+                [%IF bp.image%]<img alt="[% bp.image_caption %]" title="[% bp.image_caption %]" src="[% bp.image %]" />[%ELSE%]<img src="/static/infancia/boa-pratica-default.jpg" />[%END%]
                 <h2>[% bp.name %]</h2>
             </a>
             [% IF bp.axis_attrs %]

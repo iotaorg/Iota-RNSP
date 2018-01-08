@@ -58,7 +58,7 @@ sub best_pratice_GET {
             (
                 map { $_ => $object_ref->{$_} }
                   qw(
-                  id user_id axis_id  name description methodology goals
+                  id user_id axis_id  name description methodology goals image_caption
                   schedule results institutions_involved contatcts sources repercussion reference_city
                   tags)
             ),
@@ -168,7 +168,7 @@ sub list_GET {
             (
                 map { $_ => $obj->{$_} }
                   qw(id
-                  user_id axis_id name description methodology goals
+                  user_id axis_id name description methodology goals image_caption
                   schedule results institutions_involved contatcts sources repercussion reference_city
                   )
             ),
@@ -204,7 +204,6 @@ sub list_POST {
         $c,
         location => $c->uri_for( $self->action_for('best_pratice'), [ $object->id ] )->as_string,
         entity => {
-
             id => $object->id,
         }
     );

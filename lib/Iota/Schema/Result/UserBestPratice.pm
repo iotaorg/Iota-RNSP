@@ -161,6 +161,12 @@ __PACKAGE__->table("user_best_pratice");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 image_caption
+
+  data_type: 'text'
+  is_nullable: 1
+  original: {data_type => "varchar"}
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -222,6 +228,12 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "thumbnail_user_file_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "image_caption",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -384,8 +396,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 08:20:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FMBtv/2LWRf2Du3K9drKwg
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2018-01-08 14:28:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:u6iI/TqEJ4kN36lKnlNVjw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -706,6 +706,7 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
                 },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
                 { description => \'me.description' },
+                { image_caption => \'me.image_caption' },
                 {
                     concat => \
 "case when thumbnail_user_file_id is null then coalesce(me.description,'') || coalesce(me.methodology,'') || coalesce(me.goals,'') || coalesce(me.schedule,'') || coalesce(me.results,'') else '' end"

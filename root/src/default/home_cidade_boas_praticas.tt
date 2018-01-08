@@ -7,7 +7,7 @@
 
 
         [%IF best_pratice.image_user_file %]
-        <img src="[%l(best_pratice.image_user_file.public_url)|none%]" />
+        <img alt="[% best_pratice.image_caption %]" title="[% best_pratice.image_caption %]" src="[%l(best_pratice.image_user_file.public_url)|none%]" />
         [%END%]
 
 

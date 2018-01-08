@@ -33,9 +33,10 @@ eval {
             ( $res, $c ) = ctx_request(
                 POST '/api/best_pratice',
                 [
-                    api_key                       => 'test',
-                    'best_pratice.create.name'    => 'teste com',
-                    'best_pratice.create.axis_id' => 2,
+                    api_key                             => 'test',
+                    'best_pratice.create.name'          => 'teste com',
+                    'best_pratice.create.image_caption' => 'the image_caption',
+                    'best_pratice.create.axis_id'       => 2,
                 ]
             );
 
@@ -44,6 +45,8 @@ eval {
 
             use JSON qw(from_json);
             my $best_pratice = eval { from_json( $res->content ) };
+            ok( $best_pratice = $schema->resultset('UserBestPratice')->find( $best_pratice->{id} ) );
+            is $best_pratice->image_caption, 'the image_caption', '$best_pratice ok';
 
             my $bpurl = $res->header('Location');
             ( $res, $c ) = ctx_request(
