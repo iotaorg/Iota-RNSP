@@ -9,14 +9,12 @@ export WORKERS=4
 
 cd /src;
 source /home/app/perl5/perlbrew/etc/bashrc
-mkdir -p /data/envdir
 
 cpanm --installdeps . -n
 sqitch deploy -t local
 
 CATALYST_CONFIG=/src/iota.conf start_server \
  --pid-file=/tmp/start_server.pid \
- --envdir=/data/envdir \
  --signal-on-hup=QUIT \
  --kill-old-delay=10 \
  --port=8080 \
