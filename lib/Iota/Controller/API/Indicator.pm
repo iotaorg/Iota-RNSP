@@ -499,6 +499,7 @@ sub list_GET {
                   visibility_country_id
 
                   featured_in_home
+                  formula_human
                   created_at)
             ),
             url => $c->uri_for_action( $self->action_for('indicator'), [ $obj->{id} ] )->as_string,
