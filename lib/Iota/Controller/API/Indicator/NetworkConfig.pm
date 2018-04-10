@@ -58,7 +58,7 @@ sub network_config_POST {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin user superadmin));
 
     my $param = $c->req->params->{indicator}{network_config}{upsert};
 
@@ -98,7 +98,7 @@ sub network_config_DELETE {
     my ( $self, $c ) = @_;
 
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
-      unless $c->check_any_user_role(qw(admin superadmin));
+      unless $c->check_any_user_role(qw(admin user superadmin));
 
     my $obj = $c->stash->{collection}->search( { network_id => $c->stash->{object_id} } )->next;
 
