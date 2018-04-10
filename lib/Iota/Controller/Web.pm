@@ -1845,7 +1845,7 @@ sub best_pratice : Chained('network_cidade') PathPart('boa-pratica') CaptureArgs
             'me.id'      => $page_id,
             'me.user_id' => $c->stash->{user}{id}
         },
-        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3' ] }
+        { prefetch => [ 'axis', 'axis_dim1', 'axis_dim2', 'axis_dim3', 'image_user_file' ] }
     )->as_hashref->next;
 
     $c->detach('/error_404') unless $page;

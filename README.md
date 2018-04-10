@@ -46,6 +46,9 @@ institute metaconfig options:
   // se é pra mostrar o campo short_name da variavel (admin)
   show_variable_short_name
 
+  // se é para mostrar o campo imagem da variavel
+  show_variable_image
+
   // se é pra mostrar o campo order da variavel
   show_variable_order
 
