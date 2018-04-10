@@ -275,7 +275,7 @@ sub list_GET {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
     )->next;
-    $cache_key = $cache_key->{md5};
+    $cache_key = $c->req->uri->host . $cache_key->{md5};
     $cache_key = $cache_key ? "variable-list_GET-$cache_key" : rand . rand . rand;
 
     my $stash = $redis->get($cache_key);
