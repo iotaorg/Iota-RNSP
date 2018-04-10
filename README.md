@@ -43,6 +43,12 @@ institute metaconfig options:
   # se é pra esconder o apelido no admin, gerando a url sozinha
   "hide_cognomen": 1,
 
+  // se é pra mostrar o campo short_name da variavel (admin)
+  show_variable_short_name
+
+  // se é pra mostrar o campo order da variavel
+  show_variable_order
+
   # se tem programa de metas habilitado
   "prog_meta": 1,
 
