@@ -2190,7 +2190,7 @@ sub stash_comparacao_cidades {
                 val => $user->{by_period}{$valid}{avg},
                 lat => $user->{city}{latitude},
                 lng => $user->{city}{longitude},
-                nm  => $user->{city}{name},
+                nm  => $user->{city}{name} . ' (' . $user->{city}{uf} . ')' ,
               };
         }
     }
@@ -2218,7 +2218,7 @@ sub stash_comparacao_cidades {
         my $reg_user = {
             show => exists $shown{$user_id} ? 1 : 0,
             id   => $user_id,
-            nome => $user->{city}{name},
+            nome => $user->{city}{name}  . ' (' . $user->{city}{uf} . ')' ,
             valores => []
         };
 

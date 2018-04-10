@@ -82,7 +82,7 @@
 
     [%SET city_i = "/${user.city.pais}/${user.city.uf}/${user.city.name_url}/${indicator.name_url}"%]
     <tr data-user-id="[%user.user_id%]">
-        <td><a href="[%city_i%]">[%user.city.name%]</a></td>
+        <td><a href="[%city_i%]">[%user.city.name%]</a> ([%user.city.uf%])</td>
 
         [%FOREACH period IN choosen_periods.2%]
         [%SET val=user.by_period.${period}.avg%]
