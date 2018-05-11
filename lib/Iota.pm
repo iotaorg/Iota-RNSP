@@ -84,6 +84,17 @@ __PACKAGE__->config(
 before 'setup_components' => sub {
     my $app = shift;
 
+    if ( !$ENV{TOGEOJSON_BIN} ) {
+
+        my ( undef, $bin ) = split / /, `whereis togeojson`;
+        chomp($bin);
+
+        if ( -x $bin ) {
+            $ENV{TOGEOJSON_BIN} = $bin;
+        }
+
+    }
+
     if ( $ENV{HARNESS_ACTIVE} || $0 =~ /forkprove/ ) {
         $app->config->{'Model::DB'}{connect_info} = $app->config->{'Model::DB'}{testing_connect_info};
     }
