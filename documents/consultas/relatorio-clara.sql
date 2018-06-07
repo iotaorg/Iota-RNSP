@@ -1,3 +1,4 @@
+drop table _saida if exists ;
 create temp table _saida as
 select
 

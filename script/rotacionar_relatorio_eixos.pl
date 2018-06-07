@@ -98,7 +98,7 @@ while ( my $row = $csv->getline($fh) ) {
         }
         else {
             use DDP;
-            p @data;
+            p \@data;
             $ignored++;
         }
 
