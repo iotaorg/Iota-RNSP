@@ -8,6 +8,7 @@ use Data::Dumper;
 
 use overload ();
 use Carp;
+use Digest::MD5 qw[ md5 ];
 
 use namespace::clean -except => 'meta';
 
@@ -47,7 +48,6 @@ sub setup_lexicon_plugin {
     $current_lang = $c->config->{default_lang};
 
 }
-use Digest::MD5 qw(md5_hex);
 
 sub lexicon_reload_all {
     my @files = glob("$cache_lang_prefix*");
@@ -60,7 +60,7 @@ sub lexicon_reload_self {
 
     $cache = {};
     while ( my $r = $rs->next ) {
-        $cache->{ $r->{lang} }{ $r->{lex_key} } = $r->{lex_value};
+        $cache->{ $r->{lang} }{ md5 $r->{lex_key} } = $r->{lex_value};
     }
 
     my $cache_lang_file = "$cache_lang_prefix$$";
@@ -79,8 +79,12 @@ sub valid_values_for_lex_key {
     }
     my $out = {};
     foreach my $lang ( keys %$cache ) {
-        if ( exists $cache->{$lang}{$lex} && $cache->{$lang}{$lex} !~ /^\?\s/ && $cache->{$lang}{$lex} ) {
-            $out->{$lang} = $cache->{$lang}{$lex};
+        my $text_md5 = md5 $lex;
+
+        my $value = $cache->{$lang}{$text_md5};
+
+        if ( defined $value && $value !~ /^\?\s/o ) {
+            $out->{$lang} = $value;
         }
     }
     wantarray ? %$out : $out;
@@ -105,9 +109,10 @@ where origin_lang='pt-br' and lang='es' and lex_key in (select lex_value from le
 sub _loc_nop { $_[1] }
 
 sub loc {
-    my ($c, $text) = @_;
+    my ( $c, $text ) = @_;
 
-    if ( !$ENV{HARNESS_ACTIVE_REMOVED} && ($c->config->{disable_lexicon} || exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} )) {
+    if ( !$ENV{HARNESS_ACTIVE_REMOVED}
+        && ( $c->config->{disable_lexicon} || exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} ) ) {
 
         *loc = *_loc_nop;
         return $text;
@@ -120,11 +125,13 @@ sub loc {
 sub _loc_old {
     my ( $c, $text, $origin_lang, @conf ) = @_;
 
-    return $text if ( exists $ENV{HARNESS_ACTIVE} && $ENV{HARNESS_ACTIVE} );
-    return $text if ( !defined $text || $text =~ /^\s+$/ );
+    return $text if !defined $text;
+    return $text if defined $ENV{HARNESS_ACTIVE};
 
-    $text =~ s/^\s+//;
-    $text =~ s/\s+$//;
+    $text =~ s/^\s+//o;
+    $text =~ s/\s+$//o;
+
+    return $text if !$text;
 
     my $default = $c->config->{default_lang};
 
@@ -141,8 +148,10 @@ sub _loc_old {
         &lexicon_reload_self;
     }
 
-    if ( exists $cache->{$current_lang}{$text} ) {
-        return $cache->{$current_lang}{$text};
+    my $text_md5 = md5 $text;
+    my $value    = $cache->{$current_lang}{$text_md5};
+    if ( defined $value ) {
+        return $value;
     }
     else {
 
@@ -151,7 +160,7 @@ sub _loc_old {
 
         foreach my $lang (@add_langs) {
             my $str = $lang eq $origin_lang ? $text : "? $text";
-            $cache->{$lang}{$text} = $str;
+            $cache->{$lang}{$text_md5} = $str;
 
             my $exists = $resultset->search(
                 {
