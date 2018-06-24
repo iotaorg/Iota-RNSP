@@ -554,16 +554,20 @@ eval {
                       . '/values/'
                       . $_->{id} )
                   for @{ $list_val->{values} };
-            }
+          last;  
+	  }
             for my $var (@variacoes) {
                 &_delete( 204, '/api/indicator/' . $indicator->{id} . '/variation/' . $var->{id} );
                 &_delete( 410, '/api/indicator/' . $indicator->{id} . '/variation/' . $var->{id} );
-            }
+        last    
+	}
 
             for my $var (@subvar) {
                 &_delete( 204, '/api/indicator/' . $indicator->{id} . '/variables_variation/' . $var->{id} );
                 &_delete( 410, '/api/indicator/' . $indicator->{id} . '/variables_variation/' . $var->{id} );
-            }
+        last;    
+	}
+
 
             &_delete( 204, '/api/indicator/' . $indicator->{id} );
 
