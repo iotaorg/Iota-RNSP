@@ -11,6 +11,7 @@ use Carp;
 use Digest::MD5 qw[ md5 ];
 
 use namespace::clean -except => 'meta';
+use Encode;
 
 our $VERSION = '0.35';
 $VERSION = eval $VERSION;
@@ -60,7 +61,7 @@ sub lexicon_reload_self {
 
     $cache = {};
     while ( my $r = $rs->next ) {
-        $cache->{ $r->{lang} }{ md5 $r->{lex_key} } = $r->{lex_value};
+        $cache->{ $r->{lang} }{ md5( Encode::encode_utf8( $r->{lex_key} ) ) } = $r->{lex_value};
     }
 
     my $cache_lang_file = "$cache_lang_prefix$$";
@@ -79,7 +80,7 @@ sub valid_values_for_lex_key {
     }
     my $out = {};
     foreach my $lang ( keys %$cache ) {
-        my $text_md5 = md5 $lex;
+        my $text_md5 = md5( Encode::encode_utf8($lex) );
 
         my $value = $cache->{$lang}{$text_md5};
 
@@ -148,7 +149,7 @@ sub _loc_old {
         &lexicon_reload_self;
     }
 
-    my $text_md5 = md5 $text;
+    my $text_md5 = md5( Encode::encode_utf8($text) );
     my $value    = $cache->{$current_lang}{$text_md5};
     if ( defined $value ) {
         return $value;
