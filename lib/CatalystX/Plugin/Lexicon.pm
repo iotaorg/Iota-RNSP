@@ -19,8 +19,12 @@ $VERSION = eval $VERSION;
 my $resultset;
 my $cache;
 my $current_lang;
-my $conter=0;
-my $cache_lang_prefix = -d '/dev/shm/' ? '/dev/shm/cache.lang.' : '/tmp/cache.lang.';
+my $conter = 0;
+
+# removendo -d '/dev/shm/' ? ...
+# pois o overhead do ramdrive é maior (23% mais lento do que usar /tmp)
+
+my $cache_lang_prefix = '/tmp/cache.lang.';
 
 sub setup {
     my $c = shift;
@@ -134,7 +138,7 @@ sub _loc_old {
 
     return $text if !$text;
 
-    if (++$conter % 100 == 0){
+    if ( ++$conter % 100 == 0 ) {
         my $cache_lang_file = "$cache_lang_prefix$$";
         unless ( -e $cache_lang_file ) {
             &lexicon_reload_self;
