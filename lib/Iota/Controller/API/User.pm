@@ -55,7 +55,7 @@ sub user_file_POST {
     my $classe = $c->stash->{classe};
     my $t      = new Text2URI();
 
-    $classe = $t->translate( substr( $classe, 0, 15 ) );
+    $classe = $t->translate( substr( $classe, 0, 15 ), '_' );
     $classe ||= 'perfil';
 
     $c->res->content_type('application/json');
