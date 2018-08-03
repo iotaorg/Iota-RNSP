@@ -37,7 +37,7 @@ __PACKAGE__->table_class("DBIx::Class::ResultSource::View");
 =cut
 
 __PACKAGE__->table("download_data");
-__PACKAGE__->result_source_instance->view_definition(" SELECT m.city_id,\n    c.name AS city_name,\n    e.name AS axis_name,\n    m.indicator_id,\n    i.name AS indicator_name,\n    i.formula_human,\n    i.formula,\n    i.goal,\n    i.goal_explanation,\n    i.goal_source,\n    i.goal_operator,\n    i.explanation,\n    i.tags,\n    i.observations,\n    i.period,\n    m.variation_name,\n    iv.\"order\" AS variation_order,\n    m.valid_from,\n    m.value,\n    a.goal AS user_goal,\n    a.justification_of_missing_field,\n    t.technical_information,\n    m.institute_id,\n    m.user_id,\n    m.region_id,\n    m.sources,\n    r.name AS region_name,\n    m.updated_at,\n    m.values_used,\n    d1.name AS axis_aux1,\n    d2.name AS axis_aux2,\n    d3.description AS axis_aux3\n   FROM ((((((((((indicator_value m\n     JOIN city c ON ((m.city_id = c.id)))\n     JOIN indicator i ON ((i.id = m.indicator_id)))\n     LEFT JOIN axis e ON ((e.id = i.axis_id)))\n     LEFT JOIN axis_dim1 d1 ON ((d1.id = i.axis_dim1_id)))\n     LEFT JOIN axis_dim2 d2 ON ((d2.id = i.axis_dim2_id)))\n     LEFT JOIN axis_dim3 d3 ON ((d3.id = i.axis_dim3_id)))\n     LEFT JOIN indicator_variations iv ON (\n        CASE\n            WHEN (m.variation_name = ''::text) THEN false\n            ELSE ((iv.name = m.variation_name) AND (iv.indicator_id = m.indicator_id) AND ((iv.user_id = m.user_id) OR (iv.user_id = i.user_id)))\n        END))\n     LEFT JOIN user_indicator a ON (((a.user_id = m.user_id) AND (a.valid_from = m.valid_from) AND (a.indicator_id = m.indicator_id))))\n     LEFT JOIN user_indicator_config t ON (((t.user_id = m.user_id) AND (t.indicator_id = i.id))))\n     LEFT JOIN region r ON ((r.id = m.region_id)))");
+__PACKAGE__->result_source_instance->view_definition(" SELECT m.city_id,\n    c.name AS city_name,\n    e.name AS axis_name,\n    m.indicator_id,\n    i.name AS indicator_name,\n    i.formula_human,\n    i.formula,\n    i.goal,\n    i.goal_explanation,\n    i.goal_source,\n    i.goal_operator,\n    i.explanation,\n    i.tags,\n    i.observations,\n    i.period,\n    m.variation_name,\n    iv.\"order\" AS variation_order,\n    m.valid_from,\n    m.value,\n    a.goal AS user_goal,\n    a.justification_of_missing_field,\n    t.technical_information,\n    m.institute_id,\n    m.user_id,\n    m.region_id,\n    m.sources,\n    r.name AS region_name,\n    m.updated_at,\n    m.values_used,\n    d1.name AS axis_aux1,\n    d2.name AS axis_aux2,\n    d3.description AS axis_aux3,\n    ss.uf AS state_uf,\n    ss.name AS state_name\n   FROM (((((((((((indicator_value m\n     JOIN city c ON ((m.city_id = c.id)))\n     JOIN state ss ON ((c.state_id = ss.id)))\n     JOIN indicator i ON ((i.id = m.indicator_id)))\n     LEFT JOIN axis e ON ((e.id = i.axis_id)))\n     LEFT JOIN axis_dim1 d1 ON ((d1.id = i.axis_dim1_id)))\n     LEFT JOIN axis_dim2 d2 ON ((d2.id = i.axis_dim2_id)))\n     LEFT JOIN axis_dim3 d3 ON ((d3.id = i.axis_dim3_id)))\n     LEFT JOIN indicator_variations iv ON (\n        CASE\n            WHEN (m.variation_name = ''::text) THEN false\n            ELSE ((iv.name = m.variation_name) AND (iv.indicator_id = m.indicator_id) AND ((iv.user_id = m.user_id) OR (iv.user_id = i.user_id)))\n        END))\n     LEFT JOIN user_indicator a ON (((a.user_id = m.user_id) AND (a.valid_from = m.valid_from) AND (a.indicator_id = m.indicator_id))))\n     LEFT JOIN user_indicator_config t ON (((t.user_id = m.user_id) AND (t.indicator_id = i.id))))\n     LEFT JOIN region r ON ((r.id = m.region_id)))");
 
 =head1 ACCESSORS
 
@@ -202,6 +202,16 @@ __PACKAGE__->result_source_instance->view_definition(" SELECT m.city_id,\n    c.
   data_type: 'text'
   is_nullable: 1
 
+=head2 state_uf
+
+  data_type: 'text'
+  is_nullable: 1
+
+=head2 state_name
+
+  data_type: 'text'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -273,11 +283,15 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "axis_aux3",
   { data_type => "text", is_nullable => 1 },
+  "state_uf",
+  { data_type => "text", is_nullable => 1 },
+  "state_name",
+  { data_type => "text", is_nullable => 1 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2017-09-22 03:16:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PBekUFJ0MLCuTs0qbpGYyw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2018-08-03 16:58:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N/hbU4jQNUfkuk52DIcYrg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

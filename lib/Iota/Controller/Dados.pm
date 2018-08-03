@@ -135,7 +135,8 @@ sub _download {
     my @lines = (
         [
             map { $self->_loc_str( $c, $_ ) } 'ID da cidade',
-            'Nome da cidade ',
+            'Nome da cidade',
+            'UF',
             'Eixo',
             'ID Indicador',
             'Nome do indicador',
@@ -157,7 +158,8 @@ sub _download {
             'Informações Tecnicas',
             'Nome da região',
             'Fontes',
-            'Formula pura'
+            'Formula pura',
+            'Estado Nome'
         ]
     );
 
@@ -173,6 +175,7 @@ sub _download {
         my @this_row = (
             $data->{city_id},
             $data->{city_name},
+            $data->{state_uf},
             $c->loc( $data->{axis_name} ),
             $data->{indicator_id},
             $c->loc( $data->{indicator_name} ),
@@ -197,6 +200,7 @@ sub _download {
             ? ( join "\n", map { $c->loc($_) } @{ $data->{sources} } )
             : '',
             $data->{formula},
+            $data->{state_name},
         );
 
         push @this_row, $self->_loc_str( $c, $data->{$_} ) for @extra_fields;
