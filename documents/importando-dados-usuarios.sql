@@ -3,7 +3,7 @@ create table _city_vs_user_import (cityname varchar, user_id int);
 
 -- popula a _city_vs_user_import com os nomes da cidade
 -- no banco 'origem'
-update _city_vs_user_import set user_id= fooobar from ( select a.cityname as foo, u.id as fooobar from _city_vs_user_import a left join city b on tira_acento(trim(a.cityname)) = tira_acento(trim(b.name)) left join "user" u on u.city_id = b.id and u.active and u.institute_id=1  ) x where cityname = foo;
+update _city_vs_user_import set user_id= fooobar from ( select a.cityname as foo, u.id as fooobar from _city_vs_user_import a left join city b on tira_acento(lower(trim(a.cityname))) = tira_acento(lower(trim(b.name))) left join "user" u on u.city_id = b.id and u.active and u.institute_id=1  ) x where cityname = foo;
 
 alter table _city_vs_user_import alter column user_id set not null;
 
@@ -15,11 +15,11 @@ copy _city_vs_user_import to '/tmp/_city_vs_user_import.csv' csv ;
 copy _city_vs_user_import from  '/tmp/_city_vs_user_import.csv' csv;
 
 -- confere o de-para se não tem nenhum user faltando no banco destino
-select a.*, u.name, u.id as user_id, u.email from _city_vs_user_import a left join city b on tira_acento(trim(a.cityname)) = tira_acento(trim(b.name)) left join "user" u on u.city_id = b.id and u.active and u.institute_id=1  order by 4;
+select a.*, u.name, u.id as user_id, u.email from _city_vs_user_import a left join city b on tira_acento(lower(trim(a.cityname))) = tira_acento(lower(trim(b.name))) left join "user" u on u.city_id = b.id and u.active and u.institute_id=1  order by 4;
 -- ainda no banco de destino, configura o de-para dos users
 alter table _city_vs_user_import add column local_user_id int;
 
-update _city_vs_user_import set local_user_id = fooobar from ( select a.cityname as foo, u.id as fooobar from _city_vs_user_import a left join city b on tira_acento(trim(a.cityname)) = tira_acento(trim(b.name)) left join "user" u on u.city_id = b.id and u.active and u.institute_id=1  ) x where cityname = foo;
+update _city_vs_user_import set local_user_id = fooobar from ( select a.cityname as foo, u.id as fooobar from _city_vs_user_import a left join city b on tira_acento(lower(trim(a.cityname))) = tira_acento(lower(trim(b.name))) left join "user" u on u.city_id = b.id and u.active and u.institute_id=1  ) x where cityname = foo;
 
 alter table _city_vs_user_import alter column local_user_id set not null;
 alter table _city_vs_user_import alter column user_id set not null;
@@ -63,7 +63,17 @@ cloned_from_user ) from  '/tmp/export.csv' csv header;
 
 update _import i  set local_user_id =  a.local_user_id from _city_vs_user_import a where a.old_user_id = i.old_user_id;
 
-insert into variable_value (id,value,variable_id,user_id,created_at,value_of_date,valid_from,valid_until,observations,source,file_id) select id,value,local_variable_id,local_user_id,created_at,value_of_date,valid_from,valid_until,observations,source,file_id from _import ;
+insert into variable_value (id,value,variable_id,user_id,created_at,value_of_date,valid_from,valid_until,observations,source,file_id)
+select id,value,local_variable_id,local_user_id,created_at,value_of_date,valid_from,valid_until,observations,source,file_id
+from _import i
+where not exists (
+    select 1
+    from variable_value xx
+    where xx.variable_id = i.variable_id
+     AND xx.user_id = i.local_user_id
+    AND xx.valid_from = xx.valid_from
+)
+;
 
 -- agora sai e roda o script perl -Ilib script/atualiza_valores_indicadores.pl
 
