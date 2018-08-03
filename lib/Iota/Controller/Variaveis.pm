@@ -348,6 +348,7 @@ sub _download_and_detach {
         $c->response->content_type('application/vnd.ms-excel');
     }
     $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
+    $c->response->headers->header( 'Cache-Control' => 'no-cache' );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);
