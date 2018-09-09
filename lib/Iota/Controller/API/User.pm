@@ -55,7 +55,7 @@ sub user_file_POST {
     my $classe = $c->stash->{classe};
     my $t      = new Text2URI();
 
-    $classe = $t->translate( substr( $classe, 0, 15 ) );
+    $classe = $t->translate( substr( $classe, 0, 15 ), '_' );
     $classe ||= 'perfil';
 
     $c->res->content_type('application/json');
@@ -117,7 +117,7 @@ sub user_file_POST {
 
         my $user_id = $c->stash->{object}->next->id;
         my $filename =
-          sprintf( 'user_%i_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename ), 0, 200 ) );
+          sprintf( 'user_%i_%s_%s', $user_id, $classe, substr( $t->translate( $upload->basename, '_' ), 0, 200 ) );
 
         my $private_path =
           $c->config->{private_path} =~ /^\//o

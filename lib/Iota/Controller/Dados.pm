@@ -135,7 +135,8 @@ sub _download {
     my @lines = (
         [
             map { $self->_loc_str( $c, $_ ) } 'ID da cidade',
-            'Nome da cidade ',
+            'Nome da cidade',
+            'UF',
             'Eixo',
             'ID Indicador',
             'Nome do indicador',
@@ -157,7 +158,8 @@ sub _download {
             'Informações Tecnicas',
             'Nome da região',
             'Fontes',
-            'Formula pura'
+            'Formula pura',
+            'Estado Nome'
         ]
     );
 
@@ -173,6 +175,7 @@ sub _download {
         my @this_row = (
             $data->{city_id},
             $data->{city_name},
+            $data->{state_uf},
             $c->loc( $data->{axis_name} ),
             $data->{indicator_id},
             $c->loc( $data->{indicator_name} ),
@@ -197,6 +200,7 @@ sub _download {
             ? ( join "\n", map { $c->loc($_) } @{ $data->{sources} } )
             : '',
             $data->{formula},
+            $data->{state_name},
         );
 
         push @this_row, $self->_loc_str( $c, $data->{$_} ) for @extra_fields;
@@ -354,6 +358,7 @@ sub _download_and_detach {
         $c->response->content_type('application/vnd.ms-excel');
     }
     $c->response->headers->header( 'content-disposition' => "attachment;filename=" . basename($path) );
+    $c->response->headers->header( 'Cache-Control' => 'no-cache' );
 
     open( my $fh, '<:raw', $path );
     $c->res->body($fh);

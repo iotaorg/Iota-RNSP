@@ -5,7 +5,7 @@
         <div class="row">
 
             [%IF network.id==3%]
-                <iframe src="http://redciudades.net/iframes/header/" style="position: relative; border: none; background: transparent;" id="redNavIframe" scrolling="no" frameborder="0" marginheight="0" marginwidth="0" height="159px" width="100%"></iframe>
+
             [%ELSE%]
             <div id="page-header-left" class="span4 col-md-4">
                 <div class="logo">

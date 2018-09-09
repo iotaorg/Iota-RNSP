@@ -183,6 +183,7 @@ sub _download_and_detach {
     elsif ( $c->stash->{type} =~ /(xls)/ ) {
         $c->response->content_type('application/vnd.ms-excel');
     }
+    $c->response->headers->header( 'Cache-Control' => 'no-cache' );
     $c->response->headers->header( 'content-disposition' => "attachment;filename="
           . "variaveis-exemplo-"
           . ( $custom ? 'dos-indicadores-' : 'completa-' )
