@@ -68,7 +68,7 @@ var md = function() {
             }
 
 
-            base_uri = 'http://' + window.location.host + url;
+            base_uri = '//' + window.location.host + url;
             url = base_uri + '/' + arquivo;
             $('#id_link').attr('href', url);
             $url.val(url);

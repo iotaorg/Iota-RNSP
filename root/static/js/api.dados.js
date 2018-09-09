@@ -767,7 +767,7 @@ $(document).ready(function() {
         $(".download-links a.botao").unbind();
         $(".download-links a.botao").click(function(e) {
             e.preventDefault();
-            var x = 'http://' + window.location.host + window.location.pathname;
+            var x = '//' + window.location.host + window.location.pathname;
             if (x.substr(-1, 1) != '/') {
                 x = x + '/';
             }
