@@ -14,6 +14,38 @@ our $DEBUG = 0;
 
 sub upsert {
     my ( $self, %params ) = @_;
+
+    my @ret;
+    $self->schema->txn_do(
+        sub {
+            my $dbh = $self->schema->storage->dbh;
+            $dbh->do("SET lock_timeout TO '60s'; ");
+
+            if ( $params{user_id} ) {
+
+                my (@lock_users) = $self->schema->resultset('User')->search(
+                    { ( 'me.id' => $params{user_id} ) x !!exists $params{user_id}, },
+                    {
+                        columns  => [ { lock => \'pg_advisory_lock(id)' } ],
+                        order_by => ['id'],
+                    }
+                )->as_hashref->all;
+            }
+            else {
+                # trava o superadmin, ja que são todos (ate se outro usuario novo for inserido)
+                my (@lock_users) = $self->schema->resultset('User')->search( { 'me.id' => 1 }, )->as_hashref->all;
+
+            }
+
+            @ret = $self->_upsert(%params);
+
+        }
+    );
+    return @ret;
+}
+
+sub _upsert {
+    my ( $self, %params ) = @_;
     my $ind_rs = $self->schema->resultset('Indicator')->search( { is_fake => 0 } );
 
     #    use DDP;
@@ -274,7 +306,6 @@ sub upsert {
 
             };
 
-            #   use DDP; p $where;
             $indval_rs->search($where)->delete;
 
             while ( my ( $region_id, $region_data ) = each %$results ) {
@@ -769,8 +800,12 @@ sub _get_indicator_values {
                             );
                             my $valor = $formula->evaluate_with_alias(@calcvars);
 
-                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} =
-                              [ $valor, [ keys %sources ], decode('UTF-8', encode_json( {@calcvars} )), [ keys %observations ] ];
+                            $out->{$region_id}{$user_id}{ $indicator->id }{$date}{$variation} = [
+                                $valor,
+                                [ keys %sources ],
+                                decode( 'UTF-8', encode_json( {@calcvars} ) ),
+                                [ keys %observations ]
+                            ];
                         }
 
                     }
@@ -778,8 +813,12 @@ sub _get_indicator_values {
                         my $valor = $formula->evaluate(%values);
 
                         # '' = variacao
-                        $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} =
-                          [ $valor, [ keys %sources ], decode('UTF-8', encode_json( \%values )), [ keys %observations ] ];
+                        $out->{$region_id}{$user_id}{ $indicator->id }{$date}{''} = [
+                            $valor,
+                            [ keys %sources ],
+                            decode( 'UTF-8', encode_json( \%values ) ),
+                            [ keys %observations ]
+                        ];
                     }
 
                 }
