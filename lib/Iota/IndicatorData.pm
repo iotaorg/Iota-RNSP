@@ -19,7 +19,7 @@ sub upsert {
     $self->schema->txn_do(
         sub {
             my $dbh = $self->schema->storage->dbh;
-            $dbh->do("SET lock_timeout TO '60s'; ");
+            $dbh->do("SET lock_timeout TO '180s'; ");
 
             if ( $params{user_id} ) {
 
