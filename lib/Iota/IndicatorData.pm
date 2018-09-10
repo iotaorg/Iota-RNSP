@@ -21,27 +21,29 @@ sub upsert {
             my $dbh = $self->schema->storage->dbh;
             $dbh->do("SET lock_timeout TO '180s'; ");
 
-            if ( $params{user_id} ) {
+            if ( !( $ENV{HARNESS_ACTIVE} || $0 =~ /forkprove/ ) ) {
+                if ( $params{user_id} ) {
 
-                my (@lock_users) = $self->schema->resultset('UserRole')->search(
-                    { ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id}, },
-                    {
-                        columns  => ['user_id'],
-                        for      => 'update',
-                        order_by => ['user_id'],
-                    }
-                )->all;
-            }
-            else {
-                my (@lock_users) = $self->schema->resultset('UserRole')->search(
-                    { 'me.user_id' => 1, },
-                    {
-                        columns  => ['user_id'],
-                        for      => 'update',
-                        order_by => ['user_id'],
-                    }
-                )->all;
+                    my (@lock_users) = $self->schema->resultset('UserRole')->search(
+                        { ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id}, },
+                        {
+                            columns  => ['user_id'],
+                            for      => 'update',
+                            order_by => ['user_id'],
+                        }
+                    )->all;
+                }
+                else {
+                    my (@lock_users) = $self->schema->resultset('UserRole')->search(
+                        { 'me.user_id' => 1, },
+                        {
+                            columns  => ['user_id'],
+                            for      => 'update',
+                            order_by => ['user_id'],
+                        }
+                    )->all;
 
+                }
             }
 
             @ret = $self->_upsert(%params);
