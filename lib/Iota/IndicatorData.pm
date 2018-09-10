@@ -23,17 +23,24 @@ sub upsert {
 
             if ( $params{user_id} ) {
 
-                my (@lock_users) = $self->schema->resultset('User')->search(
-                    { ( 'me.id' => $params{user_id} ) x !!exists $params{user_id}, },
+                my (@lock_users) = $self->schema->resultset('UserRole')->search(
+                    { ( 'me.user_id' => $params{user_id} ) x !!exists $params{user_id}, },
                     {
-                        columns  => [ { lock => \'pg_advisory_lock(id)' } ],
-                        order_by => ['id'],
+                        columns  => ['user_id'],
+                        for      => 'update',
+                        order_by => ['user_id'],
                     }
-                )->as_hashref->all;
+                )->all;
             }
             else {
-                # trava o superadmin, ja que são todos (ate se outro usuario novo for inserido)
-                my (@lock_users) = $self->schema->resultset('User')->search( { 'me.id' => 1 }, )->as_hashref->all;
+                my (@lock_users) = $self->schema->resultset('UserRole')->search(
+                    { 'me.user_id' => 1, },
+                    {
+                        columns  => ['user_id'],
+                        for      => 'update',
+                        order_by => ['user_id'],
+                    }
+                )->all;
 
             }
 

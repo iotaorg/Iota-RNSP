@@ -79,7 +79,7 @@ sub _download {
       if $c->stash->{cidade};
 
     $c->stash->{all_region} = 1, delete $c->stash->{region}
-      if $c->stash->{region} eq "all";
+      if $c->stash->{region} && $c->stash->{region} eq "all";
 
     $file .= '_' . $c->stash->{region}->name_url
       if $c->stash->{region};
