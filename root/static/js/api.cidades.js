@@ -546,7 +546,7 @@ $(document).ready(function() {
             });
         });
 
-        infowindow.setContent('<p><b>Prefeitura regional: </b>' + this._data.upper_name + '</p>' + "<b>Distrito: </b>" + this._data.name);
+        infowindow.setContent('<p><b>Subprefeitura: </b>' + this._data.upper_name + '</p>' + "<b>Distrito: </b>" + this._data.name);
         infowindow.setPosition(event.latLng);
 
         infowindow.open(this._data.map);
