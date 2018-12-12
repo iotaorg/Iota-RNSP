@@ -48,7 +48,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
-
+drop table if exists _saida;
 create temp table _saida as
 select
 
