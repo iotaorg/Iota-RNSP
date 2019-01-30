@@ -81,7 +81,8 @@ sub _download {
             'Fonte preenchida',
             'Nome Região',
             'Valor ativo?',
-            'Gerado por computador?'
+            'Gerado por computador?',.
+            'ID da Região',
         ]
     );
 
@@ -194,6 +195,7 @@ sub _download {
             ( $data->{active_value} ? $yes_vs_no->{'y'} : $yes_vs_no->{'n'} ),
 
             ( $data->{generated_by_compute} ? $yes_vs_no->{'y'} : $yes_vs_no->{'n'} ),
+            $data->{region_id}
 
         );
         push @lines, \@this_row;

@@ -159,7 +159,8 @@ sub _download {
             'Nome da região',
             'Fontes',
             'Formula pura',
-            'Estado Nome'
+            'Estado Nome',
+            'ID da região',
         ]
     );
 
@@ -201,6 +202,7 @@ sub _download {
             : '',
             $data->{formula},
             $data->{state_name},
+            $data->{region_id},
         );
 
         push @this_row, $self->_loc_str( $c, $data->{$_} ) for @extra_fields;
