@@ -78,6 +78,7 @@ __PACKAGE__->result_source_instance->view_definition(
         i.id as institute_id,
         r.name as region_name,
         r.id as region_id,
+        r.depth_level as region_dl,
         vv.created_at as updated_at,
         vv.active_value,
         vv.generated_by_compute
