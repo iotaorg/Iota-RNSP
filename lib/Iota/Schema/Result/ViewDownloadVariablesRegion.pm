@@ -15,7 +15,7 @@ __PACKAGE__->add_columns(
       city_id city_name variable_id type cognomen period exp_source
       is_basic measurement_unit_name name valid_from value observations
       source user_id institute_id
-      region_name region_id active_value generated_by_compute
+      region_name region_id active_value generated_by_compute region_dl
       /
 );
 
