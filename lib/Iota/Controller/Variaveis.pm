@@ -81,7 +81,7 @@ sub _download {
             'Fonte preenchida',
             'Nome Região',
             'Valor ativo?',
-            'Gerado por computador?',.
+            'Gerado por computador?',
             'ID da Região',
         ]
     );
