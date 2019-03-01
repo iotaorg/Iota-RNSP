@@ -64,3 +64,13 @@ a:hover .inflogo-logo-rnsp {
     background-position: -273px -147px;
 }
 
+.inflogo-logo-novo-rnsp {
+    background-image: url(/static/img/logo-rnsp-horizontal--pb.png);
+    width: 181px;
+    height: 84px;
+    display: block;
+}
+
+.inflogo-logo-novo-rnsp:hover {
+    background-image: url(/static/img/logo-rnsp-horizontal.png)
+}
