@@ -51,7 +51,7 @@
 }
 .spt-arapyau{
     width: 120px;
-    background: url('https://www.cidadessustentaveis.org.br/sites/default/files/styles/logo_parceiros_thumbnail/public/arapyau.jpg?new=1');
+    background: url('https://www.cidadessustentaveis.org.br/sites/default/files/styles/logo_parceiros_thumbnail/public/arapyau.jpg?itok=790rU_ba');
     height: 80px;
 }
 
@@ -398,9 +398,9 @@
 }
 
 .spt-rnsp_0{
-    background-position: -3816px 0;
-    width: 80px;
-    height: 55px;
+    background-image: url(https://www.cidadessustentaveis.org.br/sites/default/files/styles/logo_parceiros_thumbnail/public/rnsp_0.jpg?no-cache);
+    background-position: 0 0;
+    background-size: 80px;
 }
 
 .spt-roland-berger{
