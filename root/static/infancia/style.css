@@ -243,7 +243,6 @@ footer a.fr{
 footer a.fr-b { padding: 10px 30px 10px 0px}
 footer a.fr-c { padding: 10px 30px 10px 0px}
 footer a.fr-f>i {margin-top: 15px;}
-footer a.fr-c>i {margin-top: 15px;}
 footer div.fx { margin-top: 40px}
 
 
@@ -721,6 +720,7 @@ body.root_ h2, body.root_pagina_generica_render h3 {
     padding: 15px;
     text-align: right;
     margin-bottom: -40px;
+    margin-top: 20px;
 }
 
 #infancia-menu-wrap .menu-left .header {
