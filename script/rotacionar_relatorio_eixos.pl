@@ -98,7 +98,7 @@ while ( my $row = $csv->getline($fh) ) {
         }
         else {
             use DDP;
-            p \@data;
+            p @data;
             $ignored++;
         }
 
@@ -110,7 +110,7 @@ close $fh;
 
 my @axiseq = sort keys %$eixos;
 use DDP;
-p \@axiseq;
+p @axiseq;
 
 while ( my ( $filename, $whos ) = each %$rot ) {
 
