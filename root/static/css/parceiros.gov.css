@@ -56,3 +56,12 @@ div.scrollableArea a {
 #scroll-apoio span{
 	margin: 0 15px;
 }
+
+#scroll-realizacao a:nth-child(2){
+    width: 127px;
+    height: 63px;
+    background-image: url(https://www.cidadessustentaveis.org.br/sites/default/files/styles/logo_parceiros_thumbnail/public/rnsp_0.jpg?no-cache);
+    vertical-align: top;
+    display: inline-block;
+    background-repeat: no-repeat;
+}
