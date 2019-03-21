@@ -58,7 +58,7 @@ sub verifiers_specs {
 
         image_caption => {
             required   => 0,
-            max_length => 500,
+            max_length => 2500,
             type       => 'Str',
         },
 
