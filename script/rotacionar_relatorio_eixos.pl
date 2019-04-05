@@ -5,7 +5,7 @@ use DateTime::Format::Pg;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
-
+BEGIN { $ENV{DDP_PROTO} = 1; }
 use JSON::XS;
 use Text::CSV_XS;
 
