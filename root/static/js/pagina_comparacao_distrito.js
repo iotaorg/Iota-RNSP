@@ -36,7 +36,6 @@ var pcd = function() {
                 $('.changeparam').removeClass('hide');
                 $('.comparacao-results').addClass('hide');
             });
-
             $cidade.change(_recalc_submit_prop);
             $indi.change(_recalc_btn_add_prop);
 
@@ -269,7 +268,6 @@ var pdc_results = function() {
         color_idx,
         color_idx_other,
         _init = function() {
-
             var params = $table_container.attr('data-search-params');
             if (!params) return;
             params = jQuery.parseJSON(params);
@@ -580,19 +578,13 @@ todos na media - amarelo
 
             $table_container.html($new_div);
 
-
-
-            if (map) {
+            if (typeof google === 'object' && typeof google.maps === 'object') {
                 _load_map($new_map.find('#mapa'))
-
             } else {
-
                 google.maps.event.addDomListener(window, 'load', function() {
                     _load_map($new_map.find('#mapa'))
                 });
             }
-
-
 
         };
     return {

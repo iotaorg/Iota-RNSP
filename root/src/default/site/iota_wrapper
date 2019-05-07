@@ -46,8 +46,10 @@
 [%-CALL assets.include("js/stupidtable.min.js")%]
 [%-CALL assets.include("v2/js/google_visualization.js")%]
 
+[% IF !use_classic_googlemaps %]
 [%-CALL assets.include("v2/js/load-google-maps.js")%]
 [%-CALL assets.include("v2/js/load-isotope.js")%]
+[%END%]
 
 [%-CALL assets.include("v2/js/me/account-end-user-indicator.js")%]
 
@@ -80,6 +82,10 @@
 
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+
+[%IF use_classic_googlemaps %]
+[% INCLUDE site/googlemaps.tt%]
+[%END%]
 
 [% assets.export("js") |none%]
 

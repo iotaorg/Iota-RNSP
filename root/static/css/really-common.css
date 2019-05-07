@@ -48,3 +48,33 @@
 }
 
 ol.unstyled {list-style: none; padding: 0}
+#gmap iframe, #gmap object, #gmap embed { width: 100%; }
+
+#x-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+#x-container .x-dummy {
+    padding-top: 100%; /* 4:3 aspect ratio */
+}
+
+#x-container .x-element {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: silver /* show me! */
+}
+
+
+div.loading {
+    background: url(/static/images/ajax-loader.gif) no-repeat 0 0;
+    padding-left: 38px;
+    line-height: 32px;
+    height: 32px;
+    font-size: 1.2em;
+    vertical-align: middle;
+
+}

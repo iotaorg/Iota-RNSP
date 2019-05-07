@@ -10,6 +10,7 @@ var $google_visualization = function (){
 
     return { run: run };
 }();
+
 var $google_visualization_countries = function (){
 
     var $elm, run = function(elm){

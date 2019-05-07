@@ -182,9 +182,9 @@
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
 
-[% INCLUDE site/googlemaps.tt%]
 
 [% assets.export("js") |none%]
+[% INCLUDE site/googlemaps.tt%]
 
 [% INCLUDE site/ga.tt%]
 <span style="display:none" id="ref_or_ods">[% institute_metadata.ods ? l('Meta ODS'):  l('Referência de Meta')%]</span>

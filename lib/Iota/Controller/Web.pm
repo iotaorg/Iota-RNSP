@@ -509,6 +509,10 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
     $self->_add_default_periods($c);
 
+    if (!$c->stash->{is_infancia}){
+        $c->stash->{use_classic_googlemaps} = 1;
+    }
+
     if ( $c->req->params->{selected_indicators} && $c->req->params->{cidade} && $c->stash->{choosen_periods} ) {
 
         my @ids = split /,/, $c->req->params->{selected_indicators};
