@@ -1,4 +1,8 @@
 [%-CALL assets.include("/static/js/pagina_comparacao_distrito.js", 999)%]
+[% IF !is_infancia %]
+[% INCLUDE site/googlemaps.tt%]
+[% END %]
+
 <style>.square { height: 15px; width: 15px; display: inline-block; vertical-align: middle; border-radius: 10px; margin-right: 5px}  div.infopop {margin-left: 20px} </style>
 <form role="form" class="[% has_results ? 'hide changeparam' : '' %]">
 

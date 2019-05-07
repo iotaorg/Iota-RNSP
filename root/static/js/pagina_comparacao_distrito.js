@@ -1,3 +1,4 @@
+
 var pcd = function() {
     function encodeHTML(s) {
         if (typeof s == 'string') {
@@ -8,7 +9,6 @@ var pcd = function() {
     }
 
     var
-
         $submit = $('button[type=submit]:first'),
         $cidade = $('select[name="cidade"]:first'),
         $period = $('select[name="valid_from"]:first'),
