@@ -198,6 +198,8 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
 
     $c->stash->{institute_loaded} = 1;
 
+    my $load_region_info = $c->req->match eq '/pagina_comparacao_distrito';
+
     # garante que foi executado sempre o light quando o foi executado apenas o 'institute_load'
     # nos lugares que chama essa sub sem ser via $c->forward ou semelhantes
     $c->forward('light_institute_load') if !exists $c->stash->{c_req_path};
@@ -215,7 +217,8 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
     )->next;
 
     $cache_key = $cache_key->{md5};
-    $cache_key = "institute_load-$cache_key-$without_topic";
+    $cache_key = "institute_load-v2-$cache_key-$without_topic";
+    $cache_key .= '-r' if $load_region_info;
 
     my $schema = $c->model('DB')->schema;
     my $stash  = $redis->get($cache_key);
@@ -234,7 +237,14 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
             },
             {
                 prefetch => [ 'city', 'network_users' ],
-                join => { network_users => 'network' }
+                join       => { network_users => 'network' },
+                '+columns' => [
+                    {
+                        '_has_region' => $load_region_info
+                        ? \'exists (select 1 from region r where r.city_id = "user".city_id limit 1)'
+                        : \'NULL'
+                    }
+                ]
             }
         )->all;
 
@@ -244,6 +254,14 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
           sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
           map  { $_->city }
           grep { defined $_->city_id } @users;
+
+        my @cities_with_region = $load_region_info
+          ? (
+            sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
+            map  { $_->city }
+            grep { defined $_->city_id && $_->get_column('_has_region') } @users
+          )
+          : ();
 
         $stash->{network_data} = {
             states => [
@@ -273,9 +291,11 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
             ],
 
             # rede selecionada do idioma.
-            network_id => [ $c->stash->{network}->id ],
-            admins_ids => [ map { $_->id } grep { !defined $_->city_id } @users ],
-            cities     => \@cities
+            network_id         => [ $c->stash->{network}->id ],
+            admins_ids         => [ map { $_->id } grep { !defined $_->city_id } @users ],
+            cities             => \@cities,
+            cities_with_region => \@cities_with_region,
+
         };
 
         $stash->{current_admins} = [ grep { !$_->city_id } @users ];
@@ -509,7 +529,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
 
     $self->_add_default_periods($c);
 
-    if (!$c->stash->{is_infancia}){
+    if ( !$c->stash->{is_infancia} ) {
         $c->stash->{use_classic_googlemaps} = 1;
     }
 
@@ -563,7 +583,7 @@ sub pagina_comparacao_distrito : Chained('institute_load') PathPart('comparacao-
     }
 
     $c->stash(
-        cities         => $c->stash->{network_data}{cities},
+        cities         => $c->stash->{network_data}{cities_with_region},
         custom_wrapper => 'site/iota_wrapper',
         v2             => 1,
         title          => 'Mapa interativo',
@@ -709,7 +729,7 @@ else city.pais || '/' || city.uf || '/' || city.name_uri || '/' || 'boa-pratica'
 " case when city.id is null then case when reference_city is null then ' ' else reference_city end else city.uf || ', ' || city.name end"
                 },
                 { axis_attrs => \" ( select array_agg(mx.props) from axis_attr mx where mx.id = ANY( axis.attrs)  ) " },
-                { description => \'me.description' },
+                { description   => \'me.description' },
                 { image_caption => \'me.image_caption' },
                 {
                     concat => \
@@ -1523,8 +1543,6 @@ sub network_cidade : Chained('institute_load') PathPart('') CaptureArgs(3) {
             [ $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade} ] );
     }
 
-
-
 }
 
 sub load_region_names : Private {
@@ -1549,7 +1567,6 @@ sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
 
     $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] )
       if !$c->stash->{user}{regions_enabled};
-
 
     $self->stash_mapa_sp_primeira_infancia($c);
 }
@@ -1631,27 +1648,27 @@ sub stash_distritos : Private {
 }
 
 sub stash_mapa_sp_primeira_infancia {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
     return 1 unless $c->stash->{is_infancia};
-     my @regions_to_draw;
+    my @regions_to_draw;
 
-    foreach my $region ( @{ $c->stash->{city}{regions }}){
+    foreach my $region ( @{ $c->stash->{city}{regions} } ) {
 
-        foreach my $subregion ( @{$region->{subregions}||[]}){
+        foreach my $subregion ( @{ $region->{subregions} || [] } ) {
 
             push @regions_to_draw, {
-                    p => $subregion->{polygon_path},
-                    url => $subregion->{url},
-                    name => $subregion->{name},
+                p    => $subregion->{polygon_path},
+                url  => $subregion->{url},
+                name => $subregion->{name},
 
-                    upper_name => $region->{name},
-                    upper_id => $region->{id},
-                };
+                upper_name => $region->{name},
+                upper_id   => $region->{id},
+            };
         }
 
     }
 
-    $c->stash->{regions_to_draw} = to_json(\@regions_to_draw);
+    $c->stash->{regions_to_draw} = to_json( \@regions_to_draw );
 }
 
 sub stash_comparacao_distritos : Private {
@@ -2194,7 +2211,7 @@ sub stash_comparacao_cidades {
                 val => $user->{by_period}{$valid}{avg},
                 lat => $user->{city}{latitude},
                 lng => $user->{city}{longitude},
-                nm  => $user->{city}{name} . ' (' . $user->{city}{uf} . ')' ,
+                nm  => $user->{city}{name} . ' (' . $user->{city}{uf} . ')',
               };
         }
     }
@@ -2222,7 +2239,7 @@ sub stash_comparacao_cidades {
         my $reg_user = {
             show => exists $shown{$user_id} ? 1 : 0,
             id   => $user_id,
-            nome => $user->{city}{name}  . ' (' . $user->{city}{uf} . ')' ,
+            nome => $user->{city}{name} . ' (' . $user->{city}{uf} . ')',
             valores => []
         };
 
