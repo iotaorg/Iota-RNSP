@@ -70,6 +70,9 @@ var pcd = function() {
             if (!city_id) return;
             if (!period) return;
 
+            var options = indicator_template;
+            $indi.html(options);
+
             $.get("/api/public/indicator-availability-city-year", {
                 city_id: city_id,
                 depth_level: 3,

@@ -40,7 +40,7 @@
             <div class="grupo">
                 <label>[%l('Indicador')%]</label>
                 <select data-name="indicador" class="form-control" data-max-selected-indicators="5" data-already-exists="[%l('Este indicador já foi selecionado!')%]">
-                    <option data-notzero="[%l('Selecionar indicadores - __NUM__ disponíveis')%]" data-zero="[%l('Não há indicadores com dados nos distritos para a cidade e ano selecionados.')%]" selected value=""></option>
+                    <option data-notzero="[%l('Selecionar indicadores - __NUM__ disponíveis')%]" data-zero="[%l('Não há indicadores com dados nos distritos para a cidade e ano selecionados.')%]" selected value="">Carregando...</option>
                     [%FOREACH i IN indicators.sort('name_url%') %]
                     <option value="[%i.id%]">[%l(i.name)%]</option>
                     [%END%]
@@ -99,6 +99,7 @@
 
 [% IF has_results %]
 
+<div class="comparacao-results">
 
 <div class="row hide" id="map_container">
 
@@ -168,6 +169,8 @@
     <div class="results-container" data-search-params="[% query_params %]">
         <div class="loading"><p>[%l('Carregando...')%]</p></div>
     </div>
+</div>
+
 </div>
 
 
