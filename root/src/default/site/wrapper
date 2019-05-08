@@ -116,9 +116,9 @@
 
 
 <script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+[%INCLUDE site/googlemaps.tt%]
 [% assets.export("js")|none %]
 
-[%INCLUDE site/googlemaps.tt%]
 
 [% INCLUDE site/ga.tt|none%]
 
