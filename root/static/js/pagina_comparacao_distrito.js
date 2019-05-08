@@ -8,6 +8,8 @@ var pcd = function() {
         }
     }
 
+    var html_indicator_not_avaiable = '<span style="color:red">(indisponível para cidade e ano selecionados)</span>';
+
     var
         $submit = $('button[type=submit]:first'),
         $cidade = $('select[name="cidade"]:first'),
@@ -16,7 +18,6 @@ var pcd = function() {
         $form = $('form:first'),
         $indicadors_input = $('input[name="selected_indicators"]:first'),
         $btn_add = $('.button-add-indicator:first'),
-
         $table_container = $('#table-container'),
         container_original_html = $table_container.html(),
         table_template = $('.table-selected-indicators:first').clone().wrap('<div></div>').parent().html(),
@@ -24,13 +25,12 @@ var pcd = function() {
 
         max_selected_indicators = $indi.attr('data-max-selected-indicators') * 1,
         selected_indicators_count = $indicadors_input.val().length >= 1 ? $indicadors_input.val().split(',').length : 0,
-
+        kv_indicator_id={},
         _init = function() {
 
             $btn_add.click(_onclick_btn_add);
 
             $table_container.on('click', '.xbtn .button-del', _onclick_btn_remove);
-
 
             $('.button-change-params:first').click(function() {
                 $('.changeparam').removeClass('hide');
@@ -63,6 +63,7 @@ var pcd = function() {
             $btn_add.prop('disabled', !xbool);
         },
         _refresh_indicators = function() {
+
             var city_id = $cidade.val(),
                 period = $period.val();
 
@@ -77,12 +78,23 @@ var pcd = function() {
 
                 var options = indicator_template;
 
-                $.each(o.indicators, function(idx, ind) {
-                    options = options + '<option value="' + ind.id + '">' + encodeHTML(ind.name) + '</option>';
+                kv_indicator_id = {};
 
+                $.each(o.indicators, function(idx, ind) {
+                    kv_indicator_id[ind.id]=1;
+                    options = options + '<option value="' + ind.id + '">' + encodeHTML(ind.name) + '</option>';
                 });
 
                 $indi.html(options);
+                var firstopt = $indi.find('option[data-notzero]');
+                if (o.indicators.length === 0)
+                {
+                    firstopt.text(firstopt.attr('data-zero'));
+                }else{
+
+                    firstopt.text(firstopt.attr('data-notzero').replace('__NUM__', o.indicators.length));
+                }
+                _indicator_availability_changed();
 
             }, 'json').fail(function(e) {
                 $table_container.text("ERRO: " + e.responseText);
@@ -90,8 +102,19 @@ var pcd = function() {
 
 
         },
-        _onclick_btn_add = function() {
+        _indicator_availability_changed = function (){
 
+            $table_container.find('tr[data-id]').each(function(i, o ){
+                var ii = $(o).attr('data-id');
+                if (kv_indicator_id[ii]){
+                    $(o).find('.status').text('');
+                }else{
+                    $(o).find('.status').html(html_indicator_not_avaiable);
+                }
+            });
+
+        },
+        _onclick_btn_add = function() {
 
             var indicator = $indi.val(),
                 current_indicators_str = ',' + $indicadors_input.val() + ',';
@@ -163,7 +186,7 @@ var pcd = function() {
                     var name = $indi.find('option[value=' + v + ']:first').text() || $('#ref_ind').find('td[data-id=' + v + ']:first').text(),
                         $row = row_base.clone(false);
 
-                    $row.find('td.indname').text(name);
+                    $row.find('span.indname').text(name);
                     $row.attr('data-id', v);
 
                     $new_table.find('tbody').append($row);
@@ -173,10 +196,12 @@ var pcd = function() {
                 $table_container.html($new_table);
 
             } else {
+
                 $table_container.html(container_original_html);
 
             }
 
+            _indicator_availability_changed();
         };
     return {
         run: _init
