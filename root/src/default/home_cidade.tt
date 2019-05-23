@@ -55,19 +55,6 @@
                         </div>
                     </div>
 
-                    <div class="span4 col-md-6">
-                        <div class="map" id="gmap">
-                            <div class="content-fill">
-                                <div id="x-container">
-                                    <div class="x-dummy"></div>
-                                    <div class="x-element">
-                                        <div id="mapa"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
