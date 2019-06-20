@@ -43,7 +43,8 @@ select
     func_status_indicador_by_user_by_year_no_axis(u.id, indicador.id, '2014-01-01'::date) as preenchido_2014,
     func_status_indicador_by_user_by_year_no_axis(u.id, indicador.id, '2015-01-01'::date) as preenchido_2015,
     func_status_indicador_by_user_by_year_no_axis(u.id, indicador.id, '2016-01-01'::date) as preenchido_2016,
-    func_status_indicador_by_user_by_year_no_axis(u.id, indicador.id, '2017-01-01'::date) as preenchido_2017
+    func_status_indicador_by_user_by_year_no_axis(u.id, indicador.id, '2017-01-01'::date) as preenchido_2017,
+    func_status_indicador_by_user_by_year_no_axis(u.id, indicador.id, '2018-01-01'::date) as preenchido_2018
 
 
 from "user" u
@@ -66,4 +67,6 @@ sum(preenchido_2008) as preenchido_2008,sum(preenchido_2009) as preenchido_2009,
 sum(preenchido_2010) as preenchido_2010,sum(preenchido_2011) as preenchido_2011,
 sum(preenchido_2012) as preenchido_2012,sum(preenchido_2013) as preenchido_2013,
 sum(preenchido_2014) as preenchido_2014,sum(preenchido_2015) as preenchido_2015,
-sum(preenchido_2016) as preenchido_2016,sum(preenchido_2017) as preenchido_2017 from  _saida group by 1,2 order by 2) to '/tmp/preenchidos.por.ano.csv' csv header;
+sum(preenchido_2016) as preenchido_2016,sum(preenchido_2017) as preenchido_2017,
+sum(preenchido_2018) as preenchido_2018
+ from  _saida group by 1,2 order by 2) to '/tmp/preenchidos.por.ano.csv' csv header;
