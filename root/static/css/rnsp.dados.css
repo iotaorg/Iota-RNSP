@@ -1053,8 +1053,7 @@ footer .thumbnails-unstyled li {
 #regioes ul.regions ul.subregions li a{
 	display: block;
 }
-a.link-axis,
-a.link-region{
+a.links_home_cidade{
 	margin: 5px;
 	padding: 30px 20px;
 	padding-left: 120px;
@@ -1064,15 +1063,21 @@ a.link-region{
 	-webkit-border-radius:5px;
 	background-color: #ffffff;
 	font-size: 1.4em;
+    display: inline-block;
+    width: calc(90% - 120px);
 }
-a.link-axis:hover,
-a.link-region:hover{
+
+a.links_home_cidade:hover,
+a.links_home_cidade:hover{
 	text-decoration: none;
 	background-color: #fcfcfc;
 	border: 1px solid #ccc;
 }
 a.link-axis{
-	background: url('/static/images/indicator_icon.png') no-repeat 5% center;
+    background: url('/static/images/indicator_icon.png') no-repeat 5% center;
+}
+a.link-map{
+    background: url('/static/images/map_icon2.png') no-repeat 5% center;
 }
 a.link-region{
 	background: url('/static/images/globe_icon.png') no-repeat 5% center;
@@ -1084,7 +1089,3 @@ a.link-region{
 }
 
 .no-data, .no-have {display: none!important}
-
-a.link-axis, a.link-region {
-    display: inline-block;
-}

@@ -2495,6 +2495,7 @@ sub _setup_regions_level {
         push @{ $out->{$x} }, $reg;
     }
 
+    my $subregion_count=0;
     my @regions;
     foreach my $id ( keys %$out ) {
         my $pai;
@@ -2507,6 +2508,7 @@ sub _setup_regions_level {
                 $pai = $r;
             }
             else {
+                $subregion_count++;
                 push @subs, $r;
             }
         }
@@ -2515,6 +2517,8 @@ sub _setup_regions_level {
     }
 
     $city->{regions} = \@regions;
+
+    $city->{subregion_count} = $subregion_count;
 }
 
 sub _load_variables {

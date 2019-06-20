@@ -12,7 +12,7 @@
 			<ul class="regions">
 				[%FOREACH r IN city.regions.sort('name') %]
 					<li class="header" [%IF r.subregions.size > 0 %]title="Clique para expandir"[%END%]>
-						<div class='header[%IF r.id == region.id %] selected[%END%]'><a href="[%r.url%]" title="Carregar página de [%r.name%]">[%r.name%]</a></div>
+						<div class='header[%IF r.id == region.id %] selected[%END%]' title="[%l('Clique para expandir')%]"><a href="[%r.url%]" title="[%l('Clique para ver os indicadores de __REGION__').replace('__REGION__', r.name)%]">[%r.name%]</a></div>
 						[%IF r.subregions.size > 0 %]
 							<ul class="subregions" title="">
 							[%FOREACH rr IN r.subregions.sort('name')%]

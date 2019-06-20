@@ -49,7 +49,7 @@
 
                 <div class="row">
 
-                    <div class="span4 col-md-6">
+                    <div class="span8 col-md-12">
                         <div class="summary">
                             <div class="content-fill">[%l(public.usuario.city_summary)%]</div>
                         </div>
@@ -63,16 +63,23 @@
         [% IF city.regions.size && city.regions.size>0 %]
             [%IF !is_infancia%]
 			<div class="row botoes-regioes">
-				<div class="span6 col-md-6 center">
-					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores" class="link-axis">
-						[%l('Indicadores separados por eixos')%]
+                [% spansize = city.subregion_count > 0 ? 4 : 6 %]
+				<div class="span[%spansize%] col-md-[%spansize%] center">
+					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores" class="link-axis links_home_cidade">
+						<p>[%l('Indicadores separados por eixos')%]</p>
 					</a>
 				</div>
-				<div class="span6  col-md-6 center">
-					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao" class="link-region">
-						[%l('Indicadores separados por região')%]
+				<div class="span[%spansize%] col-md-[%spansize%] center">
+					<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/regiao" class="link-region links_home_cidade">
+					<p>	[%l('Indicadores separados por região')%]</p>
 					</a>
 				</div>
+
+                [% IF spansize==4 %]
+                    <div class="span4 col-md-4 center">
+                        <a href="/comparacao-entre-distritos?cidade=[%city.id%]" class="link-map links_home_cidade">[%l('Mapa interativo')%]<p> [%region_classification_name.3%]</p></a>
+                    </div>
+                [% END %]
 			</div>
             [%END%]
 		<!--	<div class="period">
