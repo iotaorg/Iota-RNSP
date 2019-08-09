@@ -1035,6 +1035,9 @@ sub mapa_site : Chained('institute_load') PathPart('mapa-do-site') Args(0) {
     if ( $c->config->{is_sp} && !$c->stash->{is_infancia} ) {
         push @{ $c->stash->{network_data}{cities} }, { name => 'Brasília', uf => 'DF' };
     }
+    if ( $c->config->{casa_fluminense} && $c->stash->{network}->id == 2 ) {
+        push @{ $c->stash->{network_data}{cities} }, { name => 'Casa Fluminense', casa_fluminense => 1 };
+    }
 
     $c->stash(
         cities         => $c->stash->{network_data}{cities},

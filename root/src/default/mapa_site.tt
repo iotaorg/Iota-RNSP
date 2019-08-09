@@ -42,7 +42,9 @@
             <ul>
             [%FOREACH city IN cities.sort('name') %]
                 [% IF c.config.is_sp && city.name == 'Brasília' %]
-                    <li><a href="http://2013-2016.indicadores.cidadessustentaveis.org.br/br/DF/brasilia" target="_blank">[% city.name %] ([%city.uf%]) <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
+                    <li><a href="https://2013-2016.indicadores.cidadessustentaveis.org.br/br/DF/brasilia" target="_blank">[% city.name %] ([%city.uf%]) <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
+                [% ELSIF city.casa_fluminense  %]
+                    <li><a href="https://casa-fluminense.redesocialdecidades.org.br/br/RJ/casa-fluminense" target="_blank">[% city.name %] <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
                 [%ELSE%]
                 <li><a href="/[%city.pais%]/[%city.uf%]/[%city.name_uri%]">[% city.name %] ([%city.uf%])</a></li>
                 [%END%]
