@@ -71,7 +71,7 @@
                 </div>
                 <div >
                     <div class="aware">
-                        [%l('Desenvolvido por')%] <a href="http://www.eokoe.com" target="_blank">eokoe</a>
+                        [%l('Desenvolvido por')%] <a href="https://appcivico.com/" target="_blank">appcivico</a>
                     </div>
                 </div>
             </div>
