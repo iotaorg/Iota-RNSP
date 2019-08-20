@@ -541,7 +541,7 @@ table .num{
     background-color: #555;
 }
 #cidades-indicadores .table thead.eixos.collapsed th.eixo-contador {
-    background: url(/static/images/seta_up.png) no-repeat 98%;
+    background: url(/static/images/seta_up.png) no-repeat 94%;
     background-color: #555;
 }
 
