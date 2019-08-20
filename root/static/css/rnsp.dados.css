@@ -536,6 +536,7 @@ table .num{
 #cidades-indicadores .table thead.eixos th.eixo-contador {
     background: url(/static/images/seta.png) no-repeat 98%;
     background-color: #2b2b2b;
+    font-size: 12px;
 }
 #cidades-indicadores .table thead.eixos.collapsed th {
     background-color: #555;
@@ -543,6 +544,7 @@ table .num{
 #cidades-indicadores .table thead.eixos.collapsed th.eixo-contador {
     background: url(/static/images/seta_up.png) no-repeat 94%;
     background-color: #555;
+    font-size: 12px;
 }
 
 #cidades-indicadores .table thead.eixos th:hover{
