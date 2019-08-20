@@ -2093,6 +2093,11 @@ sub web_load_country : Private {
         { prefetch => 'states' }
     )->all;
 
+
+    if ( $c->config->{casa_fluminense} && $c->stash->{network}->id == 2 ) {
+        $c->stash->{web_casa_fluminense} = 1;
+    }
+
     for ( @{ $c->stash->{current_cities} } ) {
         next unless defined $_->country_id && defined $_->state_id;
         push @{ $c->stash->{web}{cities_by_state}{ $_->country_id }{ $_->state_id } }, $_;

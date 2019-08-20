@@ -85,6 +85,23 @@
     <h2>[%l('Cidades participantes')%]</h2>
     <div class="row isotope-container2 list-cities">
     [%FOREACH ct IN web.countries%]
+
+       [% IF web_casa_fluminense; web_casa_fluminense=0 %]
+        <div class="col-xs-12 [%IF ctqtd > 12%]col-sm-12[%ELSE%]col-sm-6[%END%] element">
+            <h3 style="background-color: #[%ct.color%];" id="id_state[%st.id%]" data-animated-anchor-offset="-60">Rio de janeiro <a data-animated-anchor href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
+
+            <div class="row">
+
+                <div class="[%IF ctqtd > 12%]col-xs-12 col-sm-4 col-md-3[%ELSE%]col-xs-12 col-md-6[%END%]">
+                    <a href="https://casa-fluminense.redesocialdecidades.org.br/br/RJ/casa-fluminense" target="_blank"><div style="border-left-color: #[%ct.color%];box-shadow: inset 0px 0px 1px 0px #[%ct.color%]" class="list-state"><span class="glyphicon glyphicon-link"></span> Casa Fluminense <i class="glyphicon glyphicon-new-window icon-white"></i></div></a>
+                </div>
+
+
+            </div>
+        </div>
+
+        [%END%]
+
         [%FOREACH st IN ct.states%][%SET ctqtd = web.cities_by_state.${ct.id}.${st.id}.size%]
         <div class="col-xs-12 [%IF ctqtd > 12%]col-sm-12[%ELSE%]col-sm-6[%END%] element">
             <h3 style="background-color: #[%ct.color%];" id="id_state[%st.id%]" data-animated-anchor-offset="-60">[%st.name%] <a data-animated-anchor href="#country[%ct.id%]"><small>[%ct.name%]</small></a></h3>
@@ -99,6 +116,7 @@
             </div>
         </div>
         [%END%]
+
     [%END%]
     </div>
 </div>
