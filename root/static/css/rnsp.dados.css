@@ -18,23 +18,21 @@ page-header-right img {max-height: 86px}
 }
 
 .navbar-fixed-top .navbar-inner{
-	background: #20c1c1; /* Old browsers */
+	background: #20c1c1;
 	background-image: none;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#20c1c1), color-stop(36%,#20c1c1), color-stop(100%,#009399)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #20c1c1 1%,#20c1c1 36%,#009399 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20c1c1', endColorstr='#009399',GradientType=0 ); /* IE6-9 */
+    min-height: 50px;
 }
 .navbar-fixed-top .navbar-inner .nav li a,
 .navbar-fixed-top .navbar-inner .nav li a:visited{
 	color: #fff;
-	text-shadow: 0 1px 0 #116a6a;
+    padding: 15px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 .navbar-fixed-top .navbar-inner .nav li a.active,
 .navbar-fixed-top .navbar-inner .nav li a:hover{
-	color: #ccffff;
+	color: rgb(0, 147, 153);;
 	text-shadow: 0 1px 0 #116a6a;
 }
 .navbar-fixed-top .navbar-inner .nav li.active{
@@ -220,6 +218,9 @@ table .num{
 	text-align: center;
 }
 
+#cidades-indicadores .table tbody td {
+    vertical-align: bottom;
+}
 .data-content .table tbody td.grafico canvas,
 #cidades-indicadores .table tbody td.grafico canvas{
 	border: 1px solid #e0e0e0;
@@ -823,7 +824,7 @@ margin-bottom: 10px;
 }
 
 #date-ruler .item{
-	color: #ccc;
+	color: #939393;
 	display: inline-block;
 	font-size: 9pt;
     padding-bottom: 10px;
