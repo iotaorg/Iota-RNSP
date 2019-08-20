@@ -1,0 +1,47 @@
+<div class="row">
+    [% INCLUDE 'parts/header_home_cidade.tt' %]
+</div>
+
+<div id="content" class="content">
+  <div class="row" id="cidades-dados">
+	<div class="span4 col-md-4" id="regioes">
+		<div class="menu-left" lockfixed>
+            [%IF !is_infancia %]
+			<h5>[%(region_classification_name.2)%]<small>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]/indicadores">[%l('visualizar indicadores por eixo')%]</a></small></h5>
+            [%END%]
+			<ul class="regions">
+				[%FOREACH r IN city.regions.sort('name') %]
+					<li class="header">
+						<div class='header[%IF r.id == region.id %] selected[%END%]' title="[%l('Clique para expandir')%]"><a href="[%r.url%]" title="[%l('Clique para ver os indicadores de __REGION__').replace('__REGION__', r.name)%]">[%r.name%]</a></div>
+						[%IF r.subregions.size > 0 %]
+							<ul class="subregions">
+							[%FOREACH rr IN r.subregions.sort('name')%]
+								<li [%IF rr.id == region.id %] class="selected"[%END%]><a href="[%rr.url%]">[%rr.name%]</a></li>
+							[%END%]
+							</ul>
+						[%END%]
+					</li>
+				[%END%]
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="span8 col-md-8">
+
+
+        <div id="map_canvas" data-regions="[%regions_to_draw%]"></div>
+
+	</div>
+  </div>
+</div>
+
+
+
+<script type="text/javascript">
+    var userID = [% user.id %];
+
+    var ref = 'cidade';
+    [% PROCESS 'network_javascript.tt'%]
+    var base_url = '';
+</script>

@@ -69,7 +69,7 @@ eval {
                 ]
             );
             ok( $res->is_success, 'user created' );
-            is( $res->code, 201, 'user created' );
+            is( $res->code, 201, 'user created' ) or die $res->content;
 
             ok( my $new_user = $schema->resultset('User')->find( { email => 'foo@email.com' } ), 'user in DB' );
             is( $new_user->nome_responsavel_cadastro, 'nome_responsavel_cadastro', 'nome responsavel ok' );

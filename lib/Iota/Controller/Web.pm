@@ -255,7 +255,8 @@ sub institute_load : Chained('light_institute_load') PathPart('') CaptureArgs(0)
           map  { $_->city }
           grep { defined $_->city_id } @users;
 
-        my @cities_with_region = $load_region_info
+        my @cities_with_region =
+          $load_region_info
           ? (
             sort { $a->pais . $a->uf . $a->name cmp $b->pais . $b->uf . $b->name }
             map  { $_->city }
@@ -1571,11 +1572,32 @@ sub cidade_regioes : Chained('network_cidade') PathPart('regiao') Args(0) {
     $c->detach( '/error_404', ['Regioes desabilitadas para este usuário!'] )
       if !$c->stash->{user}{regions_enabled};
 
+
+    if (   $c->stash->{user_metadata}{v2_layout}
+        && $c->stash->{c_req_match} =~ /root_cidade_regioes/
+    ){
+        $c->stash->{institute_metadata}{v2_colors}++;
+        $c->stash(
+
+            #v2             => 1,
+            v2_layout      => 1,
+
+            template       => 'v2_home_cidade_region.tt',
+        );
+        $self->stash_mapa_sp_primeira_infancia($c, 1);
+    }
+
+
     $self->stash_mapa_sp_primeira_infancia($c);
 }
 
 sub cidade_indicadores : Chained('network_cidade') PathPart('indicadores') Args(0) {
     my ( $self, $c ) = @_;
+
+    if ( $c->stash->{v2_layout} || !$c->stash->{user}{regions_enabled} ) {
+        $c->res->redirect( '/' . join '/', $c->stash->{pais}, $c->stash->{estado}, $c->stash->{cidade}, );
+        return;
+    }
 
     $c->stash->{title}    = $c->stash->{city}{name} . ', ' . $c->stash->{city}{uf} . ' - ' . $c->loc('Indicadores');
     $c->stash->{template} = 'home_cidade_indicator.tt';
@@ -1651,8 +1673,8 @@ sub stash_distritos : Private {
 }
 
 sub stash_mapa_sp_primeira_infancia {
-    my ( $self, $c ) = @_;
-    return 1 unless $c->stash->{is_infancia};
+    my ( $self, $c, $force ) = @_;
+    return 1 unless $c->stash->{is_infancia} || $force;
     my @regions_to_draw;
 
     foreach my $region ( @{ $c->stash->{city}{regions} } ) {
@@ -2443,7 +2465,8 @@ sub stash_tela_cidade : Private {
 
     $c->detach('/error_404') unless $user;
 
-    $c->stash->{user_obj} = $user;
+    $c->stash->{user_obj}      = $user;
+    $c->stash->{user_metadata} = $user->build_metadata;
     my $public = $c->controller('API::UserPublic')->user_public_load($c);
     $c->stash( public => $public );
 
@@ -2486,6 +2509,17 @@ sub stash_tela_cidade : Private {
         imagem_cidade => $user->{imagem_cidade},
         template      => 'home_cidade.tt',
     );
+
+    use DDP;
+    p $c->stash->{c_req_match};
+    if (   $c->stash->{user_metadata}{v2_layout} ) {
+        $c->stash->{institute_metadata}{v2_colors}++;
+        $c->stash(
+            v2_layout      => 1,
+            template       => 'v2_home_cidade.tt',
+        );
+    }
+
     $c->stash->{custom_wrapper} = 'site/iota_wrapper' if $c->stash->{is_infancia};
 }
 
@@ -2498,7 +2532,7 @@ sub _setup_regions_level {
         push @{ $out->{$x} }, $reg;
     }
 
-    my $subregion_count=0;
+    my $subregion_count = 0;
     my @regions;
     foreach my $id ( keys %$out ) {
         my $pai;

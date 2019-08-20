@@ -1,4 +1,4 @@
-<div class="data-right">
+f<div class="data-right">
     <div class="content-fill">
         <div id="indicador-historico">
             <div class="title">[%l('Série Histórica de')%] <span class="cidade"></span></div>
@@ -28,27 +28,7 @@
         <div id="dados-abertos">
             <div class="title">[%l('Dados abertos')%]</div>
             <div class="content-fill">
-                <div class="dados-botoes">
-                    <input type="button" value="[%l('Download')%]" id="button-download" class="button-data"/>
-                    <input type="button" value="[%l('Compartilhar')%]" id="button-share" class="button-data"/>
-                </div>
-                <div class="download-links">
-                </div>
-                <div class="share-link">
-                    <input type="text" id="share-link" value="url" />
-                    <!-- AddThis Button BEGIN -->
-                    <div class="addthis_toolbox addthis_default_style ">
-                    <a class="addthis_button_preferred_1"></a>
-                    <a class="addthis_button_preferred_2"></a>
-                    <a class="addthis_button_preferred_3"></a>
-                    <a class="addthis_button_preferred_4"></a>
-                    <a class="addthis_button_compact"></a>
-                    <a class="addthis_counter addthis_bubble_style"></a>
-                    </div>
-                    <script type="text/javascript">var addthis_config = {"data_track_addressbar":false, "data_track_clickback":false};</script>
-                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ed285338e6b8b3"></script>
-                    <!-- AddThis Button END -->
-                </div>
+                [% INCLUDE 'parts/dados_abertos_botoes.tt' %]
             </div>
         </div>
 

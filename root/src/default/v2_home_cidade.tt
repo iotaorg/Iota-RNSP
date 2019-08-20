@@ -1,0 +1,75 @@
+<div class="row">
+    [% INCLUDE 'parts/header_home_cidade.tt' %]
+
+    <div class="span12">
+        <p class="v2-city_summary">[%l(public.usuario.city_summary)%]</p>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="span12">
+
+        <div id="new-cidades-dados" >
+            [% FOREACH vv IN user_basic_variables %]
+
+            <div class="item">
+                <table>
+                    <tr>
+                        <td class="img">
+                            <img src="[% vv.variable.image_user_file.public_url %]"/>
+                        </td>
+                        <td class="trvarname">
+
+                            <div class="vblock">
+                                <span class="num">[% value4human(vv.value, vv.variable.type, vv.variable.measurement_unit.id) %]</span>
+                                [%IF vv.variable.measurement_unit.short_name %]<span class="unit">[% vv.variable.measurement_unit.short_name %]</span>[%END%]
+                            </div>
+
+                            <span class="varname">[% vv.variable.short_name || vv.variable.name %]</span>
+                            <span class="year">([%date4period(vv.value_of_date, vv.variable.period)%])</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            [% END %]
+        </div>
+    </div>
+</div>
+
+
+<div class="row" >
+    <div class="span12">
+        <div id="cidades-indicadores">
+            <h5>[%l('Indicadores separados por eixos')%]</h5>
+            <div class="period">
+                <div id="date-ruler">
+                    [%FOREACH d IN data_periods%]
+                    <a href="[%d.4%]" class="item [%IF d.0 == choosen_periods.0%]active[%END%] ">[% date4period(d.0, 'yearly')%]-[%date4period(d.1, 'yearly')%]</a>
+                    [%END%]
+                </div>
+            </div>
+
+            <div class="table">
+                <div class="loading"><p>[%l('Carregando...')%]</p></div>
+            </div>
+        </div>
+        [%IF institute.hide_empty_indicators%]
+        <label class="checkbox">
+            <input id="indicadores-hide-toggle" type="checkbox"> [%l('Exibir indicadores sem dados')%]
+        </label>
+        [%END%]
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    var userID = [% user.id || '0' %];
+
+    var ref = 'cidade';
+    [% PROCESS 'network_javascript.tt'%]
+    var base_url = '[%c.uri_for(c.controller('Web').action_for('network_render'), [city.pais, city.uf, city.name_uri]).as_string%]';
+
+</script>

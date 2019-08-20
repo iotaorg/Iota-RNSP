@@ -1,6 +1,11 @@
 [%  IF is_infancia %]
     [% INCLUDE 'parts/menu_regioes.tt'%]
 [%END%]
+[%IF v2_layout %]
+<div class="row">
+    [% INCLUDE 'parts/header_home_cidade.tt' %]
+</div>
+[%END%]
 
 <div id="content" class="content row">
 

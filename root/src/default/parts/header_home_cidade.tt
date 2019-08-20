@@ -1,0 +1,16 @@
+
+
+    <div class="col-md-12 span12 v2-posrelative">
+        <div class="v2-city-cover" [%IF imagem_cidade %] style="background-image: url([% imagem_cidade %]);"[%END%]>
+            <span class="v2-city-name">[% city.name %]</span>
+
+            <a class="v2-link_city" href="[% indicator.name_url && region ? "/$city.pais/$city.uf/$city.name_uri/$indicator.name_url" : city.pais ?  "/$city.pais/$city.uf/$city.name_uri" : "$menu_indicators_prefix" || '#' %]">
+                Cidade <img src="/static/img/ico-cidade-green.svg" style="height:24px;width:24px" />
+            </a>
+
+            <a class="v2-link_regions" href="[%  indicator.name_url && region.name_url ? "/$city.pais/$city.uf/$city.name_uri/regiao/$region.name_url/$indicator.name_url" : city.pais ?  "/$city.pais/$city.uf/$city.name_uri/regiao" : "$menu_indicators_prefix/regiao" || '#' %]">
+                Região <img src="/static/img/ico-regiao-green.svg" style="height:24px;width:24px" />
+            </a>
+        </div>
+    </div>
+

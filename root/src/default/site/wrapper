@@ -41,9 +41,6 @@
 [%-CALL assets.include("css/patrocinadores.sprites.css")%]
 [%-CALL assets.include("js/stupidtable.min.js")%]
 
-
-
-
 [%-CALL assets.include("js/libraries/RGraph.common.core.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.dynamic.js")%]
 [%-CALL assets.include("js/libraries/RGraph.common.tooltips.js")%]
@@ -61,6 +58,11 @@
 
 [%-CALL assets.include("css/really-common.css")%]
 [%-CALL assets.include("css/rnsp.dados.css")%]
+
+[% IF institute_metadata.v2_colors %]
+[%-CALL assets.include("v2/css/iota-v2colors.css")%]
+[%END%]
+
 
 
 [%- IF institute.short_name == 'org'-%]

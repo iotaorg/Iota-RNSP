@@ -758,7 +758,7 @@ $(document).ready(function() {
         if (ref == "home") {
             $(".download-links").append("<select id='dados-abertos-tipo'><option value='indicadores'>Indicadores</option><option value='variaveis'>Variáveis</option></select>");
         } else {
-            $(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados</option><option value='variaveis'>Variáveis</option></select>");
+            $(".download-links").append("<select id='dados-abertos-tipo'><option value='dados'>Dados (indicadores)</option><option value='variaveis'>Variáveis</option></select>");
         }
         $(".download-links").append("<a href='#' class='botao xls' formato='xls'>XLS</a>");
         $(".download-links").append("<a href='#' class='botao csv' formato='csv'>CSV</a>");

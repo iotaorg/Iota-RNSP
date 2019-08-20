@@ -1,0 +1,185 @@
+
+.v2-city_summary {
+    margin-bottom: -15px;
+    text-align: justify;
+}
+#cidades-indicadores h5 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px 0;
+    line-height: 20px;
+    text-rendering: optimizelegibility;
+}
+.nav-header {
+    display: block;
+    padding: 3px 15px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #999;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    text-transform: uppercase;
+}
+
+#page-header-left {display: inline-block}
+#v2-page-header-right {display: inline-block; float: right}
+.v2-link_city:hover, .v2-link_regions:hover, .v2-link_city:visited, .v2-link_regions:visited, .v2-link_city:active, .v2-link_regions:active, .v2-link_city:focus, .v2-link_regions:focus{
+    text-decoration: none;
+}
+#new-cidades-dados img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+.v2-link_city, .v2-link_regions {
+    position: absolute;
+    bottom: 10px;
+    background-color: white;
+    padding: 5px 15px;
+    border: 2px solid #eee;
+    left: 15px;
+    font-size: 20px;
+    font-weight: thin;
+    color: black;
+}
+.v2-link_regions {
+    left: 155px;
+}
+.v2-link_city:hover, .v2-link_regions:hover {
+    color: black;
+    background-color: #EEE;
+}
+.v2-posrelative {
+    position: relative;
+    margin-bottom: 15px;
+}
+.v2-city-name {
+    color: white;
+    font-size: 3em;
+    font-weight: 700;
+    position: absolute;
+    bottom: 65px;
+    left: 5px;
+    margin: 0;
+    padding: 10px;
+    text-shadow: 0px 0px 4px rgba(0,0,0,0.5);
+}
+.v2-city-cover {
+    background-color: #eee;
+    min-height: 150px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#new-cidades-dados {
+    min-width: 550px;
+    margin: 30px 0;
+
+    background-color: #333;
+
+    font-size: 0;
+}
+#new-cidades-dados .item {
+    width: 46%;
+    padding: 12px;
+    display: inline-block;
+    vertical-align: text-top;
+    font-size: 16px;
+    color: #EEE;
+}
+#new-cidades-dados .trnum {
+    text-align: center;
+}
+#new-cidades-dados td.trvarname {
+    vertical-align: text-top;
+}
+#new-cidades-dados td.img {
+    width: 40%;
+    vertical-align: middle;
+}
+#new-cidades-dados .vblock {
+    display: block;
+}
+
+#new-cidades-dados .item .unit, #new-cidades-dados .item .year {
+    font-weight: bold;
+    color: #FFF;
+    font-size: 14px;
+}
+#new-cidades-dados .vtop {
+    vertical-align: text-top;
+}
+#new-cidades-dados .item .num {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 36px;
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .v2-city-name {
+        font-size: 5em;
+    }
+    .v2-city-cover {
+        min-height: 200px;
+    }
+    #new-cidades-dados .item {
+        width: 30%;
+    }
+}
+
+#map_canvas {
+    width: 100%;
+    min-height: 620px;
+    min-width: 500px;
+}
+
+/* cores novas */
+/*
+.page-content a, a:hover, a:active, a:visited {
+    color: #3b6123;
+}
+#new-cidades-dados,.navbar-inverse, .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>.active>a, .dropdown-menu>.active>a:hover, .dropdown-menu>.active>a:focus {
+    background-color: #3b6123;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus,.navbar-inverse .nav .active>a, .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+    background-color: #2b401d;
+}
+
+#cidades-indicadores .table thead.eixos th{
+    background-color: #3b6024;
+}
+#cidades-indicadores .table thead.eixos.collapsed th {
+    background-color: #3b6123;
+}
+#cidades-indicadores .table thead.eixos th:hover{
+    background-color: #2b401d;
+}
+
+#indicadores-dados .data-right .title, #indicador-dados .data-right .title, h1, h2, h3, h4, h5 {
+    color: #3b6123;
+}
+*/
+
+#date-ruler{
+padding: 0px 10px 0px 0px;
+text-align: right;
+border-bottom: 1px solid #e0e0e0;
+margin-bottom: 10px;
+
+}
+
+#date-ruler .item.active {
+    background: url('/static/images/seta_up.png') no-repeat;
+    background-position: center 18px;
+    color: #333;
+}
+
+#date-ruler .item{
+    color: #ccc;
+    display: inline-block;
+    font-size: 9pt;
+    padding-bottom: 10px;
+    margin-left: 60px;
+    margin-right: 10px;
+}

@@ -32,7 +32,7 @@ page-header-right img {max-height: 86px}
 }
 .navbar-fixed-top .navbar-inner .nav li a.active,
 .navbar-fixed-top .navbar-inner .nav li a:hover{
-	color: rgb(0, 147, 153);;
+	color: #ccffff;
 	text-shadow: 0 1px 0 #116a6a;
 }
 .navbar-fixed-top .navbar-inner .nav li.active{
@@ -469,7 +469,7 @@ table .num{
 	color: #009999;
 	background-color: #efefef;
 	border: 1px solid #e0e0e0;
-	padding: 2px 5px;
+	padding: 15px 15px;
 	font-size: 12pt;
 	font-weight: bold;
 }
@@ -479,12 +479,19 @@ table .num{
 }
 
 #indicador-grafico .title a.link{
-	font-size: 9pt;
-	color: #009999;
+    float: right;
+    border: 1px solid #aa9fd2;
+    color: #392268;
+    background-color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 100;
+    margin-top: -5px;
 	text-decoration: none;
 }
 #indicador-grafico .title a.link:hover{
-	color: #42c3c3;
+    text-decoration: none;
+    background-color: #f0e4ff;
 }
 
 
@@ -706,6 +713,7 @@ table .num{
 
 .dados-botoes{
 	margin-top: 5px;
+    padding: 5px 15px;
 }
 
 input.button-data{
@@ -718,6 +726,7 @@ input.button-data{
 	background-color: #ffffff;
 	padding-right: 25px;
 	font-size: 9pt;
+    margin-right: 15px;
 }
 input.button-data.down{
 	background-image: url('/static/images/seta_up.png');
@@ -732,9 +741,7 @@ input.button-data:hover{
 .download-links{
 	display: inline-block;
 	display: none;
-	background-color: #f0f0f0;
 	padding: 10px;
-	margin-top: 5px;
 }
 
 .download-links .label{
@@ -779,10 +786,11 @@ font-size: 1em;
 	margin-top: 5px;
 }
 .share-link #share-link{
-	padding: 2px 4px;
-	border: 1px solid #e5e5e5;
-	background-color: #f5f5f5;
-	width: 450px;
+    padding: 4px 4px;
+    border: 1px solid #eee;
+    background-color: #ffffff;
+    width: 450px;
+    margin-left: 15px;
 }
 .share-link .addthis_toolbox{
 	display: inline-block;
