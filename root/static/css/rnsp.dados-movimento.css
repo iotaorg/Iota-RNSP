@@ -9,8 +9,8 @@
 
 .navbar-fixed-top .navbar-inner .nav li a,
 .navbar-fixed-top .navbar-inner .nav li a:visited{
-	color: #CCC;
-	text-shadow: 0 1px 0 #333;
+	color: white;
+    text-shadow: none;
 }
 
 .dropdown-menu>li>a {
@@ -19,8 +19,8 @@
 
 .navbar-fixed-top .navbar-inner .nav li a.active,
 .navbar-fixed-top .navbar-inner .nav li a:hover{
-	color: #fff;
-	text-shadow: 0 1px 0 #333;
+	background-color: #525252;
+	text-shadow: none;
 
 }
 .navbar-fixed-top .navbar-inner .nav li.active{

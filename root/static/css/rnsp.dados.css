@@ -1098,3 +1098,7 @@ a.link-region{
 }
 
 .no-data, .no-have {display: none!important}
+
+nav.navbar {
+  -webkit-font-smoothing: antialiased;
+}

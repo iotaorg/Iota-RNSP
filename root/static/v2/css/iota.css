@@ -55,6 +55,11 @@ footer .thumbnails-unstyled li {
 
 /* desligar o gradiente */
 
+@media(min-width: 768px){
+    .navbar-fixed-top,.navbar-fixed-bottom{
+        max-height: 50px;
+    }
+}
 .navbar-inverse {
     background-image: none;
     background-color: #424242;
