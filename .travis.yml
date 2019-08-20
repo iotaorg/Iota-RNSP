@@ -26,7 +26,7 @@ before_script:
   - psql -c 'create database iota_dev;' -U postgres
   - sqitch deploy -t local
 script:
-  - forkprove -MIota -j 2 -lr t/
+  - forkprove -MIota -j 2 -lr ./t/
 
 notifications:
   irc:
