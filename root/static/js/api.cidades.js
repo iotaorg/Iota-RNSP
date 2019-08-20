@@ -346,7 +346,7 @@ $(document).ready(function() {
                 if (eixos_indicadores[ix].dimension_id != 0 && (dimensions_GO[eixos_indicadores[ix].dimension_id])) {
 
                     if (dimensions_GO[eixos_indicadores[ix].dimension_id] != '__HIDE__') {
-                        table_content += "<thead class='dimensions'><tr><th colspan='10'>$$dimension</th></thead>".render({
+                        table_content += "<thead class='dimensions'><tr><th colspan='7'>$$dimension</th></thead>".render({
                             dimension: dimensions_GO[eixos_indicadores[ix].dimension_id]
                         });
                     }
@@ -354,7 +354,7 @@ $(document).ready(function() {
                 }
                 dimension_ant = eixos_indicadores[ix].dimension_id;
             }
-            table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='10'>$$eixo</th></thead>".render({
+            table_content += "<thead class='eixos collapsed ::nodata::'><tr><th class='eixo-name' colspan='6'>$$eixo</th><th class='eixo-contador' alt='Indicadores preenchidos' title='Indicadores preenchidos' colspan='1'>::counter::</th></thead>".render({
                 eixo: eixo_index
             });
             var periods = eixo;
@@ -362,16 +362,16 @@ $(document).ready(function() {
                 var datas = periods[period_index].datas;
                 var has_any_data = institute_info.hide_empty_indicators ? 0 : 1;
                 if (datas.length > 0) {
-                    table_content += "<thead class='datas'><tr><th></th><th>Autor</th>";
+                    table_content += "<thead class='datas'><tr><th style='width:99%'>Indicador</th><th class='valor'>Autor</th>";
                     $.each(datas, function(index, value) {
-                        table_content += "<th>$$data</th>".render({
+                        table_content += "<th  class='valor'>$$data</th>".render({
                             data: (datas[index].nome) ? datas[index].nome : "Sem dados"
                         });
                     });
                     table_content += "<th></th></tr></thead>";
                     has_any_data++;
                 } else {
-                    table_content += '<thead class="datas ::nodata::"><tr><th></th><th></th><th colspan="10">Nenhum ano preenchido</th><th></th></tr></thead>';
+                    table_content += '<thead class="datas ::nodata::"><tr><th></th><th></th><th colspan="7">Nenhum ano preenchido</th><th></th></tr></thead>';
                 }
 
                 table_content += "<tbody class='::nodata::'>";
@@ -383,6 +383,7 @@ $(document).ready(function() {
 
                     return a.localeCompare(b);
                 });
+                var indicadores_com_valor=0;
                 $.each(indicadores, function(i, item) {
                     var tr_class;
                     if (item.network_config.unfolded_in_home == 1) {
@@ -444,6 +445,8 @@ $(document).ready(function() {
                     } else {
                         table_content += "<td class='fonte'></td>";
                     }
+
+
                     if (item.valores.length > 0) {
 
                         var have_data = institute_info.hide_empty_indicators ? 0 : 1;
@@ -487,11 +490,17 @@ $(document).ready(function() {
                         graficos[cont] = item.valores;
                         cont++;
                         table_content = replaceAll('::onehave::', have_data ? '' : 'no-have', table_content);
+
+                        if (have_data){
+                            indicadores_com_valor++;
+                        }
                     } else {
                         table_content = replaceAll('::onehave::', institute_info.hide_empty_indicators ? 'no-have' : '', table_content);
                         table_content += "<td class='valor' colspan='5'>-</td>";
                     }
                 });
+
+                table_content = replaceAll('::counter::', indicadores_com_valor, table_content);
 
                 table_content = replaceAll('::nodata::', has_any_data ? '' : 'no-data', table_content);
 
