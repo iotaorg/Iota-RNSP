@@ -8,7 +8,7 @@ with 'Iota::Role::Verification';
 with 'Iota::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
-use JSON qw /encode_json to_json/;
+use JSON qw /encode_json from_json/;
 use String::Random;
 use MooseX::Types::Email qw/EmailAddress/;
 
@@ -115,7 +115,8 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
 
-                        eval { to_json( $r->get_value('metadata') ) };
+                        eval { from_json( $r->get_value('metadata') ) };
+
                         return 0 if $@;
                         return 1;
                     }
@@ -143,7 +144,7 @@ sub verifiers_specs {
                     post_check => sub {
                         my $r = shift;
 
-                        eval { to_json( $r->get_value('metadata') ) };
+                        eval { from_json( $r->get_value('metadata') ) };
                         return 0 if $@;
                         return 1;
                     }
