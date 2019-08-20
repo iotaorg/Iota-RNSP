@@ -2510,8 +2510,6 @@ sub stash_tela_cidade : Private {
         template      => 'home_cidade.tt',
     );
 
-    use DDP;
-    p $c->stash->{c_req_match};
     if (   $c->stash->{user_metadata}{v2_layout} ) {
         $c->stash->{institute_metadata}{v2_colors}++;
         $c->stash(
