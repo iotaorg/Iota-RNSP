@@ -23,11 +23,15 @@
                 </div>
             </div>
 
-            [%IF public%]
+            [%IF public && v2_layout && public.usuario.files.logo_movimento%]
+            <div id="v2-page-header-right">
+                <img style="max-height: 86px" src="[% public.usuario.files.logo_movimento%]" alt="">
+            </div>
+            [% ELSIF public %]
             <div id="page-header-right" class="col-md-2 col-md-offset-6 span2 offset6 text-right">
                 <div class="content right-logo">
                 [% IF public.usuario.files.logo_movimento %]
-                    <img src="[% public.usuario.files.logo_movimento%]" alt="">
+                    <img style="max-height: 86px" src="[% public.usuario.files.logo_movimento%]" alt="">
                 [%END%]
                 </div>
             </div>
