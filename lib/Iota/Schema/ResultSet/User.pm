@@ -8,7 +8,7 @@ with 'Iota::Role::Verification';
 with 'Iota::Schema::Role::InflateAsHashRef';
 
 use Data::Verifier;
-use JSON qw /encode_json/;
+use JSON qw /encode_json to_json/;
 use String::Random;
 use MooseX::Types::Email qw/EmailAddress/;
 
@@ -109,7 +109,17 @@ sub verifiers_specs {
                 cep                       => { required => 0, type => 'Str' },
                 endereco                  => { required => 0, type => 'Str' },
                 city_summary              => { required => 0, type => 'Str' },
-                metadata                  => { required => 0, type => 'Str' },
+                metadata                  => {
+                    required   => 0,
+                    type       => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+
+                        eval { to_json( $r->get_value('metadata') ) };
+                        return 0 if $@;
+                        return 1;
+                    }
+                },
 
                 can_create_indicators => { required => 0, type => 'Bool' },
                 regions_enabled       => { required => 0, type => 'Bool' },
@@ -127,7 +137,17 @@ sub verifiers_specs {
                     required => 0,
                     type     => 'Str',
                 },
-                metadata                  => { required => 0, type => 'Str' },
+                metadata => {
+                    required   => 0,
+                    type       => 'Str',
+                    post_check => sub {
+                        my $r = shift;
+
+                        eval { to_json( $r->get_value('metadata') ) };
+                        return 0 if $@;
+                        return 1;
+                    }
+                },
                 city_id => {
                     required   => 0,
                     type       => 'Int',
