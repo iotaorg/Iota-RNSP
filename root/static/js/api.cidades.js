@@ -450,6 +450,7 @@ $(document).ready(function() {
                     if (item.valores.length > 0) {
 
                         var have_data = institute_info.hide_empty_indicators ? 0 : 1;
+                        var really_have_data = 0;
                         for (j = 0; j < item.valores.length; j++) {
                             if (item.valores[j] == "-") {
                                 table_content += "<td class='valor'>-</td>";
@@ -460,6 +461,7 @@ $(document).ready(function() {
                                     });
                                     if (item.valores[j]) {
                                         have_data++;
+                                        really_have_data++;
                                     }
                                 } else {
                                     var format_value = parseFloat(item.valores[j]);
@@ -468,6 +470,7 @@ $(document).ready(function() {
                                         format_string = "#,##0.###";
                                     }
                                     have_data++;
+                                    really_have_data++;
                                     table_content += "<td class='valor'>$$valor</td>".render({
                                         valor: $.formatNumberCustom(item.valores[j], {
                                             format: format_string,
@@ -491,7 +494,7 @@ $(document).ready(function() {
                         cont++;
                         table_content = replaceAll('::onehave::', have_data ? '' : 'no-have', table_content);
 
-                        if (have_data){
+                        if (really_have_data){
                             indicadores_com_valor++;
                         }
                     } else {
