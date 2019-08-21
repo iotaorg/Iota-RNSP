@@ -820,7 +820,6 @@ form h3 {margin-top: 0}
 
 #new-cidades-dados {
     margin: 30px 0;
-    min-width: 550px;
 /*
     background-color: #4ac9f2;
     background: rgb(224,243,250);
@@ -836,12 +835,13 @@ form h3 {margin-top: 0}
     font-size: 0;
 }
 #new-cidades-dados .item {
-    width: 50%;
+    width: 100%;
     padding: 12px;
     display: inline-block;
     vertical-align: text-top;
     font-size: 16px;
     color: #EEE;
+    border-bottom: 5px solid white;
 }
 #new-cidades-dados .trnum {
     text-align: center;
@@ -850,7 +850,7 @@ form h3 {margin-top: 0}
     vertical-align: text-top;
 }
 #new-cidades-dados td.img {
-    width: 40%;
+    width: 20%;
     vertical-align: middle;
 }
 #new-cidades-dados .vblock {
@@ -889,10 +889,22 @@ div.is_infancia h5 {
     padding-bottom: 0px;
 }
 
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
     #new-cidades-dados .item {
-        width: 33%;
+        border-bottom: none;
+        width: 46%;
+    }
+    #new-cidades-dados td.img {
+        width: 40%;
+        vertical-align: middle;
     }
 }
 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    #new-cidades-dados .item {
+        width: 33.33%;
+    }
+}
