@@ -533,18 +533,22 @@ table .num{
     color: #EEE;
     text-align: left;
 }
-#cidades-indicadores .table thead.eixos th.eixo-contador {
-    background: url(/static/images/seta.png) no-repeat 98%;
+#cidades-indicadores .table thead.eixos th {
+    background: url(/static/images/seta.png) no-repeat 99%;
     background-color: #2b2b2b;
     font-size: 12px;
 }
 #cidades-indicadores .table thead.eixos.collapsed th {
     background-color: #555;
 }
-#cidades-indicadores .table thead.eixos.collapsed th.eixo-contador {
-    background: url(/static/images/seta_up.png) no-repeat 94%;
+#cidades-indicadores .table thead.eixos.collapsed th {
+    background: url(/static/images/seta_up.png) no-repeat 99%;
     background-color: #555;
+}
+#cidades-indicadores span.eixo-contador {
     font-size: 12px;
+    float: right;
+    padding-right: 30px;
 }
 
 #cidades-indicadores .table thead.eixos th:hover{

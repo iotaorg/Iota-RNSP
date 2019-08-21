@@ -354,7 +354,7 @@ $(document).ready(function() {
                 }
                 dimension_ant = eixos_indicadores[ix].dimension_id;
             }
-            table_content += "<thead class='eixos collapsed ::nodata::'><tr><th class='eixo-name' colspan='6'>$$eixo</th><th class='eixo-contador' alt='Indicadores preenchidos' title='Indicadores preenchidos' colspan='1'>::counter::</th></thead>".render({
+            table_content += "<thead class='eixos collapsed ::nodata::'><tr><th colspan='7'><span>$$eixo</span> <span class='eixo-contador' alt='Indicadores preenchidos' title='Indicadores preenchidos'>::counter::</span></th></thead>".render({
                 eixo: eixo_index
             });
             var periods = eixo;

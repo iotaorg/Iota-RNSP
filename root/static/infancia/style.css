@@ -525,13 +525,6 @@ dl.tabela blockquote small {
     font-weight: 500;
     font-size: 16px;
 }
-#cidades-indicadores .table thead.eixos.collapsed th.eixo-contador {
-    background-color: #fff;
-}
-#cidades-indicadores .table thead.eixos th.eixo-contador {
-    background-color: #fff;
-}
-
 #cidades-indicadores .table thead.eixos th:hover {
     background-color: #f5f5f5;
     color: #666;
