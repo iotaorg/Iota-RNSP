@@ -589,7 +589,11 @@ table .num{
 	text-decoration: none;
 }
 
-#cidades-indicadores .table tbody td.fonte,
+#cidades-indicadores .table tbody td.fonte {
+    display: inline-block;
+    text-align: left;
+    min-width: 104px;
+}
 #cidades-indicadores .table tbody td.valor{
 	text-align: center;
 }

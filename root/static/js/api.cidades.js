@@ -436,7 +436,7 @@ $(document).ready(function() {
                             });
 
 
-                            table_content += ("<td class='fonte forceinline'>" + innerstr + "</td>");
+                            table_content += ("<td class='fonte'>" + innerstr + "</td>");
 
 
                         } else {
