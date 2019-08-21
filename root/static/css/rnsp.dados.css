@@ -594,6 +594,13 @@ table .num{
     text-align: left;
     min-width: 104px;
 }
+#cidades-indicadores .table tbody td.fonte:empty {
+    display: table-cell;
+    min-width: 0px;
+}
+#cidades-indicadores .table tbody td.fonte>div {
+    display: inline-block !important;
+}
 #cidades-indicadores .table tbody td.valor{
 	text-align: center;
 }
