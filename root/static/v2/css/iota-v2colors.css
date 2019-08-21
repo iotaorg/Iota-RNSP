@@ -72,29 +72,32 @@
 }
 
 #new-cidades-dados {
-    min-width: 550px;
     margin: 30px 0;
-
     background-color: #333;
-
     font-size: 0;
 }
 #new-cidades-dados .item {
-    width: 46%;
     padding: 12px;
     display: inline-block;
     vertical-align: text-top;
     font-size: 16px;
     color: #EEE;
+    border-bottom: 5px solid white;
+    width: 100%;
 }
+#new-cidades-dados .item>table {width: 100%; margin: 0}
 #new-cidades-dados .trnum {
     text-align: center;
 }
 #new-cidades-dados td.trvarname {
     vertical-align: text-top;
 }
+#new-cidades-dados .varcontent {
+    padding: 10px;
+}
+
 #new-cidades-dados td.img {
-    width: 40%;
+    width: 20%;
     vertical-align: middle;
 }
 #new-cidades-dados .vblock {
@@ -114,6 +117,18 @@
     font-weight: bold;
     font-size: 36px;
 }
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    #new-cidades-dados .item {
+        border-bottom: none;
+        width: 46%;
+    }
+    #new-cidades-dados td.img {
+        width: 40%;
+        vertical-align: middle;
+    }
+}
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     .v2-city-name {
@@ -123,9 +138,10 @@
         min-height: 200px;
     }
     #new-cidades-dados .item {
-        width: 30%;
+        width: 30.32%;
     }
 }
+
 
 #map_canvas {
     width: 100%;
