@@ -151,6 +151,20 @@ sub login : Chained('root') : PathPart('login') : Args(0) : ActionClass('REST') 
 
 sub login_POST {
     my ( $self, $c ) = @_;
+
+    if ( exists $c->req->params->{email} ) {
+        my $login_disabled = $c->model('DB::User')->search(
+            {
+                email    => lc $c->req->params->{email},
+                password => 'account_migration'
+            }
+        )->count;
+        if ( $login_disabled > 0 ) {
+            $self->status_ok( $c, entity => { account_migration => 1 } );
+            $c->detach;
+        }
+    }
+
     my $dm = $c->model('DataManager');
 
     $self->status_bad_request( $c, message => 'Login invalid' ), $c->detach
