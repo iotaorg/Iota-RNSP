@@ -156,7 +156,7 @@ sub login_POST {
         my $login_disabled = $c->model('DB::User')->search(
             {
                 email    => lc $c->req->params->{email},
-                password => 'account_migration'
+                password => 'accmoved'
             }
         )->count;
         if ( $login_disabled > 0 ) {
