@@ -152,10 +152,10 @@ sub login : Chained('root') : PathPart('login') : Args(0) : ActionClass('REST') 
 sub login_POST {
     my ( $self, $c ) = @_;
 
-    if ( exists $c->req->params->{email} ) {
+    if ( exists $c->req->params->{'user.login.email'} ) {
         my $login_disabled = $c->model('DB::User')->search(
             {
-                email  => lc $c->req->params->{email},
+                email  => lc $c->req->params->{'user.login.email'},
                 active => 1,
             },
             { result_class => 'DBIx::Class::ResultClass::HashRefInflator', columns => ['password'] }
