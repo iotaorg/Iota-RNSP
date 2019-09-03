@@ -155,12 +155,14 @@ sub login_POST {
     if ( exists $c->req->params->{email} ) {
         my $login_disabled = $c->model('DB::User')->search(
             {
-                email    => lc $c->req->params->{email},
-                password => 'accmoved'
-            }
-        )->count;
-        if ( $login_disabled > 0 ) {
-            $self->status_ok( $c, entity => { account_migration => 1 } );
+                email  => lc $c->req->params->{email},
+                active => 1,
+            },
+            { result_class => 'DBIx::Class::ResultClass::HashRefInflator', columns => ['password'] }
+        )->next;
+
+        if ( $login_disabled && $login_disabled->{password} eq 'accmoved' ) {
+            $self->status_ok( $c, entity => { accmoved => 1 } );
             $c->detach;
         }
     }
