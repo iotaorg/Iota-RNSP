@@ -175,6 +175,7 @@ sub list_GET {
         push @objs, {
             (
                 (
+                  $c->req->params->{with_polygon_path} ? ( 'polygon_path' => $obj->{polygon_path} ) : (),
                     map { $_ => $obj->{$_} }
                       qw(
                       id
@@ -187,7 +188,6 @@ sub list_GET {
                       subregions_valid_after
                       created_at
                       automatic_fill),
-                    ( 'polygon_path' => $obj->{polygon_path} ) x !!exists $c->req->params->{with_polygon_path}
                 ),
 
                 city => { ( map { $_ => $c->stash->{city}->$_ } qw/name name_uri uf pais/ ), },
