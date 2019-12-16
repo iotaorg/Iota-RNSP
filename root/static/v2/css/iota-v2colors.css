@@ -142,6 +142,9 @@
     }
 }
 
+.v2-map_compare {
+    left: 293px;
+}
 
 #map_canvas {
     width: 100%;
