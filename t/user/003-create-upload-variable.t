@@ -8,7 +8,7 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
 use Catalyst::Test q(Iota);
-
+use JSON;
 use HTTP::Request::Common;
 use Package::Stash;
 use Path::Class qw(dir);
@@ -52,6 +52,11 @@ eval {
             );
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
+
+            my $user_id = eval { from_json( $res->content ) };
+
+            $Iota::TestOnly::Mock::AuthUser::_id    = $user_id->{id};
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',

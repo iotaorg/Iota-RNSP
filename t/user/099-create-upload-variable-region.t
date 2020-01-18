@@ -69,6 +69,7 @@ eval {
             );
             ok( $res->is_success, 'user created' );
             is( $res->code, 201, 'user created' );
+            my $user_id = eval { from_json( $res->content ) };
 
             my ( $fh, $filename ) = tempfile( SUFFIX => '.csv' );
             my $csv = Text::CSV_XS->new( { binary => 1, eol => "\r\n" } )
@@ -79,6 +80,9 @@ eval {
             $csv->print( $fh, [ 19, '2010-01-01', '123', 'foobar', 'obs', $reg1->{id} ] );
             $csv->print( $fh, [ 19, '2011-01-01', '456', 'foobar', '222', $reg1->{id} ] );
             close $fh;
+
+            $Iota::TestOnly::Mock::AuthUser::_id    = $user_id->{id};
+            @Iota::TestOnly::Mock::AuthUser::_roles = qw/ user /;
 
             ( $res, $c ) = ctx_request(
                 POST '/api/variable/value_via_file',
