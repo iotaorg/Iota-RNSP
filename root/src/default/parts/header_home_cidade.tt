@@ -11,6 +11,11 @@
             <a class="v2-link_regions" href="[%  indicator.name_url && region.name_url ? "/$city.pais/$city.uf/$city.name_uri/regiao/$region.name_url/$indicator.name_url" : city.pais ?  "/$city.pais/$city.uf/$city.name_uri/regiao" : "$menu_indicators_prefix/regiao" || '#' %]">
                 Região <img src="/static/img/ico-regiao-green.svg" style="height:24px;width:24px" />
             </a>
+
+            <a href="/comparacao-entre-distritos?cidade=[%city.id%]" class="v2-link_regions v2-map_compare">[%l('Mapa interativo')%]
+                <img src="/static/images/map_icon_green.png" style="height:24px;width:24px" />
+            </a>
+
         </div>
     </div>
 
