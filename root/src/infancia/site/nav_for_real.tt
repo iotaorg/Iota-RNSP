@@ -1,21 +1,4 @@
-[% IF c_req_match  == 'root_' %]
 
-[% FOREACH am IN fixed_menu_pages %]
-    <li class="[% c_req_path == am.url ? 'active' : '' %][%  am.hidden ? ' hide' : '' %]" >
-        <a href="/[% am.url %]">[%l( am.title )%]</a>
-    </li>
-[% END %]
-
-<li [% IF c_req_path == 'pagina/boas-praticas' %]class="active"[%END%]>
-    <a href="/pagina/boas-praticas">[%l('boas práticas')%]</a>
-</li>
-
-<li [% IF c_req_path == 'comparacao-entre-distritos' %]class="active"[%END%]>
-    <a href="/comparacao-entre-distritos">[%l('Mapa interativo')%]</a>
-</li>
-
-
-[%ELSE%]
 
 [% FOREACH am IN fixed_menu_pages %]
     <li [% IF c_req_path == am.url %]class="active"[%END%]>
@@ -31,16 +14,8 @@
             <a href="/comparacao-entre-distritos">[%l('Mapa interativo')%]</a>
         </li>
 
-        <li [% IF c_req_path == 'dados-abertos' %]class="active"[%END%]>
-          <a href="/dados-abertos">[%l('Dados abertos')%]</a>
-        </li>
-
     [% END %]
 
 [% END %]
 
-<li [% IF c_req_path == 'mapa-do-site' %]class="active"[%END%]>
-    <a href="/mapa-do-site">[%l('Mapa do site')%]</a>
-</li>
 
-[% END %]
