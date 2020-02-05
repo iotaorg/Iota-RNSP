@@ -23,8 +23,14 @@ sub file : Chained('base') : PathPart('') : Args(0) ActionClass('REST') {
 sub file_POST {
     my ( $self, $c ) = @_;
 
+    if ($c->check_any_user_role(qw(admin superadmin ))){
+        $c->res->body( to_json( { error => "Admins não podem fazer upload de arquivo, utilize o usuário da cidade." }, ));
+        $c->detach;
+    }
+
     $self->status_forbidden( $c, message => "access denied", ), $c->detach
       unless $c->check_any_user_role(qw(admin superadmin user));
+
     my $upload = $c->req->upload('arquivo');
     eval {
         if ($upload) {

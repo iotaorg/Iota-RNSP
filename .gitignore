@@ -19,3 +19,4 @@ root/static/user/
 root/static/built/
 .tidyall.d/
 iota.conf
+.vstags
