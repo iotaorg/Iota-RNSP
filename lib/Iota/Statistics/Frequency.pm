@@ -23,11 +23,7 @@ sub iterate {
         my $stddev = stddev(@numbers);
         my $meio   = mean(@numbers);
 
-        my (@mid);
-        foreach (@numbers) {
-            push @mid, $_;
-        }
-        $stat->add_data( sort { $a <=> $b } @mid );
+        $stat->add_data( sort { $a <=> $b } @numbers );
 
         my %f = $stat->frequency_distribution(5);
 

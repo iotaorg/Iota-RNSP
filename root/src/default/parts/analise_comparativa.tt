@@ -72,7 +72,7 @@ load_map.push( {
                 [% END %]
             </tbody>
             <tbody>
-                <tr><th colspan="2">[%city.name%]</th><th>[%value4human(ultima_analise.mean, 'num')%] ¹</th></tr>
+                <tr><th colspan="2">Mediana das regiões</th><th>[%value4human(ultima_analise.mean, 'num')%] ¹</th></tr>
             </tbody>
             <tbody>
                 <tr><td rowspan="4" class="settinhas down">&darr;</td></tr>
@@ -81,7 +81,7 @@ load_map.push( {
                 [% END %]
             </tbody>
         </table>
-        <small>¹ [%l('Média com base na soma dos números das')%] [%IF region.depth_level == 2%][%l('regiões')%][%ELSE%][%l('subregiões')%][%END%]</small>
+        <small>¹ [%l('Desconsideradas regiões cujo valor é repetido')%]</small>
 [% END %]
 
 </div>
