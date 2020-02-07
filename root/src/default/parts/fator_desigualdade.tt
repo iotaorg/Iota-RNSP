@@ -22,7 +22,7 @@
             [%END%]
         </tbody>
     </table>
-    <small>¹ [%l('Descontados distritos cujo valor é zero')%].</small>
+    <small>¹ [%l('Descontadas regiões cujo valor é zero')%].</small>
 [%ELSE%]
 <p>[%l('Sem dados')%]</p>
 [%END%]
