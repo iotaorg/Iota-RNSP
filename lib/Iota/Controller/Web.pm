@@ -1788,7 +1788,7 @@ sub stash_comparacao_distritos : Private {
                         all    => $distintos,
                         top3   => [ $definidos->[0], $definidos->[1], $definidos->[2], ],
                         lower3 => [ $definidos->[-3], $definidos->[-2], $definidos->[-1] ],
-                        mean   => $stat->mean()
+                        median   => $stat->median()
                     };
                 }
                 elsif ( @$definidos == 4 ) {

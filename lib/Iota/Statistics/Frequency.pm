@@ -3,8 +3,6 @@ package Iota::Statistics::Frequency;
 use Moose;
 use Statistics::Descriptive;
 
-use Statistics::Basic qw(:all nofill);
-
 sub iterate {
     my ( $self, $rows ) = @_;
 
@@ -19,9 +17,6 @@ sub iterate {
         @numbers = grep { !$seen{$_}++ } @numbers;
 
         my $stat = Statistics::Descriptive::Full->new();
-
-        my $stddev = stddev(@numbers);
-        my $meio   = mean(@numbers);
 
         $stat->add_data( sort { $a <=> $b } @numbers );
 

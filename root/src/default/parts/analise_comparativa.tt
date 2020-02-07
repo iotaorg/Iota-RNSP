@@ -72,7 +72,7 @@ load_map.push( {
                 [% END %]
             </tbody>
             <tbody>
-                <tr><th colspan="2">Mediana das regiões</th><th>[%value4human(ultima_analise.mean, 'num')%] ¹</th></tr>
+                <tr><th colspan="2">Mediana das regiões</th><th>[%value4human(ultima_analise.median, 'num')%] ¹</th></tr>
             </tbody>
             <tbody>
                 <tr><td rowspan="4" class="settinhas down">&darr;</td></tr>
