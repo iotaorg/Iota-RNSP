@@ -56,7 +56,7 @@ sub value4human {
       if defined $value && $value == 1 && $variable_type eq 'str';
     return $value if $variable_type eq 'str';
     return 'n/d' if defined $value && $value eq 'n/d';
-    return 0 if $value < 0.0001;
+    return '0.0...' if $value < 0.0001 && $value > 0;
 
     return $value if $value =~ /[a-z]/;
 
