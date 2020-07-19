@@ -12,9 +12,11 @@
     <a class="navbar-brand" target="_blank" href="https://github.com/iotaorg/">Iota</a>
   </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
+    [% IF !c.config.disable_lexicon %]
     <ul class="nav navbar-nav">
       [%INCLUDE 'site/left_menu_part.tt'%]
     </ul>
+    [%END%]
 
     <ul class="nav navbar-nav navbar-right">
       [%INCLUDE 'site/access_menu_part.tt'%]
@@ -42,12 +44,12 @@
         </button>
 
         <div class="nav-collapse collapse">
+        [% IF !c.config.disable_lexicon %]
         <ul class="nav">
-
-
         [%INCLUDE 'site/left_menu_part.tt'%]
-
         </ul>
+        [%END%]
+
         <ul class="nav pull-right">
             <li class="divider-vertical"></li>
             [%INCLUDE 'site/access_menu_part.tt'%]
