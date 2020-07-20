@@ -45,21 +45,21 @@
         </button>
 
         <div class="nav-collapse collapse">
-        [% IF !c.config.disable_lexicon %]
         <ul class="nav">
         [%INCLUDE 'site/left_menu_part.tt'%]
         </ul>
-        [%END%]
 
         <ul class="nav pull-right">
             <li class="divider-vertical"></li>
             [%INCLUDE 'site/access_menu_part.tt'%]
-            <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-globe icon-globe icon-white"></i> <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                [%INCLUDE 'site/lang_menu_part.tt'%]
-            </ul>
-            </li>
+            [% IF !c.config.disable_lexicon %]
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-globe icon-globe icon-white"></i> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    [%INCLUDE 'site/lang_menu_part.tt'%]
+                </ul>
+                </li>
+            [%END%]
 
             [%IF c.user%]<li><a href="/logout" title="[%l('Sair')%]"><i class=" icon-circle-arrow-right icon-white"></i></a></li>[%END%]
         </ul>
