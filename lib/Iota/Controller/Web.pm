@@ -2304,6 +2304,8 @@ sub _add_default_periods {
     my $data_atual   = DateTime->now;
     my $ano_anterior = $data_atual->year() - 1;
 
+    $ano_anterior = $c->config->{fixed_max_year} if $c->config->{fixed_max_year};
+
     my $grupos      = 4;
     my $step        = 4;
     my $ano_inicial = $ano_anterior - ( $grupos * $step ) + 1;
