@@ -49,7 +49,7 @@
 
 
 [% IF network.id == 1 && c.config.is_sp %]
-    <li><a target="_blank" href="http://2013-2016.indicadores.cidadessustentaveis.org.br">Ir para indicadores da gestão 2013-2016 <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
+    <li><a target="_blank" href="http://2013-2016-indicadores.cidadessustentaveis.org.br">Ir para indicadores da gestão 2013-2016 <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
 [% ELSIF network.id == 1 %]
     <li><a href="http://www.cidadessustentaveis.org.br/indicadores" target="_blank">Indicadores básicos/gestão 2017-2020 <i class="glyphicon glyphicon-new-window icon-white"></i></a></li>
 [% END %]
